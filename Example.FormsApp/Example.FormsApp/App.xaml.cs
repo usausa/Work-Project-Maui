@@ -1,17 +1,14 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+﻿[assembly: Xamarin.Forms.Xaml.XamlCompilation(Xamarin.Forms.Xaml.XamlCompilationOptions.Compile)]
 
 namespace Example.FormsApp
 {
-    public partial class App : Application
+    public partial class App
     {
         public App()
         {
             InitializeComponent();
 
-            MainPage = new Example.FormsApp.MainPage();
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
