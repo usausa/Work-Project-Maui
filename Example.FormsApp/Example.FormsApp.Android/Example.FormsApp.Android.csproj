@@ -37,6 +37,7 @@
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+    <MandroidI18n>CJK</MandroidI18n>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\..\Example.FormsApp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -49,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <MandroidI18n>CJK</MandroidI18n>
     <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\..\Example.FormsApp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
