@@ -8,7 +8,7 @@ namespace Example.FormsApp
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new Pages.MainPage();
         }
 
         protected override void OnStart()

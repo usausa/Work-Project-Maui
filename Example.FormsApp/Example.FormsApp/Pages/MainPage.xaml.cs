@@ -1,4 +1,4 @@
-﻿namespace Example.FormsApp
+﻿namespace Example.FormsApp.Pages
 {
     public partial class MainPage
     {
