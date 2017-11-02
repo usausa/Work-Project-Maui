@@ -157,10 +157,10 @@
       <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Usa.Smart.Core">
-      <Version>1.0.4</Version>
+      <Version>1.0.5</Version>
     </PackageReference>
     <PackageReference Include="Usa.Smart.Forms">
-      <Version>0.9.0</Version>
+      <Version>0.9.3</Version>
     </PackageReference>
     <PackageReference Include="Usa.Smart.Resolver">
       <Version>1.4.0</Version>
@@ -169,13 +169,13 @@
       <Version>3.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugins.Settings">
-      <Version>3.0.1</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>2.4.0.282</Version>
+      <Version>2.4.0.38779</Version>
     </PackageReference>
     <PackageReference Include="ZXing.Net.Mobile.Forms">
-      <Version>2.2.9</Version>
+      <Version>2.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\Example.FormsApp\Example.FormsApp.projitems" Label="Shared" Condition="Exists('..\Example.FormsApp\Example.FormsApp.projitems')" />
