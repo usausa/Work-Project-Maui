@@ -12,6 +12,9 @@
         public Navigator()
         {
             // TODO proxy?
+            //- 初期枠のセットアップ
+            //- NavigationPage<-NavigationProxy-> Navigatorの連結をどうするか？
+            //- Main前提にするか？
             Application.Current.ModalPopping += OnModalPopping;
             Application.Current.ModalPopped += OnModalPopped;
         }
@@ -47,6 +50,12 @@
         public async Task<bool> ForwardAsync<TPage>()
             where TPage : Page
         {
+            // Guard
+            if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
+            {
+                return false;
+            }
+
             // TODO
             await Task.Delay(0);
 
@@ -90,12 +99,7 @@
 
     //        public async Task<bool> ForwardAsync(string name)
     //        {
-    //            // Guard
-    //            if (Application.Current.MainPage.Navigation.ModalStack.Count > 0)
-    //            {
-    //                return false;
-    //            }
-    //
+    //...
     //            // Stack
     //            var navigationStack = Application.Current.MainPage.Navigation.NavigationStack;
     //
