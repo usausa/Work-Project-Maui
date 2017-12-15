@@ -7,7 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.FormsApp.Android", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.FormsApp.iOS", "Example.FormsApp\Example.FormsApp.iOS\Example.FormsApp.iOS.csproj", "{0D325AE4-2FBA-4229-B99C-43F8EDC4B553}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.FormsApp", "Example.FormsApp\Example.FormsApp\Example.FormsApp.csproj", "{4DFD27F0-EF92-4284-BC85-DA6401816D95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.FormsApp", "Example.FormsApp\Example.FormsApp\Example.FormsApp.csproj", "{4DFD27F0-EF92-4284-BC85-DA6401816D95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F30A454F-FD1F-4ADE-87B2-F99F7C92110F}"
+	ProjectSection(SolutionItems) = preProject
+		Example.FormsApp.ruleset = Example.FormsApp.ruleset
+		Example.FormsApp.sln.DotSettings = Example.FormsApp.sln.DotSettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
