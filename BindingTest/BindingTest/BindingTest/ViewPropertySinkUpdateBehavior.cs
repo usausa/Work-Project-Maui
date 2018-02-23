@@ -29,10 +29,10 @@
                 return;
             }
 
-            var sync = ViewProperty.GetSink(AssociatedObject);
-            if (sync != null)
+            var sink = ViewProperty.GetSink(AssociatedObject);
+            if (sink != null)
             {
-                sync.Title = ViewProperty.GetTitle(AssociatedObject.Content);
+                sink.Title = ViewProperty.GetTitle(AssociatedObject.Content);
             }
         }
     }
