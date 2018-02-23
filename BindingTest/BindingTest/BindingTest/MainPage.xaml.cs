@@ -13,5 +13,15 @@ namespace BindingTest
 		{
 			InitializeComponent();
 		}
-	}
+
+	    private void Button1_OnClicked(object sender, EventArgs e)
+	    {
+            Container.Content = new View1();
+	    }
+
+	    private void Button2_OnClicked(object sender, EventArgs e)
+	    {
+	        Container.Content = new View2();
+	    }
+    }
 }

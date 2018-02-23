@@ -4,8 +4,13 @@
              xmlns:local="clr-namespace:BindingTest"
              x:Class="BindingTest.MainPage">
 
-	<Label Text="Welcome to Xamarin.Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <StackLayout>
+        <Label Text="test"/>
+        <Button Text="view1" Clicked="Button1_OnClicked"/>
+        <Button Text="view2" Clicked="Button2_OnClicked"/>
+        <ContentView x:Name="Container">
+
+        </ContentView>
+    </StackLayout>
 
 </ContentPage>

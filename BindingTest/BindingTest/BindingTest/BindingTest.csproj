@@ -5,7 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
+    <PackageReference Include="Usa.Smart.Core" Version="1.5.1" />
+    <PackageReference Include="Usa.Smart.Forms.Resolver" Version="1.1.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="1.7.1" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Smart.Forms">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\usa.smart.forms\1.1.0\lib\netstandard2.0\Smart.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Smart.Resolver">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\usa.smart.resolver\1.7.1\lib\netstandard2.0\Smart.Resolver.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -15,5 +27,14 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MainPage.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="View1.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="View2.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

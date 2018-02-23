@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView x:Class="BindingTest.View1"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:local="clr-namespace:BindingTest;assembly=BindingTest"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type={x:Type local:View1Model}}"
+             resolver:BindingContextResolver.Type="{x:Type local:View1Model}"
+             local:ViewProperty.Title="{Binding Title.Value}">
+    <StackLayout>
+        <Button Text="View1+" Command="{Binding UpdateTitle}" CommandParameter="View1+"/>
+        <Button Text="View1++" Command="{Binding UpdateTitle}" CommandParameter="View1++"/>
+        <Button Text="View1*" Clicked="Button_OnClicked"/>
+    </StackLayout>
+</ContentView>

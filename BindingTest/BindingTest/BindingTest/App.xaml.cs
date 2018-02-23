@@ -1,22 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Xamarin.Forms;
-
-namespace BindingTest
+﻿namespace BindingTest
 {
-	public partial class App : Application
+    using Smart.Forms.Resolver;
+    using Smart.Resolver;
+
+    public partial class App
 	{
 		public App ()
 		{
 			InitializeComponent();
 
-			MainPage = new BindingTest.MainPage();
+		    var resolver = CreateResolver();
+		    ResolveProvider.Default.UseSmartResolver(resolver);
+
+            MainPage = new MainPage();
 		}
 
-		protected override void OnStart ()
+	    private SmartResolver CreateResolver()
+	    {
+	        var config = new ResolverConfig()
+	            .UseAutoBinding()
+	            .UseArrayBinding()
+	            //.UseAssignableBinding()
+	            .UsePropertyInjector();
+
+	        return config.ToResolver();
+	    }
+
+        protected override void OnStart ()
 		{
 			// Handle when your app starts
 		}
