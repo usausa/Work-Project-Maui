@@ -28,6 +28,17 @@
         private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             System.Diagnostics.Debug.WriteLine($"PropertyChanged {bindable.GetHashCode()} {oldValue} {newValue}");
+            var element = ((ContentView)bindable).Parent;
+            while (element != null)
+            {
+                if (element.BindingContext is ViewPropertyModel vm)
+                {
+                    vm.Title = GetTitle(bindable);
+                    break;
+                }
+
+                element = element.Parent;
+            }
         }
     }
 }

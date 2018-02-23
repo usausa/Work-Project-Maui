@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-
-namespace BindingTest
+﻿namespace BindingTest
 {
+    using System;
+    using Xamarin.Forms;
+
 	public partial class MainPage : ContentPage
 	{
 		public MainPage()
@@ -23,5 +19,10 @@ namespace BindingTest
 	    {
 	        Container.Content = new View2();
 	    }
-    }
+
+	    private void Button3_OnClicked(object sender, EventArgs e)
+	    {
+	        GC.Collect();
+	    }
+	}
 }

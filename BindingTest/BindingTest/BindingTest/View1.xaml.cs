@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace BindingTest
+﻿namespace BindingTest
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class View1 : ContentView
+    using System;
+
+    public partial class View1
 	{
 		public View1 ()
 		{
 			InitializeComponent ();
 		}
+
+	    ~View1()
+	    {
+            System.Diagnostics.Debug.WriteLine("~View1");
+	    }
 
 	    private void Button_OnClicked(object sender, EventArgs e)
 	    {

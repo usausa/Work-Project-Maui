@@ -1,4 +1,6 @@
-﻿namespace BindingTest
+﻿[assembly: Xamarin.Forms.Xaml.XamlCompilation(Xamarin.Forms.Xaml.XamlCompilationOptions.Compile)]
+
+namespace BindingTest
 {
     using Smart.Forms.Resolver;
     using Smart.Resolver;
