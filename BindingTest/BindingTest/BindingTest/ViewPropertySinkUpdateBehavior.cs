@@ -6,7 +6,7 @@
 
     using Xamarin.Forms;
 
-    public class ViewPropertyBehavior : BehaviorBase<ContentView>
+    public class ViewPropertySinkUpdateBehavior : BehaviorBase<ContentView>
     {
         protected override void OnAttachedTo(ContentView bindable)
         {
@@ -29,18 +29,10 @@
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine($"Content changed {AssociatedObject.Content.GetHashCode()}");
-
-            var element = AssociatedObject.Parent;
-            while (element != null)
+            var sync = ViewProperty.GetSink(AssociatedObject);
+            if (sync != null)
             {
-                if (element.BindingContext is ViewPropertyModel vm)
-                {
-                    vm.Title = ViewProperty.GetTitle(AssociatedObject.Content);
-                    break;
-                }
-
-                element = element.Parent;
+                sync.Title = ViewProperty.GetTitle(AssociatedObject.Content);
             }
         }
     }

@@ -4,6 +4,28 @@
 
     public class ViewProperty
     {
+        public static readonly BindableProperty SinkProperty = BindableProperty.CreateAttached(
+            "Sink",
+            typeof(IViewPropertySink),
+            typeof(ViewProperty),
+            null,
+            propertyChanged: PropertyChanged2);
+
+        public static IViewPropertySink GetSink(BindableObject view)
+        {
+            return (IViewPropertySink)view.GetValue(SinkProperty);
+        }
+
+        public static void SetSink(BindableObject view, IViewPropertySink value)
+        {
+            view.SetValue(SinkProperty, value);
+        }
+
+        private static void PropertyChanged2(BindableObject bindable, object oldValue, object newValue)
+        {
+            // TODO
+        }
+
         public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached(
             "Title",
             typeof(string),
@@ -13,31 +35,26 @@
 
         public static string GetTitle(BindableObject view)
         {
-            System.Diagnostics.Debug.WriteLine("GetTitle " + view.GetHashCode());
-
             return (string)view.GetValue(TitleProperty);
         }
 
         public static void SetTitle(BindableObject view, string value)
         {
-            System.Diagnostics.Debug.WriteLine("SetTitle " + view.GetHashCode());
-
             view.SetValue(TitleProperty, value);
         }
 
         private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            System.Diagnostics.Debug.WriteLine($"PropertyChanged {bindable.GetHashCode()} {oldValue} {newValue}");
-            var element = ((ContentView)bindable).Parent;
-            while (element != null)
+            var parent = ((ContentView) bindable).Parent;
+            if (parent == null)
             {
-                if (element.BindingContext is ViewPropertyModel vm)
-                {
-                    vm.Title = GetTitle(bindable);
-                    break;
-                }
+                return;
+            }
 
-                element = element.Parent;
+            var sink = GetSink(parent);
+            if (sink != null)
+            {
+                sink.Title = GetTitle(bindable);
             }
         }
     }

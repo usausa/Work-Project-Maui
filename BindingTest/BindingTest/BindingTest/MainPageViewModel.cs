@@ -2,7 +2,7 @@
 {
     using Smart.ComponentModel;
 
-    public class ViewPropertyModel : NotificationObject
+    public class MainPageViewModel : NotificationObject, IViewPropertySink
     {
         private string title;
 

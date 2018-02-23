@@ -7,17 +7,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type={x:Type local:ViewPropertyModel}}"
-             resolver:BindingContextResolver.Type="{x:Type local:ViewPropertyModel}">
+             d:DataContext="{d:DesignInstance Type={x:Type local:MainPageViewModel}}"
+             resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
 
     <StackLayout>
         <Label Text="{Binding Title}"/>
         <Button Text="view1" Clicked="Button1_OnClicked"/>
         <Button Text="view2" Clicked="Button2_OnClicked"/>
         <Button Text="GC" Clicked="Button3_OnClicked"/>
-        <ContentView x:Name="Container">
+        <ContentView x:Name="Container" local:ViewProperty.Sink="{Binding}">
             <ContentView.Behaviors>
-                <local:ViewPropertyBehavior/>
+                <local:ViewPropertySinkUpdateBehavior/>
             </ContentView.Behaviors>
         </ContentView>
     </StackLayout>
