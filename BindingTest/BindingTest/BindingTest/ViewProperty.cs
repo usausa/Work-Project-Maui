@@ -8,8 +8,7 @@
             "Sink",
             typeof(IViewPropertySink),
             typeof(ViewProperty),
-            null,
-            propertyChanged: PropertyChanged2);
+            null);
 
         public static IViewPropertySink GetSink(BindableObject view)
         {
@@ -19,11 +18,6 @@
         public static void SetSink(BindableObject view, IViewPropertySink value)
         {
             view.SetValue(SinkProperty, value);
-        }
-
-        private static void PropertyChanged2(BindableObject bindable, object oldValue, object newValue)
-        {
-            // TODO
         }
 
         public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached(
@@ -45,7 +39,7 @@
 
         private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var parent = ((ContentView) bindable).Parent;
+            var parent = ((ContentView)bindable).Parent;
             if (parent == null)
             {
                 return;
