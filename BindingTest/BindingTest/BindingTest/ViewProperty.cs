@@ -1,8 +1,7 @@
-﻿using System;
-using Xamarin.Forms;
-
-namespace BindingTest
+﻿namespace BindingTest
 {
+    using Xamarin.Forms;
+
     public class ViewProperty
     {
         public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached(
@@ -28,7 +27,7 @@ namespace BindingTest
 
         private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            System.Diagnostics.Debug.WriteLine("PropertyChanged " + oldValue + " " + newValue);
+            System.Diagnostics.Debug.WriteLine($"PropertyChanged {bindable.GetHashCode()} {oldValue} {newValue}");
         }
     }
 }
