@@ -6,41 +6,41 @@ namespace BindingTest
     using Smart.Resolver;
 
     public partial class App
-	{
-		public App ()
-		{
-			InitializeComponent();
+    {
+        public App()
+        {
+            InitializeComponent();
 
-		    var resolver = CreateResolver();
-		    ResolveProvider.Default.UseSmartResolver(resolver);
+            var resolver = CreateResolver();
+            ResolveProvider.Default.UseSmartResolver(resolver);
 
             MainPage = new MainPage();
-		}
+        }
 
-	    private SmartResolver CreateResolver()
-	    {
-	        var config = new ResolverConfig()
-	            .UseAutoBinding()
-	            .UseArrayBinding()
-	            //.UseAssignableBinding()
-	            .UsePropertyInjector();
+        private SmartResolver CreateResolver()
+        {
+            var config = new ResolverConfig()
+                .UseAutoBinding()
+                .UseArrayBinding()
+                //.UseAssignableBinding()
+                .UsePropertyInjector();
 
-	        return config.ToResolver();
-	    }
+            return config.ToResolver();
+        }
 
-        protected override void OnStart ()
-		{
-			// Handle when your app starts
-		}
+        protected override void OnStart()
+        {
+            // Handle when your app starts
+        }
 
-		protected override void OnSleep ()
-		{
-			// Handle when your app sleeps
-		}
+        protected override void OnSleep()
+        {
+            // Handle when your app sleeps
+        }
 
-		protected override void OnResume ()
-		{
-			// Handle when your app resumes
-		}
-	}
+        protected override void OnResume()
+        {
+            // Handle when your app resumes
+        }
+    }
 }
