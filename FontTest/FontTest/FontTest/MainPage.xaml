@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:FontTest"
              x:Class="FontTest.MainPage">
 
-	<Label Text="Welcome to Xamarin.Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <StackLayout VerticalOptions="Center">
+        <Label Text="ホーム &#xf38f;"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               FontFamily="{StaticResource Ionicons}"/>
+        <Label Text="&#x1f627;&#x1f62e;&#x1f62f; &#x1f3e0;"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"/>
+    </StackLayout>
 
 </ContentPage>
