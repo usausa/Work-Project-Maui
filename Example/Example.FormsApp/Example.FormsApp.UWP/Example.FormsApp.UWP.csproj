@@ -154,6 +154,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Usa.Smart.Core">
+      <Version>1.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Usa.Smart.Resolver">
+      <Version>1.7.1</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.7" />
   </ItemGroup>
