@@ -19,9 +19,9 @@
     <PackageReference Include="Usa.Smart.Forms" Version="1.1.4" />
     <PackageReference Include="Usa.Smart.Forms.Reactive" Version="1.1.4" />
     <PackageReference Include="Usa.Smart.Forms.Resolver" Version="1.1.4" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="0.9.9" />
-    <PackageReference Include="Usa.Smart.Navigation.Forms" Version="0.9.9" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="0.9.9" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="1.0.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Forms" Version="1.0.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="1.0.0" />
     <PackageReference Include="Usa.Smart.Reactive" Version="1.1.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="1.7.1" />
     <PackageReference Include="Usa.Smart.Text.Japanese" Version="1.3.0" />
