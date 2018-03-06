@@ -5,8 +5,9 @@
              x:Class="Example.FormsApp.MainPage"
              ios:Page.UseSafeArea="true">
 
-    <Label Text="Welcome to Xamarin.Forms!"
-           VerticalOptions="Start"
-           HorizontalOptions="Start" />
+    <Label Text="ホーム &#xf38f;"
+           VerticalOptions="Center"
+           HorizontalOptions="Center"
+           FontFamily="{StaticResource Ionicons}"/>
 
 </ContentPage>
