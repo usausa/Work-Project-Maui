@@ -24,40 +24,54 @@
 	            <ColumnDefinition Width="*"/>
 	            <ColumnDefinition Width="*"/>
 	            <ColumnDefinition Width="*"/>
+	            <ColumnDefinition Width="*"/>
 	        </Grid.ColumnDefinitions>
-	        <Button Grid.Column="0" Text="Test1">
+	        <Grid.RowDefinitions>
+	            <RowDefinition Height="*"/>
+	            <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Text="Test1">
 	            <Button.Triggers>
 	                <EventTrigger Event="Clicked">
                         <animations:BeginAnimationAction>
-                            <animations:BeginAnimationAction.Animation>
-                                <animations:StoryBoard>
-                                    <animations:StoryBoard.Animations>
-                                        <animations:ColorAnimation ToColor="Red" Duration="1000" Target="{Binding Source={x:Reference Container}}" />
-                                    </animations:StoryBoard.Animations>
-                                </animations:StoryBoard>
-                            </animations:BeginAnimationAction.Animation>
+                            <animations:StoryBoard>
+                                <animations:ColorAnimation ToColor="OrangeRed" Duration="1000" Target="{Binding Source={x:Reference Container}}" />
+                                <animations:ColorAnimation ToColor="LightSkyBlue" Duration="200" Delay="1000" Target="{Binding Source={x:Reference Container}}" />
+                            </animations:StoryBoard>
                         </animations:BeginAnimationAction>
                     </EventTrigger>
                 </Button.Triggers>
             </Button>
-	        <Button Grid.Column="1" Text="Test2">
+            <Button Grid.Row="0" Grid.Column="1" Text="Test2">
 	            <Button.Triggers>
 	                <EventTrigger Event="Clicked">
 	                    <animations:BeginAnimationAction>
-	                        <animations:BeginAnimationAction.Animation>
-	                            <animations:StoryBoard>
-	                                <animations:StoryBoard.Animations>
-                                        <animations:ColorAnimation ToColor="LightSkyBlue" Duration="200" Target="{Binding Source={x:Reference Container}}" />
-	                                </animations:StoryBoard.Animations>
-	                            </animations:StoryBoard>
-	                        </animations:BeginAnimationAction.Animation>
+                            <animations:StoryBoard Target="{Binding Source={x:Reference Container}}">
+                                <animations:FadeInAnimation Duration="2000"/>
+	                        </animations:StoryBoard>
 	                    </animations:BeginAnimationAction>
 	                </EventTrigger>
 	            </Button.Triggers>
 	        </Button>
-	        <Button Grid.Column="2" Text="Test3">
+            <Button Grid.Row="0" Grid.Column="2" Text="Test3">
+	            <Button.Triggers>
+	                <EventTrigger Event="Clicked">
+	                    <animations:BeginAnimationAction>
+	                        <animations:StoryBoard Target="{Binding Source={x:Reference Container}}">
+	                            <animations:ScaleToAnimation Scale="0.8" Duration="0"/>
+	                            <animations:ScaleToAnimation Scale="1.0" Duration="250" Delay="0"/>
+	                        </animations:StoryBoard>
+	                    </animations:BeginAnimationAction>
+	                </EventTrigger>
+	            </Button.Triggers>
 	        </Button>
-	    </Grid>
+
+            <Button Grid.Row="1" Grid.Column="0" Text="Test1" Clicked="OnTest1Clicked"/>
+	        <Button Grid.Row="1" Grid.Column="1" Text="Test2" Clicked="OnTest2Clicked"/>
+	        <Button Grid.Row="1" Grid.Column="2" Text="Test3" Clicked="OnTest3Clicked"/>
+	        <Button Grid.Row="1" Grid.Column="3" Text="Test4" Clicked="OnTest4Clicked"/>
+        </Grid>
 
         <ContentView Grid.Row="1" x:Name="Container"  BackgroundColor="LightSkyBlue">
 	    </ContentView>
