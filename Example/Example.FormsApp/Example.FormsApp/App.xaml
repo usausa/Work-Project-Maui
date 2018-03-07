@@ -200,6 +200,15 @@
                 <Setter Property="BorderWidth" Value="0" />
             </Style>
 
+	        <!-- Button -->
+
+	        <Style x:Key="NavigationButton" TargetType="Button">
+	            <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}"/>
+	            <Setter Property="TextColor" Value="White" />
+	            <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+	            <Setter Property="Margin" Value="3" />
+	        </Style>
+
         </ResourceDictionary>
 
     </Application.Resources>

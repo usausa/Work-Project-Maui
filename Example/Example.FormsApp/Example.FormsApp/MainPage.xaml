@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Example.FormsApp.MainPage"
-             xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,9 +10,10 @@
              xmlns:views="clr-namespace:Example.FormsApp.Views;assembly=Example.FormsApp"
              xmlns:controls="clr-namespace:Example.FormsApp.Controls;assembly=Example.FormsApp"
              mc:Ignorable="d"
+             x:Class="Example.FormsApp.MainPage"
+             ios:Page.UseSafeArea="true"
              d:DataContext="{d:DesignInstance Type={x:Type local:MainPageViewModel}}"
              resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
-             ios:Page.UseSafeArea="true"
              IsBusy="{Binding ApplicationState.IsBusy}">
 
     <Grid Style="{StaticResource MainGrid}">

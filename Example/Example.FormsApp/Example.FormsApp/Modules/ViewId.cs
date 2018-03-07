@@ -2,6 +2,8 @@
 {
     public enum ViewId
     {
-        Menu1
+        Menu1,
+        Menu2,
+        Menu3
     }
 }
