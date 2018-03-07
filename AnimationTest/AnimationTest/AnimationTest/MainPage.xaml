@@ -1,11 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:AnimationTest"
-             x:Class="AnimationTest.MainPage">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:local="clr-namespace:AnimationTest;assembly=AnimationTest"
+             xmlns:animations="clr-namespace:Smart.Forms.Animations;assembly=Smart.Forms"
+             mc:Ignorable="d"
+             x:Class="AnimationTest.MainPage"
+             ios:Page.UseSafeArea="true"
+             d:DataContext="{d:DesignInstance Type={x:Type local:MainPageViewModel}}"
+             resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
 
-	<Label Text="Welcome to Xamarin.Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+	<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+	    <Grid Grid.Row="0">
+	        <Grid.ColumnDefinitions>
+	            <ColumnDefinition Width="*"/>
+	            <ColumnDefinition Width="*"/>
+	            <ColumnDefinition Width="*"/>
+	        </Grid.ColumnDefinitions>
+	        <Button Grid.Column="0" Text="Test1">
+	            <Button.Triggers>
+	                <EventTrigger Event="Clicked">
+                        <animations:BeginAnimationAction>
+                            <animations:BeginAnimationAction.Animation>
+                                <animations:StoryBoard>
+                                    <animations:StoryBoard.Animations>
+                                        <animations:ColorAnimation ToColor="Red" Duration="1000" Target="{Binding Source={x:Reference Container}}" />
+                                    </animations:StoryBoard.Animations>
+                                </animations:StoryBoard>
+                            </animations:BeginAnimationAction.Animation>
+                        </animations:BeginAnimationAction>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+	        <Button Grid.Column="1" Text="Test2">
+	            <Button.Triggers>
+	                <EventTrigger Event="Clicked">
+	                    <animations:BeginAnimationAction>
+	                        <animations:BeginAnimationAction.Animation>
+	                            <animations:StoryBoard>
+	                                <animations:StoryBoard.Animations>
+                                        <animations:ColorAnimation ToColor="LightSkyBlue" Duration="200" Target="{Binding Source={x:Reference Container}}" />
+	                                </animations:StoryBoard.Animations>
+	                            </animations:StoryBoard>
+	                        </animations:BeginAnimationAction.Animation>
+	                    </animations:BeginAnimationAction>
+	                </EventTrigger>
+	            </Button.Triggers>
+	        </Button>
+	        <Button Grid.Column="2" Text="Test3">
+	        </Button>
+	    </Grid>
+
+        <ContentView Grid.Row="1" x:Name="Container"  BackgroundColor="LightSkyBlue">
+	    </ContentView>
+
+    </Grid>
 
 </ContentPage>
