@@ -38,7 +38,7 @@
         }
 
         public MaxLengthEffect()
-            : base("Smart.Forms.Effects.MaxLengthEffect")
+            : base("Smart.MaxLengthEffect")
         {
         }
     }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -79,14 +79,19 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\..\Smart.Forms.Controls.Android\Smart.Forms.Controls.Android.csproj">
+      <Project>{fbfe28b3-13f0-4a5f-b7e5-7e28dc395464}</Project>
+      <Name>Smart.Forms.Controls.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Smart.Forms.Controls\Smart.Forms.Controls.csproj">
+      <Project>{f2bd02a1-0efb-44ea-abcc-000a676f8035}</Project>
+      <Name>Smart.Forms.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ControlTest\ControlTest.csproj">
       <Project>{F0899C8F-E650-495B-B438-9948D6787B43}</Project>
       <Name>ControlTest</Name>
     </ProjectReference>
   </ItemGroup>
-
-
- <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
