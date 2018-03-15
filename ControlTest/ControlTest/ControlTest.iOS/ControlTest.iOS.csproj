@@ -123,6 +123,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\Smart.Forms.Controls.iOS\Smart.Forms.Controls.iOS.csproj">
+      <Project>{5915b741-9ed0-467e-8231-48b8c0d516ab}</Project>
+      <Name>Smart.Forms.Controls.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Smart.Forms.Controls\Smart.Forms.Controls.csproj">
+      <Project>{f2bd02a1-0efb-44ea-abcc-000a676f8035}</Project>
+      <Name>Smart.Forms.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ControlTest\ControlTest.csproj">
       <Project>{F0899C8F-E650-495B-B438-9948D6787B43}</Project>
       <Name>ControlTest</Name>
