@@ -5,11 +5,9 @@
              x:Class="Example.FormsApp.MainPage"
              ios:Page.UseSafeArea="true">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!"
+    <Label Text="ホーム &#xf38f;"
+           VerticalOptions="Center"
            HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+           FontFamily="{StaticResource Ionicons}"/>
 
 </ContentPage>
