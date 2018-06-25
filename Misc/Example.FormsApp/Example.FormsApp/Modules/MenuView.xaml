@@ -15,13 +15,34 @@
              views:ShellProperty.Function1Enabled="True" views:ShellProperty.Function1Text="&#xf107;"
              views:ShellProperty.Function4Enabled="True" views:ShellProperty.Function4Text="&#xf10a;">
 
-    <StackLayout>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-        <Button Text="" Style="{StaticResource NavigationButton}"/>
-    </StackLayout>
+    <Grid Style="{StaticResource MenuGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Button Grid.Row="0" Style="{StaticResource NavigationButton}"
+                Text="機能1"/>
+        <Button Grid.Row="1" Style="{StaticResource NavigationButton}"
+                Text="機能2"/>
+        <Button Grid.Row="2" Style="{StaticResource NavigationButton}"
+                Text="機能3"/>
+        <Button Grid.Row="3" Style="{StaticResource NavigationButton}"
+                Text="機能4"/>
+        <Button Grid.Row="4" Style="{StaticResource NavigationButton}"
+                Text="機能5"/>
+        <Button Grid.Row="5" Style="{StaticResource NavigationButton}"
+                Text="機能6"/>
+        <Button Grid.Row="6" Style="{StaticResource NavigationButton}"
+                Text="機能7"/>
+        <Button Grid.Row="7" Style="{StaticResource NavigationButton}"
+                Text="機能8"/>
+
+    </Grid>
 </ContentView>

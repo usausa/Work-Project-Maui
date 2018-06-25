@@ -140,7 +140,7 @@
 
             <Color x:Key="ErrorColor">#EE1111</Color>
 
-            <!-- Layout -->
+            <!-- Main Layout -->
 
             <Style x:Key="MainGrid" TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0"/>
@@ -148,11 +148,19 @@
                 <Setter Property="Margin" Value="0" />
             </Style>
 
+            <!-- Title -->
+
+            <OnPlatform x:Key="MainTitleGridHeight" x:TypeArguments="x:Double">
+                <On Platform="iOS">32.0</On>
+                <On Platform="Android, UWP">48.0</On>
+            </OnPlatform>
+
             <Style x:Key="MainTitleGrid" TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDark}"/>
                 <Setter Property="RowSpacing" Value="0"/>
                 <Setter Property="ColumnSpacing" Value="0" />
                 <Setter Property="Margin" Value="0" />
+                <Setter Property="HeightRequest" Value="{StaticResource MainTitleGridHeight}" />
             </Style>
 
             <Style x:Key="MainTitleLabel" TargetType="Label">
@@ -162,24 +170,18 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <OnPlatform x:Key="MainTitleButtonWidth" x:TypeArguments="x:Double">
-                <On Platform="iOS">48.0</On>
-                <On Platform="Android, UWP">64.0</On>
-            </OnPlatform>
-
             <Style x:Key="MainTitleButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDarkDarker}"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDark}"/>
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource LargerSize}" />
                 <Setter Property="FontFamily" Value="{StaticResource Ionicons}" />
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="CornerRadius" Value="6" />
-                <Setter Property="WidthRequest" Value="{StaticResource MainTitleButtonWidth}" />
             </Style>
 
+            <!-- Function -->
+
             <OnPlatform x:Key="MainFunctionGridHeight" x:TypeArguments="x:Double">
-                <On Platform="iOS">48.0</On>
-                <On Platform="Android, UWP">64.0</On>
+                <On Platform="iOS">40.0</On>
+                <On Platform="Android, UWP">56.0</On>
             </OnPlatform>
 
             <Style x:Key="MainFunctionGrid" TargetType="Grid">
@@ -206,6 +208,16 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="Margin" Value="3" />
+            </Style>
+
+            <!-- Page Layout -->
+
+            <Style x:Key="MenuGrid" TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0"/>
+                <Setter Property="ColumnSpacing" Value="0"/>
+                <Setter Property="Margin" Value="0,4,0,4"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
             </Style>
 
         </ResourceDictionary>

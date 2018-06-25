@@ -25,13 +25,14 @@
         <!-- header -->
         <Grid Grid.Row="0" Style="{StaticResource MainTitleGrid}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="1" Style="{StaticResource MainTitleLabel}"
                    Text="{Binding Title.Value}" />
             <Button Grid.Column="0" Style="{StaticResource MainTitleButton}"
+                    IsVisible="{Binding CanBack.Value}"
                     Command="{Binding BackCommand}"
                     Text="&#xf124;"/>
             <Button Grid.Column="2" Style="{StaticResource MainTitleButton}"
