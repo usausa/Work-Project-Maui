@@ -2,6 +2,12 @@
 {
     public enum ViewId
     {
-        Menu
+        Menu,
+
+        NavigationMenu,
+
+        DeviceMenu,
+        DeviceNfc,
+        DeviceQr
     }
 }
