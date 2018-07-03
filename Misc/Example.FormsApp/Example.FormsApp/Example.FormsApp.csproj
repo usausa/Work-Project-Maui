@@ -25,9 +25,9 @@
     <PackageReference Include="Usa.Smart.Forms" Version="1.2.2" />
     <PackageReference Include="Usa.Smart.Forms.Reactive" Version="1.2.2" />
     <PackageReference Include="Usa.Smart.Forms.Resolver" Version="1.2.2" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="1.0.3" />
-    <PackageReference Include="Usa.Smart.Navigation.Forms" Version="1.0.3" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="1.0.3" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="1.1.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Forms" Version="1.1.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="1.1.0" />
     <PackageReference Include="Usa.Smart.Reactive" Version="1.2.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="1.7.4" />
     <PackageReference Include="Xam.Plugins.Settings" Version="3.1.1" />
