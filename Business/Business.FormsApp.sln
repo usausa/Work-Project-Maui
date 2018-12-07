@@ -5,7 +5,13 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.FormsApp.Android", "Business.FormsApp\Business.FormsApp.Android\Business.FormsApp.Android.csproj", "{C04E3435-4065-472D-A09E-35A9DD6772AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.FormsApp", "Business.FormsApp\Business.FormsApp\Business.FormsApp.csproj", "{46613C57-1871-4CB7-A218-270BA05969D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business.FormsApp", "Business.FormsApp\Business.FormsApp\Business.FormsApp.csproj", "{46613C57-1871-4CB7-A218-270BA05969D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{045B3C0B-EB9A-45CC-871A-2DB16621C948}"
+	ProjectSection(SolutionItems) = preProject
+		Business.FormsApp.ruleset = Business.FormsApp.ruleset
+		Business.FormsApp.sln.DotSettings = Business.FormsApp.sln.DotSettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
