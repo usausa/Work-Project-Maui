@@ -8,6 +8,7 @@
     using Android.Content.PM;
     using Android.Graphics;
     using Android.OS;
+    using Android.Views;
 
     using Business.FormsApp.Components.Keyboard;
     using Business.FormsApp.Components.Wifi;
@@ -20,7 +21,8 @@
         Theme = "@style/MainTheme",
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-        ScreenOrientation = ScreenOrientation.Portrait)]
+        ScreenOrientation = ScreenOrientation.Portrait,
+        WindowSoftInputMode = SoftInput.AdjustResize)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private readonly Handler handler = new Handler();
