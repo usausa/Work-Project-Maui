@@ -1,13 +1,17 @@
 ﻿namespace Business.FormsApp.Droid
 {
+    using System;
+
     using Acr.UserDialogs;
 
     using Android.App;
-    using Android.Content;
     using Android.Content.PM;
+    using Android.Graphics;
     using Android.OS;
 
+    using Business.FormsApp.Components.Keyboard;
     using Business.FormsApp.Components.Wifi;
+    using Business.FormsApp.Droid.Components.Keyboard;
     using Business.FormsApp.Droid.Components.Wifi;
     using Smart.Resolver;
 
@@ -19,6 +23,10 @@
         ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        private readonly Handler handler = new Handler();
+
+        private readonly KeyboardManager keyboardManager = new KeyboardManager();
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -28,8 +36,24 @@
 
             UserDialogs.Init(this);
 
+            Window.DecorView.ViewTreeObserver.GlobalLayout += ViewTreeObserverOnGlobalLayout;
+
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(new ComponentProvider(Application)));
+            LoadApplication(new App(new ComponentProvider(this)));
+        }
+
+        private void ViewTreeObserverOnGlobalLayout(object sender, EventArgs e)
+        {
+            var contentView = Window.DecorView;
+
+            var rect = new Rect();
+            contentView.GetWindowVisibleDisplayFrame(rect);
+
+            var screenHeight = contentView.RootView.Height;
+            var keypadHeight = screenHeight - rect.Bottom;
+            var visible = keypadHeight > screenHeight * 0.15;
+
+            handler.Post(() => keyboardManager.UpdateState(visible));
         }
 
         public override void OnBackPressed()
@@ -39,16 +63,17 @@
 
         private class ComponentProvider : IComponentProvider
         {
-            private readonly Context context;
+            private readonly MainActivity activity;
 
-            public ComponentProvider(Context context)
+            public ComponentProvider(MainActivity activity)
             {
-                this.context = context;
+                this.activity = activity;
             }
 
             public void RegisterComponents(ResolverConfig config)
             {
-                config.Bind<IWifiDirectManager>().ToConstant(new WifiDirectManager(context));
+                config.Bind<IKeyboardManager>().ToConstant(activity.keyboardManager);
+                config.Bind<IWifiDirectManager>().ToConstant(new WifiDirectManager(activity));
             }
         }
     }

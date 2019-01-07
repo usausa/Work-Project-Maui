@@ -1,5 +1,8 @@
 ﻿namespace Business.FormsApp
 {
+    using System;
+
+    using Business.FormsApp.Components.Keyboard;
     using Business.FormsApp.Views;
 
     using Smart.ComponentModel;
@@ -45,11 +48,19 @@
 
         public MainPageViewModel(
             ApplicationState applicationState,
-            INavigator navigator)
+            INavigator navigator,
+            IKeyboardManager keyboardManager)
             : base(applicationState)
         {
             ApplicationState = applicationState;
             Navigator = navigator;
+
+            Disposables.Add(keyboardManager.StateChanged.
+                Subscribe(x =>
+                {
+                    System.Diagnostics.Debug.WriteLine("keyboard" + x);
+                    applicationState.KeyboardVisible = x;
+                }));
 
             BackCommand = MakeAsyncCommand(
                     () => Navigator.NotifyAsync(ShellKeys.Back),
