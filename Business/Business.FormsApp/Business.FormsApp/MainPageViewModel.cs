@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Business.FormsApp.Components.Keyboard;
+    using Business.FormsApp.Components.Device;
     using Business.FormsApp.Views;
 
     using Smart.ComponentModel;
@@ -49,17 +49,18 @@
         public MainPageViewModel(
             ApplicationState applicationState,
             INavigator navigator,
-            IKeyboardManager keyboardManager)
+            IDeviceManager deviceManager)
             : base(applicationState)
         {
             ApplicationState = applicationState;
             Navigator = navigator;
 
-            Disposables.Add(keyboardManager.StateChanged.
+            Disposables.Add(deviceManager.KeyboardState.
+                Subscribe(x => applicationState.KeyboardVisible = x));
+            Disposables.Add(deviceManager.ScreenState.
                 Subscribe(x =>
                 {
-                    System.Diagnostics.Debug.WriteLine("keyboard" + x);
-                    applicationState.KeyboardVisible = x;
+                    System.Diagnostics.Debug.WriteLine($"Screen state {x}.");
                 }));
 
             BackCommand = MakeAsyncCommand(

@@ -10,9 +10,9 @@
     using Android.OS;
     using Android.Views;
 
-    using Business.FormsApp.Components.Keyboard;
+    using Business.FormsApp.Components.Device;
     using Business.FormsApp.Components.Wifi;
-    using Business.FormsApp.Droid.Components.Keyboard;
+    using Business.FormsApp.Droid.Components.Device;
     using Business.FormsApp.Droid.Components.Wifi;
     using Smart.Resolver;
 
@@ -27,7 +27,7 @@
     {
         private readonly Handler handler = new Handler();
 
-        private readonly KeyboardManager keyboardManager = new KeyboardManager();
+        private DeviceManager deviceManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -38,7 +38,9 @@
 
             UserDialogs.Init(this);
 
+            deviceManager = new DeviceManager(this);
             Window.DecorView.ViewTreeObserver.GlobalLayout += ViewTreeObserverOnGlobalLayout;
+            deviceManager.RegisterWakeLockReceiver();
 
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));
@@ -55,7 +57,7 @@
             var keypadHeight = screenHeight - rect.Bottom;
             var visible = keypadHeight > screenHeight * 0.15;
 
-            handler.Post(() => keyboardManager.UpdateState(visible));
+            handler.Post(() => deviceManager.UpdateKeyboardState(visible));
         }
 
         public override void OnBackPressed()
@@ -74,7 +76,7 @@
 
             public void RegisterComponents(ResolverConfig config)
             {
-                config.Bind<IKeyboardManager>().ToConstant(activity.keyboardManager);
+                config.Bind<IDeviceManager>().ToConstant(activity.deviceManager);
                 config.Bind<IWifiDirectManager>().ToConstant(new WifiDirectManager(activity));
             }
         }

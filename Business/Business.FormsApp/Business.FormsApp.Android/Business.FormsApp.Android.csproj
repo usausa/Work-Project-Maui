@@ -90,7 +90,7 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Keyboard\KeyboardManager.cs" />
+    <Compile Include="Components\Device\DeviceManager.cs" />
     <Compile Include="Components\Wifi\WifiDirectManager.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\CustomButtonRenderer.cs" />
