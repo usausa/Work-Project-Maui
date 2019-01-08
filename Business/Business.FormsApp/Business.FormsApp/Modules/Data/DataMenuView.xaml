@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView x:Class="Business.FormsApp.Modules.MenuView"
+<ContentView x:Class="Business.FormsApp.Modules.Data.DataMenuView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
-             xmlns:modules="clr-namespace:Business.FormsApp.Modules;assembly=Business.FormsApp"
+             xmlns:modules="clr-namespace:Business.FormsApp.Modules.Data;assembly=Business.FormsApp"
              xmlns:shell="clr-namespace:Business.FormsApp.Shell;assembly=Business.FormsApp"
              xmlns:markup="clr-namespace:Business.FormsApp.Markup;assembly=Business.FormsApp"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type={x:Type modules:MenuViewModel}}"
-             resolver:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
-             shell:ShellProperty.Title="Menu"
-             shell:ShellProperty.CanBack="False">
+             d:DataContext="{d:DesignInstance Type={x:Type modules:DataMenuViewModel}}"
+             resolver:BindingContextResolver.Type="{x:Type modules:DataMenuViewModel}"
+             shell:ShellProperty.Title="Data Menu"
+             shell:ShellProperty.CanBack="True">
 
     <!--
     <ContentView.BindingContext>
-        <modules:MenuViewModel/>
+        <modules:DataMenuViewModel/>
     </ContentView.BindingContext>
     -->
 
@@ -33,14 +33,13 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0" Style="{StaticResource NavigationButton}"
-                Text="Dialog"
-                Command="{Binding ForwardCommand}" CommandParameter="{markup:ViewId DialogMenu}"/>
+                Text="Raw"
+                Command="{Binding ForwardCommand}" CommandParameter="{markup:ViewId DataRaw}"/>
         <Button Grid.Row="1" Style="{StaticResource NavigationButton}"
-                Text="Data"
-                Command="{Binding ForwardCommand}" CommandParameter="{markup:ViewId DataMenu}"/>
+                Text="Entity"
+                Command="{Binding ForwardCommand}" CommandParameter="{markup:ViewId DataEntity}"/>
         <Button Grid.Row="2" Style="{StaticResource NavigationButton}"
-                Text="Platform"
-                Command="{Binding ForwardCommand}" CommandParameter="{markup:ViewId PlatformMenu}"/>
+                IsEnabled="False"/>
         <Button Grid.Row="3" Style="{StaticResource NavigationButton}"
                 IsEnabled="False"/>
         <Button Grid.Row="4" Style="{StaticResource NavigationButton}"

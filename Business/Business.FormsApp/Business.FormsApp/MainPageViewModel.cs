@@ -3,7 +3,7 @@
     using System;
 
     using Business.FormsApp.Components.Device;
-    using Business.FormsApp.Views;
+    using Business.FormsApp.Shell;
 
     using Smart.ComponentModel;
     using Smart.Forms.Input;

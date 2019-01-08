@@ -2,6 +2,18 @@
 {
     public enum ViewId
     {
-        Menu
+        Menu,
+
+        DataMenu,
+        DataRaw,
+        DataEntity,
+
+        DialogMenu,
+
+        PlatformMenu,
+        PlatformInfo,
+        PlatformSensor,
+        PlatformStatus,
+        PlatformAction
     }
 }

@@ -7,7 +7,7 @@
              xmlns:navigation="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Forms"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:local="clr-namespace:Business.FormsApp"
-             xmlns:views="clr-namespace:Business.FormsApp.Views;assembly=Business.FormsApp"
+             xmlns:shell="clr-namespace:Business.FormsApp.Shell;assembly=Business.FormsApp"
              mc:Ignorable="d"
              x:Class="Business.FormsApp.MainPage"
              ios:Page.UseSafeArea="true"
@@ -16,7 +16,7 @@
              IsBusy="{Binding ApplicationState.IsBusy}">
 
     <ContentPage.Behaviors>
-        <views:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}"/>
+        <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}"/>
     </ContentPage.Behaviors>
 
     <Grid Style="{StaticResource MainGrid}">

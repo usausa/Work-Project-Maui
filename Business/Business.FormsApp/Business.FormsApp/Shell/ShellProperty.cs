@@ -1,4 +1,4 @@
-﻿namespace Business.FormsApp.Views
+﻿namespace Business.FormsApp.Shell
 {
     using Xamarin.Forms;
 
