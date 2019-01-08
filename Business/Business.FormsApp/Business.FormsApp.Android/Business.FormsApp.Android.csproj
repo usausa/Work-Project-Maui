@@ -68,6 +68,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.5.11</Version>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.0.2</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -91,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Device\DeviceManager.cs" />
+    <Compile Include="Components\Log\Logger.cs" />
     <Compile Include="Components\Wifi\WifiDirectManager.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\CustomButtonRenderer.cs" />
@@ -102,6 +106,7 @@
     <AndroidAsset Include="..\Fonts\ionicons.ttf">
       <Link>Assets\Fonts\ionicons.ttf</Link>
     </AndroidAsset>
+    <AndroidAsset Include="Assets\NLog.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

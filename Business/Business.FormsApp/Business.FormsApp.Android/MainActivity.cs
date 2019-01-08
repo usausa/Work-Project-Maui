@@ -11,9 +11,12 @@
     using Android.Views;
 
     using Business.FormsApp.Components.Device;
+    using Business.FormsApp.Components.Log;
     using Business.FormsApp.Components.Wifi;
     using Business.FormsApp.Droid.Components.Device;
+    using Business.FormsApp.Droid.Components.Log;
     using Business.FormsApp.Droid.Components.Wifi;
+
     using Smart.Resolver;
 
     [Activity(
@@ -35,6 +38,12 @@
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+
+            NLog.LogManager.ThrowExceptions = true;
+            NLog.LogManager.ThrowConfigExceptions = true;
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("assets/NLog.config");
+            //var logger = NLog.LogManager.GetCurrentClassLogger();
+            //logger.Info("test");
 
             UserDialogs.Init(this);
 
@@ -76,6 +85,7 @@
 
             public void RegisterComponents(ResolverConfig config)
             {
+                config.Bind<ILogger>().To<Logger>().InSingletonScope();
                 config.Bind<IDeviceManager>().ToConstant(activity.deviceManager);
                 config.Bind<IWifiDirectManager>().ToConstant(new WifiDirectManager(activity));
             }
