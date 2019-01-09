@@ -32,13 +32,17 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Test"
+                Command="{Binding TestCommand}"/>
         <Button Grid.Row="1" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Test encrypt"
+                Command="{Binding TestEncryptCommand}"/>
         <Button Grid.Row="2" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Benchmark1"
+                Command="{Binding Benchmark1Command}"/>
         <Button Grid.Row="3" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Benchmark2"
+                Command="{Binding Benchmark2Command}"/>
         <Button Grid.Row="4" Style="{StaticResource NavigationButton}"
                 IsEnabled="False"/>
         <Button Grid.Row="5" Style="{StaticResource NavigationButton}"
