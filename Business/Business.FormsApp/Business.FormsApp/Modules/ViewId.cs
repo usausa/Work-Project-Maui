@@ -5,8 +5,6 @@
         Menu,
 
         DataMenu,
-        DataRaw,
-        DataEntity,
 
         DialogMenu,
 
