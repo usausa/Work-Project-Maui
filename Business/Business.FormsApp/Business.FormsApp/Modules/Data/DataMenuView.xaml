@@ -44,9 +44,11 @@
                 Text="Benchmark2"
                 Command="{Binding Benchmark2Command}"/>
         <Button Grid.Row="4" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Benchmark3"
+                Command="{Binding Benchmark3Command}"/>
         <Button Grid.Row="5" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Benchmark4"
+                Command="{Binding Benchmark4Command}"/>
         <Button Grid.Row="6" Style="{StaticResource NavigationButton}"
                 IsEnabled="False"/>
         <Button Grid.Row="7" Style="{StaticResource NavigationButton}"

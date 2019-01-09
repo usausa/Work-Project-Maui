@@ -28,6 +28,10 @@
 
         public AsyncCommand Benchmark2Command { get; }
 
+        public AsyncCommand Benchmark3Command { get; }
+
+        public AsyncCommand Benchmark4Command { get; }
+
         public DataMenuViewModel(
             ApplicationState applicationState,
             IDialogService dialogService)
@@ -40,6 +44,8 @@
             TestEncryptCommand = MakeAsyncCommand(TestEncrypt);
             Benchmark1Command = MakeAsyncCommand(Benchmark1);
             Benchmark2Command = MakeAsyncCommand(Benchmark2);
+            Benchmark3Command = MakeAsyncCommand(Benchmark3);
+            Benchmark4Command = MakeAsyncCommand(Benchmark4);
 
             using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Test.db")))
             {
@@ -59,57 +65,41 @@
 
         private async Task Test()
         {
-            var con = new SQLiteAsyncConnection(
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Test.db"));
-            try
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Test.db")))
             {
                 var watch = Stopwatch.StartNew();
-                await Test(con);
+                Test(con);
                 await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}", "ok");
-            }
-            finally
-            {
-                await con.CloseAsync();
             }
         }
 
         private async Task TestEncrypt()
         {
-            var con = new SQLiteAsyncConnection(
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TestEncrypt.db"),
-                key: "12345678");
-            try
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TestEncrypt.db"), key: "12345678"))
             {
                 var watch = Stopwatch.StartNew();
-                await Test(con);
+                Test(con);
                 await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}", "ok");
-            }
-            finally
-            {
-                await con.CloseAsync();
             }
         }
 
-        private async Task Test(SQLiteAsyncConnection con)
+        private void Test(SQLiteConnection con)
         {
-            await con.ExecuteAsync("DELETE FROM Test");
+            con.Execute("DELETE FROM Test");
 
-            await con.InsertAsync(new TestEntity { Id = 1, Name = "Data-1", Qty = 2, Price = 123.45m, Time = DateTime.Now });
-            await con.ExecuteAsync("INSERT INTO Test (Id, Name, Qty, Price, Time) VALUES (?, ?, ?, ?, ?)", 2, "Data-2", 1, 100m, null);
+            con.Insert(new TestEntity { Id = 1, Name = "Data-1", Qty = 2, Price = 123.45m, Time = DateTime.Now });
+            con.Execute("INSERT INTO Test (Id, Name, Qty, Price, Time) VALUES (?, ?, ?, ?, ?)", 2, "Data-2", 1, 100m, null);
 
-            await con.QueryAsync<TestEntity>("SELECT * FROM Test");
+            con.Query<TestEntity>("SELECT * FROM Test");
         }
 
         private async Task Benchmark1()
         {
-            var con = new SQLiteAsyncConnection(
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark1.db"),
-                key: "12345678");
-            try
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark1.db"), key: "12345678"))
             {
-                await con.CreateTableAsync<TestEntity>();
+                con.CreateTable<TestEntity>();
 
-                await con.ExecuteAsync("DELETE FROM Test");
+                con.Execute("DELETE FROM Test");
 
                 var list = Enumerable.Range(1, 10000).Select(x => new TestEntity
                 {
@@ -122,26 +112,19 @@
 
                 var watch = Stopwatch.StartNew();
 
-                await con.InsertAllAsync(list, typeof(TestEntity));
+                con.InsertAll(list, typeof(TestEntity));
 
                 await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}", "ok");
-            }
-            finally
-            {
-                await con.CloseAsync();
             }
         }
 
         private async Task Benchmark2()
         {
-            var con = new SQLiteAsyncConnection(
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark2.db"),
-                key: "12345678");
-            try
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark2.db"), key: "12345678"))
             {
-                await con.CreateTableAsync<TestEntity>();
+                con.CreateTable<TestEntity>();
 
-                await con.ExecuteAsync("DELETE FROM Test");
+                con.Execute("DELETE FROM Test");
 
                 var list = Enumerable.Range(1, 10000).Select(x => new TestEntity
                 {
@@ -154,19 +137,41 @@
 
                 var watch = Stopwatch.StartNew();
 
-                await con.RunInTransactionAsync(c =>
+                con.BeginTransaction();
+
+                foreach (var entity in list)
                 {
-                    foreach (var entity in list)
-                    {
-                        c.Execute("INSERT INTO Test (Id, Name, Qty, Price, Time) VALUES (?, ?, ?, ?, ?)", entity.Id, entity.Name, entity.Qty, entity.Price, entity.Time);
-                    }
-                });
+                    con.Execute("INSERT INTO Test (Id, Name, Qty, Price, Time) VALUES (?, ?, ?, ?, ?)", entity.Id, entity.Name, entity.Qty, entity.Price, entity.Time);
+                }
+
+                con.Commit();
 
                 await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}", "ok");
             }
-            finally
+        }
+
+        private async Task Benchmark3()
+        {
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark1.db"), key: "12345678"))
             {
-                await con.CloseAsync();
+                var watch = Stopwatch.StartNew();
+
+                var list = con.Query<TestEntity>("SELECT * FROM Test");
+
+                await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}\r\nCount={list.Count}", "ok");
+            }
+        }
+
+        private async Task Benchmark4()
+        {
+            // Slow?
+            using (var con = new SQLiteConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Benchmark1.db"), SQLiteOpenFlags.ReadOnly | SQLiteOpenFlags.NoMutex, key: "12345678"))
+            {
+                var watch = Stopwatch.StartNew();
+
+                var list = con.Query<TestEntity>("SELECT * FROM Test");
+
+                await dialogService.DisplayAlert("Result", $"Elapsed={watch.Elapsed}\r\nCount={list.Count}", "ok");
             }
         }
     }
