@@ -4,6 +4,7 @@ namespace Business.FormsApp
 {
     using System.Reflection;
 
+    using Business.FormsApp.Dialogs;
     using Business.FormsApp.Modules;
 
     using Smart.Forms.Components;
@@ -51,10 +52,9 @@ namespace Business.FormsApp
                 .UsePropertyInjector();
 
             config.Bind<INavigator>().ToMethod(kernel => navigator).InSingletonScope();
-
             config.Bind<IDialogService>().To<DialogService>().InSingletonScope();
-
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
+            config.Bind<IDialog>().To<Dialog>().InSingletonScope();
 
             provider.RegisterComponents(config);
 
