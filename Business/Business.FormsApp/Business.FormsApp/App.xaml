@@ -121,6 +121,19 @@
                 <Setter Property="Spacing" Value="0"/>
             </Style>
 
+            <!-- Label -->
+
+            <Style x:Key="GroupLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontSize" Value="{StaticResource LargeSize}" />
+            </Style>
+
+            <Style x:Key="ValueLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource MetroDarken}"/>
+                <Setter Property="FontSize" Value="{StaticResource MediumSize}" />
+            </Style>
+
             <!-- Converter -->
 
             <data:NotConverter x:Key="NotConverter" />
