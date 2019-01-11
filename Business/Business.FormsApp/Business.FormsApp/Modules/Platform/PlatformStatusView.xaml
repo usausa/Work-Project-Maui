@@ -19,35 +19,16 @@
     </ContentView.BindingContext>
     -->
 
-    <Grid Style="{StaticResource MenuGrid}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <StackLayout Style="{StaticResource ContentStackLayout}">
 
-        <Button Grid.Row="0" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="1" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="2" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="3" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="4" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="5" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="6" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
-        <Button Grid.Row="7" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+        <Label Style="{StaticResource GroupLabel}" Text="Battery"/>
 
-    </Grid>
+        <Label Style="{StaticResource ValueLabel}" Text="{Binding BatteryLevel.Value}"/>
+
+        <Label Style="{StaticResource GroupLabel}" Text="WiFi"/>
+
+        <Label Style="{StaticResource ValueLabel}" Text="{Binding WifiConnected.Value}"/>
+
+    </StackLayout>
 
 </ContentView>
