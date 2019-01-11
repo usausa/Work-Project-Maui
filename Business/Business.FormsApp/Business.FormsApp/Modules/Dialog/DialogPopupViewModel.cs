@@ -15,10 +15,9 @@
 
         public bool Result { get; set; }
 
-        public DialogPopupViewModel(ApplicationState applicationState)
-            : base(applicationState)
+        public DialogPopupViewModel()
         {
-            CloseCommand = new AsyncCommand<bool>(Close);
+            CloseCommand = MakeAsyncCommand<bool>(Close);
         }
 
         public Task Initialize(string parameter)

@@ -14,10 +14,5 @@
 
             System.Diagnostics.Debug.WriteLine($"{GetType()} is Disposed");
         }
-
-        public AppDialogViewModelBase(ApplicationState applicationState)
-            : base(applicationState)
-        {
-        }
     }
 }
