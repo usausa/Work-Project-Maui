@@ -13,7 +13,7 @@
     {
         private readonly IDialogService dialogService;
 
-        private readonly IDialog dialog;
+        private readonly IDialogs dialogs;
 
         private readonly IPopupNavigator popupNavigator;
 
@@ -29,12 +29,12 @@
         public DialogMenuViewModel(
             ApplicationState applicationState,
             IDialogService dialogService,
-            IDialog dialog,
+            IDialogs dialogs,
             IPopupNavigator popupNavigator)
             : base(applicationState)
         {
             this.dialogService = dialogService;
-            this.dialog = dialog;
+            this.dialogs = dialogs;
             this.popupNavigator = popupNavigator;
 
             ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
@@ -52,7 +52,7 @@
 
         private async Task Progress()
         {
-            using (var progress = dialog.Progress("Test"))
+            using (var progress = dialogs.Progress("Test"))
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -65,7 +65,7 @@
 
         private async Task Loading()
         {
-            using (dialog.Loading("Test"))
+            using (dialogs.Loading("Test"))
             {
                 await Task.Delay(3000);
             }
@@ -73,7 +73,7 @@
 
         private async Task Date()
         {
-            var result = await dialog.Date("Test");
+            var result = await dialogs.Date("Test");
             if (result.Ok)
             {
                 await dialogService.DisplayAlert("Result", result.Value.ToString("yyyy/MM/dd"), "ok");
@@ -82,7 +82,7 @@
 
         private async Task Time()
         {
-            var result = await dialog.Time("Test");
+            var result = await dialogs.Time("Test");
             if (result.Ok)
             {
                 await dialogService.DisplayAlert("Result", result.Value.ToString(@"hh\:mm"), "ok");

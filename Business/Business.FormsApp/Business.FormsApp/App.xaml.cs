@@ -62,7 +62,7 @@ namespace Business.FormsApp
             config.Bind<IPopupNavigator>().ToMethod(kernel => popupNavigator).InSingletonScope();
             config.Bind<IDialogService>().To<DialogService>().InSingletonScope();
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
-            config.Bind<IDialog>().To<Dialog>().InSingletonScope();
+            config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
 
             provider.RegisterComponents(config);
 

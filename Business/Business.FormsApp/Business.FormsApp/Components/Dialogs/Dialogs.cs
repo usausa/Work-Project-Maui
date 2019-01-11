@@ -5,49 +5,7 @@
 
     using Acr.UserDialogs;
 
-    public interface IProgress : IDisposable
-    {
-        void Update(int percent);
-    }
-
-    public class DateDialogResult
-    {
-        public bool Ok { get; }
-
-        public DateTime Value { get; }
-
-        public DateDialogResult(bool ok, DateTime value)
-        {
-            Ok = ok;
-            Value = value;
-        }
-    }
-
-    public class TimeDialogResult
-    {
-        public bool Ok { get; }
-
-        public TimeSpan Value { get; }
-
-        public TimeDialogResult(bool ok, TimeSpan value)
-        {
-            Ok = ok;
-            Value = value;
-        }
-    }
-
-    public interface IDialog
-    {
-        IProgress Progress(string title = null);
-
-        IProgress Loading(string title = null);
-
-        Task<DateDialogResult> Date(string title = null, DateTime? value = null, DateTime? minDate = null, DateTime? maxDate = null);
-
-        Task<TimeDialogResult> Time(string title = null, TimeSpan? value = null);
-    }
-
-    public sealed class Dialog : IDialog
+    public sealed class Dialogs : IDialogs
     {
         private sealed class ProgressWrapper : IProgress
         {
