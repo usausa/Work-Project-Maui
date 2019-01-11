@@ -2,7 +2,7 @@
 {
     using Xamarin.Forms;
 
-    public class ShellProperty
+    public static class ShellProperty
     {
         public static readonly BindableProperty TitleProperty = BindableProperty.CreateAttached(
             "Title",

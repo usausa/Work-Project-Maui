@@ -6,15 +6,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:modules="clr-namespace:Business.FormsApp.Modules.Dialog;assembly=Business.FormsApp"
+             xmlns:popup="clr-namespace:Business.FormsApp.Components.Popup;assembly=Business.FormsApp"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type={x:Type modules:DialogPopupViewModel}}"
              resolver:BindingContextResolver.Type="{x:Type modules:DialogPopupViewModel}"
-             BackgroundColor="LightYellow">
+             BackgroundColor="White"
+             popup:PopupProperty.Thickness="10, 10, 10, 10">
 
     <StackLayout>
         <Label Text="{Binding Text.Value}"/>
-        <Button Text="OK" Command="{Binding CloseCommand}" CommandParameter="{StaticResource True}" />
-        <Button Text="Cancel" Command="{Binding CloseCommand}" CommandParameter="{StaticResource False}" />
+        <Button Style="{StaticResource NavigationButton}"
+                Text="OK"
+                Command="{Binding CloseCommand}" CommandParameter="{StaticResource True}" />
+        <Button Style="{StaticResource NavigationButton}"
+                Text="Cancel"
+                Command="{Binding CloseCommand}" CommandParameter="{StaticResource False}" />
     </StackLayout>
 
 </ContentView>

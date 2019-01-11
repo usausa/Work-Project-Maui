@@ -34,9 +34,44 @@
             }
         }
 
-        public Task<TResult> PopupAsync<TResult>(object id)
+        public async Task<TResult> PopupAsync<TResult>(object id)
         {
-            throw new System.NotImplementedException();
+            if (!popupTypes.TryGetValue(id, out var type))
+            {
+                throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
+            }
+
+            var content = (View)resolver.Get(type);
+
+            if (content.BindingContext is IPopupNavigatorAware aware)
+            {
+                aware.PopupNavigator = this;
+            }
+
+            var popup = new PopupPage
+            {
+                Content = content,
+                CloseWhenBackgroundIsClicked = false,
+                HasSystemPadding = true,
+                Padding = PopupProperty.GetThickness(content)
+            };
+
+            var cts = new TaskCompletionSource<TResult>();
+            popup.Disappearing += (sender, args) =>
+            {
+                if (((PopupPage)sender).BindingContext is IPopupResult<TResult> result)
+                {
+                    cts.SetResult(result.Result);
+                }
+                else
+                {
+                    cts.SetResult(default);
+                }
+            };
+
+            await PopupNavigation.Instance.PushAsync(popup, false);
+
+            return await cts.Task;
         }
 
         public async Task<TResult> PopupAsync<TParameter, TResult>(object id, TParameter parameter)
@@ -58,13 +93,12 @@
                 await initialize.Initialize(parameter);
             }
 
-            // TODO
             var popup = new PopupPage
             {
                 Content = content,
                 CloseWhenBackgroundIsClicked = false,
                 HasSystemPadding = true,
-                Padding = new Thickness(10)
+                Padding = PopupProperty.GetThickness(content)
             };
 
             var cts = new TaskCompletionSource<TResult>();
@@ -80,7 +114,7 @@
                 }
             };
 
-            await PopupNavigation.Instance.PushAsync(popup);
+            await PopupNavigation.Instance.PushAsync(popup, false);
 
             return await cts.Task;
         }
@@ -99,13 +133,12 @@
                 aware.PopupNavigator = this;
             }
 
-            // TODO
             var popup = new PopupPage
             {
                 Content = content,
                 CloseWhenBackgroundIsClicked = false,
                 HasSystemPadding = true,
-                Padding = new Thickness(10)
+                Padding = PopupProperty.GetThickness(content)
             };
 
             var cts = new TaskCompletionSource<object>();
@@ -114,19 +147,52 @@
                 cts.SetResult(default);
             };
 
-            await PopupNavigation.Instance.PushAsync(popup);
+            await PopupNavigation.Instance.PushAsync(popup, false);
 
             await cts.Task;
         }
 
-        public Task PopupAsync<TParameter>(object id, TParameter parameter)
+        public async Task PopupAsync<TParameter>(object id, TParameter parameter)
         {
-            throw new System.NotImplementedException();
+            if (!popupTypes.TryGetValue(id, out var type))
+            {
+                throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
+            }
+
+            var content = (View)resolver.Get(type);
+
+            if (content.BindingContext is IPopupNavigatorAware aware)
+            {
+                aware.PopupNavigator = this;
+            }
+
+            if (content.BindingContext is IPopupInitialize<TParameter> initialize)
+            {
+                await initialize.Initialize(parameter);
+            }
+
+            var popup = new PopupPage
+            {
+                Content = content,
+                CloseWhenBackgroundIsClicked = false,
+                HasSystemPadding = true,
+                Padding = PopupProperty.GetThickness(content)
+            };
+
+            var cts = new TaskCompletionSource<object>();
+            popup.Disappearing += (sender, args) =>
+            {
+                cts.SetResult(default);
+            };
+
+            await PopupNavigation.Instance.PushAsync(popup, false);
+
+            await cts.Task;
         }
 
         public async Task PopAsync()
         {
-            await PopupNavigation.Instance.PopAsync();
+            await PopupNavigation.Instance.PopAsync(false);
         }
     }
 }
