@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView x:Class="Business.FormsApp.Modules.Dialog.DialogPopupView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:modules="clr-namespace:Business.FormsApp.Modules.Dialog;assembly=Business.FormsApp"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type={x:Type modules:DialogPopupViewModel}}"
+             resolver:BindingContextResolver.Type="{x:Type modules:DialogPopupViewModel}"
+             BackgroundColor="LightYellow">
+
+    <StackLayout>
+        <Label Text="{Binding Text.Value}"/>
+        <Button Text="OK" Command="{Binding CloseCommand}" CommandParameter="{StaticResource True}" />
+        <Button Text="Cancel" Command="{Binding CloseCommand}" CommandParameter="{StaticResource False}" />
+    </StackLayout>
+
+</ContentView>

@@ -2,7 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using Business.FormsApp.Dialogs;
+    using Business.FormsApp.Components.Dialogs;
+    using Business.FormsApp.Components.Popup;
 
     using Smart.Forms.Components;
     using Smart.Forms.Input;
@@ -14,6 +15,8 @@
 
         private readonly IDialog dialog;
 
+        private readonly IPopupNavigator popupNavigator;
+
         public AsyncCommand<ViewId> ForwardCommand { get; }
 
         public AsyncCommand ProgressCommand { get; }
@@ -21,20 +24,25 @@
         public AsyncCommand DateCommand { get; }
         public AsyncCommand TimeCommand { get; }
 
+        public AsyncCommand PopupCommand { get; }
+
         public DialogMenuViewModel(
             ApplicationState applicationState,
             IDialogService dialogService,
-            IDialog dialog)
+            IDialog dialog,
+            IPopupNavigator popupNavigator)
             : base(applicationState)
         {
             this.dialogService = dialogService;
             this.dialog = dialog;
+            this.popupNavigator = popupNavigator;
 
             ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
             ProgressCommand = MakeAsyncCommand(Progress);
             LoadingCommand = MakeAsyncCommand(Loading);
             DateCommand = MakeAsyncCommand(Date);
             TimeCommand = MakeAsyncCommand(Time);
+            PopupCommand = MakeAsyncCommand(Popup);
         }
 
         protected override Task OnNotifyBackAsync()
@@ -44,7 +52,7 @@
 
         private async Task Progress()
         {
-            using (var progress = dialog.Progress())
+            using (var progress = dialog.Progress("Test"))
             {
                 for (var i = 0; i < 100; i++)
                 {
@@ -57,7 +65,7 @@
 
         private async Task Loading()
         {
-            using (dialog.Loading())
+            using (dialog.Loading("Test"))
             {
                 await Task.Delay(3000);
             }
@@ -65,7 +73,7 @@
 
         private async Task Date()
         {
-            var result = await dialog.Date();
+            var result = await dialog.Date("Test");
             if (result.Ok)
             {
                 await dialogService.DisplayAlert("Result", result.Value.ToString("yyyy/MM/dd"), "ok");
@@ -74,11 +82,18 @@
 
         private async Task Time()
         {
-            var result = await dialog.Time();
+            var result = await dialog.Time("Test");
             if (result.Ok)
             {
                 await dialogService.DisplayAlert("Result", result.Value.ToString(@"hh\:mm"), "ok");
             }
+        }
+
+        private async Task Popup()
+        {
+            var result = await popupNavigator.PopupAsync<string, bool>(PopupId.DialogPopup, "Test");
+
+            await dialogService.DisplayAlert("Result", result.ToString(), "ok");
         }
     }
 }

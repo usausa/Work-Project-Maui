@@ -44,7 +44,8 @@
                 Text="Time"
                 Command="{Binding TimeCommand}"/>
         <Button Grid.Row="4" Style="{StaticResource NavigationButton}"
-                IsEnabled="False"/>
+                Text="Popup"
+                Command="{Binding PopupCommand}"/>
         <Button Grid.Row="5" Style="{StaticResource NavigationButton}"
                 IsEnabled="False"/>
         <Button Grid.Row="6" Style="{StaticResource NavigationButton}"

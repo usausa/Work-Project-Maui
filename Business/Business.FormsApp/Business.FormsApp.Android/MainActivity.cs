@@ -39,17 +39,16 @@
 
             base.OnCreate(savedInstanceState);
 
-            NLog.LogManager.ThrowExceptions = true;
-            NLog.LogManager.ThrowConfigExceptions = true;
-            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("assets/NLog.config");
-            //var logger = NLog.LogManager.GetCurrentClassLogger();
-            //logger.Info("test");
-
-            UserDialogs.Init(this);
-
             deviceManager = new DeviceManager(this);
             Window.DecorView.ViewTreeObserver.GlobalLayout += ViewTreeObserverOnGlobalLayout;
             deviceManager.RegisterWakeLockReceiver();
+
+            NLog.LogManager.ThrowExceptions = true;
+            NLog.LogManager.ThrowConfigExceptions = true;
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("assets/NLog.config");
+
+            UserDialogs.Init(this);
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
 
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));
@@ -71,7 +70,16 @@
 
         public override void OnBackPressed()
         {
-            MoveTaskToBack(true);
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                System.Diagnostics.Debug.WriteLine("Android back button: There are some pages in the PopupStack");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Android back button: There are not any pages in the PopupStack");
+
+                MoveTaskToBack(true);
+            }
         }
 
         private class ComponentProvider : IComponentProvider

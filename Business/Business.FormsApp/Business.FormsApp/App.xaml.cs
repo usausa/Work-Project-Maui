@@ -4,7 +4,8 @@ namespace Business.FormsApp
 {
     using System.Reflection;
 
-    using Business.FormsApp.Dialogs;
+    using Business.FormsApp.Components.Dialogs;
+    using Business.FormsApp.Components.Popup;
     using Business.FormsApp.Modules;
 
     using Smart.Forms.Components;
@@ -15,6 +16,8 @@ namespace Business.FormsApp
     public partial class App
     {
         private readonly Navigator navigator;
+
+        private readonly PopupNavigator popupNavigator;
 
         public App(IComponentProvider provider)
         {
@@ -37,6 +40,10 @@ namespace Business.FormsApp
                     $"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
             };
 
+            // Popup
+            popupNavigator = new PopupNavigator(resolver);
+            popupNavigator.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes);
+
             // Show MainWindow
             MainPage = resolver.Get<MainPage>();
 
@@ -52,6 +59,7 @@ namespace Business.FormsApp
                 .UsePropertyInjector();
 
             config.Bind<INavigator>().ToMethod(kernel => navigator).InSingletonScope();
+            config.Bind<IPopupNavigator>().ToMethod(kernel => popupNavigator).InSingletonScope();
             config.Bind<IDialogService>().To<DialogService>().InSingletonScope();
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
             config.Bind<IDialog>().To<Dialog>().InSingletonScope();

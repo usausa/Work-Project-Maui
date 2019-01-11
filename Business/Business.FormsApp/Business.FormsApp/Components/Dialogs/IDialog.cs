@@ -1,4 +1,4 @@
-﻿namespace Business.FormsApp.Dialogs
+﻿namespace Business.FormsApp.Components.Dialogs
 {
     using System;
     using System.Threading.Tasks;

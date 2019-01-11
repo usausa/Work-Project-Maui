@@ -46,10 +46,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Modules\Dialog\DialogPopupView.xaml.cs">
+      <DependentUpon>DialogPopupView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Modules\Data\DataMenuView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Modules\Dialog\DialogMenuView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Modules\Dialog\DialogPopupView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Modules\Platform\PlatformActionView.xaml">
