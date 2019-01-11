@@ -31,9 +31,9 @@
             {
                 Vibration.Vibrate();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ignored
+                System.Diagnostics.Debug.WriteLine(ex);
             }
 
             return Task.CompletedTask;

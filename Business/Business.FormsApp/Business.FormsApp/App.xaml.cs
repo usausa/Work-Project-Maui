@@ -6,6 +6,7 @@ namespace Business.FormsApp
 
     using Business.FormsApp.Components.Dialogs;
     using Business.FormsApp.Components.Popup;
+    using Business.FormsApp.Components.Sensor;
     using Business.FormsApp.Modules;
 
     using Smart.Forms.Components;
@@ -63,6 +64,7 @@ namespace Business.FormsApp
             config.Bind<IDialogService>().To<DialogService>().InSingletonScope();
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
             config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
+            config.Bind<ISensors>().To<Sensors>().InSingletonScope();
 
             provider.RegisterComponents(config);
 

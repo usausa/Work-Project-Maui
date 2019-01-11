@@ -40,7 +40,8 @@
                     Command="{Binding BackCommand}"
                     Text="&#xf124;"/>
             <Button Grid.Column="2" Style="{StaticResource MainTitleButton}"
-                    Text="&#xf2ad;"/>
+                    Text="&#xf2ad;"
+                    IsEnabled="False"/>
         </Grid>
 
         <!-- view container -->

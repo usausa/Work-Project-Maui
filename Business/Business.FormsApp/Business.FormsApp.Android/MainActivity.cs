@@ -50,6 +50,8 @@
             UserDialogs.Init(this);
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
 
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));
         }
