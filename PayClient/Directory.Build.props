@@ -1,0 +1,9 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <NullableContextOptions>True</NullableContextOptions>
+  </PropertyGroup>
+
+</Project>

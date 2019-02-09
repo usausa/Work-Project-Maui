@@ -7,7 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayClient.FormsApp.Android"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayClient.FormsApp.iOS", "PayClient.FormsApp\PayClient.FormsApp.iOS\PayClient.FormsApp.iOS.csproj", "{9E2D712D-9166-45A5-9584-7313FB1F6C2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayClient.FormsApp", "PayClient.FormsApp\PayClient.FormsApp\PayClient.FormsApp.csproj", "{C0606550-D8E4-4D5D-B2F5-FB497A884FA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PayClient.FormsApp", "PayClient.FormsApp\PayClient.FormsApp\PayClient.FormsApp.csproj", "{C0606550-D8E4-4D5D-B2F5-FB497A884FA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{043D1057-CB59-4943-BB40-37E4DAEAB18C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		PayClient.FormsApp.ruleset = PayClient.FormsApp.ruleset
+		PayClient.FormsApp.sln.DotSettings = PayClient.FormsApp.sln.DotSettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
