@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:DataMap.FormsApp.Resources;assembly=DataMap.FormsApp"
+             xmlns:data="clr-namespace:Smart.Forms.Data;assembly=Smart.Forms"
+             x:Class="DataMap.FormsApp.App">
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <!-- ================================================================================ -->
+            <!-- Import                                                                           -->
+            <!-- ================================================================================ -->
+
+            <ResourceDictionary.MergedDictionaries>
+                <resources:MetroColors />
+                <resources:FontSize />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ================================================================================ -->
+            <!-- Value                                                                            -->
+            <!-- ================================================================================ -->
+
+            <!--  Boolean  -->
+
+            <x:Boolean x:Key="True">True</x:Boolean>
+            <x:Boolean x:Key="False">False</x:Boolean>
+
+            <!--  Color  -->
+
+            <Color x:Key="NoErrorColor">Transparent</Color>
+
+            <Color x:Key="ErrorColor">#EE1111</Color>
+
+            <Color x:Key="PopupBackgroundColor">White</Color>
+
+            <!-- ================================================================================ -->
+            <!-- Font                                                                             -->
+            <!-- ================================================================================ -->
+
+            <OnPlatform x:Key="IconFont" x:TypeArguments="x:String">
+                <On Platform="iOS" Value="ionicons" />
+                <On Platform="Android" Value="Fonts/ionicons.ttf" />
+            </OnPlatform>
+
+            <!-- ================================================================================ -->
+            <!-- Converter                                                                        -->
+            <!-- ================================================================================ -->
+
+            <data:NotConverter x:Key="NotConverter" />
+
+            <!-- ================================================================================ -->
+            <!-- Layout                                                                           -->
+            <!-- ================================================================================ -->
+
+            <!--  Main Layout  -->
+
+            <Style x:Key="MainLayout" TargetType="StackLayout">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="TestLabel" TargetType="Label">
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+            </Style>
+
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

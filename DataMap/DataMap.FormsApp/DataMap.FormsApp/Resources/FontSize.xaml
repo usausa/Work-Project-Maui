@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DataMap.FormsApp.Resources.FontSize">
+
+    <!-- Size -->
+
+    <OnPlatform x:Key="LittleSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">11.0</On>
+        <On Platform="Android">12.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="MidMediumSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">12.0</On>
+        <On Platform="Android">14.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="MediumSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">14.0</On>
+        <On Platform="Android">16.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="LargeSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">16.0</On>
+        <On Platform="Android">18.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="LargerSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">18.0</On>
+        <On Platform="Android">20.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="BigSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">20.0</On>
+        <On Platform="Android">24.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="ExtraBigSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">24.0</On>
+        <On Platform="Android">32.0</On>
+    </OnPlatform>
+
+    <OnPlatform x:Key="HugeSize" x:TypeArguments="x:Double">
+        <On Platform="iOS">32.0</On>
+        <On Platform="Android">48.0</On>
+    </OnPlatform>
+
+</ResourceDictionary>
