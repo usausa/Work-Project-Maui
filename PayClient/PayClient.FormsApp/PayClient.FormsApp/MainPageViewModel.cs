@@ -1,0 +1,26 @@
+namespace PayClient.FormsApp
+{
+    using PayClient.FormsApp.Shell;
+
+    using Smart.ComponentModel;
+    using Smart.Forms.ViewModels;
+    using Smart.Navigation;
+
+    public class MainPageViewModel : ViewModelBase, IShellControl
+    {
+        public NotificationValue<string> Title { get; } = new NotificationValue<string>();
+
+        public ApplicationState ApplicationState { get; }
+
+        public INavigator Navigator { get; }
+
+        public MainPageViewModel(
+            ApplicationState applicationState,
+            INavigator navigator)
+            : base(applicationState)
+        {
+            ApplicationState = applicationState;
+            Navigator = navigator;
+        }
+    }
+}

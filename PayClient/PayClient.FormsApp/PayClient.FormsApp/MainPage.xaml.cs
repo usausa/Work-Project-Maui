@@ -6,5 +6,10 @@ namespace PayClient.FormsApp
         {
             InitializeComponent();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }
