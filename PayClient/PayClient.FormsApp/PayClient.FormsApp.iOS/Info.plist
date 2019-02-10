@@ -33,5 +33,7 @@
     <array>
         <string>Fonts/ionicons.ttf</string>
     </array>
+    <key>NSCameraUsageDescription</key>
+    <string>Scanning Barcodes</string>
 </dict>
 </plist>

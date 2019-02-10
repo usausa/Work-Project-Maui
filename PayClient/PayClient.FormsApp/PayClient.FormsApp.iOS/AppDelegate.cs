@@ -2,6 +2,9 @@ namespace PayClient.FormsApp.iOS
 {
     using Foundation;
 
+    using PayClient.FormsApp.Components.Barcode;
+    using PayClient.FormsApp.iOS.Components.Barcode;
+
     using Smart.Resolver;
 
     using UIKit;
@@ -20,6 +23,9 @@ namespace PayClient.FormsApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Xamarin.Forms.Forms.Init();
+
+            ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+
             LoadApplication(new App(new ComponentProvider()));
 
             return base.FinishedLaunching(app, options);
@@ -29,6 +35,7 @@ namespace PayClient.FormsApp.iOS
         {
             public void RegisterComponents(ResolverConfig config)
             {
+                config.Bind<IBarcodeReader>().To<BarcodeReader>().InSingletonScope();
             }
         }
     }

@@ -1,1 +1,2 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Ignore", Scope = "namespace", Target = "~N:PayClient.FormsApp.iOS")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Ignore", Scope = "namespace", Target = "~N:PayClient.FormsApp.iOS.Components.Barcode")]

@@ -2,30 +2,56 @@ namespace PayClient.FormsApp.Modules
 {
     using System.Threading.Tasks;
 
+    using PayClient.FormsApp.Components.Barcode;
+    using PayClient.FormsApp.Components.Dialogs;
+
     using Smart.Forms.Input;
-    using Smart.Navigation;
 
     public class MenuViewModel : AppViewModelBase
     {
+        private readonly IDialogs dialogs;
+
+        private readonly IBarcodeReader barcodeReader;
+
         public AsyncCommand PayCommand { get; }
 
         public AsyncCommand SettingCommand { get; }
 
-        public MenuViewModel(ApplicationState applicationState)
+        public MenuViewModel(
+            ApplicationState applicationState,
+            IDialogs dialogs,
+            IBarcodeReader barcodeReader)
             : base(applicationState)
         {
+            this.dialogs = dialogs;
+            this.barcodeReader = barcodeReader;
+
             PayCommand = MakeAsyncCommand(Pay);
             SettingCommand = MakeAsyncCommand(Setting);
         }
 
-        private Task Pay()
+        private async Task Pay()
         {
-            return Task.CompletedTask;
+            if (await Permissions.IsPermissionRequired() &&
+                !await Permissions.RequestPermissions())
+            {
+                return;
+            }
+
+            var code = await barcodeReader.Scan();
+            await dialogs.Information(code.Text);
         }
 
-        private Task Setting()
+        private async Task Setting()
         {
-            return Task.CompletedTask;
+            if (await Permissions.IsPermissionRequired() &&
+                !await Permissions.RequestPermissions())
+            {
+                return;
+            }
+
+            var code = await barcodeReader.Scan();
+            await dialogs.Information(code.Text);
         }
     }
 }

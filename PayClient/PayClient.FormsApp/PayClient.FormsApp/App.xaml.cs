@@ -4,6 +4,7 @@ namespace PayClient.FormsApp
 {
     using System.Reflection;
 
+    using PayClient.FormsApp.Components.Dialogs;
     using PayClient.FormsApp.Modules;
 
     using Smart.Forms.Resolver;
@@ -51,6 +52,8 @@ namespace PayClient.FormsApp
             config.Bind<INavigator>().ToMethod(kernel => navigator).InSingletonScope();
 
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
+
+            config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
 
             provider.RegisterComponents(config);
 

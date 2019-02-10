@@ -1,10 +1,15 @@
 namespace PayClient.FormsApp.Droid
 {
+    using Acr.UserDialogs;
+
     using Android.App;
     using Android.Content;
     using Android.Content.PM;
     using Android.OS;
     using Android.Views;
+
+    using PayClient.FormsApp.Components.Barcode;
+    using PayClient.FormsApp.Droid.Components.Barcode;
 
     using Smart.Resolver;
 
@@ -23,8 +28,21 @@ namespace PayClient.FormsApp.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+
+            ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+
+            UserDialogs.Init(this);
+
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+        {
+            Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         private sealed class ComponentProvider : IComponentProvider
@@ -39,6 +57,8 @@ namespace PayClient.FormsApp.Droid
             public void RegisterComponents(ResolverConfig config)
             {
                 config.Bind<Context>().ToConstant(activity).InSingletonScope();
+
+                config.Bind<IBarcodeReader>().To<BarcodeReader>().InSingletonScope();
             }
         }
     }
