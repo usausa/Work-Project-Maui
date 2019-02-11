@@ -1,9 +1,12 @@
 namespace DataMap.FormsApp.Droid
 {
     using Android.App;
+    using Android.Content;
     using Android.Content.PM;
     using Android.OS;
     using Android.Views;
+
+    using Smart.Resolver;
 
     [Activity(
         Icon = "@mipmap/icon",
@@ -21,7 +24,22 @@ namespace DataMap.FormsApp.Droid
 
             base.OnCreate(savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App());
+            LoadApplication(new App(new ComponentProvider(this)));
+        }
+
+        private sealed class ComponentProvider : IComponentProvider
+        {
+            private readonly MainActivity activity;
+
+            public ComponentProvider(MainActivity activity)
+            {
+                this.activity = activity;
+            }
+
+            public void RegisterComponents(ResolverConfig config)
+            {
+                config.Bind<Context>().ToConstant(activity).InSingletonScope();
+            }
         }
     }
 }

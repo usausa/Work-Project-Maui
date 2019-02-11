@@ -6,5 +6,10 @@ namespace DataMap.FormsApp
         {
             InitializeComponent();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }

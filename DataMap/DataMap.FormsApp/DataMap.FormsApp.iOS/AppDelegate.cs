@@ -1,6 +1,9 @@
 namespace DataMap.FormsApp.iOS
 {
     using Foundation;
+
+    using Smart.Resolver;
+
     using UIKit;
 
     // The UIApplicationDelegate for the application. This class is responsible for launching the
@@ -17,9 +20,16 @@ namespace DataMap.FormsApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+            LoadApplication(new App(new ComponentProvider()));
 
             return base.FinishedLaunching(app, options);
+        }
+
+        private sealed class ComponentProvider : IComponentProvider
+        {
+            public void RegisterComponents(ResolverConfig config)
+            {
+            }
         }
     }
 }
