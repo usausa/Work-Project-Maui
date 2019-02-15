@@ -2,17 +2,26 @@
 
 namespace DataMap.FormsApp
 {
+    using System.IO;
     using System.Reflection;
 
     using DataMap.FormsApp.Components.Dialogs;
     using DataMap.FormsApp.Modules;
+    using DataMap.FormsApp.Services;
 
+    using Microsoft.Data.Sqlite;
+
+    using Smart.Data;
     using Smart.Forms.Resolver;
     using Smart.Navigation;
     using Smart.Resolver;
 
+    using Xamarin.Essentials;
+
     public partial class App
     {
+        private readonly SmartResolver resolver;
+
         private readonly Navigator navigator;
 
         public App(IComponentProvider provider)
@@ -20,7 +29,7 @@ namespace DataMap.FormsApp
             InitializeComponent();
 
             // Config Resolver
-            var resolver = CreateResolver(provider);
+            resolver = CreateResolver(provider);
             ResolveProvider.Default.UseSmartResolver(resolver);
 
             // Config Navigator
@@ -38,7 +47,6 @@ namespace DataMap.FormsApp
 
             // Show MainWindow
             MainPage = resolver.Get<MainPage>();
-            navigator.Forward(ViewId.Menu);
         }
 
         private SmartResolver CreateResolver(IComponentProvider provider)
@@ -50,10 +58,16 @@ namespace DataMap.FormsApp
                 .UsePropertyInjector();
 
             config.Bind<INavigator>().ToMethod(kernel => navigator).InSingletonScope();
+            config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
+
+            var path = Path.Combine(FileSystem.AppDataDirectory, "Test.db");
+            var connectionString = $"Data Source={path}";
+            config.Bind<IConnectionFactory>()
+                .ToConstant(new CallbackConnectionFactory(() => new SqliteConnection(connectionString)));
 
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
 
-            config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
+            config.Bind<DataService>().ToSelf().InSingletonScope();
 
             provider.RegisterComponents(config);
 
@@ -62,7 +76,10 @@ namespace DataMap.FormsApp
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            var dataService = resolver.Get<DataService>();
+            dataService.Initialize();
+
+            navigator.Forward(ViewId.Menu);
         }
 
         protected override void OnSleep()
