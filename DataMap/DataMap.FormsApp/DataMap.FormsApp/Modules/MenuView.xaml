@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type={x:Type modules:MenuViewModel}}"
              resolver:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
-             shell:ShellProperty.Title="QR Payment">
+             shell:ShellProperty.Title="DataMap">
 
     <!--
     <ContentView.BindingContext>
@@ -31,7 +31,7 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0" Style="{StaticResource MenuButton}"
-                Text="Pay"
+                Text="Test"
                 Command="{Binding TestCommand}"/>
 
     </Grid>
