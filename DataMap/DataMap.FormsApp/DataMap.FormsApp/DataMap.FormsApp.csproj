@@ -39,6 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Smart.Data.Mapper\Smart.Data.Mapper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="*.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
