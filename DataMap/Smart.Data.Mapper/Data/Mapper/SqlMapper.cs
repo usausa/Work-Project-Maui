@@ -1,4 +1,4 @@
-namespace Smart.Smart.Data.Mapper
+namespace Smart.Data.Mapper
 {
     public static class SqlMapper
     {

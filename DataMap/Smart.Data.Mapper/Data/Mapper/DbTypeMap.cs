@@ -1,0 +1,94 @@
+namespace Smart.Data.Mapper
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+
+    public sealed class DbTypeMap
+    {
+        private Dictionary<Type, DbType> typeMap;
+
+        public static DbTypeMap Default { get; } = new DbTypeMap();
+
+        public DbTypeMap()
+        {
+            Reset();
+        }
+
+        public void Reset()
+        {
+            var snapshot = new Dictionary<Type, DbType>
+            {
+                [typeof(byte)] = DbType.Byte,
+                [typeof(sbyte)] = DbType.SByte,
+                [typeof(short)] = DbType.Int16,
+                [typeof(ushort)] = DbType.UInt16,
+                [typeof(int)] = DbType.Int32,
+                [typeof(uint)] = DbType.UInt32,
+                [typeof(long)] = DbType.Int64,
+                [typeof(ulong)] = DbType.UInt64,
+                [typeof(float)] = DbType.Single,
+                [typeof(double)] = DbType.Double,
+                [typeof(decimal)] = DbType.Decimal,
+                [typeof(bool)] = DbType.Boolean,
+                [typeof(string)] = DbType.String,
+                [typeof(char)] = DbType.StringFixedLength,
+                [typeof(Guid)] = DbType.Guid,
+                [typeof(DateTime)] = DbType.DateTime,
+                [typeof(TimeSpan)] = DbType.Time,
+                [typeof(byte[])] = DbType.Binary,
+                [typeof(byte?)] = DbType.Byte,
+                [typeof(sbyte?)] = DbType.SByte,
+                [typeof(short?)] = DbType.Int16,
+                [typeof(ushort?)] = DbType.UInt16,
+                [typeof(int?)] = DbType.Int32,
+                [typeof(uint?)] = DbType.UInt32,
+                [typeof(long?)] = DbType.Int64,
+                [typeof(ulong?)] = DbType.UInt64,
+                [typeof(float?)] = DbType.Single,
+                [typeof(double?)] = DbType.Double,
+                [typeof(decimal?)] = DbType.Decimal,
+                [typeof(bool?)] = DbType.Boolean,
+                [typeof(char?)] = DbType.StringFixedLength,
+                [typeof(Guid?)] = DbType.Guid,
+                [typeof(DateTime?)] = DbType.DateTime,
+                [typeof(TimeSpan?)] = DbType.Time,
+                [typeof(object)] = DbType.Object
+            };
+
+            typeMap = snapshot;
+        }
+
+        public DbType LookupDbType(object value)
+        {
+            if ((value == null) || (value is DBNull))
+            {
+                return DbType.Object;
+            }
+
+            return LookupDbType(value.GetType());
+        }
+
+        public DbType LookupDbType(Type type)
+        {
+            var nullUnderlyingType = Nullable.GetUnderlyingType(type);
+            if (nullUnderlyingType != null)
+            {
+                type = nullUnderlyingType;
+            }
+
+            var snapShot = typeMap;
+            if (snapShot.TryGetValue(type, out var dbType))
+            {
+                return dbType;
+            }
+
+            if (type.IsEnum && snapShot.TryGetValue(Enum.GetUnderlyingType(type), out dbType))
+            {
+                return dbType;
+            }
+
+            throw new ArgumentException($"Type {type.FullName} can't be used", nameof(type));
+        }
+    }
+}
