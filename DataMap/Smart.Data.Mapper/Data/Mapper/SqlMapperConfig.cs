@@ -4,7 +4,7 @@ namespace Smart.Data.Mapper
 
     // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
-    public class SqlMapperConfig
+    public sealed class SqlMapperConfig : ISqlMapperConfig, ISqlMapperConfigComponents
     {
         public SqlMapperConfig Default { get; } = new SqlMapperConfig();
 
