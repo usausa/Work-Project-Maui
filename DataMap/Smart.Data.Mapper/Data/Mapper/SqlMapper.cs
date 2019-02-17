@@ -3,10 +3,8 @@ namespace Smart.Data.Mapper
     using System;
     using System.Data;
 
-    public static class SqlMapper
+    public static partial class SqlMapper
     {
-        public static SqlMapperConfig DefaultConfig { get; } = new SqlMapperConfig();
-
         //--------------------------------------------------------------------------------
         // Core
         //--------------------------------------------------------------------------------
@@ -64,7 +62,7 @@ namespace Smart.Data.Mapper
         // Extensions
         //--------------------------------------------------------------------------------
 
-        // TODO with config
+        // TODO with config, inline? (without config is inline?, check)
 
         public static int Execute(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
@@ -138,5 +136,66 @@ namespace Smart.Data.Mapper
         }
 
         // TODO QueryImpl
+
+        // TODO QueryFirstOrDefault, Query
+        // Lookup回数？、パラメータ、戻り値、カラムのマップはQueryなら一端配列を作って？ Stackで？
+
+        ////--------------------------------------------------------------------------------
+
+        //private static IEnumerable<T> QueryImpl<T>(this IDbConnection con, Func<T> factory, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType)
+        //{
+        //    var wasClosed = con.State == ConnectionState.Closed;
+        //    using (var cmd = SetupCommand(con, transaction, sql, param, commandTimeout, commandType))
+        //    {
+        //        try
+        //        {
+        //            var type = typeof(T);
+        //            var queryHandler = queryHandlers.FirstOrDefault(x => x.IsMatch(type));
+        //            if (queryHandler == null)
+        //            {
+        //                throw new SqlMapperException(String.Format(CultureInfo.InvariantCulture, "Type {0} can't handle", type.FullName));
+        //            }
+
+        //            if (wasClosed)
+        //            {
+        //                con.Open();
+        //            }
+
+        //            var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess);
+        //            wasClosed = false;
+
+        //            return queryHandler.Handle(factory, reader, Converter);
+        //        }
+        //        finally
+        //        {
+        //            Cleanup(wasClosed, con, cmd);
+        //        }
+        //    }
+        //}
+
+        ////--------------------------------------------------------------------------------
+        //// ExecuteScalar
+        //public static T ExecuteScalar<T>(this IDbConnection con, string sql)
+        //    return ExecuteScalarImpl<T>(con, sql, null, null, null, null);
+
+        ////--------------------------------------------------------------------------------
+        //// ExecuteReader
+        //public static IDataReader ExecuteReader(this IDbConnection con, string sql)
+        //    return ExecuteReaderImpl(con, sql, null, null, null, null, CommandBehavior.Default);
+
+        ////--------------------------------------------------------------------------------
+        //// Query
+        //public static IEnumerable<T> Query<T>(this IDbConnection con, Func<T> factory, string sql)
+        //    return QueryImpl(con, factory, sql, null, null, null, null);
+
+        //// where T : new()
+
+        //public static IEnumerable<T> Query<T>(this IDbConnection con, string sql) where T : new()
+        //    return QueryImpl(con, () => new T(), sql, null, null, null, null);
+
+        //// Dictionary<string, object>
+
+        //public static IEnumerable<Dictionary<string, object>> Query(this IDbConnection con, string sql)
+        //    return QueryImpl(con, () => new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase), sql, null, null, null, null);
     }
 }

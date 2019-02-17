@@ -1,4 +1,4 @@
-namespace Smart.Data.Mapper
+namespace Smart.Data.Mapper.Attributes
 {
     using System;
 
