@@ -36,7 +36,8 @@ namespace Smart.Data.Mapper
         {
             unchecked
             {
-                return type.GetHashCode() ^ (slot * 397);
+                //return type.GetHashCode() ^ (slot * 397);
+                return type.GetHashCode() + slot;
             }
         }
 

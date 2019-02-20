@@ -1,24 +1,19 @@
 namespace Smart.Data.Mapper.Metadata
 {
-    using System;
     using Smart.Data.Mapper.Namings;
 
     public sealed class StandardProcedureInfoFactory : IProcedureInfoFactory
     {
-        private static class ProcedureInfoHolder<T>
-        {
-            public static ProcedureInfo Value { get; }
+        private readonly INaming naming;
 
-            static ProcedureInfoHolder()
-            {
-                // TODO
-                Value = new ProcedureInfo(typeof(T));
-            }
+        public StandardProcedureInfoFactory(INaming naming)
+        {
+            this.naming = naming;
         }
 
         public ProcedureInfo Create<T>()
         {
-            return ProcedureInfoHolder<T>.Value;
+            return new ProcedureInfo();
         }
     }
 }
