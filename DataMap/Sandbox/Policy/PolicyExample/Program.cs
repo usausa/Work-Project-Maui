@@ -1,4 +1,4 @@
-﻿namespace PolicyExample
+namespace PolicyExample
 {
     using System;
 
@@ -105,21 +105,26 @@
     }
 
 
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
             var component = new Component();
-            component.ShowName<Program>();
 
+            // System.String
+            component.ShowName<string>();
+
+            // system.string
             component.MetadataFactory = MetadataFactories.Lower;
-            component.ShowName<Program>();
+            component.ShowName<string>();
 
+            // \System\String
             component.MetadataFactory = MetadataFactories.Path;
-            component.ShowName<Program>();
+            component.ShowName<string>();
 
+            // System_String
             component.MetadataFactory = MetadataFactories.Underline;
-            component.ShowName<Program>();
+            component.ShowName<string>();
         }
     }
 }
