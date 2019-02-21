@@ -1,12 +1,22 @@
 namespace Smart.Data.Mapper
 {
     using Smart.Converter;
+    using Smart.Data.Mapper.Metadata;
+    using Smart.Data.Mapper.Selectors;
 
     // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
-    public sealed class SqlMapperConfig : ISqlMapperConfig, ISqlMapperConfigComponents
+    public sealed class SqlMapperConfig : ISqlMapperConfig
     {
         public SqlMapperConfig Default { get; } = new SqlMapperConfig();
+
+        public IDbTypeSelector DbTypeSelector { get; set; } // = defaultにする？
+
+        public ITypeMetadataFactory MetadataFactory { get; set; }
+
+        //public Dictionary<Type, object> Plugin, Addを用意して、拡張メソッドでIFをキーとするメソッドを！、一応Lock
+
+        // -----------------------------
 
         // TODO メタデータはFactory側で保持、Parameter、HandlerのキャッシュはConfigで保持か？
 

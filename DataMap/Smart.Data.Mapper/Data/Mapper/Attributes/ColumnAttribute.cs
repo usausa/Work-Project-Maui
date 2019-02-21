@@ -5,6 +5,11 @@ namespace Smart.Data.Mapper.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ColumnAttribute : Attribute
     {
-        // TODO
+        public string Name { get; }
+
+        public ColumnAttribute(string name)
+        {
+            Name = name;
+        }
     }
 }

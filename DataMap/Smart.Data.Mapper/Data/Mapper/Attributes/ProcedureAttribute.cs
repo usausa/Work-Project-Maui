@@ -5,6 +5,11 @@ namespace Smart.Data.Mapper.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ProcedureAttribute : Attribute
     {
-        // TODO
+        public string Name { get; }
+
+        public ProcedureAttribute(string name)
+        {
+            Name = name;
+        }
     }
 }

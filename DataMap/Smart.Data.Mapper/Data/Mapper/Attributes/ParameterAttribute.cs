@@ -5,6 +5,11 @@ namespace Smart.Data.Mapper.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ParameterAttribute : Attribute
     {
-        // TODO
+        public string Name { get; }
+
+        public ParameterAttribute(string name)
+        {
+            Name = name;
+        }
     }
 }

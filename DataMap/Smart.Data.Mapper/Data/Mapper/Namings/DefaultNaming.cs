@@ -1,6 +1,7 @@
 namespace Smart.Data.Mapper.Namings
 {
-    public class DefaultNaming
+    public sealed class DefaultNaming : INaming
     {
+        public string Convert(string source) => source;
     }
 }

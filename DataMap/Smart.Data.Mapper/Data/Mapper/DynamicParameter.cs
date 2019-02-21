@@ -43,14 +43,6 @@ namespace Smart.Data.Mapper
 
         // TODO Build
 
-        //private readonly DbTypeMap dbTypeMap;
-
-        //public DynamicParameter()
-        //dbTypeMap = DbTypeMap.Default;
-
-        //public DynamicParameter(DbTypeMap dbTypeMap)
-        //    this.dbTypeMap = dbTypeMap;
-
         //public IEnumerable<string> ParameterNames
         //{
         //    get { return parameters.Select(x => x.Key); }
