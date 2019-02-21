@@ -1,6 +1,6 @@
-namespace Smart.Data.Mapper.Handlers
+namespace Smart.Data.Mapper.Mappers
 {
-    public class ObjectQueryHandler
+    public class ObjectResultMapper
     {
         // TODO Default?, Naming version?
         // TODO Naming Pascal, Camel, Snake Converter Func

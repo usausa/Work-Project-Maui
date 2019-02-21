@@ -2,6 +2,7 @@ namespace Smart.Data.Mapper
 {
     using System;
     using System.Data;
+    using System.Runtime.CompilerServices;
 
     public static partial class SqlMapper
     {
@@ -62,9 +63,7 @@ namespace Smart.Data.Mapper
         // Extensions
         //--------------------------------------------------------------------------------
 
-        // TODO with config, inline? (without config is inline?, check)
-
-        public static int Execute(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        public static int Execute(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, param, commandTimeout, commandType))
@@ -85,6 +84,12 @@ namespace Smart.Data.Mapper
                     Cleanup(wasClosed, con, cmd);
                 }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Execute(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            return Execute(con, SqlMapperConfig.Default, sql, param, transaction, commandTimeout, commandType);
         }
 
         // TODO

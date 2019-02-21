@@ -1,19 +1,19 @@
-namespace Smart.Data.Mapper.Selectors
+namespace Smart.Data.Mapper.Resolvers
 {
-    public class MapDbTypeSelector
+    using System;
+    using System.Data;
+
+    public sealed class StandardDbTypeResolver : IDbTypeResolver
     {
+        public bool TryResolve(Type type, out DbType dbType)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     //public sealed class DbTypeMap
     //{
     //    private Dictionary<Type, DbType> typeMap;
-
-    //    public static DbTypeMap Default { get; } = new DbTypeMap();
-
-    //    public DbTypeMap()
-    //    {
-    //        Reset();
-    //    }
 
     //    public void Reset()
     //    {
@@ -35,6 +35,7 @@ namespace Smart.Data.Mapper.Selectors
     //            [typeof(char)] = DbType.StringFixedLength,
     //            [typeof(Guid)] = DbType.Guid,
     //            [typeof(DateTime)] = DbType.DateTime,
+    //ypeof(DateTimeOffset)] = DbType.DateTimeOffset,
     //            [typeof(TimeSpan)] = DbType.Time,
     //            [typeof(byte[])] = DbType.Binary,
     //            [typeof(byte?)] = DbType.Byte,
@@ -52,6 +53,7 @@ namespace Smart.Data.Mapper.Selectors
     //            [typeof(char?)] = DbType.StringFixedLength,
     //            [typeof(Guid?)] = DbType.Guid,
     //            [typeof(DateTime?)] = DbType.DateTime,
+    //  [typeof(DateTimeOffset?)] = DbType.DateTimeOffset,
     //            [typeof(TimeSpan?)] = DbType.Time,
     //            [typeof(object)] = DbType.Object
     //        };

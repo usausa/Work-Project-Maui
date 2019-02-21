@@ -1,6 +1,6 @@
-namespace Smart.Data.Mapper.Handlers
+namespace Smart.Data.Mapper.Mappers
 {
-    public interface IQueryHandler
+    public interface IResultMapper
     {
     }
 

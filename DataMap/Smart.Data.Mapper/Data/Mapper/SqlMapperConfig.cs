@@ -1,18 +1,20 @@
 namespace Smart.Data.Mapper
 {
+    using System.Collections.Generic;
+
     using Smart.Converter;
-    using Smart.Data.Mapper.Metadata;
-    using Smart.Data.Mapper.Selectors;
+    using Smart.Data.Mapper.Parameters;
+    using Smart.Data.Mapper.Resolvers;
 
     // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
-        public SqlMapperConfig Default { get; } = new SqlMapperConfig();
+        public static SqlMapperConfig Default { get; } = new SqlMapperConfig();
 
-        public IDbTypeSelector DbTypeSelector { get; set; } // = defaultにする？
+        public IDbTypeResolver DbTypeSelector { get; set; } // = defaultにする？
 
-        public ITypeMetadataFactory MetadataFactory { get; set; }
+        public IList<IParameterBuilderFactory> ParameterBuilderFactories { get; } = new List<IParameterBuilderFactory>();
 
         //public Dictionary<Type, object> Plugin, Addを用意して、拡張メソッドでIFをキーとするメソッドを！、一応Lock
 
