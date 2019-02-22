@@ -262,7 +262,10 @@ namespace ColumnBenchmark
         [Benchmark]
         public void CacheSpecial2()
         {
-            var accessors = cache.AddIfNotExist(reader2, accessorFactory);
+            if (!cache.TryGetValue(reader2, out var accessors))
+            {
+                accessors = cache.AddIfNotExist(reader2, accessorFactory);
+            }
 
             for (var i = 0; i < accessors.Length; i++)
             {
@@ -273,7 +276,10 @@ namespace ColumnBenchmark
         [Benchmark]
         public void CacheSpecial10()
         {
-            var accessors = cache.AddIfNotExist(reader10, accessorFactory);
+            if (!cache.TryGetValue(reader10, out var accessors))
+            {
+                accessors = cache.AddIfNotExist(reader10, accessorFactory);
+            }
 
             for (var i = 0; i < accessors.Length; i++)
             {
@@ -472,6 +478,12 @@ namespace ColumnBenchmark
             }
 
             return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryGetValue(IDataReader reader, out object[] value)
+        {
+            return TryGetValueInternal(table, reader, out value);
         }
 
         public object[] AddIfNotExist(IDataReader reader, Func<string[], object[]> valueFactory)
