@@ -3,7 +3,10 @@ namespace ColumnBenchmark
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading;
 
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Configs;
@@ -57,15 +60,28 @@ namespace ColumnBenchmark
             { "D9", null },
         };
 
-        // TODO 簡易版
         private readonly Dictionary<string, object[]> accessors2 = new Dictionary<string, object[]>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, object[]> accessors10 = new Dictionary<string, object[]>(StringComparer.OrdinalIgnoreCase);
+
+        private readonly Func<string[], object[]> accessorFactory;
+
+        private readonly AccessorCache cache = new AccessorCache();
 
         private SqliteConnection con;
 
         private IDataReader reader2;
 
         private IDataReader reader10;
+
+        public Benchmark()
+        {
+            accessorFactory = CreateAccessor;
+        }
+
+        public object[] CreateAccessor(string[] columns)
+        {
+            return new object[columns.Length];
+        }
 
         [GlobalSetup]
         public void Setup()
@@ -89,6 +105,9 @@ namespace ColumnBenchmark
 
             accessors2[CreateKey(reader2)] = new object[reader2.FieldCount];
             accessors10[CreateKey(reader10)] = new object[reader10.FieldCount];
+
+            cache.AddIfNotExist(reader2, accessorFactory);
+            cache.AddIfNotExist(reader10, accessorFactory);
         }
 
         private string CreateKey(IDataReader reader)
@@ -206,10 +225,6 @@ namespace ColumnBenchmark
 
         // Cache
 
-        // TODO 最適化、これだと2では変わらず、10だと若干良いが…
-        // GetNameのコストは常に発生するので
-        // allocが160->304/760->1056になるのを抑えられるか？
-
         [Benchmark]
         public void Cache2()
         {
@@ -242,248 +257,287 @@ namespace ColumnBenchmark
             }
         }
 
-        // TODO Tuned
+        // Cache special
+
+        [Benchmark]
+        public void CacheSpecial2()
+        {
+            var accessors = cache.AddIfNotExist(reader2, accessorFactory);
+
+            for (var i = 0; i < accessors.Length; i++)
+            {
+                reader2.GetValue(i);
+            }
+        }
+
+        [Benchmark]
+        public void CacheSpecial10()
+        {
+            var accessors = cache.AddIfNotExist(reader10, accessorFactory);
+
+            for (var i = 0; i < accessors.Length; i++)
+            {
+                reader10.GetValue(i);
+            }
+        }
     }
 
-    //[DebuggerDisplay("Count = {" + nameof(Count) + "}")]
-    //public class AccessorCache
-    //{
-    //    private const int InitialSize = 256;
+    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
+    public class AccessorCache
+    {
+        private const int InitialSize = 256;
 
-    //    private const double Factor = 2;
+        private const double Factor = 2;
 
-    //    private static readonly Node[] EmptyNodes = new Node[0];
+        private static readonly Node[] EmptyNodes = new Node[0];
 
-    //    private readonly object sync = new object();
+        private readonly object sync = new object();
 
-    //    private Table table;
+        private Table table;
 
-    //    //--------------------------------------------------------------------------------
-    //    // Constructor
-    //    //--------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------
+        // Constructor
+        //--------------------------------------------------------------------------------
 
-    //    public AccessorCache()
-    //    {
-    //        table = CreateInitialTable();
-    //    }
+        public AccessorCache()
+        {
+            table = CreateInitialTable();
+        }
 
-    //    //--------------------------------------------------------------------------------
-    //    // Private
-    //    //--------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------------
 
-    //    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //    private static int CalculateHash(string[] columns)
-    //    {
-    //        unchecked
-    //        {
-    //            // TODO Hash
-    //            var hash = columns.Length;
-    //            for (var i = 0; i < columns.Length; i++)
-    //            {
-    //                hash = (hash * 31) + columns[i].GetHashCode();
-    //            }
-    //            return hash;
-    //        }
-    //    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int CalculateHash(string[] columns)
+        {
+            unchecked
+            {
+                // TODO Hash
+                var hash = columns.Length;
+                for (var i = 0; i < columns.Length; i++)
+                {
+                    hash = (hash * 31) + columns[i].GetHashCode();
+                }
+                return hash;
+            }
+        }
 
-    //    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //    private static int CalculateHash(IDataReader reader)
-    //    {
-    //        unchecked
-    //        {
-    //            // TODO Hash
-    //            var hash = reader.FieldCount;
-    //            for (var i = 0; i < reader.FieldCount; i++)
-    //            {
-    //                hash = (hash * 31) + reader.GetName(i).GetHashCode();
-    //            }
-    //            return hash;
-    //        }
-    //    }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int CalculateHash(IDataReader reader)
+        {
+            unchecked
+            {
+                // TODO Hash
+                var hash = reader.FieldCount;
+                for (var i = 0; i < reader.FieldCount; i++)
+                {
+                    hash = (hash * 31) + reader.GetName(i).GetHashCode();
+                }
+                return hash;
+            }
+        }
 
-    //    private static uint CalculateSize(int count)
-    //    {
-    //        uint size = 0;
+        private static uint CalculateSize(int count)
+        {
+            uint size = 0;
 
-    //        for (var i = 1L; i < count; i *= 2)
-    //        {
-    //            size = (size << 1) + 1;
-    //        }
+            for (var i = 1L; i < count; i *= 2)
+            {
+                size = (size << 1) + 1;
+            }
 
-    //        return size + 1;
-    //    }
+            return size + 1;
+        }
 
-    //    private static Table CreateInitialTable()
-    //    {
-    //        var mask = InitialSize - 1;
-    //        var nodes = new Node[InitialSize][];
+        private static Table CreateInitialTable()
+        {
+            var mask = InitialSize - 1;
+            var nodes = new Node[InitialSize][];
 
-    //        for (var i = 0; i < nodes.Length; i++)
-    //        {
-    //            nodes[i] = EmptyNodes;
-    //        }
+            for (var i = 0; i < nodes.Length; i++)
+            {
+                nodes[i] = EmptyNodes;
+            }
 
-    //        return new Table(mask, nodes, 0);
-    //    }
+            return new Table(mask, nodes, 0);
+        }
 
-    //    private static Node[] AddNode(Node[] nodes, Node addNode)
-    //    {
-    //        if (nodes == null)
-    //        {
-    //            return new[] { addNode };
-    //        }
+        private static Node[] AddNode(Node[] nodes, Node addNode)
+        {
+            if (nodes == null)
+            {
+                return new[] { addNode };
+            }
 
-    //        var newNodes = new Node[nodes.Length + 1];
-    //        Array.Copy(nodes, 0, newNodes, 0, nodes.Length);
-    //        newNodes[nodes.Length] = addNode;
+            var newNodes = new Node[nodes.Length + 1];
+            Array.Copy(nodes, 0, newNodes, 0, nodes.Length);
+            newNodes[nodes.Length] = addNode;
 
-    //        return newNodes;
-    //    }
+            return newNodes;
+        }
 
-    //    private static void RelocateNodes(Node[][] nodes, Node[][] oldNodes, int mask)
-    //    {
-    //        for (var i = 0; i < oldNodes.Length; i++)
-    //        {
-    //            for (var j = 0; j < oldNodes[i].Length; j++)
-    //            {
-    //                var node = oldNodes[i][j];
-    //                var relocateIndex = CalculateHash(node.Columns) & mask;
-    //                nodes[relocateIndex] = AddNode(nodes[relocateIndex], node);
-    //            }
-    //        }
-    //    }
+        private static void RelocateNodes(Node[][] nodes, Node[][] oldNodes, int mask)
+        {
+            for (var i = 0; i < oldNodes.Length; i++)
+            {
+                for (var j = 0; j < oldNodes[i].Length; j++)
+                {
+                    var node = oldNodes[i][j];
+                    var relocateIndex = CalculateHash(node.Columns) & mask;
+                    nodes[relocateIndex] = AddNode(nodes[relocateIndex], node);
+                }
+            }
+        }
 
-    //    private static void FillEmptyIfNull(Node[][] nodes)
-    //    {
-    //        for (var i = 0; i < nodes.Length; i++)
-    //        {
-    //            if (nodes[i] == null)
-    //            {
-    //                nodes[i] = EmptyNodes;
-    //            }
-    //        }
-    //    }
+        private static void FillEmptyIfNull(Node[][] nodes)
+        {
+            for (var i = 0; i < nodes.Length; i++)
+            {
+                if (nodes[i] == null)
+                {
+                    nodes[i] = EmptyNodes;
+                }
+            }
+        }
 
-    //    private Table CreateAddTable(Table oldTable, Node node)
-    //    {
-    //        var requestSize = Math.Max(InitialSize, (int)Math.Ceiling((oldTable.Count + 1) * Factor));
+        private Table CreateAddTable(Table oldTable, Node node)
+        {
+            var requestSize = Math.Max(InitialSize, (int)Math.Ceiling((oldTable.Count + 1) * Factor));
 
-    //        var size = CalculateSize(requestSize);
-    //        var mask = (int)(size - 1);
-    //        var newNodes = new Node[size][];
+            var size = CalculateSize(requestSize);
+            var mask = (int)(size - 1);
+            var newNodes = new Node[size][];
 
-    //        RelocateNodes(newNodes, oldTable.Nodes, mask);
+            RelocateNodes(newNodes, oldTable.Nodes, mask);
 
-    //        var index = CalculateHash(node.Columns) & mask;
-    //        newNodes[index] = AddNode(newNodes[index], node);
+            var index = CalculateHash(node.Columns) & mask;
+            newNodes[index] = AddNode(newNodes[index], node);
 
-    //        FillEmptyIfNull(newNodes);
+            FillEmptyIfNull(newNodes);
 
-    //        return new Table(mask, newNodes, oldTable.Count + 1);
-    //    }
-
-
-    //    //--------------------------------------------------------------------------------
-    //    // Public
-    //    //--------------------------------------------------------------------------------
-
-    //    public int Count => table.Count;
-
-    //    public void Clear()
-    //    {
-    //        lock (sync)
-    //        {
-    //            var newTable = CreateInitialTable();
-    //            Interlocked.MemoryBarrier();
-    //            table = newTable;
-    //        }
-    //    }
-
-    //    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //    private static bool TryGetValueInternal(Table targetTable, IDataReader reader, out object value)
-    //    {
-    //        var index = CalculateHash(reader) & targetTable.HashMask;
-    //        var array = targetTable.Nodes[index];
-    //        for (var i = 0; i < array.Length; i++)
-    //        {
-    //            var node = array[i];
+            return new Table(mask, newNodes, oldTable.Count + 1);
+        }
 
 
-    //            if ((node.Slot == slot) && (node.Type == type))
-    //            {
-    //                value = node.Value;
-    //                return true;
-    //            }
-    //        }
+        //--------------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------------
 
-    //        value = null;
-    //        return false;
-    //    }
+        public int Count => table.Count;
 
-    //    public object AddIfNotExist(IDataReader reader, Func<string[], object> valueFactory)
-    //    {
-    //        lock (sync)
-    //        {
-    //            var columns = new string[reader.FieldCount];
-    //            for (var i = 0; i < columns.Length; i++)
-    //            {
-    //                columns[i] = reader.GetName(i);
-    //            }
+        public void Clear()
+        {
+            lock (sync)
+            {
+                var newTable = CreateInitialTable();
+                Interlocked.MemoryBarrier();
+                table = newTable;
+            }
+        }
 
-    //            // Double checked locking
-    //            if (TryGetValueInternal(table, reader, out var currentValue))
-    //            {
-    //                return currentValue;
-    //            }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool TryGetValueInternal(Table targetTable, IDataReader reader, out object[] value)
+        {
+            var index = CalculateHash(reader) & targetTable.HashMask;
+            var array = targetTable.Nodes[index];
+            for (var i = 0; i < array.Length; i++)
+            {
+                var node = array[i];
+                if (IsMatchColumn(node.Columns, reader))
+                {
+                    value = node.Value;
+                    return true;
+                }
+            }
 
-    //            var value = valueFactory(columns);
+            value = null;
+            return false;
+        }
 
-    //            // Check if added by recursive
-    //            if (TryGetValueInternal(table, reader, out currentValue))
-    //            {
-    //                return currentValue;
-    //            }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsMatchColumn(string[] columns, IDataReader reader)
+        {
+            if (columns.Length != reader.FieldCount)
+            {
+                return false;
+            }
 
-    //            // Rebuild
-    //            var newTable = CreateAddTable(table, new Node(columns, value));
-    //            Interlocked.MemoryBarrier();
-    //            table = newTable;
+            for (var i = 0; i < columns.Length; i++)
+            {
+                if (String.Compare(columns[i], reader.GetName(i), StringComparison.OrdinalIgnoreCase) != 0)
+                {
+                    return false;
+                }
+            }
 
-    //            return value;
-    //        }
-    //    }
+            return true;
+        }
 
-    //    //--------------------------------------------------------------------------------
-    //    // Inner
-    //    //--------------------------------------------------------------------------------
+        public object[] AddIfNotExist(IDataReader reader, Func<string[], object[]> valueFactory)
+        {
+            lock (sync)
+            {
+                // Double checked locking
+                if (TryGetValueInternal(table, reader, out var currentValue))
+                {
+                    return currentValue;
+                }
 
-    //    private class Node
-    //    {
-    //        public string[] Columns { get; }
+                var columns = new string[reader.FieldCount];
+                for (var i = 0; i < columns.Length; i++)
+                {
+                    columns[i] = reader.GetName(i);
+                }
 
-    //        public object Value { get; }
+                var value = valueFactory(columns);
 
-    //        public Node(string[] columns, object value)
-    //        {
-    //            Columns = columns;
-    //            Value = value;
-    //        }
-    //    }
+                // Check if added by recursive
+                if (TryGetValueInternal(table, reader, out currentValue))
+                {
+                    return currentValue;
+                }
 
-    //    private class Table
-    //    {
-    //        public int HashMask { get; }
+                // Rebuild
+                var newTable = CreateAddTable(table, new Node(columns, value));
+                Interlocked.MemoryBarrier();
+                table = newTable;
 
-    //        public Node[][] Nodes { get; }
+                return value;
+            }
+        }
 
-    //        public int Count { get; }
+        //--------------------------------------------------------------------------------
+        // Inner
+        //--------------------------------------------------------------------------------
 
-    //        public Table(int hashMask, Node[][] nodes, int count)
-    //        {
-    //            HashMask = hashMask;
-    //            Nodes = nodes;
-    //            Count = count;
-    //        }
-    //    }
-    //}
+        private class Node
+        {
+            public string[] Columns { get; }
+
+            public object[] Value { get; }
+
+            public Node(string[] columns, object[] value)
+            {
+                Columns = columns;
+                Value = value;
+            }
+        }
+
+        private class Table
+        {
+            public int HashMask { get; }
+
+            public Node[][] Nodes { get; }
+
+            public int Count { get; }
+
+            public Table(int hashMask, Node[][] nodes, int count)
+            {
+                HashMask = hashMask;
+                Nodes = nodes;
+                Count = count;
+            }
+        }
+    }
 }
