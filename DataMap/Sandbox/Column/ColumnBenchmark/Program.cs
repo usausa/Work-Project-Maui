@@ -286,6 +286,40 @@ namespace ColumnBenchmark
                 reader10.GetValue(i);
             }
         }
+
+        [Benchmark(OperationsPerInvoke = 10)]
+        public void CacheSpecial2N()
+        {
+            if (!cache.TryGetValue(reader2, out var accessors))
+            {
+                accessors = cache.AddIfNotExist(reader2, accessorFactory);
+            }
+
+            for (var loop = 0; loop < 10; loop++)
+            {
+                for (var i = 0; i < accessors.Length; i++)
+                {
+                    reader2.GetValue(i);
+                }
+            }
+        }
+
+        [Benchmark(OperationsPerInvoke = 10)]
+        public void CacheSpecial10N()
+        {
+            if (!cache.TryGetValue(reader10, out var accessors))
+            {
+                accessors = cache.AddIfNotExist(reader10, accessorFactory);
+            }
+
+            for (var loop = 0; loop < 10; loop++)
+            {
+                for (var i = 0; i < accessors.Length; i++)
+                {
+                    reader10.GetValue(i);
+                }
+            }
+        }
     }
 
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
@@ -329,20 +363,20 @@ namespace ColumnBenchmark
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int CalculateHash(IDataReader reader)
-        {
-            unchecked
-            {
-                // TODO Hash
-                var hash = reader.FieldCount;
-                for (var i = 0; i < reader.FieldCount; i++)
-                {
-                    hash = (hash * 31) + reader.GetName(i).GetHashCode();
-                }
-                return hash;
-            }
-        }
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private static int CalculateHash(IDataReader reader)
+        //{
+        //    unchecked
+        //    {
+        //        // TODO Hash
+        //        var hash = reader.FieldCount;
+        //        for (var i = 0; i < reader.FieldCount; i++)
+        //        {
+        //            hash = (hash * 31) + reader.GetName(i).GetHashCode();
+        //        }
+        //        return hash;
+        //    }
+        //}
 
         private static uint CalculateSize(int count)
         {
@@ -443,14 +477,14 @@ namespace ColumnBenchmark
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool TryGetValueInternal(Table targetTable, IDataReader reader, out object[] value)
+        private static bool TryGetValueInternal(Table targetTable, string[] columns, out object[] value)
         {
-            var index = CalculateHash(reader) & targetTable.HashMask;
+            var index = CalculateHash(columns) & targetTable.HashMask;
             var array = targetTable.Nodes[index];
             for (var i = 0; i < array.Length; i++)
             {
                 var node = array[i];
-                if (IsMatchColumn(node.Columns, reader))
+                if (IsMatchColumn(node.Columns, columns))
                 {
                     value = node.Value;
                     return true;
@@ -462,16 +496,16 @@ namespace ColumnBenchmark
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsMatchColumn(string[] columns, IDataReader reader)
+        private static bool IsMatchColumn(string[] columns1, string[] columns2)
         {
-            if (columns.Length != reader.FieldCount)
+            if (columns1.Length != columns2.Length)
             {
                 return false;
             }
 
-            for (var i = 0; i < columns.Length; i++)
+            for (var i = 0; i < columns1.Length; i++)
             {
-                if (String.Compare(columns[i], reader.GetName(i), StringComparison.OrdinalIgnoreCase) != 0)
+                if (String.Compare(columns1[i], columns2[i], StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     return false;
                 }
@@ -483,29 +517,26 @@ namespace ColumnBenchmark
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGetValue(IDataReader reader, out object[] value)
         {
-            return TryGetValueInternal(table, reader, out value);
+            return TryGetValueInternal(table, GatherColumnNames(reader), out value);
         }
 
         public object[] AddIfNotExist(IDataReader reader, Func<string[], object[]> valueFactory)
         {
             lock (sync)
             {
+                var columns = GatherColumnNames(reader);
+
                 // Double checked locking
-                if (TryGetValueInternal(table, reader, out var currentValue))
+                if (TryGetValueInternal(table, columns, out var currentValue))
                 {
                     return currentValue;
                 }
 
-                var columns = new string[reader.FieldCount];
-                for (var i = 0; i < columns.Length; i++)
-                {
-                    columns[i] = reader.GetName(i);
-                }
 
                 var value = valueFactory(columns);
 
                 // Check if added by recursive
-                if (TryGetValueInternal(table, reader, out currentValue))
+                if (TryGetValueInternal(table, columns, out currentValue))
                 {
                     return currentValue;
                 }
@@ -517,6 +548,17 @@ namespace ColumnBenchmark
 
                 return value;
             }
+        }
+
+        private static string[] GatherColumnNames(IDataReader reader)
+        {
+            var columns = new string[reader.FieldCount];
+            for (var i = 0; i < columns.Length; i++)
+            {
+                columns[i] = reader.GetName(i);
+            }
+
+            return columns;
         }
 
         //--------------------------------------------------------------------------------
