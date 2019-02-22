@@ -1,6 +1,6 @@
 namespace Smart.Data.Mapper.Mappers
 {
-    public class ObjectResultMapper
+    public class ObjectResultMapperFactory
     {
         // TODO Default?, Naming version?
         // TODO Naming Pascal, Camel, Snake Converter Func

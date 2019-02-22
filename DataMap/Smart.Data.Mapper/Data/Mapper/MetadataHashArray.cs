@@ -5,6 +5,8 @@ namespace Smart.Data.Mapper
     using System.Runtime.CompilerServices;
     using System.Threading;
 
+    // TODO 不要メソッド削除、TryGetValue？
+
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     internal class MetadataHashArray
     {

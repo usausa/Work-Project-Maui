@@ -1,7 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+
 namespace Smart.Data.Mapper.Mappers
 {
-    public interface IResultMapper
+    public interface IResultMapperFactory
     {
+        bool IsMatch(Type type);
+
+        // TODO factory, converter, handler ?
+        Func<IDataReader, IEnumerable<T>> CreateMapper<T>();
     }
 
     //public interface IQueryHandler
