@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginExample", "PluginExample\PluginExample.csproj", "{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9DB063B6-CA9D-487A-927F-24A8B54924EB}"
+	ProjectSection(SolutionItems) = preProject
+		Plugin.sln.DotSettings = Plugin.sln.DotSettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC8ED283-5BC5-49EF-B55E-EFCFBC80DC78}
+	EndGlobalSection
+EndGlobal
