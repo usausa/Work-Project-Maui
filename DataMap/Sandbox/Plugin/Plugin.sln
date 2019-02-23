@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Plugin.sln.DotSettings = Plugin.sln.DotSettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginBenchmark", "PluginBenchmark\PluginBenchmark.csproj", "{ECCD25A3-D79F-4D70-B01E-80536F9D8DFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6D777CC-D830-4DD0-940F-4D8697D9C1AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECCD25A3-D79F-4D70-B01E-80536F9D8DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECCD25A3-D79F-4D70-B01E-80536F9D8DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECCD25A3-D79F-4D70-B01E-80536F9D8DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECCD25A3-D79F-4D70-B01E-80536F9D8DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
