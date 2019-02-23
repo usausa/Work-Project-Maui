@@ -14,7 +14,7 @@ namespace Smart.Data.Mapper
 
         public IDbTypeResolver DbTypeSelector { get; set; } // = defaultにする？
 
-        public IList<IParameterBuilderFactory> ParameterBuilderFactories { get; } = new List<IParameterBuilderFactory>();
+        public IList<IParameterBuilder> ParameterBuilders { get; } = new List<IParameterBuilder>();
 
         //public Dictionary<Type, object> Plugin, Addを用意して、拡張メソッドでIFをキーとするメソッドを！、一応Lock
 

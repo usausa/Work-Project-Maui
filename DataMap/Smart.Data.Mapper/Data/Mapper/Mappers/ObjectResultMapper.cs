@@ -1,61 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-
 namespace Smart.Data.Mapper.Mappers
 {
-    public interface IResultMapperFactory
+    public class ObjectResultMapper
     {
-        bool IsMatch(Type type);
+        // TODO Default?, Naming version?
+        // TODO Naming Pascal, Camel, Snake Converter Func
+        // Attribute only ?
+        // Procedureとの共有？
 
-        // TODO factory, converter, handler ?
-        Func<IDataReader, IEnumerable<T>> CreateMapper<T>();
+        //private readonly Dictionary<string, IAccessor> mapAccessors = new Dictionary<string, IAccessor>(StringComparer.OrdinalIgnoreCase);
+
+        //public DefaultTypeMetadata(Type type)
+        //{
+        //    foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        //    {
+        //        if (accessor.CanWrite) // With Naming
+        //        {
+        //            mapAccessors[pi.Name] = accessor;
+        //        }
+        //    }
+        //}
+
+        //public IAccessor GetMapAccessor(string column)
+        //{
+        //    IAccessor accessor;
+        //    mapAccessors.TryGetValue(column, out accessor);
+        //    return accessor;
+        //}
     }
-
-    //public interface IQueryHandler
-    //{
-    //    bool IsMatch(Type type);
-
-    //    IEnumerable<T> Handle<T>(Func<T> factory, IDataReader reader, ObjectConverter converter);
-    //}
-
-    //--
-
-    //public class DictionaryQueryHandler : IQueryHandler
-    //{
-    //    private static readonly Type TargetType = typeof(IDictionary<string, object>);
-
-    //    public bool IsMatch(Type type)
-    //    {
-    //        return TargetType.IsAssignableFrom(type);
-    //    }
-
-    //    public IEnumerable<T> Handle<T>(Func<T> factory, IDataReader reader, ObjectConverter converter)
-    //    {
-    //        var columns = new string[reader.FieldCount];
-    //        for (var i = 0; i < columns.Length; i++)
-    //        {
-    //            columns[i] = reader.GetName(i);
-    //        }
-
-    //        while (reader.Read())
-    //        {
-    //            var entity = (IDictionary<string, object>)factory();
-
-    //            for (var i = 0; i < columns.Length; i++)
-    //            {
-    //                var column = columns[i];
-
-    //                entity[column] = reader.IsDBNull(i) ? null : reader[column];
-    //            }
-
-    //            yield return (T)entity;
-    //        }
-    //    }
-    //}
-
-    //--
-
     //public class ObjectQueryHandler : IQueryHandler
     //{
     //    private readonly ITypeMetadataFactory metadataFactory;

@@ -4,7 +4,7 @@ namespace Smart.Data.Mapper
     using System.Collections.Generic;
     using System.Data;
 
-    public class DynamicParameter
+    public sealed class DynamicParameter : IDynamicParameter
     {
         private readonly Dictionary<string, ParameterInfo> parameters = new Dictionary<string, ParameterInfo>();
 
@@ -39,15 +39,6 @@ namespace Smart.Data.Mapper
             return (T)value;
         }
 
-        // TODO Names?
-
-        // TODO Build
-
-        //public IEnumerable<string> ParameterNames
-        //{
-        //    get { return parameters.Select(x => x.Key); }
-        //}
-
         //void IDynamicParameter.BuildParameters(IDbCommand cmd)
         //{
         //    foreach (var param in parameters.Values)
@@ -67,5 +58,9 @@ namespace Smart.Data.Mapper
         //        parameter.Direction = param.Direction;
         //    }
         //}
+        public void Build(ISqlMapperConfig config, IDbCommand cmd)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
