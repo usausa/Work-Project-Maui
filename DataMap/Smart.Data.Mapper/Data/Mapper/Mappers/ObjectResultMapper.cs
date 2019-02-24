@@ -27,6 +27,7 @@ namespace Smart.Data.Mapper.Mappers
         //    return accessor;
         //}
     }
+
     //public class ObjectQueryHandler : IQueryHandler
     //{
     //    private readonly ITypeMetadataFactory metadataFactory;

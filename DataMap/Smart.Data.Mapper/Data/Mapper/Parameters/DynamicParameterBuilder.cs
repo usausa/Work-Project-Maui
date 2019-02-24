@@ -4,11 +4,11 @@ namespace Smart.Data.Mapper.Parameters
 
     public sealed class DynamicParameterBuilder : IParameterBuilder
     {
-        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object value)
+        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object parameter)
         {
-            if (value is IDynamicParameter parameter)
+            if (parameter is IDynamicParameter dynamicParameter)
             {
-                parameter.Build(config, cmd);
+                dynamicParameter.Build(config, cmd);
                 return true;
             }
 

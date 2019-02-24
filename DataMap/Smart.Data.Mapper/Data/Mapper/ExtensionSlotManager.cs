@@ -6,13 +6,29 @@ namespace Smart.Data.Mapper
 
         private static int next;
 
-        public static int Allocate()
+        private static int Allocate()
         {
             lock (Sync)
             {
                 next++;
                 return next;
             }
+        }
+
+        // ReSharper disable once UnusedTypeParameter
+        private static class SlotHolder<T>
+        {
+            public static int Slot { get; }
+
+            static SlotHolder()
+            {
+                Slot = Allocate();
+            }
+        }
+
+        public static int GetSlot<T>()
+        {
+            return SlotHolder<T>.Slot;
         }
     }
 }

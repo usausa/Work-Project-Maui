@@ -5,6 +5,6 @@ namespace Smart.Data.Mapper.Parameters
 
     public interface IParameterBuilder
     {
-        bool Handle(ISqlMapperConfig config, IDbCommand cmd, object value);
+        bool Handle(ISqlMapperConfig config, IDbCommand cmd, object parameter);
     }
 }

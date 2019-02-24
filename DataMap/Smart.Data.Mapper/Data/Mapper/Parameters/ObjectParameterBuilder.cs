@@ -37,7 +37,7 @@ namespace Smart.Data.Mapper.Parameters
         //{
         //    return parameterAccessors;
         //}
-        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object value)
+        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object parameter)
         {
             // TODO
             return true;
