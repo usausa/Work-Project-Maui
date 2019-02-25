@@ -1,19 +1,40 @@
 namespace Smart.Data.Mapper
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
 
     using Smart.Converter;
+    using Smart.Data.Mapper.Mappers;
     using Smart.Data.Mapper.Parameters;
-    using Smart.Data.Mapper.Resolvers;
 
     // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
-        public static SqlMapperConfig Default { get; } = new SqlMapperConfig();
+        private static readonly IParameterBuilder[] DefaultParameterBuilders =
+        {
+            new DynamicParameterBuilder(),
+            new ObjectParameterBuilder()
+        };
 
-        public IDbTypeResolver DbTypeSelector { get; set; } // = defaultにする？
+        private static readonly IResultMapper[] DefaultResultMappers =
+        {
+            new ObjectResultMapper()
+        };
+
+        // TODO Custom ? withHandlers ?
+        private readonly Dictionary<Type, DbType> typeMap = new Dictionary<Type, DbType>();
+
+        private IParameterBuilder[] parameterBuilders;
+
+        private IResultMapper[] resultMappers;
+
+        //--------------------------------------------------------------------------------
+        // Property
+        //--------------------------------------------------------------------------------
+
+        public static SqlMapperConfig Default { get; } = new SqlMapperConfig();
 
         public IList<IParameterBuilder> ParameterBuilders { get; } = new List<IParameterBuilder>();
 
@@ -31,35 +52,129 @@ namespace Smart.Data.Mapper
 
         public IObjectConverter Converter { get; set; } = ObjectConverter.Default;
 
+        //--------------------------------------------------------------------------------
+        // Constructor
+        //--------------------------------------------------------------------------------
+
+        public SqlMapperConfig()
+        {
+            ResetParameterBuilders();
+            ResetResultMappers();
+            ResetTypeMap();
+        }
+
+        //--------------------------------------------------------------------------------
+        // Config
+        //--------------------------------------------------------------------------------
+
+        public SqlMapperConfig ResetParameterBuilders()
+        {
+            parameterBuilders = DefaultParameterBuilders;
+            return this;
+        }
+
+        public SqlMapperConfig AddParameterBuilders(IParameterBuilder builder)
+        {
+            var builders = new IParameterBuilder[parameterBuilders.Length + 1];
+            Array.Copy(parameterBuilders, 0, builders, 0, parameterBuilders.Length - DefaultParameterBuilders.Length);
+            builders[parameterBuilders.Length - DefaultParameterBuilders.Length] = builder;
+            Array.Copy(DefaultParameterBuilders, 0, builders, builders.Length - DefaultParameterBuilders.Length, DefaultParameterBuilders.Length);
+            return this;
+        }
+
+        public SqlMapperConfig ResetResultMappers()
+        {
+            resultMappers = DefaultResultMappers;
+            return this;
+        }
+
+        public SqlMapperConfig AddResultMappers(IResultMapper mapper)
+        {
+            var builders = new IResultMapper[resultMappers.Length + 1];
+            Array.Copy(resultMappers, 0, builders, 0, resultMappers.Length - DefaultResultMappers.Length);
+            builders[resultMappers.Length - DefaultResultMappers.Length] = mapper;
+            Array.Copy(DefaultResultMappers, 0, builders, builders.Length - DefaultResultMappers.Length, DefaultResultMappers.Length);
+            return this;
+        }
+
+        public SqlMapperConfig ResetTypeMap()
+        {
+            typeMap.Clear();
+            typeMap[typeof(byte)] = DbType.Byte;
+            typeMap[typeof(sbyte)] = DbType.SByte;
+            typeMap[typeof(short)] = DbType.Int16;
+            typeMap[typeof(ushort)] = DbType.UInt16;
+            typeMap[typeof(int)] = DbType.Int32;
+            typeMap[typeof(uint)] = DbType.UInt32;
+            typeMap[typeof(long)] = DbType.Int64;
+            typeMap[typeof(ulong)] = DbType.UInt64;
+            typeMap[typeof(float)] = DbType.Single;
+            typeMap[typeof(double)] = DbType.Double;
+            typeMap[typeof(decimal)] = DbType.Decimal;
+            typeMap[typeof(bool)] = DbType.Boolean;
+            typeMap[typeof(string)] = DbType.String;
+            typeMap[typeof(char)] = DbType.StringFixedLength;
+            typeMap[typeof(Guid)] = DbType.Guid;
+            typeMap[typeof(DateTime)] = DbType.DateTime;
+            typeMap[typeof(DateTimeOffset)] = DbType.DateTimeOffset;
+            typeMap[typeof(TimeSpan)] = DbType.Time;
+            typeMap[typeof(byte[])] = DbType.Binary;
+            typeMap[typeof(byte?)] = DbType.Byte;
+            typeMap[typeof(sbyte?)] = DbType.SByte;
+            typeMap[typeof(short?)] = DbType.Int16;
+            typeMap[typeof(ushort?)] = DbType.UInt16;
+            typeMap[typeof(int?)] = DbType.Int32;
+            typeMap[typeof(uint?)] = DbType.UInt32;
+            typeMap[typeof(long?)] = DbType.Int64;
+            typeMap[typeof(ulong?)] = DbType.UInt64;
+            typeMap[typeof(float?)] = DbType.Single;
+            typeMap[typeof(double?)] = DbType.Double;
+            typeMap[typeof(decimal?)] = DbType.Decimal;
+            typeMap[typeof(bool?)] = DbType.Boolean;
+            typeMap[typeof(char?)] = DbType.StringFixedLength;
+            typeMap[typeof(Guid?)] = DbType.Guid;
+            typeMap[typeof(DateTime?)] = DbType.DateTime;
+            typeMap[typeof(DateTimeOffset?)] = DbType.DateTimeOffset;
+            typeMap[typeof(TimeSpan?)] = DbType.Time;
+            typeMap[typeof(object)] = DbType.Object;
+            return this;
+        }
+
+        //--------------------------------------------------------------------------------
+        // ISqlMapperConfig
+        //--------------------------------------------------------------------------------
+
         public DbType LookupDbType(object value)
         {
+            if ((value == null) || (value is DBNull))
+            {
+                return DbType.Object;
+            }
+
+            // TODO Handler with Selector with default?
             throw new System.NotImplementedException();
         }
 
-        // TODO Parameter
-        //public static class DefaultParameterBuilders
-        //{
-        //    public static IList<IParameterBuilder> Create()
+        //    public DbType LookupDbType(Type type)
         //    {
-        //        return new List<IParameterBuilder>
+        //        var nullUnderlyingType = Nullable.GetUnderlyingType(type);
+        //        if (nullUnderlyingType != null)
         //        {
-        //            new DynamicParameterParameterBuilder(),
-        //            new DictionaryParameterBuilder(DbTypeMap.Default),
-        //            new ObjectParameterBuilder(DbTypeMap.Default, DefaultTypeMetaDataFactory.Default)
-        //        };
-        //    }
-        //}
+        //            type = nullUnderlyingType;
+        //        }
 
-        // TODO Query
-        //public static class DefaultQueryHandlers
-        //{
-        //    public static IList<IQueryHandler> Create()
-        //    {
-        //        return new List<IQueryHandler>
+        //        var snapShot = typeMap;
+        //        if (snapShot.TryGetValue(type, out var dbType))
         //        {
-        //            new DictionaryQueryHandler(),
-        //            new ObjectQueryHandler(DefaultTypeMetaDataFactory.Default)
-        //        };
+        //            return dbType;
+        //        }
+
+        //        if (type.IsEnum && snapShot.TryGetValue(Enum.GetUnderlyingType(type), out dbType))
+        //        {
+        //            return dbType;
+        //        }
+
+        //        throw new ArgumentException($"Type {type.FullName} can't be used", nameof(type));
         //    }
         //}
     }

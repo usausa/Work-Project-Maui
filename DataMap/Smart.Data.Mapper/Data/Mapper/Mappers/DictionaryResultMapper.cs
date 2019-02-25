@@ -1,17 +1,23 @@
 namespace Smart.Data.Mapper.Mappers
 {
-    public class DictionaryResultMapper
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+
+    public sealed class DictionaryResultMapper : IResultMapper
     {
+        private static readonly Type TargetType = typeof(IDictionary<string, object>);
+
+        public bool IsMatch(Type type)
+        {
+            return TargetType.IsAssignableFrom(type);
+        }
+
+        public IEnumerable<T> Map<T>(ISqlMapperConfig config, IDataReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
-
-    //public class DictionaryQueryHandler : IQueryHandler
-    //{
-    //    private static readonly Type TargetType = typeof(IDictionary<string, object>);
-
-    //    public bool IsMatch(Type type)
-    //    {
-    //        return TargetType.IsAssignableFrom(type);
-    //    }
 
     //    public IEnumerable<T> Handle<T>(Func<T> factory, IDataReader reader, ObjectConverter converter)
     //    {
