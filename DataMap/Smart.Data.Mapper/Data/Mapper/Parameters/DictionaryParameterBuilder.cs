@@ -12,15 +12,17 @@ namespace Smart.Data.Mapper.Parameters
             {
                 foreach (var keyValue in dictionary)
                 {
-                    // TODO
                     var param = cmd.CreateParameter();
                     param.ParameterName = keyValue.Key;
+
                     var value = keyValue.Value ?? DBNull.Value;
+                    param.Value = value;
+
                     if (value != DBNull.Value)
                     {
-                        //parameter.DbType = dbTypeMap.LookupDbType(value);
+                        param.DbType = config.LookupDbType(value);
                     }
-                    param.Value = value;
+
                     cmd.Parameters.Add(param);
                 }
 

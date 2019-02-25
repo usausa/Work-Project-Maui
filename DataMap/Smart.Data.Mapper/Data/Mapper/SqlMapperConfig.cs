@@ -1,6 +1,7 @@
 namespace Smart.Data.Mapper
 {
     using System.Collections.Generic;
+    using System.Data;
 
     using Smart.Converter;
     using Smart.Data.Mapper.Parameters;
@@ -29,6 +30,11 @@ namespace Smart.Data.Mapper
         // TODO Micro components style? デフォルトのは置換で? 順番の問題があるからダメか？
 
         public IObjectConverter Converter { get; set; } = ObjectConverter.Default;
+
+        public DbType LookupDbType(object value)
+        {
+            throw new System.NotImplementedException();
+        }
 
         // TODO Parameter
         //public static class DefaultParameterBuilders

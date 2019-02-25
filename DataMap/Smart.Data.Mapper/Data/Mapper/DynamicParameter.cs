@@ -33,34 +33,37 @@ namespace Smart.Data.Mapper
             var value = parameters[name].AttachedParam.Value;
             if (value == DBNull.Value)
             {
-                return default(T);
+                return default;
             }
 
             return (T)value;
         }
 
-        //void IDynamicParameter.BuildParameters(IDbCommand cmd)
-        //{
-        //    foreach (var param in parameters.Values)
-        //    {
-        //        var parameter = cmd.CreateParameter();
-        //        cmd.Parameters.Add(parameter);
-
-        //        param.AttachedParam = parameter;
-
-        //        parameter.ParameterName = param.Name;
-        //        parameter.Value = param.Value ?? DBNull.Value;
-        //        parameter.DbType = param.DbType ?? dbTypeMap.LookupDbType(param.Value);
-        //        if (param.Size.HasValue)
-        //        {
-        //            parameter.Size = param.Size.Value;
-        //        }
-        //        parameter.Direction = param.Direction;
-        //    }
-        //}
         public void Build(ISqlMapperConfig config, IDbCommand cmd)
         {
-            throw new NotImplementedException();
+            foreach (var parameter in parameters.Values)
+            {
+                var param = cmd.CreateParameter();
+                param.ParameterName = parameter.Name;
+
+                var value = parameter.Value ?? DBNull.Value;
+                param.Value = value;
+
+                if (value != DBNull.Value)
+                {
+                    param.DbType = parameter.DbType ?? config.LookupDbType(value);
+                }
+
+                if (parameter.Size.HasValue)
+                {
+                    param.Size = parameter.Size.Value;
+                }
+
+                param.Direction = parameter.Direction;
+
+                cmd.Parameters.Add(param);
+                parameter.AttachedParam = param;
+            }
         }
     }
 }
