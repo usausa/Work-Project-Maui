@@ -20,7 +20,8 @@ namespace Smart.Data.Mapper.Parameters
 
                     if (value != DBNull.Value)
                     {
-                        param.DbType = config.LookupDbType(value);
+                        param.DbType = config.LookupDbType(value, out var handler);
+                        handler?.SetValue(param, value);
                     }
 
                     cmd.Parameters.Add(param);

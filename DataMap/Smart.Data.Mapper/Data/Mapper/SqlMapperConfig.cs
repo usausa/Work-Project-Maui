@@ -5,6 +5,7 @@ namespace Smart.Data.Mapper
     using System.Data;
 
     using Smart.Converter;
+    using Smart.Data.Mapper.Handlers;
     using Smart.Data.Mapper.Mappers;
     using Smart.Data.Mapper.Parameters;
 
@@ -144,8 +145,9 @@ namespace Smart.Data.Mapper
         // ISqlMapperConfig
         //--------------------------------------------------------------------------------
 
-        public DbType LookupDbType(object value)
+        public DbType LookupDbType(object value, out ITypeHandler handler)
         {
+            handler = null;
             if ((value == null) || (value is DBNull))
             {
                 return DbType.Object;

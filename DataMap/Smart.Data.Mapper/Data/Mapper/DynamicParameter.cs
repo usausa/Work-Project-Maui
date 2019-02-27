@@ -49,17 +49,25 @@ namespace Smart.Data.Mapper
                 var value = parameter.Value ?? DBNull.Value;
                 param.Value = value;
 
-                if (value != DBNull.Value)
-                {
-                    param.DbType = parameter.DbType ?? config.LookupDbType(value);
-                }
-
                 if (parameter.Size.HasValue)
                 {
                     param.Size = parameter.Size.Value;
                 }
 
                 param.Direction = parameter.Direction;
+
+                if (value != DBNull.Value)
+                {
+                    if (parameter.DbType.HasValue)
+                    {
+                        param.DbType = parameter.DbType.Value;
+                    }
+                    else
+                    {
+                        param.DbType = config.LookupDbType(value, out var handler);
+                        handler?.SetValue(param, value);
+                    }
+                }
 
                 cmd.Parameters.Add(param);
                 parameter.AttachedParam = param;
