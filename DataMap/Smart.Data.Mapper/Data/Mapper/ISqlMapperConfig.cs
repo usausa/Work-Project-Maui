@@ -1,14 +1,18 @@
 namespace Smart.Data.Mapper
 {
+    using System;
     using System.Data;
+    using System.Reflection;
 
     using Smart.Data.Mapper.Handlers;
 
     public interface ISqlMapperConfig
     {
+        Func<object, object> CreateGetter(PropertyInfo pi);
+
         // Parameter
 
-        DbType LookupDbType(object value, out ITypeHandler handler);
+        DbType LookupDbType(Type type, out ITypeHandler handler);
 
         // TODO
     }

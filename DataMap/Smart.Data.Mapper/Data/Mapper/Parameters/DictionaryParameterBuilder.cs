@@ -15,13 +15,22 @@ namespace Smart.Data.Mapper.Parameters
                     var param = cmd.CreateParameter();
                     param.ParameterName = keyValue.Key;
 
-                    var value = keyValue.Value ?? DBNull.Value;
-                    param.Value = value;
-
-                    if (value != DBNull.Value)
+                    var value = keyValue.Value;
+                    if (value is null)
                     {
-                        param.DbType = config.LookupDbType(value, out var handler);
-                        handler?.SetValue(param, value);
+                        param.Value = DBNull.Value;
+                    }
+                    else
+                    {
+                        param.DbType = config.LookupDbType(value.GetType(), out var handler);
+                        if (handler != null)
+                        {
+                            handler.SetValue(param, value);
+                        }
+                        else
+                        {
+                            param.Value = value;
+                        }
                     }
 
                     cmd.Parameters.Add(param);

@@ -46,28 +46,32 @@ namespace Smart.Data.Mapper
                 var param = cmd.CreateParameter();
                 param.ParameterName = parameter.Name;
 
-                var value = parameter.Value ?? DBNull.Value;
-                param.Value = value;
-
-                if (parameter.Size.HasValue)
+                var value = parameter.Value;
+                if (value is null)
                 {
-                    param.Size = parameter.Size.Value;
+                    param.Value = DBNull.Value;
                 }
-
-                param.Direction = parameter.Direction;
-
-                if (value != DBNull.Value)
+                else
                 {
-                    if (parameter.DbType.HasValue)
+                    var dbType = config.LookupDbType(value.GetType(), out var handler);
+                    param.DbType = parameter.DbType ?? dbType;
+
+                    if (parameter.Size.HasValue)
                     {
-                        param.DbType = parameter.DbType.Value;
+                        param.Size = parameter.Size.Value;
+                    }
+
+                    if (handler != null)
+                    {
+                        handler.SetValue(param, value);
                     }
                     else
                     {
-                        param.DbType = config.LookupDbType(value, out var handler);
-                        handler?.SetValue(param, value);
+                        param.Value = value;
                     }
                 }
+
+                param.Direction = parameter.Direction;
 
                 cmd.Parameters.Add(param);
                 parameter.AttachedParam = param;

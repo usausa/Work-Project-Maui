@@ -3,11 +3,13 @@ namespace Smart.Data.Mapper
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Reflection;
 
     using Smart.Converter;
     using Smart.Data.Mapper.Handlers;
     using Smart.Data.Mapper.Mappers;
     using Smart.Data.Mapper.Parameters;
+    using Smart.Reflection;
 
     // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
@@ -50,6 +52,8 @@ namespace Smart.Data.Mapper
         // TODO MetadataRepository
 
         // TODO Micro components style? デフォルトのは置換で? 順番の問題があるからダメか？
+
+        public IDelegateFactory DelegateFactory { get; set; } = Smart.Reflection.DelegateFactory.Default;
 
         public IObjectConverter Converter { get; set; } = ObjectConverter.Default;
 
@@ -145,39 +149,35 @@ namespace Smart.Data.Mapper
         // ISqlMapperConfig
         //--------------------------------------------------------------------------------
 
-        public DbType LookupDbType(object value, out ITypeHandler handler)
+        public Func<object, object> CreateGetter(PropertyInfo pi)
+        {
+            return DelegateFactory.CreateGetter(pi);
+        }
+
+        public DbType LookupDbType(Type type, out ITypeHandler handler)
         {
             handler = null;
-            if ((value == null) || (value is DBNull))
+
+            //var nullUnderlyingType = Nullable.GetUnderlyingType(type);
+            //if (nullUnderlyingType != null)
+            //{
+            //    type = nullUnderlyingType;
+            //}
+
+            if (typeMap.TryGetValue(type, out var dbType))
             {
-                return DbType.Object;
+                return dbType;
             }
+
+            //        if (type.IsEnum && snapShot.TryGetValue(Enum.GetUnderlyingType(type), out dbType))
+            //        {
+            //            return dbType;
+            //        }
+
+            //        throw new ArgumentException($"Type {type.FullName} can't be used", nameof(type));
 
             // TODO Handler with Selector with default?
             throw new System.NotImplementedException();
         }
-
-        //    public DbType LookupDbType(Type type)
-        //    {
-        //        var nullUnderlyingType = Nullable.GetUnderlyingType(type);
-        //        if (nullUnderlyingType != null)
-        //        {
-        //            type = nullUnderlyingType;
-        //        }
-
-        //        var snapShot = typeMap;
-        //        if (snapShot.TryGetValue(type, out var dbType))
-        //        {
-        //            return dbType;
-        //        }
-
-        //        if (type.IsEnum && snapShot.TryGetValue(Enum.GetUnderlyingType(type), out dbType))
-        //        {
-        //            return dbType;
-        //        }
-
-        //        throw new ArgumentException($"Type {type.FullName} can't be used", nameof(type));
-        //    }
-        //}
     }
 }
