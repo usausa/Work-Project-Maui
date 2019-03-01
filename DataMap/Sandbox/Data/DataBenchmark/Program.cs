@@ -1,4 +1,7 @@
-﻿namespace DataBenchmark
+using System.Collections.Generic;
+using Smart.Mock.Data;
+
+namespace DataBenchmark
 {
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Configs;
@@ -25,7 +28,7 @@
         {
             Add(MarkdownExporter.Default, MarkdownExporter.GitHub);
             Add(MemoryDiagnoser.Default);
-            Add(Job.ShortRun);
+            Add(Job.MediumRun);
         }
     }
 
@@ -33,52 +36,99 @@
     [Config(typeof(BenchmarkConfig))]
     public class Benchmark
     {
-        private SqliteConnection con;
+        private SqliteConnection sqlite;
+
+        private MockDbConnection mockQuery;
+
+        private MockDbConnection mockExecute;
 
         [GlobalSetup]
-        public void Setup()
+        public void GlobalSetup()
         {
-            con = new SqliteConnection("Data Source=:memory:");
-            con.Open();
-            con.Execute("CREATE TABLE IF NOT EXISTS Table1 (Id int PRIMARY KEY, Data text)");
-            con.Execute("CREATE TABLE IF NOT EXISTS Table2 (Id int, Data text)");
+            sqlite = new SqliteConnection("Data Source=:memory:");
+            sqlite.Open();
+            sqlite.Execute("CREATE TABLE IF NOT EXISTS Table1 (Id int PRIMARY KEY, Data text)");
+            sqlite.Execute("CREATE TABLE IF NOT EXISTS Table2 (Id int, Data text)");
 
             for (var i = 1; i <= 100; i++)
             {
-                con.Execute("INSERT INTO Table1 (Id, Data) VALUES (@Id, @Data)", new { Id = i, Data = "test" });
+                sqlite.Execute("INSERT INTO Table1 (Id, Data) VALUES (@Id, @Data)", new { Id = i, Data = "test" });
             }
+
+            mockQuery = new MockDbConnection();
+            mockExecute = new MockDbConnection();
+        }
+
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            sqlite.Execute("DELETE FROM Table2");
+
+            var columns = new[]
+            {
+                new MockColumn(typeof(long), "Id"),
+                new MockColumn(typeof(string), "Data")
+            };
+            var rows = new List<object[]>();
+            for (var i = 1; i <= 100; i++)
+            {
+                rows.Add(new object[] { (long)i, "test" });
+            }
+            mockQuery.SetupCommand(cmd => cmd.SetupResult(new MockDataReader(columns, rows)));
+
+            mockExecute.SetupCommand(cmd => cmd.SetupResult(1));
         }
 
         [GlobalCleanup]
-        public void Cleanup()
+        public void GlobalCleanup()
         {
-            con.Close();
+            sqlite.Close();
+            mockQuery.Close();
+            mockExecute.Close();
+        }
+
+        // SQLite
+
+        [Benchmark]
+        public void SqliteQueryFirst()
+        {
+            sqlite.QueryFirstOrDefault<Table>("SELECT * FROM Table1 WHERE Id = @Id", new { Id = 1 });
         }
 
         [Benchmark]
-        public void QueryFirst()
+        public void SqliteQuery()
         {
-            con.QueryFirstOrDefault<Table>("SELECT * FROM Table1 WHERE Id = @Id", new { Id = 1 });
-        }
-
-        [Benchmark]
-        public void Query()
-        {
-            foreach (var _ in con.Query<Table>("SELECT * FROM Table1", buffered: false))
+            foreach (var _ in sqlite.Query<Table>("SELECT * FROM Table1", buffered: false))
             {
             }
         }
 
         [Benchmark]
-        public void Scalar()
+        public void SqliteScalar()
         {
-            con.ExecuteScalar<int>("SELECT COUNT(*) FROM Table1");
+            sqlite.ExecuteScalar<int>("SELECT COUNT(*) FROM Table1");
         }
 
         [Benchmark]
-        public void Execute()
+        public void SqliteExecute()
         {
-            con.Execute("INSERT INTO Table2 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
+            sqlite.Execute("INSERT INTO Table2 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
+        }
+
+        // Mock
+
+        [Benchmark]
+        public void MockQuery()
+        {
+            foreach (var _ in mockQuery.Query<Table>("SELECT * FROM Table1", buffered: false))
+            {
+            }
+        }
+
+        [Benchmark]
+        public void MockExecute()
+        {
+            mockExecute.Execute("INSERT INTO Table2 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
         }
     }
 
