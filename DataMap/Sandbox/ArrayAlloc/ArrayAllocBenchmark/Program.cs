@@ -1,3 +1,5 @@
+using System;
+
 namespace ArrayAllocBenchmark
 {
     using System.Buffers;
@@ -31,7 +33,10 @@ namespace ArrayAllocBenchmark
     [Config(typeof(BenchmarkConfig))]
     public class Benchmark
     {
-        private static readonly ThreadLocal<string[]> staticArray = new ThreadLocal<string[]>(() => new string[10]);
+        private static readonly ThreadLocal<string[]> StaticArray = new ThreadLocal<string[]>(() => new string[10]);
+
+        [ThreadStatic]
+        private static string[] staticArray2;
 
         [Benchmark]
         public void Alloc()
@@ -60,11 +65,27 @@ namespace ArrayAllocBenchmark
         [Benchmark]
         public void ThreadStatic()
         {
-            var array = staticArray.Value;
+            var array = StaticArray.Value;
             if (array.Length < 10)
             {
                 array = new string[10];
-                staticArray.Value = array;
+                StaticArray.Value = array;
+            }
+
+            for (var i = 0; i < 10; i++)
+            {
+                array[i] = string.Empty;
+            }
+        }
+
+        [Benchmark]
+        public void ThreadStatic2()
+        {
+            var array = staticArray2;
+            if ((array == null) || (array.Length < 10))
+            {
+                array = new string[10];
+                staticArray2 = array;
             }
 
             for (var i = 0; i < 10; i++)
