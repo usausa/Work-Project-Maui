@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:effects="clr-namespace:EffectTest.Effects;assembly=EffectTest"
+             x:Class="EffectTest.MainPage">
+
+    <StackLayout>
+
+        <Label Text="Test"
+               BackgroundColor="LightYellow"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="1"
+               effects:BorderEffect.Color="Yellow"
+               effects:BorderEffect.Radius="1"/>
+
+        <Label Text="Test"
+               BackgroundColor="LightPink"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="5"
+               effects:BorderEffect.Color="DeepPink"
+               effects:BorderEffect.Radius="8"/>
+
+        <Label Text="Test"
+               BackgroundColor="LightBlue"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="1"
+               effects:BorderEffect.Color="Blue"
+               effects:BorderEffect.Radius="8"/>
+
+    </StackLayout>
+
+</ContentPage>
