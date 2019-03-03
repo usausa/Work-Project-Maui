@@ -12,6 +12,8 @@
 
     public class MainPageViewModel : ViewModelBase, IShellControl
     {
+        public static MainPageViewModel DesignInstance { get; } = null; // For design
+
         public NotificationValue<string> Title { get; } = new NotificationValue<string>();
 
         public NotificationValue<bool> CanBack { get; } = new NotificationValue<bool>();

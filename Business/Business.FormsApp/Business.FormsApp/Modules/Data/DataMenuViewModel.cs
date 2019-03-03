@@ -16,6 +16,8 @@
 
     public class DataMenuViewModel : AppViewModelBase
     {
+        public static DataMenuViewModel DesignInstance { get; } = null; // For design
+
         private readonly IDialogService dialogService;
 
         public AsyncCommand<ViewId> ForwardCommand { get; }

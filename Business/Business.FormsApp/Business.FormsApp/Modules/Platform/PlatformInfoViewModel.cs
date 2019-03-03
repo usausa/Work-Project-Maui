@@ -9,6 +9,8 @@
 
     public class PlatformInfoViewModel : AppViewModelBase
     {
+        public static PlatformInfoViewModel DesignInstance { get; } = null; // For design
+
         public NotificationValue<string> AppName { get; } = new NotificationValue<string>();
         public NotificationValue<string> AppPackageName { get; } = new NotificationValue<string>();
         public NotificationValue<string> AppVersionString { get; } = new NotificationValue<string>();

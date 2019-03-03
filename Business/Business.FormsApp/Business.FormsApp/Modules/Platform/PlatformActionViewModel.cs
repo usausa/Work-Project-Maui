@@ -10,6 +10,8 @@
 
     public class PlatformActionViewModel : AppViewModelBase
     {
+        public static PlatformActionViewModel DesignInstance { get; } = null; // For design
+
         public AsyncCommand VibrateCommand { get; }
         public AsyncCommand SpeakCommand { get; }
 

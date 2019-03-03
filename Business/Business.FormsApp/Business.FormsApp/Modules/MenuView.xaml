@@ -2,23 +2,14 @@
 <ContentView x:Class="Business.FormsApp.Modules.MenuView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:modules="clr-namespace:Business.FormsApp.Modules;assembly=Business.FormsApp"
              xmlns:shell="clr-namespace:Business.FormsApp.Shell;assembly=Business.FormsApp"
              xmlns:markup="clr-namespace:Business.FormsApp.Markup;assembly=Business.FormsApp"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type={x:Type modules:MenuViewModel}}"
+             BindingContext="{Binding Source={x:Static modules:MenuViewModel.DesignInstance}}"
              resolver:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
              shell:ShellProperty.Title="Menu"
              shell:ShellProperty.CanBack="False">
-
-    <!--
-    <ContentView.BindingContext>
-        <modules:MenuViewModel/>
-    </ContentView.BindingContext>
-    -->
 
     <Grid Style="{StaticResource MenuGrid}">
         <Grid.RowDefinitions>

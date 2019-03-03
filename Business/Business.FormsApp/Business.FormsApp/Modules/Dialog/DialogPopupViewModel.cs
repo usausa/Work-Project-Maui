@@ -7,8 +7,10 @@
     using Smart.ComponentModel;
     using Smart.Forms.Input;
 
-    public class DialogPopupViewModel : AppDialogViewModelBase, IPopupInitialize<string>, IPopupResult<bool>
+    public class DialogPopupViewModel : AppDialogViewModelBase, IPopupInitializeAsync<string>, IPopupResult<bool>
     {
+        public static DialogPopupViewModel DesignInstance { get; } = null; // For design
+
         public NotificationValue<string> Text { get; } = new NotificationValue<string>();
 
         public AsyncCommand<bool> CloseCommand { get; }

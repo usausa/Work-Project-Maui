@@ -7,6 +7,8 @@
 
     public class PlatformMenuViewModel : AppViewModelBase
     {
+        public static PlatformMenuViewModel DesignInstance { get; } = null; // For design
+
         public AsyncCommand<ViewId> ForwardCommand { get; }
 
         public PlatformMenuViewModel(ApplicationState applicationState)

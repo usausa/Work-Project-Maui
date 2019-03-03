@@ -2,22 +2,13 @@
 <ContentView x:Class="Business.FormsApp.Modules.Platform.PlatformStatusView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:resolver="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:modules="clr-namespace:Business.FormsApp.Modules.Platform;assembly=Business.FormsApp"
              xmlns:shell="clr-namespace:Business.FormsApp.Shell;assembly=Business.FormsApp"
-             mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type={x:Type modules:PlatformStatusViewModel}}"
+             BindingContext="{Binding Source={x:Static modules:PlatformStatusViewModel.DesignInstance}}"
              resolver:BindingContextResolver.Type="{x:Type modules:PlatformStatusViewModel}"
              shell:ShellProperty.Title="Platform Status"
              shell:ShellProperty.CanBack="True">
-
-    <!--
-    <ContentView.BindingContext>
-        <modules:PlatformStatusViewModel/>
-    </ContentView.BindingContext>
-    -->
 
     <StackLayout Style="{StaticResource ContentStackLayout}">
 

@@ -6,43 +6,59 @@
     <!-- Size -->
 
     <OnPlatform x:Key="LittleSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">11.0</On>
-        <On Platform="Android, UWP">12.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="11.0"/>
+            <On Platform="Android, UWP" Value="12.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="MidMediumSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">12.0</On>
-        <On Platform="Android, UWP">14.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="12.0"/>
+            <On Platform="Android, UWP" Value="14.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="MediumSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">14.0</On>
-        <On Platform="Android, UWP">16.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="14.0"/>
+            <On Platform="Android, UWP" Value="16.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="LargeSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">16.0</On>
-        <On Platform="Android, UWP">18.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="16.0"/>
+            <On Platform="Android, UWP" Value="18.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="LargerSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">18.0</On>
-        <On Platform="Android, UWP">20.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="18.0"/>
+            <On Platform="Android, UWP" Value="20.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="BigSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">20.0</On>
-        <On Platform="Android, UWP">24.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="20.0"/>
+            <On Platform="Android, UWP" Value="24.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="ExtraBigSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">24.0</On>
-        <On Platform="Android, UWP">32.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="24.0"/>
+            <On Platform="Android, UWP" Value="32.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
     <OnPlatform x:Key="HugeSize" x:TypeArguments="x:Double">
-        <On Platform="iOS">32.0</On>
-        <On Platform="Android, UWP">48.0</On>
+        <OnPlatform.Platforms>
+            <On Platform="iOS" Value="32.0"/>
+            <On Platform="Android, UWP" Value="48.0"/>
+        </OnPlatform.Platforms>
     </OnPlatform>
 
 </ResourceDictionary>

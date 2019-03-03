@@ -10,6 +10,8 @@
 
     public class PlatformSensorViewModel : AppViewModelBase
     {
+        public static PlatformSensorViewModel DesignInstance { get; } = null; // For design
+
         private readonly ISensors sensors;
 
         public NotificationValue<string> Location { get; } = new NotificationValue<string>();

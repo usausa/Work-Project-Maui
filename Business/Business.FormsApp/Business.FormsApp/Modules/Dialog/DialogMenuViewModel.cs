@@ -11,6 +11,8 @@
 
     public class DialogMenuViewModel : AppViewModelBase
     {
+        public static DialogMenuViewModel DesignInstance { get; } = null; // For design
+
         private readonly IDialogService dialogService;
 
         private readonly IDialogs dialogs;

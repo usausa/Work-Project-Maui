@@ -8,19 +8,15 @@
     using Rg.Plugins.Popup.Pages;
     using Rg.Plugins.Popup.Services;
 
-    using Smart.Resolver;
-
-    using Xamarin.Forms;
-
-    public class PopupNavigator : IPopupNavigator
+    public sealed class PopupNavigator : IPopupNavigator
     {
-        private readonly IResolver resolver;
+        private readonly IPopupFactory factory;
 
         private readonly Dictionary<object, Type> popupTypes = new Dictionary<object, Type>();
 
-        public PopupNavigator(IResolver resolver)
+        public PopupNavigator(IPopupFactory factory)
         {
-            this.resolver = resolver;
+            this.factory = factory;
         }
 
         public void AutoRegister(IEnumerable<Type> types)
@@ -41,7 +37,7 @@
                 throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
             }
 
-            var content = (View)resolver.Get(type);
+            var content = factory.Get(type);
 
             if (content.BindingContext is IPopupNavigatorAware aware)
             {
@@ -59,7 +55,7 @@
             var cts = new TaskCompletionSource<TResult>();
             popup.Disappearing += (sender, args) =>
             {
-                if (((PopupPage)sender).BindingContext is IPopupResult<TResult> result)
+                if (((PopupPage)sender).Content.BindingContext is IPopupResult<TResult> result)
                 {
                     cts.SetResult(result.Result);
                 }
@@ -81,7 +77,7 @@
                 throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
             }
 
-            var content = (View)resolver.Get(type);
+            var content = factory.Get(type);
 
             if (content.BindingContext is IPopupNavigatorAware aware)
             {
@@ -90,7 +86,11 @@
 
             if (content.BindingContext is IPopupInitialize<TParameter> initialize)
             {
-                await initialize.Initialize(parameter);
+                initialize.Initialize(parameter);
+            }
+            if (content.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter);
             }
 
             var popup = new PopupPage
@@ -104,7 +104,7 @@
             var cts = new TaskCompletionSource<TResult>();
             popup.Disappearing += (sender, args) =>
             {
-                if (((PopupPage)sender).BindingContext is IPopupResult<TResult> result)
+                if (((PopupPage)sender).Content.BindingContext is IPopupResult<TResult> result)
                 {
                     cts.SetResult(result.Result);
                 }
@@ -126,7 +126,7 @@
                 throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
             }
 
-            var content = (View)resolver.Get(type);
+            var content = factory.Get(type);
 
             if (content.BindingContext is IPopupNavigatorAware aware)
             {
@@ -159,7 +159,7 @@
                 throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
             }
 
-            var content = (View)resolver.Get(type);
+            var content = factory.Get(type);
 
             if (content.BindingContext is IPopupNavigatorAware aware)
             {
@@ -168,7 +168,11 @@
 
             if (content.BindingContext is IPopupInitialize<TParameter> initialize)
             {
-                await initialize.Initialize(parameter);
+                initialize.Initialize(parameter);
+            }
+            if (content.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter);
             }
 
             var popup = new PopupPage

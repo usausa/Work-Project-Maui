@@ -42,7 +42,7 @@ namespace Business.FormsApp
             };
 
             // Popup
-            popupNavigator = new PopupNavigator(resolver);
+            popupNavigator = new PopupNavigator(new SmartPopupFactory(resolver));
             popupNavigator.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes);
 
             // Show MainWindow

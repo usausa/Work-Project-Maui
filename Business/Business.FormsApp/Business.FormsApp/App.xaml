@@ -20,10 +20,12 @@
 
             <!-- Font -->
 
-            <OnPlatform x:Key="Ionicons" x:TypeArguments="x:String">
-                <On Platform="iOS">ionicons</On>
-                <On Platform="Android">Fonts/ionicons.ttf</On>
-                <On Platform="UWP">Assets/Fonts/ionicons.ttf#ionicons</On>
+            <OnPlatform x:Key="IconFont" x:TypeArguments="x:String">
+                <OnPlatform.Platforms>
+                    <On Platform="iOS" Value="icons" />
+                    <On Platform="Android" Value="Fonts/icons.ttf" />
+                    <On Platform="UWP" Value="Assets/Fonts/icons.ttf#icons" />
+                </OnPlatform.Platforms>
             </OnPlatform>
 
             <!-- Color -->
@@ -43,8 +45,10 @@
             <!-- Title -->
 
             <OnPlatform x:Key="MainTitleGridHeight" x:TypeArguments="x:Double">
-                <On Platform="iOS">32.0</On>
-                <On Platform="Android, UWP">48.0</On>
+                <OnPlatform.Platforms>
+                    <On Platform="iOS">32.0</On>
+                    <On Platform="Android, UWP">48.0</On>
+                </OnPlatform.Platforms>
             </OnPlatform>
 
             <Style x:Key="MainTitleGrid" TargetType="Grid">
@@ -58,53 +62,31 @@
             <Style x:Key="MainTitleLabel" TargetType="Label">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
             <OnPlatform x:Key="MainTitleButtonWidth" x:TypeArguments="x:Double">
-                <On Platform="iOS">32.0</On>
-                <On Platform="Android, UWP">48.0</On>
+                <OnPlatform.Platforms>
+                    <On Platform="iOS">32.0</On>
+                    <On Platform="Android, UWP">48.0</On>
+                </OnPlatform.Platforms>
             </OnPlatform>
 
             <Style x:Key="MainTitleButton" TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDark}"/>
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource LargerSize}" />
-                <Setter Property="FontFamily" Value="{StaticResource Ionicons}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
                 <Setter Property="WidthRequest" Value="{StaticResource MainTitleButtonWidth}"/>
             </Style>
 
-            <!-- Function -->
+            <!--  Dialog  -->
 
-            <OnPlatform x:Key="MainFunctionGridHeight" x:TypeArguments="x:Double">
-                <On Platform="iOS">40.0</On>
-                <On Platform="Android, UWP">56.0</On>
-            </OnPlatform>
-
-            <Style x:Key="MainFunctionGrid" TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}"/>
-                <Setter Property="RowSpacing" Value="0"/>
-                <Setter Property="ColumnSpacing" Value="0" />
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="HeightRequest" Value="{StaticResource MainFunctionGridHeight}" />
-            </Style>
-
-            <Style x:Key="MainFunctionButton" TargetType="Button">
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
-                <Setter Property="FontFamily" Value="{StaticResource Ionicons}" />
-                <Setter Property="CornerRadius" Value="0" />
-                <Setter Property="BorderWidth" Value="0" />
-            </Style>
-
-            <!-- Button -->
-
-            <Style x:Key="NavigationButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}"/>
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
-                <Setter Property="Margin" Value="3" />
+            <Style x:Key="DialogLayout" TargetType="StackLayout">
+                <Setter Property="Spacing" Value="0" />
             </Style>
 
             <!-- Page Layout -->
@@ -121,6 +103,48 @@
                 <Setter Property="Spacing" Value="0"/>
             </Style>
 
+            <Style x:Key="InputGrid" TargetType="Grid">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="RowSpacing" Value="3"/>
+                <Setter Property="ColumnSpacing" Value="3" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <!-- Function -->
+
+            <OnPlatform x:Key="MainFunctionGridHeight" x:TypeArguments="x:Double">
+                <OnPlatform.Platforms>
+                    <On Platform="iOS">40.0</On>
+                    <On Platform="Android, UWP">56.0</On>
+                </OnPlatform.Platforms>
+            </OnPlatform>
+
+            <Style x:Key="MainFunctionGrid" TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}"/>
+                <Setter Property="RowSpacing" Value="0"/>
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HeightRequest" Value="{StaticResource MainFunctionGridHeight}" />
+            </Style>
+
+            <Style x:Key="MainFunctionButton" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+            </Style>
+
+            <!-- Button -->
+
+            <Style x:Key="NavigationButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}"/>
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="Margin" Value="3" />
+            </Style>
+
             <!-- Label -->
 
             <Style x:Key="GroupLabel" TargetType="Label">
@@ -132,6 +156,37 @@
             <Style x:Key="ValueLabel" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource MetroDarken}"/>
                 <Setter Property="FontSize" Value="{StaticResource MediumSize}" />
+            </Style>
+
+            <!--  Input  -->
+
+            <Style x:Key="InputLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource HugeSize}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="InputTextButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
+            </Style>
+
+            <Style x:Key="InputDisableButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLightenBrighter}"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
+            </Style>
+
+            <Style x:Key="InputFunctionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}"/>
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
             </Style>
 
             <!-- Converter -->

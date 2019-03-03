@@ -10,6 +10,8 @@
 
     public class PlatformStatusViewModel : AppViewModelBase
     {
+        public static PlatformStatusViewModel DesignInstance { get; } = null; // For design
+
         public NotificationValue<string> BatteryLevel { get; } = new NotificationValue<string>();
 
         public NotificationValue<string> WifiConnected { get; } = new NotificationValue<string>();
