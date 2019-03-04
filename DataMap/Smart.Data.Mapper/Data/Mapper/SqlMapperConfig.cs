@@ -179,5 +179,18 @@ namespace Smart.Data.Mapper
             // TODO Handler with Selector with default?
             throw new System.NotImplementedException();
         }
+
+        public bool BuildCommand(IDbCommand cmd, object param)
+        {
+            for (var i = 0; i < parameterBuilders.Length; i++)
+            {
+                if (parameterBuilders[i].Handle(this, cmd, param))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

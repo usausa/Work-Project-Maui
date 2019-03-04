@@ -14,6 +14,8 @@ namespace Smart.Data.Mapper
 
         DbType LookupDbType(Type type, out ITypeHandler handler);
 
+        bool BuildCommand(IDbCommand cmd, object param);
+
         // TODO
     }
 }

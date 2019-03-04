@@ -10,7 +10,7 @@ namespace Smart.Data.Mapper
         // Core
         //--------------------------------------------------------------------------------
 
-        private static IDbCommand SetupCommand(IDbConnection con, IDbTransaction transaction, string sql, object param, int? commandTimeout, CommandType? commandType)
+        private static IDbCommand SetupCommand(ISqlMapperConfig config, IDbConnection con, IDbTransaction transaction, string sql, object param, int? commandTimeout, CommandType? commandType)
         {
             var cmd = con.CreateCommand();
 
@@ -31,17 +31,13 @@ namespace Smart.Data.Mapper
                 cmd.CommandType = commandType.Value;
             }
 
-            // TODO
-            //if (param != null)
-            //{
-            //    var builder = parameterBuilders.FirstOrDefault(x => x.IsMatch(param));
-            //    if (builder == null)
-            //    {
-            //        throw new SqlMapperException("Parameter can't build.");
-            //    }
-
-            //    builder.BuildParameters(cmd, param);
-            //}
+            if (param != null)
+            {
+                if (!config.BuildCommand(cmd, param))
+                {
+                    throw new SqlMapperException("Parameter build failed.");
+                }
+            }
 
             return cmd;
         }
@@ -66,7 +62,7 @@ namespace Smart.Data.Mapper
         public static int Execute(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
             var wasClosed = con.State == ConnectionState.Closed;
-            using (var cmd = SetupCommand(con, transaction, sql, param, commandTimeout, commandType))
+            using (var cmd = SetupCommand(config, con, transaction, sql, param, commandTimeout, commandType))
             {
                 try
                 {
@@ -116,29 +112,29 @@ namespace Smart.Data.Mapper
         //    }
         //}
 
-        private static IDataReader ExecuteReaderImpl(this IDbConnection con, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType, CommandBehavior commandBehavior)
-        {
-            var wasClosed = con.State == ConnectionState.Closed;
-            using (var cmd = SetupCommand(con, transaction, sql, param, commandTimeout, commandType))
-            {
-                try
-                {
-                    if (wasClosed)
-                    {
-                        con.Open();
-                    }
+        //private static IDataReader ExecuteReaderImpl(this IDbConnection con, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType, CommandBehavior commandBehavior)
+        //{
+        //    var wasClosed = con.State == ConnectionState.Closed;
+        //    using (var cmd = SetupCommand(config, con, transaction, sql, param, commandTimeout, commandType))
+        //    {
+        //        try
+        //        {
+        //            if (wasClosed)
+        //            {
+        //                con.Open();
+        //            }
 
-                    var reader = cmd.ExecuteReader(commandBehavior);
-                    wasClosed = false;
+        //            var reader = cmd.ExecuteReader(commandBehavior);
+        //            wasClosed = false;
 
-                    return reader;
-                }
-                finally
-                {
-                    Cleanup(wasClosed, con, cmd);
-                }
-            }
-        }
+        //            return reader;
+        //        }
+        //        finally
+        //        {
+        //            Cleanup(wasClosed, con, cmd);
+        //        }
+        //    }
+        //}
 
         // TODO QueryImpl
 

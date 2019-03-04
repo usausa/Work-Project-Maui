@@ -39,8 +39,9 @@ namespace Smart.Data.Mapper.Parameters
                 entries = typeMetadataMap.AddIfNotExist(parameter.GetType(), t => CreateParameterEntries(config, t));
             }
 
-            foreach (var entry in entries)
+            for (var i = 0; i < entries.Length; i++)
             {
+                var entry = entries[i];
                 var param = cmd.CreateParameter();
 
                 param.ParameterName = entry.Name;
