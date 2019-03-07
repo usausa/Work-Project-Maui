@@ -61,6 +61,7 @@
                FontSize="Large"
                HorizontalOptions="FillAndExpand"
                VerticalOptions="Start"
+               effects:BorderEffect.Padding="3,0,3,0"
                effects:BorderEffect.Width="0.2"
                effects:BorderEffect.Color="Black"/>
 

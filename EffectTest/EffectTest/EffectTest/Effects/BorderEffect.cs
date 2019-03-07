@@ -6,6 +6,14 @@
 
     public sealed class BorderEffect : RoutingEffect
     {
+        public static readonly BindableProperty PaddingProperty =
+            BindableProperty.CreateAttached(
+                "Padding",
+                typeof(Thickness),
+                typeof(BorderEffect),
+                default(Thickness),
+                propertyChanged: OnPropertyChanged);
+
         public static readonly BindableProperty WidthProperty =
             BindableProperty.CreateAttached(
                 "Width",
@@ -28,6 +36,16 @@
                 typeof(BorderEffect),
                 default(double),
                 propertyChanged: OnPropertyChanged);
+
+        public static void SetPadding(BindableObject view, Thickness value)
+        {
+            view.SetValue(PaddingProperty, value);
+        }
+
+        public static Thickness GetPadding(BindableObject view)
+        {
+            return (Thickness)view.GetValue(PaddingProperty);
+        }
 
         public static void SetWidth(BindableObject view, double value)
         {
@@ -68,7 +86,8 @@
 
             var width = GetWidth(bindable);
             var radius = GetRadius(bindable);
-            var on = ((width > 0) || (radius > 0));
+            var padding = GetPadding(bindable);
+            var on = (width > 0) || (radius > 0) || (padding.Left > 0) || (padding.Top > 0) || (padding.Right > 0) || (padding.Bottom > 0);
 
             var effect = element.Effects.OfType<BorderEffect>().FirstOrDefault();
             if (on && effect == null)
