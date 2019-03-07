@@ -33,6 +33,50 @@
                effects:BorderEffect.Color="Blue"
                effects:BorderEffect.Radius="8"/>
 
+        <Label Text="Test"
+               BackgroundColor="Orange"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Radius="8"/>
+
+        <Label Text="Test"
+               BackgroundColor="LightPink"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="5"
+               effects:BorderEffect.Color="DeepPink"/>
+
+        <Label Text="Test"
+               BackgroundColor="LightBlue"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="0.2"
+               effects:BorderEffect.Color="Blue"/>
+
+        <Label Text="Test"
+               BackgroundColor="White"
+               FontSize="Large"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="Start"
+               effects:BorderEffect.Width="0.2"
+               effects:BorderEffect.Color="Black"/>
+
+        <BoxView Color="Red"
+                 HorizontalOptions="FillAndExpand"
+                 VerticalOptions="Start"
+                 effects:BorderEffect.Radius="12"/>
+
+        <Button Text="■"
+                HorizontalOptions="Center"
+                WidthRequest="32"
+                HeightRequest="32"
+                CornerRadius="16"
+                Padding="0"
+                BackgroundColor="Cyan"/>
+
     </StackLayout>
 
 </ContentPage>

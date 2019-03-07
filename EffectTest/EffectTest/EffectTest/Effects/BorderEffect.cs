@@ -12,7 +12,7 @@
                 typeof(double),
                 typeof(BorderEffect),
                 default(double),
-                propertyChanged: OnWidthPropertyChanged);
+                propertyChanged: OnPropertyChanged);
 
         public static readonly BindableProperty ColorProperty =
             BindableProperty.CreateAttached(
@@ -26,7 +26,8 @@
                 "Radius",
                 typeof(double),
                 typeof(BorderEffect),
-                default(double));
+                default(double),
+                propertyChanged: OnPropertyChanged);
 
         public static void SetWidth(BindableObject view, double value)
         {
@@ -58,23 +59,25 @@
             return (double)view.GetValue(RadiusProperty);
         }
 
-        private static void OnWidthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (!(bindable is VisualElement element))
             {
                 return;
             }
 
-            var effect = element.Effects.OfType<BorderEffect>().FirstOrDefault();
-            if (effect != null)
-            {
-                element.Effects.Remove(effect);
-            }
+            var width = GetWidth(bindable);
+            var radius = GetRadius(bindable);
+            var on = ((width > 0) || (radius > 0));
 
-            var width = (double)newValue;
-            if (width > 0)
+            var effect = element.Effects.OfType<BorderEffect>().FirstOrDefault();
+            if (on && effect == null)
             {
                 element.Effects.Add(new BorderEffect());
+            }
+            else if (!on && effect != null)
+            {
+                element.Effects.Remove(effect);
             }
         }
 

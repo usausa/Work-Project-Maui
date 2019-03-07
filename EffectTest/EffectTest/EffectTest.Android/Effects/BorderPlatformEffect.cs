@@ -19,21 +19,12 @@ namespace EffectTest.Droid.Effects
 
         private GradientDrawable border;
 
-        private Android.Graphics.Color color;
-
-        private int width;
-
-        private float radius;
-
         protected override void OnAttached()
         {
             view = Container ?? Control;
             oldDrawable = view.Background;
             border = new GradientDrawable();
 
-            UpdateWidth();
-            UpdateColor();
-            UpdateRadius();
             UpdateBorder();
         }
 
@@ -59,38 +50,24 @@ namespace EffectTest.Droid.Effects
 
             if (args.PropertyName == BorderEffect.WidthProperty.PropertyName)
             {
-                UpdateWidth();
                 UpdateBorder();
             }
             else if (args.PropertyName == BorderEffect.ColorProperty.PropertyName)
             {
-                UpdateColor();
                 UpdateBorder();
             }
             else if (args.PropertyName == BorderEffect.RadiusProperty.PropertyName)
             {
-                UpdateRadius();
                 UpdateBorder();
             }
         }
 
-        private void UpdateWidth()
-        {
-            width = (int)view.Context.ToPixels(BorderEffect.GetWidth(Element));
-        }
-
-        private void UpdateColor()
-        {
-            color = BorderEffect.GetColor(Element).ToAndroid();
-        }
-
-        private void UpdateRadius()
-        {
-            radius = view.Context.ToPixels(BorderEffect.GetRadius(Element));
-        }
-
         private void UpdateBorder()
         {
+            var width = (int)view.Context.ToPixels(BorderEffect.GetWidth(Element));
+            var color = BorderEffect.GetColor(Element).ToAndroid();
+            var radius = view.Context.ToPixels(BorderEffect.GetRadius(Element));
+
             border.SetStroke(width, color);
             border.SetCornerRadius(radius);
 
@@ -109,9 +86,11 @@ namespace EffectTest.Droid.Effects
                 {
                     border.SetColor(backgroundColor.ToAndroid());
                 }
+
+                Control.SetPadding(width, width, width, width);
             }
 
-            view.SetPadding(width, width, width, width);
+            // TODO
             view.ClipToOutline = true;
 
             view.SetBackground(border);
