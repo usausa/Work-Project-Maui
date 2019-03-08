@@ -2,6 +2,7 @@
 
 namespace EffectTest.Droid.Effects
 {
+    using System;
     using System.ComponentModel;
 
     using Android.Graphics.Drawables;
@@ -13,20 +14,8 @@ namespace EffectTest.Droid.Effects
 
     public sealed class BorderPlatformEffect : PlatformEffect
     {
-        //private Android.Views.View view;
-
-        private Drawable oldDrawable;
-
-        private GradientDrawable border;
-
-        // TODO setBackgroundColor(0x00000000);
-
         protected override void OnAttached()
         {
-            var view = Container ?? Control;
-            oldDrawable = view.Background;
-            border = new GradientDrawable();
-
             UpdateBorder();
         }
 
@@ -34,17 +23,12 @@ namespace EffectTest.Droid.Effects
         {
             var view = Container ?? Control;
 
-            if (oldDrawable != null)
-            {
-                view.Background = oldDrawable;
-                oldDrawable = null;
+            var current = view.Background;
+            view.SetBackground(null);
+            ((IDisposable)current)?.Dispose();
 
-                view.SetPadding(0, 0, 0, 0);
-                view.ClipToOutline = false;
-            }
-
-            border?.Dispose();
-            border = null;
+            Control?.SetPadding(0, 0, 0, 0);
+            view.ClipToOutline = false;
         }
 
         protected override void OnElementPropertyChanged(PropertyChangedEventArgs args)
@@ -81,6 +65,8 @@ namespace EffectTest.Droid.Effects
             var color = BorderEffect.GetColor(Element).ToAndroid();
             var radius = view.Context.ToPixels(BorderEffect.GetRadius(Element));
 
+            var border = new GradientDrawable();
+
             border.SetStroke(width, color);
             border.SetCornerRadius(radius);
 
@@ -105,7 +91,9 @@ namespace EffectTest.Droid.Effects
             Control?.SetPadding(width + paddingLeft, width + paddingTop, width + paddingRight, width + paddingBottom);
             view.ClipToOutline = true;
 
+            var current = view.Background;
             view.SetBackground(border);
+            ((IDisposable)current)?.Dispose();
         }
     }
 }
