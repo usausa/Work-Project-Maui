@@ -4,13 +4,13 @@
 
     using Xamarin.Forms;
 
-    public sealed class BorderEffect : RoutingEffect
+    public static class Border
     {
         public static readonly BindableProperty PaddingProperty =
             BindableProperty.CreateAttached(
                 "Padding",
                 typeof(Thickness),
-                typeof(BorderEffect),
+                typeof(Border),
                 default(Thickness),
                 propertyChanged: OnPropertyChanged);
 
@@ -18,7 +18,7 @@
             BindableProperty.CreateAttached(
                 "Width",
                 typeof(double),
-                typeof(BorderEffect),
+                typeof(Border),
                 default(double),
                 propertyChanged: OnPropertyChanged);
 
@@ -26,14 +26,14 @@
             BindableProperty.CreateAttached(
                 "Color",
                 typeof(Color),
-                typeof(BorderEffect),
+                typeof(Border),
                 Color.Transparent);
 
         public static readonly BindableProperty RadiusProperty =
             BindableProperty.CreateAttached(
                 "Radius",
                 typeof(double),
-                typeof(BorderEffect),
+                typeof(Border),
                 default(double),
                 propertyChanged: OnPropertyChanged);
 
@@ -99,7 +99,10 @@
                 element.Effects.Remove(effect);
             }
         }
+    }
 
+    public sealed class BorderEffect : RoutingEffect
+    {
         public BorderEffect()
             : base("Test.BorderEffect")
         {

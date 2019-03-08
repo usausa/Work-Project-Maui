@@ -8,42 +8,29 @@
 
     public class MainPageViewModel : ViewModelBase
     {
-        public NotificationValue<BorderSetting> Setting { get; } = new NotificationValue<BorderSetting>();
+        public NotificationValue<Color> BackgroundColor { get; } = new NotificationValue<Color>();
 
-        public DelegateCommand ChangeCommand { get; }
+        public NotificationValue<Thickness> Padding { get; } = new NotificationValue<Thickness>();
 
-        private readonly BorderSetting[] settings =
-        {
-            new BorderSetting(),
-            new BorderSetting { BackgroundColor = Color.LightPink, Width = 5, Color = Color.DeepPink, Radius = 8 },
-            new BorderSetting { BackgroundColor = Color.LightGray },
-            new BorderSetting { BackgroundColor = Color.LightYellow, Width = 1, Color = Color.Yellow, Radius = 1 },
-            //new BorderSetting { BackgroundColor = Color.LightPink, Padding = new Thickness(3, 0, 3, 0), Width = 5, Color = Color.DeepPink, Radius = 5 },
-            new BorderSetting { BackgroundColor = Color.LightBlue, Width = 1, Color = Color.Blue, Radius = 8 },
-            new BorderSetting { BackgroundColor = Color.Orange, Radius = 8 },
-            new BorderSetting { BackgroundColor = Color.LightPink, Width = 5, Color = Color.DeepPink },
-            new BorderSetting { BackgroundColor = Color.LightBlue, Width = 0.2, Color = Color.Blue },
-            new BorderSetting { BackgroundColor = Color.White, Padding = new Thickness(3, 0, 3, 0), Width = 0.2, Color = Color.Black },
-            new BorderSetting { BackgroundColor = Color.Red, Radius = 12 },
-        };
+        public NotificationValue<Color> BorderColor { get; } = new NotificationValue<Color>(Color.Black);
 
-        private int index;
+        public NotificationValue<double> BorderWidth { get; } = new NotificationValue<double>();
+
+        public NotificationValue<double> BorderRadius { get; } = new NotificationValue<double>();
+
+        public DelegateCommand<Color> BackgroundColorCommand { get; }
+        public DelegateCommand<double> PaddingCommand { get; }
+        public DelegateCommand<Color> ColorCommand { get; }
+        public DelegateCommand<double> WidthCommand { get; }
+        public DelegateCommand<double> RadiusCommand { get; }
 
         public MainPageViewModel()
         {
-            ChangeCommand = MakeDelegateCommand(ChangeSetting);
-            Setting.Value = settings[index];
-        }
-
-        private void ChangeSetting()
-        {
-            index++;
-            if (index >= settings.Length)
-            {
-                index = 0;
-            }
-
-            Setting.Value = settings[index];
+            BackgroundColorCommand = MakeDelegateCommand<Color>(x => BackgroundColor.Value = x);
+            PaddingCommand = MakeDelegateCommand<double>(x => Padding.Value = new Thickness(x, 0, x, 0));
+            ColorCommand = MakeDelegateCommand<Color>(x => BorderColor.Value = x);
+            WidthCommand = MakeDelegateCommand<double>(x => BorderWidth.Value = x);
+            RadiusCommand = MakeDelegateCommand<double>(x => BorderRadius.Value = x);
         }
     }
 }

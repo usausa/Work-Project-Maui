@@ -24,8 +24,11 @@ namespace EffectTest.Droid.Effects
             var view = Container ?? Control;
 
             var current = view.Background;
-            view.SetBackground(null);
-            ((IDisposable)current)?.Dispose();
+            var backgroundColor = ResolveBackgroundColor();
+            view.SetBackground(backgroundColor != Color.Default
+                ? new ColorDrawable(backgroundColor.ToAndroid())
+                : null);
+            ((IDisposable) current)?.Dispose();
 
             Control?.SetPadding(0, 0, 0, 0);
             view.ClipToOutline = false;
@@ -35,65 +38,68 @@ namespace EffectTest.Droid.Effects
         {
             base.OnElementPropertyChanged(args);
 
-            if (args.PropertyName == BorderEffect.WidthProperty.PropertyName)
+            if (args.PropertyName == Border.WidthProperty.PropertyName)
             {
                 UpdateBorder();
             }
-            else if (args.PropertyName == BorderEffect.ColorProperty.PropertyName)
+            else if (args.PropertyName == Border.ColorProperty.PropertyName)
             {
                 UpdateBorder();
             }
-            else if (args.PropertyName == BorderEffect.RadiusProperty.PropertyName)
+            else if (args.PropertyName == Border.RadiusProperty.PropertyName)
             {
                 UpdateBorder();
             }
-
-            // TODO Background?
+            else if (args.PropertyName == Border.PaddingProperty.PropertyName)
+            {
+                UpdateBorder();
+            }
+            else if (args.PropertyName == VisualElement.BackgroundColorProperty.PropertyName)
+            {
+                UpdateBorder();
+            }
         }
 
         private void UpdateBorder()
         {
             var view = Container ?? Control;
 
-            var padding = BorderEffect.GetPadding(Element);
-            var paddingLeft = (int)view.Context.ToPixels(padding.Left);
-            var paddingTop = (int)view.Context.ToPixels(padding.Top);
-            var paddingRight = (int)view.Context.ToPixels(padding.Right);
-            var paddingBottom = (int)view.Context.ToPixels(padding.Bottom);
-
-            var width = (int)view.Context.ToPixels(BorderEffect.GetWidth(Element));
-            var color = BorderEffect.GetColor(Element).ToAndroid();
-            var radius = view.Context.ToPixels(BorderEffect.GetRadius(Element));
+            var padding = Border.GetPadding(Element);
+            var paddingLeft = (int) view.Context.ToPixels(padding.Left);
+            var paddingTop = (int) view.Context.ToPixels(padding.Top);
+            var paddingRight = (int) view.Context.ToPixels(padding.Right);
+            var paddingBottom = (int) view.Context.ToPixels(padding.Bottom);
+            var width = (int) view.Context.ToPixels(Border.GetWidth(Element));
+            var color = Border.GetColor(Element).ToAndroid();
+            var radius = view.Context.ToPixels(Border.GetRadius(Element));
 
             var border = new GradientDrawable();
 
             border.SetStroke(width, color);
             border.SetCornerRadius(radius);
 
-            if (Element is BoxView boxView)
+            var backgroundColor = ResolveBackgroundColor();
+            if (backgroundColor != Color.Default)
             {
-                var backgroundColor = boxView.Color;
-                if (backgroundColor != Color.Default)
-                {
-                    border.SetColor(backgroundColor.ToAndroid());
-                }
-            }
-            else
-            {
-                var backgroundColor = ((View)Element).BackgroundColor;
-                if (backgroundColor != Color.Default)
-                {
-                    border.SetColor(backgroundColor.ToAndroid());
-                }
-
+                border.SetColor(backgroundColor.ToAndroid());
             }
 
-            Control?.SetPadding(width + paddingLeft, width + paddingTop, width + paddingRight, width + paddingBottom);
+            Control?.SetPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
             view.ClipToOutline = true;
 
             var current = view.Background;
             view.SetBackground(border);
-            ((IDisposable)current)?.Dispose();
+            ((IDisposable) current)?.Dispose();
+        }
+
+        private Color ResolveBackgroundColor()
+        {
+            if (Element is BoxView boxView)
+            {
+                return boxView.Color;
+            }
+
+            return ((View)Element).BackgroundColor;
         }
     }
 }

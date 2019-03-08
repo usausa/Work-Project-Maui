@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:effects="clr-namespace:EffectTest.Effects;assembly=EffectTest"
              xmlns:local="clr-namespace:EffectTest;assembly=EffectTest"
+             xmlns:markup="clr-namespace:Smart.Forms.Markup;assembly=Smart.Forms"
              x:Class="EffectTest.MainPage">
 
     <ContentPage.BindingContext>
@@ -12,35 +13,126 @@
     <StackLayout>
 
         <Label Text="Test"
-               BackgroundColor="LightPink"
                FontSize="Large"
                HorizontalOptions="FillAndExpand"
-               VerticalOptions="Start"
-               effects:BorderEffect.Width="5"
-               effects:BorderEffect.Color="DeepPink"
-               effects:BorderEffect.Radius="8"/>
-
-        <Label Text="Test"
-               BackgroundColor="{Binding Setting.Value.BackgroundColor}"
-               FontSize="Large"
-               HorizontalOptions="FillAndExpand"
-               VerticalOptions="Start"
                VerticalTextAlignment="Center"
-               effects:BorderEffect.Padding="{Binding Setting.Value.Padding}"
-               effects:BorderEffect.Width="{Binding Setting.Value.Width}"
-               effects:BorderEffect.Color="{Binding Setting.Value.Color}"
-               effects:BorderEffect.Radius="{Binding Setting.Value.Radius}"/>
+               HeightRequest="40"
+               BackgroundColor="{Binding BackgroundColor.Value}"
+               effects:Border.Padding="{Binding Padding.Value}"
+               effects:Border.Color="{Binding BorderColor.Value}"
+               effects:Border.Width="{Binding BorderWidth.Value}"
+               effects:Border.Radius="{Binding BorderRadius.Value}"/>
 
-        <BoxView Color="{Binding Setting.Value.BackgroundColor}"
-                 HorizontalOptions="FillAndExpand"
+        <BoxView HorizontalOptions="FillAndExpand"
                  VerticalOptions="Start"
-                 effects:BorderEffect.Padding="{Binding Setting.Value.Padding}"
-                 effects:BorderEffect.Width="{Binding Setting.Value.Width}"
-                 effects:BorderEffect.Color="{Binding Setting.Value.Color}"
-                 effects:BorderEffect.Radius="{Binding Setting.Value.Radius}"/>
+                 Color="{Binding BackgroundColor.Value}"
+                 effects:Border.Padding="{Binding Padding.Value}"
+                 effects:Border.Color="{Binding BorderColor.Value}"
+                 effects:Border.Width="{Binding BorderWidth.Value}"
+                 effects:Border.Radius="{Binding BorderRadius.Value}"/>
 
-        <Button Text="Change"
-                Command="{Binding ChangeCommand}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" BackgroundColor="LightGray"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.Transparent}"/>
+            <Button Grid.Column="1" BackgroundColor="Gray"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.Gray}"/>
+            <Button Grid.Column="2" BackgroundColor="Red"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.Red}"/>
+            <Button Grid.Column="3" BackgroundColor="LightPink"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.LightPink}"/>
+            <Button Grid.Column="4" BackgroundColor="LightYellow"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.LightYellow}"/>
+            <Button Grid.Column="5" BackgroundColor="LightBlue"
+                    Command="{Binding BackgroundColorCommand}" CommandParameter="{x:Static Color.LightBlue}"/>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="0" BackgroundColor="LightGray"
+                    Command="{Binding PaddingCommand}" CommandParameter="{markup:Double 0}"/>
+            <Button Grid.Column="1" Text="2" BackgroundColor="LightGray"
+                    Command="{Binding PaddingCommand}" CommandParameter="{markup:Double 2}"/>
+            <Button Grid.Column="2" Text="4" BackgroundColor="LightGray"
+                    Command="{Binding PaddingCommand}" CommandParameter="{markup:Double 4}"/>
+            <Button Grid.Column="3" Text="8" BackgroundColor="LightGray"
+                    Command="{Binding PaddingCommand}" CommandParameter="{markup:Double 8}"/>
+            <Button Grid.Column="4" Text="16" BackgroundColor="LightGray"
+                    Command="{Binding PaddingCommand}" CommandParameter="{markup:Double 16}"/>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" BackgroundColor="LightGray"
+                    Command="{Binding ColorCommand}" CommandParameter="{x:Static Color.Transparent}"/>
+            <Button Grid.Column="1" BackgroundColor="Black"
+                    Command="{Binding ColorCommand}" CommandParameter="{x:Static Color.Black}"/>
+            <Button Grid.Column="2" BackgroundColor="DeepPink"
+                    Command="{Binding ColorCommand}" CommandParameter="{x:Static Color.DeepPink}"/>
+            <Button Grid.Column="3" BackgroundColor="Orange"
+                    Command="{Binding ColorCommand}" CommandParameter="{x:Static Color.Orange}"/>
+            <Button Grid.Column="4" BackgroundColor="DeepSkyBlue"
+                    Command="{Binding ColorCommand}" CommandParameter="{x:Static Color.DeepSkyBlue}"/>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="0" BackgroundColor="LightGray"
+                    Command="{Binding WidthCommand}" CommandParameter="{markup:Double 0}"/>
+            <Button Grid.Column="1" Text="1" BackgroundColor="LightGray"
+                    Command="{Binding WidthCommand}" CommandParameter="{markup:Double 1}"/>
+            <Button Grid.Column="2" Text="2" BackgroundColor="LightGray"
+                    Command="{Binding WidthCommand}" CommandParameter="{markup:Double 2}"/>
+            <Button Grid.Column="3" Text="4" BackgroundColor="LightGray"
+                    Command="{Binding WidthCommand}" CommandParameter="{markup:Double 4}"/>
+            <Button Grid.Column="4" Text="8" BackgroundColor="LightGray"
+                    Command="{Binding WidthCommand}" CommandParameter="{markup:Double 8}"/>
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="0" BackgroundColor="LightGray"
+                    Command="{Binding RadiusCommand}" CommandParameter="{markup:Double 0}"/>
+            <Button Grid.Column="1" Text="1" BackgroundColor="LightGray"
+                    Command="{Binding RadiusCommand}" CommandParameter="{markup:Double 1}"/>
+            <Button Grid.Column="2" Text="5" BackgroundColor="LightGray"
+                    Command="{Binding RadiusCommand}" CommandParameter="{markup:Double 5}"/>
+            <Button Grid.Column="3" Text="10" BackgroundColor="LightGray"
+                    Command="{Binding RadiusCommand}" CommandParameter="{markup:Double 10}"/>
+            <Button Grid.Column="4" Text="20" BackgroundColor="LightGray"
+                    Command="{Binding RadiusCommand}" CommandParameter="{markup:Double 20}"/>
+        </Grid>
 
     </StackLayout>
 
