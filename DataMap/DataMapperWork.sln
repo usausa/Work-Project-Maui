@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMapperWork", "DataMappe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart.Data.Mapper", "Smart.Data.Mapper\Smart.Data.Mapper.csproj", "{24235D2A-C278-4F0F-8374-A4AF7E9DB675}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Data.Mapper.Tests", "Smart.Data.Mapper.Tests\Smart.Data.Mapper.Tests.csproj", "{67E383D2-6C32-4955-813A-0C5F2B82520A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{24235D2A-C278-4F0F-8374-A4AF7E9DB675}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24235D2A-C278-4F0F-8374-A4AF7E9DB675}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24235D2A-C278-4F0F-8374-A4AF7E9DB675}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
