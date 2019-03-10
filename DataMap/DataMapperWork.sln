@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smart.Data.Mapper", "Smart.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Data.Mapper.Tests", "Smart.Data.Mapper.Tests\Smart.Data.Mapper.Tests.csproj", "{67E383D2-6C32-4955-813A-0C5F2B82520A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart.Data.Mapper.Benchmark", "Smart.Data.Mapper.Benchmark\Smart.Data.Mapper.Benchmark.csproj", "{33CF6BFB-9800-4378-8097-9A5AB6190120}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67E383D2-6C32-4955-813A-0C5F2B82520A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CF6BFB-9800-4378-8097-9A5AB6190120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CF6BFB-9800-4378-8097-9A5AB6190120}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CF6BFB-9800-4378-8097-9A5AB6190120}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CF6BFB-9800-4378-8097-9A5AB6190120}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
