@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:OverlayTest"
+             x:Class="OverlayTest.MainPage">
+
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel/>
+    </ContentPage.BindingContext>
+
+    <AbsoluteLayout>
+
+        <StackLayout>
+            <Button Text="Show overlay" Command="{Binding ShowCommand}"/>
+        </StackLayout>
+
+        <ContentView AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     IsVisible="{Binding IsOverlay.Value}"
+                     BackgroundColor="#C0C0C0C0"
+                     Padding="0"
+                     Margin="0">
+
+            <StackLayout>
+                <Button Text="Close" Command="{Binding CloseCommand}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+            </StackLayout>
+
+        </ContentView>
+
+    </AbsoluteLayout>
+
+</ContentPage>
