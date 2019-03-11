@@ -56,7 +56,7 @@ namespace Smart.Data.Mapper
         }
 
         //--------------------------------------------------------------------------------
-        // Extensions
+        // Execute
         //--------------------------------------------------------------------------------
 
         public static int Execute(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
@@ -87,6 +87,58 @@ namespace Smart.Data.Mapper
         {
             return Execute(con, SqlMapperConfig.Default, sql, param, transaction, commandTimeout, commandType);
         }
+
+        //--------------------------------------------------------------------------------
+        // Execute
+        //--------------------------------------------------------------------------------
+
+        public static T ExecuteScalar<T>(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            var wasClosed = con.State == ConnectionState.Closed;
+            using (var cmd = SetupCommand(config, con, transaction, sql, param, commandTimeout, commandType))
+            {
+                try
+                {
+                    if (wasClosed)
+                    {
+                        con.Open();
+                    }
+
+                    var result = cmd.ExecuteScalar();
+
+                    switch (result)
+                    {
+                        case DBNull _:
+                            return default;
+                        case T scalar:
+                            return scalar;
+                        default:
+                            var parser = config.CreateParser(result.GetType(), typeof(T));
+                            return (T)parser(result);
+                    }
+                }
+                finally
+                {
+                    Cleanup(wasClosed, con, cmd);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ExecuteScalar<T>(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            return ExecuteScalar<T>(con, SqlMapperConfig.Default, sql, param, transaction, commandTimeout, commandType);
+        }
+
+        ////--------------------------------------------------------------------------------
+        //// ExecuteScalar
+        //public static T ExecuteScalar<T>(this IDbConnection con, string sql)
+        //    return ExecuteScalarImpl<T>(con, sql, null, null, null, null);
+
+        ////--------------------------------------------------------------------------------
+        //// ExecuteReader
+        //public static IDataReader ExecuteReader(this IDbConnection con, string sql)
+        //    return ExecuteReaderImpl(con, sql, null, null, null, null, CommandBehavior.Default);
 
         // TODO
         //private static T ExecuteScalarImpl<T>(this IDbConnection con, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType)
@@ -173,16 +225,6 @@ namespace Smart.Data.Mapper
         //        }
         //    }
         //}
-
-        ////--------------------------------------------------------------------------------
-        //// ExecuteScalar
-        //public static T ExecuteScalar<T>(this IDbConnection con, string sql)
-        //    return ExecuteScalarImpl<T>(con, sql, null, null, null, null);
-
-        ////--------------------------------------------------------------------------------
-        //// ExecuteReader
-        //public static IDataReader ExecuteReader(this IDbConnection con, string sql)
-        //    return ExecuteReaderImpl(con, sql, null, null, null, null, CommandBehavior.Default);
 
         ////--------------------------------------------------------------------------------
         //// Query

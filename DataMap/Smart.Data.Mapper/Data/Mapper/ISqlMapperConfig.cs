@@ -16,6 +16,8 @@ namespace Smart.Data.Mapper
 
         bool BuildCommand(IDbCommand cmd, object param);
 
+        Func<object, object> CreateParser(Type sourceType, Type destinationType);
+
         // TODO
     }
 }
