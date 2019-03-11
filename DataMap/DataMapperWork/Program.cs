@@ -17,7 +17,7 @@ namespace DataMapperWork
 
                 con.Execute("INSERT INTO Table1 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
 
-                var count = con.ExecuteScalar<long>("SELECT COUNT(*) FROM Table1");
+                var count = con.ExecuteScalar<int>("SELECT COUNT(*) FROM Table1");
 
                 Console.WriteLine(count);
             }

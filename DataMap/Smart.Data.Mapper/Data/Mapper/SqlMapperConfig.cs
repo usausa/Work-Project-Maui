@@ -196,7 +196,7 @@ namespace Smart.Data.Mapper
         public Func<object, object> CreateParser(Type sourceType, Type destinationType)
         {
             // TODO ITypeHandler
-            return Converter.CreateConverter(sourceType, sourceType);
+            return Converter.CreateConverter(sourceType, destinationType);
         }
     }
 }

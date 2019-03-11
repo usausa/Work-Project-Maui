@@ -106,16 +106,18 @@ namespace Smart.Data.Mapper
 
                     var result = cmd.ExecuteScalar();
 
-                    switch (result)
+                    if (result is DBNull)
                     {
-                        case DBNull _:
-                            return default;
-                        case T scalar:
-                            return scalar;
-                        default:
-                            var parser = config.CreateParser(result.GetType(), typeof(T));
-                            return (T)parser(result);
+                        return default;
                     }
+
+                    if (result is T scalar)
+                    {
+                        return scalar;
+                    }
+
+                    var parser = config.CreateParser(result.GetType(), typeof(T));
+                    return (T)parser(result);
                 }
                 finally
                 {
