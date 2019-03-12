@@ -34,7 +34,7 @@ namespace Smart.Data.Mapper.Parameters
             return true;
         }
 
-        public Action<IDbCommand, object> CreateBuilder(SqlMapperConfig config, Type type)
+        public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
         {
             var entries = CreateParameterEntries(config, type);
 

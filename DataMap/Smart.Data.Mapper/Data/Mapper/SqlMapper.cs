@@ -1,6 +1,7 @@
 namespace Smart.Data.Mapper
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Runtime.CompilerServices;
 
@@ -33,7 +34,8 @@ namespace Smart.Data.Mapper
 
             if (param != null)
             {
-                config.BuildCommand(cmd, param);
+                var builder = config.CreateParameterBuilder(param.GetType());
+                builder(cmd, param);
             }
 
             return cmd;
@@ -164,48 +166,82 @@ namespace Smart.Data.Mapper
         // Query
         //--------------------------------------------------------------------------------
 
-        // TODO QueryImpl
+        public static IEnumerable<T> Query<T>(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            var wasClosed = con.State == ConnectionState.Closed;
+            using (var cmd = SetupCommand(config, con, transaction, sql, param, commandTimeout, commandType))
+            {
+                try
+                {
+                    if (wasClosed)
+                    {
+                        con.Open();
+                    }
 
-        // TODO QueryFirstOrDefault, Query
-        // Lookup回数？、パラメータ、戻り値、カラムのマップはQueryなら一端配列を作って？ Stackで？
+                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess))
+                    {
+                        wasClosed = false;
 
-        ////--------------------------------------------------------------------------------
+                        // TODO
 
-        //private static IEnumerable<T> QueryImpl<T>(this IDbConnection con, Func<T> factory, string sql, object param, IDbTransaction transaction, int? commandTimeout, CommandType? commandType)
-        //{
-        //    var wasClosed = con.State == ConnectionState.Closed;
-        //    using (var cmd = SetupCommand(con, transaction, sql, param, commandTimeout, commandType))
-        //    {
-        //        try
-        //        {
-        //            var type = typeof(T);
-        //            var queryHandler = queryHandlers.FirstOrDefault(x => x.IsMatch(type));
-        //            if (queryHandler == null)
-        //            {
-        //                throw new SqlMapperException(String.Format(CultureInfo.InvariantCulture, "Type {0} can't handle", type.FullName));
-        //            }
+                        while (reader.Read())
+                        {
+                            // TODO
+                            yield return default;
+                        }
+                    }
+                }
+                finally
+                {
+                    Cleanup(wasClosed, con, cmd);
+                }
+            }
+        }
 
-        //            if (wasClosed)
-        //            {
-        //                con.Open();
-        //            }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Query<T>(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            return Query<T>(con, SqlMapperConfig.Default, sql, param, transaction, commandTimeout, commandType);
+        }
 
-        //            var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess);
-        //            wasClosed = false;
+        public static T QueryFirstOrDefault<T>(this IDbConnection con, ISqlMapperConfig config, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            var wasClosed = con.State == ConnectionState.Closed;
+            using (var cmd = SetupCommand(config, con, transaction, sql, param, commandTimeout, commandType))
+            {
+                try
+                {
+                    if (wasClosed)
+                    {
+                        con.Open();
+                    }
 
-        //            return queryHandler.Handle(factory, reader, Converter);
-        //        }
-        //        finally
-        //        {
-        //            Cleanup(wasClosed, con, cmd);
-        //        }
-        //    }
-        //}
+                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess))
+                    {
+                        wasClosed = false;
 
-        ////--------------------------------------------------------------------------------
-        //// Query
-        //public static IEnumerable<T> Query<T>(this IDbConnection con, Func<T> factory, string sql)
-        //    return QueryImpl(con, factory, sql, null, null, null, null);
-        //// where T : new()
+                        // TODO
+
+                        if (reader.Read())
+                        {
+                            // TODO
+                            return default;
+                        }
+
+                        return default;
+                    }
+                }
+                finally
+                {
+                    Cleanup(wasClosed, con, cmd);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T QueryFirstOrDefault<T>(this IDbConnection con, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            return QueryFirstOrDefault<T>(con, SqlMapperConfig.Default, sql, param, transaction, commandTimeout, commandType);
+        }
     }
 }

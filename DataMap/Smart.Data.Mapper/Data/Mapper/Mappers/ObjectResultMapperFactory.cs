@@ -1,19 +1,22 @@
 namespace Smart.Data.Mapper.Mappers
 {
     using System;
-    using System.Collections.Generic;
     using System.Data;
 
-    public sealed class ObjectResultMapper : IResultMapper
+    public sealed class ObjectResultMapperFactory : IResultMapperFactory
     {
         public bool IsMatch(Type type)
         {
             return true;
         }
 
-        public IEnumerable<T> Map<T>(ISqlMapperConfig config, IDataReader reader)
+        public Func<IDataRecord, T> CreateMapper<T>(ISqlMapperConfig config, Type type, string[] columns)
         {
-            throw new NotImplementedException();
+            // TODO
+            return record =>
+            {
+                return default;
+            };
         }
 
         // TODO Default?, Naming version?

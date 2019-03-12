@@ -7,6 +7,6 @@ namespace Smart.Data.Mapper.Parameters
     {
         bool IsMatch(Type type);
 
-        Action<IDbCommand, object> CreateBuilder(SqlMapperConfig config, Type type);
+        Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type);
     }
 }

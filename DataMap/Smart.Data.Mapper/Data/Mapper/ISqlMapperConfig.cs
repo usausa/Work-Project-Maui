@@ -10,14 +10,12 @@ namespace Smart.Data.Mapper
     {
         Func<object, object> CreateGetter(PropertyInfo pi);
 
-        // Parameter
+        Func<object, object> CreateParser(Type sourceType, Type destinationType);
 
         DbType LookupDbType(Type type, out ITypeHandler handler);
 
-        void BuildCommand(IDbCommand cmd, object param);
+        Action<IDbCommand, object> CreateParameterBuilder(Type type);
 
-        Func<object, object> CreateParser(Type sourceType, Type destinationType);
-
-        // TODO
+        Func<IDataRecord, T> CreateMapper<T>();
     }
 }

@@ -22,21 +22,21 @@ namespace Smart.Data.Mapper
             new ObjectParameterBuilderFactory()
         };
 
-        private static readonly IResultMapper[] DefaultResultMappers =
+        private static readonly IResultMapperFactory[] DefaultResultMappers =
         {
-            new ObjectResultMapper()
+            new ObjectResultMapperFactory()
         };
 
         private readonly ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>>();
 
-        private readonly ThreadsafeTypeHashArrayMap<IResultMapper> resultMapperCache = new ThreadsafeTypeHashArrayMap<IResultMapper>();
+        private readonly ResultMapperCache resultMapperCache = new ResultMapperCache();
 
         // TODO Custom ? withHandlers ?
         private readonly Dictionary<Type, DbType> typeMap = new Dictionary<Type, DbType>();
 
         private IParameterBuilderFactory[] parameterBuilderFactories;
 
-        private IResultMapper[] resultMappers;
+        private IResultMapperFactory[] resultMappers;
 
         //--------------------------------------------------------------------------------
         // Property
@@ -101,10 +101,10 @@ namespace Smart.Data.Mapper
             return this;
         }
 
-        public SqlMapperConfig AddResultMappers(IResultMapper mapper)
+        public SqlMapperConfig AddResultMappers(IResultMapperFactory mapper)
         {
             // TODO clear cache?
-            var builders = new IResultMapper[resultMappers.Length + 1];
+            var builders = new IResultMapperFactory[resultMappers.Length + 1];
             Array.Copy(resultMappers, 0, builders, 0, resultMappers.Length - DefaultResultMappers.Length);
             builders[resultMappers.Length - DefaultResultMappers.Length] = mapper;
             Array.Copy(DefaultResultMappers, 0, builders, builders.Length - DefaultResultMappers.Length, DefaultResultMappers.Length);
@@ -163,6 +163,12 @@ namespace Smart.Data.Mapper
             return DelegateFactory.CreateGetter(pi);
         }
 
+        public Func<object, object> CreateParser(Type sourceType, Type destinationType)
+        {
+            // TODO ITypeHandler, zero no lookup ?
+            return Converter.CreateConverter(sourceType, destinationType);
+        }
+
         public DbType LookupDbType(Type type, out ITypeHandler handler)
         {
             handler = null;
@@ -189,17 +195,22 @@ namespace Smart.Data.Mapper
             throw new System.NotImplementedException();
         }
 
-        public void BuildCommand(IDbCommand cmd, object param)
+        public Func<IDataRecord, T> CreateMapper<T>()
         {
-            if (!parameterBuilderCache.TryGetValue(param.GetType(), out var parameterBuilder))
-            {
-                parameterBuilder = parameterBuilderCache.AddIfNotExist(param.GetType(), CreateParameterBuilder);
-            }
-
-            parameterBuilder(cmd, param);
+            throw new NotImplementedException();
         }
 
-        private Action<IDbCommand, object> CreateParameterBuilder(Type type)
+        public Action<IDbCommand, object> CreateParameterBuilder(Type type)
+        {
+            if (!parameterBuilderCache.TryGetValue(type, out var parameterBuilder))
+            {
+                parameterBuilder = parameterBuilderCache.AddIfNotExist(type, CreateParameterBuilderInternal);
+            }
+
+            return parameterBuilder;
+        }
+
+        private Action<IDbCommand, object> CreateParameterBuilderInternal(Type type)
         {
             foreach (var factory in parameterBuilderFactories)
             {
@@ -210,12 +221,6 @@ namespace Smart.Data.Mapper
             }
 
             throw new SqlMapperException($"Parameter type is not supported. type=[{type.FullName}]");
-        }
-
-        public Func<object, object> CreateParser(Type sourceType, Type destinationType)
-        {
-            // TODO ITypeHandler, zero no lookup ?
-            return Converter.CreateConverter(sourceType, destinationType);
         }
     }
 }

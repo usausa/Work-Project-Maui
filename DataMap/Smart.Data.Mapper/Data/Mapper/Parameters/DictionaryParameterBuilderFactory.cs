@@ -11,7 +11,7 @@ namespace Smart.Data.Mapper.Parameters
             return typeof(IDictionary<string, object>).IsAssignableFrom(type);
         }
 
-        public Action<IDbCommand, object> CreateBuilder(SqlMapperConfig config, Type type)
+        public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
         {
             return (cmd, parameter) =>
             {
