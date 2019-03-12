@@ -6,10 +6,9 @@ namespace Smart.Data.Mapper.Parameters
     using System.Linq;
     using System.Reflection;
 
-    using Smart.Collections.Concurrent;
     using Smart.Data.Mapper.Handlers;
 
-    public sealed class ObjectParameterBuilder : IParameterBuilder
+    public sealed class ObjectParameterBuilderFactory : IParameterBuilderFactory
     {
         private sealed class ParameterEntry
         {
@@ -30,48 +29,49 @@ namespace Smart.Data.Mapper.Parameters
             }
         }
 
-        private readonly ThreadsafeTypeHashArrayMap<ParameterEntry[]> typeMetadataMap = new ThreadsafeTypeHashArrayMap<ParameterEntry[]>();
-
-        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object parameter)
+        public bool IsMatch(Type type)
         {
-            if (!typeMetadataMap.TryGetValue(parameter.GetType(), out var entries))
-            {
-                entries = typeMetadataMap.AddIfNotExist(parameter.GetType(), t => CreateParameterEntries(config, t));
-            }
-
-            for (var i = 0; i < entries.Length; i++)
-            {
-                var entry = entries[i];
-                var param = cmd.CreateParameter();
-
-                param.ParameterName = entry.Name;
-
-                var value = entry.Getter(parameter);
-
-                if (value is null)
-                {
-                    param.Value = DBNull.Value;
-                }
-                else
-                {
-                    param.DbType = entry.DbType;
-                    if (entry.Handler != null)
-                    {
-                        entry.Handler.SetValue(param, value);
-                    }
-                    else
-                    {
-                        param.Value = value;
-                    }
-                }
-
-                cmd.Parameters.Add(param);
-            }
-
             return true;
         }
 
-        private ParameterEntry[] CreateParameterEntries(ISqlMapperConfig config, Type type)
+        public Action<IDbCommand, object> CreateBuilder(SqlMapperConfig config, Type type)
+        {
+            var entries = CreateParameterEntries(config, type);
+
+            return (cmd, parameter) =>
+            {
+                for (var i = 0; i < entries.Length; i++)
+                {
+                    var entry = entries[i];
+                    var param = cmd.CreateParameter();
+
+                    param.ParameterName = entry.Name;
+
+                    var value = entry.Getter(parameter);
+
+                    if (value is null)
+                    {
+                        param.Value = DBNull.Value;
+                    }
+                    else
+                    {
+                        param.DbType = entry.DbType;
+                        if (entry.Handler != null)
+                        {
+                            entry.Handler.SetValue(param, value);
+                        }
+                        else
+                        {
+                            param.Value = value;
+                        }
+                    }
+
+                    cmd.Parameters.Add(param);
+                }
+            };
+        }
+
+        private static ParameterEntry[] CreateParameterEntries(ISqlMapperConfig config, Type type)
         {
             var list = new List<ParameterEntry>();
             foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead))

@@ -36,21 +36,6 @@ namespace Smart.Data.Mapper.Benchmark
 
         private MockDbConnection mockExecuteScalar;
 
-        [GlobalSetup]
-        public void GlobalSetup()
-        {
-            // Warmup
-            // TODO
-            //IterationSetup();
-            //MockExecuteDapperWithParameter10();
-            //IterationSetup();
-            //MockExecuteSmartWithParameter10();
-            //IterationSetup();
-            //MockExecuteDapper();
-            //IterationSetup();
-            //MockExecuteSmart();
-        }
-
         [IterationSetup]
         public void IterationSetup()
         {

@@ -14,7 +14,7 @@ namespace Smart.Data.Mapper
 
         DbType LookupDbType(Type type, out ITypeHandler handler);
 
-        bool BuildCommand(IDbCommand cmd, object param);
+        void BuildCommand(IDbCommand cmd, object param);
 
         Func<object, object> CreateParser(Type sourceType, Type destinationType);
 

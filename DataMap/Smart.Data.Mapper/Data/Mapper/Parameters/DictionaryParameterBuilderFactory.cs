@@ -4,13 +4,18 @@ namespace Smart.Data.Mapper.Parameters
     using System.Collections.Generic;
     using System.Data;
 
-    public sealed class DictionaryParameterBuilder : IParameterBuilder
+    public sealed class DictionaryParameterBuilderFactory : IParameterBuilderFactory
     {
-        public bool Handle(ISqlMapperConfig config, IDbCommand cmd, object parameter)
+        public bool IsMatch(Type type)
         {
-            if (parameter is IDictionary<string, object> dictionary)
+            return typeof(IDictionary<string, object>).IsAssignableFrom(type);
+        }
+
+        public Action<IDbCommand, object> CreateBuilder(SqlMapperConfig config, Type type)
+        {
+            return (cmd, parameter) =>
             {
-                foreach (var keyValue in dictionary)
+                foreach (var keyValue in (IDictionary<string, object>)parameter)
                 {
                     var param = cmd.CreateParameter();
                     param.ParameterName = keyValue.Key;
@@ -35,11 +40,7 @@ namespace Smart.Data.Mapper.Parameters
 
                     cmd.Parameters.Add(param);
                 }
-
-                return true;
-            }
-
-            return false;
+            };
         }
     }
 }

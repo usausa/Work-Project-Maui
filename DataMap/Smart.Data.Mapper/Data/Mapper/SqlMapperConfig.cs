@@ -5,6 +5,7 @@ namespace Smart.Data.Mapper
     using System.Data;
     using System.Reflection;
 
+    using Smart.Collections.Concurrent;
     using Smart.Converter;
     using Smart.Data.Mapper.Handlers;
     using Smart.Data.Mapper.Mappers;
@@ -15,10 +16,10 @@ namespace Smart.Data.Mapper
 
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
-        private static readonly IParameterBuilder[] DefaultParameterBuilders =
+        private static readonly IParameterBuilderFactory[] DefaultParameterBuilders =
         {
-            new DynamicParameterBuilder(),
-            new ObjectParameterBuilder()
+            new DynamicParameterBuilderFactory(),
+            new ObjectParameterBuilderFactory()
         };
 
         private static readonly IResultMapper[] DefaultResultMappers =
@@ -26,10 +27,14 @@ namespace Smart.Data.Mapper
             new ObjectResultMapper()
         };
 
+        private readonly ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>>();
+
+        private readonly ThreadsafeTypeHashArrayMap<IResultMapper> resultMapperCache = new ThreadsafeTypeHashArrayMap<IResultMapper>();
+
         // TODO Custom ? withHandlers ?
         private readonly Dictionary<Type, DbType> typeMap = new Dictionary<Type, DbType>();
 
-        private IParameterBuilder[] parameterBuilders;
+        private IParameterBuilderFactory[] parameterBuilderFactories;
 
         private IResultMapper[] resultMappers;
 
@@ -39,7 +44,7 @@ namespace Smart.Data.Mapper
 
         public static SqlMapperConfig Default { get; } = new SqlMapperConfig();
 
-        public IList<IParameterBuilder> ParameterBuilders { get; } = new List<IParameterBuilder>();
+        public IList<IParameterBuilderFactory> ParameterBuilders { get; } = new List<IParameterBuilderFactory>();
 
         //public Dictionary<Type, object> Plugin, Addを用意して、拡張メソッドでIFをキーとするメソッドを！、一応Lock
 
@@ -63,7 +68,7 @@ namespace Smart.Data.Mapper
 
         public SqlMapperConfig()
         {
-            ResetParameterBuilders();
+            ResetParameterBuilderFactories();
             ResetResultMappers();
             ResetTypeMap();
         }
@@ -72,29 +77,33 @@ namespace Smart.Data.Mapper
         // Config
         //--------------------------------------------------------------------------------
 
-        public SqlMapperConfig ResetParameterBuilders()
+        public SqlMapperConfig ResetParameterBuilderFactories()
         {
-            parameterBuilders = DefaultParameterBuilders;
+            // TODO clear cache?
+            parameterBuilderFactories = DefaultParameterBuilders;
             return this;
         }
 
-        public SqlMapperConfig AddParameterBuilders(IParameterBuilder builder)
+        public SqlMapperConfig AddParameterBuilderFactory(IParameterBuilderFactory factory)
         {
-            var builders = new IParameterBuilder[parameterBuilders.Length + 1];
-            Array.Copy(parameterBuilders, 0, builders, 0, parameterBuilders.Length - DefaultParameterBuilders.Length);
-            builders[parameterBuilders.Length - DefaultParameterBuilders.Length] = builder;
+            // TODO clear cache?
+            var builders = new IParameterBuilderFactory[parameterBuilderFactories.Length + 1];
+            Array.Copy(parameterBuilderFactories, 0, builders, 0, parameterBuilderFactories.Length - DefaultParameterBuilders.Length);
+            builders[parameterBuilderFactories.Length - DefaultParameterBuilders.Length] = factory;
             Array.Copy(DefaultParameterBuilders, 0, builders, builders.Length - DefaultParameterBuilders.Length, DefaultParameterBuilders.Length);
             return this;
         }
 
         public SqlMapperConfig ResetResultMappers()
         {
+            // TODO clear cache?
             resultMappers = DefaultResultMappers;
             return this;
         }
 
         public SqlMapperConfig AddResultMappers(IResultMapper mapper)
         {
+            // TODO clear cache?
             var builders = new IResultMapper[resultMappers.Length + 1];
             Array.Copy(resultMappers, 0, builders, 0, resultMappers.Length - DefaultResultMappers.Length);
             builders[resultMappers.Length - DefaultResultMappers.Length] = mapper;
@@ -180,22 +189,32 @@ namespace Smart.Data.Mapper
             throw new System.NotImplementedException();
         }
 
-        public bool BuildCommand(IDbCommand cmd, object param)
+        public void BuildCommand(IDbCommand cmd, object param)
         {
-            for (var i = 0; i < parameterBuilders.Length; i++)
+            if (!parameterBuilderCache.TryGetValue(param.GetType(), out var parameterBuilder))
             {
-                if (parameterBuilders[i].Handle(this, cmd, param))
+                parameterBuilder = parameterBuilderCache.AddIfNotExist(param.GetType(), CreateParameterBuilder);
+            }
+
+            parameterBuilder(cmd, param);
+        }
+
+        private Action<IDbCommand, object> CreateParameterBuilder(Type type)
+        {
+            foreach (var factory in parameterBuilderFactories)
+            {
+                if (factory.IsMatch(type))
                 {
-                    return true;
+                    return factory.CreateBuilder(this, type);
                 }
             }
 
-            return false;
+            throw new SqlMapperException($"Parameter type is not supported. type=[{type.FullName}]");
         }
 
         public Func<object, object> CreateParser(Type sourceType, Type destinationType)
         {
-            // TODO ITypeHandler
+            // TODO ITypeHandler, zero no lookup ?
             return Converter.CreateConverter(sourceType, destinationType);
         }
     }
