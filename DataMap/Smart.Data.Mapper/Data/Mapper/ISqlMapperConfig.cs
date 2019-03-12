@@ -8,7 +8,11 @@ namespace Smart.Data.Mapper
 
     public interface ISqlMapperConfig
     {
+        Func<T> CreateFactory<T>();
+
         Func<object, object> CreateGetter(PropertyInfo pi);
+
+        Action<object, object> CreateSetter(PropertyInfo pi);
 
         Func<object, object> CreateParser(Type sourceType, Type destinationType);
 
@@ -16,6 +20,6 @@ namespace Smart.Data.Mapper
 
         Action<IDbCommand, object> CreateParameterBuilder(Type type);
 
-        Func<IDataRecord, T> CreateMapper<T>();
+        Func<IDataRecord, T> CreateMapper<T>(IDataReader reader);
     }
 }

@@ -10,39 +10,32 @@ namespace Smart.Data.Mapper.Mappers
             return true;
         }
 
-        public Func<IDataRecord, T> CreateMapper<T>(ISqlMapperConfig config, Type type, string[] columns)
+        public Func<IDataRecord, T> CreateMapper<T>(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
         {
+            var objectFactory = config.CreateFactory<T>();
+
             // TODO
+
             return record =>
             {
-                return default;
+                var obj = objectFactory();
+
+                // TODO
+
+                return obj;
             };
         }
 
         // TODO Default?, Naming version?
         // TODO Naming Pascal, Camel, Snake Converter Func
-        // Attribute only ?
-        // Procedureとの共有？
 
         //private readonly Dictionary<string, IAccessor> mapAccessors = new Dictionary<string, IAccessor>(StringComparer.OrdinalIgnoreCase);
 
         //public DefaultTypeMetadata(Type type)
         //{
         //    foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        //    {
         //        if (accessor.CanWrite) // With Naming
-        //        {
         //            mapAccessors[pi.Name] = accessor;
-        //        }
-        //    }
-        //}
-
-        //public IAccessor GetMapAccessor(string column)
-        //{
-        //    IAccessor accessor;
-        //    mapAccessors.TryGetValue(column, out accessor);
-        //    return accessor;
-        //}
 
         //    public IEnumerable<T> Handle<T>(Func<T> factory, IDataReader reader, ObjectConverter converter)
         //    {

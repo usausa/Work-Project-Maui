@@ -158,9 +158,19 @@ namespace Smart.Data.Mapper
         // ISqlMapperConfig
         //--------------------------------------------------------------------------------
 
+        public Func<T> CreateFactory<T>()
+        {
+            return DelegateFactory.CreateFactory<T>();
+        }
+
         public Func<object, object> CreateGetter(PropertyInfo pi)
         {
             return DelegateFactory.CreateGetter(pi);
+        }
+
+        public Action<object, object> CreateSetter(PropertyInfo pi)
+        {
+            return DelegateFactory.CreateSetter(pi);
         }
 
         public Func<object, object> CreateParser(Type sourceType, Type destinationType)
@@ -195,7 +205,7 @@ namespace Smart.Data.Mapper
             throw new System.NotImplementedException();
         }
 
-        public Func<IDataRecord, T> CreateMapper<T>()
+        public Func<IDataRecord, T> CreateMapper<T>(IDataReader reader)
         {
             throw new NotImplementedException();
         }

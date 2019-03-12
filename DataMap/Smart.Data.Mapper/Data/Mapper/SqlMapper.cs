@@ -7,6 +7,18 @@ namespace Smart.Data.Mapper
 
     public static partial class SqlMapper
     {
+        private const CommandBehavior CommandBehaviorQueryWithClose =
+            CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess;
+
+        private const CommandBehavior CommandBehaviorQuery =
+            CommandBehavior.SequentialAccess;
+
+        private const CommandBehavior CommandBehaviorQueryFirstOrDefaultWithClose =
+            CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess | CommandBehavior.SingleRow;
+
+        private const CommandBehavior CommandBehaviorQueryFirstOrDefault =
+            CommandBehavior.SequentialAccess | CommandBehavior.SingleRow;
+
         //--------------------------------------------------------------------------------
         // Core
         //--------------------------------------------------------------------------------
@@ -178,16 +190,15 @@ namespace Smart.Data.Mapper
                         con.Open();
                     }
 
-                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess))
+                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehaviorQueryWithClose : CommandBehaviorQuery))
                     {
                         wasClosed = false;
 
-                        // TODO
+                        var mapper = config.CreateMapper<T>(reader);
 
                         while (reader.Read())
                         {
-                            // TODO
-                            yield return default;
+                            yield return mapper(reader);
                         }
                     }
                 }
@@ -216,19 +227,13 @@ namespace Smart.Data.Mapper
                         con.Open();
                     }
 
-                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehavior.CloseConnection | CommandBehavior.SequentialAccess : CommandBehavior.SequentialAccess))
+                    using (var reader = cmd.ExecuteReader(wasClosed ? CommandBehaviorQueryFirstOrDefaultWithClose : CommandBehaviorQueryFirstOrDefault))
                     {
                         wasClosed = false;
 
-                        // TODO
+                        var mapper = config.CreateMapper<T>(reader);
 
-                        if (reader.Read())
-                        {
-                            // TODO
-                            return default;
-                        }
-
-                        return default;
+                        return reader.Read() ? mapper(reader) : default;
                     }
                 }
                 finally
