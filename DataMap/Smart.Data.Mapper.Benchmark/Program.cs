@@ -40,10 +40,15 @@ namespace Smart.Data.Mapper.Benchmark
         public void GlobalSetup()
         {
             // Warmup
-            IterationSetup();
-            MockExecuteDapper();
-            IterationSetup();
-            MockExecuteSmart();
+            // TODO
+            //IterationSetup();
+            //MockExecuteDapperWithParameter10();
+            //IterationSetup();
+            //MockExecuteSmartWithParameter10();
+            //IterationSetup();
+            //MockExecuteDapper();
+            //IterationSetup();
+            //MockExecuteSmart();
         }
 
         [IterationSetup]
@@ -66,56 +71,79 @@ namespace Smart.Data.Mapper.Benchmark
         // Execute
         //--------------------------------------------------------------------------------
 
+        private const string ExecuteSql =
+            "INSERT INTO Table (Id, Data) VALUES (@Id, @Data)";
+
         [Benchmark]
         public void MockExecuteDapper()
         {
-            Dapper.SqlMapper.Execute(mockExecute, "INSERT INTO Table (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
+            Dapper.SqlMapper.Execute(mockExecute, ExecuteSql, new { Id = 1, Data = "test" });
         }
 
         [Benchmark]
         public void MockExecuteSmart()
         {
-            mockExecute.Execute("INSERT INTO Table (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
+            mockExecute.Execute(ExecuteSql, new { Id = 1, Data = "test" });
         }
+
+        private const string ExecuteWithParameter10Sql =
+            "INSERT INTO Table (Id, Name, Amount, Qty, Flag1, Flag2, DateTimeOffset, CreatedBy, UpdatedAt, UpdatedBy) " +
+            "VALUES (@Id, @Name, @Amount, @Qty, @Flag1, @Flag2, @DateTimeOffset, @CreatedBy, @UpdatedAt, @UpdatedBy)";
 
         [Benchmark]
         public void MockExecuteDapperWithParameter10()
         {
-            Dapper.SqlMapper.Execute(mockExecute, "INSERT INTO Table (Id, Data) VALUES (@Id, @Data)", new Table());
+            Dapper.SqlMapper.Execute(mockExecute, ExecuteWithParameter10Sql, new Table());
         }
 
         [Benchmark]
         public void MockExecuteSmartWithParameter10()
         {
-            mockExecute.Execute("INSERT INTO Table (Id, Data) VALUES (@Id, @Data)", new Table());
+            mockExecute.Execute(ExecuteWithParameter10Sql, new Table());
+        }
+
+        [Benchmark]
+        public void MockExecuteDapperWithOverParameter()
+        {
+            // [MEMO] Dapper optimize parameters
+            Dapper.SqlMapper.Execute(mockExecute, ExecuteSql, new Table());
+        }
+
+        [Benchmark]
+        public void MockExecuteSmartWithOverParameter()
+        {
+            mockExecute.Execute(ExecuteSql, new Table());
         }
 
         //--------------------------------------------------------------------------------
         // ExecuteScalar
         //--------------------------------------------------------------------------------
 
+        private const string ExecuteScalarSql =
+            "SELECT COUNT(*) FROM Table";
+
         [Benchmark]
         public long MockExecuteScalarDapper()
         {
-            return Dapper.SqlMapper.ExecuteScalar<long>(mockExecuteScalar, "SELECT COUNT(*) FROM Table");
+            return Dapper.SqlMapper.ExecuteScalar<long>(mockExecuteScalar, ExecuteScalarSql);
         }
 
         [Benchmark]
         public long MockExecuteScalarSmart()
         {
-            return mockExecuteScalar.ExecuteScalar<long>("SELECT COUNT(*) FROM Table");
+            return mockExecuteScalar.ExecuteScalar<long>(ExecuteScalarSql);
         }
 
         [Benchmark]
         public long MockExecuteScalarDapperWithConvert()
         {
-            return Dapper.SqlMapper.ExecuteScalar<int>(mockExecuteScalar, "SELECT COUNT(*) FROM Table");
+            return Dapper.SqlMapper.ExecuteScalar<int>(mockExecuteScalar, ExecuteScalarSql);
         }
 
         [Benchmark]
         public long MockExecuteScalarSmartWithConvert()
         {
-            return mockExecuteScalar.ExecuteScalar<int>("SELECT COUNT(*) FROM Table");
+            return mockExecuteScalar.ExecuteScalar<int>(ExecuteScalarSql);
         }
 
         //--------------------------------------------------------------------------------
@@ -163,33 +191,6 @@ namespace Smart.Data.Mapper.Benchmark
         //    mockQuery.SetupCommand(cmd => cmd.SetupResult(new MockDataReader(columns, rows)));
 
         //    mockExecute.SetupCommand(cmd => cmd.SetupResult(1));
-        //}
-
-        //[Benchmark]
-        //public void SqliteQueryFirst()
-        //{
-        //    sqlite.QueryFirstOrDefault<Table>("SELECT * FROM Table1 WHERE Id = @Id", new { Id = 1 });
-        //}
-
-        //[Benchmark]
-        //public void SqliteQuery()
-        //{
-        //    foreach (var _ in sqlite.Query<Table>("SELECT * FROM Table1", buffered: false))
-        //    {
-        //    }
-        //}
-
-        //[Benchmark]
-        //public void SqliteScalar()
-        //{
-        //    sqlite.ExecuteScalar<int>("SELECT COUNT(*) FROM Table1");
-        //}
-
-        //[Benchmark]
-        //public void SqliteExecute()
-        //{
-        //    sqlite.Execute("INSERT INTO Table2 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
-        //}
 
         //// Mock
 
