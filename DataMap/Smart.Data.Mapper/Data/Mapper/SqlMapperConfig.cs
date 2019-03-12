@@ -16,13 +16,13 @@ namespace Smart.Data.Mapper
 
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
-        private static readonly IParameterBuilderFactory[] DefaultParameterBuilders =
+        private static readonly IParameterBuilderFactory[] DefaultParameterBuilderFactories =
         {
             new DynamicParameterBuilderFactory(),
             new ObjectParameterBuilderFactory()
         };
 
-        private static readonly IResultMapperFactory[] DefaultResultMappers =
+        private static readonly IResultMapperFactory[] DefaultResultMapperFactories =
         {
             new ObjectResultMapperFactory()
         };
@@ -36,7 +36,7 @@ namespace Smart.Data.Mapper
 
         private IParameterBuilderFactory[] parameterBuilderFactories;
 
-        private IResultMapperFactory[] resultMappers;
+        private IResultMapperFactory[] resultMapperFactories;
 
         //--------------------------------------------------------------------------------
         // Property
@@ -80,7 +80,7 @@ namespace Smart.Data.Mapper
         public SqlMapperConfig ResetParameterBuilderFactories()
         {
             // TODO clear cache?
-            parameterBuilderFactories = DefaultParameterBuilders;
+            parameterBuilderFactories = DefaultParameterBuilderFactories;
             return this;
         }
 
@@ -88,26 +88,26 @@ namespace Smart.Data.Mapper
         {
             // TODO clear cache?
             var builders = new IParameterBuilderFactory[parameterBuilderFactories.Length + 1];
-            Array.Copy(parameterBuilderFactories, 0, builders, 0, parameterBuilderFactories.Length - DefaultParameterBuilders.Length);
-            builders[parameterBuilderFactories.Length - DefaultParameterBuilders.Length] = factory;
-            Array.Copy(DefaultParameterBuilders, 0, builders, builders.Length - DefaultParameterBuilders.Length, DefaultParameterBuilders.Length);
+            Array.Copy(parameterBuilderFactories, 0, builders, 0, parameterBuilderFactories.Length - DefaultParameterBuilderFactories.Length);
+            builders[parameterBuilderFactories.Length - DefaultParameterBuilderFactories.Length] = factory;
+            Array.Copy(DefaultParameterBuilderFactories, 0, builders, builders.Length - DefaultParameterBuilderFactories.Length, DefaultParameterBuilderFactories.Length);
             return this;
         }
 
         public SqlMapperConfig ResetResultMappers()
         {
             // TODO clear cache?
-            resultMappers = DefaultResultMappers;
+            resultMapperFactories = DefaultResultMapperFactories;
             return this;
         }
 
-        public SqlMapperConfig AddResultMappers(IResultMapperFactory mapper)
+        public SqlMapperConfig AddResultMapperFactory(IResultMapperFactory factory)
         {
             // TODO clear cache?
-            var builders = new IResultMapperFactory[resultMappers.Length + 1];
-            Array.Copy(resultMappers, 0, builders, 0, resultMappers.Length - DefaultResultMappers.Length);
-            builders[resultMappers.Length - DefaultResultMappers.Length] = mapper;
-            Array.Copy(DefaultResultMappers, 0, builders, builders.Length - DefaultResultMappers.Length, DefaultResultMappers.Length);
+            var builders = new IResultMapperFactory[resultMapperFactories.Length + 1];
+            Array.Copy(resultMapperFactories, 0, builders, 0, resultMapperFactories.Length - DefaultResultMapperFactories.Length);
+            builders[resultMapperFactories.Length - DefaultResultMapperFactories.Length] = factory;
+            Array.Copy(DefaultResultMapperFactories, 0, builders, builders.Length - DefaultResultMapperFactories.Length, DefaultResultMapperFactories.Length);
             return this;
         }
 
@@ -207,7 +207,33 @@ namespace Smart.Data.Mapper
 
         public Func<IDataRecord, T> CreateMapper<T>(IDataReader reader)
         {
-            throw new NotImplementedException();
+            // TODO
+            var type = typeof(T);
+            var columns = new ColumnInfo[reader.FieldCount];
+            for (var i = 0; i < columns.Length; i++)
+            {
+                columns[i] = new ColumnInfo(reader.GetName(i), reader.GetFieldType(i));
+            }
+
+            if (resultMapperCache.TryGetValue(type, columns, out var value))
+            {
+                return (Func<IDataRecord, T>)value;
+            }
+
+            return (Func<IDataRecord, T>)resultMapperCache.AddIfNotExist(type, columns, CreateMapperInternal<T>);
+        }
+
+        private object CreateMapperInternal<T>(Type type, ColumnInfo[] columns)
+        {
+            foreach (var factory in resultMapperFactories)
+            {
+                if (factory.IsMatch(type))
+                {
+                    return factory.CreateMapper<T>(this, type, columns);
+                }
+            }
+
+            throw new SqlMapperException($"Result type is not supported. type=[{type.FullName}]");
         }
 
         public Action<IDbCommand, object> CreateParameterBuilder(Type type)
