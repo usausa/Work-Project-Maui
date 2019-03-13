@@ -12,6 +12,8 @@ namespace Smart.Data.Mapper.Mappers
     {
         public static ObjectResultMapperFactory Instance { get; } = new ObjectResultMapperFactory();
 
+        private static readonly Action<object, object> Nop = (obj, value) => { };
+
         private ObjectResultMapperFactory()
         {
         }
@@ -59,6 +61,7 @@ namespace Smart.Data.Mapper.Mappers
                             targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.OrdinalIgnoreCase));
                 if (entry == null)
                 {
+                    list.Add(Nop);
                     continue;
                 }
 
