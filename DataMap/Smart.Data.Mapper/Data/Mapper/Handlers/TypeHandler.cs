@@ -11,18 +11,7 @@ namespace Smart.Data.Mapper.Handlers
 
         public void SetValue(IDbDataParameter parameter, object value)
         {
-            if (value is DBNull)
-            {
-                parameter.Value = value;
-            }
-            else if (value is null)
-            {
-                parameter.Value = DBNull.Value;
-            }
-            else
-            {
-                SetValue(parameter, (T)value);
-            }
+            SetValue(parameter, (T)value);
         }
 
         public object Parse(Type destinationType, object value)

@@ -1,7 +1,12 @@
 namespace Smart.Data.Mapper.Mappers
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
+    using System.Reflection;
+
+    using Smart.Data.Mapper.Attributes;
 
     public sealed class ObjectResultMapperFactory : IResultMapperFactory
     {
@@ -11,85 +16,73 @@ namespace Smart.Data.Mapper.Mappers
         {
         }
 
-        public bool IsMatch(Type type)
-        {
-            return true;
-        }
+        public bool IsMatch(Type type) => true;
 
         public Func<IDataRecord, T> CreateMapper<T>(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
         {
             var objectFactory = config.CreateFactory<T>();
-
-            // TODO
+            var entries = CreateMapEntries(config, type, columns);
 
             return record =>
             {
                 var obj = objectFactory();
 
-                // TODO
+                for (var i = 0; i < entries.Length; i++)
+                {
+                    entries[i](obj, record.GetValue(i));
+                }
 
                 return obj;
             };
         }
 
-        // TODO Default?, Naming version?
-        // TODO Naming Pascal, Camel, Snake Converter Func
+        private static Action<object, object>[] CreateMapEntries(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
+        {
+            var namingConverter = config.GetNameConverter();
+            var targetProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(IsTargetProperty)
+                .Select(x =>
+                {
+                    var attr = x.GetCustomAttribute<DBNameAttribute>();
+                    return new
+                    {
+                        Name = attr != null ? attr.Name : namingConverter(x.Name),
+                        Property = x
+                    };
+                })
+                .ToArray();
 
-        //private readonly Dictionary<string, IAccessor> mapAccessors = new Dictionary<string, IAccessor>(StringComparer.OrdinalIgnoreCase);
+            var list = new List<Action<object, object>>();
+            foreach (var column in columns)
+            {
+                var entry = targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.Ordinal)) ??
+                            targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.OrdinalIgnoreCase));
+                if (entry == null)
+                {
+                    continue;
+                }
 
-        //public DefaultTypeMetadata(Type type)
-        //{
-        //    foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        //        if (accessor.CanWrite) // With Naming
-        //            mapAccessors[pi.Name] = accessor;
+                var pi = entry.Property;
+                var setter = config.CreateSetter(pi);
+                var defaultValue = pi.PropertyType.GetDefaultValue();
 
-        //    public IEnumerable<T> Handle<T>(Func<T> factory, IDataReader reader, ObjectConverter converter)
-        //    {
-        //        using (reader)
-        //        {
-        //            var metadata = metadataFactory.Create(typeof(T));
+                if (pi.PropertyType == column.Type)
+                {
+                    list.Add((obj, value) => setter(obj, value is DBNull ? defaultValue : value));
+                }
+                else
+                {
+                    var parser = config.CreateParser(column.Type, pi.PropertyType);
+                    list.Add((obj, value) => setter(obj, parser(value is DBNull ? defaultValue : value)));
+                }
+            }
 
-        //            var columns = new string[reader.FieldCount];
-        //            var accessors = new IAccessor[reader.FieldCount];
-        //            for (var i = 0; i < columns.Length; i++)
-        //            {
-        //                var name = reader.GetName(i);
-        //                columns[i] = name;
-        //                accessors[i] = metadata.GetMapAccessor(name);
-        //            }
+            return list.ToArray();
+        }
 
-        //            while (reader.Read())
-        //            {
-        //                var entity = factory();
-
-        //                for (var i = 0; i < columns.Length; i++)
-        //                {
-        //                    var accessor = accessors[i];
-        //                    if (accessor == null)
-        //                    {
-        //                        continue;
-        //                    }
-
-        //                    if (reader.IsDBNull(i))
-        //                    {
-        //                        accessor.SetValue(entity, accessor.Type.GetDefaultValue());
-        //                    }
-        //                    else
-        //                    {
-        //                        var value = reader[columns[i]];
-        //                        if (accessor.Type != value.GetType())
-        //                        {
-        //                            value = converter.Convert(value, accessor.Type);
-        //                        }
-
-        //                        accessor.SetValue(entity, value);
-        //                    }
-        //                }
-
-        //                yield return entity;
-        //            }
-        //        }
-        //    }
-        //}
+        private static bool IsTargetProperty(PropertyInfo pi)
+        {
+            return pi.CanWrite && (pi.GetCustomAttribute<IgnoreAttribute>() == null);
+        }
     }
 }

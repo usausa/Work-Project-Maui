@@ -13,12 +13,15 @@ namespace Smart.Data.Mapper
     using Smart.Data.Mapper.Parameters;
     using Smart.Reflection;
 
+    // TODO Clear cache ?
+
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
         private static readonly IParameterBuilderFactory[] DefaultParameterBuilderFactories =
         {
             DynamicParameterBuilderFactory.Instance,
             DictionaryParameterBuilderFactory.Instance,
+            ProcedureParameterBuilderFactory.Instance,
             ObjectParameterBuilderFactory.Instance
         };
 

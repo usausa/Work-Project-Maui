@@ -1,6 +1,7 @@
 namespace DataMapperWork
 {
     using System;
+    using System.Linq;
 
     using Microsoft.Data.Sqlite;
 
@@ -18,9 +19,21 @@ namespace DataMapperWork
                 con.Execute("INSERT INTO Table1 (Id, Data) VALUES (@Id, @Data)", new { Id = 1, Data = "test" });
 
                 var count = con.ExecuteScalar<int>("SELECT COUNT(*) FROM Table1");
-
                 Console.WriteLine(count);
+
+                var list = con.Query<Table>("SELECT * FROM Table1").ToList();
+                foreach (var entity in list)
+                {
+                    Console.WriteLine($"{entity.Id} : {entity.Data}");
+                }
             }
         }
+    }
+
+    public class Table
+    {
+        public int Id { get; set; }
+
+        public string Data { get; set; }
     }
 }

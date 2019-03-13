@@ -6,6 +6,7 @@ namespace Smart.Data.Mapper.Parameters
     using System.Linq;
     using System.Reflection;
 
+    using Smart.Data.Mapper.Attributes;
     using Smart.Data.Mapper.Handlers;
 
     public sealed class ObjectParameterBuilderFactory : IParameterBuilderFactory
@@ -16,29 +17,7 @@ namespace Smart.Data.Mapper.Parameters
         {
         }
 
-        private sealed class ParameterEntry
-        {
-            public string Name { get; }
-
-            public Func<object, object> Getter { get; }
-
-            public DbType DbType { get; }
-
-            public ITypeHandler Handler { get; }
-
-            public ParameterEntry(string name, Func<object, object> getter, DbType dbType, ITypeHandler handler)
-            {
-                Name = name;
-                Getter = getter;
-                DbType = dbType;
-                Handler = handler;
-            }
-        }
-
-        public bool IsMatch(Type type)
-        {
-            return true;
-        }
+        public bool IsMatch(Type type) => true;
 
         public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
         {
@@ -80,7 +59,7 @@ namespace Smart.Data.Mapper.Parameters
         private static ParameterEntry[] CreateParameterEntries(ISqlMapperConfig config, Type type)
         {
             var list = new List<ParameterEntry>();
-            foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead))
+            foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(IsTargetProperty))
             {
                 var getter = config.CreateGetter(pi);
                 var entry = config.LookupTypeHandle(pi.PropertyType);
@@ -88,6 +67,30 @@ namespace Smart.Data.Mapper.Parameters
             }
 
             return list.ToArray();
+        }
+
+        private static bool IsTargetProperty(PropertyInfo pi)
+        {
+            return pi.CanRead && (pi.GetCustomAttribute<IgnoreAttribute>() == null);
+        }
+
+        private sealed class ParameterEntry
+        {
+            public string Name { get; }
+
+            public Func<object, object> Getter { get; }
+
+            public DbType DbType { get; }
+
+            public ITypeHandler Handler { get; }
+
+            public ParameterEntry(string name, Func<object, object> getter, DbType dbType, ITypeHandler handler)
+            {
+                Name = name;
+                Getter = getter;
+                DbType = dbType;
+                Handler = handler;
+            }
         }
     }
 }
