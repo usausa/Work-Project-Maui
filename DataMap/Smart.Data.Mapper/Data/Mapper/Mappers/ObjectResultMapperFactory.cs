@@ -12,8 +12,6 @@ namespace Smart.Data.Mapper.Mappers
     {
         public static ObjectResultMapperFactory Instance { get; } = new ObjectResultMapperFactory();
 
-        private static readonly Action<object, object> Nop = (obj, value) => { };
-
         private ObjectResultMapperFactory()
         {
         }
@@ -31,14 +29,15 @@ namespace Smart.Data.Mapper.Mappers
 
                 for (var i = 0; i < entries.Length; i++)
                 {
-                    entries[i](obj, record.GetValue(i));
+                    var entry = entries[i];
+                    entry.Setter(obj, record.GetValue(entry.Index));
                 }
 
                 return obj;
             };
         }
 
-        private static Action<object, object>[] CreateMapEntries(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
+        private static MapEntry[] CreateMapEntries(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
         {
             // TODO delete Naming ?
             var namingConverter = config.GetNameConverter();
@@ -55,15 +54,15 @@ namespace Smart.Data.Mapper.Mappers
                 })
                 .ToArray();
 
-            var list = new List<Action<object, object>>();
-            foreach (var column in columns)
+            var list = new List<MapEntry>();
+            for (var i = 0; i < columns.Length; i++)
             {
                 // TODO column to pascal and ordinal & ignore ?
+                var column = columns[i];
                 var entry = targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.Ordinal)) ??
                             targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.OrdinalIgnoreCase));
                 if (entry == null)
                 {
-                    list.Add(Nop);
                     continue;
                 }
 
@@ -73,12 +72,12 @@ namespace Smart.Data.Mapper.Mappers
 
                 if (pi.PropertyType == column.Type)
                 {
-                    list.Add((obj, value) => setter(obj, value is DBNull ? defaultValue : value));
+                    list.Add(new MapEntry(i, (obj, value) => setter(obj, value is DBNull ? defaultValue : value)));
                 }
                 else
                 {
                     var parser = config.CreateParser(column.Type, pi.PropertyType);
-                    list.Add((obj, value) => setter(obj, parser(value is DBNull ? defaultValue : value)));
+                    list.Add(new MapEntry(i, (obj, value) => setter(obj, parser(value is DBNull ? defaultValue : value))));
                 }
             }
 
@@ -88,6 +87,19 @@ namespace Smart.Data.Mapper.Mappers
         private static bool IsTargetProperty(PropertyInfo pi)
         {
             return pi.CanWrite && (pi.GetCustomAttribute<IgnoreAttribute>() == null);
+        }
+
+        private sealed class MapEntry
+        {
+            public int Index { get; }
+
+            public Action<object, object> Setter { get; }
+
+            public MapEntry(int index, Action<object, object> setter)
+            {
+                Index = index;
+                Setter = setter;
+            }
         }
     }
 }
