@@ -172,7 +172,7 @@ namespace Smart.Data.Mapper
             for (var i = 0; i < columns1.Length; i++)
             {
                 var column1 = columns1[i];
-                var column2 = columns1[2];
+                var column2 = columns2[i];
 
                 if (column1.Type != column2.Type)
                 {

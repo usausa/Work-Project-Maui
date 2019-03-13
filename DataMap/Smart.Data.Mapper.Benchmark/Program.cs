@@ -1,6 +1,7 @@
 namespace Smart.Data.Mapper.Benchmark
 {
     using System;
+    using System.Linq;
 
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Configs;
@@ -36,20 +37,60 @@ namespace Smart.Data.Mapper.Benchmark
 
         private MockDbConnection mockExecuteScalar;
 
+        private MockDbConnection mockQuery;
+
+        private MockDbConnection mockQueryFirst;
+
         [IterationSetup]
         public void IterationSetup()
         {
             mockExecute = new MockDbConnection();
             mockExecute.SetupCommand(cmd => cmd.SetupResult(1));
+
             mockExecuteScalar = new MockDbConnection();
             mockExecuteScalar.SetupCommand(cmd => cmd.SetupResult(1L));
-        }
 
-        [GlobalCleanup]
-        public void GlobalCleanup()
-        {
-            mockExecute.Close();
-            mockExecuteScalar.Close();
+            mockQuery = new MockDbConnection();
+            mockQuery.SetupCommand(cmd => cmd.SetupResult(new MockDataReader(
+                new[]
+                {
+                    new MockColumn(typeof(long), "Id"),
+                    new MockColumn(typeof(string), "Name")
+                },
+                Enumerable.Range(1, 100).Select(x => new object[]
+                {
+                    (long)x,
+                    "test"
+                }).ToList())));
+
+            mockQueryFirst = new MockDbConnection();
+            mockQueryFirst.SetupCommand(cmd => cmd.SetupResult(new MockDataReader(
+                new[]
+                {
+                    new MockColumn(typeof(long), "Id"),
+                    new MockColumn(typeof(string), "Name"),
+                    new MockColumn(typeof(int), "Amount"),
+                    new MockColumn(typeof(int), "Qty"),
+                    new MockColumn(typeof(bool), "Flag1"),
+                    new MockColumn(typeof(bool), "Flag2"),
+                    new MockColumn(typeof(DateTimeOffset), "CreatedAt"),
+                    new MockColumn(typeof(string), "CreatedBy"),
+                    new MockColumn(typeof(DateTimeOffset?), "UpdatedAt"),
+                    new MockColumn(typeof(string), "UpdatedBy"),
+                },
+                Enumerable.Range(1, 1).Select(x => new object[]
+                {
+                    (long)x,
+                    "test",
+                    1,
+                    2,
+                    true,
+                    false,
+                    DateTimeOffset.Now,
+                    "user",
+                    DBNull.Value,
+                    DBNull.Value
+                }).ToList())));
         }
 
         //--------------------------------------------------------------------------------
@@ -60,13 +101,13 @@ namespace Smart.Data.Mapper.Benchmark
             "INSERT INTO Table (Id, Data) VALUES (@Id, @Data)";
 
         [Benchmark]
-        public void MockExecuteDapper()
+        public void DapperExecute()
         {
             Dapper.SqlMapper.Execute(mockExecute, ExecuteSql, new { Id = 1, Data = "test" });
         }
 
         [Benchmark]
-        public void MockExecuteSmart()
+        public void SmartExecute()
         {
             mockExecute.Execute(ExecuteSql, new { Id = 1, Data = "test" });
         }
@@ -76,28 +117,28 @@ namespace Smart.Data.Mapper.Benchmark
             "VALUES (@Id, @Name, @Amount, @Qty, @Flag1, @Flag2, @DateTimeOffset, @CreatedBy, @UpdatedAt, @UpdatedBy)";
 
         [Benchmark]
-        public void MockExecuteDapperWithParameter10()
+        public void DapperExecuteWithParameter10()
         {
-            Dapper.SqlMapper.Execute(mockExecute, ExecuteWithParameter10Sql, new Table());
+            Dapper.SqlMapper.Execute(mockExecute, ExecuteWithParameter10Sql, new LargeData());
         }
 
         [Benchmark]
-        public void MockExecuteSmartWithParameter10()
+        public void SmartExecuteWithParameter10()
         {
-            mockExecute.Execute(ExecuteWithParameter10Sql, new Table());
+            mockExecute.Execute(ExecuteWithParameter10Sql, new LargeData());
         }
 
         [Benchmark]
-        public void MockExecuteDapperWithOverParameter()
+        public void DapperExecuteWithOverParameter()
         {
             // [MEMO] Dapper optimize parameters
-            Dapper.SqlMapper.Execute(mockExecute, ExecuteSql, new Table());
+            Dapper.SqlMapper.Execute(mockExecute, ExecuteSql, new LargeData());
         }
 
         [Benchmark]
-        public void MockExecuteSmartWithOverParameter()
+        public void SmartExecuteWithOverParameter()
         {
-            mockExecute.Execute(ExecuteSql, new Table());
+            mockExecute.Execute(ExecuteSql, new LargeData());
         }
 
         //--------------------------------------------------------------------------------
@@ -108,25 +149,25 @@ namespace Smart.Data.Mapper.Benchmark
             "SELECT COUNT(*) FROM Table";
 
         [Benchmark]
-        public long MockExecuteScalarDapper()
+        public long DapperExecuteScalar()
         {
             return Dapper.SqlMapper.ExecuteScalar<long>(mockExecuteScalar, ExecuteScalarSql);
         }
 
         [Benchmark]
-        public long MockExecuteScalarSmart()
+        public long SmartExecuteScalar()
         {
             return mockExecuteScalar.ExecuteScalar<long>(ExecuteScalarSql);
         }
 
         [Benchmark]
-        public long MockExecuteScalarDapperWithConvert()
+        public long DapperExecuteScalarWithConvert()
         {
             return Dapper.SqlMapper.ExecuteScalar<int>(mockExecuteScalar, ExecuteScalarSql);
         }
 
         [Benchmark]
-        public long MockExecuteScalarSmartWithConvert()
+        public long SmartExecuteScalarWithConvert()
         {
             return mockExecuteScalar.ExecuteScalar<int>(ExecuteScalarSql);
         }
@@ -135,60 +176,53 @@ namespace Smart.Data.Mapper.Benchmark
         // Query
         //--------------------------------------------------------------------------------
 
-        // TODO 2
+        private const string QuerySql =
+            "SELECT * FROM Data ORDER BY Id";
 
-        // TODO first?, reader?
+        [Benchmark]
+        public void DapperQuery100()
+        {
+            foreach (var dummy in Dapper.SqlMapper.Query<Data>(mockQuery, QuerySql, buffered: false))
+            {
+            }
+        }
 
-        //private MockDbConnection mockQuery;
+        [Benchmark]
+        public void SmartQuery100()
+        {
+            foreach (var dummy in mockQuery.Query<Data>(QuerySql))
+            {
+            }
+        }
 
-        //[GlobalSetup]
-        //public void GlobalSetup()
-        //{
-        //    sqlite = new SqliteConnection("Data Source=:memory:");
-        //    sqlite.Open();
-        //    sqlite.Execute("CREATE TABLE IF NOT EXISTS Table1 (Id int PRIMARY KEY, Data text)");
-        //    sqlite.Execute("CREATE TABLE IF NOT EXISTS Table2 (Id int, Data text)");
+        //--------------------------------------------------------------------------------
+        // Query
+        //--------------------------------------------------------------------------------
 
-        //    for (var i = 1; i <= 100; i++)
-        //    {
-        //        sqlite.Execute("INSERT INTO Table1 (Id, Data) VALUES (@Id, @Data)", new { Id = i, Data = "test" });
-        //    }
+        private const string QueryFirstSql =
+            "SELECT * FROM LargeData WHERE Id = 1";
 
-        //    mockQuery = new MockDbConnection();
-        //    mockExecute = new MockDbConnection();
-        //}
+        [Benchmark]
+        public LargeData DapperQueryFirst()
+        {
+            return Dapper.SqlMapper.QueryFirstOrDefault<LargeData>(mockQueryFirst, QueryFirstSql);
+        }
 
-        //[IterationSetup]
-        //public void IterationSetup()
-        //{
-        //    sqlite.Execute("DELETE FROM Table2");
-
-        //    var columns = new[]
-        //    {
-        //        new MockColumn(typeof(long), "Id"),
-        //        new MockColumn(typeof(string), "Data")
-        //    };
-        //    var rows = new List<object[]>();
-        //    for (var i = 1; i <= 100; i++)
-        //    {
-        //        rows.Add(new object[] { (long)i, "test" });
-        //    }
-        //    mockQuery.SetupCommand(cmd => cmd.SetupResult(new MockDataReader(columns, rows)));
-
-        //    mockExecute.SetupCommand(cmd => cmd.SetupResult(1));
-
-        //// Mock
-
-        //[Benchmark]
-        //public void MockQuery()
-        //{
-        //    foreach (var _ in mockQuery.Query<Table>("SELECT * FROM Table1", buffered: false))
-        //    {
-        //    }
-        //}
+        [Benchmark]
+        public LargeData SmartQueryFirst()
+        {
+            return mockQueryFirst.QueryFirstOrDefault<LargeData>(QueryFirstSql);
+        }
     }
 
-    public class Table
+    public class Data
+    {
+        public long Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class LargeData
     {
         public long Id { get; set; }
 

@@ -2,7 +2,7 @@ namespace Smart.Data.Mapper
 {
     using System;
 
-    public sealed class ColumnInfo
+    public struct ColumnInfo
     {
         public string Name { get; }
 
