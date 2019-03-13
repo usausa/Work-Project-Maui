@@ -56,6 +56,9 @@ namespace Smart.Data.Mapper
 
         private static readonly Dictionary<Type, ITypeHandler> DefaultTypeHandlers = new Dictionary<Type, ITypeHandler>();
 
+        [ThreadStatic]
+        private static ColumnInfo[] columnInfoPool;
+
         private readonly ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>>();
 
         private readonly ResultMapperCache resultMapperCache = new ResultMapperCache();
@@ -221,13 +224,19 @@ namespace Smart.Data.Mapper
 
         Func<IDataRecord, T> ISqlMapperConfig.CreateMapper<T>(IDataReader reader)
         {
-            // TODO ThreadLocal cache?
-            var type = typeof(T);
-            var columns = new ColumnInfo[reader.FieldCount];
-            for (var i = 0; i < columns.Length; i++)
+            var fieldCount = reader.FieldCount;
+            if ((columnInfoPool == null) || (columnInfoPool.Length < fieldCount))
             {
-                columns[i] = new ColumnInfo(reader.GetName(i), reader.GetFieldType(i));
+                columnInfoPool = new ColumnInfo[fieldCount];
             }
+
+            var type = typeof(T);
+            for (var i = 0; i < columnInfoPool.Length; i++)
+            {
+                columnInfoPool[i] = new ColumnInfo(reader.GetName(i), reader.GetFieldType(i));
+            }
+
+            var columns = new Span<ColumnInfo>(columnInfoPool, 0, fieldCount);
 
             if (resultMapperCache.TryGetValue(type, columns, out var value))
             {

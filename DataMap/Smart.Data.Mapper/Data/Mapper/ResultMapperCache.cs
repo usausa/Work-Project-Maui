@@ -32,7 +32,7 @@ namespace Smart.Data.Mapper
         //--------------------------------------------------------------------------------
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int CalculateHash(Type targetType, ColumnInfo[] columns)
+        private static int CalculateHash(Type targetType, Span<ColumnInfo> columns)
         {
             unchecked
             {
@@ -143,7 +143,7 @@ namespace Smart.Data.Mapper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool TryGetValueInternal(Table targetTable, Type targetType, ColumnInfo[] columns, out object value)
+        private static bool TryGetValueInternal(Table targetTable, Type targetType, Span<ColumnInfo> columns, out object value)
         {
             var index = CalculateHash(targetType, columns) & targetTable.HashMask;
             var array = targetTable.Nodes[index];
@@ -162,7 +162,7 @@ namespace Smart.Data.Mapper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsMatchColumn(ColumnInfo[] columns1, ColumnInfo[] columns2)
+        private static bool IsMatchColumn(ColumnInfo[] columns1, Span<ColumnInfo> columns2)
         {
             if (columns1.Length != columns2.Length)
             {
@@ -189,12 +189,12 @@ namespace Smart.Data.Mapper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetValue(Type targetType, ColumnInfo[] columns, out object value)
+        public bool TryGetValue(Type targetType, Span<ColumnInfo> columns, out object value)
         {
             return TryGetValueInternal(table, targetType, columns, out value);
         }
 
-        public object AddIfNotExist(Type targetType, ColumnInfo[] columns, Func<Type, ColumnInfo[], object> valueFactory)
+        public object AddIfNotExist(Type targetType, Span<ColumnInfo> columns, Func<Type, ColumnInfo[], object> valueFactory)
         {
             lock (sync)
             {
@@ -204,7 +204,10 @@ namespace Smart.Data.Mapper
                     return currentValue;
                 }
 
-                var value = valueFactory(targetType, columns);
+                var copyColumns = new ColumnInfo[columns.Length];
+                columns.CopyTo(new Span<ColumnInfo>(copyColumns));
+
+                var value = valueFactory(targetType, copyColumns);
 
                 // Check if added by recursive
                 if (TryGetValueInternal(table, targetType, columns, out currentValue))
@@ -213,7 +216,7 @@ namespace Smart.Data.Mapper
                 }
 
                 // Rebuild
-                var newTable = CreateAddTable(table, new Node(targetType, columns, value));
+                var newTable = CreateAddTable(table, new Node(targetType, copyColumns, value));
                 Interlocked.MemoryBarrier();
                 table = newTable;
 
