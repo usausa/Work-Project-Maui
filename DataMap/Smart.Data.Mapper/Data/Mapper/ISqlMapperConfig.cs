@@ -16,6 +16,8 @@ namespace Smart.Data.Mapper
 
         Func<string, string> GetNameConverter();
 
+        Func<PropertyInfo[], string, PropertyInfo> GetPropertySelector();
+
         Func<object, object> CreateParser(Type sourceType, Type destinationType);
 
         TypeHandleEntry LookupTypeHandle(Type type);
