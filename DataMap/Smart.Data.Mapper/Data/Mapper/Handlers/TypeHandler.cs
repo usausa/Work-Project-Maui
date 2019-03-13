@@ -15,6 +15,10 @@ namespace Smart.Data.Mapper.Handlers
             {
                 parameter.Value = value;
             }
+            else if (value is null)
+            {
+                parameter.Value = DBNull.Value;
+            }
             else
             {
                 SetValue(parameter, (T)value);

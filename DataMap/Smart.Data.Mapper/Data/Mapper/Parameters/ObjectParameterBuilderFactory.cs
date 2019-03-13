@@ -10,6 +10,12 @@ namespace Smart.Data.Mapper.Parameters
 
     public sealed class ObjectParameterBuilderFactory : IParameterBuilderFactory
     {
+        public static ObjectParameterBuilderFactory Instance { get; } = new ObjectParameterBuilderFactory();
+
+        private ObjectParameterBuilderFactory()
+        {
+        }
+
         private sealed class ParameterEntry
         {
             public string Name { get; }
@@ -77,8 +83,8 @@ namespace Smart.Data.Mapper.Parameters
             foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead))
             {
                 var getter = config.CreateGetter(pi);
-                var dbType = config.LookupDbType(pi.PropertyType, out var handler);
-                list.Add(new ParameterEntry(pi.Name, getter, dbType, handler));
+                var entry = config.LookupTypeHandle(pi.PropertyType);
+                list.Add(new ParameterEntry(pi.Name, getter, entry.DbType, entry.TypeHandler));
             }
 
             return list.ToArray();

@@ -5,6 +5,12 @@ namespace Smart.Data.Mapper.Mappers
 
     public sealed class ObjectResultMapperFactory : IResultMapperFactory
     {
+        public static ObjectResultMapperFactory Instance { get; } = new ObjectResultMapperFactory();
+
+        private ObjectResultMapperFactory()
+        {
+        }
+
         public bool IsMatch(Type type)
         {
             return true;

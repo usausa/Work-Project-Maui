@@ -6,6 +6,12 @@ namespace Smart.Data.Mapper.Parameters
 
     public sealed class DictionaryParameterBuilderFactory : IParameterBuilderFactory
     {
+        public static DictionaryParameterBuilderFactory Instance { get; } = new DictionaryParameterBuilderFactory();
+
+        private DictionaryParameterBuilderFactory()
+        {
+        }
+
         public bool IsMatch(Type type)
         {
             return typeof(IDictionary<string, object>).IsAssignableFrom(type);
@@ -27,10 +33,12 @@ namespace Smart.Data.Mapper.Parameters
                     }
                     else
                     {
-                        param.DbType = config.LookupDbType(value.GetType(), out var handler);
-                        if (handler != null)
+                        var entry = config.LookupTypeHandle(value.GetType());
+                        param.DbType = entry.DbType;
+
+                        if (entry.TypeHandler != null)
                         {
-                            handler.SetValue(param, value);
+                            entry.TypeHandler.SetValue(param, value);
                         }
                         else
                         {

@@ -9,34 +9,63 @@ namespace Smart.Data.Mapper
     using Smart.Converter;
     using Smart.Data.Mapper.Handlers;
     using Smart.Data.Mapper.Mappers;
+    using Smart.Data.Mapper.Namings;
     using Smart.Data.Mapper.Parameters;
     using Smart.Reflection;
-
-    // TODO インターフェース抽出？、メタデータが取得できれば良いだけか？
 
     public sealed class SqlMapperConfig : ISqlMapperConfig
     {
         private static readonly IParameterBuilderFactory[] DefaultParameterBuilderFactories =
         {
-            new DynamicParameterBuilderFactory(),
-            new ObjectParameterBuilderFactory()
+            DynamicParameterBuilderFactory.Instance,
+            DictionaryParameterBuilderFactory.Instance,
+            ObjectParameterBuilderFactory.Instance
         };
 
         private static readonly IResultMapperFactory[] DefaultResultMapperFactories =
         {
-            new ObjectResultMapperFactory()
+            ObjectResultMapperFactory.Instance
         };
+
+        private static readonly Dictionary<Type, DbType> DefaultTypeMap = new Dictionary<Type, DbType>
+        {
+            { typeof(byte), DbType.Byte },
+            { typeof(sbyte), DbType.SByte },
+            { typeof(short), DbType.Int16 },
+            { typeof(ushort), DbType.UInt16 },
+            { typeof(int), DbType.Int32 },
+            { typeof(uint), DbType.UInt32 },
+            { typeof(long), DbType.Int64 },
+            { typeof(ulong), DbType.UInt64 },
+            { typeof(float), DbType.Single },
+            { typeof(double), DbType.Double },
+            { typeof(decimal), DbType.Decimal },
+            { typeof(bool), DbType.Boolean },
+            { typeof(string), DbType.String },
+            { typeof(char), DbType.StringFixedLength },
+            { typeof(Guid), DbType.Guid },
+            { typeof(DateTime), DbType.DateTime },
+            { typeof(DateTimeOffset), DbType.DateTimeOffset },
+            { typeof(TimeSpan), DbType.Time },
+            { typeof(byte[]), DbType.Binary },
+            { typeof(object), DbType.Object },
+        };
+
+        private static readonly Dictionary<Type, ITypeHandler> DefaultTypeHandlers = new Dictionary<Type, ITypeHandler>();
 
         private readonly ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>>();
 
         private readonly ResultMapperCache resultMapperCache = new ResultMapperCache();
 
-        // TODO Custom ? withHandlers ?
-        private readonly Dictionary<Type, DbType> typeMap = new Dictionary<Type, DbType>();
+        private readonly ThreadsafeTypeHashArrayMap<TypeHandleEntry> typeHandleEntries = new ThreadsafeTypeHashArrayMap<TypeHandleEntry>();
 
         private IParameterBuilderFactory[] parameterBuilderFactories;
 
         private IResultMapperFactory[] resultMapperFactories;
+
+        private Dictionary<Type, DbType> typeMap;
+
+        private Dictionary<Type, ITypeHandler> typeHandlers;
 
         //--------------------------------------------------------------------------------
         // Property
@@ -44,23 +73,11 @@ namespace Smart.Data.Mapper
 
         public static SqlMapperConfig Default { get; } = new SqlMapperConfig();
 
-        public IList<IParameterBuilderFactory> ParameterBuilders { get; } = new List<IParameterBuilderFactory>();
-
-        //public Dictionary<Type, object> Plugin, Addを用意して、拡張メソッドでIFをキーとするメソッドを！、一応Lock
-
-        // -----------------------------
-
-        // TODO メタデータはFactory側で保持、Parameter、HandlerのキャッシュはConfigで保持か？
-
-        // TODO ClearCache? これ自体は保持せずFactoryに分離？、QueryとParameter？
-        // TODO MetadataFactory + Naming (exception if exist) ?
-        // TODO MetadataRepository
-
-        // TODO Micro components style? デフォルトのは置換で? 順番の問題があるからダメか？
-
         public IDelegateFactory DelegateFactory { get; set; } = Smart.Reflection.DelegateFactory.Default;
 
         public IObjectConverter Converter { get; set; } = ObjectConverter.Default;
+
+        public INaming Naming { get; set; } = DefaultNaming.Instance;
 
         //--------------------------------------------------------------------------------
         // Constructor
@@ -68,9 +85,10 @@ namespace Smart.Data.Mapper
 
         public SqlMapperConfig()
         {
-            ResetParameterBuilderFactories();
-            ResetResultMappers();
-            ResetTypeMap();
+            parameterBuilderFactories = DefaultParameterBuilderFactories;
+            resultMapperFactories = DefaultResultMapperFactories;
+            typeMap = DefaultTypeMap;
+            typeHandlers = DefaultTypeHandlers;
         }
 
         //--------------------------------------------------------------------------------
@@ -79,78 +97,65 @@ namespace Smart.Data.Mapper
 
         public SqlMapperConfig ResetParameterBuilderFactories()
         {
-            // TODO clear cache?
             parameterBuilderFactories = DefaultParameterBuilderFactories;
+            parameterBuilderCache.Clear();
             return this;
         }
 
-        public SqlMapperConfig AddParameterBuilderFactory(IParameterBuilderFactory factory)
+        public SqlMapperConfig ConfigureBuilderFactory(Action<IList<IParameterBuilderFactory>> action)
         {
-            // TODO clear cache?
-            var builders = new IParameterBuilderFactory[parameterBuilderFactories.Length + 1];
-            Array.Copy(parameterBuilderFactories, 0, builders, 0, parameterBuilderFactories.Length - DefaultParameterBuilderFactories.Length);
-            builders[parameterBuilderFactories.Length - DefaultParameterBuilderFactories.Length] = factory;
-            Array.Copy(DefaultParameterBuilderFactories, 0, builders, builders.Length - DefaultParameterBuilderFactories.Length, DefaultParameterBuilderFactories.Length);
+            var list = new List<IParameterBuilderFactory>(parameterBuilderFactories);
+            action(list);
+            parameterBuilderFactories = list.ToArray();
+            parameterBuilderCache.Clear();
             return this;
         }
 
         public SqlMapperConfig ResetResultMappers()
         {
-            // TODO clear cache?
             resultMapperFactories = DefaultResultMapperFactories;
+            resultMapperCache.Clear();
             return this;
         }
 
-        public SqlMapperConfig AddResultMapperFactory(IResultMapperFactory factory)
+        public SqlMapperConfig ConfigureMapperFactory(Action<IList<IResultMapperFactory>> action)
         {
-            // TODO clear cache?
-            var builders = new IResultMapperFactory[resultMapperFactories.Length + 1];
-            Array.Copy(resultMapperFactories, 0, builders, 0, resultMapperFactories.Length - DefaultResultMapperFactories.Length);
-            builders[resultMapperFactories.Length - DefaultResultMapperFactories.Length] = factory;
-            Array.Copy(DefaultResultMapperFactories, 0, builders, builders.Length - DefaultResultMapperFactories.Length, DefaultResultMapperFactories.Length);
+            var list = new List<IResultMapperFactory>(resultMapperFactories);
+            action(list);
+            resultMapperFactories = list.ToArray();
+            resultMapperCache.Clear();
             return this;
         }
 
         public SqlMapperConfig ResetTypeMap()
         {
-            typeMap.Clear();
-            typeMap[typeof(byte)] = DbType.Byte;
-            typeMap[typeof(sbyte)] = DbType.SByte;
-            typeMap[typeof(short)] = DbType.Int16;
-            typeMap[typeof(ushort)] = DbType.UInt16;
-            typeMap[typeof(int)] = DbType.Int32;
-            typeMap[typeof(uint)] = DbType.UInt32;
-            typeMap[typeof(long)] = DbType.Int64;
-            typeMap[typeof(ulong)] = DbType.UInt64;
-            typeMap[typeof(float)] = DbType.Single;
-            typeMap[typeof(double)] = DbType.Double;
-            typeMap[typeof(decimal)] = DbType.Decimal;
-            typeMap[typeof(bool)] = DbType.Boolean;
-            typeMap[typeof(string)] = DbType.String;
-            typeMap[typeof(char)] = DbType.StringFixedLength;
-            typeMap[typeof(Guid)] = DbType.Guid;
-            typeMap[typeof(DateTime)] = DbType.DateTime;
-            typeMap[typeof(DateTimeOffset)] = DbType.DateTimeOffset;
-            typeMap[typeof(TimeSpan)] = DbType.Time;
-            typeMap[typeof(byte[])] = DbType.Binary;
-            typeMap[typeof(byte?)] = DbType.Byte;
-            typeMap[typeof(sbyte?)] = DbType.SByte;
-            typeMap[typeof(short?)] = DbType.Int16;
-            typeMap[typeof(ushort?)] = DbType.UInt16;
-            typeMap[typeof(int?)] = DbType.Int32;
-            typeMap[typeof(uint?)] = DbType.UInt32;
-            typeMap[typeof(long?)] = DbType.Int64;
-            typeMap[typeof(ulong?)] = DbType.UInt64;
-            typeMap[typeof(float?)] = DbType.Single;
-            typeMap[typeof(double?)] = DbType.Double;
-            typeMap[typeof(decimal?)] = DbType.Decimal;
-            typeMap[typeof(bool?)] = DbType.Boolean;
-            typeMap[typeof(char?)] = DbType.StringFixedLength;
-            typeMap[typeof(Guid?)] = DbType.Guid;
-            typeMap[typeof(DateTime?)] = DbType.DateTime;
-            typeMap[typeof(DateTimeOffset?)] = DbType.DateTimeOffset;
-            typeMap[typeof(TimeSpan?)] = DbType.Time;
-            typeMap[typeof(object)] = DbType.Object;
+            typeMap = DefaultTypeMap;
+            typeHandleEntries.Clear();
+            return this;
+        }
+
+        public SqlMapperConfig ConfigureTypeMap(Action<IDictionary<Type, DbType>> action)
+        {
+            var dictionary = new Dictionary<Type, DbType>(typeMap);
+            action(dictionary);
+            typeMap = dictionary;
+            typeHandleEntries.Clear();
+            return this;
+        }
+
+        public SqlMapperConfig ResetTypeHandlers()
+        {
+            typeHandlers = DefaultTypeHandlers;
+            typeHandleEntries.Clear();
+            return this;
+        }
+
+        public SqlMapperConfig ConfigureTypeHandlers(Action<IDictionary<Type, ITypeHandler>> action)
+        {
+            var dictionary = new Dictionary<Type, ITypeHandler>(typeHandlers);
+            action(dictionary);
+            typeHandlers = dictionary;
+            typeHandleEntries.Clear();
             return this;
         }
 
@@ -158,56 +163,62 @@ namespace Smart.Data.Mapper
         // ISqlMapperConfig
         //--------------------------------------------------------------------------------
 
-        public Func<T> CreateFactory<T>()
-        {
-            return DelegateFactory.CreateFactory<T>();
-        }
+        Func<T> ISqlMapperConfig.CreateFactory<T>() => DelegateFactory.CreateFactory<T>();
 
-        public Func<object, object> CreateGetter(PropertyInfo pi)
-        {
-            return DelegateFactory.CreateGetter(pi);
-        }
+        Func<object, object> ISqlMapperConfig.CreateGetter(PropertyInfo pi) => DelegateFactory.CreateGetter(pi);
 
-        public Action<object, object> CreateSetter(PropertyInfo pi)
-        {
-            return DelegateFactory.CreateSetter(pi);
-        }
+        Action<object, object> ISqlMapperConfig.CreateSetter(PropertyInfo pi) => DelegateFactory.CreateSetter(pi);
 
-        public Func<object, object> CreateParser(Type sourceType, Type destinationType)
+        Func<string, string> ISqlMapperConfig.GetNameConverter() => Naming.Convert;
+
+        Func<object, object> ISqlMapperConfig.CreateParser(Type sourceType, Type destinationType)
         {
-            // TODO ITypeHandler, zero no lookup ?
+            if (!typeHandleEntries.TryGetValue(destinationType, out var entry))
+            {
+                entry = typeHandleEntries.AddIfNotExist(destinationType, CreateTypeHandleInternal);
+            }
+
+            if (entry.TypeHandler != null)
+            {
+                return x => entry.TypeHandler.Parse(destinationType, x);
+            }
+
             return Converter.CreateConverter(sourceType, destinationType);
         }
 
-        public DbType LookupDbType(Type type, out ITypeHandler handler)
+        TypeHandleEntry ISqlMapperConfig.LookupTypeHandle(Type type)
         {
-            handler = null;
-
-            //var nullUnderlyingType = Nullable.GetUnderlyingType(type);
-            //if (nullUnderlyingType != null)
-            //{
-            //    type = nullUnderlyingType;
-            //}
-
-            if (typeMap.TryGetValue(type, out var dbType))
+            if (!typeHandleEntries.TryGetValue(type, out var entry))
             {
-                return dbType;
+                entry = typeHandleEntries.AddIfNotExist(type, CreateTypeHandleInternal);
             }
 
-            //        if (type.IsEnum && snapShot.TryGetValue(Enum.GetUnderlyingType(type), out dbType))
-            //        {
-            //            return dbType;
-            //        }
+            if (!entry.CanUseAsParameter)
+            {
+                throw new SqlMapperException($"Type cannot use as parameter. type=[{type.FullName}]");
+            }
 
-            //        throw new ArgumentException($"Type {type.FullName} can't be used", nameof(type));
-
-            // TODO Handler with Selector with default?
-            throw new System.NotImplementedException();
+            return entry;
         }
 
-        public Func<IDataRecord, T> CreateMapper<T>(IDataReader reader)
+        private TypeHandleEntry CreateTypeHandleInternal(Type type)
         {
-            // TODO
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            var findDbType = typeMap.TryGetValue(type, out var dbType);
+            if (!findDbType && type.IsEnum)
+            {
+                findDbType = typeMap.TryGetValue(Enum.GetUnderlyingType(type), out dbType);
+            }
+
+            typeHandlers.TryGetValue(type, out var handler);
+
+            return new TypeHandleEntry(findDbType || (handler != null), dbType, handler);
+        }
+
+        Func<IDataRecord, T> ISqlMapperConfig.CreateMapper<T>(IDataReader reader)
+        {
+            // TODO ThreadLocal cache?
             var type = typeof(T);
             var columns = new ColumnInfo[reader.FieldCount];
             for (var i = 0; i < columns.Length; i++)
@@ -236,7 +247,7 @@ namespace Smart.Data.Mapper
             throw new SqlMapperException($"Result type is not supported. type=[{type.FullName}]");
         }
 
-        public Action<IDbCommand, object> CreateParameterBuilder(Type type)
+        Action<IDbCommand, object> ISqlMapperConfig.CreateParameterBuilder(Type type)
         {
             if (!parameterBuilderCache.TryGetValue(type, out var parameterBuilder))
             {

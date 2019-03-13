@@ -53,17 +53,17 @@ namespace Smart.Data.Mapper
                 }
                 else
                 {
-                    var dbType = config.LookupDbType(value.GetType(), out var handler);
-                    param.DbType = parameter.DbType ?? dbType;
+                    var entry = config.LookupTypeHandle(value.GetType());
+                    param.DbType = parameter.DbType ?? entry.DbType;
 
                     if (parameter.Size.HasValue)
                     {
                         param.Size = parameter.Size.Value;
                     }
 
-                    if (handler != null)
+                    if (entry.TypeHandler != null)
                     {
-                        handler.SetValue(param, value);
+                        entry.TypeHandler.SetValue(param, value);
                     }
                     else
                     {
