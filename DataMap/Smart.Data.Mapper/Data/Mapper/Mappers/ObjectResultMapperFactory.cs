@@ -40,6 +40,7 @@ namespace Smart.Data.Mapper.Mappers
 
         private static Action<object, object>[] CreateMapEntries(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
         {
+            // TODO delete Naming ?
             var namingConverter = config.GetNameConverter();
             var targetProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(IsTargetProperty)
@@ -57,6 +58,7 @@ namespace Smart.Data.Mapper.Mappers
             var list = new List<Action<object, object>>();
             foreach (var column in columns)
             {
+                // TODO column to pascal and ordinal & ignore ?
                 var entry = targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.Ordinal)) ??
                             targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.OrdinalIgnoreCase));
                 if (entry == null)
