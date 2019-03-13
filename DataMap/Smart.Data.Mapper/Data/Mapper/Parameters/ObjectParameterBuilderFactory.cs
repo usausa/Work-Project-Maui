@@ -19,41 +19,43 @@ namespace Smart.Data.Mapper.Parameters
 
         public bool IsMatch(Type type) => true;
 
-        public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
+        public ParameterBuilder CreateBuilder(ISqlMapperConfig config, Type type)
         {
             var entries = CreateParameterEntries(config, type);
 
-            return (cmd, parameter) =>
-            {
-                for (var i = 0; i < entries.Length; i++)
+            return new ParameterBuilder(
+                (cmd, parameter) =>
                 {
-                    var entry = entries[i];
-                    var param = cmd.CreateParameter();
-
-                    param.ParameterName = entry.Name;
-
-                    var value = entry.Getter(parameter);
-
-                    if (value is null)
+                    for (var i = 0; i < entries.Length; i++)
                     {
-                        param.Value = DBNull.Value;
-                    }
-                    else
-                    {
-                        param.DbType = entry.DbType;
-                        if (entry.Handler != null)
+                        var entry = entries[i];
+                        var param = cmd.CreateParameter();
+
+                        param.ParameterName = entry.Name;
+
+                        var value = entry.Getter(parameter);
+
+                        if (value is null)
                         {
-                            entry.Handler.SetValue(param, value);
+                            param.Value = DBNull.Value;
                         }
                         else
                         {
-                            param.Value = value;
+                            param.DbType = entry.DbType;
+                            if (entry.Handler != null)
+                            {
+                                entry.Handler.SetValue(param, value);
+                            }
+                            else
+                            {
+                                param.Value = value;
+                            }
                         }
-                    }
 
-                    cmd.Parameters.Add(param);
-                }
-            };
+                        cmd.Parameters.Add(param);
+                    }
+                },
+                null);
         }
 
         private static ParameterEntry[] CreateParameterEntries(ISqlMapperConfig config, Type type)

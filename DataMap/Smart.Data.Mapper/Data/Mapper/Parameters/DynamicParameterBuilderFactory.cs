@@ -1,7 +1,6 @@
 namespace Smart.Data.Mapper.Parameters
 {
     using System;
-    using System.Data;
 
     public sealed class DynamicParameterBuilderFactory : IParameterBuilderFactory
     {
@@ -16,9 +15,11 @@ namespace Smart.Data.Mapper.Parameters
             return typeof(IDynamicParameter).IsAssignableFrom(type);
         }
 
-        public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
+        public ParameterBuilder CreateBuilder(ISqlMapperConfig config, Type type)
         {
-            return (cmd, parameter) => ((IDynamicParameter)parameter).Build(config, cmd);
+            return new ParameterBuilder(
+                (cmd, parameter) => ((IDynamicParameter)parameter).Build(config, cmd),
+                null);
         }
     }
 }

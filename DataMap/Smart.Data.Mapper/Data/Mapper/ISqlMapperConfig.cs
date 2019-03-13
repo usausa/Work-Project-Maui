@@ -4,6 +4,8 @@ namespace Smart.Data.Mapper
     using System.Data;
     using System.Reflection;
 
+    using Smart.Data.Mapper.Parameters;
+
     public interface ISqlMapperConfig
     {
         Func<T> CreateFactory<T>();
@@ -18,7 +20,7 @@ namespace Smart.Data.Mapper
 
         TypeHandleEntry LookupTypeHandle(Type type);
 
-        Action<IDbCommand, object> CreateParameterBuilder(Type type);
+        ParameterBuilder CreateParameterBuilder(Type type);
 
         Func<IDataRecord, T> CreateMapper<T>(IDataReader reader);
     }

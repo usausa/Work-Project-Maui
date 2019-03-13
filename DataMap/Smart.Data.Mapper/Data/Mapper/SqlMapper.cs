@@ -8,6 +8,8 @@ namespace Smart.Data.Mapper
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Smart.Data.Mapper.Parameters;
+
     public static class SqlMapper
     {
         private const CommandBehavior CommandBehaviorQueryWithClose =
@@ -21,6 +23,8 @@ namespace Smart.Data.Mapper
 
         private const CommandBehavior CommandBehaviorQueryFirstOrDefault =
             CommandBehavior.SequentialAccess | CommandBehavior.SingleRow;
+
+        private static readonly ParameterBuilder NullParameterBuilder = new ParameterBuilder(null, null);
 
         //--------------------------------------------------------------------------------
         // Core
@@ -92,12 +96,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -108,7 +108,7 @@ namespace Smart.Data.Mapper
 
                     var result = cmd.ExecuteNonQuery();
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     return result;
                 }
@@ -130,12 +130,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupAsyncCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -146,7 +142,7 @@ namespace Smart.Data.Mapper
 
                     var result = await cmd.ExecuteNonQueryAsync(token);
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     return result;
                 }
@@ -172,12 +168,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -188,7 +180,7 @@ namespace Smart.Data.Mapper
 
                     var result = cmd.ExecuteScalar();
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     if (result is DBNull)
                     {
@@ -221,12 +213,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupAsyncCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -237,7 +225,7 @@ namespace Smart.Data.Mapper
 
                     var result = await cmd.ExecuteScalarAsync(token);
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     if (result is DBNull)
                     {
@@ -274,12 +262,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -291,7 +275,7 @@ namespace Smart.Data.Mapper
                     var reader = cmd.ExecuteReader(wasClosed ? commandBehavior | CommandBehavior.CloseConnection : commandBehavior);
                     wasClosed = false;
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     return reader;
                 }
@@ -313,12 +297,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupAsyncCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -330,7 +310,7 @@ namespace Smart.Data.Mapper
                     var reader = await cmd.ExecuteReaderAsync(wasClosed ? commandBehavior | CommandBehavior.CloseConnection : commandBehavior, token);
                     wasClosed = false;
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     return reader;
                 }
@@ -356,12 +336,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -374,7 +350,7 @@ namespace Smart.Data.Mapper
                     {
                         wasClosed = false;
 
-                        // TODO
+                        builder.PostProcess?.Invoke(cmd, param);
 
                         var mapper = config.CreateMapper<T>(reader);
 
@@ -402,12 +378,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupAsyncCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 var reader = default(DbDataReader);
                 try
@@ -420,7 +392,7 @@ namespace Smart.Data.Mapper
                     reader = await cmd.ExecuteReaderAsync(wasClosed ? CommandBehaviorQueryWithClose : CommandBehaviorQuery, token);
                     wasClosed = false;
 
-                    // TODO
+                    builder.PostProcess?.Invoke(cmd, param);
 
                     var mapper = config.CreateMapper<T>(reader);
 
@@ -459,12 +431,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -477,7 +445,7 @@ namespace Smart.Data.Mapper
                     {
                         wasClosed = false;
 
-                        // TODO
+                        builder.PostProcess?.Invoke(cmd, param);
 
                         var mapper = config.CreateMapper<T>(reader);
 
@@ -502,12 +470,8 @@ namespace Smart.Data.Mapper
             var wasClosed = con.State == ConnectionState.Closed;
             using (var cmd = SetupAsyncCommand(con, transaction, sql, commandTimeout, commandType))
             {
-                // TODO
-                if (param != null)
-                {
-                    var builder = config.CreateParameterBuilder(param.GetType());
-                    builder(cmd, param);
-                }
+                var builder = param != null ? config.CreateParameterBuilder(param.GetType()) : NullParameterBuilder;
+                builder.Build?.Invoke(cmd, param);
 
                 try
                 {
@@ -520,7 +484,7 @@ namespace Smart.Data.Mapper
                     {
                         wasClosed = false;
 
-                        // TODO
+                        builder.PostProcess?.Invoke(cmd, param);
 
                         var mapper = config.CreateMapper<T>(reader);
 

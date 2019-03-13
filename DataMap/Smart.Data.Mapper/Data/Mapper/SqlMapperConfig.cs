@@ -21,7 +21,6 @@ namespace Smart.Data.Mapper
         {
             DynamicParameterBuilderFactory.Instance,
             DictionaryParameterBuilderFactory.Instance,
-            ProcedureParameterBuilderFactory.Instance,
             ObjectParameterBuilderFactory.Instance
         };
 
@@ -59,7 +58,7 @@ namespace Smart.Data.Mapper
         [ThreadStatic]
         private static ColumnInfo[] columnInfoPool;
 
-        private readonly ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<Action<IDbCommand, object>>();
+        private readonly ThreadsafeTypeHashArrayMap<ParameterBuilder> parameterBuilderCache = new ThreadsafeTypeHashArrayMap<ParameterBuilder>();
 
         private readonly ResultMapperCache resultMapperCache = new ResultMapperCache();
 
@@ -259,7 +258,7 @@ namespace Smart.Data.Mapper
             throw new SqlMapperException($"Result type is not supported. type=[{type.FullName}]");
         }
 
-        Action<IDbCommand, object> ISqlMapperConfig.CreateParameterBuilder(Type type)
+        ParameterBuilder ISqlMapperConfig.CreateParameterBuilder(Type type)
         {
             if (!parameterBuilderCache.TryGetValue(type, out var parameterBuilder))
             {
@@ -269,7 +268,7 @@ namespace Smart.Data.Mapper
             return parameterBuilder;
         }
 
-        private Action<IDbCommand, object> CreateParameterBuilderInternal(Type type)
+        private ParameterBuilder CreateParameterBuilderInternal(Type type)
         {
             foreach (var factory in parameterBuilderFactories)
             {

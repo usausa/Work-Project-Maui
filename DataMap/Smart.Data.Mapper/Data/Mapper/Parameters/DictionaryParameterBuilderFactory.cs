@@ -2,7 +2,6 @@ namespace Smart.Data.Mapper.Parameters
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
 
     public sealed class DictionaryParameterBuilderFactory : IParameterBuilderFactory
     {
@@ -17,38 +16,40 @@ namespace Smart.Data.Mapper.Parameters
             return typeof(IDictionary<string, object>).IsAssignableFrom(type);
         }
 
-        public Action<IDbCommand, object> CreateBuilder(ISqlMapperConfig config, Type type)
+        public ParameterBuilder CreateBuilder(ISqlMapperConfig config, Type type)
         {
-            return (cmd, parameter) =>
-            {
-                foreach (var keyValue in (IDictionary<string, object>)parameter)
+            return new ParameterBuilder(
+                (cmd, parameter) =>
                 {
-                    var param = cmd.CreateParameter();
-                    param.ParameterName = keyValue.Key;
-
-                    var value = keyValue.Value;
-                    if (value is null)
+                    foreach (var keyValue in (IDictionary<string, object>)parameter)
                     {
-                        param.Value = DBNull.Value;
-                    }
-                    else
-                    {
-                        var entry = config.LookupTypeHandle(value.GetType());
-                        param.DbType = entry.DbType;
+                        var param = cmd.CreateParameter();
+                        param.ParameterName = keyValue.Key;
 
-                        if (entry.TypeHandler != null)
+                        var value = keyValue.Value;
+                        if (value is null)
                         {
-                            entry.TypeHandler.SetValue(param, value);
+                            param.Value = DBNull.Value;
                         }
                         else
                         {
-                            param.Value = value;
-                        }
-                    }
+                            var entry = config.LookupTypeHandle(value.GetType());
+                            param.DbType = entry.DbType;
 
-                    cmd.Parameters.Add(param);
-                }
-            };
+                            if (entry.TypeHandler != null)
+                            {
+                                entry.TypeHandler.SetValue(param, value);
+                            }
+                            else
+                            {
+                                param.Value = value;
+                            }
+                        }
+
+                        cmd.Parameters.Add(param);
+                    }
+                },
+                null);
         }
     }
 }
