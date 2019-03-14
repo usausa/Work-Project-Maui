@@ -1,11 +1,13 @@
 namespace DataMapperWork
 {
     using System;
+    using System.Data;
     using System.Linq;
 
     using Microsoft.Data.Sqlite;
 
     using Smart.Data.Mapper;
+    using Smart.Data.Mapper.Attributes;
 
     public static class Program
     {
@@ -27,7 +29,25 @@ namespace DataMapperWork
                     Console.WriteLine($"{entity.Id} : {entity.Data}");
                 }
             }
+
+            //using (var con = new SqlConnection("Data Source=10.13.8.21;MultipleActiveResultSets=True;Initial Catalog=Test;User ID=test;Password=test"))
+            //{
+            //    con.Open();
+
+            //    var param = new TestProcParameter { InParam = 1 };
+            //    con.Execute("TestProc", param, commandType: CommandType.StoredProcedure);
+            //    Console.WriteLine(param.OutParam);
+            //}
         }
+    }
+
+    public class TestProcParameter
+    {
+        public int InParam { get; set; }
+
+        [DbType(DbType.Int32)]
+        [Direction(ParameterDirection.Output)]
+        public long OutParam { get; set; }
     }
 
     public class Table

@@ -46,32 +46,36 @@ namespace Smart.Data.Mapper
                 var param = cmd.CreateParameter();
                 param.ParameterName = parameter.Name;
 
-                var value = parameter.Value;
-                if (value is null)
-                {
-                    param.Value = DBNull.Value;
-                }
-                else
-                {
-                    var entry = config.LookupTypeHandle(value.GetType());
-                    param.DbType = parameter.DbType ?? entry.DbType;
+                param.Direction = parameter.Direction;
 
-                    if (parameter.Size.HasValue)
+                if ((parameter.Direction == ParameterDirection.Input) ||
+                    (parameter.Direction == ParameterDirection.InputOutput))
+                {
+                    var value = parameter.Value;
+                    if (value is null)
                     {
-                        param.Size = parameter.Size.Value;
-                    }
-
-                    if (entry.TypeHandler != null)
-                    {
-                        entry.TypeHandler.SetValue(param, value);
+                        param.Value = DBNull.Value;
                     }
                     else
                     {
-                        param.Value = value;
+                        var entry = config.LookupTypeHandle(value.GetType());
+                        param.DbType = parameter.DbType ?? entry.DbType;
+
+                        if (parameter.Size.HasValue)
+                        {
+                            param.Size = parameter.Size.Value;
+                        }
+
+                        if (entry.TypeHandler != null)
+                        {
+                            entry.TypeHandler.SetValue(param, value);
+                        }
+                        else
+                        {
+                            param.Value = value;
+                        }
                     }
                 }
-
-                param.Direction = parameter.Direction;
 
                 cmd.Parameters.Add(param);
                 parameter.AttachedParam = param;

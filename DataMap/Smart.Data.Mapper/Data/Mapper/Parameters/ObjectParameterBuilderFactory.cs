@@ -35,7 +35,7 @@ namespace Smart.Data.Mapper.Parameters
                     var size = x.GetCustomAttribute<SizeAttribute>()?.Size;
                     var direction = x.GetCustomAttribute<DirectionAttribute>()?.Direction ?? ParameterDirection.Input;
                     var entry = config.LookupTypeHandle(x.PropertyType);
-                    var getter = config.CreateGetter(x);
+                    var getter = ((direction == ParameterDirection.Input) || (direction == ParameterDirection.InputOutput)) ? config.CreateGetter(x) : null;
                     var setter = direction != ParameterDirection.Input ? CreateConvertSetter(config, x) : null;
                     return new ParameterEntry(x.Name, getter, setter, dbType ?? entry.DbType, entry.TypeHandler, size, direction);
                 })
@@ -82,32 +82,34 @@ namespace Smart.Data.Mapper.Parameters
 
                     param.ParameterName = entry.Name;
 
-                    var value = entry.Getter(parameter);
+                    param.Direction = entry.Direction;
 
-                    if (value is null)
+                    if (entry.Getter != null)
                     {
-                        param.Value = DBNull.Value;
-                    }
-                    else
-                    {
-                        param.DbType = entry.DbType;
-
-                        if (entry.Size.HasValue)
+                        var value = entry.Getter(parameter);
+                        if (value is null)
                         {
-                            param.Size = entry.Size.Value;
-                        }
-
-                        if (entry.Handler != null)
-                        {
-                            entry.Handler.SetValue(param, value);
+                            param.Value = DBNull.Value;
                         }
                         else
                         {
-                            param.Value = value;
+                            param.DbType = entry.DbType;
+
+                            if (entry.Size.HasValue)
+                            {
+                                param.Size = entry.Size.Value;
+                            }
+
+                            if (entry.Handler != null)
+                            {
+                                entry.Handler.SetValue(param, value);
+                            }
+                            else
+                            {
+                                param.Value = value;
+                            }
                         }
                     }
-
-                    param.Direction = entry.Direction;
 
                     cmd.Parameters.Add(param);
                 }
