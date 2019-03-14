@@ -1,10 +1,10 @@
-using Smart.Text;
-
 namespace Smart.Data.Mapper.Selector
 {
     using System;
     using System.Linq;
     using System.Reflection;
+
+    using Smart.Text;
 
     public sealed class DefaultPropertySelector : IPropertySelector
     {

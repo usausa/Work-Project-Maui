@@ -60,15 +60,15 @@ namespace Smart.Data.Mapper.Parameters
 
         private static ParameterEntry[] CreateParameterEntries(ISqlMapperConfig config, Type type)
         {
-            var list = new List<ParameterEntry>();
-            foreach (var pi in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(IsTargetProperty))
-            {
-                var getter = config.CreateGetter(pi);
-                var entry = config.LookupTypeHandle(pi.PropertyType);
-                list.Add(new ParameterEntry(pi.Name, getter, entry.DbType, entry.TypeHandler));
-            }
-
-            return list.ToArray();
+            return type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(IsTargetProperty)
+                .Select(x =>
+                {
+                    var getter = config.CreateGetter(x);
+                    var entry = config.LookupTypeHandle(x.PropertyType);
+                    return new ParameterEntry(x.Name, getter, entry.DbType, entry.TypeHandler);
+                })
+                .ToArray();
         }
 
         private static bool IsTargetProperty(PropertyInfo pi)
