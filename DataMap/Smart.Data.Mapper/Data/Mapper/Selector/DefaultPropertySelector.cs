@@ -1,5 +1,9 @@
+using Smart.Text;
+
 namespace Smart.Data.Mapper.Selector
 {
+    using System;
+    using System.Linq;
     using System.Reflection;
 
     public sealed class DefaultPropertySelector : IPropertySelector
@@ -12,7 +16,16 @@ namespace Smart.Data.Mapper.Selector
 
         public PropertyInfo Select(PropertyInfo[] properties, string name)
         {
-            throw new System.NotImplementedException();
+            var pi = properties.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.Ordinal)) ??
+                     properties.FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (pi != null)
+            {
+                return pi;
+            }
+
+            var pascalName = Inflector.Pascalize(name);
+            return properties.FirstOrDefault(x => String.Equals(x.Name, pascalName, StringComparison.Ordinal)) ??
+                   properties.FirstOrDefault(x => String.Equals(x.Name, pascalName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

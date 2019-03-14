@@ -39,34 +39,20 @@ namespace Smart.Data.Mapper.Mappers
 
         private static MapEntry[] CreateMapEntries(ISqlMapperConfig config, Type type, ColumnInfo[] columns)
         {
-            // TODO delete Naming ?
-            var namingConverter = config.GetNameConverter();
-            var targetProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            var selector = config.GetPropertySelector();
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(IsTargetProperty)
-                .Select(x =>
-                {
-                    var attr = x.GetCustomAttribute<DBNameAttribute>();
-                    return new
-                    {
-                        Name = attr != null ? attr.Name : namingConverter(x.Name),
-                        Property = x
-                    };
-                })
                 .ToArray();
 
             var list = new List<MapEntry>();
             for (var i = 0; i < columns.Length; i++)
             {
-                // TODO column to pascal and ordinal & ignore ?
                 var column = columns[i];
-                var entry = targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.Ordinal)) ??
-                            targetProperties.FirstOrDefault(x => String.Equals(x.Name, column.Name, StringComparison.OrdinalIgnoreCase));
-                if (entry == null)
+                var pi = selector(properties, column.Name);
+                if (pi == null)
                 {
                     continue;
                 }
-
-                var pi = entry.Property;
                 var setter = config.CreateSetter(pi);
                 var defaultValue = pi.PropertyType.GetDefaultValue();
 

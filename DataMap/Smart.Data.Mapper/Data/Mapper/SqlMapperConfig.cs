@@ -9,7 +9,6 @@ namespace Smart.Data.Mapper
     using Smart.Converter;
     using Smart.Data.Mapper.Handlers;
     using Smart.Data.Mapper.Mappers;
-    using Smart.Data.Mapper.Namings;
     using Smart.Data.Mapper.Parameters;
     using Smart.Data.Mapper.Selector;
     using Smart.Reflection;
@@ -82,9 +81,6 @@ namespace Smart.Data.Mapper
         public IDelegateFactory DelegateFactory { get; set; } = Smart.Reflection.DelegateFactory.Default;
 
         public IObjectConverter Converter { get; set; } = ObjectConverter.Default;
-
-        // TODO Delete
-        public INaming Naming { get; set; } = DefaultNaming.Instance;
 
         public IPropertySelector PropertySelector { get; set; } = DefaultPropertySelector.Instance;
 
@@ -178,9 +174,7 @@ namespace Smart.Data.Mapper
 
         Action<object, object> ISqlMapperConfig.CreateSetter(PropertyInfo pi) => DelegateFactory.CreateSetter(pi);
 
-        Func<string, string> ISqlMapperConfig.GetNameConverter() => Naming.Convert;
-
-        public Func<PropertyInfo[], string, PropertyInfo> GetPropertySelector() => PropertySelector.Select;
+        Func<PropertyInfo[], string, PropertyInfo> ISqlMapperConfig.GetPropertySelector() => PropertySelector.Select;
 
         Func<object, object> ISqlMapperConfig.CreateParser(Type sourceType, Type destinationType)
         {
