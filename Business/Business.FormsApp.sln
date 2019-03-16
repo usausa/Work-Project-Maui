@@ -9,8 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business.FormsApp", "Busine
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{045B3C0B-EB9A-45CC-871A-2DB16621C948}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Business.FormsApp.ruleset = Business.FormsApp.ruleset
 		Business.FormsApp.sln.DotSettings = Business.FormsApp.sln.DotSettings
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
 Global

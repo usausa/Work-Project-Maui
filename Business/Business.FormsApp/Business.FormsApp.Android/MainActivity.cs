@@ -1,4 +1,4 @@
-﻿namespace Business.FormsApp.Droid
+namespace Business.FormsApp.Droid
 {
     using System;
 
@@ -11,10 +11,8 @@
     using Android.Views;
 
     using Business.FormsApp.Components.Device;
-    using Business.FormsApp.Components.Log;
     using Business.FormsApp.Components.Wifi;
     using Business.FormsApp.Droid.Components.Device;
-    using Business.FormsApp.Droid.Components.Log;
     using Business.FormsApp.Droid.Components.Wifi;
 
     using Smart.Resolver;
@@ -42,10 +40,6 @@
             deviceManager = new DeviceManager(this);
             Window.DecorView.ViewTreeObserver.GlobalLayout += ViewTreeObserverOnGlobalLayout;
             deviceManager.RegisterWakeLockReceiver();
-
-            NLog.LogManager.ThrowExceptions = true;
-            NLog.LogManager.ThrowConfigExceptions = true;
-            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("assets/NLog.config");
 
             UserDialogs.Init(this);
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
@@ -86,7 +80,6 @@
 
             public void RegisterComponents(ResolverConfig config)
             {
-                config.Bind<ILogger>().To<Logger>().InSingletonScope();
                 config.Bind<IDeviceManager>().ToConstant(activity.deviceManager);
                 config.Bind<IWifiDirectManager>().ToConstant(new WifiDirectManager(activity));
             }
