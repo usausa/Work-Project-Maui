@@ -7,7 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.FormsApp.Android
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.FormsApp.iOS", "DataAccess.FormsApp\DataAccess.FormsApp.iOS\DataAccess.FormsApp.iOS.csproj", "{FFF153A2-77D5-4FA9-ADB2-CA95A45D933D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.FormsApp", "DataAccess.FormsApp\DataAccess.FormsApp\DataAccess.FormsApp.csproj", "{0E8ABB42-329B-4816-BD66-BC3188038402}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.FormsApp", "DataAccess.FormsApp\DataAccess.FormsApp\DataAccess.FormsApp.csproj", "{0E8ABB42-329B-4816-BD66-BC3188038402}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E70C41A-6465-429F-84A4-DD1C4DA52A66}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		DataAccess.FormsApp.ruleset = DataAccess.FormsApp.ruleset
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

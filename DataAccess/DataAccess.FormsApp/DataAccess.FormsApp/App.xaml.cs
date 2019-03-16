@@ -1,13 +1,10 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+[assembly: Xamarin.Forms.Xaml.XamlCompilation(Xamarin.Forms.Xaml.XamlCompilationOptions.Compile)]
 
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DataAccess.FormsApp
 {
-    public partial class App : Application
+    public partial class App
     {
-        public App()
+        public App(IComponentProvider provider)
         {
             InitializeComponent();
 
