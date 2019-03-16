@@ -72,16 +72,7 @@
 
         public override void OnBackPressed()
         {
-            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
-            {
-                System.Diagnostics.Debug.WriteLine("Android back button: There are some pages in the PopupStack");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Android back button: There are not any pages in the PopupStack");
-
-                MoveTaskToBack(true);
-            }
+            Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
         }
 
         private class ComponentProvider : IComponentProvider

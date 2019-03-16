@@ -2,7 +2,7 @@
 {
     public partial class MaterialColors
     {
-        public MetroColors()
+        public MaterialColors()
         {
             InitializeComponent();
         }
