@@ -22,6 +22,8 @@ namespace DataAccess.FormsApp.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            SQLitePCL.Batteries_V2.Init();
+
             base.OnCreate(savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));

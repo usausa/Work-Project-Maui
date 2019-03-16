@@ -16,4 +16,8 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <WarningsAsMessages>MSB3277</WarningsAsMessages>
+  </PropertyGroup>
+
 </Project>

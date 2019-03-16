@@ -10,11 +10,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Usa.Smart.Core" Version="1.6.0" />
+    <PackageReference Include="Usa.Smart.Data" Version="0.0.5" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="0.1.0" />
     <PackageReference Include="Usa.Smart.Forms" Version="1.3.3" />
     <PackageReference Include="Usa.Smart.Forms.Reactive" Version="1.3.3" />
     <PackageReference Include="Usa.Smart.Forms.Resolver" Version="1.3.3" />
@@ -23,6 +26,7 @@
     <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="1.1.3" />
     <PackageReference Include="Usa.Smart.Resolver" Version="1.7.6" />
     <PackageReference Include="Usa.Smart.Resolver.Xamarin" Version="1.7.6" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
   </ItemGroup>
 
