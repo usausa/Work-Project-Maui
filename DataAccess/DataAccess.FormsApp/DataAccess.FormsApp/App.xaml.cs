@@ -3,32 +3,78 @@
 namespace DataAccess.FormsApp
 {
     using System.IO;
+    using System.Reflection;
+
+    using DataAccess.FormsApp.Modules;
 
     using Microsoft.Data.Sqlite;
 
-    using Smart.Data.Mapper;
+    using Smart.Data;
+    using Smart.Forms.Resolver;
+    using Smart.Navigation;
+    using Smart.Resolver;
 
     using Xamarin.Essentials;
 
     public partial class App
     {
+        private readonly Navigator navigator;
+
         public App(IComponentProvider provider)
         {
             InitializeComponent();
 
-            var path = Path.Combine(FileSystem.AppDataDirectory, "Test.db");
-            var connectionString = $"Data Source={path}";
-            var con = new SqliteConnection(connectionString);
-            con.Open();
+            // Config Resolver
+            var resolver = CreateResolver(provider);
+            ResolveProvider.Default.UseSmartResolver(resolver);
 
-            con.Execute("CREATE TABLE IF NOT EXISTS Item (Id int PRIMARY KEY, Name text, Price int)");
+            // Config Navigator
+            navigator = new NavigatorConfig()
+                .UseFormsNavigationProvider()
+                .UseResolver(resolver)
+                .UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes))
+                .ToNavigator();
+            navigator.Navigated += (sender, args) =>
+            {
+                // for debug
+                System.Diagnostics.Debug.WriteLine(
+                    $"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
+            };
 
-            MainPage = new MainPage();
+            // Show MainWindow
+            MainPage = resolver.Get<MainPage>();
+        }
+
+        private SmartResolver CreateResolver(IComponentProvider provider)
+        {
+            var config = new ResolverConfig()
+                .UseAutoBinding()
+                .UseArrayBinding()
+                .UseAssignableBinding()
+                .UsePropertyInjector();
+
+            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "Test.db");
+
+            config.Bind<INavigator>().ToMethod(kernel => navigator).InSingletonScope();
+
+            provider.RegisterComponents(config);
+            config.Bind<Settings>().ToConstant(new Settings
+            {
+                DatabasePath = databasePath
+            }).InSingletonScope();
+
+            var connectionString = $"Data Source={databasePath}";
+            config.Bind<IConnectionFactory>()
+                .ToConstant(new CallbackConnectionFactory(() => new SqliteConnection(connectionString)));
+
+            config.Bind<ApplicationState>().ToSelf().InSingletonScope();
+
+            return config.ToResolver();
         }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            navigator.Forward(ViewId.Menu);
         }
 
         protected override void OnSleep()

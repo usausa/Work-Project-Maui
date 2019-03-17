@@ -1,12 +1,20 @@
 namespace DataAccess.FormsApp
 {
-    using Xamarin.Forms;
+    using DataAccess.FormsApp.Shell;
 
-    public partial class MainPage : ContentPage
+    using Smart.Navigation;
+
+    public partial class MainPage
     {
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            (BindingContext as MainPageViewModel)?.Navigator.NotifyAsync(ShellEvent.Back);
+            return true;
         }
     }
 }
