@@ -1,13 +1,9 @@
 namespace DataAccess.FormsApp.Modules
 {
-    using System.Threading.Tasks;
-
-    using DataAccess.FormsApp.Shell;
-
     using Smart.Forms.ViewModels;
     using Smart.Navigation;
 
-    public class AppViewModelBase : ViewModelBase, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
+    public class AppViewModelBase : ViewModelBase, INavigatorAware, INavigationEventSupport
     {
         public INavigator Navigator { get; set; }
 
@@ -36,22 +32,6 @@ namespace DataAccess.FormsApp.Modules
 
         public virtual void OnNavigatedTo(INavigationContext context)
         {
-        }
-
-        public Task NavigatorNotifyAsync(ShellEvent parameter)
-        {
-            switch (parameter)
-            {
-                case ShellEvent.Back:
-                    return OnNotifyBackAsync();
-                default:
-                    return Task.CompletedTask;
-            }
-        }
-
-        protected virtual Task OnNotifyBackAsync()
-        {
-            return Task.CompletedTask;
         }
     }
 }

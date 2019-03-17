@@ -10,11 +10,5 @@ namespace DataAccess.FormsApp
         {
             InitializeComponent();
         }
-
-        protected override bool OnBackButtonPressed()
-        {
-            (BindingContext as MainPageViewModel)?.Navigator.NotifyAsync(ShellEvent.Back);
-            return true;
-        }
     }
 }
