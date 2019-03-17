@@ -34,7 +34,6 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <MandroidI18n>CJK</MandroidI18n>
-    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,7 +48,6 @@
     <EnableLLVM>true</EnableLLVM>
     <AndroidSupportedAbis />
     <MandroidI18n>CJK</MandroidI18n>
-    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
