@@ -1,7 +1,6 @@
-using System.IO;
-
 namespace DataAccess.FormsApp.Modules
 {
+    using System.IO;
     using System.Threading.Tasks;
 
     using Smart.ComponentModel;
