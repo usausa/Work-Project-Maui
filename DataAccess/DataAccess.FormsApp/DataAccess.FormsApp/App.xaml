@@ -57,8 +57,22 @@
 
             <!--  Button  -->
 
-            <Style x:Key="MenuButton" TargetType="Button">
+            <Style x:Key="DefinitionButton" TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="Margin" Value="3" />
+            </Style>
+
+            <Style x:Key="ActionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="Margin" Value="3" />
+            </Style>
+
+            <Style x:Key="MemoryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroMagenta}" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="Margin" Value="3" />
