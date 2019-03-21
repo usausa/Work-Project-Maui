@@ -1,16 +1,21 @@
-﻿using System;
-
-using Android.App;
-using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-
 namespace ControlTest.FormsApp.Droid
 {
-    [Activity(Label = "ControlTest.FormsApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    using Android.App;
+    using Android.Content;
+    using Android.Content.PM;
+    using Android.OS;
+    using Android.Views;
+
+    using Smart.Resolver;
+
+    [Activity(
+        Icon = "@mipmap/icon",
+        Theme = "@style/MainTheme",
+        MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+        ScreenOrientation = ScreenOrientation.Portrait,
+        WindowSoftInputMode = SoftInput.AdjustResize)]
+    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -18,8 +23,23 @@ namespace ControlTest.FormsApp.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App());
+            Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            LoadApplication(new App(new ComponentProvider(this)));
+        }
+
+        private sealed class ComponentProvider : IComponentProvider
+        {
+            private readonly MainActivity activity;
+
+            public ComponentProvider(MainActivity activity)
+            {
+                this.activity = activity;
+            }
+
+            public void RegisterComponents(ResolverConfig config)
+            {
+                config.Bind<Context>().ToConstant(activity).InSingletonScope();
+            }
         }
     }
 }

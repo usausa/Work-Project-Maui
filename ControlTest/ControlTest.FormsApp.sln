@@ -7,7 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlTest.FormsApp.Androi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlTest.FormsApp.iOS", "ControlTest.FormsApp\ControlTest.FormsApp.iOS\ControlTest.FormsApp.iOS.csproj", "{47CE7549-2717-4C25-B6A1-D0EA54A0C1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlTest.FormsApp", "ControlTest.FormsApp\ControlTest.FormsApp\ControlTest.FormsApp.csproj", "{2ADB522B-1945-4BE8-AA84-548EB33C70B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlTest.FormsApp", "ControlTest.FormsApp\ControlTest.FormsApp\ControlTest.FormsApp.csproj", "{2ADB522B-1945-4BE8-AA84-548EB33C70B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54FD72BE-EE2D-48C4-993F-A59E54F34781}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		ControlTest.FormsApp.ruleset = ControlTest.FormsApp.ruleset
+		ControlTest.FormsApp.sln.DotSettings = ControlTest.FormsApp.sln.DotSettings
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
