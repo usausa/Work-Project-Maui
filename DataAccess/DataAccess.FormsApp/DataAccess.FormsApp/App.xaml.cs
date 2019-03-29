@@ -5,6 +5,7 @@ namespace DataAccess.FormsApp
     using System.IO;
     using System.Reflection;
 
+    using DataAccess.FormsApp.Components;
     using DataAccess.FormsApp.Modules;
 
     using Microsoft.Data.Sqlite;
@@ -68,6 +69,8 @@ namespace DataAccess.FormsApp
                 .ToConstant(new CallbackConnectionFactory(() => new SqliteConnection(connectionString)));
 
             config.Bind<ApplicationState>().ToSelf().InSingletonScope();
+
+            config.Bind<IDialogs>().To<Dialogs>().InSingletonScope();
 
             return config.ToResolver();
         }

@@ -24,10 +24,10 @@ namespace DataAccess.FormsApp.Models
         // integer
         public bool BoolValue { get; set; }
 
-        // bigint
+        // integer
         public DateTime DateTimeValue { get; set; }
 
-        // bigint
+        // integer
         public DateTimeOffset DateTimeOffsetValue { get; set; }
     }
 }

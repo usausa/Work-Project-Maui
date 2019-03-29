@@ -3,17 +3,27 @@ namespace DataAccess.FormsApp.Modules
     using System.IO;
     using System.Threading.Tasks;
 
+    using DataAccess.FormsApp.Components;
+
     using Smart.ComponentModel;
+    using Smart.Data;
+    using Smart.Data.Mapper;
     using Smart.Forms.Input;
 
     public class MenuViewModel : AppViewModelBase
     {
         public static MenuViewModel DesignInstance { get; } = null; // For design
 
+        private readonly Settings settings;
+
+        private readonly IDialogs dialogs;
+
+        private readonly IConnectionFactory connectionFactory;
+
         public NotificationValue<bool> IsCreated { get; } = new NotificationValue<bool>();
 
         public AsyncCommand CreateCommand { get; }
-        public AsyncCommand DropCommand { get; }
+        public DelegateCommand DropCommand { get; }
         public AsyncCommand InsertCommand { get; }
         public AsyncCommand UpdateCommand { get; }
         public AsyncCommand DeleteCommand { get; }
@@ -27,12 +37,17 @@ namespace DataAccess.FormsApp.Modules
 
         public MenuViewModel(
             ApplicationState applicationState,
-            Settings settings)
+            Settings settings,
+            IDialogs dialogs,
+            IConnectionFactory connectionFactory)
             : base(applicationState)
         {
-            // TODO DI
+            this.settings = settings;
+            this.dialogs = dialogs;
+            this.connectionFactory = connectionFactory;
+
             CreateCommand = MakeAsyncCommand(Create, () => !IsCreated.Value).Observe(IsCreated);
-            DropCommand = MakeAsyncCommand(Drop, () => IsCreated.Value).Observe(IsCreated);
+            DropCommand = MakeDelegateCommand(Drop, () => IsCreated.Value).Observe(IsCreated);
             InsertCommand = MakeAsyncCommand(Insert, () => IsCreated.Value).Observe(IsCreated);
             UpdateCommand = MakeAsyncCommand(Update, () => IsCreated.Value).Observe(IsCreated);
             DeleteCommand = MakeAsyncCommand(Delete, () => IsCreated.Value).Observe(IsCreated);
@@ -50,41 +65,58 @@ namespace DataAccess.FormsApp.Modules
         private async Task Create()
         {
             // TODO
-            await Task.Delay(0);
+            await connectionFactory.UsingAsync(async con =>
+                await con.ExecuteAsync(
+                    "CREATE TABLE IF NOT EXISTS Data (" +
+                    "Id int, " +
+                    "Name text, " +
+                    "PRIMARY KEY (Id))"));
 
             IsCreated.Value = true;
         }
 
-        private async Task Drop()
+        private void Drop()
         {
-            // TODO
-            await Task.Delay(0);
+            File.Delete(settings.DatabasePath);
 
             IsCreated.Value = false;
         }
 
         private async Task Insert()
         {
-            // TODO
-            await Task.Delay(0);
+            // TODO dup
+            await connectionFactory.UsingAsync(async con =>
+                await con.ExecuteAsync(
+                    ""));
         }
 
         private async Task Update()
         {
             // TODO
-            await Task.Delay(0);
+            var effect = await connectionFactory.UsingAsync(async con =>
+                await con.ExecuteAsync(
+                    ""));
+
+            await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Delete()
         {
             // TODO
-            await Task.Delay(0);
+            var effect = await connectionFactory.UsingAsync(async con =>
+                await con.ExecuteAsync(
+                    ""));
+
+            await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Count()
         {
-            // TODO
-            await Task.Delay(0);
+            var count = await connectionFactory.UsingAsync(async con =>
+                await con.ExecuteScalarAsync<long>(
+                    "SELECT COUNT(*) FROM Text"));
+
+            await dialogs.Information($"Count={count}");
         }
 
         private async Task Select1()

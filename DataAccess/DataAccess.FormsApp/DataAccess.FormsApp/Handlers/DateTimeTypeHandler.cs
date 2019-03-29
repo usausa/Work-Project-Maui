@@ -5,16 +5,17 @@ namespace DataAccess.FormsApp.Handlers
 
     using Smart.Data.Mapper.Handlers;
 
-    public sealed class DateTimeTypeHandler : ITypeHandler
+    public sealed class DateTimeTypeHandler : TypeHandler<DateTime>
     {
-        public void SetValue(IDbDataParameter parameter, object value)
+        public override void SetValue(IDbDataParameter parameter, DateTime value)
         {
-            throw new NotImplementedException();
+            parameter.DbType = DbType.Int64;
+            parameter.Value = value.Ticks;
         }
 
-        public object Parse(Type destinationType, object value)
+        public override DateTime Parse(object value)
         {
-            throw new NotImplementedException();
+            return new DateTime((long)value);
         }
     }
 }
