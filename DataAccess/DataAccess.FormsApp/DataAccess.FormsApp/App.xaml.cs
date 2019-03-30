@@ -2,15 +2,18 @@
 
 namespace DataAccess.FormsApp
 {
+    using System;
     using System.IO;
     using System.Reflection;
 
     using DataAccess.FormsApp.Components;
+    using DataAccess.FormsApp.Handlers;
     using DataAccess.FormsApp.Modules;
 
     using Microsoft.Data.Sqlite;
 
     using Smart.Data;
+    using Smart.Data.Mapper;
     using Smart.Forms.Resolver;
     using Smart.Navigation;
     using Smart.Resolver;
@@ -41,6 +44,12 @@ namespace DataAccess.FormsApp
                 System.Diagnostics.Debug.WriteLine(
                     $"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
             };
+
+            // Config DataMapper
+            SqlMapperConfig.Default.ConfigureTypeHandlers(config =>
+            {
+                config[typeof(DateTimeOffset)] = new DateTimeOffsetTypeHandler();
+            });
 
             // Show MainWindow
             MainPage = resolver.Get<MainPage>();

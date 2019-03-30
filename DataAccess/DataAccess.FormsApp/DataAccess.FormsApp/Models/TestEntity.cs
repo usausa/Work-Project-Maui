@@ -25,9 +25,6 @@ namespace DataAccess.FormsApp.Models
         public bool BoolValue { get; set; }
 
         // integer
-        public DateTime DateTimeValue { get; set; }
-
-        // integer
         public DateTimeOffset DateTimeOffsetValue { get; set; }
     }
 }

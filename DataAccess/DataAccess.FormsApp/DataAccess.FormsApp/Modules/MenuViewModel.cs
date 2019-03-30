@@ -64,12 +64,17 @@ namespace DataAccess.FormsApp.Modules
 
         private async Task Create()
         {
-            // TODO
             await connectionFactory.UsingAsync(async con =>
                 await con.ExecuteAsync(
-                    "CREATE TABLE IF NOT EXISTS Data (" +
-                    "Id int, " +
-                    "Name text, " +
+                    "CREATE TABLE IF NOT EXISTS Test (" +
+                    "Id INTEGER, " +
+                    "StringValue TEXT, " +
+                    "IntValue INTEGER, " +
+                    "LongValue INTEGER, " +
+                    "DoubleValue REAL, " +
+                    "DecimalValue REAL, " +
+                    "BoolValue INTEGER, " +
+                    "DateTimeOffsetValue INTEGER, " +
                     "PRIMARY KEY (Id))"));
 
             IsCreated.Value = true;
@@ -114,7 +119,7 @@ namespace DataAccess.FormsApp.Modules
         {
             var count = await connectionFactory.UsingAsync(async con =>
                 await con.ExecuteScalarAsync<long>(
-                    "SELECT COUNT(*) FROM Text"));
+                    "SELECT COUNT(*) FROM Test"));
 
             await dialogs.Information($"Count={count}");
         }
