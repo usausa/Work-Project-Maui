@@ -14,6 +14,7 @@ namespace DataAccess.FormsApp.Modules
     using Smart.Data.Mapper;
     //using Smart.Data.Mapper.Builders;
     using Smart.Forms.Input;
+    using Smart.Navigation;
 
     using Microsoft.Data.Sqlite;
 
@@ -27,7 +28,13 @@ namespace DataAccess.FormsApp.Modules
 
         private readonly IConnectionFactory connectionFactory;
 
+        private readonly SqliteConnection memoryConnection;
+
         public NotificationValue<bool> IsCreated { get; } = new NotificationValue<bool>();
+
+        public NotificationValue<bool> IsInserted { get; } = new NotificationValue<bool>();
+
+        public NotificationValue<bool> IsMemoryInserted { get; } = new NotificationValue<bool>();
 
         public AsyncCommand CreateCommand { get; }
         public DelegateCommand DropCommand { get; }
@@ -61,17 +68,49 @@ namespace DataAccess.FormsApp.Modules
             CountCommand = MakeAsyncCommand(Count, () => IsCreated.Value).Observe(IsCreated);
             Select1Command = MakeAsyncCommand(Select1, () => IsCreated.Value).Observe(IsCreated);
             SelectAllCommand = MakeAsyncCommand(SelectAll, () => IsCreated.Value).Observe(IsCreated);
-            InsertBulkCommand = MakeAsyncCommand(InsertBulk, () => IsCreated.Value).Observe(IsCreated);
-            DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => IsCreated.Value).Observe(IsCreated);
-            MemoryInsertBulkCommand = MakeAsyncCommand(MemoryInsertBulk);
-            MemoryDeleteAllCommand = MakeAsyncCommand(MemoryDeleteAll);
+            InsertBulkCommand = MakeAsyncCommand(InsertBulk, () => !IsInserted.Value).Observe(IsInserted);
+            DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => IsInserted.Value).Observe(IsCreated);
+            MemoryInsertBulkCommand = MakeAsyncCommand(MemoryInsertBulk, () => !IsMemoryInserted.Value).Observe(IsMemoryInserted);
+            MemoryDeleteAllCommand = MakeAsyncCommand(MemoryDeleteAll, () => IsMemoryInserted.Value).Observe(IsMemoryInserted);
 
             IsCreated.Value = File.Exists(settings.DatabasePath);
+
+            memoryConnection = new SqliteConnection("Data Source=:memory:");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                memoryConnection.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        public override async void OnNavigatingTo(INavigationContext context)
+        {
+            await memoryConnection.OpenAsync();
+            await memoryConnection.ExecuteAsync(
+                "CREATE TABLE IF NOT EXISTS Benchmark (" +
+                "Id INTEGER, " +
+                "Name TEXT, " +
+                "PRIMARY KEY (Id))");
+
+            if (IsCreated.Value)
+            {
+                var count = await connectionFactory.UsingAsync(con =>
+                    con.ExecuteScalarAsync<long>("SELECT COUNT(*) FROM Benchmark"));
+                IsInserted.Value = count > 0;
+            }
+
+            base.OnNavigatingTo(context);
         }
 
         private async Task Create()
         {
             await connectionFactory.UsingAsync(async con =>
+            {
                 await con.ExecuteAsync(
                     "CREATE TABLE IF NOT EXISTS Test (" +
                     "Id INTEGER, " +
@@ -82,9 +121,16 @@ namespace DataAccess.FormsApp.Modules
                     "DecimalValue REAL, " +
                     "BoolValue INTEGER, " +
                     "DateTimeOffsetValue INTEGER, " +
-                    "PRIMARY KEY (Id))"));
+                    "PRIMARY KEY (Id))");
+                await con.ExecuteAsync(
+                    "CREATE TABLE IF NOT EXISTS Benchmark (" +
+                    "Id INTEGER, " +
+                    "Name TEXT, " +
+                    "PRIMARY KEY (Id))");
+            });
 
             IsCreated.Value = true;
+            IsInserted.Value = false;
         }
 
         private void Drop()
@@ -92,6 +138,7 @@ namespace DataAccess.FormsApp.Modules
             File.Delete(settings.DatabasePath);
 
             IsCreated.Value = false;
+            IsInserted.Value = false;
         }
 
         private async Task Insert()
@@ -205,26 +252,61 @@ namespace DataAccess.FormsApp.Modules
 
         private async Task InsertBulk()
         {
-            // TODO
-            await Task.Delay(0);
+            var watch = Stopwatch.StartNew();
+
+            await connectionFactory.UsingTxAsync(async (con, tx) =>
+            {
+                for (var i = 1; i <= 10000; i++)
+                {
+                    await con.ExecuteAsync(
+                        "INSERT INTO Benchmark (Id, Name) VALUES (@Id, @Name)",
+                        new BenchmarkEntity { Id = i, Name = $"Name-{i}" },
+                        tx);
+                }
+
+                tx.Commit();
+            });
+
+            await dialogs.Information($"Inserted\r\nElapsed={watch.ElapsedMilliseconds}");
+
+            IsInserted.Value = true;
         }
 
         private async Task DeleteAll()
         {
-            // TODO
-            await Task.Delay(0);
+            await connectionFactory.UsingAsync(con =>
+                con.ExecuteAsync("DELETE FROM Benchmark"));
+
+            IsInserted.Value = false;
         }
 
         private async Task MemoryInsertBulk()
         {
-            // TODO
-            await Task.Delay(0);
+            var watch = Stopwatch.StartNew();
+
+            using (var tx = memoryConnection.BeginTransaction())
+            {
+                for (var i = 1; i <= 10000; i++)
+                {
+                    await memoryConnection.ExecuteAsync(
+                        "INSERT INTO Benchmark (Id, Name) VALUES (@Id, @Name)",
+                        new BenchmarkEntity { Id = i, Name = $"Name-{i}" },
+                        tx);
+                }
+
+                tx.Commit();
+            }
+
+            await dialogs.Information($"Inserted\r\nElapsed={watch.ElapsedMilliseconds}");
+
+            IsMemoryInserted.Value = true;
         }
 
         private async Task MemoryDeleteAll()
         {
-            // TODO
-            await Task.Delay(0);
+            await memoryConnection.ExecuteAsync("DELETE FROM Benchmark");
+
+            IsMemoryInserted.Value = false;
         }
     }
 }
