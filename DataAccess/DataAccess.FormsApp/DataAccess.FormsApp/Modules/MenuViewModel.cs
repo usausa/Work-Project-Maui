@@ -1,14 +1,21 @@
 namespace DataAccess.FormsApp.Modules
 {
+    using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using DataAccess.FormsApp.Components;
+    using DataAccess.FormsApp.Models;
 
     using Smart.ComponentModel;
     using Smart.Data;
     using Smart.Data.Mapper;
+    //using Smart.Data.Mapper.Builders;
     using Smart.Forms.Input;
+
+    using Microsoft.Data.Sqlite;
 
     public class MenuViewModel : AppViewModelBase
     {
@@ -56,8 +63,8 @@ namespace DataAccess.FormsApp.Modules
             SelectAllCommand = MakeAsyncCommand(SelectAll, () => IsCreated.Value).Observe(IsCreated);
             InsertBulkCommand = MakeAsyncCommand(InsertBulk, () => IsCreated.Value).Observe(IsCreated);
             DeleteAllCommand = MakeAsyncCommand(DeleteAll, () => IsCreated.Value).Observe(IsCreated);
-            MemoryInsertBulkCommand = MakeAsyncCommand(MemoryInsertBulk, () => IsCreated.Value).Observe(IsCreated);
-            MemoryDeleteAllCommand = MakeAsyncCommand(MemoryDeleteAll, () => IsCreated.Value).Observe(IsCreated);
+            MemoryInsertBulkCommand = MakeAsyncCommand(MemoryInsertBulk);
+            MemoryDeleteAllCommand = MakeAsyncCommand(MemoryDeleteAll);
 
             IsCreated.Value = File.Exists(settings.DatabasePath);
         }
@@ -89,36 +96,77 @@ namespace DataAccess.FormsApp.Modules
 
         private async Task Insert()
         {
-            // TODO dup
-            await connectionFactory.UsingAsync(async con =>
-                await con.ExecuteAsync(
-                    ""));
+            var ret = await connectionFactory.UsingAsync(async con =>
+            {
+                try
+                {
+                    await con.ExecuteAsync(
+                        //SqlInsert<TestEntity>.Values(),
+                        "INSERT INTO Test (" +
+                        "Id, StringValue, IntValue, LongValue, DoubleValue, DecimalValue, BoolValue, DateTimeOffsetValue" +
+                        ") VALUES (" +
+                        "@Id, @StringValue, @IntValue, @LongValue, @DoubleValue, @DecimalValue, @BoolValue, @DateTimeOffsetValue" +
+                        ")",
+                        new TestEntity
+                        {
+                            Id = 1,
+                            StringValue = "Test",
+                            IntValue = 2,
+                            LongValue = 3L,
+                            DoubleValue = 4.5d,
+                            DecimalValue = 6.7m,
+                            BoolValue = true,
+                            DateTimeOffsetValue = DateTimeOffset.Now
+                        });
+                    return true;
+                }
+                catch (SqliteException e)
+                {
+                    if (e.SqliteErrorCode == SQLitePCL.raw.SQLITE_CONSTRAINT)
+                    {
+                        return false;
+                    }
+                    throw;
+                }
+            });
+
+            if (ret)
+            {
+                await dialogs.Information("Inserted");
+            }
+            else
+            {
+                await dialogs.Information("Key duplicate");
+            }
         }
 
         private async Task Update()
         {
-            // TODO
-            var effect = await connectionFactory.UsingAsync(async con =>
-                await con.ExecuteAsync(
-                    ""));
+            var effect = await connectionFactory.UsingAsync(con =>
+                con.ExecuteAsync(
+                    //SqlUpdate<TestEntity>.Set("StringValue = @StringValue", "Id = @Id"),
+                    "UPDATE Test SET StringValue = @StringValue WHERE Id = @Id",
+                    new { Id = 1, StringValue = "Updated" }));
 
             await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Delete()
         {
-            // TODO
-            var effect = await connectionFactory.UsingAsync(async con =>
-                await con.ExecuteAsync(
-                    ""));
+            var effect = await connectionFactory.UsingAsync(con =>
+                con.ExecuteAsync(
+                    //SqlDelete<TestEntity>.ByKey(),
+                    "DELETE FROM Test WHERE Id = @Id",
+                    new { Id = 1 }));
 
             await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Count()
         {
-            var count = await connectionFactory.UsingAsync(async con =>
-                await con.ExecuteScalarAsync<long>(
+            var count = await connectionFactory.UsingAsync(con =>
+                con.ExecuteScalarAsync<long>(
+                    //SqlCount<TestEntity>.All()));
                     "SELECT COUNT(*) FROM Test"));
 
             await dialogs.Information($"Count={count}");
@@ -126,14 +174,33 @@ namespace DataAccess.FormsApp.Modules
 
         private async Task Select1()
         {
-            // TODO
-            await Task.Delay(0);
+            var entity = await connectionFactory.UsingAsync(con =>
+                con.QueryFirstOrDefaultAsync<TestEntity>(
+                    //SqlSelect<TestEntity>.ByKey(),
+                    "SELECT * FROM Test WHERE Id = @Id",
+                    new { Id = 1 }));
+
+            if (entity != null)
+            {
+                await dialogs.Information($"StringValue={entity.StringValue}");
+            }
+            else
+            {
+                await dialogs.Information("Not found");
+            }
         }
 
         private async Task SelectAll()
         {
+            var watch = Stopwatch.StartNew();
+
             // TODO
-            await Task.Delay(0);
+            var list = (await connectionFactory.UsingAsync(async con =>
+                (await con.QueryAsync<TestEntity>(
+                    //SqlSelect<TestEntity>.All())).ToList()));
+                    "SELECT * FROM Test ORDER BY Id")).ToList()));
+
+            await dialogs.Information($"Count={list.Count}\r\nElapsed={watch.ElapsedMilliseconds}");
         }
 
         private async Task InsertBulk()

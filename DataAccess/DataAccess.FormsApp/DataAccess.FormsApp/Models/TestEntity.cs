@@ -2,8 +2,11 @@ namespace DataAccess.FormsApp.Models
 {
     using System;
 
+    using Smart.Data.Mapper.Attributes;
+
     public class TestEntity
     {
+        [PrimaryKey]
         public long Id { get; set; }
 
         // varchar
