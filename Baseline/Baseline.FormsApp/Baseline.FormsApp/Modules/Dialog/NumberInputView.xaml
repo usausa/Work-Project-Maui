@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView x:Class="Baseline.FormsApp.Modules.Dialog.NumberInputView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:popup="clr-namespace:Baseline.FormsApp.Components.Popup;assembly=Baseline.FormsApp"
+             xmlns:modules="clr-namespace:Baseline.FormsApp.Modules.Dialog;assembly=Baseline.FormsApp"
+             BindingContext="{Binding Source={x:Static modules:NumberInputViewModel.DesignInstance}}"
+             sr:BindingContextResolver.Type="{x:Type modules:NumberInputViewModel}"
+             BackgroundColor="{StaticResource PopupBackgroundColor}"
+             popup:PopupProperty.Thickness="10">
+
+    <StackLayout Style="{StaticResource DialogLayout}">
+        <!-- title -->
+        <Label Style="{StaticResource TitleLabel}"
+               Text="{Binding Title.Value}" />
+
+        <!-- display -->
+        <Label Style="{StaticResource InputLabel}"
+               Text="{Binding Input.Display}" />
+
+        <!-- pad -->
+        <Grid Style="{StaticResource InputGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource InputTextButton}"
+                    Text="7" Command="{Binding PushCommand}" CommandParameter="7" />
+            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource InputTextButton}"
+                    Text="8" Command="{Binding PushCommand}" CommandParameter="8" />
+            <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource InputTextButton}"
+                    Text="9" Command="{Binding PushCommand}" CommandParameter="9" />
+
+            <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource InputTextButton}"
+                    Text="4" Command="{Binding PushCommand}" CommandParameter="3" />
+            <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource InputTextButton}"
+                    Text="5" Command="{Binding PushCommand}" CommandParameter="5" />
+            <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource InputTextButton}"
+                    Text="6" Command="{Binding PushCommand}" CommandParameter="6" />
+
+            <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource InputTextButton}"
+                    Text="1" Command="{Binding PushCommand}" CommandParameter="1" />
+            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource InputTextButton}"
+                    Text="2" Command="{Binding PushCommand}" CommandParameter="2" />
+            <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource InputTextButton}"
+                    Text="3" Command="{Binding PushCommand}" CommandParameter="3" />
+
+            <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource InputFunctionButton}"
+                    Text="C" Command="{Binding ClearCommand}" />
+            <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource InputTextButton}"
+                    Text="0" Command="{Binding PushCommand}" CommandParameter="0" />
+            <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource InputFunctionButton}"
+                    Text="BS" Command="{Binding PopCommand}"/>
+
+        </Grid>
+
+        <!-- function -->
+        <Grid Style="{StaticResource FunctionGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource FunctionButton}" Text="&#xe801; キャンセル" Command="{Binding CloseCommand}" CommandParameter="{StaticResource False}" />
+            <Button Grid.Column="1" Style="{StaticResource FunctionButton}" Text="&#xe800; OK" Command="{Binding CloseCommand}" CommandParameter="{StaticResource True}" />
+        </Grid>
+    </StackLayout>
+
+</ContentView>

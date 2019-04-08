@@ -5,7 +5,16 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseline.FormsApp.Android", "Baseline.FormsApp\Baseline.FormsApp.Android\Baseline.FormsApp.Android.csproj", "{CD5FE832-E755-4C1D-B758-D3021170481C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseline.FormsApp", "Baseline.FormsApp\Baseline.FormsApp\Baseline.FormsApp.csproj", "{DE4275C9-DD28-4B6C-BEF5-AFBAE73034E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baseline.FormsApp", "Baseline.FormsApp\Baseline.FormsApp\Baseline.FormsApp.csproj", "{DE4275C9-DD28-4B6C-BEF5-AFBAE73034E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3438F587-9CBC-4B45-8853-C522552BC7FA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Baseline.FormsApp.ruleset = Baseline.FormsApp.ruleset
+		Baseline.FormsApp.sln.DotSettings = Baseline.FormsApp.sln.DotSettings
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

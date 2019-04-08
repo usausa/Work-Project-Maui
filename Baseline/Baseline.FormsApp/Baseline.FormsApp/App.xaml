@@ -1,8 +1,194 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Baseline.FormsApp.App">
+<?xml version="1.0" encoding="utf-8" ?>
+<Application
+    x:Class="Baseline.FormsApp.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sd="clr-namespace:Smart.Forms.Data;assembly=Smart.Forms"
+    xmlns:resources="clr-namespace:Baseline.FormsApp.Resources;assembly=Baseline.FormsApp">
     <Application.Resources>
+
+        <ResourceDictionary>
+
+            <!-- ================================================================================ -->
+            <!-- Import                                                                           -->
+            <!-- ================================================================================ -->
+
+            <ResourceDictionary.MergedDictionaries>
+                <resources:MaterialColors />
+                <resources:MetroColors />
+                <resources:FontSize />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ================================================================================ -->
+            <!-- Value                                                                            -->
+            <!-- ================================================================================ -->
+
+            <!-- Boolean -->
+
+            <x:Boolean x:Key="True">True</x:Boolean>
+            <x:Boolean x:Key="False">False</x:Boolean>
+
+            <!-- Color -->
+
+            <Color x:Key="NoErrorColor">Transparent</Color>
+
+            <Color x:Key="ErrorColor">#EE1111</Color>
+
+            <Color x:Key="PopupBackgroundColor">White</Color>
+
+            <!-- ================================================================================ -->
+            <!-- Font                                                                             -->
+            <!-- ================================================================================ -->
+
+            <!-- http://fontello.com/ -->
+            <OnPlatform x:Key="IconFont" x:TypeArguments="x:String">
+                <On Platform="iOS" Value="icons" />
+                <On Platform="Android" Value="Fonts/icons.ttf" />
+            </OnPlatform>
+
+            <!-- ================================================================================ -->
+            <!-- Converter                                                                        -->
+            <!-- ================================================================================ -->
+
+            <sd:ReverseConverter x:Key="ReverseConverter" />
+
+            <!-- ================================================================================ -->
+            <!-- Layout                                                                           -->
+            <!-- ================================================================================ -->
+
+            <!-- Main Layout -->
+
+            <Style x:Key="MainLayout" TargetType="StackLayout">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <OnPlatform x:Key="TitleHeight" x:TypeArguments="x:Double">
+                <On Platform="iOS">32.0</On>
+                <On Platform="Android">48.0</On>
+            </OnPlatform>
+
+            <Style x:Key="TitleLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDark}" />
+                <Setter Property="HeightRequest" Value="{StaticResource TitleHeight}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ContainerLayout" TargetType="AbsoluteLayout">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <!-- Dialog -->
+
+            <Style x:Key="DialogLayout" TargetType="StackLayout">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <!-- Page Layout -->
+
+            <Style x:Key="MenuGrid" TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="Margin" Value="0,4,0,4" />
+            </Style>
+
+            <Style x:Key="PageGrid" TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+            </Style>
+
+            <Style x:Key="InputGrid" TargetType="Grid">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="RowSpacing" Value="3"/>
+                <Setter Property="ColumnSpacing" Value="3" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <!-- Function -->
+
+            <OnPlatform x:Key="FunctionGridHeight" x:TypeArguments="x:Double">
+                <On Platform="iOS">40.0</On>
+                <On Platform="Android">56.0</On>
+            </OnPlatform>
+
+            <Style x:Key="FunctionGrid" TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HeightRequest" Value="{StaticResource FunctionGridHeight}" />
+            </Style>
+
+            <Style x:Key="FunctionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="BorderWidth" Value="0" />
+            </Style>
+
+            <!-- Button -->
+
+            <Style x:Key="NavigationButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+                <Setter Property="Margin" Value="3" />
+            </Style>
+
+            <Style x:Key="CircleButton" TargetType="Button">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16"/>
+                <Setter Property="FontSize" Value="{StaticResource LargerSize}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+
+            <!-- Label -->
+
+            <Style x:Key="WorkLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+            </Style>
+
+            <!--  Input  -->
+
+            <Style x:Key="InputLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource HugeSize}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="InputTextButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
+            </Style>
+
+            <Style x:Key="InputDisableButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLightenBrighter}"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
+            </Style>
+
+            <Style x:Key="InputFunctionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}"/>
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3"/>
+            </Style>
+
+        </ResourceDictionary>
 
     </Application.Resources>
 </Application>
