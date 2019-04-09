@@ -21,6 +21,8 @@ namespace Baseline.FormsApp.Droid
 
     using Smart.Resolver;
 
+    using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+
     [Activity(
         Icon = "@mipmap/icon",
         Theme = "@style/MainTheme",
@@ -60,6 +62,9 @@ namespace Baseline.FormsApp.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(new ComponentProvider(this)));
+
+            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>()
+                .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
         }
 
         protected override void OnResume()

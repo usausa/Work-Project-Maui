@@ -5,6 +5,7 @@ namespace Baseline.FormsApp.Components.Device
 
     using Xamarin.Essentials;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Ignore")]
     public abstract class DeviceManagerBase : IDeviceManager
     {
         private readonly BehaviorSubject<bool> keyboardState = new BehaviorSubject<bool>(false);
