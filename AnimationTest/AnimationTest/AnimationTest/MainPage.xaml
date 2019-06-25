@@ -7,10 +7,23 @@
              x:Class="AnimationTest.MainPage">
 
     <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Text="1" Clicked="Button1_OnClicked"/>
+            <Button Grid.Column="1" Text="2" Clicked="Button2_OnClicked"/>
+            <Button Grid.Column="2" Text="3" Clicked="Button3_OnClicked"/>
+            <Button Grid.Column="3" Text="4" Clicked="Button4_OnClicked"/>
+        </Grid>
+
+        <AbsoluteLayout x:Name="Container" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightYellow"/>
+
     </StackLayout>
 
 </ContentPage>
