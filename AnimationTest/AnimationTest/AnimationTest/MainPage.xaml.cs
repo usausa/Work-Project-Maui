@@ -18,19 +18,21 @@ namespace AnimationTest
             InitializeComponent();
         }
 
-        private void Button1_OnClicked(object sender, EventArgs e)
+        private async void Button1_OnClicked(object sender, EventArgs e)
         {
             ClearViews();
 
             // TODO Animation基本機構
-            // - Task分離
             // - 旧ビューの無効化、見た目？
             // - ビューの分離とインタラクションがわかるように
             // - 新ビューのアニメーション中イベント(Navigation自体が終わっていれば、発生しても問題ない？)
+            //   新も終わった段階でEnableにする？
             // - 分離ビュー更新
-            // - Taskが返ったとして、呼び出す側はawaitする？
+            // - Taskが返ったとして、呼び出す側はawaitする？(あまり関係ないか？)
             // - Stack時、Enableの復帰、位置情報の復帰、Visibleの変更と気に
             // - Navigationテストプロジェクト作成？
+            //   再入は禁止の問題！
+            //   Deactivateタイミングの問題
 
             // アニメーションパターン網羅
             // FadeIn     : Open   : addTop   , newView opacity 0 -> 1
@@ -51,20 +53,16 @@ namespace AnimationTest
             var newView = new BoxView { BackgroundColor = Color.CornflowerBlue };
             AddView(newView);
 
-            var width = Container.Width;
-            newView.Animate("Slide", x =>
-            {
-                var oldMargin = (int)(x * width);
-                var newMargin = width - oldMargin;
-                Debug.WriteLine(oldMargin + " " + oldView.Width + " " + newMargin + " " + newView.Width);
+            // Pre
+            oldView.IsEnabled = false;
 
-                oldView.Margin = new Thickness(-oldMargin, 0, oldMargin, 0);
-                newView.Margin = new Thickness(newMargin, 0, -newMargin, 0);
+            // Animation
+            await Animations.Slide(Container, oldView, newView, 2000U);
 
-            }, 16U, 2000U, Easing.Linear, (d, c) =>
-            {
-                Container.Children.Remove(oldView);
-            });
+            // Post
+            Container.Children.Remove(oldView);
+
+            Debug.WriteLine("After slide call");
         }
 
         private void Button2_OnClicked(object sender, EventArgs e)
