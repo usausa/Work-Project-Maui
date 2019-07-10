@@ -9,7 +9,14 @@ using Android.OS;
 
 namespace Dashboard.FormsApp.Droid
 {
-    [Activity(Label = "Dashboard.FormsApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(
+        Icon = "@mipmap/icon",
+        Theme = "@style/MainTheme",
+        MainLauncher = true,
+        AlwaysRetainTaskState = true,
+        LaunchMode = LaunchMode.SingleInstance,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+        ScreenOrientation = ScreenOrientation.Landscape)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -22,7 +29,31 @@ namespace Dashboard.FormsApp.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+
+            // Full screen
+            //Window.AddFlags(WindowManagerFlags.Fullscreen);
+            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+            Window.AddFlags(WindowManagerFlags.TurnScreenOn);
+
+            UpdateSystemUiVisibility();
         }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            UpdateSystemUiVisibility();
+        }
+
+        private void UpdateSystemUiVisibility()
+        {
+            const int uiOptions = (int)SystemUiFlags.LowProfile |
+                                  (int)SystemUiFlags.HideNavigation |
+                                  (int)SystemUiFlags.Fullscreen |
+                                  (int)SystemUiFlags.ImmersiveSticky;
+            Window.DecorView.SystemUiVisibility = (StatusBarVisibility)uiOptions;
+        }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
