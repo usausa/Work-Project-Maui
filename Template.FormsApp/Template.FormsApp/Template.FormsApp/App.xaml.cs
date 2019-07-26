@@ -1,10 +1,8 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 namespace Template.FormsApp
 {
-    public partial class App : Application
+    using Xamarin.Forms;
+
+    public partial class App
     {
         public App()
         {
