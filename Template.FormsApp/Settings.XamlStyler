@@ -13,6 +13,8 @@
         "x:Class",
         "xmlns",
         "xmlns:x",
+        "xmlns:d",
+        "xmlns:mc",
         "xmlns:ios",
         "xmlns:sd",
         "xmlns:se",
