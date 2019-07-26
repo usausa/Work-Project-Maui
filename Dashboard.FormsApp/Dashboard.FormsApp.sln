@@ -1,11 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29025.244
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.FormsApp.Android", "Dashboard.FormsApp\Dashboard.FormsApp.Android\Dashboard.FormsApp.Android.csproj", "{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.FormsApp.Android", "Dashboard.FormsApp\Dashboard.FormsApp.Android\Dashboard.FormsApp.Android.csproj", "{FF6A541D-0FA7-4934-897D-35C93F013630}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.FormsApp", "Dashboard.FormsApp\Dashboard.FormsApp\Dashboard.FormsApp.csproj", "{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.FormsApp", "Dashboard.FormsApp\Dashboard.FormsApp\Dashboard.FormsApp.csproj", "{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C2206B3A-705B-447C-8AE5-CB4E6A232B87}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Dashboard.FormsApp.ruleset = Dashboard.FormsApp.ruleset
+		Dashboard.FormsApp.sln.DotSettings = Dashboard.FormsApp.sln.DotSettings
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Settings.XamlStyler = Settings.XamlStyler
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,23 +23,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02027FDE-EA49-4D1D-B69D-E0CEC2EBAF8E}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFEAE1D3-0289-4484-874D-03FEA5DB03EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF6A541D-0FA7-4934-897D-35C93F013630}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06BF5DC8-5FA4-4585-8718-00B51BAF31D6}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B1DCCA5E-15E1-4587-BB95-1D648966EA47}
+		SolutionGuid = {DE1BC8DA-A3FF-4EE3-870C-37A69E7622DE}
 	EndGlobalSection
 EndGlobal
