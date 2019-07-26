@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <MSBuildWarningsAsMessages>XA0106</MSBuildWarningsAsMessages>
+    <MSBuildWarningsAsMessages>MSB3277;XA0106</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
