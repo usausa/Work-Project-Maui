@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeliCaReader.FormsApp.Android", "FeliCaReader.FormsApp\FeliCaReader.FormsApp.Android\FeliCaReader.FormsApp.Android.csproj", "{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeliCaReader.FormsApp", "FeliCaReader.FormsApp\FeliCaReader.FormsApp\FeliCaReader.FormsApp.csproj", "{6DA7D332-B2F3-46F6-97E3-774CA8C44928}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{119F64BF-40F7-4EA8-8493-4EF9CB4E9287}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DA7D332-B2F3-46F6-97E3-774CA8C44928}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE841219-BB68-4F73-AE68-8CB4698C55F9}
+	EndGlobalSection
+EndGlobal
