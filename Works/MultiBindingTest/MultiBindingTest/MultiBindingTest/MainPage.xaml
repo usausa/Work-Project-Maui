@@ -1,16 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="MultiBindingTest.MainPage">
+<ContentPage
+    x:Class="MultiBindingTest.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multiBindingTest="clr-namespace:MultiBindingTest;assembly=MultiBindingTest"
+    mc:Ignorable="d">
+
+    <ContentPage.Resources>
+        <multiBindingTest:AllConverter x:Key="AllConverter" />
+        <multiBindingTest:AnyConverter x:Key="AnyConverter" />
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <multiBindingTest:MainPageViewModel />
+    </ContentPage.BindingContext>
 
     <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+        <CheckBox IsChecked="{Binding IsChecked1.Value}" />
+        <CheckBox IsChecked="{Binding IsChecked2.Value}" />
+        <Button IsEnabled="{Binding IsChecked1.Value}" Text="Checked1" />
+        <Button IsEnabled="{Binding IsChecked2.Value}" Text="Checked2" />
+        <Button Text="Or">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{StaticResource AnyConverter}">
+                    <Binding Path="IsChecked1.Value" />
+                    <Binding Path="IsChecked2.Value" />
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
+        <Button Text="And">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{StaticResource AllConverter}">
+                    <Binding Path="IsChecked1.Value" />
+                    <Binding Path="IsChecked2.Value" />
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
     </StackLayout>
 
 </ContentPage>
