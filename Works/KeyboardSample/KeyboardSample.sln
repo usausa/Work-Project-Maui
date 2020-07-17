@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardSample.Android", "KeyboardSample\KeyboardSample.Android\KeyboardSample.Android.csproj", "{892A0937-9B6B-4657-94B5-B2774CC4EA16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyboardSample", "KeyboardSample\KeyboardSample\KeyboardSample.csproj", "{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892A0937-9B6B-4657-94B5-B2774CC4EA16}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06DF54BA-E3FF-4DB8-9CCA-5DDFFD0D2353}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50B2CDB3-3D17-4455-B67D-3F5132E33785}
+	EndGlobalSection
+EndGlobal

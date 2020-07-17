@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:behaviors="clr-namespace:KeyboardSample.Behaviors;assembly=KeyboardSample"
+             xmlns:controls="clr-namespace:KeyboardSample.Controls;assembly=KeyboardSample"
+             xmlns:app="clr-namespace:KeyboardSample;assembly=KeyboardSample"
+             mc:Ignorable="d"
+             x:Class="KeyboardSample.MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="InputNumericEntry" TargetType="Entry">
+                <Setter Property="Keyboard" Value="Numeric" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="EntryStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="White" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="LightYellow" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="LightGray" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <Label Text="Input1"
+               FontSize="Large" />
+        <controls:NoKeyboardEntry Style="{StaticResource InputNumericEntry}"
+                                  IsEnabled="{Binding Input1.Enable}"
+                                  Text="{Binding Input1.Text}">
+            <controls:NoKeyboardEntry.Behaviors>
+                <behaviors:EntryControlBehavior Controller="{Binding Input1}" />
+                <behaviors:SetFocusBehavior />
+            </controls:NoKeyboardEntry.Behaviors>
+        </controls:NoKeyboardEntry>
+
+        <Label Text="Input2"
+               FontSize="Large" />
+        <controls:NoKeyboardEntry Style="{StaticResource InputNumericEntry}"
+                                  IsEnabled="{Binding Input2.Enable}"
+                                  Text="{Binding Input2.Text}">
+            <controls:NoKeyboardEntry.Behaviors>
+                <behaviors:EntryControlBehavior Controller="{Binding Input2}" />
+            </controls:NoKeyboardEntry.Behaviors>
+        </controls:NoKeyboardEntry>
+
+        <Label Text="Previous1"
+               FontSize="Large" />
+        <Label Text="{Binding Previous1.Value}" />
+
+        <Label Text="Previous2"
+               FontSize="Large" />
+        <Label Text="{Binding Previous2.Value}" />
+
+    </StackLayout>
+
+</ContentPage>
