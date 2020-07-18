@@ -21,22 +21,24 @@
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="effects:Border.Color" Value="DarkGray" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Focused">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" Value="LightYellow" />
+                                    <Setter Property="effects:Border.Color" Value="DarkGray" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="LightGray" />
+                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="effects:Border.Color" Value="LightGray" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                <Setter Property="effects:Border.Color" Value="DarkGray" />
                 <Setter Property="effects:Border.Width" Value="1" />
                 <Setter Property="effects:Border.Padding" Value="6" />
             </Style>
