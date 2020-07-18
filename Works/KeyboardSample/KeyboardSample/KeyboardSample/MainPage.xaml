@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:behaviors="clr-namespace:KeyboardSample.Behaviors;assembly=KeyboardSample"
              xmlns:controls="clr-namespace:KeyboardSample.Controls;assembly=KeyboardSample"
+             xmlns:effects="clr-namespace:KeyboardSample.Effects;assembly=KeyboardSample"
              xmlns:app="clr-namespace:KeyboardSample;assembly=KeyboardSample"
              mc:Ignorable="d"
              x:Class="KeyboardSample.MainPage">
@@ -16,7 +17,7 @@
                 <Setter Property="Keyboard" Value="Numeric" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
-                        <VisualStateGroup x:Name="EntryStates">
+                        <VisualStateGroup x:Name="EntryState">
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" Value="White" />
@@ -35,6 +36,9 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
+                <Setter Property="effects:Border.Color" Value="DarkGray" />
+                <Setter Property="effects:Border.Width" Value="1" />
+                <Setter Property="effects:Border.Padding" Value="6" />
             </Style>
 
         </ResourceDictionary>

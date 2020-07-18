@@ -24,6 +24,7 @@ namespace KeyboardSample.Droid.Renderers
 
             EditText.ShowSoftInputOnFocus = false;
 
+            // Hide border
             if (Control != null)
             {
                 Control.Background = null;
