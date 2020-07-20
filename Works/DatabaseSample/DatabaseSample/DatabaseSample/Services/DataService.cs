@@ -44,6 +44,7 @@ namespace DatabaseSample.Services
             {
                 await con.ExecuteAsync("PRAGMA AUTO_VACUUM=1");
                 await con.ExecuteAsync(SqlHelper.MakeCreate<DataEntity>());
+                await con.ExecuteAsync(SqlHelper.MakeCreate<BulkDataEntity>());
             });
         }
 

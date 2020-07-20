@@ -1,6 +1,7 @@
 ﻿namespace DatabaseSample.iOS
 {
     using Foundation;
+
     using UIKit;
 
     // The UIApplicationDelegate for the application. This class is responsible for launching the

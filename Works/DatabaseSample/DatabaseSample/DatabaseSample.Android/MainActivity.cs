@@ -1,5 +1,7 @@
 ﻿namespace DatabaseSample.Droid
 {
+    using Acr.UserDialogs;
+
     using Android.App;
     using Android.Content.PM;
     using Android.Runtime;
@@ -16,6 +18,8 @@
             base.OnCreate(savedInstanceState);
 
             SQLitePCL.Batteries_V2.Init();
+
+            UserDialogs.Init(this);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
