@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace DatabaseSample.Services
+﻿namespace DatabaseSample.Services
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace DatabaseSample.Services
 
     using Smart.Data;
     using Smart.Data.Mapper;
-    using Smart.Data.Mapper.Builders;
+    //using Smart.Data.Mapper.Builders;
 
     public class DataServiceOptions
     {
@@ -56,7 +55,10 @@ namespace DatabaseSample.Services
             {
                 try
                 {
-                    await con.ExecuteAsync(SqlInsert<DataEntity>.Values(), entity);
+                    await con.ExecuteAsync(
+                        //SqlInsert<DataEntity>.Values(),
+                        "INSERT INTO Data (Id, Name, CreateAt) VALUES (@Id, @Name, @CreateAt)",
+                        entity);
 
                     return true;
                 }
@@ -75,7 +77,8 @@ namespace DatabaseSample.Services
         {
             return await provider.UsingAsync(con =>
                 con.ExecuteAsync(
-                    SqlUpdate<DataEntity>.Set("Name = @Name", "Id = @Id"),
+                    //SqlUpdate<DataEntity>.Set("Name = @Name", "Id = @Id"),
+                    "UPDATE Data SET Name = @Name WHERE Id = @Id",
                     new { Id = id, Name = name }));
         }
 
@@ -83,7 +86,8 @@ namespace DatabaseSample.Services
         {
             return await provider.UsingAsync(con =>
                 con.ExecuteAsync(
-                    SqlDelete<DataEntity>.ByKey(),
+                    //SqlDelete<DataEntity>.ByKey(),
+                    "DELETE FROM Data WHERE Id = @Id",
                     new { Id = id }));
         }
 
@@ -91,7 +95,8 @@ namespace DatabaseSample.Services
         {
             return await provider.UsingAsync(con =>
                 con.QueryFirstOrDefaultAsync<DataEntity>(
-                    SqlSelect<DataEntity>.ByKey(),
+                    //SqlSelect<DataEntity>.ByKey(),
+                    "SELECT * FROM Data WHERE Id = @Id",
                     new { Id = id }));
         }
 
@@ -101,7 +106,8 @@ namespace DatabaseSample.Services
         {
             return await provider.UsingAsync(con =>
                 con.ExecuteScalarAsync<int>(
-                    SqlCount<BulkDataEntity>.All()));
+                    //SqlCount<BulkDataEntity>.All()));
+                    "SELECT COUNT(*) FROM BulkData"));
         }
 
         public void InsertBulkDataEnumerable(IEnumerable<BulkDataEntity> source)
@@ -110,7 +116,11 @@ namespace DatabaseSample.Services
             {
                 foreach (var entity in source)
                 {
-                    con.Execute(SqlInsert<BulkDataEntity>.Values(), entity, tx);
+                    con.Execute(
+                        //SqlInsert<BulkDataEntity>.Values(),
+                        "INSERT INTO BulkData (Key1, Key2, Key3, Value1, Value2, Value3, Value4, Value5) VALUES (@Key1, @Key2, @Key3, @Value1, @Value2, @Value3, @Value4, @Value5)",
+                        entity,
+                        tx);
                 }
 
                 tx.Commit();
@@ -124,7 +134,10 @@ namespace DatabaseSample.Services
 
         public List<BulkDataEntity> QueryAllBulkDataList()
         {
-            return provider.Using(con => con.QueryList<BulkDataEntity>(SqlSelect<BulkDataEntity>.All()));
+            return provider.Using(con =>
+                con.QueryList<BulkDataEntity>(
+                    //SqlSelect<BulkDataEntity>.All()));
+                    "SELECT * FROM BulkData ORDER BY Key1, Key2, Key3"));
         }
     }
 }

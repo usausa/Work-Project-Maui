@@ -46,8 +46,7 @@
 
                 sql.Append(type);
 
-                if ((!isNullable && propertyType.IsValueType) ||
-                    (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() != null))
+                if (!isNullable || (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() != null))
                 {
                     sql.Append(" NOT NULL");
                 }
