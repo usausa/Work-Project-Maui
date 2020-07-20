@@ -7,7 +7,6 @@
 
     using Smart;
     using Smart.Data.Mapper.Attributes;
-    using Smart.Data.Mapper.Builders;
     using Smart.Data.Mapper.Builders.Metadata;
 
     public static class SqlHelper
@@ -77,30 +76,6 @@
             sql.Append(")");
 
             return sql.ToString();
-        }
-
-        public static string SelectByKey<T>() => SqlSelect<T>.ByKey();
-
-        public static string Insert<T>() => SqlInsert<T>.Values();
-
-        public static string Update<T>() => SqlUpdate<T>.ByKey();
-
-        public static string DeleteAll<T>() => DeleteAllHolder<T>.Sql;
-
-        private static class DeleteAllHolder<T>
-        {
-            public static string Sql { get; }
-
-            static DeleteAllHolder()
-            {
-                var tableInfo = TableInfo<T>.Instance;
-                var sql = new StringBuilder(256);
-
-                sql.Append("DELETE FROM ");
-                sql.Append(tableInfo.Name);
-
-                Sql = sql.ToString();
-            }
         }
     }
 }

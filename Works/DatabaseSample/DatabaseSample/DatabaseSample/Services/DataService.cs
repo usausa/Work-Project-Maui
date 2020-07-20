@@ -10,6 +10,7 @@
 
     using Smart.Data;
     using Smart.Data.Mapper;
+    using Smart.Data.Mapper.Builders;
 
     public class DataServiceOptions
     {
@@ -44,5 +45,53 @@
             });
         }
 
+        // CRUD
+
+        public async ValueTask<bool> InsertDataAsync(DataEntity entity)
+        {
+            return await provider.UsingAsync(async con =>
+            {
+                try
+                {
+                    await con.ExecuteAsync(SqlInsert<DataEntity>.Values(), entity);
+
+                    return true;
+                }
+                catch (SqliteException e)
+                {
+                    if (e.SqliteErrorCode == SQLitePCL.raw.SQLITE_CONSTRAINT)
+                    {
+                        return false;
+                    }
+                    throw;
+                }
+            });
+        }
+
+        public async ValueTask<int> UpdateDataAsync(long id, string name)
+        {
+            return await provider.UsingAsync(con =>
+                con.ExecuteAsync(
+                    SqlUpdate<DataEntity>.Set("Name = @Name", "Id = @Id"),
+                    new { Id = id, Name = name }));
+        }
+
+        public async ValueTask<int> DeleteDataAsync(long id)
+        {
+            return await provider.UsingAsync(con =>
+                con.ExecuteAsync(
+                    SqlDelete<DataEntity>.ByKey(),
+                    new { Id = id }));
+        }
+
+        public async ValueTask<DataEntity> QueryDataAsync(long id)
+        {
+            return await provider.UsingAsync(con =>
+                con.QueryFirstOrDefaultAsync<DataEntity>(
+                    SqlSelect<DataEntity>.ByKey(),
+                    new { Id = id }));
+        }
+
+        // Bulk
     }
 }

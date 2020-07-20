@@ -1,17 +1,25 @@
-﻿using System.Threading.Tasks;
-using Smart.ComponentModel;
-using Smart.Forms.Input;
-using XamarinFormsComponents.Dialogs;
-
-namespace DatabaseSample
+﻿namespace DatabaseSample
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using DatabaseSample.Models;
+    using DatabaseSample.Services;
+
+    using Smart.ComponentModel;
+    using Smart.Forms.Input;
     using Smart.Forms.ViewModels;
+
+    using XamarinFormsComponents.Dialogs;
+
 
     public class MainPageViewModel : ViewModelBase
     {
         public static MainPageViewModel DesignInstance { get; } = null; // For design
 
         private readonly IDialogs dialogs;
+
+        private readonly DataService dataService;
 
         public NotificationValue<int> BulkDataCount { get; } = new NotificationValue<int>();
 
@@ -25,9 +33,11 @@ namespace DatabaseSample
         public AsyncCommand QueryAllCommand { get; }
 
         public MainPageViewModel(
-            IDialogs dialogs)
+            IDialogs dialogs,
+            DataService dataService)
         {
             this.dialogs = dialogs;
+            this.dataService = dataService;
 
             InsertCommand = MakeAsyncCommand(Insert);
             UpdateCommand = MakeAsyncCommand(Update);
@@ -46,30 +56,44 @@ namespace DatabaseSample
 
         private async Task Insert()
         {
-            await Task.Delay(5000);
+            var ret = await dataService.InsertDataAsync(new DataEntity { Id = 1L, Name = "Data-1", CreateAt = DateTime.Now });
 
-            await dialogs.Information("test");
+            if (ret)
+            {
+                await dialogs.Information("Inserted");
+            }
+            else
+            {
+                await dialogs.Information("Key duplicate");
+            }
         }
 
         private async Task Update()
         {
-            await Task.Delay(5000);
+            var effect = await dataService.UpdateDataAsync(1L, "Updated");
 
-            await dialogs.Information("test");
+            await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Delete()
         {
-            await Task.Delay(5000);
+            var effect = await dataService.DeleteDataAsync(1L);
 
-            await dialogs.Information("test");
+            await dialogs.Information($"Effect={effect}");
         }
 
         private async Task Query()
         {
-            await Task.Delay(5000);
+            var entity = await dataService.QueryDataAsync(1L);
 
-            await dialogs.Information("test");
+            if (entity != null)
+            {
+                await dialogs.Information($"Name={entity.Name}\r\nDate={entity.CreateAt:yyyy/MM/dd HH:mm:ss}");
+            }
+            else
+            {
+                await dialogs.Information("Not found");
+            }
         }
 
         private async Task BulkInsert()
