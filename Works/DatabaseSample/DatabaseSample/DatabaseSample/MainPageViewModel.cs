@@ -1,6 +1,8 @@
 ﻿namespace DatabaseSample
 {
     using System;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using DatabaseSample.Models;
@@ -51,7 +53,7 @@
 
         public async Task Initialize()
         {
-            await Task.Delay(0);
+            BulkDataCount.Value = await dataService.CountBulkDataAsync();
         }
 
         private async Task Insert()
@@ -98,23 +100,57 @@
 
         private async Task BulkInsert()
         {
-            await Task.Delay(5000);
+            var list = Enumerable.Range(1, 10000)
+                .Select(x => new BulkDataEntity
+                {
+                    Key1 = $"{x / 1000:D2}",
+                    Key2 = $"{x % 1000:D2}",
+                    Key3 = "0",
+                    Value1 = 1,
+                    Value2 = 2,
+                    Value3 = 3,
+                    Value4 = 4,
+                    Value5 = 5
+                })
+                .ToList();
 
-            await dialogs.Information("test");
+            var watch = new Stopwatch();
+
+            using (dialogs.Loading())
+            {
+                watch.Start();
+
+                await Task.Run(() => dataService.InsertBulkDataEnumerable(list));
+
+                watch.Stop();
+            }
+
+            BulkDataCount.Value = await dataService.CountBulkDataAsync();
+
+            await dialogs.Information($"Inserted\r\nElapsed={watch.ElapsedMilliseconds}");
         }
 
         private async Task DeleteAll()
         {
-            await Task.Delay(5000);
+            await dataService.DeleteAllBulkDataAsync();
 
-            await dialogs.Information("test");
+            BulkDataCount.Value = await dataService.CountBulkDataAsync();
         }
 
         private async Task QueryAll()
         {
-            await Task.Delay(5000);
+            var watch = new Stopwatch();
 
-            await dialogs.Information("test");
+            using (dialogs.Loading())
+            {
+                watch.Start();
+
+                await Task.Run(() => dataService.QueryAllBulkDataList());
+
+                watch.Stop();
+            }
+
+            await dialogs.Information($"Query\r\nElapsed={watch.ElapsedMilliseconds}");
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DatabaseSample.Services
+﻿using System.Collections.Generic;
+
+namespace DatabaseSample.Services
 {
     using System.IO;
     using System.Threading.Tasks;
@@ -93,5 +95,35 @@
         }
 
         // Bulk
+
+        public async ValueTask<int> CountBulkDataAsync()
+        {
+            return await provider.UsingAsync(con =>
+                con.ExecuteScalarAsync<int>(
+                    SqlCount<BulkDataEntity>.All()));
+        }
+
+        public void InsertBulkDataEnumerable(IEnumerable<BulkDataEntity> source)
+        {
+            provider.UsingTx((con, tx) =>
+            {
+                foreach (var entity in source)
+                {
+                    con.Execute(SqlInsert<BulkDataEntity>.Values(), entity, tx);
+                }
+
+                tx.Commit();
+            });
+        }
+
+        public async ValueTask DeleteAllBulkDataAsync()
+        {
+            await provider.UsingAsync(con => con.ExecuteAsync("DELETE FROM BulkData"));
+        }
+
+        public List<BulkDataEntity> QueryAllBulkDataList()
+        {
+            return provider.Using(con => con.QueryList<BulkDataEntity>(SqlSelect<BulkDataEntity>.All()));
+        }
     }
 }
