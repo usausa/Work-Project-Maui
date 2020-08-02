@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:shell="clr-namespace:ViewSample.Shell;assembly=ViewSample"
+             xmlns:markup="clr-namespace:ViewSample.Markup;assembly=ViewSample"
+             xmlns:modules="clr-namespace:ViewSample.Modules.Main;assembly=ViewSample"
+             mc:Ignorable="d"
+             x:Class="ViewSample.Modules.Main.MenuView"
+             x:DataType="{x:Type modules:MenuViewModel}"
+             BindingContext="{Binding Source={x:Static modules:MenuViewModel.DesignInstance}}"
+             sr:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
+             shell:ShellProperty.Title="Menu">
+
+</ContentView>
