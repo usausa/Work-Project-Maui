@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AnimationTest
@@ -50,6 +51,9 @@ namespace AnimationTest
 
             var oldView = new BoxView { BackgroundColor = Color.OrangeRed };
             AddView(oldView);
+
+            await Task.Delay(1000);
+
             var newView = new BoxView { BackgroundColor = Color.CornflowerBlue };
             AddView(newView);
 
@@ -57,7 +61,8 @@ namespace AnimationTest
             oldView.IsEnabled = false;
 
             // Animation
-            await Animations.Slide(Container, oldView, newView, 2000U);
+            //await Animations.Slide(Container, oldView, newView, 2000U);
+            await Animations.Slide(Container, oldView, newView, 100U);
 
             // Post
             Container.Children.Remove(oldView);
