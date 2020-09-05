@@ -1,9 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AnimationTest.MainPage">
+<ContentPage
+    x:Class="AnimationTest.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:AnimationTest;assembly=AnimationTest"
+    BindingContext="{Binding Source={x:Static app:MainPage.DesignInstance}}">
 
     <StackLayout>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{Binding PushCommand}"
+                Text="Push" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding PopCommand}"
+                Text="Pop" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding NextCommand}"
+                Text="Next" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding BackCommand}"
+                Text="Back" />
+        </Grid>
+
+        <AbsoluteLayout
+            x:Name="Container"
+            BackgroundColor="LightYellow"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand" />
+
     </StackLayout>
 
 </ContentPage>
