@@ -69,12 +69,6 @@
         // アニメーションパターン網羅
         // FadeIn     : Open   : addTop   , newView opacity 0 -> 1
         // FadeOut    : Close  : addBottom, oldView opacity 1 -> 0
-        // SlideLeft  : Next   : addTop   , newView margin  100->0, old...
-        // SlideRight : Back   : addTop   , newView margin -100->0, old...
-        // TopDown    : Notify :
-        // TopUp      : Close  :
-        // BottomUp   : Notify :
-        // BottomDown : Close  :
         //
         // Scale : like fade ? Dialog? Scale and fade ? [center, 0% to 100%]
         // Flip  : card (mode change?)
@@ -92,6 +86,30 @@
             await Task.Delay(500);
 
             // Push (Open:New, DeActive:Old)
+            var view2 = new View2();
+            OpenView(view2);
+
+            await FadeIn(view2, length);
+
+            DeActiveView(view1);
+
+            // Animation
+            static Task<bool> FadeIn(View newView, uint length = 250U)
+            {
+                newView.Opacity = 0;
+
+                var tcs = new TaskCompletionSource<bool>();
+                newView.ScaleTo(0, 0U).ContinueWith(x => newView.ScaleTo(1, length));
+                newView.Animate(
+                    "FadeIn",
+                    x => newView.Opacity = x,
+                    16U,
+                    length,
+                    Easing.Linear,
+                    (v, c) => tcs.SetResult(c));
+
+                return tcs.Task;
+            }
         }
 
         private async Task PopAnimation(uint length)
