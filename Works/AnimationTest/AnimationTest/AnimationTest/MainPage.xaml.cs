@@ -54,26 +54,15 @@
         // Animation
         //--------------------------------------------------------------------------------
 
-        // TODO Animation基本機構
-        // - 旧ビューの無効化、見た目？
-        // - ビューの分離とインタラクションがわかるように
-        // - 新ビューのアニメーション中イベント(Navigation自体が終わっていれば、発生しても問題ない？)
-        //   新も終わった段階でEnableにする？
-        // - 分離ビュー更新
-        // - Taskが返ったとして、呼び出す側はawaitする？(あまり関係ないか？)
-        // - Stack時、Enableの復帰、位置情報の復帰、Visibleの変更と気に
-        // - Navigationテストプロジェクト作成？
-        //   再入は禁止の問題！
-        //   Deactivateタイミングの問題
-
-        // アニメーションパターン網羅
-        // FadeIn     : Open   : addTop   , newView opacity 0 -> 1
-        // FadeOut    : Close  : addBottom, oldView opacity 1 -> 0
-        //
-        // Scale : like fade ? Dialog? Scale and fade ? [center, 0% to 100%]
-        // Flip  : card (mode change?)
-        // Notify + opacity ?
         // TODO Strategyにオプションを設定できるようにする感じか？
+        // TODO Animation基本機構
+        // - Stack時、Enableの復帰、位置情報の復帰、Visibleの変更と気をつける点
+        // - 新も終わった段階でEnableにする？、これが効かない！
+        // - Navigationテストプロジェクト作成、ナビゲーションのキューイング？
+        // - Deactivateタイミングの問題(?)
+        // RotateYTo :(mode change?)
+        // Flip  : card
+        // Notify + opacity ? Down
 
         private async Task PushAnimation(uint length)
         {
@@ -99,10 +88,13 @@
                 newView.Opacity = 0;
 
                 var tcs = new TaskCompletionSource<bool>();
-                newView.ScaleTo(0, 0U).ContinueWith(x => newView.ScaleTo(1, length));
                 newView.Animate(
                     "FadeIn",
-                    x => newView.Opacity = x,
+                    x =>
+                    {
+                        newView.Opacity = x;
+                        newView.Scale = x;
+                    },
                     16U,
                     length,
                     Easing.Linear,
@@ -127,11 +119,30 @@
             await Task.Delay(500);
 
             // Pop (Active:New, Close:Old)
-            ActiveView(view2);
+            ActiveView(view1);
 
-            // TODO Animation(with disable old?)
+            await FadeOut(view2, length);
 
-            CloseView(view1);
+            CloseView(view2);
+
+            // Animation
+            static Task<bool> FadeOut(View oldView, uint length = 250U)
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                oldView.Animate(
+                    "FadeIn",
+                    x =>
+                    {
+                        oldView.Opacity = (1 - x);
+                        oldView.Scale = (1 - x);
+                    },
+                    16U,
+                    length,
+                    Easing.Linear,
+                    (v, c) => tcs.SetResult(c));
+
+                return tcs.Task;
+            }
         }
 
         private async Task NextAnimation(uint length)
