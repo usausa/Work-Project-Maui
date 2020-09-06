@@ -4,33 +4,59 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:app="clr-namespace:AnimationTest;assembly=AnimationTest"
+    xmlns:markup="clr-namespace:Smart.Forms.Markup;assembly=Smart.Forms"
     BindingContext="{Binding Source={x:Static app:MainPage.DesignInstance}}">
 
     <StackLayout>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
+        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*">
             <Button
+                Grid.Row="0"
                 Grid.Column="0"
                 Command="{Binding PushCommand}"
+                CommandParameter="{markup:Int32 100}"
                 Text="Push" />
             <Button
+                Grid.Row="0"
                 Grid.Column="1"
                 Command="{Binding PopCommand}"
+                CommandParameter="{markup:Int32 100}"
                 Text="Pop" />
             <Button
+                Grid.Row="0"
                 Grid.Column="2"
                 Command="{Binding NextCommand}"
+                CommandParameter="{markup:Int32 100}"
                 Text="Next" />
             <Button
+                Grid.Row="0"
                 Grid.Column="3"
                 Command="{Binding BackCommand}"
+                CommandParameter="{markup:Int32 100}"
+                Text="Back" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                Command="{Binding PushCommand}"
+                CommandParameter="{markup:Int32 2500}"
+                Text="Push" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Command="{Binding PopCommand}"
+                CommandParameter="{markup:Int32 2500}"
+                Text="Pop" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="2"
+                Command="{Binding NextCommand}"
+                CommandParameter="{markup:Int32 2500}"
+                Text="Next" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="3"
+                Command="{Binding BackCommand}"
+                CommandParameter="{markup:Int32 2500}"
                 Text="Back" />
         </Grid>
 

@@ -7,7 +7,7 @@
 
     <StackLayout>
         <Label Text="View2" />
-        <Button Text="Back" />
+        <Button Clicked="Button_OnClicked" Text="Back" />
     </StackLayout>
 
 </ContentView>

@@ -1,13 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Smart.ComponentModel;
-using Smart.Forms.Input;
-using Xamarin.Forms;
-
-namespace AnimationTest
+﻿namespace AnimationTest
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Windows.Input;
+
+    using Smart.ComponentModel;
+    using Smart.Forms.Input;
+
+    using Xamarin.Forms;
+
     public partial class MainPage
     {
         public static MainPage DesignInstance => null;
@@ -30,22 +31,22 @@ namespace AnimationTest
             BindingContext = this;
         }
 
-        private ICommand MakeAsyncCommand(Func<Task> func)
+        private ICommand MakeAsyncCommand(Func<uint, Task> func)
         {
-            return new AsyncCommand(
-                    async () =>
+            return new AsyncCommand<int>(
+                    async x =>
                     {
                         executing.Value = true;
                         try
                         {
-                            await func();
+                            await func((uint)x);
                         }
                         finally
                         {
                             executing.Value = false;
                         }
                     },
-                    () => !executing.Value)
+                    x => !executing.Value)
                 .Observe(executing);
         }
 
@@ -80,7 +81,7 @@ namespace AnimationTest
         // Notify + opacity ?
         // TODO Strategyにオプションを設定できるようにする感じか？
 
-        private async Task PushAnimation()
+        private async Task PushAnimation(uint length)
         {
             ClearViews();
 
@@ -88,12 +89,12 @@ namespace AnimationTest
             var view1 = new View1();
             AddView(view1);
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             // Push (Open:New, DeActive:Old)
         }
 
-        private async Task PopAnimation()
+        private async Task PopAnimation(uint length)
         {
             ClearViews();
 
@@ -105,7 +106,7 @@ namespace AnimationTest
             var view2 = new View2();
             AddView(view2);
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             // Pop (Active:New, Close:Old)
             ActiveView(view2);
@@ -115,7 +116,7 @@ namespace AnimationTest
             CloseView(view1);
         }
 
-        private async Task NextAnimation()
+        private async Task NextAnimation(uint length)
         {
             ClearViews();
 
@@ -123,13 +124,13 @@ namespace AnimationTest
             var view1 = new View1();
             AddView(view1);
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             // Forward (Open:New, Close:Old)
             var view2 = new View2();
             OpenView(view2);
 
-            await SlideNext(Container, view1, view2, 100U);
+            await SlideNext(Container, view1, view2, length);
 
             CloseView(view1);
 
@@ -152,17 +153,13 @@ namespace AnimationTest
                     16U,
                     length,
                     Easing.Linear,
-                    (v, c) =>
-                    {
-                        Debug.WriteLine("Animation end");
-                        tcs.SetResult(c);
-                    });
+                    (v, c) => tcs.SetResult(c));
 
                 return tcs.Task;
             }
         }
 
-        private async Task BackAnimation()
+        private async Task BackAnimation(uint length)
         {
             ClearViews();
 
@@ -170,11 +167,39 @@ namespace AnimationTest
             var view2 = new View2();
             AddView(view2);
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             // Forward (Open:New, Close:Old)
+            var view1 = new View1();
+            OpenView(view1);
 
-            // TODO
+            await SlideBack(Container, view1, view2, length);
+
+            CloseView(view2);
+
+            // Animation
+            static Task<bool> SlideBack(AbsoluteLayout container, View oldView, View newView, uint length = 250U)
+            {
+                var width = container.Width;
+
+                var tcs = new TaskCompletionSource<bool>();
+                newView.Animate(
+                    "Slide",
+                    x =>
+                    {
+                        var newMargin = (int)(x * width);
+                        var oldMargin = width - newMargin;
+                        oldView.Margin = new Thickness(-oldMargin, 0, oldMargin, 0);
+                        newView.Margin = new Thickness(newMargin, 0, -newMargin, 0);
+
+                    },
+                    16U,
+                    length,
+                    Easing.Linear,
+                    (v, c) => tcs.SetResult(c));
+
+                return tcs.Task;
+            }
         }
 
         //--------------------------------------------------------------------------------

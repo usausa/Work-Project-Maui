@@ -16,5 +16,10 @@ namespace AnimationTest
         {
             InitializeComponent();
         }
+
+        private async void Button_OnClicked(object sender, EventArgs e)
+        {
+            await Application.Current.MainPage.DisplayAlert("", "clicked", "ok");
+        }
     }
 }
