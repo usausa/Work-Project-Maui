@@ -21,6 +21,8 @@
         public ICommand BackCommand { get; }
         public ICommand FlipCommand { get; }
 
+        private BoxView guard;
+
         public MainPage()
         {
             InitializeComponent();
@@ -80,7 +82,9 @@
             var view2 = new View2();
             OpenView(view2);
 
+            LockContainer();
             await FadeIn(view2, length);
+            UnlockContainer();
 
             DeActiveView(view1);
 
@@ -123,7 +127,9 @@
             // Pop (Active:New, Close:Old)
             ActiveView(view1);
 
+            LockContainer();
             await FadeOut(view2, length);
+            UnlockContainer();
 
             CloseView(view2);
 
@@ -161,7 +167,9 @@
             var view2 = new View2();
             OpenView(view2);
 
+            LockContainer();
             await SlideNext(Container, view1, view2, length);
+            UnlockContainer();
 
             CloseView(view1);
 
@@ -204,7 +212,9 @@
             var view1 = new View1();
             OpenView(view1);
 
+            LockContainer();
             await SlideBack(Container, view1, view2, length);
+            UnlockContainer();
 
             CloseView(view2);
 
@@ -247,7 +257,9 @@
             var view2 = new View2();
             OpenView(view2);
 
+            LockContainer();
             await Flip(view1, view2, length);
+            UnlockContainer();
 
             CloseView(view1);
 
@@ -290,6 +302,21 @@
         private void ClearViews()
         {
             Container.Children.Clear();
+        }
+
+        private void LockContainer()
+        {
+            guard = new BoxView();
+            guard.Background = Brush.Transparent;
+
+            AddView(guard);
+
+            Container.RaiseChild(guard);
+        }
+
+        private void UnlockContainer()
+        {
+            Container.Children.Remove(guard);
         }
     }
 }
