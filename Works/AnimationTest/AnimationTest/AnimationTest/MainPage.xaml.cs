@@ -1,4 +1,6 @@
-﻿namespace AnimationTest
+﻿using System.Linq;
+
+namespace AnimationTest
 {
     using System;
     using System.Threading.Tasks;
@@ -20,8 +22,6 @@
         public ICommand NextCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand FlipCommand { get; }
-
-        private BoxView guard;
 
         public MainPage()
         {
@@ -164,6 +164,7 @@
             await Task.Delay(500);
 
             // Forward (Open:New, Close:Old)
+
             var view2 = new View2();
             OpenView(view2);
 
@@ -306,8 +307,11 @@
 
         private void LockContainer()
         {
-            guard = new BoxView();
-            guard.Background = Brush.Transparent;
+            var guard = new BoxView
+            {
+                ClassId = "_guard",
+                Background = Brush.Transparent
+            };
 
             AddView(guard);
 
@@ -316,7 +320,11 @@
 
         private void UnlockContainer()
         {
-            Container.Children.Remove(guard);
+            var guard = Container.Children.FirstOrDefault(x => x.ClassId == "_guard");
+            if (guard != null)
+            {
+                Container.Children.Remove(guard);
+            }
         }
     }
 }
