@@ -19,6 +19,7 @@
         public ICommand PopCommand { get; }
         public ICommand NextCommand { get; }
         public ICommand BackCommand { get; }
+        public ICommand FlipCommand { get; }
 
         public MainPage()
         {
@@ -28,6 +29,7 @@
             PopCommand = MakeAsyncCommand(PopAnimation);
             NextCommand = MakeAsyncCommand(NextAnimation);
             BackCommand = MakeAsyncCommand(BackAnimation);
+            FlipCommand = MakeAsyncCommand(FlipAnimation);
             BindingContext = this;
         }
 
@@ -228,6 +230,40 @@
                     (v, c) => tcs.SetResult(c));
 
                 return tcs.Task;
+            }
+        }
+
+        private async Task FlipAnimation(uint length)
+        {
+            ClearViews();
+
+            // Preset
+            var view1 = new View1();
+            AddView(view1);
+
+            await Task.Delay(500);
+
+            // Forward (Open:New, Close:Old)
+            var view2 = new View2();
+            OpenView(view2);
+
+            await Flip(view1, view2, length);
+
+            CloseView(view1);
+
+            // Animation
+            static async Task Flip(View oldView, View newView, uint length = 250U)
+            {
+                newView.IsVisible = false;
+
+                oldView.RotationY = 360;
+                await oldView.RotateYTo(270, length, Easing.Linear);
+
+                oldView.IsVisible = false;
+                newView.IsVisible = true;
+
+                newView.RotationY = 90;
+                await newView.RotateYTo(0, length, Easing.Linear);
             }
         }
 

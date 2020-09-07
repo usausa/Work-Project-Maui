@@ -9,7 +9,7 @@
 
     <StackLayout>
 
-        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*">
+        <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="*,*">
             <Button
                 Grid.Row="0"
                 Grid.Column="0"
@@ -35,29 +35,41 @@
                 CommandParameter="{markup:Int32 100}"
                 Text="Back" />
             <Button
+                Grid.Row="0"
+                Grid.Column="4"
+                Command="{Binding FlipCommand}"
+                CommandParameter="{markup:Int32 100}"
+                Text="Flip" />
+            <Button
                 Grid.Row="1"
                 Grid.Column="0"
                 Command="{Binding PushCommand}"
-                CommandParameter="{markup:Int32 2500}"
+                CommandParameter="{markup:Int32 2000}"
                 Text="Push" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
                 Command="{Binding PopCommand}"
-                CommandParameter="{markup:Int32 2500}"
+                CommandParameter="{markup:Int32 2000}"
                 Text="Pop" />
             <Button
                 Grid.Row="1"
                 Grid.Column="2"
                 Command="{Binding NextCommand}"
-                CommandParameter="{markup:Int32 2500}"
+                CommandParameter="{markup:Int32 2000}"
                 Text="Next" />
             <Button
                 Grid.Row="1"
                 Grid.Column="3"
                 Command="{Binding BackCommand}"
-                CommandParameter="{markup:Int32 2500}"
+                CommandParameter="{markup:Int32 2000}"
                 Text="Back" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="4"
+                Command="{Binding FlipCommand}"
+                CommandParameter="{markup:Int32 2000}"
+                Text="Flip" />
         </Grid>
 
         <AbsoluteLayout
