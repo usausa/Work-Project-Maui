@@ -1,24 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SideMenuTest.MainPage">
+<ContentPage
+    x:Class="SideMenuTest.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
-        </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-    </StackLayout>
+    <AbsoluteLayout>
+        <StackLayout
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Background="Blue">
+            <StackLayout.GestureRecognizers>
+                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_OnPanUpdated" />
+            </StackLayout.GestureRecognizers>
+        </StackLayout>
+
+        <BoxView
+            AbsoluteLayout.LayoutBounds="0,0,AutoSize,1"
+            AbsoluteLayout.LayoutFlags="XProportional,YProportional,HeightProportional"
+            Background="Red"
+            Opacity="0.4"
+            WidthRequest="16" />
+
+        <BoxView
+            AbsoluteLayout.LayoutBounds="-240,0,AutoSize,1"
+            AbsoluteLayout.LayoutFlags="YProportional,HeightProportional"
+            Background="Green"
+            WidthRequest="240" />
+
+    </AbsoluteLayout>
 
 </ContentPage>
