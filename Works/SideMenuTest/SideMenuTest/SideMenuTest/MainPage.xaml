@@ -9,23 +9,33 @@
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Background="Blue">
-            <StackLayout.GestureRecognizers>
-                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_OnPanUpdated" />
-            </StackLayout.GestureRecognizers>
+            <Label
+                FontSize="Large"
+                Text="12345678901234567890"
+                TextColor="White" />
         </StackLayout>
 
         <BoxView
             AbsoluteLayout.LayoutBounds="0,0,AutoSize,1"
             AbsoluteLayout.LayoutFlags="XProportional,YProportional,HeightProportional"
             Background="Red"
-            Opacity="0.4"
-            WidthRequest="16" />
+            Opacity="0"
+            WidthRequest="16">
+            <BoxView.GestureRecognizers>
+                <PanGestureRecognizer PanUpdated="Anchor_OnPanUpdated" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
 
-        <BoxView
+        <StackLayout
+            x:Name="SideMenu"
             AbsoluteLayout.LayoutBounds="-240,0,AutoSize,1"
             AbsoluteLayout.LayoutFlags="YProportional,HeightProportional"
             Background="Green"
-            WidthRequest="240" />
+            WidthRequest="240">
+            <StackLayout.GestureRecognizers>
+                <PanGestureRecognizer PanUpdated="SideMenu_OnPanUpdated" />
+            </StackLayout.GestureRecognizers>
+        </StackLayout>
 
     </AbsoluteLayout>
 
