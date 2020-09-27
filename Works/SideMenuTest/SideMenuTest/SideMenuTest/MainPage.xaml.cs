@@ -38,7 +38,6 @@
                 {
                     showSideMenu = false;
                 }
-                //showSideMenu = e.TotalX > 0;
                 lastPosition = rect.X;
             }
             else if (e.StatusType == GestureStatus.Completed)
@@ -79,7 +78,6 @@
                 {
                     showSideMenu = false;
                 }
-                //showSideMenu = e.TotalX > 0;
                 lastPosition = rect.X;
             }
             else if (e.StatusType == GestureStatus.Completed)
