@@ -18,7 +18,6 @@
         <BoxView
             AbsoluteLayout.LayoutBounds="0,0,AutoSize,1"
             AbsoluteLayout.LayoutFlags="XProportional,YProportional,HeightProportional"
-            Background="Red"
             Opacity="0"
             WidthRequest="16">
             <BoxView.GestureRecognizers>
