@@ -4,25 +4,14 @@ namespace KeySample.FormsApp.Modules
     {
         Menu,
 
-        Data,
+        MoveNext,
+        MoveSpecial,
 
-        EditList,
-        EditDetailNew,
-        EditDetailUpdate,
+        ShortcutBasic,
+        ShortcutStack1,
+        ShortcutStack2,
 
-        Stack1,
-        Stack2,
-        Stack3,
-
-        WizardInput1,
-        WizardInput2,
-        WizardResult,
-
-        SharedInput,
-        SharedMain1,
-        SharedMain2,
-
-        NavigateCancel,
-        NavigateInitialize,
+        ControlEdit,
+        ControlList
     }
 }
