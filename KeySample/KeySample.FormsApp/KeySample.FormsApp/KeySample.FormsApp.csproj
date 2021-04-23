@@ -45,8 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Behaviors\" />
-    <Folder Include="Controls\" />
     <Folder Include="Converters\" />
     <Folder Include="Messaging\" />
   </ItemGroup>
