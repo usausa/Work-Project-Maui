@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sd="clr-namespace:Smart.Forms.Data;assembly=Smart.Forms"
              xmlns:resources="clr-namespace:KeySample.FormsApp.Resources;assembly=KeySample.FormsApp"
+             xmlns:effects="clr-namespace:KeySample.FormsApp.Effects;assembly=KeySample.FormsApp"
              x:Class="KeySample.FormsApp.App">
     <Application.Resources>
 
@@ -137,10 +138,33 @@
             </Style>
 
             <Style x:Key="MenuButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="Margin" Value="3" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="MenuButtonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroOrangeDark}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroTealDarker}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+                <Setter Property="effects:FocusableEffect.Attach" Value="True" />
             </Style>
 
             <Style x:Key="DefaultLabel" TargetType="Label">

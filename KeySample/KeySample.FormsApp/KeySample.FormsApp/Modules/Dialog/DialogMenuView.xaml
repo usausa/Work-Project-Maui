@@ -3,12 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:shell="clr-namespace:KeySample.FormsApp.Shell;assembly=KeySample.FormsApp"
-             xmlns:markup="clr-namespace:KeySample.FormsApp.Markup;assembly=KeySample.FormsApp"
-             xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Main;assembly=KeySample.FormsApp"
-             x:Class="KeySample.FormsApp.Modules.Main.MenuView"
-             x:DataType="{x:Type modules:MenuViewModel}"
-             sr:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
-             shell:ShellProperty.Title="Menu">
+             xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Dialog;assembly=KeySample.FormsApp"
+             x:Class="KeySample.FormsApp.Modules.Dialog.DialogMenuView"
+             x:DataType="{x:Type modules:DialogMenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type modules:DialogMenuViewModel}"
+             shell:ShellProperty.Title="Dialog">
 
     <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
@@ -22,24 +21,24 @@
 
         <Button Grid.Row="0"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId DialogMenu}"
+                Command="{Binding DialogCommand}"
                 Text="Dialog" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
-                Text="Function2" />
+                IsEnabled="False" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
-                Text="Function3" />
+                IsEnabled="False" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
-                Text="Function4" />
+                IsEnabled="False" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
-                Text="Function5" />
+                IsEnabled="False" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
-                Text="Function6" />
+                Command="{Binding BackCommand}"
+                Text="Back" />
     </Grid>
 
 </ContentView>

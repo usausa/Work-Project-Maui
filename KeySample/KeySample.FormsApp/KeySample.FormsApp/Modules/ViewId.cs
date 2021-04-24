@@ -4,6 +4,8 @@ namespace KeySample.FormsApp.Modules
     {
         Menu,
 
+        DialogMenu,
+
         MoveNext,
         MoveSpecial,
 

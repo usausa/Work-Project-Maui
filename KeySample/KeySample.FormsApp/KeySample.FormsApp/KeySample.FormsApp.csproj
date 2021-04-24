@@ -49,4 +49,10 @@
     <Folder Include="Messaging\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Modules\Dialog\DialogMenuView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
