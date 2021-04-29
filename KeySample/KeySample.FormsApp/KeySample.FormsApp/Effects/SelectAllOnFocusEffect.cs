@@ -1,15 +1,14 @@
 namespace KeySample.FormsApp.Effects
 {
     using System.Linq;
-
     using Xamarin.Forms;
 
-    public sealed class FocusableEffect : RoutingEffect
+    public sealed class SelectAllOnFocusEffect : RoutingEffect
     {
         public static readonly BindableProperty OnProperty = BindableProperty.CreateAttached(
             "On",
             typeof(bool),
-            typeof(FocusableEffect),
+            typeof(SelectAllOnFocusEffect),
             false,
             propertyChanged: OnOnChanged);
 
@@ -32,11 +31,11 @@ namespace KeySample.FormsApp.Effects
 
             if ((bool)newValue)
             {
-                element.Effects.Add(new FocusableEffect());
+                element.Effects.Add(new SelectAllOnFocusEffect());
             }
             else
             {
-                var effect = element.Effects.FirstOrDefault(x => x is FocusableEffect);
+                var effect = element.Effects.FirstOrDefault(x => x is SelectAllOnFocusEffect);
                 if (effect != null)
                 {
                     element.Effects.Remove(effect);
@@ -44,8 +43,8 @@ namespace KeySample.FormsApp.Effects
             }
         }
 
-        public FocusableEffect()
-            : base("KeySample.FocusableEffect")
+        public SelectAllOnFocusEffect()
+            : base("KeySample.SelectAllOnFocusEffect")
         {
         }
     }

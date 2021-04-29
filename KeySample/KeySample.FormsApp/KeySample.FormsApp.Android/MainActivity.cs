@@ -59,6 +59,12 @@ namespace KeySample.FormsApp.Droid
 
         public override bool DispatchKeyEvent(KeyEvent e)
         {
+            // Disable sound
+            //if ((e.KeyCode == Keycode.VolumeDown) || (e.KeyCode == Keycode.VolumeUp))
+            //{
+            //    return true;
+            //}
+
             System.Diagnostics.Debug.WriteLine($"*DispatchKeyEvent : KeyCode=[{e.KeyCode}]");
             return base.DispatchKeyEvent(e);
         }

@@ -15,6 +15,21 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <StackLayout Style="{StaticResource FillLayout}">
+            <Frame Style="{StaticResource InputFrame}">
+                <Entry Style="{StaticResource NoBorderEntry}"
+                       Placeholder="entry1" ReturnType="Next" />
+            </Frame>
+            <Frame Style="{StaticResource InputFrame}">
+                <Entry Style="{StaticResource NoBorderEntry}"
+                       Placeholder="entry2" ReturnType="Next" />
+            </Frame>
+            <Frame Style="{StaticResource InputFrame}">
+                <Entry Style="{StaticResource NoBorderEntry}"
+                       Placeholder="entry3" ReturnType="Next" />
+            </Frame>
+        </StackLayout>
+
         <!-- Function -->
         <Grid Grid.Row="1"
               Style="{StaticResource FunctionGrid}">

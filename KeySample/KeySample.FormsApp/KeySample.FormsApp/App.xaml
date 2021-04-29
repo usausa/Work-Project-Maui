@@ -164,12 +164,28 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                <Setter Property="effects:FocusableEffect.Attach" Value="True" />
+                <Setter Property="effects:FocusableEffect.On" Value="True" />
             </Style>
 
             <Style x:Key="DefaultLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
             </Style>
+
+            <Style x:Key="InputFrame" TargetType="Frame">
+                <Setter Property="Padding" Value="3,0,3,0" />
+                <Setter Property="CornerRadius" Value="9" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLightenBrighter}" />
+                <Setter Property="BorderColor" Value="{StaticResource MetroLightenDarker}" />
+            </Style>
+
+            <Style x:Key="NoBorderEntry" TargetType="Entry">
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+                <Setter Property="effects:DisableKeyboardOnFocusEffect.On" Value="True" />
+                <Setter Property="effects:SelectAllOnFocusEffect.On" Value="True" />
+                <Setter Property="effects:NoBorderEffect.On" Value="True" />
+            </Style>
+
         </ResourceDictionary>
 
     </Application.Resources>

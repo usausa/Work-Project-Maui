@@ -27,7 +27,9 @@
                 Text="Dialog" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
-                Text="Function2" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ControlEdit}"
+                Text="Control Edit" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
                 Text="Function3" />
