@@ -164,7 +164,7 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                <Setter Property="effects:FocusableEffect.On" Value="True" />
+                <!--<Setter Property="effects:FocusableEffect.On" Value="True" />-->
             </Style>
 
             <Style x:Key="DefaultLabel" TargetType="Label">
