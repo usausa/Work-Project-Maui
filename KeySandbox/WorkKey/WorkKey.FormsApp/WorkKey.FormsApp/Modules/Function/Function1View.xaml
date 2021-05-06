@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:shell="clr-namespace:WorkKey.FormsApp.Shell;assembly=WorkKey.FormsApp"
+             xmlns:modules="clr-namespace:WorkKey.FormsApp.Modules.Function;assembly=WorkKey.FormsApp"
+             x:Class="WorkKey.FormsApp.Modules.Function.Function1View"
+             x:DataType="{x:Type modules:Function1ViewModel}"
+             sr:BindingContextResolver.Type="{x:Type modules:Function1ViewModel}"
+             shell:ShellProperty.Title="Function1"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function4Text="Alert"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <StackLayout Style="{StaticResource FillLayout}">
+        <Label Text="sample" />
+    </StackLayout>
+
+</ContentView>
