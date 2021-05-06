@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="workkey.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="workkey.function.app">
   <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
-  <application android:label="WorkKey" android:theme="@style/MainTheme"></application>
+  <application android:label="WorkFunction" android:theme="@style/MainTheme"></application>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
   <uses-permission android:name="android.permission.INTERNET" />

@@ -18,7 +18,7 @@ namespace WorkKey.FormsApp.Droid
     using WorkKey.FormsApp.Droid.Components.Dialog;
 
     [Activity(
-        Name = "workkey.app.MainActivity",
+        Name = "workkey.function.app.MainActivity",
         Icon = "@mipmap/icon",
         Theme = "@style/MainTheme.Splash",
         MainLauncher = true,
