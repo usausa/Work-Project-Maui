@@ -70,15 +70,8 @@ namespace WorkKey.FormsApp
             Disposables.Add(Observable
                 .FromEvent<EventHandler<EventArgs<ShellEvent>>, EventArgs<ShellEvent>>(h => (_, e) => h(e), h => deviceManager.ShellKeyDown += h, h => deviceManager.ShellKeyDown -= h)
                 .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(e =>
-                {
-                    if (BusyState.IsBusy || !functionEnables[e.Data - ShellEvent.Function1].Value)
-                    {
-                        return;
-                    }
-
-                    Navigator.NotifyAsync(e.Data);
-                }));
+                .Where(x => !BusyState.IsBusy && functionEnables[x.Data - ShellEvent.Function1].Value)
+                .Subscribe(x => Navigator.NotifyAsync(x.Data)));
         }
     }
 }
