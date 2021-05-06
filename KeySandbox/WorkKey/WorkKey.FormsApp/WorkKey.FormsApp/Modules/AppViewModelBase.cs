@@ -40,16 +40,38 @@ namespace WorkKey.FormsApp.Modules
 
         public Task NavigatorNotifyAsync(ShellEvent parameter)
         {
-            switch (parameter)
+            return parameter switch
             {
-                case ShellEvent.Back:
-                    return OnNotifyBackAsync();
-                default:
-                    return Task.CompletedTask;
-            }
+                ShellEvent.Back => OnNotifyBackAsync(),
+                ShellEvent.Function1 => OnNotifyFunction1Async(),
+                ShellEvent.Function2 => OnNotifyFunction2Async(),
+                ShellEvent.Function3 => OnNotifyFunction3Async(),
+                ShellEvent.Function4 => OnNotifyFunction4Async(),
+                _ => Task.CompletedTask
+            };
         }
 
         protected virtual Task OnNotifyBackAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction1Async()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction2Async()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction3Async()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction4Async()
         {
             return Task.CompletedTask;
         }

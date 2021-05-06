@@ -4,12 +4,15 @@ namespace WorkKey.FormsApp.Components.Device
     using System.Collections.Generic;
     using System.Linq;
     using System.Reactive.Subjects;
-
+    using Smart;
+    using WorkKey.FormsApp.Shell;
     using Xamarin.Essentials;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Ignore")]
     public abstract class DeviceManagerBase : IDeviceManager
     {
+        public event EventHandler<EventArgs<ShellEvent>> ShellKeyDown;
+
         private readonly BehaviorSubject<NetworkState> networkState;
 
         public IObservable<NetworkState> NetworkState => networkState;
@@ -21,6 +24,11 @@ namespace WorkKey.FormsApp.Components.Device
             {
                 networkState.OnNext(GetNetworkState(args.NetworkAccess, args.ConnectionProfiles));
             };
+        }
+
+        protected void RaiseShellKeyDown(ShellEvent ev)
+        {
+            ShellKeyDown?.Invoke(this, new EventArgs<ShellEvent>(ev));
         }
 
         private static NetworkState GetNetworkState(NetworkAccess access, IEnumerable<ConnectionProfile> profiles)

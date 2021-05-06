@@ -1,8 +1,10 @@
 namespace WorkKey.FormsApp.Droid.Components.Device
 {
     using Android.App;
+    using Android.Views;
 
     using WorkKey.FormsApp.Components.Device;
+    using WorkKey.FormsApp.Shell;
 
     public sealed class DeviceManager : DeviceManagerBase
     {
@@ -11,6 +13,21 @@ namespace WorkKey.FormsApp.Droid.Components.Device
         public DeviceManager(Activity activity)
         {
             this.activity = activity;
+        }
+
+        public bool DispatchKeyEvent(KeyEvent e)
+        {
+            if ((e.KeyCode >= Keycode.F1) && (e.KeyCode <= Keycode.F4))
+            {
+                if (e.Action == KeyEventActions.Up)
+                {
+                    RaiseShellKeyDown(ShellEvent.Function1 + (e.KeyCode - Keycode.F1));
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public override string GetVersion()

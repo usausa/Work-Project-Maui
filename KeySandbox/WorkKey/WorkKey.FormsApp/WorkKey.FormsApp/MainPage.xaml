@@ -20,8 +20,8 @@
     <Grid Style="{StaticResource MainGrid}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="6" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- header -->
@@ -32,12 +32,40 @@
                Text="{Binding Title.Value}" />
 
         <!-- view container -->
-        <AbsoluteLayout Grid.Row="2"
+        <AbsoluteLayout Grid.Row="1"
                         Style="{StaticResource ContainerLayout}">
             <AbsoluteLayout.Behaviors>
                 <sn:NavigationContainerBehavior Navigator="{Binding Navigator}" />
             </AbsoluteLayout.Behaviors>
         </AbsoluteLayout>
+
+        <!-- function -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource FunctionGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Style="{StaticResource FunctionButton1}"
+                    Command="{Binding Function1Command}"
+                    Text="{Binding Function1Text.Value}" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource FunctionButton2}"
+                    Command="{Binding Function2Command}"
+                    Text="{Binding Function2Text.Value}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource FunctionButton3}"
+                    Command="{Binding Function3Command}"
+                    Text="{Binding Function3Text.Value}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource FunctionButton4}"
+                    Command="{Binding Function4Command}"
+                    Text="{Binding Function4Text.Value}" />
+        </Grid>
     </Grid>
 
 </ContentPage>

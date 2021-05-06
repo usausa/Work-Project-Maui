@@ -105,12 +105,35 @@
                 <Setter Property="HeightRequest" Value="{StaticResource FunctionGridHeight}" />
             </Style>
 
-            <Style x:Key="FunctionButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
+            <Style x:Key="FunctionButtonBase" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="CornerRadius" Value="0" />
                 <Setter Property="BorderWidth" Value="0" />
+            </Style>
+
+            <Style x:Key="FunctionButton1"
+                   BasedOn="{StaticResource FunctionButtonBase}"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroRed}" />
+            </Style>
+
+            <Style x:Key="FunctionButton2"
+                   BasedOn="{StaticResource FunctionButtonBase}"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
+            </Style>
+
+            <Style x:Key="FunctionButton3"
+                   BasedOn="{StaticResource FunctionButtonBase}"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
+            </Style>
+
+            <Style x:Key="FunctionButton4"
+                   BasedOn="{StaticResource FunctionButtonBase}"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}" />
             </Style>
 
             <!-- ================================================================================ -->

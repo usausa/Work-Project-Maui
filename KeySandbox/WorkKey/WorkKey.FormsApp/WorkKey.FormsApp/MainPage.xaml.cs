@@ -13,7 +13,11 @@ namespace WorkKey.FormsApp
 
         protected override bool OnBackButtonPressed()
         {
-            (BindingContext as MainPageViewModel)?.Navigator.NotifyAsync(ShellEvent.Back);
+            if ((BindingContext is MainPageViewModel vm) && !vm.BusyState.IsBusy)
+            {
+                vm.Navigator.NotifyAsync(ShellEvent.Back);
+            }
+
             return true;
         }
     }

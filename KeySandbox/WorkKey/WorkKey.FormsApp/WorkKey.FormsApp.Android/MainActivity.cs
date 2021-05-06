@@ -61,6 +61,16 @@ namespace WorkKey.FormsApp.Droid
             Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
         }
 
+        public override bool DispatchKeyEvent(KeyEvent e)
+        {
+            if (deviceManager.DispatchKeyEvent(e))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         private sealed class ComponentProvider : IComponentProvider
         {
             private readonly MainActivity activity;
