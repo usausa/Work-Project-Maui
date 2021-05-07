@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FocusTest.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  header  -->
+        <BoxView Grid.Row="0" />
+        <Label Grid.Row="0" />
+
+        <!--  view container  -->
+        <ContentView
+            Grid.Row="1"
+            IsEnabled="False"
+            IsVisible="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Button x:Name="Page1Button1" Grid.Row="0" />
+                <Button
+                    x:Name="Page1Button2"
+                    Grid.Row="1"
+                    IsEnabled="False" />
+                <Button x:Name="Page1Button3" Grid.Row="2" />
+                <Button
+                    x:Name="Page1Button4"
+                    Grid.Row="3"
+                    IsEnabled="False" />
+                <Button x:Name="Page1Button5" Grid.Row="4" />
+                <Button
+                    x:Name="Page1Button6"
+                    Grid.Row="5"
+                    IsEnabled="False" />
+            </Grid>
+        </ContentView>
+
+        <ContentView Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Button
+                    x:Name="Page2Button1"
+                    Grid.Row="0"
+                    IsEnabled="False" />
+                <Button x:Name="Page2Button2" Grid.Row="1" />
+                <Button
+                    x:Name="Page2Button3"
+                    Grid.Row="2"
+                    IsEnabled="False" />
+                <Button x:Name="Page2Button4" Grid.Row="3" />
+                <Button x:Name="Page2Button5" Grid.Row="4" />
+                <Button
+                    x:Name="Page2Button6"
+                    Grid.Row="5"
+                    IsEnabled="False" />
+            </Grid>
+        </ContentView>
+
+        <!--  function  -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Func1" Grid.Column="0" />
+            <Button
+                x:Name="Func2"
+                Grid.Column="1"
+                IsEnabled="False" />
+            <Button
+                x:Name="Func3"
+                Grid.Column="2"
+                IsEnabled="False" />
+            <Button x:Name="Func4" Grid.Column="3" />
+        </Grid>
+    </Grid>
+
+</ContentPage>
