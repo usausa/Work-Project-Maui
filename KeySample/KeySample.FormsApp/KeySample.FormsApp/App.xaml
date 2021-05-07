@@ -46,6 +46,39 @@
             <!-- ================================================================================ -->
             <!-- Layout -->
             <!-- ================================================================================ -->
+
+            <Style x:Key="InputEntryBase" TargetType="Entry">
+                <Setter Property="effects:DisableKeyboardOnFocusEffect.On" Value="True" />
+                <Setter Property="effects:SelectAllOnFocusEffect.On" Value="True" />
+            </Style>
+
+            <Style x:Key="InputButtonBase" TargetType="Button">
+                <Setter Property="effects:EnterClickEffect.On" Value="True" />
+            </Style>
+
+            <!-- ================================================================================ -->
+            <!-- Layout -->
+            <!-- ================================================================================ -->
+
+            <Style x:Key="FillGrid" TargetType="Grid">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <Style x:Key="FillLayout" TargetType="StackLayout">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <Style x:Key="PaddingLayout" TargetType="StackLayout">
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
             <!-- ================================================================================ -->
             <!-- Main -->
             <!-- ================================================================================ -->
@@ -118,26 +151,9 @@
             <!-- Basic -->
             <!-- ================================================================================ -->
 
-            <Style x:Key="FillGrid" TargetType="Grid">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="RowSpacing" Value="0" />
-                <Setter Property="ColumnSpacing" Value="0" />
-                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-                <Setter Property="VerticalOptions" Value="FillAndExpand" />
-            </Style>
-
-            <Style x:Key="FillLayout" TargetType="StackLayout">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <Style x:Key="PaddingLayout" TargetType="StackLayout">
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <Style x:Key="MenuButton" TargetType="Button">
+            <Style x:Key="MenuButton"
+                   BasedOn="{StaticResource InputButtonBase}"
+                   TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="Margin" Value="3" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -179,10 +195,10 @@
                 <Setter Property="BorderColor" Value="{StaticResource MetroLightenDarker}" />
             </Style>
 
-            <Style x:Key="NoBorderEntry" TargetType="Entry">
+            <Style x:Key="NoBorderEntry"
+                   BasedOn="{StaticResource InputEntryBase}"
+                   TargetType="Entry">
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
-                <Setter Property="effects:DisableKeyboardOnFocusEffect.On" Value="True" />
-                <Setter Property="effects:SelectAllOnFocusEffect.On" Value="True" />
                 <Setter Property="effects:NoBorderEffect.On" Value="True" />
             </Style>
 
