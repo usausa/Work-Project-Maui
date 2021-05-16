@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pages:PopupPage
+    x:Class="WorkPopupLevel.PopupDialog1"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="http://rotorgames.com"
+    Padding="36"
+    BackgroundColor="Orange"
+    CloseWhenBackgroundIsClicked="False"
+    HasSystemPadding="true"
+    Disappearing="PopupDialog1_OnDisappearing">
+
+    <StackLayout>
+        <Button Clicked="TestButton_OnClicked" Text="Test" />
+        <Button Clicked="CloseButton_OnClicked" Text="Close" />
+    </StackLayout>
+
+</pages:PopupPage>

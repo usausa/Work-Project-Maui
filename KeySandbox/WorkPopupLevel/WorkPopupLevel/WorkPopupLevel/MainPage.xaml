@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkPopupLevel.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    DescendantAdded="MainPage_OnDescendantAdded"
+    DescendantRemoved="MainPage_OnDescendantRemoved">
+
+    <StackLayout>
+        <Button Clicked="Popup1Button_OnClicked" Text="Popup1" />
+        <Button Clicked="Popup2Button_OnClicked" Text="Popup2" />
+        <Button Clicked="TestButton_OnClicked" Text="Test" />
+    </StackLayout>
+
+</ContentPage>

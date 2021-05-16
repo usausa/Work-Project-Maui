@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<views:Popup
+    x:Class="WorkPopupLevel.PopupDialog2"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:WorkPopupLevel;assembly=WorkPopupLevel"
+    xmlns:views="http://xamarin.com/schemas/2020/toolkit"
+    x:TypeArguments="x:String"
+    IsLightDismissEnabled="False"
+    Size="{x:Static local:PopupSize.Large}">
+
+    <StackLayout>
+        <Button Clicked="TestButton_OnClicked" Text="Test" />
+        <Button Clicked="CloseButton_OnClicked" Text="Close" />
+    </StackLayout>
+
+</views:Popup>
