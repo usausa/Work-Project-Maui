@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:effects="clr-namespace:KeySample.FormsApp.Effects;assembly=WorkFocusBarcode"
+             xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms" xmlns:workFocusBarcode="clr-namespace:WorkFocusBarcode;assembly=WorkFocusBarcode"
+             x:Class="WorkFocusBarcode.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <forms:ZXingScannerView x:Name="ScannerView"
+                                Grid.Row="0"
+                                IsScanning="True" />
+        <forms:ZXingDefaultOverlay Grid.Row="0" />
+
+        <Entry x:Name="Entry1"
+               Grid.Row="1"
+               effects:DisableKeyboardOnFocusEffect.On="True">
+            <Entry.Behaviors>
+                <workFocusBarcode:BarcodeEntryBehavior Camera="{x:Reference Name=ScannerView}" />
+            </Entry.Behaviors>
+        </Entry>
+
+        <Entry x:Name="Entry2"
+               Grid.Row="2"
+               effects:DisableKeyboardOnFocusEffect.On="True">
+            <Entry.Behaviors>
+                <workFocusBarcode:BarcodeEntryBehavior Camera="{x:Reference Name=ScannerView}" />
+            </Entry.Behaviors>
+        </Entry>
+
+        <Button Grid.Row="3"
+                Text="Clear"
+                Clicked="Button_OnClicked" />
+
+    </Grid>
+
+</ContentPage>
