@@ -43,6 +43,7 @@
     "BindingContext, DataContext",
     "sr:*",
     "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan, Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
+    "TabIndex",
     "Style",
     "shell:ShellProperty.Title",
     "shell:ShellProperty.Function1Text",
