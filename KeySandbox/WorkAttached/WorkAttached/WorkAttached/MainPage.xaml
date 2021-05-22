@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkAttached.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    DescendantAdded="MainPage_OnDescendantAdded"
+    DescendantRemoved="MainPage_OnDescendantRemoved">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackLayout x:Name="Container" Grid.Row="0" />
+
+        <Button
+            Grid.Row="1"
+            Clicked="Button_OnClicked"
+            Text="Add" />
+    </Grid>
+
+</ContentPage>

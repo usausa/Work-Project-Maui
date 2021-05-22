@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="WorkAttached.View1"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:module="clr-namespace:WorkAttached;assembly=WorkAttached">
+
+    <StackLayout>
+        <Button module:Shortcut.Key="1" />
+        <CheckBox module:Shortcut.Key="2" />
+        <Entry module:Shortcut.Key="3" />
+        <Entry module:Shortcut.Key="4" />
+    </StackLayout>
+
+</ContentView>
