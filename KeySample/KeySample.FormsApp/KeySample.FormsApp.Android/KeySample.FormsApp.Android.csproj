@@ -84,6 +84,7 @@
     <Compile Include="Effects\DisableKeyboardOnFocusPlatformEffect.cs" />
     <Compile Include="Effects\Effects.cs" />
     <Compile Include="Effects\FocusablePlatformEffect.cs" />
+    <Compile Include="Effects\InputFilterPlatformEffect.cs" />
     <Compile Include="Effects\NoBorderPlatformEffect.cs" />
     <Compile Include="Effects\SelectAllOnFocusPlatformEffect.cs" />
     <Compile Include="MainActivity.cs" />

@@ -1,6 +1,7 @@
 namespace KeySample.FormsApp.Effects
 {
     using System.Linq;
+
     using Xamarin.Forms;
 
     public sealed class SelectAllOnFocusEffect : RoutingEffect
@@ -10,7 +11,7 @@ namespace KeySample.FormsApp.Effects
             typeof(bool),
             typeof(SelectAllOnFocusEffect),
             false,
-            propertyChanged: OnOnChanged);
+            propertyChanged: OnChanged);
 
         public static bool GetOn(BindableObject view)
         {
@@ -22,7 +23,7 @@ namespace KeySample.FormsApp.Effects
             view.SetValue(OnProperty, value);
         }
 
-        private static void OnOnChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (bindable is not Element element)
             {
