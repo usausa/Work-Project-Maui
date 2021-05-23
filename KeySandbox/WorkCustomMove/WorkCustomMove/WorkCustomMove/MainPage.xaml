@@ -11,10 +11,12 @@
         <Button
             app:Debug.Id="Button1"
             effects:FocusableEffect.On="True"
+            Clicked="Button_OnClicked"
             Text="button" />
         <Button
             app:Debug.Id="Button2"
             effects:FocusableEffect.On="True"
+            Clicked="Button_OnClicked"
             Text="button" />
         <Entry app:Debug.Id="Entry2" effects:DisableKeyboardOnFocusEffect.On="True" />
         <CheckBox app:Debug.Id="CheckBox1" effects:FocusableEffect.On="True" />
@@ -50,6 +52,34 @@
                 effects:DisableKeyboardOnFocusEffect.On="True" />
         </Grid>
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                app:Debug.Id="Button11"
+                effects:FocusableEffect.On="True"
+                Text="b1" />
+            <Button
+                Grid.Column="1"
+                app:Debug.Id="Button12"
+                effects:FocusableEffect.On="True"
+                Text="b2" />
+            <Button
+                Grid.Column="2"
+                app:Debug.Id="Button13"
+                effects:FocusableEffect.On="True"
+                Text="b3" />
+            <Button
+                Grid.Column="3"
+                app:Debug.Id="Button14"
+                effects:FocusableEffect.On="True"
+                Text="b4" />
+        </Grid>
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -61,19 +91,23 @@
             <Entry
                 Grid.Row="0"
                 Grid.Column="0"
-                app:Debug.Id="EntryG21" />
+                app:Debug.Id="EntryG21"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
             <Entry
                 Grid.Row="0"
                 Grid.Column="1"
-                app:Debug.Id="EntryG22" />
+                app:Debug.Id="EntryG22"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
             <Entry
                 Grid.Row="1"
                 Grid.Column="0"
-                app:Debug.Id="EntryG23" />
+                app:Debug.Id="EntryG23"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
             <Entry
                 Grid.Row="1"
                 Grid.Column="1"
-                app:Debug.Id="EntryG24" />
+                app:Debug.Id="EntryG24"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
         </Grid>
     </StackLayout>
 

@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Effects\DisableKeyboardOnFocusPlatformEffect.cs" />
     <Compile Include="Effects\Effects.cs" />
+    <Compile Include="Effects\EntryPlatformEffect.cs" />
     <Compile Include="Effects\FocusablePlatformEffect.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

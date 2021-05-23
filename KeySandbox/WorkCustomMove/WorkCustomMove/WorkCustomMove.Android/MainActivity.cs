@@ -61,6 +61,10 @@ namespace WorkCustomMove.Droid
                         return true;
                     }
                 }
+                else
+                {
+                    return true;
+                }
             }
             if (e.KeyCode == Keycode.DpadRight)
             {
@@ -71,6 +75,10 @@ namespace WorkCustomMove.Droid
                     {
                         return true;
                     }
+                }
+                else
+                {
+                    return true;
                 }
             }
 

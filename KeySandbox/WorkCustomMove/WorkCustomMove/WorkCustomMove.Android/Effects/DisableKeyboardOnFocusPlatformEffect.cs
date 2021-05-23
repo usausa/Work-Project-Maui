@@ -12,7 +12,7 @@ namespace WorkCustomMove.Droid.Effects
         {
             if (Control is TextView textView)
             {
-                textView.ShowSoftInputOnFocus = false;
+                //textView.ShowSoftInputOnFocus = false;
             }
         }
 

@@ -24,11 +24,11 @@ namespace WorkCustomMove
             System.Diagnostics.Debug.WriteLine("**** KeyManagerOnForward");
 
             var elements = EnumerateVisualElement(this).ToList();
-            System.Diagnostics.Debug.WriteLine("--------");
-            foreach (var visualElement in elements)
-            {
-                System.Diagnostics.Debug.WriteLine($"**** {Debug.GetId(visualElement)} {visualElement.GetType()} {visualElement.IsFocused}");
-            }
+            //System.Diagnostics.Debug.WriteLine("--------");
+            //foreach (var visualElement in elements)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"**** {Debug.GetId(visualElement)} {visualElement.GetType()} {visualElement.IsFocused}");
+            //}
 
             if (elements.Count > 0)
             {
@@ -51,7 +51,7 @@ namespace WorkCustomMove
                     if (index < elements.Count - 1)
                     {
                         var ret = elements[index + 1].Focus();
-                        System.Diagnostics.Debug.WriteLine($"**** focus={ret}");
+                        //System.Diagnostics.Debug.WriteLine($"**** focus={ret}");
                     }
                 }
                 else
@@ -59,7 +59,7 @@ namespace WorkCustomMove
                     if (index > 0)
                     {
                         var ret = elements[index - 1].Focus();
-                        System.Diagnostics.Debug.WriteLine($"**** focus={ret}");
+                        //System.Diagnostics.Debug.WriteLine($"**** focus={ret}");
                     }
                 }
             }
@@ -130,6 +130,12 @@ namespace WorkCustomMove
             }
 
             return null;
+        }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            var visualElement = (VisualElement)sender;
+            System.Diagnostics.Debug.WriteLine($"**** Button_OnClicked {Debug.GetId(visualElement)} {visualElement.GetType()} {visualElement.IsFocused}");
         }
     }
 }
