@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkCustomMove.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkCustomMove;assembly=WorkCustomMove"
+    xmlns:effects="clr-namespace:WorkCustomMove.Effects;assembly=WorkCustomMove">
+
+    <StackLayout>
+        <Entry app:Debug.Id="Entry1" effects:DisableKeyboardOnFocusEffect.On="True" />
+        <Button
+            app:Debug.Id="Button1"
+            effects:FocusableEffect.On="True"
+            Text="button" />
+        <Button
+            app:Debug.Id="Button2"
+            effects:FocusableEffect.On="True"
+            Text="button" />
+        <Entry app:Debug.Id="Entry2" effects:DisableKeyboardOnFocusEffect.On="True" />
+        <CheckBox app:Debug.Id="CheckBox1" effects:FocusableEffect.On="True" />
+        <Entry app:Debug.Id="Entry3" effects:DisableKeyboardOnFocusEffect.On="True" />
+        <Grid BackgroundColor="LightGray" IsEnabled="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Entry
+                Grid.Row="0"
+                Grid.Column="0"
+                app:Debug.Id="EntryG11"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
+            <Entry
+                Grid.Row="0"
+                Grid.Column="1"
+                app:Debug.Id="EntryG12"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
+            <Entry
+                Grid.Row="1"
+                Grid.Column="0"
+                app:Debug.Id="EntryG13"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
+            <Entry
+                Grid.Row="1"
+                Grid.Column="1"
+                app:Debug.Id="EntryG14"
+                effects:DisableKeyboardOnFocusEffect.On="True" />
+        </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Entry
+                Grid.Row="0"
+                Grid.Column="0"
+                app:Debug.Id="EntryG21" />
+            <Entry
+                Grid.Row="0"
+                Grid.Column="1"
+                app:Debug.Id="EntryG22" />
+            <Entry
+                Grid.Row="1"
+                Grid.Column="0"
+                app:Debug.Id="EntryG23" />
+            <Entry
+                Grid.Row="1"
+                Grid.Column="1"
+                app:Debug.Id="EntryG24" />
+        </Grid>
+    </StackLayout>
+
+</ContentPage>
