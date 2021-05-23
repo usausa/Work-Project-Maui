@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkEntry.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkEntry;assembly=WorkEntry">
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <Entry
+            app:InputEntry.On="True"
+            app:InputEntryBehavior.Bind="{Binding Input1}"
+            Completed="Entry_OnCompleted" />
+        <Entry app:InputEntry.On="True" app:InputEntryBehavior.Bind="{Binding Input2}" />
+        <Entry app:InputEntry.On="True" app:InputEntryBehavior.Bind="{Binding Input3}" />
+        <Button Command="{Binding SwitchCommand}" Text="Switch" />
+        <Button Command="{Binding TextCommand}" Text="Text" />
+    </StackLayout>
+
+</ContentPage>
