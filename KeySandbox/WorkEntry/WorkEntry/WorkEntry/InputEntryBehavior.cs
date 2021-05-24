@@ -98,8 +98,7 @@ namespace WorkEntry
             controller.HandleCompleted(ice);
             if (!ice.HasError)
             {
-                System.Diagnostics.Debug.WriteLine("Move next");
-                // TODO Next
+                FocusHelper.MoveFocusInPage(entry, true);
             }
         }
 

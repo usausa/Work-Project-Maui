@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 
 using Smart.ComponentModel;
@@ -23,7 +24,7 @@ namespace WorkEntry
             }));
             Input2 = new InputModel(MakeDelegateCommand<InputCompleteEvent>(x =>
             {
-                x.HasError = true;
+                x.HasError = String.IsNullOrEmpty(Input2.Text);
                 Debug.WriteLine($"**** Input2 completed {Input2.Text}");
             }));
             Input3 = new InputModel(MakeDelegateCommand<InputCompleteEvent>(x =>
