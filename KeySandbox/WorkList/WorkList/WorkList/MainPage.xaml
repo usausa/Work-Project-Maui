@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkList.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkList;assembly=WorkList"
+    xmlns:interactivity="clr-namespace:Smart.Forms.Interactivity;assembly=Smart.Forms">
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Entry Grid.Row="0" />
+        <Entry Grid.Row="1" />
+
+        <app:ListViewEx
+            Grid.Row="2"
+            app:ListViewEffect.On="True"
+            ItemsSource="{Binding Items}">
+            <app:ListViewEx.Behaviors>
+                <interactivity:ListViewSelectedToCommandBehavior Command="{Binding SelectCommand}" />
+            </app:ListViewEx.Behaviors>
+            <app:ListViewEx.ItemTemplate>
+                <DataTemplate x:DataType="app:DataEntity">
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding Id}" />
+                            <Label Grid.Column="1" Text="{Binding Name}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </app:ListViewEx.ItemTemplate>
+
+        </app:ListViewEx>
+
+        <Button
+            Grid.Row="3"
+            app:FocusableEffect.On="True"
+            Text="button" />
+        <Button
+            Grid.Row="4"
+            app:FocusableEffect.On="True"
+            Command="{Binding RemoveCommand}"
+            Text="Remove" />
+    </Grid>
+
+</ContentPage>
