@@ -9,14 +9,19 @@ using Rg.Plugins.Popup.Services;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 
+using XamarinFormsComponents.Dialogs;
+
 namespace WorkPopupLevel
 {
     public partial class MainPage : ContentPage
     {
+        private XamarinFormsComponents.Dialogs.Dialogs dialogs;
+
         public MainPage()
         {
             InitializeComponent();
 
+            dialogs = new Dialogs();
         }
 
         private async void Popup1Button_OnClicked(object sender, EventArgs e)
@@ -50,6 +55,31 @@ namespace WorkPopupLevel
         private void MainPage_OnDescendantRemoved(object sender, ElementEventArgs e)
         {
             Debug.WriteLine($"===R {e.Element.GetType()}");
+        }
+
+        private async void Chose1Button_OnClicked(object sender, EventArgs e)
+        {
+            // UserDialog
+            await dialogs.Select(Enumerable.Range(1, 10).Select(x => $"Item-{x}"));
+        }
+
+        private async void Chose2Button_OnClicked(object sender, EventArgs e)
+        {
+            var items = Enumerable.Range(1, 40).Select(x => $"Item-{x}").ToArray();
+
+            var selected = await ((App)Application.Current).Dialog.Select(25, items);
+            Debug.WriteLine(selected);
+        }
+
+        private async void ConfirmButton_OnClicked(object sender, EventArgs e)
+        {
+            var ret = await ((App) Application.Current).Dialog.Confirm("title", "message", "ok", "cancel");
+            Debug.WriteLine(ret);
+        }
+
+        private async void InformationButton_OnClicked(object sender, EventArgs e)
+        {
+            await ((App) Application.Current).Dialog.Information("title", "message", "ok");
         }
     }
 }

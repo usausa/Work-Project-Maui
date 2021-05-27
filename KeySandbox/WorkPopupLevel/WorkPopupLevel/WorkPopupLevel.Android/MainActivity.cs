@@ -1,9 +1,12 @@
 ﻿using System;
 
+using Acr.UserDialogs;
+
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
+using Android.Views;
 
 namespace WorkPopupLevel.Droid
 {
@@ -14,16 +17,23 @@ namespace WorkPopupLevel.Droid
         {
             base.OnCreate(savedInstanceState);
 
+            UserDialogs.Init(this);
             Rg.Plugins.Popup.Popup.Init(this);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App());
+            LoadApplication(new App() { Dialog = new CustomDialog(this) });
         }
 
         public override void OnBackPressed()
         {
             Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
+        }
+
+        public override bool DispatchKeyEvent(KeyEvent e)
+        {
+            System.Diagnostics.Debug.WriteLine($"*DispatchKeyEvent : Action=[{e.Action}], KeyCode=[{e.KeyCode}]");
+            return base.DispatchKeyEvent(e);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

@@ -10,6 +10,10 @@
         <Button Clicked="Popup1Button_OnClicked" Text="Popup1" />
         <Button Clicked="Popup2Button_OnClicked" Text="Popup2" />
         <Button Clicked="TestButton_OnClicked" Text="Test" />
+        <Button Clicked="Chose1Button_OnClicked" Text="Chose1" />
+        <Button Clicked="Chose2Button_OnClicked" Text="Chose2" />
+        <Button Clicked="ConfirmButton_OnClicked" Text="Confirm" />
+        <Button Clicked="InformationButton_OnClicked" Text="Information" />
     </StackLayout>
 
 </ContentPage>

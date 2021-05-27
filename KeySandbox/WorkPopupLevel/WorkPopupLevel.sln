@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkPopupLevel.Android", "WorkPopupLevel\WorkPopupLevel.Android\WorkPopupLevel.Android.csproj", "{890A6774-22BA-4068-8580-2FABBEC3690E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkPopupLevel", "WorkPopupLevel\WorkPopupLevel\WorkPopupLevel.csproj", "{7344FB7E-916F-4426-9B00-72E5962429B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkPopupLevel", "WorkPopupLevel\WorkPopupLevel\WorkPopupLevel.csproj", "{7344FB7E-916F-4426-9B00-72E5962429B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E098A969-FCCA-47DE-8675-9623FFB8B7D0}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

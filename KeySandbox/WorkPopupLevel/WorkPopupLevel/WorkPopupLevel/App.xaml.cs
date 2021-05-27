@@ -7,6 +7,8 @@ namespace WorkPopupLevel
 {
     public partial class App : Application
     {
+        public ICustomDialog Dialog { get; set; }
+
         public App()
         {
             InitializeComponent();
