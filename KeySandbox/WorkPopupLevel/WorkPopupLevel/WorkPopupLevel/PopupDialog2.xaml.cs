@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -42,6 +43,11 @@ namespace WorkPopupLevel
                     yield return child2;
                 }
             }
+        }
+
+        private void PopupDialog2_OnDismissed(object sender, PopupDismissedEventArgs e)
+        {
+            Debug.WriteLine("*******************PopupDialog2_OnDismissed");
         }
     }
 }

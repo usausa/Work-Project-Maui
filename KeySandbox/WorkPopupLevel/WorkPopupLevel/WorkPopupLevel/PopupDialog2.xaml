@@ -7,7 +7,8 @@
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     x:TypeArguments="x:String"
     IsLightDismissEnabled="False"
-    Size="{x:Static local:PopupSize.Large}">
+    Size="{x:Static local:PopupSize.Large}"
+    Dismissed="PopupDialog2_OnDismissed">
 
     <StackLayout>
         <Button Clicked="TestButton_OnClicked" Text="Test" />
