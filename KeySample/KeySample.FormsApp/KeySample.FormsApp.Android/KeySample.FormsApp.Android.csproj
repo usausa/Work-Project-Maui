@@ -81,13 +81,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Dialog\ApplicationDialog.cs" />
-    <Compile Include="Effects\DisableKeyboardOnFocusPlatformEffect.cs" />
     <Compile Include="Effects\Effects.cs" />
-    <Compile Include="Effects\FocusablePlatformEffect.cs" />
     <Compile Include="Effects\InputFilterPlatformEffect.cs" />
-    <Compile Include="Effects\NoBorderPlatformEffect.cs" />
-    <Compile Include="Effects\SelectAllOnFocusPlatformEffect.cs" />
+    <Compile Include="KeyEventManagerDriver.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Renderers\PhysicalKeyListViewRenderer.cs" />
+    <Compile Include="Renderers\PhysicalKeyCheckBoxRenderer.cs" />
+    <Compile Include="Renderers\PhysicalKeyButtonRenderer.cs" />
+    <Compile Include="Renderers\PhysicalKeyEntryRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
