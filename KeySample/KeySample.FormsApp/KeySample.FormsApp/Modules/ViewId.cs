@@ -9,11 +9,10 @@ namespace KeySample.FormsApp.Modules
         MoveNext,
         MoveSpecial,
 
-        ShortcutBasic,
         ShortcutStack1,
         ShortcutStack2,
 
-        ControlEdit,
+        ControlEntry,
         ControlList
     }
 }

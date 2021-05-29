@@ -2,10 +2,10 @@ namespace KeySample.FormsApp.Modules.Control
 {
     using Smart.Navigation.Attributes;
 
-    [View(ViewId.ControlEdit)]
-    public partial class ControlEditView
+    [View(ViewId.ControlEntry)]
+    public partial class ControlEntryView
     {
-        public ControlEditView()
+        public ControlEntryView()
         {
             InitializeComponent();
         }

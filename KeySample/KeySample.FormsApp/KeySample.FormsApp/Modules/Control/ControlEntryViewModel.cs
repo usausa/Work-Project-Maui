@@ -1,15 +1,15 @@
-namespace KeySample.FormsApp.Modules.Shortcut
+namespace KeySample.FormsApp.Modules.Control
 {
     using System.Threading.Tasks;
     using System.Windows.Input;
 
     using Smart.Navigation;
 
-    public class ShortcutBasicViewModel : AppViewModelBase
+    public class ControlEntryViewModel : AppViewModelBase
     {
         public ICommand BackCommand { get; }
 
-        public ShortcutBasicViewModel(
+        public ControlEntryViewModel(
             ApplicationState applicationState)
             : base(applicationState)
         {

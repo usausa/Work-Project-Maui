@@ -10,6 +10,8 @@ namespace KeySample.FormsApp.Components.Dialog
 
         ValueTask Information(string title, string message, string ok);
 
+        ValueTask<int> Select(int selected, string[] items);
+
         IProgress Progress(string title);
 
         IProgress Loading(string title);

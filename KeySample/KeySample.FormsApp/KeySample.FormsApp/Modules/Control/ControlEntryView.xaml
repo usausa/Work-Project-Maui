@@ -4,9 +4,9 @@
              xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:shell="clr-namespace:KeySample.FormsApp.Shell;assembly=KeySample.FormsApp"
              xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Control;assembly=KeySample.FormsApp"
-             x:Class="KeySample.FormsApp.Modules.Control.ControlEditView"
-             x:DataType="{x:Type modules:ControlEditViewModel}"
-             sr:BindingContextResolver.Type="{x:Type modules:ControlEditViewModel}"
+             x:Class="KeySample.FormsApp.Modules.Control.ControlEntryView"
+             x:DataType="{x:Type modules:ControlEntryViewModel}"
+             sr:BindingContextResolver.Type="{x:Type modules:ControlEntryViewModel}"
              shell:ShellProperty.Title="Detect">
 
     <Grid Style="{StaticResource FillGrid}">

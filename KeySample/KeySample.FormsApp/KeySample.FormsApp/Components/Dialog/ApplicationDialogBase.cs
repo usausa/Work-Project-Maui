@@ -17,6 +17,8 @@ namespace KeySample.FormsApp.Components.Dialog
 
         public abstract ValueTask Information(string title, string message, string ok);
 
+        public abstract ValueTask<int> Select(int selected, string[] items);
+
         public IProgress Progress(string title)
         {
             return dialogs.Progress(title);
@@ -49,5 +51,7 @@ namespace KeySample.FormsApp.Components.Dialog
         {
             return dialog.Information(string.Empty, message, "OK");
         }
+
+        // TODO
     }
 }
