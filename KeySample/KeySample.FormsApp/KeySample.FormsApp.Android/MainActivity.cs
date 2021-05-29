@@ -1,7 +1,5 @@
 namespace KeySample.FormsApp.Droid
 {
-    using System.Collections.Generic;
-
     using Acr.UserDialogs;
 
     using Android.App;
@@ -57,7 +55,7 @@ namespace KeySample.FormsApp.Droid
             Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
         }
 
-        public override bool DispatchKeyEvent(KeyEvent e)
+        public override bool DispatchKeyEvent(KeyEvent? e)
         {
             // Disable sound
             //if ((e.KeyCode == Keycode.VolumeDown) || (e.KeyCode == Keycode.VolumeUp))
@@ -65,50 +63,8 @@ namespace KeySample.FormsApp.Droid
             //    return true;
             //}
 
-            System.Diagnostics.Debug.WriteLine($"*DispatchKeyEvent : KeyCode=[{e.KeyCode}]");
+            System.Diagnostics.Debug.WriteLine($"*DispatchKeyEvent : KeyCode=[{e?.KeyCode}]");
             return base.DispatchKeyEvent(e);
-        }
-
-        public override bool DispatchKeyShortcutEvent(KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*DispatchKeyShortcutEvent : KeyCode=[{e.KeyCode}]");
-            return base.DispatchKeyShortcutEvent(e);
-        }
-
-        public override bool OnKeyDown(Keycode keyCode, KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*OnKeyDown : KeyCode=[{keyCode}], KeyCode=[{e.KeyCode}]");
-            return base.OnKeyDown(keyCode, e);
-        }
-
-        public override bool OnKeyUp(Keycode keyCode, KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*OnKeyUp : KeyCode=[{keyCode}], KeyCode=[{e.KeyCode}]");
-            return base.OnKeyUp(keyCode, e);
-        }
-
-        public override bool OnKeyLongPress(Keycode keyCode, KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*OnKeyLongPress : KeyCode=[{keyCode}], KeyCode=[{e.KeyCode}]");
-            return base.OnKeyLongPress(keyCode, e);
-        }
-
-        public override bool OnKeyMultiple(Keycode keyCode, int repeatCount, KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*OnKeyMultiple : KeyCode=[{keyCode}], repeat=[{repeatCount}] KeyCode=[{e.KeyCode}]");
-            return base.OnKeyMultiple(keyCode, repeatCount, e);
-        }
-
-        public override bool OnKeyShortcut(Keycode keyCode, KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*OnKeyShortcut : KeyCode=[{keyCode}], KeyCode=[{e.KeyCode}]");
-            return base.OnKeyShortcut(keyCode, e);
-        }
-
-        public override bool SuperDispatchKeyEvent(KeyEvent e)
-        {
-            System.Diagnostics.Debug.WriteLine($"*SuperDispatchKeyEvent : KeyCode=[{e.KeyCode}]");
-            return base.SuperDispatchKeyEvent(e);
         }
 
         private sealed class ComponentProvider : IComponentProvider

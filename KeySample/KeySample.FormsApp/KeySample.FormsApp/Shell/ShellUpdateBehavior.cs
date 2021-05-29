@@ -15,7 +15,7 @@ namespace KeySample.FormsApp.Shell
             typeof(ShellUpdateBehavior),
             propertyChanged: HandlePropertyChanged);
 
-        public INavigator Navigator
+        public INavigator? Navigator
         {
             get => (INavigator)GetValue(NavigatorProperty);
             set => SetValue(NavigatorProperty, value);
@@ -32,12 +32,12 @@ namespace KeySample.FormsApp.Shell
             base.OnDetachingFrom(bindable);
         }
 
-        private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void HandlePropertyChanged(BindableObject bindable, object? oldValue, object? newValue)
         {
             ((ShellUpdateBehavior)bindable).OnNavigatorPropertyChanged(oldValue as INavigator, newValue as INavigator);
         }
 
-        private void OnNavigatorPropertyChanged(INavigator oldValue, INavigator newValue)
+        private void OnNavigatorPropertyChanged(INavigator? oldValue, INavigator? newValue)
         {
             if (newValue == oldValue)
             {
@@ -67,11 +67,11 @@ namespace KeySample.FormsApp.Shell
             UpdateShell(null);
         }
 
-        private void UpdateShell(object view)
+        private void UpdateShell(object? view)
         {
-            if (AssociatedObject.BindingContext is IShellControl shell)
+            if (AssociatedObject?.BindingContext is IShellControl shell)
             {
-                ShellProperty.UpdateShellControl(shell, (BindableObject)view);
+                ShellProperty.UpdateShellControl(shell, view as BindableObject);
             }
         }
     }

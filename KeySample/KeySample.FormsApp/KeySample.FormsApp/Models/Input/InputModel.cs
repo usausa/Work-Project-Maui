@@ -15,24 +15,24 @@ namespace KeySample.FormsApp.Models.Input
     {
         public event EventHandler<EventArgs> FocusRequested;
 
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         public bool Enable { get; set; }
 
         public void HandleCompleted(InputCompleteEvent e);
     }
 
-    public class InputModel : NotificationObject, IInputController
+    public sealed class InputModel : NotificationObject, IInputController
     {
-        private event EventHandler<EventArgs> Requested;
+        private event EventHandler<EventArgs>? Requested;
 
-        private readonly ICommand command;
+        private readonly ICommand? command;
 
-        private string text;
+        private string? text;
 
         private bool enable;
 
-        public string Text
+        public string? Text
         {
             get => text;
             set => SetProperty(ref text, value);
@@ -45,18 +45,19 @@ namespace KeySample.FormsApp.Models.Input
         }
 
         public InputModel()
-            : this(true, null)
         {
+            enable = true;
         }
 
         public InputModel(bool enable)
-            : this(enable, null)
         {
+            this.enable = enable;
         }
 
         public InputModel(ICommand command)
-            : this(true, command)
         {
+            enable = true;
+            this.command = command;
         }
 
         public InputModel(bool enable, ICommand command)

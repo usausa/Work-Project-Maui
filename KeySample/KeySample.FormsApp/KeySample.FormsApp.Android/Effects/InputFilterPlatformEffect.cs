@@ -53,9 +53,9 @@ namespace KeySample.FormsApp.Droid.Effects
                 this.rule = rule;
             }
 
-            public ICharSequence FilterFormatted(ICharSequence source, int start, int end, ISpanned dest, int dstart, int dend)
+            public ICharSequence? FilterFormatted(ICharSequence? source, int start, int end, ISpanned? dest, int dstart, int dend)
             {
-                var value = dest.SubSequence(0, dstart) + source.SubSequence(start, end) + dest.SubSequence(dend, dest.Length());
+                var value = dest!.SubSequence(0, dstart) + source!.SubSequence(start, end) + dest!.SubSequence(dend, dest!.Length());
                 return rule(value) ? source : new Java.Lang.String(dest.SubSequence(dstart, dend));
             }
         }

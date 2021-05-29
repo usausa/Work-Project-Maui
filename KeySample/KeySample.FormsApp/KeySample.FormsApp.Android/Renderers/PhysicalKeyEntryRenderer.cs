@@ -44,9 +44,9 @@ namespace KeySample.FormsApp.Droid.Renderers
             }
         }
 
-        bool TextView.IOnEditorActionListener.OnEditorAction(TextView v, ImeAction actionId, KeyEvent e)
+        bool TextView.IOnEditorActionListener.OnEditorAction(TextView? v, ImeAction actionId, KeyEvent? e)
         {
-            if ((e.KeyCode == Keycode.Enter) && (e.Action == KeyEventActions.Up))
+            if ((e!.KeyCode == Keycode.Enter) && (e.Action == KeyEventActions.Up))
             {
                 ((IEntryController)Element).SendCompleted();
             }

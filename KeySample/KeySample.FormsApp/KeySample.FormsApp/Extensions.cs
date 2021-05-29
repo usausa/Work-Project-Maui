@@ -11,7 +11,7 @@ namespace KeySample.FormsApp
         // Navigation
         //--------------------------------------------------------------------------------
 
-        public static async ValueTask PostForwardAsync(this INavigator navigator, object viewId, NavigationParameter parameter = null)
+        public static async ValueTask PostForwardAsync(this INavigator navigator, object viewId, NavigationParameter? parameter = null)
         {
             if (navigator.Executing)
             {

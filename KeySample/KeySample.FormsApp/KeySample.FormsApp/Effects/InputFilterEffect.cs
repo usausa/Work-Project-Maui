@@ -14,12 +14,12 @@ namespace KeySample.FormsApp.Effects
             null,
             propertyChanged: OnChanged);
 
-        public static Func<string, bool> GetRule(BindableObject view)
+        public static Func<string, bool>? GetRule(BindableObject view)
         {
-            return (Func<string, bool>)view.GetValue(RuleProperty);
+            return (Func<string, bool>?)view.GetValue(RuleProperty);
         }
 
-        public static void SetRule(BindableObject view, Func<string, bool> value)
+        public static void SetRule(BindableObject view, Func<string, bool?> value)
         {
             view.SetValue(RuleProperty, value);
         }

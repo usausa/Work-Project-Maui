@@ -1,5 +1,6 @@
 namespace KeySample.FormsApp.Droid.Components.Dialog
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     using Android.App;
@@ -45,6 +46,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
 
             private readonly Activity activity;
 
+            [AllowNull]
             private AlertDialog alertDialog;
 
             public ConfirmDialog(Activity activity)
@@ -52,14 +54,14 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 this.activity = activity;
             }
 
-            public Task<bool> ShowAsync(string title, string message, string ok, string cancel)
+            public Task<bool> ShowAsync(string? title, string message, string ok, string cancel)
             {
                 alertDialog = new AlertDialog.Builder(activity)
-                    .SetTitle(title)
-                    .SetMessage(message)
-                    .SetOnKeyListener(this)
-                    .SetCancelable(false)
-                    .Create();
+                    .SetTitle(title)!
+                    .SetMessage(message)!
+                    .SetOnKeyListener(this)!
+                    .SetCancelable(false)!
+                    .Create()!;
                 alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
                 alertDialog.SetButton((int)DialogButtonType.Negative, cancel, (_, _) => result.TrySetResult(false));
 
@@ -68,11 +70,11 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 return result.Task;
             }
 
-            public bool OnKey(IDialogInterface dialog, Keycode keyCode, KeyEvent e)
+            public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
             {
-                if ((e.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+                if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
                 {
-                    dialog.Dismiss();
+                    dialog!.Dismiss();
                     result.TrySetResult(false);
                     return true;
                 }
@@ -87,6 +89,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
 
             private readonly Activity activity;
 
+            [AllowNull]
             private AlertDialog alertDialog;
 
             public InformationDialog(Activity activity)
@@ -94,14 +97,14 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 this.activity = activity;
             }
 
-            public Task ShowAsync(string title, string message, string ok)
+            public Task ShowAsync(string? title, string message, string ok)
             {
                 alertDialog = new AlertDialog.Builder(activity)
-                    .SetTitle(title)
-                    .SetMessage(message)
-                    .SetOnKeyListener(this)
-                    .SetCancelable(false)
-                    .Create();
+                    .SetTitle(title)!
+                    .SetMessage(message)!
+                    .SetOnKeyListener(this)!
+                    .SetCancelable(false)!
+                    .Create()!;
                 alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
 
                 alertDialog.Show();
@@ -109,11 +112,11 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 return result.Task;
             }
 
-            public bool OnKey(IDialogInterface dialog, Keycode keyCode, KeyEvent e)
+            public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
             {
-                if ((e.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+                if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
                 {
-                    dialog.Dismiss();
+                    dialog!.Dismiss();
                     result.TrySetResult(false);
                     return true;
                 }
@@ -128,6 +131,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
 
             private readonly Activity activity;
 
+            [AllowNull]
             private AlertDialog alertDialog;
 
             public SelectDialog(Activity activity)
@@ -135,15 +139,15 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 this.activity = activity;
             }
 
-            public Task<int> ShowAsync(string title, int selected, string[] items)
+            public Task<int> ShowAsync(string? title, int selected, string[] items)
             {
                 alertDialog = new AlertDialog.Builder(activity)
-                    .SetTitle(title)
-                    .SetItems(items, (_, args) => result.TrySetResult(args.Which))
-                    .SetOnKeyListener(this)
-                    .SetCancelable(false)
-                    .Create();
-                alertDialog.ListView.Selector = new ColorDrawable(Android.Graphics.Color.Blue) { Alpha = 64 };
+                    .SetTitle(title)!
+                    .SetItems(items, (_, args) => result.TrySetResult(args.Which))!
+                    .SetOnKeyListener(this)!
+                    .SetCancelable(false)!
+                    .Create()!;
+                alertDialog.ListView!.Selector = new ColorDrawable(Android.Graphics.Color.Blue) { Alpha = 64 };
 
                 alertDialog.Show();
 
@@ -155,11 +159,11 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 return result.Task;
             }
 
-            public bool OnKey(IDialogInterface dialog, Keycode keyCode, KeyEvent e)
+            public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
             {
-                if ((e.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+                if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
                 {
-                    dialog.Dismiss();
+                    dialog!.Dismiss();
                     result.TrySetResult(-1);
                     return true;
                 }
