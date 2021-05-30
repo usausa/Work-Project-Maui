@@ -2,13 +2,15 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:input="clr-namespace:KeySample.FormsApp.Input;assembly=KeySample.FormsApp"
              xmlns:shell="clr-namespace:KeySample.FormsApp.Shell;assembly=KeySample.FormsApp"
              xmlns:markup="clr-namespace:KeySample.FormsApp.Markup;assembly=KeySample.FormsApp"
              xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Main;assembly=KeySample.FormsApp"
              x:Class="KeySample.FormsApp.Modules.Main.MenuView"
              x:DataType="{x:Type modules:MenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
-             shell:ShellProperty.Title="Menu">
+             shell:ShellProperty.Title="Menu"
+             shell:ShellProperty.FunctionVisible="False">
 
     <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
@@ -24,24 +26,30 @@
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DialogMenu}"
-                Text="Dialog" />
+                input:Shortcut.Key="Num1"
+                Text="1. Dialog" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ControlEntry}"
-                Text="Control Edit" />
+                input:Shortcut.Key="Num2"
+                Text="2. Control Edit" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
-                Text="Function3" />
+                IsEnabled="False"
+                input:Shortcut.Key="Num3" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
-                Text="Function4" />
+                IsEnabled="False"
+                input:Shortcut.Key="Num4" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
-                Text="Function5" />
+                IsEnabled="False"
+                input:Shortcut.Key="Num5" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
-                Text="Function6" />
+                IsEnabled="False"
+                input:Shortcut.Key="Num6" />
     </Grid>
 
 </ContentView>

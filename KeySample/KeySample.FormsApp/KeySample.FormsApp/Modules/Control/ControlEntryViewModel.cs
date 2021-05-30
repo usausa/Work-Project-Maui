@@ -18,8 +18,6 @@ namespace KeySample.FormsApp.Modules.Control
         public ICommand SwitchCommand { get; }
         public ICommand SetCommand { get; }
 
-        public ICommand BackCommand { get; }
-
         public ControlEntryViewModel(
             ApplicationState applicationState)
             : base(applicationState)
@@ -30,14 +28,11 @@ namespace KeySample.FormsApp.Modules.Control
 
             SwitchCommand = MakeDelegateCommand(() => Input1.Enable = !Input1.Enable);
             SetCommand = MakeDelegateCommand(() => Input3.Text = "123");
-
-            BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
         }
 
-        protected override Task OnNotifyBackAsync()
-        {
-            return Navigator.ForwardAsync(ViewId.Menu);
-        }
+        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+        protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
         private void Input1Complete(InputCompleteEvent ice)
         {

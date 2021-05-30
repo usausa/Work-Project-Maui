@@ -1,6 +1,7 @@
 namespace KeySample.FormsApp.Modules.Main
 {
     using System.Windows.Input;
+
     using Smart.Navigation;
 
     public class MenuViewModel : AppViewModelBase

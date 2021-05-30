@@ -7,7 +7,9 @@
              x:Class="KeySample.FormsApp.Modules.Shortcut.ShortcutStack2View"
              x:DataType="{x:Type modules:ShortcutStack2ViewModel}"
              sr:BindingContextResolver.Type="{x:Type modules:ShortcutStack2ViewModel}"
-             shell:ShellProperty.Title="Detect">
+             shell:ShellProperty.Title="Stack"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
@@ -15,18 +17,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Function -->
-        <Grid Grid.Row="1"
-              Style="{StaticResource FunctionGrid}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                    Style="{StaticResource FunctionButton}"
-                    Command="{Binding BackCommand}"
-                    Text="Back" />
-        </Grid>
     </Grid>
 
 </ContentView>

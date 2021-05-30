@@ -1,5 +1,7 @@
 namespace KeySample.FormsApp
 {
+    using System.Windows.Input;
+
     using KeySample.FormsApp.Shell;
 
     using Smart.ComponentModel;
@@ -8,11 +10,22 @@ namespace KeySample.FormsApp
 
     public class MainPageViewModel : ViewModelBase, IShellControl
     {
-        public NotificationValue<string> Title { get; } = new();
-
         public ApplicationState ApplicationState { get; }
 
         public INavigator Navigator { get; }
+
+        public NotificationValue<string> Title { get; } = new();
+
+        public NotificationValue<bool> FunctionVisible { get; } = new();
+
+        public NotificationValue<string> Function1Text { get; } = new();
+        public NotificationValue<string> Function4Text { get; } = new();
+
+        public NotificationValue<bool> Function1Enabled { get; } = new();
+        public NotificationValue<bool> Function4Enabled { get; } = new();
+
+        public ICommand Function1Command { get; }
+        public ICommand Function4Command { get; }
 
         //--------------------------------------------------------------------------------
         // Constructor
@@ -25,6 +38,15 @@ namespace KeySample.FormsApp
         {
             ApplicationState = applicationState;
             Navigator = navigator;
+
+            Function1Command = MakeAsyncCommand(
+                    () => Navigator.NotifyAsync(ShellEvent.Function1),
+                    () => Function1Enabled.Value)
+                .Observe(Function1Enabled);
+            Function4Command = MakeAsyncCommand(
+                    () => Navigator.NotifyAsync(ShellEvent.Function4),
+                    () => Function4Enabled.Value)
+                .Observe(Function4Enabled);
         }
     }
 }

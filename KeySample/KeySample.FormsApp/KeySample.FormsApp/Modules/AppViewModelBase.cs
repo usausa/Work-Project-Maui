@@ -46,12 +46,26 @@ namespace KeySample.FormsApp.Modules
             {
                 case ShellEvent.Back:
                     return OnNotifyBackAsync();
+                case ShellEvent.Function1:
+                    return OnNotifyFunction1();
+                case ShellEvent.Function4:
+                    return OnNotifyFunction4();
                 default:
                     return Task.CompletedTask;
             }
         }
 
         protected virtual Task OnNotifyBackAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction1()
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task OnNotifyFunction4()
         {
             return Task.CompletedTask;
         }

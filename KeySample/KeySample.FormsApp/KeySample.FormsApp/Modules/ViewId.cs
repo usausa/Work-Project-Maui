@@ -6,13 +6,15 @@ namespace KeySample.FormsApp.Modules
 
         DialogMenu,
 
-        MoveNext,
-        MoveSpecial,
+        // TODO popup1,2
+
+        ControlEntry,
+        ControlList,
+        // TODO misc
+
+        // TODO barcode
 
         ShortcutStack1,
         ShortcutStack2,
-
-        ControlEntry,
-        ControlList
     }
 }

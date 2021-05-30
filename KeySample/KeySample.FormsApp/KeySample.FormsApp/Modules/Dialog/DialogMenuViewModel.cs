@@ -15,7 +15,6 @@ namespace KeySample.FormsApp.Modules.Dialog
         public ICommand InformationCommand { get; }
         public ICommand ConfirmCommand { get; }
         public ICommand SelectCommand { get; }
-        public ICommand BackCommand { get; }
 
         public DialogMenuViewModel(
             ApplicationState applicationState,
@@ -36,12 +35,10 @@ namespace KeySample.FormsApp.Modules.Dialog
                 selected = await dialog.Select(Enumerable.Range(1, 15).Select(x => $"Item-{x}").ToArray(), selected);
                 await dialog.Information($"result=[{selected}]");
             });
-            BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
         }
 
-        protected override Task OnNotifyBackAsync()
-        {
-            return Navigator.ForwardAsync(ViewId.Menu);
-        }
+        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+        protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
     }
 }
