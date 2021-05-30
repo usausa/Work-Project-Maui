@@ -50,15 +50,6 @@
     <Folder Include="Controls\" />
     <Folder Include="Converters\" />
     <Folder Include="Messaging\" />
-    <Folder Include="Modules\Popup\" />
-    <Folder Include="Modules\Device\" />
-    <Folder Include="Modules\Navigation\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Modules\Control\ControlMenuView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@ namespace KeySample.FormsApp.Modules
 {
     public enum DialogId
     {
-        DialogPopup
+        DialogType1,
+        DialogType2,
     }
 }

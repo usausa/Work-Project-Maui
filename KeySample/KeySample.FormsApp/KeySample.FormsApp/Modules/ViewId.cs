@@ -7,8 +7,6 @@ namespace KeySample.FormsApp.Modules
         DialogMenu,
 
         PopupMenu,
-        PopupType1,
-        PopupType2,
 
         ControlMenu,
         ControlEntry,

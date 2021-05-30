@@ -9,7 +9,7 @@
              x:Class="KeySample.FormsApp.Modules.Control.ControlMenuView"
              x:DataType="{x:Type modules:ControlMenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type modules:ControlMenuViewModel}"
-             shell:ShellProperty.Title="Menu"
+             shell:ShellProperty.Title="Control"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
