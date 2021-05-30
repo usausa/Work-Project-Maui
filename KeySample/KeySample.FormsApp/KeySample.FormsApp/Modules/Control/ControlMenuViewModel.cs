@@ -1,15 +1,19 @@
-namespace KeySample.FormsApp.Modules.Shortcut
+namespace KeySample.FormsApp.Modules.Control
 {
     using System.Threading.Tasks;
+    using System.Windows.Input;
 
     using Smart.Navigation;
 
-    public class ShortcutStack1ViewModel : AppViewModelBase
+    public class ControlMenuViewModel : AppViewModelBase
     {
-        public ShortcutStack1ViewModel(
+        public ICommand ForwardCommand { get; }
+
+        public ControlMenuViewModel(
             ApplicationState applicationState)
             : base(applicationState)
         {
+            ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         }
 
         protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);

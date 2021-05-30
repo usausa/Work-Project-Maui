@@ -28,7 +28,7 @@ namespace KeySample.FormsApp.Modules.Control
             SelectCommand = MakeDelegateCommand<DataEntity>(x => Selected.Value = $"{x.Id} : {x.Name}");
         }
 
-        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
         protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
     }

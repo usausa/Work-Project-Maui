@@ -43,8 +43,7 @@
 
         <!-- function -->
         <Grid Grid.Row="2"
-              Style="{StaticResource FunctionGrid}"
-              IsVisible="{Binding FunctionVisible.Value}">
+              Style="{StaticResource FunctionGrid}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -53,11 +52,13 @@
             <Button Grid.Column="0"
                     Style="{StaticResource FunctionButton}"
                     Command="{Binding Function1Command}"
+                    IsVisible="{Binding FunctionVisible.Value}"
                     input:Shortcut.Key="Function1"
                     Text="{Binding Function1Text.Value}" />
             <Button Grid.Column="1"
                     Style="{StaticResource FunctionButton}"
                     Command="{Binding Function4Command}"
+                    IsVisible="{Binding FunctionVisible.Value}"
                     input:Shortcut.Key="Function4"
                     Text="{Binding Function4Text.Value}" />
         </Grid>

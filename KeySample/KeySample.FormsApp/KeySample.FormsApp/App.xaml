@@ -262,6 +262,8 @@
                 -->
             </Style>
 
+            <Style x:Key="DefaultCheckBox" TargetType="CheckBox" />
+
             <Style x:Key="DefaultLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
             </Style>

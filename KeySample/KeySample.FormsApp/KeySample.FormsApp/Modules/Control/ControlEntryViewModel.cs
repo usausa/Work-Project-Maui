@@ -30,7 +30,7 @@ namespace KeySample.FormsApp.Modules.Control
             SetCommand = MakeDelegateCommand(() => Input3.Text = "123");
         }
 
-        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
         protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
