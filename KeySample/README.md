@@ -29,7 +29,7 @@
 ### Entry
 
 * Completeボタンの標準挙動ではソフトキーボード制御に難があるので自前の制御で上書き
-* Text、Enable、フォーカス制御をまとめたInputModelを用意し、InputBind.ModelでバインドすることでAll in oneで設定
+* Text、Enable、フォーカス制御をまとめたEntryModelを用意し、EntryBind.ModelでバインドすることでAll in oneで設定
 
 ### Button、CheckBox
 

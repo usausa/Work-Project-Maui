@@ -2,10 +2,14 @@
 
 namespace KeySample.FormsApp.Droid.Renderers
 {
+    using System.ComponentModel;
+
     using Android.Content;
     using Android.Views;
     using Android.Views.InputMethods;
     using Android.Widget;
+
+    using KeySample.FormsApp.Droid.Helpers;
 
     using Xamarin.Forms;
     using Xamarin.Forms.Platform.Android;
@@ -46,6 +50,16 @@ namespace KeySample.FormsApp.Droid.Renderers
             if (e.NewElement is not null)
             {
                 EditText.SetOnEditorActionListener(this);
+            }
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if ((e.PropertyName == VisualElement.IsFocusedProperty.PropertyName) && EditText.IsFocused)
+            {
+                EditText.HideKeyboard();
             }
         }
 
