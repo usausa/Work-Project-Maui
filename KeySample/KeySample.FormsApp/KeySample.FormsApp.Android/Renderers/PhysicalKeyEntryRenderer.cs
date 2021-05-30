@@ -37,9 +37,14 @@ namespace KeySample.FormsApp.Droid.Renderers
             // Select all
             EditText.SetSelectAllOnFocus(true);
 
-            if (e.OldElement is null)
+            // Override editor action
+            if (e.OldElement is not null)
             {
-                // Override editor action
+                EditText.SetOnEditorActionListener(null);
+            }
+
+            if (e.NewElement is not null)
+            {
                 EditText.SetOnEditorActionListener(this);
             }
         }

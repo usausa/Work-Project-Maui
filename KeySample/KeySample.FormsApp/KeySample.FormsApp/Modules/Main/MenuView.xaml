@@ -30,26 +30,31 @@
                 Text="1. Dialog" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ControlEntry}"
+                IsEnabled="False"
                 input:Shortcut.Key="Num2"
-                Text="2. Control Edit" />
+                Text="2. Popup" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                input:Shortcut.Key="Num3" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ControlEntry}"
+                input:Shortcut.Key="Num3"
+                Text="3. Control Edit" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                input:Shortcut.Key="Num4" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ControlList}"
+                input:Shortcut.Key="Num4"
+                Text="4. Control List" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                input:Shortcut.Key="Num5" />
+                input:Shortcut.Key="Num5"
+                Text="5. Control Misc" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                input:Shortcut.Key="Num6" />
+                input:Shortcut.Key="Num6"
+                Text="6. Barcode" />
     </Grid>
 
 </ContentView>

@@ -29,6 +29,8 @@
 
             <!-- Color -->
 
+            <Color x:Key="DisabledColor">#B8B5B2</Color>
+
             <Color x:Key="NoErrorColor">Transparent</Color>
             <Color x:Key="ErrorColor">#EE1111</Color>
 
@@ -154,7 +156,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueBrighter}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -200,7 +202,7 @@
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
                                     <Setter Property="FontSize" Value="{StaticResource BigSize}" />
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroTealBrighter}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -241,7 +243,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueBrighter}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -264,9 +266,13 @@
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
             </Style>
 
+            <Style x:Key="DefaultEntry" TargetType="Entry">
+                <Setter Property="FontSize" Value="{StaticResource BigSize}" />
+            </Style>
+
             <Style x:Key="InputFrame" TargetType="Frame">
                 <Setter Property="Padding" Value="3,0,3,0" />
-                <Setter Property="CornerRadius" Value="9" />
+                <Setter Property="CornerRadius" Value="12" />
                 <Setter Property="HasShadow" Value="False" />
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroLightenBrighter}" />
                 <Setter Property="BorderColor" Value="{StaticResource MetroLightenDarker}" />

@@ -10,7 +10,7 @@ namespace KeySample.FormsApp.Modules
 
         ControlEntry,
         ControlList,
-        // TODO misc
+        ControlMisc,
 
         // TODO barcode
 

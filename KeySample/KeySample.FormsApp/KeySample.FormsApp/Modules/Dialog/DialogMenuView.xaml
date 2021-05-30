@@ -36,14 +36,6 @@
                 Command="{Binding SelectCommand}"
                 input:Shortcut.Key="Num3"
                 Text="3. Select" />
-        <Button Grid.Row="3"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                input:Shortcut.Key="Num4" />
-        <Button Grid.Row="4"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                input:Shortcut.Key="Num5" />
     </Grid>
 
 </ContentView>
