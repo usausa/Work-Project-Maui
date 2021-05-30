@@ -1,6 +1,6 @@
 namespace KeySample.FormsApp.Input
 {
-    public enum KeyCodes : byte
+    public enum KeyCode : byte
     {
         None = 0,
 

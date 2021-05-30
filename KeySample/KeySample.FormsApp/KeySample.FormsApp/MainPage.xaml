@@ -16,6 +16,7 @@
 
     <ContentPage.Behaviors>
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
+        <input:KeyInputBehavior />
     </ContentPage.Behaviors>
 
     <Grid Style="{StaticResource MainGrid}">

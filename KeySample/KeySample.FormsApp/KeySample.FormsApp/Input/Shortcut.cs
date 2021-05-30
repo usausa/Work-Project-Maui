@@ -6,16 +6,16 @@ namespace KeySample.FormsApp.Input
     {
         public static readonly BindableProperty KeyProperty = BindableProperty.CreateAttached(
             "Key",
-            typeof(KeyCodes),
+            typeof(KeyCode),
             typeof(Shortcut),
             null);
 
-        public static KeyCodes GetKey(BindableObject view)
+        public static KeyCode GetKey(BindableObject view)
         {
-            return (KeyCodes)view.GetValue(KeyProperty);
+            return (KeyCode)view.GetValue(KeyProperty);
         }
 
-        public static void SetKey(BindableObject view, KeyCodes value)
+        public static void SetKey(BindableObject view, KeyCode value)
         {
             view.SetValue(KeyProperty, value);
         }

@@ -1,9 +1,10 @@
 namespace KeySample.FormsApp.Droid
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using Acr.UserDialogs;
 
     using Android.App;
-    using Android.Content;
     using Android.Content.PM;
     using Android.OS;
     using Android.Runtime;
@@ -27,6 +28,9 @@ namespace KeySample.FormsApp.Droid
         WindowSoftInputMode = SoftInput.AdjustResize)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        [AllowNull]
+        private KeyInputDriver keyInputDriver;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetTheme(Resource.Style.MainTheme);
@@ -38,6 +42,9 @@ namespace KeySample.FormsApp.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            // Key input
+            keyInputDriver = new KeyInputDriver(this);
 
             // Boot
             LoadApplication(new App(new ComponentProvider(this)));
@@ -57,13 +64,11 @@ namespace KeySample.FormsApp.Droid
 
         public override bool DispatchKeyEvent(KeyEvent? e)
         {
-            // Disable sound
-            //if ((e.KeyCode == Keycode.VolumeDown) || (e.KeyCode == Keycode.VolumeUp))
-            //{
-            //    return true;
-            //}
+            if (keyInputDriver.Process(e!))
+            {
+                return true;
+            }
 
-            System.Diagnostics.Debug.WriteLine($"*DispatchKeyEvent : KeyCode=[{e?.KeyCode}]");
             return base.DispatchKeyEvent(e);
         }
 

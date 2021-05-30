@@ -154,7 +154,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueBrighter}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -200,7 +200,7 @@
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
                                     <Setter Property="FontSize" Value="{StaticResource BigSize}" />
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroTealBrighter}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -241,7 +241,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueBrighter}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

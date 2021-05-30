@@ -6,14 +6,14 @@ namespace KeySample.FormsApp.Input
 
     using Xamarin.Forms;
 
-    public static class FocusHelper
+    public static class ElementHelper
     {
         public static bool MoveFocus(VisualElement parent, bool forward)
         {
             var find = false;
             var first = default(VisualElement);
             var previous = default(VisualElement);
-            foreach (var visual in EnumerateFocusable(parent))
+            foreach (var visual in EnumerateActive(parent))
             {
                 if (visual.IsFocused)
                 {
@@ -54,7 +54,7 @@ namespace KeySample.FormsApp.Input
             var find = false;
             var first = default(VisualElement);
             var previous = default(VisualElement);
-            foreach (var visual in EnumerateFocusable(page))
+            foreach (var visual in EnumerateActive(page))
             {
                 if (visual == element)
                 {
@@ -84,7 +84,7 @@ namespace KeySample.FormsApp.Input
             return false;
         }
 
-        private static IEnumerable<VisualElement> EnumerateFocusable(Element parent)
+        public static IEnumerable<VisualElement> EnumerateActive(Element parent)
         {
             foreach (var child in parent.LogicalChildren)
             {
@@ -95,17 +95,24 @@ namespace KeySample.FormsApp.Input
                         continue;
                     }
 
-                    if (visualElement.IsTabStop && (visualElement is not Layout))
+                    if (visualElement.IsTabStop && !IsNonStopElement(visualElement))
                     {
                         yield return visualElement;
                     }
                 }
 
-                foreach (var descendant in EnumerateFocusable(child))
+                foreach (var descendant in EnumerateActive(child))
                 {
                     yield return descendant;
                 }
             }
+        }
+
+        private static bool IsNonStopElement(VisualElement visualElement)
+        {
+            return visualElement is Layout ||
+                   visualElement is BoxView ||
+                   visualElement is Label;
         }
     }
 }

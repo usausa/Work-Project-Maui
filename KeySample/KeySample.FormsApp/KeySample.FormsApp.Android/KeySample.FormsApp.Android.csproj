@@ -89,7 +89,7 @@
     <Compile Include="Components\Dialog\ApplicationDialog.cs" />
     <Compile Include="Effects\Effects.cs" />
     <Compile Include="Effects\InputFilterPlatformEffect.cs" />
-    <Compile Include="KeyEventManagerDriver.cs" />
+    <Compile Include="KeyInputDriver.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\PhysicalKeyListViewRenderer.cs" />
     <Compile Include="Renderers\PhysicalKeyCheckBoxRenderer.cs" />

@@ -84,7 +84,7 @@ namespace KeySample.FormsApp.Behaviors
             controller.HandleCompleted(ice);
             if (!ice.HasError)
             {
-                FocusHelper.MoveFocusInPage(entry, true);
+                ElementHelper.MoveFocusInPage(entry, true);
             }
         }
     }
