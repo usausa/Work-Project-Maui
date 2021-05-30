@@ -24,7 +24,7 @@ namespace KeySample.FormsApp.Effects
             view.SetValue(RuleProperty, value);
         }
 
-        private static void OnChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnChanged(BindableObject bindable, object? oldValue, object? newValue)
         {
             if (bindable is not Element element)
             {

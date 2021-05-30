@@ -31,7 +31,12 @@ namespace KeySample.FormsApp.Droid.Renderers
         {
             base.OnElementChanged(e);
 
-            if (e.OldElement != null)
+            if (e.OldElement is not null)
+            {
+                e.OldElement.FocusChangeRequested -= OnFocusChangeRequested;
+            }
+
+            if (e.NewElement is not null)
             {
                 Element.FocusChangeRequested += OnFocusChangeRequested;
             }

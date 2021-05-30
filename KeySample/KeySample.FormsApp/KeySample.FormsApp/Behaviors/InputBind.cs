@@ -11,32 +11,15 @@ namespace KeySample.FormsApp.Behaviors
 
     using Xamarin.Forms;
 
-    public class InputEntryBehavior : BehaviorBase<Entry>
+    public sealed class InputBindBehavior : BehaviorBase<Entry>
     {
-        public static readonly BindableProperty BindProperty = BindableProperty.CreateAttached(
-            "Bind",
-            typeof(IInputController),
-            typeof(InputEntryBehavior),
-            null,
-            propertyChanged: BindChanged);
-
-        public static IInputController GetBind(BindableObject view)
-        {
-            return (IInputController)view.GetValue(BindProperty);
-        }
-
-        public static void SetBind(BindableObject view, IInputController value)
-        {
-            view.SetValue(BindProperty, value);
-        }
-
         private bool updating;
 
         protected override void OnAttachedTo(Entry bindable)
         {
             base.OnAttachedTo(bindable);
 
-            var controller = GetBind(bindable);
+            var controller = InputBind.GetModel(bindable);
             bindable.Completed += BindableOnCompleted;
             bindable.TextChanged += BindableOnTextChanged;
             controller.FocusRequested += ControllerOnFocusRequested;
@@ -45,7 +28,7 @@ namespace KeySample.FormsApp.Behaviors
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            var controller = GetBind(bindable);
+            var controller = InputBind.GetModel(bindable);
             bindable.Completed -= BindableOnCompleted;
             bindable.TextChanged -= BindableOnTextChanged;
             controller.FocusRequested -= ControllerOnFocusRequested;
@@ -64,14 +47,14 @@ namespace KeySample.FormsApp.Behaviors
 
             if (e.PropertyName == nameof(InputModel.Text))
             {
-                var controller = GetBind(entry);
+                var controller = InputBind.GetModel(entry);
                 updating = true;
                 entry.Text = controller.Text;
                 updating = false;
             }
             else if (e.PropertyName == nameof(InputModel.Enable))
             {
-                var controller = GetBind(entry);
+                var controller = InputBind.GetModel(entry);
                 entry.IsEnabled = controller.Enable;
             }
         }
@@ -89,14 +72,14 @@ namespace KeySample.FormsApp.Behaviors
             }
 
             var entry = (Entry)sender;
-            var controller = GetBind(entry);
+            var controller = InputBind.GetModel(entry);
             controller.Text = e.NewTextValue;
         }
 
         private void BindableOnCompleted(object sender, EventArgs e)
         {
             var entry = (Entry)sender;
-            var controller = GetBind(entry);
+            var controller = InputBind.GetModel(entry);
             var ice = new InputCompleteEvent();
             controller.HandleCompleted(ice);
             if (!ice.HasError)
@@ -104,8 +87,28 @@ namespace KeySample.FormsApp.Behaviors
                 FocusHelper.MoveFocusInPage(entry, true);
             }
         }
+    }
 
-        private static void BindChanged(BindableObject bindable, object oldValue, object newValue)
+    public sealed class InputBind
+    {
+        public static readonly BindableProperty ModelProperty = BindableProperty.CreateAttached(
+            "Model",
+            typeof(IInputController),
+            typeof(InputBind),
+            null,
+            propertyChanged: BindChanged);
+
+        public static IInputController GetModel(BindableObject view)
+        {
+            return (IInputController)view.GetValue(ModelProperty);
+        }
+
+        public static void SetModel(BindableObject view, IInputController value)
+        {
+            view.SetValue(ModelProperty, value);
+        }
+
+        private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
         {
             if (bindable is not Entry entry)
             {
@@ -114,7 +117,7 @@ namespace KeySample.FormsApp.Behaviors
 
             if (oldValue is not null)
             {
-                var behavior = entry.Behaviors.FirstOrDefault(x => x is InputEntryBehavior);
+                var behavior = entry.Behaviors.FirstOrDefault(x => x is InputBindBehavior);
                 if (behavior is not null)
                 {
                     entry.Behaviors.Remove(behavior);
@@ -123,7 +126,7 @@ namespace KeySample.FormsApp.Behaviors
 
             if (newValue is not null)
             {
-                entry.Behaviors.Add(new InputEntryBehavior());
+                entry.Behaviors.Add(new InputBindBehavior());
             }
         }
     }
