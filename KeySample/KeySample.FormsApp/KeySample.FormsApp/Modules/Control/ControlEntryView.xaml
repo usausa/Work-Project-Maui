@@ -15,15 +15,15 @@
     <StackLayout Style="{StaticResource FillLayout}">
         <Frame Style="{StaticResource InputFrame}">
             <Entry Style="{StaticResource NoBorderEntry}"
-                   behaviors:InputBind.Model="{Binding Input1}" />
+                   behaviors:EntryBind.Model="{Binding Input1}" />
         </Frame>
         <Frame Style="{StaticResource InputFrame}">
             <Entry Style="{StaticResource NoBorderEntry}"
-                   behaviors:InputBind.Model="{Binding Input2}" />
+                   behaviors:EntryBind.Model="{Binding Input2}" />
         </Frame>
         <Frame Style="{StaticResource InputFrame}">
             <Entry Style="{StaticResource NoBorderEntry}"
-                   behaviors:InputBind.Model="{Binding Input3}" />
+                   behaviors:EntryBind.Model="{Binding Input3}" />
         </Frame>
 
         <Button Style="{StaticResource DefaultButton}"

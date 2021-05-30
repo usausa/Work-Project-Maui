@@ -1,4 +1,4 @@
-namespace KeySample.FormsApp.Models.Input
+namespace KeySample.FormsApp.Models.Entry
 {
     using System;
     using System.ComponentModel;
@@ -6,12 +6,12 @@ namespace KeySample.FormsApp.Models.Input
 
     using Smart.ComponentModel;
 
-    public class InputCompleteEvent
+    public class EntryCompleteEvent
     {
         public bool HasError { get; set; }
     }
 
-    public interface IInputController : INotifyPropertyChanged
+    public interface IEntryController : INotifyPropertyChanged
     {
         public event EventHandler<EventArgs> FocusRequested;
 
@@ -19,10 +19,10 @@ namespace KeySample.FormsApp.Models.Input
 
         public bool Enable { get; set; }
 
-        public void HandleCompleted(InputCompleteEvent e);
+        public void HandleCompleted(EntryCompleteEvent e);
     }
 
-    public sealed class InputModel : NotificationObject, IInputController
+    public sealed class EntryModel : NotificationObject, IEntryController
     {
         private event EventHandler<EventArgs>? Requested;
 
@@ -44,23 +44,23 @@ namespace KeySample.FormsApp.Models.Input
             set => SetProperty(ref enable, value);
         }
 
-        public InputModel()
+        public EntryModel()
         {
             enable = true;
         }
 
-        public InputModel(bool enable)
+        public EntryModel(bool enable)
         {
             this.enable = enable;
         }
 
-        public InputModel(ICommand command)
+        public EntryModel(ICommand command)
         {
             enable = true;
             this.command = command;
         }
 
-        public InputModel(bool enable, ICommand command)
+        public EntryModel(bool enable, ICommand command)
         {
             this.enable = enable;
             this.command = command;
@@ -71,13 +71,13 @@ namespace KeySample.FormsApp.Models.Input
             Requested?.Invoke(this, EventArgs.Empty);
         }
 
-        event EventHandler<EventArgs> IInputController.FocusRequested
+        event EventHandler<EventArgs> IEntryController.FocusRequested
         {
             add => Requested += value;
             remove => Requested -= value;
         }
 
-        void IInputController.HandleCompleted(InputCompleteEvent e)
+        void IEntryController.HandleCompleted(EntryCompleteEvent e)
         {
             if ((command is not null) && command.CanExecute(e))
             {

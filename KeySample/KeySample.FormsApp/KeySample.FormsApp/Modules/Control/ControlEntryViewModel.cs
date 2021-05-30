@@ -5,15 +5,15 @@ namespace KeySample.FormsApp.Modules.Control
     using System.Threading.Tasks;
     using System.Windows.Input;
 
-    using KeySample.FormsApp.Models.Input;
+    using KeySample.FormsApp.Models.Entry;
 
     using Smart.Navigation;
 
     public class ControlEntryViewModel : AppViewModelBase
     {
-        public InputModel Input1 { get; }
-        public InputModel Input2 { get; }
-        public InputModel Input3 { get; }
+        public EntryModel Input1 { get; }
+        public EntryModel Input2 { get; }
+        public EntryModel Input3 { get; }
 
         public ICommand SwitchCommand { get; }
         public ICommand SetCommand { get; }
@@ -22,9 +22,9 @@ namespace KeySample.FormsApp.Modules.Control
             ApplicationState applicationState)
             : base(applicationState)
         {
-            Input1 = new InputModel(MakeDelegateCommand<InputCompleteEvent>(Input1Complete));
-            Input2 = new InputModel(MakeDelegateCommand<InputCompleteEvent>(Input2Complete));
-            Input3 = new InputModel(MakeDelegateCommand<InputCompleteEvent>(Input3Complete));
+            Input1 = new EntryModel(MakeDelegateCommand<EntryCompleteEvent>(Input1Complete));
+            Input2 = new EntryModel(MakeDelegateCommand<EntryCompleteEvent>(Input2Complete));
+            Input3 = new EntryModel(MakeDelegateCommand<EntryCompleteEvent>(Input3Complete));
 
             SwitchCommand = MakeDelegateCommand(() => Input1.Enable = !Input1.Enable);
             SetCommand = MakeDelegateCommand(() => Input3.Text = "123");
@@ -34,19 +34,19 @@ namespace KeySample.FormsApp.Modules.Control
 
         protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
-        private void Input1Complete(InputCompleteEvent ice)
+        private void Input1Complete(EntryCompleteEvent ice)
         {
             ice.HasError = String.IsNullOrEmpty(Input1.Text);
             Debug.WriteLine($"**** Input1 completed {Input1.Text}");
         }
 
-        private void Input2Complete(InputCompleteEvent ice)
+        private void Input2Complete(EntryCompleteEvent ice)
         {
             ice.HasError = String.IsNullOrEmpty(Input2.Text);
             Debug.WriteLine($"**** Input2 completed {Input2.Text}");
         }
 
-        private void Input3Complete(InputCompleteEvent ice)
+        private void Input3Complete(EntryCompleteEvent ice)
         {
             ice.HasError = String.IsNullOrEmpty(Input3.Text);
             Debug.WriteLine($"**** Input3 completed {Input3.Text}");
