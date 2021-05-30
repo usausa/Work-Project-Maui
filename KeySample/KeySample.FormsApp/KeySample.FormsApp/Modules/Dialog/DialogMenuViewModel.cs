@@ -1,6 +1,6 @@
 namespace KeySample.FormsApp.Modules.Dialog
 {
-    using System.Diagnostics;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Input;
 
@@ -10,7 +10,11 @@ namespace KeySample.FormsApp.Modules.Dialog
 
     public class DialogMenuViewModel : AppViewModelBase
     {
-        public ICommand DialogCommand { get; }
+        private int selected = -1;
+
+        public ICommand InformationCommand { get; }
+        public ICommand ConfirmCommand { get; }
+        public ICommand SelectCommand { get; }
         public ICommand BackCommand { get; }
 
         public DialogMenuViewModel(
@@ -18,10 +22,19 @@ namespace KeySample.FormsApp.Modules.Dialog
             IApplicationDialog dialog)
             : base(applicationState)
         {
-            DialogCommand = MakeAsyncCommand(async () =>
+            InformationCommand = MakeAsyncCommand(async () =>
+            {
+                await dialog.Information("message");
+            });
+            ConfirmCommand = MakeAsyncCommand(async () =>
             {
                 var ret = await dialog.Confirm("message");
-                Debug.WriteLine($"Confirm result=[{ret}]");
+                await dialog.Information($"result=[{ret}]");
+            });
+            SelectCommand = MakeAsyncCommand(async () =>
+            {
+                selected = await dialog.Select(Enumerable.Range(1, 15).Select(x => $"Item-{x}").ToArray(), selected);
+                await dialog.Information($"result=[{selected}]");
             });
             BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
         }

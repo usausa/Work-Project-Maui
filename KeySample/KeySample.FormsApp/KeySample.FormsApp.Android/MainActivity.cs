@@ -78,7 +78,7 @@ namespace KeySample.FormsApp.Droid
 
             public void RegisterComponents(ResolverConfig config)
             {
-                config.Bind<Context>().ToConstant(activity).InSingletonScope();
+                config.Bind<Activity>().ToConstant(activity).InSingletonScope();
 
                 config.Bind<IApplicationDialog>().To<ApplicationDialog>().InSingletonScope();
             }

@@ -1,5 +1,7 @@
 namespace KeySample.FormsApp.Components.Dialog
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using XamarinFormsComponents.Dialogs;
@@ -13,45 +15,40 @@ namespace KeySample.FormsApp.Components.Dialog
             this.dialogs = dialogs;
         }
 
-        public abstract ValueTask<bool> Confirm(string title, string message, string ok, string cancel);
+        public abstract ValueTask Information(string message, string? title = null, string ok = "OK");
 
-        public abstract ValueTask Information(string title, string message, string ok);
+        public abstract ValueTask<bool> Confirm(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel");
 
-        public abstract ValueTask<int> Select(int selected, string[] items);
+        public abstract ValueTask<int> Select(string[] items, int selected = -1, string? title = null);
 
-        public IProgress Progress(string title)
-        {
-            return dialogs.Progress(title);
-        }
+        public IProgress Progress(string title) => dialogs.Progress(title);
 
-        public IProgress Loading(string title)
-        {
-            return dialogs.Loading(title);
-        }
+        public IProgress Loading(string title) => dialogs.Loading(title);
     }
 
     public static class ApplicationDialogBaseExtensions
     {
-        public static ValueTask<bool> Confirm(this IApplicationDialog dialog, string title, string message)
+        public static ValueTask<int> Select<T>(
+            this IApplicationDialog dialog,
+            T[] values,
+            Func<T, string> formatter,
+            int selected = -1,
+            string? title = null)
         {
-            return dialog.Confirm(title, message, "Yes", "No");
+            var items = values.Select(formatter).ToArray();
+            return dialog.Select(items, selected, title);
         }
 
-        public static ValueTask<bool> Confirm(this IApplicationDialog dialog, string message)
+        public static async ValueTask<T?> SelectItem<T>(
+            this IApplicationDialog dialog,
+            T[] values,
+            Func<T, string> formatter,
+            int selected = -1,
+            string? title = null)
         {
-            return dialog.Confirm(string.Empty, message, "Yes", "No");
+            var items = values.Select(formatter).ToArray();
+            var result = await dialog.Select(items, selected, title);
+            return result >= 0 ? values[result] : default;
         }
-
-        public static ValueTask Information(this IApplicationDialog dialog, string title, string message)
-        {
-            return dialog.Information(title, message, "OK");
-        }
-
-        public static ValueTask Information(this IApplicationDialog dialog, string message)
-        {
-            return dialog.Information(string.Empty, message, "OK");
-        }
-
-        // TODO
     }
 }

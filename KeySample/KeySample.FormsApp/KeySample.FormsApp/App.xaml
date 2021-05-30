@@ -139,7 +139,6 @@
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="CornerRadius" Value="0" />
                 <Setter Property="BorderWidth" Value="0" />
-                <!--
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -161,7 +160,7 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                -->
+                <!--
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
                 <Style.Triggers>
                     <Trigger TargetType="Button" Property="IsFocused" Value="True">
@@ -171,6 +170,7 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
                     </Trigger>
                 </Style.Triggers>
+                -->
             </Style>
 
             <!-- ================================================================================ -->
@@ -182,7 +182,6 @@
                    TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="Margin" Value="3" />
-                <!--
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -207,7 +206,7 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                -->
+                <!--
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroTeal}" />
                 <Style.Triggers>
@@ -218,6 +217,7 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
                     </Trigger>
                 </Style.Triggers>
+                -->
             </Style>
 
             <Style x:Key="DefaultButton"
@@ -226,7 +226,6 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="Margin" Value="3" />
-                <!--
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -248,7 +247,7 @@
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
-                -->
+                <!--
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroBlue}" />
                 <Style.Triggers>
                     <Trigger TargetType="Button" Property="IsFocused" Value="True">
@@ -258,6 +257,7 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
                     </Trigger>
                 </Style.Triggers>
+                -->
             </Style>
 
             <Style x:Key="DefaultLabel" TargetType="Label">

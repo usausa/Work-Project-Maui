@@ -6,11 +6,11 @@ namespace KeySample.FormsApp.Components.Dialog
 
     public interface IApplicationDialog
     {
-        ValueTask<bool> Confirm(string title, string message, string ok, string cancel);
+        ValueTask Information(string message, string? title = null, string ok = "OK");
 
-        ValueTask Information(string title, string message, string ok);
+        ValueTask<bool> Confirm(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel");
 
-        ValueTask<int> Select(int selected, string[] items);
+        ValueTask<int> Select(string[] items, int selected = -1, string? title = null);
 
         IProgress Progress(string title);
 

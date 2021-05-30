@@ -22,68 +22,25 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
             this.activity = activity;
         }
 
-        public async override ValueTask<bool> Confirm(string title, string message, string ok, string cancel)
-        {
-            var dialog = new ConfirmDialog(activity);
-            return await dialog.ShowAsync(title, message, ok, cancel);
-        }
-
-        public async override ValueTask Information(string title, string message, string ok)
+        public async override ValueTask Information(string message, string? title = null, string ok = "OK")
         {
             var dialog = new InformationDialog(activity);
-            await dialog.ShowAsync(title, message, ok);
+            await dialog.ShowAsync(message, title, ok);
         }
 
-        public async override ValueTask<int> Select(int selected, string[] items)
+        public async override ValueTask<bool> Confirm(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel")
+        {
+            var dialog = new ConfirmDialog(activity);
+            return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel);
+        }
+
+        public async override ValueTask<int> Select(string[] items, int selected = -1, string? title = null)
         {
             var dialog = new SelectDialog(activity);
-            return await dialog.ShowAsync(null, selected, items);
+            return await dialog.ShowAsync(items, selected, title);
         }
 
-        public class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
-        {
-            private readonly TaskCompletionSource<bool> result = new();
-
-            private readonly Activity activity;
-
-            [AllowNull]
-            private AlertDialog alertDialog;
-
-            public ConfirmDialog(Activity activity)
-            {
-                this.activity = activity;
-            }
-
-            public Task<bool> ShowAsync(string? title, string message, string ok, string cancel)
-            {
-                alertDialog = new AlertDialog.Builder(activity)
-                    .SetTitle(title)!
-                    .SetMessage(message)!
-                    .SetOnKeyListener(this)!
-                    .SetCancelable(false)!
-                    .Create()!;
-                alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
-                alertDialog.SetButton((int)DialogButtonType.Negative, cancel, (_, _) => result.TrySetResult(false));
-
-                alertDialog.Show();
-
-                return result.Task;
-            }
-
-            public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
-            {
-                if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
-                {
-                    dialog!.Dismiss();
-                    result.TrySetResult(false);
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        public class InformationDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
+        public class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
         {
             private readonly TaskCompletionSource<bool> result = new();
 
@@ -97,7 +54,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 this.activity = activity;
             }
 
-            public Task ShowAsync(string? title, string message, string ok)
+            public Task ShowAsync(string message, string? title, string ok)
             {
                 alertDialog = new AlertDialog.Builder(activity)
                     .SetTitle(title)!
@@ -105,11 +62,18 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                     .SetOnKeyListener(this)!
                     .SetCancelable(false)!
                     .Create()!;
+                alertDialog.SetOnShowListener(this);
                 alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
 
                 alertDialog.Show();
 
                 return result.Task;
+            }
+
+            public void OnShow(IDialogInterface? dialog)
+            {
+                var button = alertDialog.GetButton((int)DialogButtonType.Positive)!;
+                button.RequestFocus();
             }
 
             public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
@@ -125,7 +89,61 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
             }
         }
 
-        public class SelectDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
+        public class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+        {
+            private readonly TaskCompletionSource<bool> result = new();
+
+            private readonly Activity activity;
+
+            [AllowNull]
+            private AlertDialog alertDialog;
+
+            private bool positive;
+
+            public ConfirmDialog(Activity activity)
+            {
+                this.activity = activity;
+            }
+
+            public Task<bool> ShowAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
+            {
+                positive = defaultPositive;
+
+                alertDialog = new AlertDialog.Builder(activity)
+                    .SetTitle(title)!
+                    .SetMessage(message)!
+                    .SetOnKeyListener(this)!
+                    .SetCancelable(false)!
+                    .Create()!;
+                alertDialog.SetOnShowListener(this);
+                alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
+                alertDialog.SetButton((int)DialogButtonType.Negative, cancel, (_, _) => result.TrySetResult(false));
+
+                alertDialog.Show();
+
+                return result.Task;
+            }
+
+            public void OnShow(IDialogInterface? dialog)
+            {
+                var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+                button.RequestFocus();
+            }
+
+            public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
+            {
+                if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+                {
+                    dialog!.Dismiss();
+                    result.TrySetResult(false);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
         {
             private readonly TaskCompletionSource<int> result = new();
 
@@ -139,7 +157,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 this.activity = activity;
             }
 
-            public Task<int> ShowAsync(string? title, int selected, string[] items)
+            public Task<int> ShowAsync(string[] items, int selected, string? title)
             {
                 alertDialog = new AlertDialog.Builder(activity)
                     .SetTitle(title)!
@@ -147,6 +165,7 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                     .SetOnKeyListener(this)!
                     .SetCancelable(false)!
                     .Create()!;
+                alertDialog.SetOnShowListener(this);
                 alertDialog.ListView!.Selector = new ColorDrawable(Android.Graphics.Color.Blue) { Alpha = 64 };
 
                 alertDialog.Show();
@@ -157,6 +176,11 @@ namespace KeySample.FormsApp.Droid.Components.Dialog
                 }
 
                 return result.Task;
+            }
+
+            public void OnShow(IDialogInterface? dialog)
+            {
+                alertDialog.ListView?.RequestFocus();
             }
 
             public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)

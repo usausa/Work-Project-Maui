@@ -21,14 +21,16 @@
 
         <Button Grid.Row="0"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding DialogCommand}"
-                Text="Dialog" />
+                Command="{Binding InformationCommand}"
+                Text="Information" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False" />
+                Command="{Binding ConfirmCommand}"
+                Text="Confirm" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False" />
+                Command="{Binding SelectCommand}"
+                Text="Select" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False" />
