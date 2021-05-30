@@ -7,10 +7,11 @@
     Padding="36"
     BackgroundColor="Orange"
     CloseWhenBackgroundIsClicked="False"
-    HasSystemPadding="true"
-    Disappearing="PopupDialog1_OnDisappearing">
+    Disappearing="PopupDialog1_OnDisappearing"
+    HasSystemPadding="true">
 
     <StackLayout>
+        <Button Clicked="CountButton_OnClicked" Text="Count" />
         <Button Clicked="TestButton_OnClicked" Text="Test" />
         <Button Clicked="CloseButton_OnClicked" Text="Close" />
     </StackLayout>

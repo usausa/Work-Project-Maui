@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Rg.Plugins.Popup.Events;
 using Rg.Plugins.Popup.Services;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
@@ -22,11 +24,22 @@ namespace WorkPopupLevel
             InitializeComponent();
 
             dialogs = new Dialogs();
+
+            PopupNavigation.Instance.Popping += InstanceOnPopping;
+            PopupNavigation.Instance.Pushed += InstanceOnPushed;
+        }
+
+        private void InstanceOnPopping(object sender, PopupNavigationEventArgs e)
+        {
+        }
+
+        private void InstanceOnPushed(object sender, PopupNavigationEventArgs e)
+        {
         }
 
         private async void Popup1Button_OnClicked(object sender, EventArgs e)
         {
-            await PopupNavigation.Instance.PushAsync(new PopupDialog1());
+            await PopupNavigation.Instance.PushAsync(new PopupDialog1() { AndroidTalkbackAccessibilityWorkaround = true });
         }
 
         private async void Popup2Button_OnClicked(object sender, EventArgs e)

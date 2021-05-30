@@ -18,10 +18,10 @@ namespace WorkPopupLevel
             InitializeComponent();
         }
 
-        private void TestButton_OnClicked(object sender, EventArgs e)
+        private void CountButton_OnClicked(object sender, EventArgs e)
         {
-            Debug.WriteLine("**Modal : " + Navigation.ModalStack.Count);
-            Debug.WriteLine("**Navigation : " + Navigation.NavigationStack.Count);
+            Debug.WriteLine("**Navigation : " + Application.Current.MainPage.Navigation.NavigationStack.Count);
+            Debug.WriteLine("**Modal : " + Application.Current.MainPage.Navigation.ModalStack.Count);
         }
 
         private void CloseButton_OnClicked(object sender, EventArgs e)

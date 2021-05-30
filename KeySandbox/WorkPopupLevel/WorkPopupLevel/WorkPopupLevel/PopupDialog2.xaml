@@ -6,12 +6,12 @@
     xmlns:local="clr-namespace:WorkPopupLevel;assembly=WorkPopupLevel"
     xmlns:views="http://xamarin.com/schemas/2020/toolkit"
     x:TypeArguments="x:String"
+    Dismissed="PopupDialog2_OnDismissed"
     IsLightDismissEnabled="False"
-    Size="{x:Static local:PopupSize.Large}"
-    Dismissed="PopupDialog2_OnDismissed">
+    Size="{x:Static local:PopupSize.Large}">
 
     <StackLayout>
-        <Button Clicked="TestButton_OnClicked" Text="Test" />
+        <Button Clicked="CountButton_OnClicked" Text="Count" />
         <Button Clicked="CloseButton_OnClicked" Text="Close" />
     </StackLayout>
 
