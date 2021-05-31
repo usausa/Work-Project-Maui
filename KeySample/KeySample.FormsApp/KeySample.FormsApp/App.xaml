@@ -46,37 +46,6 @@
             <sd:ReverseConverter x:Key="ReverseConverter" />
 
             <!-- ================================================================================ -->
-            <!-- Layout -->
-            <!-- ================================================================================ -->
-
-            <Style x:Key="InputEntryBase" TargetType="Entry" />
-
-            <Style x:Key="InputButtonBase" TargetType="Button" />
-
-            <!-- ================================================================================ -->
-            <!-- Layout -->
-            <!-- ================================================================================ -->
-
-            <Style x:Key="FillGrid" TargetType="Grid">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="RowSpacing" Value="0" />
-                <Setter Property="ColumnSpacing" Value="0" />
-                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-                <Setter Property="VerticalOptions" Value="FillAndExpand" />
-            </Style>
-
-            <Style x:Key="FillLayout" TargetType="StackLayout">
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <Style x:Key="PaddingLayout" TargetType="StackLayout">
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="Margin" Value="0" />
-            </Style>
-
-            <!-- ================================================================================ -->
             <!-- Main -->
             <!-- ================================================================================ -->
 
@@ -176,12 +145,33 @@
             </Style>
 
             <!-- ================================================================================ -->
+            <!-- Layout -->
+            <!-- ================================================================================ -->
+
+            <Style x:Key="FillGrid" TargetType="Grid">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <Style x:Key="FillLayout" TargetType="StackLayout">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <Style x:Key="PaddingLayout" TargetType="StackLayout">
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <!-- ================================================================================ -->
             <!-- Basic -->
             <!-- ================================================================================ -->
 
-            <Style x:Key="MenuButton"
-                   BasedOn="{StaticResource InputButtonBase}"
-                   TargetType="Button">
+            <Style x:Key="MenuButton" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="Margin" Value="3" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -222,9 +212,7 @@
                 -->
             </Style>
 
-            <Style x:Key="DefaultButton"
-                   BasedOn="{StaticResource InputButtonBase}"
-                   TargetType="Button">
+            <Style x:Key="DefaultButton" TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource BigSize}" />
                 <Setter Property="Margin" Value="3" />

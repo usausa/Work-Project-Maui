@@ -1,6 +1,9 @@
 namespace KeySample.FormsApp.Shell
 {
     using System;
+    using System.Linq;
+
+    using KeySample.FormsApp.Input;
 
     using Smart.Forms.Interactivity;
     using Smart.Navigation;
@@ -59,7 +62,18 @@ namespace KeySample.FormsApp.Shell
 
         private void NavigatorOnNavigated(object sender, Smart.Navigation.NavigationEventArgs e)
         {
-            UpdateShell(e.ToView);
+            var view = e.ToView as Element;
+
+            UpdateShell(view);
+
+            if ((AssociatedObject is not null) && (view is not null) && ShellProperty.GetDefaultFocus(view))
+            {
+                Device.InvokeOnMainThreadAsync(() =>
+                {
+                    var target = ElementHelper.EnumerateActive(AssociatedObject).FirstOrDefault();
+                    target?.Focus();
+                });
+            }
         }
 
         private void NavigatorOnExited(object sender, EventArgs e)
@@ -67,11 +81,11 @@ namespace KeySample.FormsApp.Shell
             UpdateShell(null);
         }
 
-        private void UpdateShell(object? view)
+        private void UpdateShell(BindableObject? view)
         {
             if (AssociatedObject?.BindingContext is IShellControl shell)
             {
-                ShellProperty.UpdateShellControl(shell, view as BindableObject);
+                ShellProperty.UpdateShellControl(shell, view);
             }
         }
     }
