@@ -1,4 +1,4 @@
-namespace KeySample.FormsApp.Input
+namespace KeySample.FormsApp.Helpers
 {
     using System.Collections.Generic;
 
@@ -8,6 +8,25 @@ namespace KeySample.FormsApp.Input
 
     public static class ElementHelper
     {
+        public static VisualElement? FindFocused(Element parent)
+        {
+            foreach (var child in parent.LogicalChildren)
+            {
+                if ((child is VisualElement visualElement) && visualElement.IsFocused)
+                {
+                    return visualElement;
+                }
+
+                var focused = FindFocused(child);
+                if (focused is not null)
+                {
+                    return focused;
+                }
+            }
+
+            return null;
+        }
+
         public static bool MoveFocus(VisualElement parent, bool forward)
         {
             var find = false;

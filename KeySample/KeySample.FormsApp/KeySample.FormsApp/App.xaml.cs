@@ -3,6 +3,7 @@ namespace KeySample.FormsApp
     using System.Reflection;
 
     using KeySample.FormsApp.Modules;
+    using KeySample.FormsApp.Shell;
     using KeySample.FormsApp.State;
 
     using Smart.Forms.Resolver;
@@ -27,6 +28,7 @@ namespace KeySample.FormsApp
             // Config Navigator
             navigator = new NavigatorConfig()
                 .UseFormsNavigationProvider()
+                .AddPlugin<FocusRestorePlugin>()
                 .UseResolver(resolver)
                 .UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes))
                 .ToNavigator();

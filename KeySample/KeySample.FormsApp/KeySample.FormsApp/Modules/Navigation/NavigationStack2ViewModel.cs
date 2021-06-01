@@ -12,7 +12,7 @@ namespace KeySample.FormsApp.Modules.Navigation
         {
         }
 
-        protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+        protected override Task OnNotifyBackAsync() => Navigator.PopAsync();
 
         protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
     }

@@ -2,6 +2,8 @@ namespace KeySample.FormsApp.Input
 {
     using System.Linq;
 
+    using KeySample.FormsApp.Helpers;
+
     using Smart.Forms.Interactivity;
 
     using Xamarin.Forms;
@@ -24,7 +26,7 @@ namespace KeySample.FormsApp.Input
 
         public bool Handle(KeyCode key)
         {
-            if (AssociatedObject is null)
+            if ((AssociatedObject is null) || !AssociatedObject.IsEnabled)
             {
                 return false;
             }

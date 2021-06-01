@@ -4,7 +4,7 @@ namespace KeySample.FormsApp.Behaviors
     using System.ComponentModel;
     using System.Linq;
 
-    using KeySample.FormsApp.Input;
+    using KeySample.FormsApp.Helpers;
     using KeySample.FormsApp.Models.Entry;
 
     using Smart.Forms.Interactivity;

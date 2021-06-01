@@ -11,6 +11,7 @@
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
              ios:Page.UseSafeArea="true"
+             IsEnabled="{Binding ApplicationState.IsBusy, Converter={StaticResource ReverseConverter}}"
              IsBusy="{Binding ApplicationState.IsBusy}"
              Visual="Material">
 

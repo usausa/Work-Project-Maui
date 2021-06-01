@@ -40,9 +40,10 @@
                 Text="3. Popup" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId NavigationStack1}"
                 input:Shortcut.Key="Num4"
-                Text="4. Navigation" />
+                Text="4. Stack" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

@@ -3,7 +3,7 @@ namespace KeySample.FormsApp.Shell
     using System;
     using System.Linq;
 
-    using KeySample.FormsApp.Input;
+    using KeySample.FormsApp.Helpers;
 
     using Smart.Forms.Interactivity;
     using Smart.Navigation;
@@ -66,7 +66,10 @@ namespace KeySample.FormsApp.Shell
 
             UpdateShell(view);
 
-            if ((AssociatedObject is not null) && (view is not null) && ShellProperty.GetDefaultFocus(view))
+            if (!e.Context.Attribute.IsRestore() &&
+                (AssociatedObject is not null) &&
+                (view is not null) &&
+                ShellProperty.GetDefaultFocus(view))
             {
                 Device.InvokeOnMainThreadAsync(() =>
                 {

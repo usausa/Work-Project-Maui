@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:si="clr-namespace:Smart.Forms.Interactivity;assembly=Smart.Forms"
              xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:shell="clr-namespace:KeySample.FormsApp.Shell;assembly=KeySample.FormsApp"
              xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Control;assembly=KeySample.FormsApp"
-             xmlns:entity="clr-namespace:KeySample.FormsApp.Models.Entity;assembly=KeySample.FormsApp"
              x:Class="KeySample.FormsApp.Modules.Control.ControlMiscView"
              x:DataType="{x:Type modules:ControlMiscViewModel}"
              sr:BindingContextResolver.Type="{x:Type modules:ControlMiscViewModel}"
