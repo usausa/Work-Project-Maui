@@ -35,7 +35,8 @@
                 Text="2. Dialog" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId PopupMenu}"
                 input:Shortcut.Key="Num3"
                 Text="3. Popup" />
         <Button Grid.Row="3"

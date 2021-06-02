@@ -1,10 +1,18 @@
 namespace KeySample.FormsApp.Modules
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+    using System.Threading.Tasks;
+
+    using KeySample.FormsApp.Models.Input;
+
+    using XamarinFormsComponents.Popup;
 
     public static class PopupNavigatorExtensions
     {
+        public static ValueTask<string> InputType1Async(this IPopupNavigator popupNavigator, string title, string value, int maxLength)
+        {
+            return popupNavigator.PopupAsync<TextInputParameter, string>(
+                DialogId.PopupType1,
+                new TextInputParameter(title, value, maxLength));
+        }
     }
 }

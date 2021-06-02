@@ -1,15 +1,18 @@
 namespace KeySample.FormsApp.Models.Input
 {
-    using System.Diagnostics.CodeAnalysis;
-
     public class TextInputParameter
     {
-        [AllowNull]
-        public string Title { get; init; }
+        public string Title { get; }
 
-        [AllowNull]
-        public string Value { get; init; }
+        public string Value { get; }
 
-        public int MaxLength { get; init; }
+        public int MaxLength { get; }
+
+        public TextInputParameter(string title, string value, int maxLength)
+        {
+            Title = title;
+            Value = value;
+            MaxLength = maxLength;
+        }
     }
 }

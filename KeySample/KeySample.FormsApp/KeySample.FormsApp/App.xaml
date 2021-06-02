@@ -37,6 +37,8 @@
             <Color x:Key="BorderColor">DarkGray</Color>
             <Color x:Key="LineColor">Black</Color>
 
+            <Color x:Key="PopupBackgroundColor">White</Color>
+
             <!-- ================================================================================ -->
             <!-- Converter -->
             <!-- ================================================================================ -->
@@ -165,6 +167,55 @@
             <Style x:Key="PaddingLayout" TargetType="StackLayout">
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <!-- ================================================================================ -->
+            <!-- Dialog -->
+            <!-- ================================================================================ -->
+
+            <Style x:Key="DialogTitleLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroBlueDark}" />
+                <Setter Property="HeightRequest" Value="{StaticResource TitleHeight}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="InputGrid" TargetType="Grid">
+                <Setter Property="CompressedLayout.IsHeadless" Value="True" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="RowSpacing" Value="3" />
+                <Setter Property="ColumnSpacing" Value="3" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <Style x:Key="InputLabelBase" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource HugeSize}" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            </Style>
+
+            <Style x:Key="LeftInputLabel"
+                   BasedOn="{StaticResource InputLabelBase}"
+                   TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+            </Style>
+
+            <Style x:Key="InputTextButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3" />
+            </Style>
+
+            <Style x:Key="InputFunctionButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
+                <Setter Property="BorderRadius" Value="3" />
             </Style>
 
             <!-- ================================================================================ -->

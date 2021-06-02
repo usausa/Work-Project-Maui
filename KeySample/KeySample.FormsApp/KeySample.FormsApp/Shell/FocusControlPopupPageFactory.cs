@@ -10,7 +10,7 @@ namespace KeySample.FormsApp.Shell
     {
         public PopupPage Create(View content)
         {
-            return new PopupPage
+            return new()
             {
                 Content = content,
                 CloseWhenBackgroundIsClicked = false,
