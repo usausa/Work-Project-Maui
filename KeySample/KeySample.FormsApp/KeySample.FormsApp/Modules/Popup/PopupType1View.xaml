@@ -4,6 +4,7 @@
              xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
              xmlns:popup="clr-namespace:XamarinFormsComponents.Popup;assembly=XamarinFormsComponents.Popup"
              xmlns:input="clr-namespace:KeySample.FormsApp.Input;assembly=KeySample.FormsApp"
+             xmlns:behaviors="clr-namespace:KeySample.FormsApp.Behaviors;assembly=KeySample.FormsApp"
              xmlns:modules="clr-namespace:KeySample.FormsApp.Modules.Popup;assembly=KeySample.FormsApp"
              x:Class="KeySample.FormsApp.Modules.Popup.PopupType1View"
              x:DataType="{x:Type modules:PopupType1ViewModel}"
@@ -122,6 +123,7 @@
             <Button Grid.Column="1"
                     Style="{StaticResource FunctionButton}"
                     Command="{Binding CommitCommand}"
+                    behaviors:Focus.Default="True"
                     input:Shortcut.Key="Function4"
                     Text="Commit" />
         </Grid>

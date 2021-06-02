@@ -1,5 +1,8 @@
 namespace KeySample.FormsApp.Extender
 {
+    using System.Linq;
+
+    using KeySample.FormsApp.Helpers;
     using KeySample.FormsApp.Input;
 
     using Rg.Plugins.Popup.Pages;
@@ -21,6 +24,10 @@ namespace KeySample.FormsApp.Extender
             };
 
             page.Behaviors.Add(new KeyInputBehavior());
+            page.Appearing += (_, _) =>
+            {
+                Device.InvokeOnMainThreadAsync(() => page.SetDefaultFocus());
+            };
 
             return page;
         }

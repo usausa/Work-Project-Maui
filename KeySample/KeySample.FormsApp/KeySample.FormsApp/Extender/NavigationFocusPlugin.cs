@@ -1,7 +1,6 @@
 namespace KeySample.FormsApp.Extender
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using KeySample.FormsApp.Helpers;
 
@@ -51,7 +50,7 @@ namespace KeySample.FormsApp.Extender
                 var page = element.FindParent<Page>();
                 if (page is not null)
                 {
-                    Device.InvokeOnMainThreadAsync(() => ElementHelper.EnumerateActive(page).FirstOrDefault()?.Focus());
+                    Device.InvokeOnMainThreadAsync(() => page.SetDefaultFocus());
                 }
             }
         }
