@@ -62,6 +62,9 @@ namespace KeySample.FormsApp
                 adapter.AddPopupNavigator();
                 adapter.AddJsonSerializer();
                 adapter.AddSettings();
+
+                // Custom
+                adapter.AddComponent<IPopupPageFactory, FocusControlPopupPageFactory>();
             });
 
             config.BindSingleton<INavigator>(_ => navigator);

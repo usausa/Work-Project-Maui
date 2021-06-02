@@ -7,11 +7,19 @@ namespace KeySample.FormsApp.Modules.Popup
 
     using KeySample.FormsApp.Models.Input;
 
+    using Smart.ComponentModel;
+
     using XamarinFormsComponents.Popup;
 
     public class PopupType1ViewModel : AppDialogViewModelBase, IPopupResult<string>, IPopupInitialize<TextInputParameter>
     {
         private readonly IApplicationDialog dialogs;
+
+        private string currentText;
+
+        public NotificationValue<string> Title { get; } = new();
+
+        // TODO
 
         public string Result { get; private set; } = string.Empty;
 
