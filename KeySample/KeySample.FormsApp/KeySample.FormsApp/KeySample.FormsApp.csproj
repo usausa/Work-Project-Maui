@@ -12,6 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controls\**" />
+    <Compile Remove="Converters\**" />
+    <Compile Remove="Messaging\**" />
+    <EmbeddedResource Remove="Controls\**" />
+    <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Messaging\**" />
+    <None Remove="Controls\**" />
+    <None Remove="Converters\**" />
+    <None Remove="Messaging\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\Font Awesome 5 Free-Regular-400.otf" />
   </ItemGroup>
 
@@ -47,9 +59,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Converters\" />
-    <Folder Include="Messaging\" />
+    <EmbeddedResource Update="Modules\Popup\PopupType1View.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Modules\Popup\PopupType2View.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
