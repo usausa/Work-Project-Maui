@@ -21,23 +21,6 @@ namespace KeySample.FormsApp.Shell
             view.SetValue(TitleProperty, value);
         }
 
-        public static readonly BindableProperty DefaultFocusProperty = BindableProperty.CreateAttached(
-            "DefaultFocus",
-            typeof(bool),
-            typeof(ShellProperty),
-            true,
-            propertyChanged: PropertyChanged);
-
-        public static bool GetDefaultFocus(BindableObject view)
-        {
-            return (bool)view.GetValue(DefaultFocusProperty);
-        }
-
-        public static void SetDefaultFocus(BindableObject view, bool value)
-        {
-            view.SetValue(DefaultFocusProperty, value);
-        }
-
         public static readonly BindableProperty FunctionVisibleProperty = BindableProperty.CreateAttached(
             "FunctionVisible",
             typeof(bool),

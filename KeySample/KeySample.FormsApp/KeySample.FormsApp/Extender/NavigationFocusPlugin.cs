@@ -1,6 +1,7 @@
-namespace KeySample.FormsApp.Shell
+namespace KeySample.FormsApp.Extender
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using KeySample.FormsApp.Helpers;
 
@@ -10,7 +11,7 @@ namespace KeySample.FormsApp.Shell
 
     using Xamarin.Forms;
 
-    public sealed class FocusRestorePlugin : PluginBase
+    public sealed class NavigationFocusPlugin : PluginBase
     {
         private readonly Dictionary<object, VisualElement> focusBackup = new();
 
@@ -37,12 +38,21 @@ namespace KeySample.FormsApp.Shell
 
         public override void OnNavigatedTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object target)
         {
-            if (navigationContext.Attribute.IsRestore() && focusBackup.TryGetValue(view, out var focused))
+            if (navigationContext.Attribute.IsRestore())
             {
-                Device.InvokeOnMainThreadAsync(() =>
+                if (focusBackup.TryGetValue(view, out var focused))
                 {
-                    focused.Focus();
-                });
+                    Device.InvokeOnMainThreadAsync(() => focused.Focus());
+                }
+            }
+            else
+            {
+                var element = (Element)view;
+                var page = element.FindParent<Page>();
+                if (page is not null)
+                {
+                    Device.InvokeOnMainThreadAsync(() => ElementHelper.EnumerateActive(page).FirstOrDefault()?.Focus());
+                }
             }
         }
     }

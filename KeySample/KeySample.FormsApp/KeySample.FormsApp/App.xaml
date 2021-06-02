@@ -205,17 +205,57 @@
             </Style>
 
             <Style x:Key="InputTextButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
-                <Setter Property="TextColor" Value="Black" />
                 <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
                 <Setter Property="BorderRadius" Value="3" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroLighten}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroLightenDarker}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
             </Style>
 
             <Style x:Key="InputFunctionButton" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}" />
-                <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="{StaticResource ExtraBigSize}" />
                 <Setter Property="BorderRadius" Value="3" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroOrange}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MetroOrangeDarker}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
             </Style>
 
             <!-- ================================================================================ -->

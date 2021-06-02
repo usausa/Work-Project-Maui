@@ -1,9 +1,6 @@
 namespace KeySample.FormsApp.Shell
 {
     using System;
-    using System.Linq;
-
-    using KeySample.FormsApp.Helpers;
 
     using Smart.Forms.Interactivity;
     using Smart.Navigation;
@@ -62,21 +59,7 @@ namespace KeySample.FormsApp.Shell
 
         private void NavigatorOnNavigated(object sender, Smart.Navigation.NavigationEventArgs e)
         {
-            var view = e.ToView as Element;
-
-            UpdateShell(view);
-
-            if (!e.Context.Attribute.IsRestore() &&
-                (AssociatedObject is not null) &&
-                (view is not null) &&
-                ShellProperty.GetDefaultFocus(view))
-            {
-                Device.InvokeOnMainThreadAsync(() =>
-                {
-                    var target = ElementHelper.EnumerateActive(AssociatedObject).FirstOrDefault();
-                    target?.Focus();
-                });
-            }
+            UpdateShell(e.ToView as Element);
         }
 
         private void NavigatorOnExited(object sender, EventArgs e)

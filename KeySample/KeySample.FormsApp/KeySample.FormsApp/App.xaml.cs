@@ -2,8 +2,8 @@ namespace KeySample.FormsApp
 {
     using System.Reflection;
 
+    using KeySample.FormsApp.Extender;
     using KeySample.FormsApp.Modules;
-    using KeySample.FormsApp.Shell;
     using KeySample.FormsApp.State;
 
     using Smart.Forms.Resolver;
@@ -28,7 +28,7 @@ namespace KeySample.FormsApp
             // Config Navigator
             navigator = new NavigatorConfig()
                 .UseFormsNavigationProvider()
-                .AddPlugin<FocusRestorePlugin>()
+                .AddPlugin<NavigationFocusPlugin>()
                 .UseResolver(resolver)
                 .UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes))
                 .ToNavigator();
@@ -64,7 +64,7 @@ namespace KeySample.FormsApp
                 adapter.AddSettings();
 
                 // Custom
-                adapter.AddComponent<IPopupPageFactory, FocusControlPopupPageFactory>();
+                adapter.UsePopupPageFactory<PopupPageFactory>();
             });
 
             config.BindSingleton<INavigator>(_ => navigator);

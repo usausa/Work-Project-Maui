@@ -22,5 +22,7 @@ namespace KeySample.FormsApp.Input
         Function2,
         Function3,
         Function4,
+
+        Del = 0x7f
     }
 }

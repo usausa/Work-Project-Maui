@@ -118,6 +118,22 @@ namespace KeySample.FormsApp.Droid
                 return true;
             }
 
+            // DEL
+            if (e.KeyCode == Keycode.Del)
+            {
+                if (activity.CurrentFocus is EditText)
+                {
+                    return false;
+                }
+
+                if (e.Action == KeyEventActions.Up)
+                {
+                    KeyInputManager.Default.Process(KeyCode.Del);
+                }
+
+                return true;
+            }
+
             return false;
         }
     }
