@@ -8,18 +8,18 @@ namespace KeySample.FormsApp.Input
 
     using Xamarin.Forms;
 
-    public class KeyInputBehavior : BehaviorBase<Page>, IKeyInputHandler
+    public class InputControlBehavior : BehaviorBase<Page>, IInputHandler
     {
         protected override void OnAttachedTo(Page bindable)
         {
             base.OnAttachedTo(bindable);
 
-            KeyInputManager.Default.PushHandler(this);
+            InputManager.Default.PushHandler(this);
         }
 
         protected override void OnDetachingFrom(Page bindable)
         {
-            KeyInputManager.Default.PopHandler(this);
+            InputManager.Default.PopHandler(this);
 
             base.OnDetachingFrom(bindable);
         }
@@ -52,6 +52,11 @@ namespace KeySample.FormsApp.Input
             }
 
             return false;
+        }
+
+        public VisualElement? FindFocused()
+        {
+            return AssociatedObject is not null ? ElementHelper.FindFocused(AssociatedObject) : null;
         }
     }
 }

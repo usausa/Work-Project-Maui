@@ -9,7 +9,7 @@
 
 ### ショートカット
 
-* ボタンに対するショートカットキー(0～9、FnX)割り当て
+* ボタンに対するショートカットキー(0～9、Del、FnX)割り当て
 
 ### タブ移動
 
@@ -48,8 +48,10 @@
 
 ### Popup
 
-(TODO)
+* Rg.Plugins.PopupのPopupPageへの対応
+* PopupPageに対しては固有のハンドラをスタックする形で対応
 
 ### バーコード(Entry単位)
 
-(TODO)
+* IEntryBarcodeReader及びBarcodeEntryBehavior参照
+* BarcodeEntryBehaviorによりフォーカス時にIEntryBarcodeReaderに対してEntryを登録し、スキャンイベントが発生したら通知してもらう形

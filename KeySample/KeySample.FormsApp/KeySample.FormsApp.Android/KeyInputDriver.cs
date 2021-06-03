@@ -28,7 +28,7 @@ namespace KeySample.FormsApp.Droid
 
                 if (e.Action == KeyEventActions.Down)
                 {
-                    KeyInputManager.Default.Process(KeyCode.Up);
+                    InputManager.Default.Process(KeyCode.Up);
                 }
 
                 return true;
@@ -45,7 +45,7 @@ namespace KeySample.FormsApp.Droid
 
                 if (e.Action == KeyEventActions.Down)
                 {
-                    KeyInputManager.Default.Process(KeyCode.Down);
+                    InputManager.Default.Process(KeyCode.Down);
                 }
 
                 return true;
@@ -96,7 +96,7 @@ namespace KeySample.FormsApp.Droid
 
                 if (e.Action == KeyEventActions.Up)
                 {
-                    KeyInputManager.Default.Process((KeyCode)((int)KeyCode.Num0 + (e.KeyCode - Keycode.Num0)));
+                    InputManager.Default.Process((KeyCode)((int)KeyCode.Num0 + (e.KeyCode - Keycode.Num0)));
                 }
 
                 return true;
@@ -107,7 +107,7 @@ namespace KeySample.FormsApp.Droid
             {
                 if (e.Action == KeyEventActions.Up)
                 {
-                    KeyInputManager.Default.Process((KeyCode)((int)KeyCode.Function1 + (e.KeyCode - Keycode.F1)));
+                    InputManager.Default.Process((KeyCode)((int)KeyCode.Function1 + (e.KeyCode - Keycode.F1)));
                 }
 
                 return true;
@@ -123,7 +123,7 @@ namespace KeySample.FormsApp.Droid
 
                 if (e.Action == KeyEventActions.Up)
                 {
-                    KeyInputManager.Default.Process(KeyCode.Del);
+                    InputManager.Default.Process(KeyCode.Del);
                 }
 
                 return true;

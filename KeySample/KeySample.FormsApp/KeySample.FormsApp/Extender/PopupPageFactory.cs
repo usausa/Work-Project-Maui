@@ -1,8 +1,5 @@
 namespace KeySample.FormsApp.Extender
 {
-    using System.Linq;
-
-    using KeySample.FormsApp.Helpers;
     using KeySample.FormsApp.Input;
 
     using Rg.Plugins.Popup.Pages;
@@ -23,7 +20,7 @@ namespace KeySample.FormsApp.Extender
                 Padding = PopupProperty.GetThickness(content)
             };
 
-            page.Behaviors.Add(new KeyInputBehavior());
+            page.Behaviors.Add(new InputControlBehavior());
             page.Appearing += (_, _) =>
             {
                 Device.InvokeOnMainThreadAsync(() => page.SetDefaultFocus());
