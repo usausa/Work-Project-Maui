@@ -27,6 +27,7 @@
     "xmlns:grid",
     "xmlns:resources",
     "xmlns:shell",
+    "xmlns:barcode",
     "xmlns:behaviors",
     "xmlns:controls",
     "xmlns:converters",

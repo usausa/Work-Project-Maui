@@ -32,7 +32,6 @@
         <Button Style="{StaticResource DefaultButton}"
                 Command="{Binding SetCommand}"
                 Text="Set" />
-
     </StackLayout>
 
 </ContentView>

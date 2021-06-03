@@ -105,11 +105,6 @@ namespace KeySample.FormsApp.Droid
             // Function
             if ((e.KeyCode >= Keycode.F1) && (e.KeyCode <= Keycode.F12))
             {
-                if (activity.CurrentFocus is EditText)
-                {
-                    return false;
-                }
-
                 if (e.Action == KeyEventActions.Up)
                 {
                     KeyInputManager.Default.Process((KeyCode)((int)KeyCode.Function1 + (e.KeyCode - Keycode.F1)));

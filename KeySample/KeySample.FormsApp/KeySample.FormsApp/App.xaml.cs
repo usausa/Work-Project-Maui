@@ -2,6 +2,8 @@ namespace KeySample.FormsApp
 {
     using System.Reflection;
 
+    using KeySample.FormsApp.Components.Barcode;
+    using KeySample.FormsApp.Components.Dialog;
     using KeySample.FormsApp.Extender;
     using KeySample.FormsApp.Modules;
     using KeySample.FormsApp.State;
@@ -15,6 +17,8 @@ namespace KeySample.FormsApp
 
     public partial class App
     {
+        private readonly SmartResolver resolver;
+
         private readonly Navigator navigator;
 
         public App(IComponentProvider provider)
@@ -22,7 +26,7 @@ namespace KeySample.FormsApp
             InitializeComponent();
 
             // Config Resolver
-            var resolver = CreateResolver(provider);
+            resolver = CreateResolver(provider);
             ResolveProvider.Default.UseSmartResolver(resolver);
 
             // Config Navigator
@@ -74,6 +78,8 @@ namespace KeySample.FormsApp
             config.BindSingleton<Configuration>();
             config.BindSingleton<Session>();
 
+            config.BindSingleton<IAttachableBarcodeReader, AttachableEntryBarcodeReader>();
+
             provider.RegisterComponents(config);
 
             return config.ToResolver();
@@ -81,6 +87,19 @@ namespace KeySample.FormsApp
 
         protected override async void OnStart()
         {
+            var dialogs = resolver.Get<IApplicationDialog>();
+
+            // Permission
+            while (await Permissions.IsPermissionRequired())
+            {
+                await Permissions.RequestPermissions();
+
+                if (await Permissions.IsPermissionRequired())
+                {
+                    await dialogs.Information("Permission required.");
+                }
+            }
+
             // Navigate
             await navigator.ForwardAsync(ViewId.Menu);
         }

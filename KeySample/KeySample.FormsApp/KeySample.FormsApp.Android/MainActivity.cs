@@ -36,6 +36,9 @@ namespace KeySample.FormsApp.Droid
             SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
 
+            // Barcode
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+
             // Components
             UserDialogs.Init(this);
             Rg.Plugins.Popup.Popup.Init(this);

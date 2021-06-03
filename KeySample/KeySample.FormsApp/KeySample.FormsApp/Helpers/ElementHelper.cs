@@ -114,7 +114,7 @@ namespace KeySample.FormsApp.Helpers
                         continue;
                     }
 
-                    if (visualElement.IsTabStop && !IsNonStopElement(visualElement))
+                    if (visualElement.IsTabStop && IsFocusableElement(visualElement))
                     {
                         yield return visualElement;
                     }
@@ -127,11 +127,12 @@ namespace KeySample.FormsApp.Helpers
             }
         }
 
-        private static bool IsNonStopElement(VisualElement visualElement)
+        private static bool IsFocusableElement(VisualElement visualElement)
         {
-            return visualElement is Layout ||
-                   visualElement is BoxView ||
-                   visualElement is Label;
+            return visualElement is Button ||
+                   visualElement is CheckBox ||
+                   visualElement is Entry ||
+                   visualElement is ListView;
         }
     }
 }
