@@ -15,6 +15,9 @@ namespace WorkPopupLevel.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            var a = new[] {0, 1, 2};
+            var max = a[^1];
+
             base.OnCreate(savedInstanceState);
 
             UserDialogs.Init(this);
