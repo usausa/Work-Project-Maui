@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Forms.Resolver;assembly=Smart.Forms"
+             xmlns:shell="clr-namespace:BluetoothSample.FormsApp.Shell;assembly=BluetoothSample.FormsApp"
+             xmlns:modules="clr-namespace:BluetoothSample.FormsApp.Modules.Main;assembly=BluetoothSample.FormsApp"
+             x:Class="BluetoothSample.FormsApp.Modules.Main.MenuView"
+             x:DataType="{x:Type modules:MenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type modules:MenuViewModel}"
+             shell:ShellProperty.Title="Menu"
+             shell:ShellProperty.FunctionVisible="False">
+
+    <Grid Style="{StaticResource FillGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Style="{StaticResource MenuButton}"
+                Text="1. Function1" />
+        <Button Grid.Row="1"
+                Style="{StaticResource MenuButton}"
+                Text="2. Function2" />
+        <Button Grid.Row="2"
+                Style="{StaticResource MenuButton}"
+                Text="3. Function3" />
+        <Button Grid.Row="3"
+                Style="{StaticResource MenuButton}"
+                Text="4. Function4" />
+        <Button Grid.Row="4"
+                Style="{StaticResource MenuButton}"
+                Text="5. Function5" />
+        <Button Grid.Row="5"
+                Style="{StaticResource MenuButton}"
+                Text="6. Function6" />
+    </Grid>
+
+</ContentView>
