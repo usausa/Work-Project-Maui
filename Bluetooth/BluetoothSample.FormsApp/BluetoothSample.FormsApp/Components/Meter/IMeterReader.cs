@@ -4,6 +4,6 @@ namespace BluetoothSample.FormsApp.Components.Meter
 
     public interface IMeterReader
     {
-        ValueTask<bool> Discover();
+        ValueTask<bool> ReadAsync();
     }
 }

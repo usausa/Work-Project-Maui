@@ -19,9 +19,9 @@ namespace BluetoothSample.FormsApp.Modules.Main
         {
             DiscoveryCommand = MakeAsyncCommand(async () =>
             {
-                using (dialog.Loading("discover"))
+                using (dialog.Loading("reading"))
                 {
-                    await meterReader.Discover();
+                    await meterReader.ReadAsync();
                 }
             });
         }

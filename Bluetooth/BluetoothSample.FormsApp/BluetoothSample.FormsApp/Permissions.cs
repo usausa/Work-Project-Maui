@@ -14,12 +14,24 @@ namespace BluetoothSample.FormsApp
                 return true;
             }
 
+            status = await Xamarin.Essentials.Permissions.CheckStatusAsync<Xamarin.Essentials.Permissions.LocationWhenInUse>();
+            if (status != PermissionStatus.Granted)
+            {
+                return true;
+            }
+
             return false;
         }
 
         public static async ValueTask<bool> RequestPermissions()
         {
             var status = await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageWrite>();
+            if (status != PermissionStatus.Granted)
+            {
+                return false;
+            }
+
+            status = await Xamarin.Essentials.Permissions.RequestAsync<Xamarin.Essentials.Permissions.LocationWhenInUse>();
             if (status != PermissionStatus.Granted)
             {
                 return false;
