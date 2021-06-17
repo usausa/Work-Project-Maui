@@ -1,17 +1,29 @@
 namespace BluetoothSample.FormsApp.Modules.Main
 {
     using System.Windows.Input;
+
+    using BluetoothSample.FormsApp.Components.Dialog;
+    using BluetoothSample.FormsApp.Components.Meter;
+
     using Smart.Navigation;
 
     public class MenuViewModel : AppViewModelBase
     {
-        public ICommand ForwardCommand { get; }
+        public ICommand DiscoveryCommand { get; }
 
         public MenuViewModel(
-            ApplicationState applicationState)
+            ApplicationState applicationState,
+            IApplicationDialog dialog,
+            IMeterReader meterReader)
             : base(applicationState)
         {
-            ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
+            DiscoveryCommand = MakeAsyncCommand(async () =>
+            {
+                using (dialog.Loading("discover"))
+                {
+                    await meterReader.Discover();
+                }
+            });
         }
     }
 }

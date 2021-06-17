@@ -12,7 +12,9 @@ namespace BluetoothSample.FormsApp.Droid
     using Smart.Resolver;
 
     using BluetoothSample.FormsApp.Components.Dialog;
+    using BluetoothSample.FormsApp.Components.Meter;
     using BluetoothSample.FormsApp.Droid.Components.Dialog;
+    using BluetoothSample.FormsApp.Droid.Components.Meter;
 
     [Activity(
         Name = "bluetoothsample.app.MainActivity",
@@ -68,6 +70,7 @@ namespace BluetoothSample.FormsApp.Droid
                 config.Bind<Activity>().ToConstant(activity).InSingletonScope();
 
                 config.Bind<IApplicationDialog>().To<ApplicationDialog>().InSingletonScope();
+                config.Bind<IMeterReader>().To<MeterReader>().InSingletonScope();
             }
         }
     }
