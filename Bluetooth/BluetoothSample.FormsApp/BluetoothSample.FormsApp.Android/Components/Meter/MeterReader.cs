@@ -12,7 +12,7 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
 
     public class MeterReader : IMeterReader
     {
-        private static readonly Func<BluetoothDevice, bool> Finder = x => x.Name?.StartsWith("BTWATTCH2") ?? false;
+        private static readonly Func<BluetoothDevice, bool> Finder = x => x.Name?.Contains("M5STACK") ?? false;
 
         private static readonly byte[] Pin = Encoding.ASCII.GetBytes("0000");
 
@@ -62,7 +62,6 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
             var cts = new CancellationTokenSource(10_000);
             cts.Token.Register(() => tcs.TrySetResult(false));
 
-            device.SetPin(pin);
             device.CreateBond();
 
             var result = await tcs.Task;
@@ -90,22 +89,22 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
                 System.Diagnostics.Debug.WriteLine($"**** {intent!.Action}");
                 switch (intent!.Action)
                 {
-                    // TODO not happen ?
                     case BluetoothDevice.ActionPairingRequest:
                         var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
                         device.SetPin(pin);
                         InvokeAbortBroadcast();
-                        System.Diagnostics.Debug.WriteLine("**** BluetoothDevice.ActionPairingRequest");
                         break;
 
                     case BluetoothDevice.ActionBondStateChanged:
-                        // TODO 11 to 10 false ?
                         var state = intent.GetIntExtra(BluetoothDevice.ExtraBondState, BluetoothDevice.Error);
                         //var previousState = intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
-                        System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionPairingRequest {state}");
                         if ((Bond)state == Bond.Bonded)
                         {
                             tcs.TrySetResult(true);
+                        }
+                        else if ((Bond)state == Bond.None)
+                        {
+                            tcs.TrySetResult(false);
                         }
                         break;
                 }
@@ -125,6 +124,8 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
             adapter.StartDiscovery();
 
             var device = await tcs.Task;
+
+            adapter.CancelDiscovery();
 
             context.UnregisterReceiver(receiver);
 
