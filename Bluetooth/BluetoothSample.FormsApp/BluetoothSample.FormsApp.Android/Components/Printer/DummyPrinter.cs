@@ -1,4 +1,4 @@
-namespace BluetoothSample.FormsApp.Droid.Components.Meter
+namespace BluetoothSample.FormsApp.Droid.Components.Printer
 {
     using System;
     using System.Text;
@@ -8,25 +8,25 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
     using Android.Bluetooth;
     using Android.Content;
 
-    using BluetoothSample.FormsApp.Components.Meter;
+    using BluetoothSample.FormsApp.Components.Printer;
 
-    public class MeterReader : IMeterReader
+    public class DummyPrinter : IPrinter
     {
-        private static readonly Func<BluetoothDevice, bool> Finder = x => x.Name?.Contains("M5STACK") ?? false;
+        private static readonly Func<BluetoothDevice, bool> Finder = x => x.Name?.Contains("DummyPrinter") ?? false;
 
-        private static readonly byte[] Pin = Encoding.ASCII.GetBytes("0000");
+        private static readonly byte[] Pin = Encoding.ASCII.GetBytes("8888");
 
         private readonly Context context;
 
         private readonly BluetoothAdapter adapter;
 
-        public MeterReader(Context context)
+        public DummyPrinter(Context context)
         {
             this.context = context;
             adapter = ((BluetoothManager)context.GetSystemService(Context.BluetoothService)!).Adapter!;
         }
 
-        public async ValueTask<bool> ReadAsync()
+        public async ValueTask<bool> WriteAsync(string command)
         {
             // Find
             var device = await FindBluetoothDeviceAsync(Finder);
@@ -49,13 +49,14 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
 
         private async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
         {
+            // TODO この方法だと処理が終わるまで確認画面が出ない？
             var tcs = new TaskCompletionSource<bool>();
 
             var receiver = new BondReceiver(tcs, pin);
             var filter = new IntentFilter();
             filter.AddAction(BluetoothDevice.ActionPairingRequest);
             filter.AddAction(BluetoothDevice.ActionBondStateChanged);
-            //filter.Priority = (int)IntentFilterPriority.HighPriority - 1;
+            filter.Priority = (int)IntentFilterPriority.HighPriority;
             context.RegisterReceiver(receiver, filter);
 
             // Timeout
@@ -65,6 +66,8 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
             device.CreateBond();
 
             var result = await tcs.Task;
+
+            System.Diagnostics.Debug.WriteLine($"**** result=[{result}]");
 
             cts.Dispose();
             context.UnregisterReceiver(receiver);
@@ -86,18 +89,20 @@ namespace BluetoothSample.FormsApp.Droid.Components.Meter
 
             public override void OnReceive(Context? context, Intent? intent)
             {
-                System.Diagnostics.Debug.WriteLine($"**** {intent!.Action}");
                 switch (intent!.Action)
                 {
                     case BluetoothDevice.ActionPairingRequest:
+                        // TODO
                         var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
+                        System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionPairingRequest {device.Name}");
                         device.SetPin(pin);
                         InvokeAbortBroadcast();
                         break;
 
                     case BluetoothDevice.ActionBondStateChanged:
                         var state = intent.GetIntExtra(BluetoothDevice.ExtraBondState, BluetoothDevice.Error);
-                        //var previousState = intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
+                        var previousState = intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
+                        System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionBondStateChanged {previousState} -> {state}");
                         if ((Bond)state == Bond.Bonded)
                         {
                             tcs.TrySetResult(true);

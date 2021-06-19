@@ -3,7 +3,7 @@ namespace BluetoothSample.FormsApp.Modules.Main
     using System.Windows.Input;
 
     using BluetoothSample.FormsApp.Components.Dialog;
-    using BluetoothSample.FormsApp.Components.Meter;
+    using BluetoothSample.FormsApp.Components.Printer;
 
     using Smart.Navigation;
 
@@ -14,14 +14,14 @@ namespace BluetoothSample.FormsApp.Modules.Main
         public MenuViewModel(
             ApplicationState applicationState,
             IApplicationDialog dialog,
-            IMeterReader meterReader)
+            IPrinter printer)
             : base(applicationState)
         {
             DiscoveryCommand = MakeAsyncCommand(async () =>
             {
-                using (dialog.Loading("reading"))
+                //using (dialog.Loading("printing"))
                 {
-                    await meterReader.ReadAsync();
+                    await printer.WriteAsync("test");
                 }
             });
         }
