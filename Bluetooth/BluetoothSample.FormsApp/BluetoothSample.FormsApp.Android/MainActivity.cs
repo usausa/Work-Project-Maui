@@ -13,6 +13,7 @@ namespace BluetoothSample.FormsApp.Droid
 
     using BluetoothSample.FormsApp.Components.Dialog;
     using BluetoothSample.FormsApp.Components.Printer;
+    using BluetoothSample.FormsApp.Droid.Components.Bluetooth;
     using BluetoothSample.FormsApp.Droid.Components.Dialog;
     using BluetoothSample.FormsApp.Droid.Components.Printer;
 
@@ -70,6 +71,7 @@ namespace BluetoothSample.FormsApp.Droid
                 config.Bind<Activity>().ToConstant(activity).InSingletonScope();
 
                 config.Bind<IApplicationDialog>().To<ApplicationDialog>().InSingletonScope();
+                config.Bind<BluetoothHelper>().ToSelf().InSingletonScope();
                 config.Bind<IPrinter>().To<DummyPrinter>().InSingletonScope();
             }
         }

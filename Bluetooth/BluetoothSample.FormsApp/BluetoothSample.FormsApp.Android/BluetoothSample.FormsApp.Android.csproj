@@ -103,6 +103,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Bluetooth\BluetoothHelper.cs" />
     <Compile Include="Components\Dialog\ApplicationDialog.cs" />
     <Compile Include="Components\Printer\DummyPrinter.cs" />
     <Compile Include="MainActivity.cs" />

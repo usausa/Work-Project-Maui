@@ -5,165 +5,84 @@ namespace BluetoothSample.FormsApp.Droid.Components.Printer
     using System.Threading.Tasks;
 
     using Android.Bluetooth;
-    using Android.Content;
+    using Android.Util;
 
-    using BluetoothSample.FormsApp.Components.Printer;
+    using BluetoothSample.FormsApp.Droid.Components.Bluetooth;
+
+    using Java.Util;
+
+    using IPrinter = BluetoothSample.FormsApp.Components.Printer.IPrinter;
 
     public class DummyPrinter : IPrinter
     {
-        private static readonly Func<BluetoothDevice, bool> Finder = x => x.Name?.Contains("DummyPrinter") ?? false;
+        private static readonly UUID SppUuid = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB")!;
+
+        private static readonly Func<BluetoothDevice, bool> Finder = x => (x.Name is not null) && x.Name.Contains("DummyPrinter");
 
         private static readonly byte[] Pin = Encoding.ASCII.GetBytes("8888");
 
-        private readonly Context context;
+        private readonly BluetoothHelper bluetooth;
 
-        private readonly BluetoothAdapter adapter;
+        private BluetoothDevice? device;
 
-        public DummyPrinter(Context context)
+        public DummyPrinter(BluetoothHelper bluetooth)
         {
-            this.context = context;
-            adapter = ((BluetoothManager)context.GetSystemService(Context.BluetoothService)!).Adapter!;
+            this.bluetooth = bluetooth;
         }
 
         public async ValueTask<bool> WriteAsync(string command)
         {
             // Find
-            var device = await FindBluetoothDeviceAsync(Finder);
             if (device is null)
             {
-                return false;
+                device = await bluetooth.FindDeviceAsync(Finder);
+                if (device is null)
+                {
+                    return false;
+                }
             }
 
             // Bond
-            if ((device.BondState != Bond.Bonded) &&
-                !await BondAsync(device, Pin))
+            if ((device.BondState != Bond.Bonded) && !await bluetooth.BondAsync(device, Pin))
             {
+                device = null;
                 return false;
             }
 
-            // TODO
-
-            return true;
-        }
-
-        private async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
-        {
-            var tcs = new TaskCompletionSource<bool>();
-
-            var receiver = new BondReceiver(tcs, pin);
-            var filter = new IntentFilter();
-            filter.AddAction(BluetoothDevice.ActionPairingRequest);
-            filter.AddAction(BluetoothDevice.ActionBondStateChanged);
-            //filter.Priority = (int)IntentFilterPriority.HighPriority;
-            context.RegisterReceiver(receiver, filter);
-
-            // TODO ?
-            // Timeout
-            //var cts = new CancellationTokenSource(10_000);
-            //cts.Token.Register(() => tcs.TrySetResult(false));
-
-            device.CreateBond();
-
-            var result = await tcs.Task;
-
-            System.Diagnostics.Debug.WriteLine($"**** result=[{result}]");
-
-            //cts.Dispose();
-            context.UnregisterReceiver(receiver);
-
-            return result;
-        }
-
-        public class BondReceiver : BroadcastReceiver
-        {
-            private readonly TaskCompletionSource<bool> tcs;
-
-            private readonly byte[] pin;
-
-            public BondReceiver(TaskCompletionSource<bool> tcs, byte[] pin)
+            // Execute
+            var socket = default(BluetoothSocket);
+            try
             {
-                this.tcs = tcs;
-                this.pin = pin;
-            }
+                // TODO Timeout?
+                socket = device.CreateRfcommSocketToServiceRecord(SppUuid)!;
 
-            public override void OnReceive(Context? context, Intent? intent)
-            {
-                switch (intent!.Action)
+                await socket.ConnectAsync();
+
+                // Write
+                var send = Encoding.ASCII.GetBytes(command);
+                await socket.OutputStream!.WriteAsync(send, 0, send.Length);
+
+                // Read
+                var receive = new byte[16];
+                var read = await socket.InputStream!.ReadAsync(receive, 0, receive.Length);
+                if (read <= 0)
                 {
-                    case BluetoothDevice.ActionPairingRequest:
-                        var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
-                        System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionPairingRequest {device.Name}");
-                        // TODO ?
-                        device.SetPin(pin);
-                        //InvokeAbortBroadcast();
-                        break;
-
-                    case BluetoothDevice.ActionBondStateChanged:
-                        var state = intent.GetIntExtra(BluetoothDevice.ExtraBondState, BluetoothDevice.Error);
-                        var previousState = intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
-                        System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionBondStateChanged {previousState} -> {state}");
-                        if ((Bond)state == Bond.Bonded)
-                        {
-                            tcs.TrySetResult(true);
-                        }
-                        else if ((Bond)state == Bond.None)
-                        {
-                            tcs.TrySetResult(false);
-                        }
-                        break;
+                    device = null;
+                    return false;
                 }
+
+                var result = Encoding.ASCII.GetString(receive, 0, read);
+                return result.StartsWith("OK");
             }
-        }
-
-        private async ValueTask<BluetoothDevice?> FindBluetoothDeviceAsync(Func<BluetoothDevice, bool> predicate)
-        {
-            var tcs = new TaskCompletionSource<BluetoothDevice?>();
-
-            var receiver = new FindReceiver(tcs, predicate);
-            var filter = new IntentFilter();
-            filter.AddAction(BluetoothDevice.ActionFound);
-            filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
-            context.RegisterReceiver(receiver, filter);
-
-            adapter.StartDiscovery();
-
-            var device = await tcs.Task;
-
-            adapter.CancelDiscovery();
-
-            context.UnregisterReceiver(receiver);
-
-            return device;
-        }
-
-        public class FindReceiver : BroadcastReceiver
-        {
-            private readonly TaskCompletionSource<BluetoothDevice?> tcs;
-
-            private readonly Func<BluetoothDevice, bool> predicate;
-
-            public FindReceiver(TaskCompletionSource<BluetoothDevice?> tcs, Func<BluetoothDevice, bool> predicate)
+            catch (Java.IO.IOException ex)
             {
-                this.tcs = tcs;
-                this.predicate = predicate;
+                Log.Error(nameof(DummyPrinter), ex, "Connection error.");
+                device = null;
+                return false;
             }
-
-            public override void OnReceive(Context? context, Intent? intent)
+            finally
             {
-                switch (intent!.Action)
-                {
-                    case BluetoothDevice.ActionFound:
-                        var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
-                        if (predicate(device))
-                        {
-                            tcs.TrySetResult(device);
-                        }
-                        break;
-
-                    case BluetoothAdapter.ActionDiscoveryFinished:
-                        tcs.TrySetResult(null);
-                        break;
-                }
+                socket?.Close();
             }
         }
     }
