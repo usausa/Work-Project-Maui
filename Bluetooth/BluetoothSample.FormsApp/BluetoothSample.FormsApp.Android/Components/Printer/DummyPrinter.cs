@@ -2,7 +2,6 @@ namespace BluetoothSample.FormsApp.Droid.Components.Printer
 {
     using System;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Android.Bluetooth;
@@ -49,19 +48,19 @@ namespace BluetoothSample.FormsApp.Droid.Components.Printer
 
         private async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
         {
-            // TODO この方法だと処理が終わるまで確認画面が出ない？
             var tcs = new TaskCompletionSource<bool>();
 
             var receiver = new BondReceiver(tcs, pin);
             var filter = new IntentFilter();
             filter.AddAction(BluetoothDevice.ActionPairingRequest);
             filter.AddAction(BluetoothDevice.ActionBondStateChanged);
-            filter.Priority = (int)IntentFilterPriority.HighPriority;
+            //filter.Priority = (int)IntentFilterPriority.HighPriority;
             context.RegisterReceiver(receiver, filter);
 
+            // TODO ?
             // Timeout
-            var cts = new CancellationTokenSource(10_000);
-            cts.Token.Register(() => tcs.TrySetResult(false));
+            //var cts = new CancellationTokenSource(10_000);
+            //cts.Token.Register(() => tcs.TrySetResult(false));
 
             device.CreateBond();
 
@@ -69,7 +68,7 @@ namespace BluetoothSample.FormsApp.Droid.Components.Printer
 
             System.Diagnostics.Debug.WriteLine($"**** result=[{result}]");
 
-            cts.Dispose();
+            //cts.Dispose();
             context.UnregisterReceiver(receiver);
 
             return result;
@@ -92,11 +91,11 @@ namespace BluetoothSample.FormsApp.Droid.Components.Printer
                 switch (intent!.Action)
                 {
                     case BluetoothDevice.ActionPairingRequest:
-                        // TODO
                         var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
                         System.Diagnostics.Debug.WriteLine($"**** BluetoothDevice.ActionPairingRequest {device.Name}");
+                        // TODO ?
                         device.SetPin(pin);
-                        InvokeAbortBroadcast();
+                        //InvokeAbortBroadcast();
                         break;
 
                     case BluetoothDevice.ActionBondStateChanged:

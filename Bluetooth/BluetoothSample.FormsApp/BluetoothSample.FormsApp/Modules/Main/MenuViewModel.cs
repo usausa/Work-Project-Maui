@@ -7,7 +7,7 @@ namespace BluetoothSample.FormsApp.Modules.Main
 
     public class MenuViewModel : AppViewModelBase
     {
-        public ICommand DiscoveryCommand { get; }
+        public ICommand PrintCommand { get; }
 
         public MenuViewModel(
             ApplicationState applicationState,
@@ -15,7 +15,7 @@ namespace BluetoothSample.FormsApp.Modules.Main
             IPrinter printer)
             : base(applicationState)
         {
-            DiscoveryCommand = MakeAsyncCommand(async () =>
+            PrintCommand = MakeAsyncCommand(async () =>
             {
                 using (dialog.Loading("printing"))
                 {

@@ -22,8 +22,8 @@
 
         <Button Grid.Row="0"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding DiscoveryCommand}"
-                Text="Discovery" />
+                Command="{Binding PrintCommand}"
+                Text="Print" />
     </Grid>
 
 </ContentView>
