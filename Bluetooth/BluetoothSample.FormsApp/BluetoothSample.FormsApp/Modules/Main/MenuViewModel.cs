@@ -5,8 +5,6 @@ namespace BluetoothSample.FormsApp.Modules.Main
     using BluetoothSample.FormsApp.Components.Dialog;
     using BluetoothSample.FormsApp.Components.Printer;
 
-    using Smart.Navigation;
-
     public class MenuViewModel : AppViewModelBase
     {
         public ICommand DiscoveryCommand { get; }
@@ -19,7 +17,7 @@ namespace BluetoothSample.FormsApp.Modules.Main
         {
             DiscoveryCommand = MakeAsyncCommand(async () =>
             {
-                //using (dialog.Loading("printing"))
+                using (dialog.Loading("printing"))
                 {
                     await printer.WriteAsync("test");
                 }
