@@ -2,7 +2,12 @@
 <ContentPage
     x:Class="DeviceStatusExample.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:DeviceStatusExample">
+
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel />
+    </ContentPage.BindingContext>
 
     <ScrollView>
         <VerticalStackLayout
@@ -13,8 +18,37 @@
             <Label
                 FontSize="32"
                 HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+                Text="{Binding BatteryLevel.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding BatteryState.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding BatterySource.Value}" />
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding Connection.Value}" />
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiActive.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiSsid.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiLevel.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiAddress.Value}" />
 
         </VerticalStackLayout>
     </ScrollView>

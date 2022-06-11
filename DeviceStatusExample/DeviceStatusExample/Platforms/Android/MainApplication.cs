@@ -1,7 +1,8 @@
-﻿using Android.App;
-using Android.Runtime;
-
+﻿// ReSharper disable once CheckNamespace
 namespace DeviceStatusExample;
+
+using Android.App;
+using Android.Runtime;
 
 [Application]
 public class MainApplication : MauiApplication
