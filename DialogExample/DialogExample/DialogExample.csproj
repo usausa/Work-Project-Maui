@@ -50,8 +50,4 @@
     <PackageReference Include="Usa.Smart.Maui" Version="0.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
-
 </Project>

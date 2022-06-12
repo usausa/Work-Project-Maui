@@ -6,7 +6,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
-using DialogExample.Components.Dialog;
+using DialogExample.Components;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
@@ -15,6 +15,6 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        CurrentActivity.Init(this);
+        ActivityResolver.Init(this);
     }
 }

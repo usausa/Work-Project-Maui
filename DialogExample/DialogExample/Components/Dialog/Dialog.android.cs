@@ -10,19 +10,19 @@ internal partial class DialogImplementation
 {
     public async partial ValueTask Information(string message, string? title, string ok)
     {
-        var dialog = new InformationDialog(CurrentActivity.Activity);
+        var dialog = new InformationDialog(ActivityResolver.CurrentActivity);
         await dialog.ShowAsync(message, title, ok);
     }
 
     public async partial ValueTask<bool> Confirm(string message, bool defaultPositive, string? title, string ok, string cancel)
     {
-        var dialog = new ConfirmDialog(CurrentActivity.Activity);
+        var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel);
     }
 
     public async partial ValueTask<int> Select(string[] items, int selected, string? title)
     {
-        var dialog = new SelectDialog(CurrentActivity.Activity);
+        var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(items, selected, title);
     }
 }
