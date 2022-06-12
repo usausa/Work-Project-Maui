@@ -67,7 +67,7 @@ public interface IWifiInformation
 
 public static class WifiInformation
 {
-    private static WifiInformationImplementation current;
+    private static WifiInformationImplementation? current;
 
     public static IWifiInformation Current => current ??= new WifiInformationImplementation();
 
@@ -92,11 +92,11 @@ public static class WifiInformation
 
 internal partial class WifiInformationImplementation : IWifiInformation
 {
-    private event EventHandler<WifiStateEventArgs> StateChangedInternal;
+    private event EventHandler<WifiStateEventArgs>? StateChangedInternal;
 
-    private event EventHandler<WifiCapabilityEventArgs> CapabilityChangedInternal;
+    private event EventHandler<WifiCapabilityEventArgs>? CapabilityChangedInternal;
 
-    private event EventHandler<WifiLinkEventArgs> LinkChangedInternal;
+    private event EventHandler<WifiLinkEventArgs>? LinkChangedInternal;
 
     public event EventHandler<WifiStateEventArgs> StateChanged
     {

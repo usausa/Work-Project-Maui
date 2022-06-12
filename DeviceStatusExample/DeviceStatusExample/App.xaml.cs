@@ -2,12 +2,12 @@
 
 public partial class App
 {
-	public App()
-	{
-		InitializeComponent();
+    public App()
+    {
+        InitializeComponent();
 
-		MainPage = new MainPage();
-	}
+        MainPage = new MainPage();
+    }
 
     protected override async void OnStart()
     {

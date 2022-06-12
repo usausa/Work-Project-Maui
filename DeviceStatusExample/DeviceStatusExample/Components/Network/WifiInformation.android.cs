@@ -8,12 +8,12 @@ using Java.Net;
 
 internal partial class WifiInformationImplementation
 {
-    private static ConnectivityManager connectivityManager;
+    private static ConnectivityManager? connectivityManager;
 
-    private WifiInformationCallBack callback;
+    private WifiInformationCallBack? callback;
 
     private static ConnectivityManager ConnectivityManager =>
-        connectivityManager ??= Android.App.Application.Context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
+        connectivityManager ??= (ConnectivityManager)Android.App.Application.Context.GetSystemService(Context.ConnectivityService)!;
 
     private partial void StartListener()
     {
@@ -65,7 +65,7 @@ internal partial class WifiInformationImplementation
         {
             var wifiInfo = (WifiInfo)networkCapabilities.TransportInfo!;
 #pragma warning disable CS0618
-            parent.RaiseCapabilityChanged(wifiInfo.SSID, WifiManager.CalculateSignalLevel(networkCapabilities.SignalStrength, 100));
+            parent.RaiseCapabilityChanged(wifiInfo.SSID ?? string.Empty, WifiManager.CalculateSignalLevel(networkCapabilities.SignalStrength, 100));
 #pragma warning restore CS0618
         }
 
@@ -76,11 +76,11 @@ internal partial class WifiInformationImplementation
             {
                 if (linkAddress.Address is Inet4Address ip4)
                 {
-                    list.Add(new LinkAddress(ip4.HostAddress, true));
+                    list.Add(new LinkAddress(ip4.HostAddress!, true));
                 }
                 else if (linkAddress.Address is Inet6Address ip6)
                 {
-                    list.Add(new LinkAddress(ip6.HostAddress, false));
+                    list.Add(new LinkAddress(ip6.HostAddress!, false));
                 }
             }
 
