@@ -2,7 +2,12 @@
 <ContentPage
     x:Class="DialogExample.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:DialogExample">
+
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel />
+    </ContentPage.BindingContext>
 
     <ScrollView>
         <VerticalStackLayout
@@ -10,11 +15,9 @@
             Spacing="25"
             VerticalOptions="Center">
 
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+            <Button Command="{Binding InformationCommand}" Text="Information" />
+            <Button Command="{Binding ConfirmCommand}" Text="Confirm" />
+            <Button Command="{Binding SelectCommand}" Text="Select" />
 
         </VerticalStackLayout>
     </ScrollView>
