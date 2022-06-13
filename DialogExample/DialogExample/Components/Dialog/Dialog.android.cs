@@ -5,29 +5,31 @@ using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Views;
 
-
 internal partial class DialogImplementation
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask Information(string message, string? title, string ok)
     {
-        var dialog = new InformationDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new InformationDialog(ActivityResolver.CurrentActivity);
         await dialog.ShowAsync(message, title, ok);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<bool> Confirm(string message, bool defaultPositive, string? title, string ok, string cancel)
     {
-        var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> Select(string[] items, int selected, string? title)
     {
-        var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(items, selected, title);
     }
 }
 
-internal class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+internal sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
 {
     private readonly TaskCompletionSource<bool> result = new();
 
@@ -40,6 +42,7 @@ internal class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListe
         this.activity = activity;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task ShowAsync(string message, string? title, string ok)
     {
         alertDialog = new AlertDialog.Builder(activity)
@@ -75,7 +78,7 @@ internal class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListe
     }
 }
 
-internal class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+internal sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
 {
     private readonly TaskCompletionSource<bool> result = new();
 
@@ -90,6 +93,7 @@ internal class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener,
         this.activity = activity;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task<bool> ShowAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
     {
         positive = defaultPositive;
@@ -128,7 +132,7 @@ internal class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener,
     }
 }
 
-internal class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+internal sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
 {
     private readonly TaskCompletionSource<int> result = new();
 
@@ -141,6 +145,7 @@ internal class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, 
         this.activity = activity;
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task<int> ShowAsync(string[] items, int selected, string? title)
     {
         alertDialog = new AlertDialog.Builder(activity)
