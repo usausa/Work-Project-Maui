@@ -11,20 +11,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.3.0</Version>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <MinClientVersion>2.12</MinClientVersion>
-    <Authors>machi_pon</Authors>
-    <Copyright>Copyright (c) 2022 machi_pon</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/usausa/Smart-Net-Navigation</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 

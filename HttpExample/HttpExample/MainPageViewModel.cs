@@ -43,8 +43,7 @@ public class MainPageViewModel : ViewModelBase
 
         await Application.Current!.MainPage!.DisplayAlert(
             "Result",
-            $"Elapsed=[{watch.Elapsed}]\n" +
-            $"Success=[{success}]\n",
+            $"Elapsed=[{watch.Elapsed}]\nSuccess=[{success}]\n",
             "ok");
     }
 
@@ -52,11 +51,11 @@ public class MainPageViewModel : ViewModelBase
         await Execute("Default", async (c, i) => await c.GetAsync<ItemResponse>($"/Example/Item?code={i}"));
 
     private async Task ExecutePost() =>
-        await Execute("Default", async (c, i) => await c.PostAsync<EchoResponse>("/Example/Echo", new EchoRequest { Message = "Hello" }));
+        await Execute("Default", async (c, _) => await c.PostAsync<EchoResponse>("/Example/Echo", new EchoRequest { Message = "Hello" }));
 
     private async Task ExecuteGet2() =>
         await Execute("NoBase", async (c, i) => await c.GetAsync<ItemResponse>($"http://192.168.100.9:5000/Example/Item?code={i}"));
 
     private async Task ExecutePost2() =>
-        await Execute("NoBase", async (c, i) => await c.PostAsync<EchoResponse>("http://192.168.100.9:5000/Example/Echo", new EchoRequest { Message = "Hello" }));
+        await Execute("NoBase", async (c, _) => await c.PostAsync<EchoResponse>("http://192.168.100.9:5000/Example/Echo", new EchoRequest { Message = "Hello" }));
 }

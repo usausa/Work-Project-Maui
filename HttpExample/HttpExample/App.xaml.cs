@@ -1,6 +1,6 @@
 ﻿namespace HttpExample;
 
-public partial class App : Application
+public partial class App
 {
     public App(MainPage mainPage)
     {
