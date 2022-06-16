@@ -5,13 +5,48 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:GraphicExample">
 
-    <ContentPage.Resources>
-        <local:TestDrawable x:Key="Drawable" />
-    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel />
+    </ContentPage.BindingContext>
 
-    <GraphicsView
-        Drawable="{StaticResource Drawable}"
-        HorizontalOptions="Fill"
-        VerticalOptions="Fill" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GraphicsView
+            Grid.Row="0"
+            local:Graphic.Drawer="{x:Type local:TestDrawable}"
+            local:Graphic.Source="{Binding Source}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{Binding AddCommand}"
+                Text="Add" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding DeleteCommand}"
+                Text="Delete" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding LeftCommand}"
+                Text="Left" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding RightCommand}"
+                Text="Right" />
+        </Grid>
+    </Grid>
 
 </ContentPage>

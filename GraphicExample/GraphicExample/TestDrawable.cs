@@ -1,13 +1,23 @@
 ﻿namespace GraphicExample;
 
-internal class TestDrawable : IDrawable
+public sealed class TestDrawable : IDrawable
 {
+    private readonly TestData data;
+
+    public TestDrawable(TestData data)
+    {
+        this.data = data;
+    }
+
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         // Draw border
-        canvas.DrawRectangle(dirtyRect.Inflate(-1, -1));
+        //canvas.DrawRectangle(dirtyRect.Inflate(-1, -1));
 
         canvas.FillColor = Colors.Black;
-        canvas.FillCircle(new Point(dirtyRect.Width / 2, dirtyRect.Height / 2), 15d);
+        foreach (var point in data.Points)
+        {
+            canvas.FillCircle(new Point(dirtyRect.Width * point.X, dirtyRect.Height * point.Y), 15d);
+        }
     }
 }
