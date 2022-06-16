@@ -51,7 +51,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Rester" Version="2.2.0" />
     <PackageReference Include="Rester.Serializers.System.Text.Json" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="0.2.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="0.3.0" />
   </ItemGroup>
 
 </Project>
