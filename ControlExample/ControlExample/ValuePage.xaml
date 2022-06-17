@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.ValuePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Value">
+
+    <VerticalStackLayout Padding="8" Spacing="8">
+
+        <CheckBox IsChecked="True" />
+
+        <CheckBox Color="Red" />
+        <CheckBox Color="Green" />
+        <CheckBox Color="Blue" />
+
+        <Slider Maximum="360" />
+
+        <Stepper
+            HorizontalOptions="Center"
+            Increment="30"
+            Maximum="360" />
+
+        <Switch IsToggled="True" />
+        <Switch OnColor="Orange" ThumbColor="Green" />
+
+        <ActivityIndicator IsRunning="True" />
+
+        <ProgressBar Progress="0.5" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

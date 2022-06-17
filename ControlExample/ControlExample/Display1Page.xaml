@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.Display1Page"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Display1">
+
+    <VerticalStackLayout Padding="8" Spacing="8">
+
+        <Border
+            Padding="16,8"
+            Background="#2B0B98"
+            HorizontalOptions="Center"
+            Stroke="#C49B33"
+            StrokeThickness="4">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="40,0,0,40" />
+            </Border.StrokeShape>
+            <Label
+                FontAttributes="Bold"
+                FontSize="18"
+                Text=".NET MAUI"
+                TextColor="White" />
+        </Border>
+
+        <Border
+            Padding="16,8"
+            Background="#2B0B98"
+            HorizontalOptions="Center"
+            StrokeShape="RoundRectangle 40,0,0,40"
+            StrokeThickness="4">
+            <Border.Stroke>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Offset="0.1" Color="Orange" />
+                    <GradientStop Offset="1.0" Color="Brown" />
+                </LinearGradientBrush>
+            </Border.Stroke>
+            <Label
+                FontAttributes="Bold"
+                FontSize="18"
+                Text=".NET MAUI"
+                TextColor="White" />
+        </Border>
+
+        <BoxView
+            CornerRadius="10"
+            HeightRequest="160"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="160"
+            Color="CornflowerBlue" />
+
+        <Frame BorderColor="Gray" CornerRadius="10">
+            <Label Text="Frame wrapped around a Label" />
+        </Frame>
+
+        <Frame
+            Padding="8"
+            BorderColor="Gray"
+            CornerRadius="5">
+            <StackLayout>
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    Text="Card Example" />
+                <BoxView
+                    HeightRequest="2"
+                    HorizontalOptions="Fill"
+                    Color="Gray" />
+                <Label Text="Frames can wrap more complex layouts to create more complex UI components, such as this card!" />
+            </StackLayout>
+        </Frame>
+
+        <Frame
+            Margin="10"
+            BorderColor="Black"
+            CornerRadius="50"
+            HeightRequest="60"
+            HorizontalOptions="Center"
+            IsClippedToBounds="True"
+            VerticalOptions="Center"
+            WidthRequest="60">
+            <Image
+                Margin="-20"
+                Aspect="AspectFill"
+                HeightRequest="100"
+                Source="dotnet_bot.jpg"
+                WidthRequest="100" />
+        </Frame>
+
+    </VerticalStackLayout>
+
+</ContentPage>

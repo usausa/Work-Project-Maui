@@ -1,8 +1,8 @@
 ﻿namespace ControlExample;
 
-public partial class MainPage
+public partial class AppShell
 {
-    public MainPage()
+    public AppShell()
     {
         InitializeComponent();
     }

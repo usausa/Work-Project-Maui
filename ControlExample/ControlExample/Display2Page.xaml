@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.Display2Page"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ControlExample"
+    Title="Display2">
+
+    <VerticalStackLayout Padding="8" Spacing="8">
+
+        <Label Text="This is a green label." TextColor="#77d065" />
+
+        <Label CharacterSpacing="10" Text="Character spaced text" />
+
+        <Label>
+            <Label.Text>
+                First line
+                Second line
+            </Label.Text>
+        </Label>
+
+        <Label
+            LineBreakMode="WordWrap"
+            MaxLines="2"
+            Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In facilisis nulla eu felis fringilla vulputate. Nullam porta eleifend lacinia. Donec at iaculis tellus." />
+
+        <Label
+            LineBreakMode="WordWrap"
+            LineHeight="1.8"
+            Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In facilisis nulla eu felis fringilla vulputate. Nullam porta eleifend lacinia. Donec at iaculis tellus." />
+
+        <Label TextType="Html">
+            <![CDATA[
+                This is <strong style="color:red">HTML</strong> text.
+            ]]>
+        </Label>
+
+        <Label Text="This is underlined text." TextDecorations="Underline" />
+        <Label Text="This is text with strikethrough." TextDecorations="Strikethrough" />
+        <Label Text="This is underlined text with strikethrough." TextDecorations="Underline, Strikethrough" />
+
+        <Label Text="This text will be displayed in uppercase." TextTransform="Uppercase" />
+
+        <Label LineBreakMode="WordWrap">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span
+                        FontAttributes="Bold"
+                        Text="Red Bold, "
+                        TextColor="Red" />
+                    <Span FontSize="14" Text="default, ">
+                        <Span.GestureRecognizers>
+                            <TapGestureRecognizer />
+                        </Span.GestureRecognizers>
+                    </Span>
+                    <Span
+                        FontAttributes="Italic"
+                        FontSize="12"
+                        Text="italic small." />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+        <Label>
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="Alternatively, click " />
+                    <local:HyperlinkSpan Text="here" Url="https://docs.microsoft.com/dotnet/" />
+                    <Span Text=" to view .NET documentation." />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+    </VerticalStackLayout>
+
+</ContentPage>
