@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.ScrollPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ControlExample"
+    Title="Scroll">
+
+    <ScrollView>
+        <StackLayout BindableLayout.ItemsSource="{x:Static local:NamedColor.All}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="local:NamedColor">
+                    <StackLayout Orientation="Horizontal">
+                        <BoxView
+                            HeightRequest="32"
+                            VerticalOptions="Center"
+                            WidthRequest="32"
+                            Color="{Binding Color}" />
+                        <Label
+                            FontSize="24"
+                            Text="{Binding FriendlyName}"
+                            VerticalOptions="Center" />
+                    </StackLayout>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

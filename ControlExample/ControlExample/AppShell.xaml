@@ -23,6 +23,21 @@
             ContentTemplate="{DataTemplate local:ValuePage}"
             Route="Value" />
 
+        <ShellContent
+            Title="Shape"
+            ContentTemplate="{DataTemplate local:ShapePage}"
+            Route="Shape" />
+
+        <ShellContent
+            Title="Graphic"
+            ContentTemplate="{DataTemplate local:GraphicPage}"
+            Route="Graphic" />
+
+        <ShellContent
+            Title="Scroll"
+            ContentTemplate="{DataTemplate local:ScrollPage}"
+            Route="Scroll" />
+
     </FlyoutItem>
 
 </Shell>

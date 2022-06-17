@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.ShapePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Shape">
+
+    <VerticalStackLayout Padding="8" Spacing="8">
+
+        <Ellipse
+            Fill="DarkBlue"
+            HeightRequest="50"
+            HorizontalOptions="Start"
+            Stroke="Red"
+            StrokeThickness="4"
+            WidthRequest="150" />
+
+        <Ellipse
+            HeightRequest="100"
+            HorizontalOptions="Start"
+            Stroke="Red"
+            StrokeThickness="4"
+            WidthRequest="100" />
+
+        <Rectangle
+            Fill="DarkBlue"
+            HeightRequest="50"
+            HorizontalOptions="Start"
+            Stroke="Red"
+            StrokeDashArray="1,1"
+            StrokeDashOffset="6"
+            StrokeThickness="4"
+            WidthRequest="150" />
+
+        <Rectangle
+            Fill="Blue"
+            HeightRequest="50"
+            HorizontalOptions="Start"
+            RadiusX="25"
+            RadiusY="5"
+            Stroke="Black"
+            StrokeThickness="3"
+            WidthRequest="200" />
+
+        <Line
+            Stroke="Red"
+            StrokeLineCap="Flat"
+            StrokeThickness="12"
+            X1="0"
+            X2="300"
+            Y1="20"
+            Y2="20" />
+        <Line
+            Stroke="Red"
+            StrokeLineCap="Square"
+            StrokeThickness="12"
+            X1="0"
+            X2="300"
+            Y1="20"
+            Y2="20" />
+        <Line
+            Stroke="Red"
+            StrokeLineCap="Round"
+            StrokeThickness="12"
+            X1="0"
+            X2="300"
+            Y1="20"
+            Y2="20" />
+
+        <Polyline
+            Points="20 20,250 40,20 60"
+            Stroke="DarkBlue"
+            StrokeLineJoin="Miter"
+            StrokeThickness="20" />
+        <Polyline
+            Points="20 20,250 40,20 60"
+            Stroke="DarkBlue"
+            StrokeLineJoin="Bevel"
+            StrokeThickness="20" />
+        <Polyline
+            Points="20 20,250 40,20 60"
+            Stroke="DarkBlue"
+            StrokeLineJoin="Round"
+            StrokeThickness="20" />
+
+        <Polyline
+            Points="0,0 10,30 15,0 18,60 23,30 35,30 40,0 43,60 48,30 100,30"
+            Stroke="Red"
+            StrokeDashArray="1,1"
+            StrokeDashOffset="6"
+            StrokeThickness="2" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
