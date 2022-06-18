@@ -1,8 +1,8 @@
 namespace ControlExample;
 
-public partial class GraphicPage
+public partial class Graphic1Page
 {
-    public GraphicPage()
+    public Graphic1Page()
     {
         InitializeComponent();
     }

@@ -29,9 +29,9 @@
             Route="Shape" />
 
         <ShellContent
-            Title="Graphic"
-            ContentTemplate="{DataTemplate local:GraphicPage}"
-            Route="Graphic" />
+            Title="Graphic1"
+            ContentTemplate="{DataTemplate local:Graphic1Page}"
+            Route="Graphic1" />
 
         <ShellContent
             Title="Scroll"
