@@ -43,6 +43,11 @@
             ContentTemplate="{DataTemplate local:ScrollPage}"
             Route="Scroll" />
 
+        <ShellContent
+            Title="Template"
+            ContentTemplate="{DataTemplate local:TemplatePage}"
+            Route="Template" />
+
     </FlyoutItem>
 
 </Shell>
