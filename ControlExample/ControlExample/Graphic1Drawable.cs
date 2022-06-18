@@ -2,7 +2,7 @@
 
 using Font = Microsoft.Maui.Graphics.Font;
 
-internal class Graphic1Drawable : IDrawable
+public class Graphic1Drawable : IDrawable
 {
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {

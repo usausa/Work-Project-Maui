@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ControlExample.Graphic2Page"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="using:ControlExample"
+    Title="Graphic2">
+
+    <ContentPage.Resources>
+        <local:Graphic2Drawable x:Key="Drawable" />
+    </ContentPage.Resources>
+
+    <GraphicsView
+        Drawable="{StaticResource Drawable}"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill" />
+
+</ContentPage>

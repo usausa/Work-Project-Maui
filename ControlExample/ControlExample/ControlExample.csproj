@@ -65,6 +65,9 @@
     <MauiXaml Update="Graphic1Page.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Graphic2Page.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="ScrollPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

@@ -34,6 +34,11 @@
             Route="Graphic1" />
 
         <ShellContent
+            Title="Graphic2"
+            ContentTemplate="{DataTemplate local:Graphic2Page}"
+            Route="Graphic2" />
+
+        <ShellContent
             Title="Scroll"
             ContentTemplate="{DataTemplate local:ScrollPage}"
             Route="Scroll" />
