@@ -16,6 +16,8 @@
                 SemanticProperties.HeadingLevel="Level1"
                 Text="Hello, World!" />
 
+            <Button Text="Child" Clicked="Button_OnClicked"/>
+
         </VerticalStackLayout>
     </ScrollView>
 
