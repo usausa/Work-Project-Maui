@@ -4,19 +4,23 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25"
-            VerticalOptions="Center">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+        <BoxView
+            x:Name="Box"
+            Grid.Row="0"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            Color="SkyBlue" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <Button
+            Grid.Row="1"
+            Clicked="Button_OnClicked"
+            Text="Loading" />
+    </Grid>
 
 </ContentPage>
