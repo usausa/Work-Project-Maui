@@ -19,10 +19,23 @@
             VerticalOptions="Fill"
             Color="SkyBlue" />
 
-        <Button
-            Grid.Row="1"
-            Command="{Binding LoadingCommand}"
-            Text="Loading" />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{Binding SimpleCommand}"
+                Text="Simple" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding TextCommand}"
+                Text="Text" />
+        </Grid>
     </Grid>
 
 </ContentPage>

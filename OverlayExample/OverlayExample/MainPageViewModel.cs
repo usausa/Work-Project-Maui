@@ -6,15 +6,26 @@ using Smart.Maui.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    public ICommand LoadingCommand { get; }
+    public ICommand SimpleCommand { get; }
+    public ICommand TextCommand { get; }
 
     public MainPageViewModel(IDialog dialog)
     {
-        LoadingCommand = MakeAsyncCommand(async () =>
+        SimpleCommand = MakeAsyncCommand(async () =>
         {
             using var loading = dialog.Loading();
 
             await Task.Delay(3000);
+        });
+        TextCommand = MakeAsyncCommand(async () =>
+        {
+            using var loading = dialog.Loading("0");
+
+            for (var i = 0; i <= 100; i++)
+            {
+                loading.Update($"{i}");
+                await Task.Delay(50);
+            }
         });
     }
 }
