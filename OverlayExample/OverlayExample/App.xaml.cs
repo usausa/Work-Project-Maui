@@ -2,10 +2,10 @@
 
 public partial class App
 {
-    public App()
+    public App(IServiceProvider provider)
     {
         InitializeComponent();
 
-        MainPage = new MainPage();
+        MainPage = provider.GetRequiredService<MainPage>();
     }
 }

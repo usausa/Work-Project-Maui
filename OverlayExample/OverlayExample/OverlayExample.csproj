@@ -40,4 +40,8 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Usa.Smart.Maui" Version="0.3.0" />
+  </ItemGroup>
+
 </Project>
