@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="LocationExample.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="0">
+            <Label
+                x:Name="Latitude"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+            <Label
+                x:Name="Longitude"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+            <Label
+                x:Name="Timestamp"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+            <Label
+                x:Name="Place1"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+            <Label
+                x:Name="Place2"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+            <Label
+                x:Name="Place3"
+                FontSize="32"
+                HorizontalOptions="Fill" />
+        </StackLayout>
+
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Column="0"
+                    Clicked="StartButton_OnClicked"
+                    Text="Start" />
+                <Button
+                    Grid.Column="1"
+                    Clicked="StopButton_OnClicked"
+                    Text="Stop" />
+                <Button
+                    Grid.Column="2"
+                    Clicked="LastButton_OnClicked"
+                    Text="Last" />
+                <Button
+                    Grid.Column="3"
+                    Clicked="PlaceButton_OnClicked"
+                    Text="Place" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
