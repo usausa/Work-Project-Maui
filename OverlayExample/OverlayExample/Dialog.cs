@@ -1,42 +1,51 @@
 ﻿namespace OverlayExample;
 
-public interface ITextProgress : IDisposable
+public interface ILoading : IDisposable
 {
     void Update(string text);
 }
 
+public interface IProgress : IDisposable
+{
+    void Update(double value);
+}
+
 public interface IDialog
 {
-    IDisposable Loading();
+    IDisposable Lock();
 
-    ITextProgress Loading(string text);
+    ILoading Loading(string text = "");
+
+    IProgress Progress();
 }
 
 public sealed class Dialog : IDialog
 {
-    // Simple
-    public IDisposable Loading()
+    public IDisposable Lock()
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new SimpleOverlay(window);
+        return new LockOverlay(window);
     }
 
-    public ITextProgress Loading(string text)
+    public ILoading Loading(string text = "")
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new TextOverlay(window, text);
+        return new LoadingOverlay(window, text);
     }
 
-    // TODO Timer animation
-    // TODO Progress
+    public IProgress Progress()
+    {
+        var window = Application.Current!.MainPage!.GetParentWindow();
+        return new ProgressOverlay(window);
+    }
 }
 
-internal sealed class SimpleOverlay : WindowOverlay, IDisposable
+internal sealed class LockOverlay : WindowOverlay, IDisposable
 {
-    public SimpleOverlay(IWindow window)
+    public LockOverlay(IWindow window)
         : base(window)
     {
-        AddWindowElement(new LoadingElementOverlay());
+        AddWindowElement(new ElementOverlay());
         EnableDrawableTouchHandling = true;
 
         window.AddOverlay(this);
@@ -47,11 +56,11 @@ internal sealed class SimpleOverlay : WindowOverlay, IDisposable
         Window.RemoveOverlay(this);
     }
 
-    private class LoadingElementOverlay : IWindowOverlayElement
+    private class ElementOverlay : IWindowOverlayElement
     {
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
-            canvas.FillColor = Color.FromRgba(0, 0, 0, 64);
+            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
             canvas.FillRectangle(dirtyRect);
         }
 
@@ -59,14 +68,14 @@ internal sealed class SimpleOverlay : WindowOverlay, IDisposable
     }
 }
 
-internal sealed class TextOverlay : WindowOverlay, ITextProgress
+internal sealed class LoadingOverlay : WindowOverlay, ILoading
 {
-    private readonly LoadingElementOverlay overlay;
+    private readonly ElementOverlay overlay;
 
-    public TextOverlay(IWindow window, string text)
+    public LoadingOverlay(IWindow window, string text)
         : base(window)
     {
-        overlay = new LoadingElementOverlay { Text = text };
+        overlay = new ElementOverlay { Text = text };
         AddWindowElement(overlay);
         EnableDrawableTouchHandling = true;
 
@@ -80,26 +89,87 @@ internal sealed class TextOverlay : WindowOverlay, ITextProgress
 
     public void Update(string text)
     {
-        //if (!MainThread.IsMainThread)
-        //{
-        //    MainThread.BeginInvokeOnMainThread(() => Update(text));
-        //    return;
-        //}
-
         overlay.Text = text;
         Invalidate();
     }
 
-    private class LoadingElementOverlay : IWindowOverlayElement
+    private class ElementOverlay : IWindowOverlayElement
     {
         public string Text { get; set; } = string.Empty;
 
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
-            canvas.FillColor = Color.FromRgba(0, 0, 0, 64);
+            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
             canvas.FillRectangle(dirtyRect);
-            canvas.FontSize = 48;
-            canvas.DrawString(Text, dirtyRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+
+            var messageRect = new RectF(32, (dirtyRect.Height / 2) - 32, dirtyRect.Width - 64, 64);
+
+            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+            canvas.FillRoundedRectangle(messageRect, 8);
+
+            canvas.FontColor = Colors.White;
+            canvas.FontSize = 24;
+            canvas.DrawString(Text, messageRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+        }
+
+        public bool Contains(Point point) => true;
+    }
+}
+
+internal sealed class ProgressOverlay : WindowOverlay, IProgress
+{
+    private readonly ElementOverlay overlay;
+
+    public ProgressOverlay(IWindow window)
+        : base(window)
+    {
+        overlay = new ElementOverlay();
+        AddWindowElement(overlay);
+        EnableDrawableTouchHandling = true;
+
+        window.AddOverlay(this);
+    }
+
+    public void Dispose()
+    {
+        Window.RemoveOverlay(this);
+    }
+
+    public void Update(double value)
+    {
+        overlay.Value = value switch
+        {
+            > 100 => 100,
+            < 0 => 0,
+            _ => value
+        };
+        Invalidate();
+    }
+
+    private class ElementOverlay : IWindowOverlayElement
+    {
+        public double Value { get; set; }
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+            canvas.FillRectangle(dirtyRect);
+
+            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+            canvas.FillRoundedRectangle(new RectF((dirtyRect.Width / 2) - 80, (dirtyRect.Height / 2) - 80, 160, 160), 16);
+
+            var arcRect = new RectF((dirtyRect.Width / 2) - 64, (dirtyRect.Height / 2) - 64, 128, 128);
+
+            canvas.StrokeSize = 8;
+            canvas.StrokeColor = Colors.Gray;
+            canvas.DrawArc(arcRect, 0, 360, false, false);
+
+            canvas.StrokeColor = Colors.White;
+            canvas.DrawArc(arcRect, 90, 90 - (int)(360 * Value / 100), true, false);
+
+            canvas.FontColor = Colors.White;
+            canvas.FontSize = 24;
+            canvas.DrawString($"{Value:F1}%", arcRect, HorizontalAlignment.Center, VerticalAlignment.Center);
         }
 
         public bool Contains(Point point) => true;

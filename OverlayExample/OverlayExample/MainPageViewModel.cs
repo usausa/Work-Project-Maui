@@ -6,25 +6,37 @@ using Smart.Maui.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    public ICommand SimpleCommand { get; }
-    public ICommand TextCommand { get; }
+    public ICommand LockCommand { get; }
+    public ICommand LoadingCommand { get; }
+    public ICommand ProgressCommand { get; }
 
     public MainPageViewModel(IDialog dialog)
     {
-        SimpleCommand = MakeAsyncCommand(async () =>
+        LockCommand = MakeAsyncCommand(async () =>
         {
-            using var loading = dialog.Loading();
+            using var loading = dialog.Lock();
 
             await Task.Delay(3000);
         });
-        TextCommand = MakeAsyncCommand(async () =>
+        LoadingCommand = MakeAsyncCommand(async () =>
         {
-            using var loading = dialog.Loading("0");
+            using var loading = dialog.Loading();
 
-            for (var i = 0; i <= 100; i++)
+            loading.Update("Connecting...");
+            await Task.Delay(1000);
+            loading.Update("Downloading...");
+            await Task.Delay(2000);
+            loading.Update("Updating...");
+            await Task.Delay(1000);
+        });
+        ProgressCommand = MakeAsyncCommand(async () =>
+        {
+            using var loading = dialog.Progress();
+
+            for (var i = 0; i <= 1000; i++)
             {
-                loading.Update($"{i}");
-                await Task.Delay(50);
+                loading.Update(i / 10d);
+                await Task.Delay(1);
             }
         });
     }

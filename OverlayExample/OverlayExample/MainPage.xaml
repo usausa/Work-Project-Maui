@@ -17,7 +17,7 @@
             Grid.Row="0"
             HorizontalOptions="Fill"
             VerticalOptions="Fill"
-            Color="SkyBlue" />
+            Color="White" />
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -29,12 +29,16 @@
 
             <Button
                 Grid.Column="0"
-                Command="{Binding SimpleCommand}"
-                Text="Simple" />
+                Command="{Binding LockCommand}"
+                Text="Lock" />
             <Button
                 Grid.Column="1"
-                Command="{Binding TextCommand}"
-                Text="Text" />
+                Command="{Binding LoadingCommand}"
+                Text="Loading" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding ProgressCommand}"
+                Text="Progress" />
         </Grid>
     </Grid>
 
