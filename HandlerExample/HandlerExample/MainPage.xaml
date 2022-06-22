@@ -2,7 +2,8 @@
 <ContentPage
     x:Class="HandlerExample.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:HandlerExample">
 
     <ScrollView>
         <VerticalStackLayout
@@ -10,11 +11,14 @@
             Spacing="25"
             VerticalOptions="Center">
 
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+            <Entry />
+            <local:CustomEntry1 />
+            <local:CustomEntry2 />
+            <local:CustomEntry3
+                x:Name="Entry3"
+                Text="test"
+                TextColor="Red" />
+            <Button Clicked="Button_OnClicked" Text="Update" />
 
         </VerticalStackLayout>
     </ScrollView>

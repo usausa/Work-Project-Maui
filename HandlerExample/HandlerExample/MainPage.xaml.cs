@@ -6,4 +6,9 @@ public partial class MainPage
     {
         InitializeComponent();
     }
+
+    private void Button_OnClicked(object? sender, EventArgs e)
+    {
+        Entry3.Text = DateTime.Now.ToString("HH:mm:ss");
+    }
 }
