@@ -16,6 +16,12 @@ public static class MauiProgram
 			})
             .ConfigureContainer(new DebugServiceProviderFactory(), config =>
             {
+				config
+                    .UseAutoBinding()
+                    .UseArrayBinding()
+                    .UseAssignableBinding()
+                    .UsePropertyInjector();
+
                 config.BindTransient<MainPage>();
             });
 
