@@ -23,11 +23,18 @@ public partial class ChildPopup
 
     private void Button_OnTestClicked(object? sender, EventArgs e)
     {
+        Debug.WriteLine("----------");
         var parent = Parent;
         while (parent is not null)
         {
             Debug.WriteLine($"**** {parent}");
             parent = parent.Parent;
+        }
+
+        Debug.WriteLine("----------");
+        foreach (var child in Parent.GetVisualTreeDescendants())
+        {
+            Debug.WriteLine($"**** {child}");
         }
     }
 

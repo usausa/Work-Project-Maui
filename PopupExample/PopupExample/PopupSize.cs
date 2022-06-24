@@ -1,0 +1,8 @@
+﻿namespace PopupExample;
+
+public static class PopupSize
+{
+    public static Size Large => new(
+        (DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density) * 0.8, 
+        (DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density) * 0.8);
+}
