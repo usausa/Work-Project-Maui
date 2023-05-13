@@ -6,8 +6,6 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 
-using MauiComponents;
-
 [Activity(
     Theme = "@style/Maui.SplashTheme",
     MainLauncher = true,
@@ -19,7 +17,5 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-
-        ActivityResolver.Init(this);
     }
 }

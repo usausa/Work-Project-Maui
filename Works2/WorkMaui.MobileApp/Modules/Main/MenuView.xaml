@@ -23,26 +23,19 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0"
-                Command="{Binding InformationCommand}"
-                Text="Information" />
+                Text="" />
         <Button Grid.Row="1"
-                Command="{Binding ConfirmCommand}"
-                Text="Confirm" />
+                Text="" />
         <Button Grid.Row="2"
-                Command="{Binding SelectCommand}"
-                Text="Select" />
+                Text="" />
         <Button Grid.Row="3"
-                Command="{Binding LockCommand}"
-                Text="Lock" />
+                Text="" />
         <Button Grid.Row="4"
-                Command="{Binding LoadingCommand}"
-                Text="Loading" />
+                Text="" />
         <Button Grid.Row="5"
-                Command="{Binding ProgressCommand}"
-                Text="Progress" />
+                Text="" />
         <Button Grid.Row="6"
-                Command="{Binding PopupCommand}"
-                Text="Popup" />
+                Text="" />
     </Grid>
 
 </ContentView>

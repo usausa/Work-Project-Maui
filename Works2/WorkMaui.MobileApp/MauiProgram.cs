@@ -7,7 +7,6 @@ using CommunityToolkit.Maui;
 using Smart.Resolver;
 
 using WorkMaui.MobileApp.Modules;
-using WorkMaui.MobileApp.Services;
 
 public static class MauiProgram
 {
@@ -22,15 +21,9 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             })
             .UseMauiCommunityToolkit()
-            .ConfigureService(services =>
-            {
-#if ANDROID
-                services.AddComponentsDialog();
-#endif
-                services.AddComponentsPopup(c =>
-                    c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
-                services.AddComponentsSerializer();
-            })
+            //.ConfigureService(services =>
+            //{
+            //})
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
 #if DEBUG
@@ -54,13 +47,6 @@ public static class MauiProgram
 
         config.BindSingleton<ApplicationState>();
 
-        // Service
-        config.BindSingleton(new DataServiceOptions
-        {
-            Path = Path.Combine(FileSystem.AppDataDirectory, "Data.db")
-        });
-
-        config.BindSingleton<DataService>();
         config.AddNavigator(c =>
         {
             c.UseMauiNavigationProvider();
