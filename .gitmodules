@@ -1,0 +1,6 @@
+[submodule "Works3/Smart.Maui"]
+	path = Works3/Smart.Maui
+	url = https://github.com/usausa/Smart-Net-Maui.git
+[submodule "Works3/MauiComponents"]
+	path = Works3/MauiComponents
+	url = https://github.com/usausa/MauiComponents.git
