@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using WorkControl2.Behaviors;
 
 namespace WorkControl2
 {
@@ -18,6 +19,9 @@ namespace WorkControl2
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
+
+            // Apply
+            TintImageMapper.ApplyTintColor();
 
             return builder.Build();
         }
