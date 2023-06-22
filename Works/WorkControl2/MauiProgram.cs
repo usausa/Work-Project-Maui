@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using WorkControl2.Behaviors;
+using WorkControl2.Controls;
 
 namespace WorkControl2
 {
@@ -22,6 +23,18 @@ namespace WorkControl2
 
             // Apply
             TintImageMapper.ApplyTintColor();
+
+            // Customize only custom entry
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("SelectEntry", (handler, entry) =>
+            {
+#if ANDROID
+                // Custom
+                if (entry is SelectEntry)
+                {
+                    handler.PlatformView.SetSelectAllOnFocus(true);
+                }
+#endif
+            });
 
             return builder.Build();
         }

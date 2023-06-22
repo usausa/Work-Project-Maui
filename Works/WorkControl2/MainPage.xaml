@@ -29,6 +29,19 @@
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 Source="dotnet_bot.png" />
 
+            <Image
+                HeightRequest="200"
+                HorizontalOptions="Center"
+                SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                Source="dotnet_bot.png">
+                <Image.Behaviors>
+                    <behaviors:TintImageBehavior TintColor="CadetBlue" />
+                </Image.Behaviors>
+            </Image>
+
+            <Entry Text="123" />
+            <controls:SelectEntry Text="123" />
+
         </VerticalStackLayout>
     </ScrollView>
 
