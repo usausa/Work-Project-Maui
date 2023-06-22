@@ -1,24 +1,27 @@
 ﻿namespace WorkControl;
 
+using System.Diagnostics;
+
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
 	public MainPage()
 	{
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    private void SimpleViewOnClicked(object sender, EventArgs e)
+    {
+		Debug.WriteLine("SimpleView clicked.");
+    }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+    private void ColorButtonOnClicked(object sender, EventArgs e)
+    {
+        SimpleView.Color = SimpleView.Color.Equals(Colors.Red) ? Colors.Blue : Colors.Red;
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private void CallButtonOnClicked(object sender, EventArgs e)
+    {
+        SimpleView.PlatformCall(DateTime.Now.Second);
+    }
 }
 
