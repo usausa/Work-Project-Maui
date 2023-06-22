@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkControl", "WorkControl\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkControl2", "WorkControl2\WorkControl2.csproj", "{43960269-926A-48D8-810D-050827B4D88D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkControl3", "WorkControl3\WorkControl3.csproj", "{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,12 @@ Global
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
