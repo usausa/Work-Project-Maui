@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.Logging;
 
+using WorkControl3.Controls;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -23,7 +25,11 @@ public static class MauiProgram
         Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoKeyboardEntry", (handler, entry) =>
         {
 #if ANDROID
-            handler.PlatformView.ShowSoftInputOnFocus = false;
+            if (entry is CustomEntry)
+            {
+                handler.PlatformView.SetSelectAllOnFocus(true);
+                handler.PlatformView.ShowSoftInputOnFocus = false;
+            }
 #endif
         });
         return builder.Build();

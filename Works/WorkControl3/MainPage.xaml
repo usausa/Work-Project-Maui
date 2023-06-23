@@ -2,7 +2,8 @@
 <ContentPage
     x:Class="WorkControl3.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:WorkControl3.Controls">
 
     <ScrollView>
         <VerticalStackLayout
@@ -17,8 +18,8 @@
                 Text="Hello, World!" />
 
             <Button Text="123" />
-            <Entry Text="123" />
-            <Entry Text="123" />
+            <controls:CustomEntry Text="123" />
+            <controls:CustomEntry Text="123" />
             <Button Text="123" />
 
         </VerticalStackLayout>

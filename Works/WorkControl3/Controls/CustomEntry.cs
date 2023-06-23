@@ -1,5 +1,5 @@
 ﻿namespace WorkControl3.Controls;
 
-public class NoKeyboardEntry : Entry
+public class CustomEntry : Entry
 {
 }
