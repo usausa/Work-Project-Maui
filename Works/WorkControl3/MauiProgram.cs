@@ -15,14 +15,15 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            .ConfigureCustomControls();
 
 #if DEBUG
-	builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         // Customize only custom entry
-        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoKeyboardEntry", (handler, entry) =>
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("CustomEntry", (handler, entry) =>
         {
 #if ANDROID
             if (entry is CustomEntry)

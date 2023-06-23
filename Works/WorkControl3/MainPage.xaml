@@ -21,6 +21,9 @@
             <controls:CustomEntry Text="123" />
             <controls:CustomEntry Text="123" />
             <Button Text="123" />
+            <controls:CustomEntry2 Text="123" />
+            <controls:CustomEntry2 Text="123" />
+            <Button Text="123" />
 
         </VerticalStackLayout>
     </ScrollView>
