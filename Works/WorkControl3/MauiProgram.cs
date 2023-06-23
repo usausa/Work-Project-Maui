@@ -1,25 +1,31 @@
-﻿using Microsoft.Extensions.Logging;
+﻿namespace WorkControl3;
 
-namespace WorkControl3
+using Microsoft.Extensions.Logging;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+	builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
-        }
+        // Customize only custom entry
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoKeyboardEntry", (handler, entry) =>
+        {
+#if ANDROID
+            handler.PlatformView.ShowSoftInputOnFocus = false;
+#endif
+        });
+        return builder.Build();
     }
 }

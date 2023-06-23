@@ -16,6 +16,11 @@
                 SemanticProperties.HeadingLevel="Level1"
                 Text="Hello, World!" />
 
+            <Button Text="123" />
+            <Entry Text="123" />
+            <Entry Text="123" />
+            <Button Text="123" />
+
         </VerticalStackLayout>
     </ScrollView>
 
