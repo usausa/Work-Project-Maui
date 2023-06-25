@@ -5,9 +5,13 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkControl", "WorkControl\WorkControl.csproj", "{6B758699-AB67-4955-BC69-5B33D02F57DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkControl2", "WorkControl2\WorkControl2.csproj", "{43960269-926A-48D8-810D-050827B4D88D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkControl2", "WorkControl2\WorkControl2.csproj", "{43960269-926A-48D8-810D-050827B4D88D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkControl3", "WorkControl3\WorkControl3.csproj", "{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkControl3", "WorkControl3\WorkControl3.csproj", "{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Control", "Control", "{F368FB04-C4B2-49CC-89B0-9AAD1FE4F209}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkKeyFunction", "WorkKeyFunction\WorkKeyFunction.csproj", "{2A55F280-C4EC-476C-9046-648EE4971A98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,26 +20,34 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6B758699-AB67-4955-BC69-5B33D02F57DB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43960269-926A-48D8-810D-050827B4D88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43960269-926A-48D8-810D-050827B4D88D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B758699-AB67-4955-BC69-5B33D02F57DB} = {F368FB04-C4B2-49CC-89B0-9AAD1FE4F209}
+		{43960269-926A-48D8-810D-050827B4D88D} = {F368FB04-C4B2-49CC-89B0-9AAD1FE4F209}
+		{941D43A1-3711-4A9E-BCBE-A68B9D1E304E} = {F368FB04-C4B2-49CC-89B0-9AAD1FE4F209}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}

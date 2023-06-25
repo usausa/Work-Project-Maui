@@ -40,7 +40,7 @@ public partial class CustomEntry2Handler : EntryHandler
             if (e.Action == KeyEventActions.Down && keyCode == Keycode.Enter)
             {
                 Debug.WriteLine("* Handled");
-                //return true;
+                return true;
             }
 
             return false;
