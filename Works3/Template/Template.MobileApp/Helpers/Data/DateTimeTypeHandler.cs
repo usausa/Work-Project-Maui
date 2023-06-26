@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Helpers;
+namespace Template.MobileApp.Helpers.Data;
 
 using Smart.Data.Mapper.Handlers;
 

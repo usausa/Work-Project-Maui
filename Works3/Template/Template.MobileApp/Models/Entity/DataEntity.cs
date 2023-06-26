@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models;
+namespace Template.MobileApp.Models.Entity;
 
 using Smart.Data.Mapper.Attributes;
 

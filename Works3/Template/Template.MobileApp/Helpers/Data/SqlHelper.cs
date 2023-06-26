@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Helpers;
+namespace Template.MobileApp.Helpers.Data;
 
 using System.Reflection;
 
@@ -11,6 +11,7 @@ public static class SqlHelper
     private static readonly Dictionary<Type, string> TypeMap = new()
     {
         { typeof(string), "TEXT" },
+        { typeof(Guid), "TEXT" },
         { typeof(DateTime), "INTEGER" },
         { typeof(long), "INTEGER" },
         { typeof(int), "INTEGER" },
@@ -24,7 +25,7 @@ public static class SqlHelper
 
         var sql = new StringBuilder();
 
-        sql.Append("CREATE TABLE IF NOT EXISTS ");
+        sql.Append("CREATE TABLE ");
         sql.Append(table.Name);
         sql.Append(" (");
 
@@ -43,7 +44,8 @@ public static class SqlHelper
 
             sql.Append(type);
 
-            if (!isNullable || (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() != null))
+            if ((!isNullable && propertyType.IsValueType) ||
+                (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() is not null))
             {
                 sql.Append(" NOT NULL");
             }

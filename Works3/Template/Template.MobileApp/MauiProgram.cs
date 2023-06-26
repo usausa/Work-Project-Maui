@@ -12,6 +12,7 @@ using Smart.Resolver;
 
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
+using Template.MobileApp.State;
 
 public static class MauiProgram
 {
@@ -62,6 +63,9 @@ public static class MauiProgram
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
 
         config.BindSingleton<ApplicationState>();
+
+        config.BindSingleton<Configuration>();
+        config.BindSingleton<Session>();
 
         // Service
         config.BindSingleton(new DataServiceOptions
