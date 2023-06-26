@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Control", "Control", "{F368
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkKeyFunction", "WorkKeyFunction\WorkKeyFunction.csproj", "{2A55F280-C4EC-476C-9046-648EE4971A98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkEffect", "WorkEffect\WorkEffect.csproj", "{5485E260-5993-4CD3-8600-EB6BF4997332}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,12 @@ Global
 		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A55F280-C4EC-476C-9046-648EE4971A98}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5485E260-5993-4CD3-8600-EB6BF4997332}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
