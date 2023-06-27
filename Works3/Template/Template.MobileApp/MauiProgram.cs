@@ -9,7 +9,7 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 
 using Smart.Resolver;
-
+using Template.MobileApp.Components.Device;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
 using Template.MobileApp.State;
@@ -62,6 +62,9 @@ public static class MauiProgram
         // Components
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
 
+        config.BindSingleton<IDeviceManager, DeviceManager>();
+
+        // State
         config.BindSingleton<ApplicationState>();
 
         config.BindSingleton<Configuration>();
