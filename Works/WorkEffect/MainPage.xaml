@@ -10,8 +10,42 @@
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
-            Spacing="25"
+            Spacing="6"
             VerticalOptions="Center">
+
+            <Label
+                BackgroundColor="LightGreen"
+                FontSize="24"
+                HeightRequest="48"
+                Text="XXX" />
+            <Label
+                BackgroundColor="LightGreen"
+                FontSize="24"
+                HeightRequest="48"
+                HorizontalTextAlignment="Start"
+                Text="XXX"
+                VerticalTextAlignment="Start" />
+            <Label
+                BackgroundColor="LightBlue"
+                FontSize="24"
+                HeightRequest="48"
+                HorizontalTextAlignment="Center"
+                Text="XXX"
+                VerticalTextAlignment="Start" />
+            <Label
+                BackgroundColor="LightYellow"
+                FontSize="20"
+                HeightRequest="48"
+                HorizontalTextAlignment="Start"
+                Text="XXX"
+                VerticalTextAlignment="Center" />
+            <Label
+                BackgroundColor="LightYellow"
+                FontSize="20"
+                HeightRequest="48"
+                HorizontalTextAlignment="End"
+                Text="XXX"
+                VerticalTextAlignment="End" />
 
             <Entry
                 x:Name="Entry1"
