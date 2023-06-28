@@ -89,12 +89,6 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Behaviors\" />
-    <Folder Include="Messaging\" />
-  </ItemGroup>
-
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
