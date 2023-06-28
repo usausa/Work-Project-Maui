@@ -31,6 +31,7 @@ public static class MauiProgram
         //#endif
         //        });
 
+        Border.UseCustomMapper();
         NoBorder2.UseCustomMapper();
         InputFilter.UseCustomMapper();
 

@@ -14,10 +14,31 @@
             VerticalOptions="Center">
 
             <Label
+                x:Name="Label1"
+                behaviors:Border.BorderColor="Blue"
+                behaviors:Border.BorderWidth="1"
                 BackgroundColor="LightGreen"
                 FontSize="24"
                 HeightRequest="48"
                 Text="XXX" />
+
+            <Button
+                Clicked="Width1OnClicked"
+                HorizontalOptions="Center"
+                Text="1" />
+            <Button
+                Clicked="Width3OnClicked"
+                HorizontalOptions="Center"
+                Text="3" />
+            <Button
+                Clicked="WidthBlueOnClicked"
+                HorizontalOptions="Center"
+                Text="Blue" />
+            <Button
+                Clicked="WidthRedOnClicked"
+                HorizontalOptions="Center"
+                Text="Red" />
+
             <Label
                 BackgroundColor="LightGreen"
                 FontSize="24"
@@ -32,13 +53,7 @@
                 HorizontalTextAlignment="Center"
                 Text="XXX"
                 VerticalTextAlignment="Start" />
-            <Label
-                BackgroundColor="LightYellow"
-                FontSize="20"
-                HeightRequest="48"
-                HorizontalTextAlignment="Start"
-                Text="XXX"
-                VerticalTextAlignment="Center" />
+
             <Label
                 BackgroundColor="LightYellow"
                 FontSize="20"
@@ -57,6 +72,11 @@
             </Entry>
 
             <controls:MyEntry x:Name="Entry2" Text="123" />
+
+            <Entry
+                behaviors:Border.BorderColor="Blue"
+                behaviors:Border.BorderWidth="1"
+                Text="123" />
 
             <Button
                 x:Name="CounterBtn"

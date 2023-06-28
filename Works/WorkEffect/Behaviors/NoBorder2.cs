@@ -17,24 +17,15 @@ public static class NoBorder2
     public static void UseCustomMapper()
     {
 #if ANDROID
-        EntryHandler.Mapper.Add("On", (handler, _) =>
-        {
-            var element = (Entry)handler.VirtualView;
-            var on = GetOn(element);
-            UpdateBehaviors(element, on);
-        });
-        EditorHandler.Mapper.Add("On", (handler, _) =>
-        {
-            var element = (Editor)handler.VirtualView;
-            var on = GetOn(element);
-            UpdateBehaviors(element, on);
-        });
+        EntryHandler.Mapper.Add("On", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+        EditorHandler.Mapper.Add("On", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 #endif
     }
 
 #if ANDROID
-    private static void UpdateBehaviors(VisualElement element, bool on)
+    private static void UpdateBehaviors(VisualElement element)
     {
+        var on = GetOn(element);
         if (on)
         {
             element.Behaviors.Add(new NoBorderBehavior());
