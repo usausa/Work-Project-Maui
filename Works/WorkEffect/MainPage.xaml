@@ -3,6 +3,7 @@
     x:Class="WorkEffect.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:WorkEffect.Behaviors"
     xmlns:controls="clr-namespace:WorkEffect.Controls">
 
     <ScrollView>
@@ -11,15 +12,19 @@
             Spacing="25"
             VerticalOptions="Center">
 
-            <Entry x:Name="Entry1" Text="123" />
+            <Entry x:Name="Entry1" Text="123">
+                <Entry.Behaviors>
+                    <behaviors:SelectAllTextBehavior />
+                </Entry.Behaviors>
+            </Entry>
 
             <controls:MyEntry x:Name="Entry2" Text="123" />
 
             <Button
                 x:Name="CounterBtn"
+                Clicked="CounterBtn_OnClicked"
                 HorizontalOptions="Center"
-                Text="Click me" 
-                Clicked="CounterBtn_OnClicked"/>
+                Text="Click me" />
 
         </VerticalStackLayout>
     </ScrollView>
