@@ -1,10 +1,10 @@
 namespace Template.MobileApp.State;
 
-public class Configuration
+public class Settings
 {
     private readonly IPreferences preferences;
 
-    public Configuration(IPreferences preferences)
+    public Settings(IPreferences preferences)
     {
         this.preferences = preferences;
     }

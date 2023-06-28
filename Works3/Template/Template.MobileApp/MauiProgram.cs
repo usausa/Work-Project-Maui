@@ -59,6 +59,9 @@ public static class MauiProgram
             .UsePropertyInjector()
             .UsePageContextScope();
 
+        // MAUI
+        config.BindSingleton(Preferences.Default);
+
         // Components
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
 
@@ -67,7 +70,7 @@ public static class MauiProgram
         // State
         config.BindSingleton<ApplicationState>();
 
-        config.BindSingleton<Configuration>();
+        config.BindSingleton<Settings>();
         config.BindSingleton<Session>();
 
         // Service
