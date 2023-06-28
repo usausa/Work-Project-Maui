@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:WorkEffect.Behaviors"
-    xmlns:controls="clr-namespace:WorkEffect.Controls">
+    xmlns:controls="clr-namespace:WorkEffect.Controls"
+    xmlns:workEffect="clr-namespace:WorkEffect">
 
     <ScrollView>
         <VerticalStackLayout
@@ -12,7 +13,10 @@
             Spacing="25"
             VerticalOptions="Center">
 
-            <Entry x:Name="Entry1" Text="123">
+            <Entry
+                x:Name="Entry1"
+                behaviors:InputFilter.Rule="{x:Static workEffect:InputRule.Integer}"
+                Text="123">
                 <Entry.Behaviors>
                     <behaviors:SelectAllTextBehavior />
                 </Entry.Behaviors>

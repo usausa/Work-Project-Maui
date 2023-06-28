@@ -1,4 +1,5 @@
-﻿using Android.Graphics.Drawables;
+﻿#nullable enable
+using Android.Graphics.Drawables;
 
 namespace WorkEffect.Behaviors;
 

@@ -16,6 +16,7 @@ public static class NoBorder2
 
     public static void UseCustomMapper()
     {
+#if ANDROID
         EntryHandler.Mapper.Add("On", (handler, _) =>
         {
             var element = (Entry)handler.VirtualView;
@@ -28,8 +29,10 @@ public static class NoBorder2
             var on = GetOn(element);
             UpdateBehaviors(element, on);
         });
+#endif
     }
 
+#if ANDROID
     private static void UpdateBehaviors(VisualElement element, bool on)
     {
         if (on)
@@ -45,4 +48,5 @@ public static class NoBorder2
             }
         }
     }
+#endif
 }
