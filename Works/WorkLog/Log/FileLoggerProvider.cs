@@ -13,8 +13,8 @@ internal sealed class FileLoggerProvider : ILoggerProvider
     {
         this.options = options.Value;
         writer = new FileLoggerWriter(
-            options.Value.Directory ,
-            options.Value.Prefix,
+            options.Value.Directory ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Log"),
+            options.Value.Prefix ?? string.Empty,
             options.Value.RetainDays,
             options.Value.Format ?? SimpleLogFormat.Instance);
     }

@@ -1,5 +1,6 @@
 ﻿namespace WorkLog.Log;
 
+using System.Diagnostics;
 using System.Text;
 
 using Microsoft.Extensions.Logging;
@@ -51,9 +52,9 @@ internal sealed class FileLoggerWriter : IDisposable
                 writer?.Dispose();
                 writer = CreateWriter(date);
 
-                // TODO delete old
-
                 lastDate = date;
+
+                Task.Run(() => DeleteOldFiles(date.AddDays(-retainDays)));
             }
 
             writer!.WriteLine(message);
@@ -61,7 +62,41 @@ internal sealed class FileLoggerWriter : IDisposable
         }
     }
 
-    private StreamWriter CreateWriter(DateTime timestamp)
+    private void DeleteOldFiles(DateTime date)
+    {
+        var noPrefix = String.IsNullOrEmpty(prefix);
+        var baseFilename = MakeFilename(date);
+
+        foreach (var file in Directory.GetFiles(directory))
+        {
+            var fi = new FileInfo(file);
+
+            if (fi.Name.EndsWith(".log") &&
+                (noPrefix || fi.Name.StartsWith(prefix!)) &&
+                (fi.Name.Length == (12 + prefix?.Length)) &&
+                String.CompareOrdinal(fi.Name, baseFilename) <= 0)
+            {
+                try
+                {
+                    File.Delete(Path.Combine(directory, file));
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+            }
+        }
+    }
+
+    private StreamWriter CreateWriter(DateTime date)
+    {
+        var filename = Path.Combine(directory, MakeFilename(date));
+        var fileStream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        fileStream.Seek(0, SeekOrigin.End);
+        return new StreamWriter(fileStream);
+    }
+
+    private string MakeFilename(DateTime date)
     {
         var builder = new StringBuilder();
         if (!String.IsNullOrEmpty(prefix))
@@ -69,12 +104,9 @@ internal sealed class FileLoggerWriter : IDisposable
             builder.Append(prefix);
         }
 
-        builder.Append(timestamp.ToString("yyyyMMdd"));
+        builder.Append(date.ToString("yyyyMMdd"));
         builder.Append(".log");
 
-        var filename = Path.Combine(directory, builder.ToString());
-        var fileStream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-        fileStream.Seek(0, SeekOrigin.End);
-        return new StreamWriter(fileStream);
+        return builder.ToString();
     }
 }

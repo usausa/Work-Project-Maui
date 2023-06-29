@@ -4,13 +4,13 @@ using Microsoft.Extensions.Logging;
 
 public sealed class FileLoggerOptions
 {
-    public bool ShortCategory { get; set; } = true;
+    public bool ShortCategory { get; set; }
 
     public LogLevel Threshold { get; set; } = LogLevel.Information;
 
     public LogFormat? Format { get; set; }
 
-    public string Directory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Log");
+    public string? Directory { get; set; }
 
     public string? Prefix { get; set; }
 

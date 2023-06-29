@@ -4,7 +4,7 @@ namespace WorkLog.Log;
 
 public sealed class AndroidLoggerOptions
 {
-    public bool ShortCategory { get; set; } = true;
+    public bool ShortCategory { get; set; }
 
     public LogLevel Threshold { get; set; } = LogLevel.Trace;
 

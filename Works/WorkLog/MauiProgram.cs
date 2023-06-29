@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Other;
 using WorkLog.Log;
@@ -33,6 +32,7 @@ namespace WorkLog
                     options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir("")!.Path, "log");
 #endif
                     options.Prefix = "app";
+                    options.RetainDays = 7;
                 })
                 .AddFilter("WorkLog", LogLevel.Debug)
                 .AddFilter("Other", LogLevel.Warning);
