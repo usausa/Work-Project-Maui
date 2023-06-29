@@ -34,7 +34,7 @@ namespace WorkLog
                     options.Prefix = "app";
                     options.RetainDays = 7;
                 })
-                .AddFilter("WorkLog", LogLevel.Debug)
+                .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug)
                 .AddFilter("Other", LogLevel.Warning);
 
             builder.Services.AddSingleton<SingletonService>();
