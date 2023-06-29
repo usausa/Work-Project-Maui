@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 using Other;
 using WorkLog.Log;
@@ -22,10 +23,11 @@ namespace WorkLog
 		    builder.Logging.AddDebug();
 #endif
             builder.Logging.AddAndroidLogger(options =>
-            {
-                options.Format = SimpleLogFormat.Instance;
-                // TODO
-            });
+                {
+                    options.ShortCategory = true;
+                })
+                .AddFilter("WorkLog", LogLevel.Debug)
+                .AddFilter("Other", LogLevel.Warning);
 
             builder.Services.AddSingleton<SingletonService>();
             builder.Services.AddTransient<TransientService>();

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace WorkLog;
 
@@ -13,6 +14,10 @@ public class SingletonService
 
     public void Execute()
     {
+        Debug.WriteLine(log.IsEnabled(LogLevel.Debug));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Information));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Warning));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Error));
         log.LogTrace($"{nameof(SingletonService)} trace.");
         log.LogDebug($"{nameof(SingletonService)} debug.");
         log.LogInformation($"{nameof(SingletonService)} information.");

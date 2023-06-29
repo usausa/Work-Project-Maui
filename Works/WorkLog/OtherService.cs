@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Other;
 
@@ -13,6 +14,10 @@ public class OtherService
 
     public void Execute()
     {
+        Debug.WriteLine(log.IsEnabled(LogLevel.Debug));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Information));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Warning));
+        Debug.WriteLine(log.IsEnabled(LogLevel.Error));
         log.LogTrace($"{nameof(OtherService)} trace.");
         log.LogDebug($"{nameof(OtherService)} debug.");
         log.LogInformation($"{nameof(OtherService)} information.");

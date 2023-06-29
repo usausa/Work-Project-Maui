@@ -20,15 +20,17 @@ public sealed class SimpleLogFormat : LogFormat
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string LogLevelFormat(LogLevel level)
     {
+        // ReSharper disable StringLiteralTypo
         return level switch
         {
-            LogLevel.Trace => "TRACE",
-            LogLevel.Debug => "DEBUG",
+            LogLevel.Trace => "TRAC",
+            LogLevel.Debug => "DBUG",
             LogLevel.Information => "INFO",
             LogLevel.Warning => "WARN",
-            LogLevel.Error => "ERROR",
-            LogLevel.Critical => "CRITICAL",
+            LogLevel.Error => "EROR",
+            LogLevel.Critical => "CRIT",
             _ => "NONE"
         };
+        // ReSharper restore StringLiteralTypo
     }
 }

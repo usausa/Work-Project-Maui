@@ -19,14 +19,17 @@ internal sealed class AndroidLogger : ILogger
 
     }
 
-    // TODO ?
     public bool IsEnabled(LogLevel logLevel) => logLevel >= threshold;
 
     public IDisposable BeginScope<TState>(TState state) => NullScope.Instance;
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
-        Func<TState, Exception, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
+        if (!IsEnabled(logLevel))
+        {
+            return;
+        }
+
         var timestamp = DateTime.Now;
         var message = format.Format(logLevel, timestamp, categoryName, state, exception, formatter);
         var throwable = exception is not null ? Java.Lang.Throwable.FromException(exception) : null;

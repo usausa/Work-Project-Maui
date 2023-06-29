@@ -5,14 +5,11 @@ using Microsoft.Extensions.Options;
 
 public sealed class AndroidLoggerProvider : ILoggerProvider
 {
-    private readonly bool shortCategory;
-
-    private readonly LogFormat? format;
+    private readonly AndroidLoggerOptions options;
 
     public AndroidLoggerProvider(IOptions<AndroidLoggerOptions> options)
     {
-        shortCategory = options.Value.ShortCategory;
-        format = options.Value.Format;
+        this.options = options.Value;
     }
 
     public void Dispose()
@@ -21,6 +18,15 @@ public sealed class AndroidLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new AndroidLogger(categoryName, LogLevel.Debug, format ?? MessageLogFormat.Instance);
+        if (options.ShortCategory)
+        {
+            var index = categoryName.LastIndexOf('.');
+            if (index >= 0)
+            {
+                categoryName = categoryName[(index + 1)..];
+            }
+        }
+
+        return new AndroidLogger(categoryName, options.Threshold, options.Format ?? MessageLogFormat.Instance);
     }
 }
