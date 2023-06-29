@@ -16,7 +16,6 @@ internal sealed class AndroidLogger : ILogger
         this.categoryName = categoryName;
         this.threshold = threshold;
         this.format = format;
-
     }
 
     public bool IsEnabled(LogLevel logLevel) => logLevel >= threshold;

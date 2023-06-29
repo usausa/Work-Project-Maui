@@ -19,12 +19,20 @@ namespace WorkLog
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Logging
 #if DEBUG
-		    builder.Logging.AddDebug();
+                .AddDebug()
 #endif
-            builder.Logging.AddAndroidLogger(options =>
+                .AddAndroidLogger(options =>
                 {
                     options.ShortCategory = true;
+                })
+                .AddFileLogger(options =>
+                {
+#if ANDROID
+                    options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir("")!.Path, "log");
+#endif
+                    options.Prefix = "app";
                 })
                 .AddFilter("WorkLog", LogLevel.Debug)
                 .AddFilter("Other", LogLevel.Warning);

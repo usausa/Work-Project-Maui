@@ -15,4 +15,16 @@ public static class LoggingBuilderExtensions
         builder.Services.Configure(configure);
         return builder;
     }
+
+    public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder)
+    {
+        return builder.AddFileLogger(_ => { });
+    }
+
+    public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder, Action<FileLoggerOptions> configure)
+    {
+        builder.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+        builder.Services.Configure(configure);
+        return builder;
+    }
 }
