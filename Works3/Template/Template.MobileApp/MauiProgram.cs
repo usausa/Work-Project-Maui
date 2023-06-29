@@ -4,10 +4,6 @@ using System.Reflection;
 
 using CommunityToolkit.Maui;
 
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
@@ -21,6 +17,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Builder
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -44,13 +41,32 @@ public static class MauiProgram
             })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
+        // Logging
+        builder.Logging
 #if DEBUG
-        builder.Logging.AddDebug();
+            .AddDebug()
 #endif
+#if ANDROID
+            .AddAndroidLogger(options =>
+            {
+                options.ShortCategory = true;
+            })
+#endif
+            .AddFileLogger(options =>
+            {
+#if ANDROID
+                options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "log");
+#endif
+                options.RetainDays = 7;
+            })
+            .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug);
 
         if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
-            AppCenter.Start(Variants.AppCenterSecret(), typeof(Analytics), typeof(Crashes));
+            Microsoft.AppCenter.AppCenter.Start(
+                Variants.AppCenterSecret(),
+                typeof(Microsoft.AppCenter.Analytics.Analytics),
+                typeof(Microsoft.AppCenter.Crashes.Crashes));
         }
 
         return builder.Build();
