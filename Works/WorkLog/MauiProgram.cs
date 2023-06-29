@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 
+using Other;
+using WorkLog.Log;
+
 namespace WorkLog
 {
     public static class MauiProgram
@@ -16,8 +19,17 @@ namespace WorkLog
                 });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+		    builder.Logging.AddDebug();
 #endif
+            builder.Logging.AddAndroidLogger(options =>
+            {
+                options.Format = SimpleLogFormat.Instance;
+                // TODO
+            });
+
+            builder.Services.AddSingleton<SingletonService>();
+            builder.Services.AddTransient<TransientService>();
+            builder.Services.AddSingleton<OtherService>();
 
             return builder.Build();
         }

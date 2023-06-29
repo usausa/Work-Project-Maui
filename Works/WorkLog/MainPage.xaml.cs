@@ -1,24 +1,34 @@
-﻿namespace WorkLog
+﻿using Other;
+
+namespace WorkLog
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IServiceProvider provider;
 
-        public MainPage()
+        public MainPage(IServiceProvider provider)
         {
             InitializeComponent();
+
+            this.provider = provider;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void SingletonButton_OnClicked(object sender, EventArgs e)
         {
-            count++;
+            var service = provider.GetRequiredService<SingletonService>();
+            service.Execute();
+        }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+        private void TransientButton_OnClicked(object sender, EventArgs e)
+        {
+            var service = provider.GetRequiredService<TransientService>();
+            service.Execute();
+        }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        private void OtherButton_OnClicked(object sender, EventArgs e)
+        {
+            var service = provider.GetRequiredService<OtherService>();
+            service.Execute();
         }
     }
 }
