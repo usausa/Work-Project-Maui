@@ -13,6 +13,8 @@ namespace WorkFont
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
+                    fonts.AddFont("Font Awesome 5 Free-Regular-400.otf", "FontAwesomeRegular");
                 });
 
 #if DEBUG
