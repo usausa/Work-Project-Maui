@@ -12,14 +12,14 @@
             VerticalOptions="Center">
 
             <Image
-                BackgroundColor="Red"
+                BackgroundColor="LightYellow"
                 HeightRequest="40"
                 VerticalOptions="Center"
                 WidthRequest="40">
                 <Image.Source>
                     <FontImageSource
                         FontFamily="FontAwesomeRegular"
-                        Glyph="{x:Static fonts:FontAwesome.Tired}"
+                        Glyph="{x:Static fonts:FontAwesomeIcons.TrashCan}"
                         Color="Black" />
                 </Image.Source>
             </Image>
@@ -28,15 +28,31 @@
                 FontFamily="FontAwesomeRegular"
                 FontSize="32"
                 HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="{x:Static fonts:FontAwesome.Tired}" />
+                Text="{x:Static fonts:FontAwesomeIcons.TrashCan}" />
 
             <Label
                 FontFamily="MaterialIconsRegular"
                 FontSize="32"
                 HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
                 Text="{x:Static fonts:MaterialIcons._5g}" />
+
+            <Label
+                FontFamily="CustomIcons"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{x:Static fonts:CustomIcons.Cat}" />
+            <Label
+                FontFamily="CustomIcons"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{x:Static fonts:CustomIcons.Smile1}"
+                TextColor="Blue" />
+            <Label
+                FontFamily="CustomIcons"
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{x:Static fonts:CustomIcons.Smile2}"
+                TextColor="Red" />
 
         </VerticalStackLayout>
     </ScrollView>

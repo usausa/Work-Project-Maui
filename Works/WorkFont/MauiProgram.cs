@@ -14,7 +14,8 @@ namespace WorkFont
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
-                    fonts.AddFont("Font Awesome 5 Free-Regular-400.otf", "FontAwesomeRegular");
+                    fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesomeRegular");
+                    fonts.AddFont("icomoon.ttf", "CustomIcons");
                 });
 
 #if DEBUG
