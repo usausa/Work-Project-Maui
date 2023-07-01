@@ -2,6 +2,10 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
+#if ANDROID && DEVICE_HAS_KEYPAD
+using Android.Views;
+#endif
+
 using CommunityToolkit.Maui;
 
 using Smart.Resolver;
@@ -34,7 +38,24 @@ public static class MauiProgram
             .ConfigureService(services =>
             {
 #if ANDROID
-                services.AddComponentsDialog();
+                services.AddComponentsDialog(c =>
+                {
+                    var resources = Application.Current!.Resources;
+                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent1");
+                    c.LoadingMessageBackgroundColor = Colors.White;
+                    c.LoadingMessageColor = Colors.Black;
+                    c.ProgressValueColor = Colors.Black;
+                    c.ProgressAreaBackgroundColor = Colors.White;
+                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent1");
+                    c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+#if DEVICE_HAS_KEYPAD
+                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
+                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+                    c.EnableDialogButtonFocus = true;
+#endif
+                    c.EnablePromptEnterAction = true;
+                    c.EnablePromptSelectAll = true;
+                });
 #endif
                 // TODO SourceGenerator?
                 services.AddComponentsPopup(c =>
