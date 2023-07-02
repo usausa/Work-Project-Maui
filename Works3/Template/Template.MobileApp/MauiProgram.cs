@@ -32,11 +32,14 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
-            .UseMauiCommunityToolkit()
-            .ConfigureCustomControls()
-            .ConfigureCustomBehaviors()
+            //.ConfigureEssentials(c => { }) // Essentials options
+            .UseMauiCommunityToolkit() // Community Toolkit options
+            .ConfigureCustomControls() // Application custom controls
+            .ConfigureCustomBehaviors() // Application custom behaviors
             .ConfigureService(services =>
             {
+                // TODO inside ConfigureContainer？
+                // MauiComponents
 #if ANDROID
                 services.AddComponentsDialog(c =>
                 {
