@@ -105,7 +105,9 @@ public static class MauiProgram
             .UsePageContextScope();
 
         // MAUI
+        config.BindSingleton(FileSystem.Current);
         config.BindSingleton(Preferences.Default);
+        config.BindSingleton(Vibration.Default);
 
         // Components
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
@@ -119,10 +121,11 @@ public static class MauiProgram
         config.BindSingleton<Session>();
 
         // Service
-        config.BindSingleton(new DataServiceOptions
-        {
-            Path = Path.Combine(FileSystem.AppDataDirectory, "Data.db")
-        });
+#if DEBUG && ANDROID
+        config.BindSingleton(_ => new DataServiceOptions { Path = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "Data.db") });
+#else
+        config.BindSingleton(p => new DataServiceOptions { Path = Path.Combine(p.GetRequiredService<IFileSystem>().AppDataDirectory, "Data.db") });
+#endif
 
         config.BindSingleton<DataService>();
         config.AddNavigator(c =>
