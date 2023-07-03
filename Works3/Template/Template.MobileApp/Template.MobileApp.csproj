@@ -89,27 +89,6 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <MauiXaml Update="Modules\Device\DeviceInfoView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Device\DeviceMenuView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Device\DeviceMiscView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Device\DeviceStatusView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Navigation\DialogMenuView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Navigation\NavigationMenuView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
