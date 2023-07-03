@@ -1,10 +1,10 @@
-namespace Template.MobileApp.Modules.Device;
+namespace Template.MobileApp.Modules.Navigation;
 
-public class DeviceMenuViewModel : AppViewModelBase
+public class NavigationMenuViewModel : AppViewModelBase
 {
     public ICommand BackCommand { get; }
 
-    public DeviceMenuViewModel(
+    public NavigationMenuViewModel(
         ApplicationState applicationState)
         : base(applicationState)
     {
