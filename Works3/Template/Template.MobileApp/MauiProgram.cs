@@ -2,11 +2,15 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
-#if ANDROID && DEVICE_HAS_KEYPAD
+#if ANDROID
+// ReSharper disable RedundantUsingDirective
 using Android.Views;
+// ReSharper restore RedundantUsingDirective
 #endif
 
 using CommunityToolkit.Maui;
+
+using Microsoft.Maui.LifecycleEvents;
 
 using Smart.Resolver;
 
@@ -25,6 +29,21 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+#if ANDROID
+            // ReSharper disable UnusedParameter.Local
+            .ConfigureLifecycleEvents(events =>
+            {
+                // Lifecycle
+#if DEVICE_FULL_SCREEN
+                events.AddAndroid(android => android.OnCreate((activity, _) =>
+                {
+                    var window = activity.Window!;
+                    window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+                }));
+#endif
+            })
+            // ReSharper restore UnusedParameter.Local
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -32,10 +51,10 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", "FontAwesome");
             })
-            //.ConfigureEssentials(c => { }) // Essentials options
-            .UseMauiCommunityToolkit() // Community Toolkit options
-            .ConfigureCustomControls() // Application custom controls
-            .ConfigureCustomBehaviors() // Application custom behaviors
+            //.ConfigureEssentials(c => { })
+            .UseMauiCommunityToolkit()
+            .ConfigureCustomControls()
+            .ConfigureCustomBehaviors()
             .ConfigureService(services =>
             {
                 // TODO inside ConfigureContainer？
