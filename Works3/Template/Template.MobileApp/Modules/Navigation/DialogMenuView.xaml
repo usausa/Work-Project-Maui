@@ -59,8 +59,8 @@
                 Command="{Binding PopupCommand}"
                 Text="Popup" />
         <Button Grid.Row="11"
-                Command="{Binding BackCommand}"
-                Text="Back" />
+                Command="{Binding ToastCommand}"
+                Text="Toast" />
     </Grid>
 
 </ContentView>

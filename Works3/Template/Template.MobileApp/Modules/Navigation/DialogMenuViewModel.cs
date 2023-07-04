@@ -2,6 +2,8 @@ namespace Template.MobileApp.Modules.Navigation;
 
 public class DialogMenuViewModel : AppViewModelBase
 {
+    private int count;
+
     public ICommand InformationCommand { get; }
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
@@ -12,10 +14,9 @@ public class DialogMenuViewModel : AppViewModelBase
     public ICommand LoadingCommand { get; }
     public ICommand ProgressCommand { get; }
     public ICommand SnackbarCommand { get; }
+    public ICommand ToastCommand { get; }
 
     public ICommand PopupCommand { get; }
-
-    public ICommand BackCommand { get; }
 
     public DialogMenuViewModel(
         ApplicationState applicationState,
@@ -86,7 +87,10 @@ public class DialogMenuViewModel : AppViewModelBase
             var result = await popupNavigator.PopupAsync<string, bool>(DialogId.Sample, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
             await dialog.InformationAsync($"Result={result}");
         });
-
-        BackCommand = MakeAsyncCommand(async () => await Navigator.ForwardAsync(ViewId.Menu));
+        ToastCommand = MakeAsyncCommand(async () =>
+        {
+            count++;
+            await dialog.Toast($"Count={count}");
+        });
     }
 }
