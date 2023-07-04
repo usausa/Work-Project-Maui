@@ -9,11 +9,6 @@
              sr:BindingContextResolver.Type="{x:Type module:DeviceStatusViewModel}"
              shell:ShellProperty.Title="DeviceStatus">
 
-    <VerticalStackLayout>
-
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
-
-    </VerticalStackLayout>
+    <VerticalStackLayout />
 
 </ContentView>

@@ -93,4 +93,6 @@ public class DialogMenuViewModel : AppViewModelBase
             await dialog.Toast($"Count={count}");
         });
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 }

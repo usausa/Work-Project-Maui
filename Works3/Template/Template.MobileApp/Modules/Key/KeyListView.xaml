@@ -11,9 +11,6 @@
 
     <VerticalStackLayout>
 
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
-
     </VerticalStackLayout>
 
 </ContentView>

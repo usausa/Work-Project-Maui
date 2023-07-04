@@ -9,11 +9,6 @@
              sr:BindingContextResolver.Type="{x:Type module:KeyMiscViewModel}"
              shell:ShellProperty.Title="Misc">
 
-    <VerticalStackLayout>
-
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
-
-    </VerticalStackLayout>
+    <VerticalStackLayout />
 
 </ContentView>

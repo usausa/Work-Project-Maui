@@ -10,10 +10,6 @@
              shell:ShellProperty.Title="Entry">
 
     <VerticalStackLayout>
-
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
-
     </VerticalStackLayout>
 
 </ContentView>

@@ -9,12 +9,7 @@
              sr:BindingContextResolver.Type="{x:Type module:DeviceInfoViewModel}"
              shell:ShellProperty.Title="DeviceInfo">
 
-    <VerticalStackLayout>
-
-        <Button Command="{Binding BackCommand}"
-                Text="Back" />
-
-    </VerticalStackLayout>
+    <VerticalStackLayout />
 
 
 </ContentView>

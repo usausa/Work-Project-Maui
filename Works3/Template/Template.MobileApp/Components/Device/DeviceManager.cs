@@ -22,6 +22,12 @@ public interface IDeviceManager
 
     void FeedbackLongPress();
 
+    // Light
+
+    void LightOn();
+
+    void LightOff();
+
     // Information
 
     string? GetVersion();

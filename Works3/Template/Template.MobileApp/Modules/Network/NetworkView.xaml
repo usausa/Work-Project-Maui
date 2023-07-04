@@ -21,9 +21,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="7"
-                Command="{Binding BackCommand}"
-                Text="Back" />
     </Grid>
 
 </ContentView>

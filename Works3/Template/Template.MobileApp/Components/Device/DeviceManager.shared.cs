@@ -2,6 +2,8 @@ namespace Template.MobileApp.Components.Device;
 
 public sealed partial class DeviceManager : IDeviceManager, IDisposable
 {
+    private readonly IFlashlight flashlight;
+
     private readonly IVibration vibration;
 
     private readonly IHapticFeedback feedback;
@@ -11,9 +13,11 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public IObservable<NetworkState> NetworkState => networkState;
 
     public DeviceManager(
+        IFlashlight flashlight,
         IVibration vibration,
         IHapticFeedback feedback)
     {
+        this.flashlight = flashlight;
         this.vibration = vibration;
         this.feedback = feedback;
 
@@ -58,4 +62,12 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public void FeedbackClick() => feedback.Perform(HapticFeedbackType.Click);
 
     public void FeedbackLongPress() => feedback.Perform(HapticFeedbackType.LongPress);
+
+    // ------------------------------------------------------------
+    // Light
+    // ------------------------------------------------------------
+
+    public void LightOn() => flashlight.TurnOnAsync();
+
+    public void LightOff() => flashlight.TurnOffAsync();
 }

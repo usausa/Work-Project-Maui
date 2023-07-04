@@ -8,7 +8,9 @@ public class DeviceMiscViewModel : AppViewModelBase
 
     public ICommand VibrateCancelCommand { get; }
 
-    public ICommand BackCommand { get; }
+    public ICommand LightOnCommand { get; }
+
+    public ICommand LightOffCommand { get; }
 
     public DeviceMiscViewModel(
         ApplicationState applicationState,
@@ -17,7 +19,9 @@ public class DeviceMiscViewModel : AppViewModelBase
     {
         VibrateCommand = MakeDelegateCommand(() => device.Vibrate(5000));
         VibrateCancelCommand = MakeDelegateCommand(device.VibrateCancel);
-
-        BackCommand = MakeAsyncCommand(async () => await Navigator.ForwardAsync(ViewId.DeviceMenu));
+        LightOnCommand = MakeDelegateCommand(device.LightOn);
+        LightOffCommand = MakeDelegateCommand(device.LightOff);
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 }
