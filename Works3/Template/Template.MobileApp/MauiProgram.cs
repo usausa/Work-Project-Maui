@@ -70,12 +70,12 @@ public static class MauiProgram
                 services.AddComponentsDialog(c =>
                 {
                     var resources = Application.Current!.Resources;
-                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent1");
+                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
                     c.LoadingMessageBackgroundColor = Colors.White;
                     c.LoadingMessageColor = Colors.Black;
                     c.ProgressValueColor = Colors.Black;
                     c.ProgressAreaBackgroundColor = Colors.White;
-                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent1");
+                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
                     c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
 #if DEVICE_HAS_KEYPAD
                     c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
