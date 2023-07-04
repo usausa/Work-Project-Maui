@@ -7,6 +7,10 @@ using Android.OS;
 
 public sealed partial class DeviceManager
 {
+    // ------------------------------------------------------------
+    // Display
+    // ------------------------------------------------------------
+
     public void SetOrientation(Orientation orientation)
     {
         var activity = ActivityResolver.CurrentActivity;
@@ -33,6 +37,10 @@ public sealed partial class DeviceManager
                 break;
         }
     }
+
+    // ------------------------------------------------------------
+    // Information
+    // ------------------------------------------------------------
 
     public string? GetVersion()
     {

@@ -60,6 +60,7 @@ public static class MauiProgram
             })
             //.ConfigureEssentials(c => { })
             .UseMauiCommunityToolkit()
+            .UseMauiInterfaces()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
             .ConfigureService(services =>
@@ -148,12 +149,6 @@ public static class MauiProgram
             .UseAssignableBinding()
             .UsePropertyInjector()
             .UsePageContextScope();
-
-        // MAUI
-        config.BindSingleton(FileSystem.Current);
-        config.BindSingleton(Preferences.Default);
-        config.BindSingleton(Vibration.Default);
-        config.BindSingleton(HapticFeedback.Default);
 
         // Navigator
         config.AddNavigator(c =>

@@ -29,6 +29,10 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
         networkState.Dispose();
     }
 
+    // ------------------------------------------------------------
+    // Status
+    // ------------------------------------------------------------
+
     private static NetworkState GetNetworkState(NetworkAccess access, IEnumerable<ConnectionProfile> profiles)
     {
         if (access != NetworkAccess.None && access != NetworkAccess.Unknown)
@@ -42,6 +46,10 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     }
 
     public NetworkState GetNetworkState() => GetNetworkState(Connectivity.NetworkAccess, Connectivity.ConnectionProfiles);
+
+    // ------------------------------------------------------------
+    // Feed
+    // ------------------------------------------------------------
 
     public void Vibrate(double duration) => vibration.Vibrate(duration);
 
