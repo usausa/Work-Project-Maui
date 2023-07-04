@@ -2,12 +2,21 @@ namespace Template.MobileApp.Components.Device;
 
 public sealed partial class DeviceManager : IDeviceManager, IDisposable
 {
+    private readonly IVibration vibration;
+
+    private readonly IHapticFeedback feedback;
+
     private readonly BehaviorSubject<NetworkState> networkState;
 
     public IObservable<NetworkState> NetworkState => networkState;
 
-    public DeviceManager()
+    public DeviceManager(
+        IVibration vibration,
+        IHapticFeedback feedback)
     {
+        this.vibration = vibration;
+        this.feedback = feedback;
+
         networkState = new BehaviorSubject<NetworkState>(GetNetworkState(Connectivity.NetworkAccess, Connectivity.ConnectionProfiles));
         Connectivity.ConnectivityChanged += (_, args) =>
         {
@@ -33,4 +42,12 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     }
 
     public NetworkState GetNetworkState() => GetNetworkState(Connectivity.NetworkAccess, Connectivity.ConnectionProfiles);
+
+    public void Vibrate(double duration) => vibration.Vibrate(duration);
+
+    public void VibrateCancel() => vibration.Cancel();
+
+    public void FeedbackClick() => feedback.Perform(HapticFeedbackType.Click);
+
+    public void FeedbackLongPress() => feedback.Perform(HapticFeedbackType.LongPress);
 }

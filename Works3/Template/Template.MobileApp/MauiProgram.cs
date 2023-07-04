@@ -153,6 +153,7 @@ public static class MauiProgram
         config.BindSingleton(FileSystem.Current);
         config.BindSingleton(Preferences.Default);
         config.BindSingleton(Vibration.Default);
+        config.BindSingleton(HapticFeedback.Default);
 
         // Navigator
         config.AddNavigator(c =>

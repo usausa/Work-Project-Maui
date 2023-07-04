@@ -11,6 +11,11 @@
 
     <VerticalStackLayout>
 
+        <Button Command="{Binding VibrateCommand}"
+                Text="Vibrate" />
+        <Button Command="{Binding VibrateCancelCommand}"
+                Text="Vibrate cancel" />
+
         <Button Command="{Binding BackCommand}"
                 Text="Back" />
 
