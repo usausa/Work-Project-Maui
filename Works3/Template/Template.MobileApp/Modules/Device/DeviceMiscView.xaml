@@ -33,13 +33,17 @@
         <Button Command="{Binding LightOffCommand}"
                 Text="Light off" />
 
+        <Button Command="{Binding ScreenshotCommand}"
+                Text="Screenshot" />
+
         <Button Command="{Binding SpeakCommand}"
                 Text="Speak" />
         <Button Command="{Binding SpeakCancelCommand}"
                 Text="Speak cancel" />
 
-        <Button Command="{Binding ScreenshotCommand}"
-                Text="Screenshot" />
+        <Button Command="{Binding RecognizeCommand}"
+                Text="Recognize" />
+        <Label Text="{Binding RecognizeText.Value}" />
 
     </VerticalStackLayout>
 

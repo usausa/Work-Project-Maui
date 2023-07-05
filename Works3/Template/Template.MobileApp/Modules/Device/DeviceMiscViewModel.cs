@@ -21,10 +21,14 @@ public class DeviceMiscViewModel : AppViewModelBase
     public ICommand LightOnCommand { get; }
     public ICommand LightOffCommand { get; }
 
+    public ICommand ScreenshotCommand { get; }
+
     public ICommand SpeakCommand { get; }
     public ICommand SpeakCancelCommand { get; }
 
-    public ICommand ScreenshotCommand { get; }
+    public ICommand RecognizeCommand { get; }
+
+    public NotificationValue<string> RecognizeText { get; } = new();
 
     public DeviceMiscViewModel(
         ApplicationState applicationState,
@@ -47,16 +51,25 @@ public class DeviceMiscViewModel : AppViewModelBase
         LightOnCommand = MakeDelegateCommand(device.LightOn);
         LightOffCommand = MakeDelegateCommand(device.LightOff);
 
-#pragma warning disable CA2012
-        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
-#pragma warning restore CA2012
-        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {
             await using var stream = await device.TakeScreenshotAsync();
             await using var file = File.Create(Path.Combine(storage.PublicFolder, "screenshot.jpg"));
             await stream.CopyToAsync(file);
+        });
+
+#pragma warning disable CA2012
+        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
+#pragma warning restore CA2012
+        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
+
+        RecognizeCommand = MakeAsyncCommand(async () =>
+        {
+            RecognizeText.Value = string.Empty;
+
+            var result = await speech.RecognizeAsync(text => RecognizeText.Value += text);
+
+            RecognizeText.Value = !String.IsNullOrEmpty(result) ? result : string.Empty;
         });
     }
 
