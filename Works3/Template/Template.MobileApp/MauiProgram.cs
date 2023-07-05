@@ -5,14 +5,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-#if ANDROID
-// ReSharper disable RedundantUsingDirective
-using Android.Views;
-// ReSharper restore RedundantUsingDirective
-#endif
-
 using CommunityToolkit.Maui;
-using Components.Sound;
+
 using Microsoft.Maui.LifecycleEvents;
 
 using Rester;
@@ -22,6 +16,8 @@ using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Device;
+using Template.MobileApp.Components.Sound;
+using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
@@ -42,11 +38,7 @@ public static class MauiProgram
             {
                 // Lifecycle
 #if DEVICE_FULL_SCREEN
-                events.AddAndroid(android => android.OnCreate((activity, _) =>
-                {
-                    var window = activity.Window!;
-                    window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
-                }));
+                events.AddAndroid(android => android.OnCreate((activity, _) => AndroidHelper.FullScreen(activity)));
 #endif
             })
             // ReSharper restore UnusedParameter.Local
@@ -100,15 +92,12 @@ public static class MauiProgram
             .AddDebug()
 #endif
 #if ANDROID
-            .AddAndroidLogger(options =>
-            {
-                options.ShortCategory = true;
-            })
+            .AddAndroidLogger(options => options.ShortCategory = true)
 #endif
             .AddFileLogger(options =>
             {
 #if ANDROID
-                options.Directory = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "log");
+                options.Directory = Path.Combine(AndroidHelper.GetExternalFilesDir(), "log");
 #endif
                 options.RetainDays = 7;
             })
@@ -129,7 +118,7 @@ public static class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // App Center
+        // Config App Center
         if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
         {
             Microsoft.AppCenter.AppCenter.Start(
@@ -163,21 +152,27 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
+        config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<ISoundManager, SoundManager>();
 
         // State
         config.BindSingleton<ApplicationState>();
-
-        config.BindSingleton<Settings>();
         config.BindSingleton<Session>();
+        config.BindSingleton<Settings>();
 
         // Service
-#if DEBUG && ANDROID
-        config.BindSingleton(_ => new DataServiceOptions { Path = Path.Combine(Android.App.Application.Context.GetExternalFilesDir(string.Empty)!.Path, "Data.db") });
+        config.BindSingleton(p =>
+        {
+            var storage = p.GetRequiredService<IStorageManager>();
+            return new DataServiceOptions
+            {
+#if DEBUG
+                Path = Path.Combine(storage.PublicFolder, "Data.db")
 #else
-        config.BindSingleton(p => new DataServiceOptions { Path = Path.Combine(p.GetRequiredService<IFileSystem>().AppDataDirectory, "Data.db") });
+                Path = Path.Combine(storage.PrivateFolder, "Data.db")
 #endif
-
+            };
+        });
         config.BindSingleton<DataService>();
 
         // Startup

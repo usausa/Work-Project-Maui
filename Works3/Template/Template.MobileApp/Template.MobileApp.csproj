@@ -87,7 +87,6 @@
     <PackageReference Include="Usa.Smart.Reactive" Version="2.2.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Text.Japanese" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
