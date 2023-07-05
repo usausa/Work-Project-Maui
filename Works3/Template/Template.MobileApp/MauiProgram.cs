@@ -53,6 +53,7 @@ public static class MauiProgram
             //.ConfigureEssentials(c => { })
             .UseMauiCommunityToolkit()
             .UseMauiInterfaces()
+            .UseCommunityToolkitInterfaces()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
             .ConfigureService(services =>
