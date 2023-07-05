@@ -7,6 +7,8 @@ using System.Text.Unicode;
 
 using CommunityToolkit.Maui;
 
+using MauiComponents.Resolver;
+
 using Microsoft.Maui.LifecycleEvents;
 
 using Rester;
@@ -56,35 +58,6 @@ public static class MauiProgram
             .UseCommunityToolkitInterfaces()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors()
-            .ConfigureService(services =>
-            {
-                // TODO inside ConfigureContainer？
-                // MauiComponents
-#if ANDROID
-                services.AddComponentsDialog(c =>
-                {
-                    var resources = Application.Current!.Resources;
-                    c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
-                    c.LoadingMessageBackgroundColor = Colors.White;
-                    c.LoadingMessageColor = Colors.Black;
-                    c.ProgressValueColor = Colors.Black;
-                    c.ProgressAreaBackgroundColor = Colors.White;
-                    c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
-                    c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
-#if DEVICE_HAS_KEYPAD
-                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
-                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
-                    c.EnableDialogButtonFocus = true;
-#endif
-                    c.EnablePromptEnterAction = true;
-                    c.EnablePromptSelectAll = true;
-                });
-#endif
-                // TODO SourceGenerator?
-                services.AddComponentsPopup(c =>
-                    c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
-                services.AddComponentsSerializer();
-            })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
         // Logging
@@ -139,6 +112,32 @@ public static class MauiProgram
             .UseAssignableBinding()
             .UsePropertyInjector()
             .UsePageContextScope();
+
+        // MauiComponents
+#if ANDROID
+        config.UseComponentsDialog(c =>
+        {
+            var resources = Application.Current!.Resources;
+            c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
+            c.LoadingMessageBackgroundColor = Colors.White;
+            c.LoadingMessageColor = Colors.Black;
+            c.ProgressValueColor = Colors.Black;
+            c.ProgressAreaBackgroundColor = Colors.White;
+            c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
+            c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+#if DEVICE_HAS_KEYPAD
+            c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
+            c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+            c.EnableDialogButtonFocus = true;
+#endif
+            c.EnablePromptEnterAction = true;
+            c.EnablePromptSelectAll = true;
+        });
+#endif
+        // TODO SourceGenerator?
+        config.UseComponentsPopup(c =>
+            c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.UseComponentsSerializer();
 
         // Navigator
         config.AddNavigator(c =>
