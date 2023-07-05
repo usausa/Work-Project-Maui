@@ -12,7 +12,7 @@ using Android.Views;
 #endif
 
 using CommunityToolkit.Maui;
-
+using Components.Sound;
 using Microsoft.Maui.LifecycleEvents;
 
 using Rester;
@@ -163,6 +163,7 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
+        config.BindSingleton<ISoundManager, SoundManager>();
 
         // State
         config.BindSingleton<ApplicationState>();

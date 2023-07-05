@@ -19,6 +19,10 @@
                 Text="Light on" />
         <Button Command="{Binding LightOffCommand}"
                 Text="Light off" />
+        <Button Command="{Binding SpeakCommand}"
+                Text="Speak" />
+        <Button Command="{Binding SpeakCancelCommand}"
+                Text="Speak cancel" />
 
     </VerticalStackLayout>
 
