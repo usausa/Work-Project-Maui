@@ -7,7 +7,9 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceMiscView"
              x:DataType="{x:Type module:DeviceMiscViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceMiscViewModel}"
-             shell:ShellProperty.Title="DeviceMisc">
+             shell:ShellProperty.Title="DeviceMisc"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout>
 
@@ -40,6 +42,5 @@
                 Text="Screenshot" />
 
     </VerticalStackLayout>
-
 
 </ContentView>

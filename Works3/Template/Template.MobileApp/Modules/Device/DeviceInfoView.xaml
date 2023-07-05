@@ -7,7 +7,9 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceInfoView"
              x:DataType="{x:Type module:DeviceInfoViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:DeviceInfoViewModel}"
-             shell:ShellProperty.Title="DeviceInfo">
+             shell:ShellProperty.Title="DeviceInfo"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout>
 
@@ -23,6 +25,5 @@
         <Label Text="{Binding ApplicationBuild.Value, StringFormat='Build: {0}'}" />
 
     </VerticalStackLayout>
-
 
 </ContentView>

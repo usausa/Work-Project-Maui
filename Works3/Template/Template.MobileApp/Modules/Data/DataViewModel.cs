@@ -45,6 +45,8 @@ public class DataViewModel : AppViewModelBase
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
     public override async void OnNavigatingTo(INavigationContext context)
     {
         BulkDataCount.Value = await dataService.CountBulkDataAsync();

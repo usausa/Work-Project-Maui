@@ -7,10 +7,10 @@
              x:Class="Template.MobileApp.Modules.Key.KeyListView"
              x:DataType="{x:Type module:KeyListViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:KeyListViewModel}"
-             shell:ShellProperty.Title="List">
+             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
-
-    </VerticalStackLayout>
+    <VerticalStackLayout />
 
 </ContentView>

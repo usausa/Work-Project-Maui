@@ -12,4 +12,6 @@ public class DeviceMenuViewModel : AppViewModelBase
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

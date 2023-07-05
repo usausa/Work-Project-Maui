@@ -8,7 +8,9 @@
              x:Class="Template.MobileApp.Modules.Key.KeyMenuView"
              x:DataType="{x:Type module:KeyMenuViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:KeyMenuViewModel}"
-             shell:ShellProperty.Title="Key">
+             shell:ShellProperty.Title="Key"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid>
         <Grid.RowDefinitions>

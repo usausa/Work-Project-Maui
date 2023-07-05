@@ -7,9 +7,10 @@
              x:Class="Template.MobileApp.Modules.Key.KeyEntryView"
              x:DataType="{x:Type module:KeyEntryViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:KeyEntryViewModel}"
-             shell:ShellProperty.Title="Entry">
+             shell:ShellProperty.Title="Entry"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout>
-    </VerticalStackLayout>
+    <VerticalStackLayout />
 
 </ContentView>
