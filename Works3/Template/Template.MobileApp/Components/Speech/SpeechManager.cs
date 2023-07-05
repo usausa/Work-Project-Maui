@@ -1,21 +1,25 @@
-namespace Template.MobileApp.Components.Sound;
+namespace Template.MobileApp.Components.Speech;
 
-public interface ISoundManager
+public interface ISpeechManager
 {
-    // Speech
+    // Text to speech
 
     ValueTask SpeakAsync(string text, float? pitch = null, float? volume = null);
 
     void SpeakCancel();
+
+    // Speech to text
+
+    // TODO
 }
 
-public sealed class SoundManager : ISoundManager, IDisposable
+public sealed class SpeechManager : ISpeechManager, IDisposable
 {
     private readonly ITextToSpeech textToSpeech;
 
     private CancellationTokenSource? cts;
 
-    public SoundManager(ITextToSpeech textToSpeech)
+    public SpeechManager(ITextToSpeech textToSpeech)
     {
         this.textToSpeech = textToSpeech;
     }

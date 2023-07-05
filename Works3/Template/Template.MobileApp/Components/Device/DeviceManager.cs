@@ -10,7 +10,13 @@ public interface IDeviceManager
 
     // Display
 
+    Orientation GetOrientation();
+
     void SetOrientation(Orientation orientation);
+
+    ValueTask<Stream> TakeScreenshotAsync();
+
+    void KeepScreenOn(bool value);
 
     // Feed
 
@@ -28,17 +34,31 @@ public interface IDeviceManager
 
     void LightOff();
 
-    // Screen
-
-    ValueTask<Stream> TakeScreenshotAsync();
-
     // Information
 
-    string? GetVersion();
+    Version DeviceVersion { get; }
+
+    string DeviceName { get; }
+
+    bool IsDeviceEmulator { get; }
+
+    string ApplicationName { get; }
+
+    string ApplicationPackageName { get; }
+
+    Version ApplicationVersion { get; }
+
+    string ApplicationBuild { get; }
 }
 
 public sealed partial class DeviceManager : IDeviceManager, IDisposable
 {
+    private readonly IAppInfo appInfo;
+
+    private readonly IDeviceInfo deviceInfo;
+
+    private readonly IDeviceDisplay deviceDisplay;
+
     private readonly IVibration vibration;
 
     private readonly IHapticFeedback feedback;
@@ -52,11 +72,17 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public IObservable<NetworkState> NetworkState => networkState;
 
     public DeviceManager(
+        IAppInfo appInfo,
+        IDeviceInfo deviceInfo,
+        IDeviceDisplay deviceDisplay,
         IVibration vibration,
         IHapticFeedback feedback,
         IFlashlight flashlight,
         IScreenshot screenshot)
     {
+        this.appInfo = appInfo;
+        this.deviceInfo = deviceInfo;
+        this.deviceDisplay = deviceDisplay;
         this.vibration = vibration;
         this.feedback = feedback;
         this.flashlight = flashlight;
@@ -93,6 +119,26 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public NetworkState GetNetworkState() => GetNetworkState(Connectivity.NetworkAccess, Connectivity.ConnectionProfiles);
 
     // ------------------------------------------------------------
+    // Display
+    // ------------------------------------------------------------
+
+    public Orientation GetOrientation() =>
+        deviceDisplay.MainDisplayInfo.Orientation switch
+        {
+            DisplayOrientation.Landscape => Orientation.Landscape,
+            DisplayOrientation.Portrait => Orientation.Portrait,
+            _ => Orientation.Unknown
+        };
+
+    public async ValueTask<Stream> TakeScreenshotAsync()
+    {
+        var result = await screenshot.CaptureAsync();
+        return await result.OpenReadAsync();
+    }
+
+    public void KeepScreenOn(bool value) => deviceDisplay.KeepScreenOn = value;
+
+    // ------------------------------------------------------------
     // Feed
     // ------------------------------------------------------------
 
@@ -113,12 +159,20 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public void LightOff() => flashlight.TurnOffAsync();
 
     // ------------------------------------------------------------
-    // Screen
+    // Information
     // ------------------------------------------------------------
 
-    public async ValueTask<Stream> TakeScreenshotAsync()
-    {
-        var result = await screenshot.CaptureAsync();
-        return await result.OpenReadAsync();
-    }
+    public Version DeviceVersion => deviceInfo.Version;
+
+    public string DeviceName => deviceInfo.Name;
+
+    public bool IsDeviceEmulator => deviceInfo.DeviceType == DeviceType.Virtual;
+
+    public string ApplicationName => appInfo.Name;
+
+    public string ApplicationPackageName => appInfo.PackageName;
+
+    public Version ApplicationVersion => appInfo.Version;
+
+    public string ApplicationBuild => appInfo.BuildString;
 }

@@ -16,7 +16,7 @@ using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Sound;
+using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Helpers.Data;
@@ -153,7 +153,7 @@ public static class MauiProgram
         // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<ISoundManager, SoundManager>();
+        config.BindSingleton<ISpeechManager, SpeechManager>();
 
         // State
         config.BindSingleton<ApplicationState>();

@@ -12,8 +12,7 @@
 
     <VerticalStackLayout>
 
-        <Label Text="CRUD"
-               FontSize="Large" />
+        <Label Text="CRUD" />
         <Button Command="{Binding InsertCommand}"
                 Text="Insert" />
         <Button Command="{Binding UpdateCommand}"
@@ -23,8 +22,7 @@
         <Button Command="{Binding QueryCommand}"
                 Text="Query" />
 
-        <Label Text="Bulk"
-               FontSize="Large" />
+        <Label Text="Bulk" />
         <Label Text="{Binding BulkDataCount.Value, StringFormat='Count: {0}'}" />
         <Button Command="{Binding BulkInsertCommand}"
                 Text="BulkInsert" />

@@ -2,11 +2,19 @@
 namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Sound;
+using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 
 public class DeviceMiscViewModel : AppViewModelBase
 {
+    private readonly IDeviceManager device;
+
+    public ICommand KeepScreenOnCommand { get; }
+    public ICommand KeepScreenOffCommand { get; }
+
+    public ICommand OrientationPortraitCommand { get; }
+    public ICommand OrientationLandscapeCommand { get; }
+
     public ICommand VibrateCommand { get; }
     public ICommand VibrateCancelCommand { get; }
 
@@ -22,17 +30,28 @@ public class DeviceMiscViewModel : AppViewModelBase
         ApplicationState applicationState,
         IDeviceManager device,
         IStorageManager storage,
-        ISoundManager sound)
+        ISpeechManager speech)
         : base(applicationState)
     {
+        this.device = device;
+
+        KeepScreenOnCommand = MakeDelegateCommand(() => device.KeepScreenOn(true));
+        KeepScreenOffCommand = MakeDelegateCommand(() => device.KeepScreenOn(false));
+
+        OrientationPortraitCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Portrait));
+        OrientationLandscapeCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Landscape));
+
         VibrateCommand = MakeDelegateCommand(() => device.Vibrate(5000));
         VibrateCancelCommand = MakeDelegateCommand(device.VibrateCancel);
+
         LightOnCommand = MakeDelegateCommand(device.LightOn);
         LightOffCommand = MakeDelegateCommand(device.LightOff);
+
 #pragma warning disable CA2012
-        SpeakCommand = MakeDelegateCommand(() => sound.SpeakAsync("テストです"));
+        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
 #pragma warning restore CA2012
-        SpeakCancelCommand = MakeDelegateCommand(sound.SpeakCancel);
+        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
+
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {
             await using var stream = await device.TakeScreenshotAsync();
@@ -42,4 +61,9 @@ public class DeviceMiscViewModel : AppViewModelBase
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    public override void OnNavigatingFrom(INavigationContext context)
+    {
+        device.SetOrientation(Orientation.Portrait);
+    }
 }
