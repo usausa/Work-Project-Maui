@@ -23,6 +23,8 @@
                 Text="Speak" />
         <Button Command="{Binding SpeakCancelCommand}"
                 Text="Speak cancel" />
+        <Button Command="{Binding ScreenshotCommand}"
+                Text="Screenshot" />
 
     </VerticalStackLayout>
 

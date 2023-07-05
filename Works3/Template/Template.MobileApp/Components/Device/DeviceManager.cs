@@ -28,6 +28,10 @@ public interface IDeviceManager
 
     void LightOff();
 
+    // Screen
+
+    ValueTask<Stream> TakeScreenshotAsync();
+
     // Information
 
     string? GetVersion();
@@ -35,24 +39,28 @@ public interface IDeviceManager
 
 public sealed partial class DeviceManager : IDeviceManager, IDisposable
 {
-    private readonly IFlashlight flashlight;
-
     private readonly IVibration vibration;
 
     private readonly IHapticFeedback feedback;
+
+    private readonly IFlashlight flashlight;
+
+    private readonly IScreenshot screenshot;
 
     private readonly BehaviorSubject<NetworkState> networkState;
 
     public IObservable<NetworkState> NetworkState => networkState;
 
     public DeviceManager(
-        IFlashlight flashlight,
         IVibration vibration,
-        IHapticFeedback feedback)
+        IHapticFeedback feedback,
+        IFlashlight flashlight,
+        IScreenshot screenshot)
     {
-        this.flashlight = flashlight;
         this.vibration = vibration;
         this.feedback = feedback;
+        this.flashlight = flashlight;
+        this.screenshot = screenshot;
 
         networkState = new BehaviorSubject<NetworkState>(GetNetworkState(Connectivity.NetworkAccess, Connectivity.ConnectionProfiles));
         Connectivity.ConnectivityChanged += (_, args) =>
@@ -103,4 +111,14 @@ public sealed partial class DeviceManager : IDeviceManager, IDisposable
     public void LightOn() => flashlight.TurnOnAsync();
 
     public void LightOff() => flashlight.TurnOffAsync();
+
+    // ------------------------------------------------------------
+    // Screen
+    // ------------------------------------------------------------
+
+    public async ValueTask<Stream> TakeScreenshotAsync()
+    {
+        var result = await screenshot.CaptureAsync();
+        return await result.OpenReadAsync();
+    }
 }
