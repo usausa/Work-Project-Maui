@@ -44,7 +44,7 @@ public sealed class DeviceState : NotificationObject, IDisposable
     public double BatteryChargeLevel
     {
         get => batteryChargeLevel;
-        set => SetProperty(ref batteryChargeLevel, value);
+        private set => SetProperty(ref batteryChargeLevel, value);
     }
 
     private BatteryState batteryState;
@@ -52,7 +52,7 @@ public sealed class DeviceState : NotificationObject, IDisposable
     public BatteryState BatteryState
     {
         get => batteryState;
-        set => SetProperty(ref batteryState, value);
+        private set => SetProperty(ref batteryState, value);
     }
 
     private BatteryPowerSource batteryPowerSource;
@@ -60,7 +60,7 @@ public sealed class DeviceState : NotificationObject, IDisposable
     public BatteryPowerSource BatteryPowerSource
     {
         get => batteryPowerSource;
-        set => SetProperty(ref batteryPowerSource, value);
+        private set => SetProperty(ref batteryPowerSource, value);
     }
 
     // Connectivity
@@ -70,32 +70,23 @@ public sealed class DeviceState : NotificationObject, IDisposable
     public NetworkProfile NetworkProfile
     {
         get => networkProfile;
-        set
-        {
-            if (SetProperty(ref networkProfile, value))
-            {
-                RaisePropertyChanging(nameof(NetworkState));
-            }
-        }
+        private set => SetProperty(ref networkProfile, value);
     }
     private NetworkAccess networkAccess;
 
     public NetworkAccess NetworkAccess
     {
         get => networkAccess;
-        set
-        {
-            if (SetProperty(ref networkAccess, value))
-            {
-                RaisePropertyChanging(nameof(NetworkState));
-            }
-        }
+        private set => SetProperty(ref networkAccess, value);
     }
 
-    private NetworkState NetworkState =>
-        networkAccess.IsConnected()
-            ? (networkProfile.IsHighSpeed() ? NetworkState.ConnectedHighSpeed : NetworkState.Connected)
-            : NetworkState.Disconnected;
+    private NetworkState networkState;
+
+    public NetworkState NetworkState
+    {
+        get => networkState;
+        private set => SetProperty(ref networkState, value);
+    }
 
     public DeviceState(
         ILogger<DeviceState> log,
@@ -172,5 +163,8 @@ public sealed class DeviceState : NotificationObject, IDisposable
 
         NetworkProfile = profile;
         NetworkAccess = access;
+        NetworkState = access.IsConnected()
+            ? (profile.IsHighSpeed() ? NetworkState.ConnectedHighSpeed : NetworkState.Connected)
+            : NetworkState.Disconnected;
     }
 }

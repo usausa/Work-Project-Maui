@@ -18,5 +18,11 @@
         <Label Text="{Binding DeviceState.BatteryState, StringFormat='State: {0}'}" />
         <Label Text="{Binding DeviceState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
 
+        <Label Text="[Network]" />
+        <Label Text="{Binding DeviceState.NetworkProfile, StringFormat='Profile: {0}'}" />
+        <Label Text="{Binding DeviceState.NetworkAccess, StringFormat='Access: {0}'}" />
+        <Label Text="{Binding DeviceState.NetworkState, StringFormat='State: {0}'}" />
+
     </VerticalStackLayout>
+
 </ContentView>
