@@ -1,14 +1,14 @@
-namespace Template.MobileApp.Components.Device;
+namespace Template.MobileApp.Components.Screen;
 
 using Android.Content.PM;
 
-public sealed partial class DeviceManager
+public sealed partial class ScreenManager
 {
     // ------------------------------------------------------------
     // Display
     // ------------------------------------------------------------
 
-    public void SetOrientation(Orientation orientation)
+    public void SetOrientation(DisplayOrientation orientation)
     {
         var current = GetOrientation();
         if (current == orientation)
@@ -19,8 +19,8 @@ public sealed partial class DeviceManager
         var activity = ActivityResolver.CurrentActivity;
         activity.RequestedOrientation = orientation switch
         {
-            Orientation.Landscape => ScreenOrientation.Landscape,
-            Orientation.Portrait => ScreenOrientation.Portrait,
+            DisplayOrientation.Landscape => ScreenOrientation.Landscape,
+            DisplayOrientation.Portrait => ScreenOrientation.Portrait,
             _ => activity.RequestedOrientation
         };
     }
