@@ -2,7 +2,7 @@ namespace Template.MobileApp.Components.Speech;
 
 using CommunityToolkit.Maui.Media;
 
-public interface ISpeechManager
+public interface ISpeechService
 {
     // Text to speech
 
@@ -16,7 +16,7 @@ public interface ISpeechManager
     ValueTask<string?> RecognizeAsync(Action<string> progress);
 }
 
-public sealed class SpeechManager : ISpeechManager, IDisposable
+public sealed class SpeechService : ISpeechService, IDisposable
 {
     private readonly ITextToSpeech textToSpeech;
 
@@ -24,7 +24,7 @@ public sealed class SpeechManager : ISpeechManager, IDisposable
 
     private CancellationTokenSource? cts;
 
-    public SpeechManager(
+    public SpeechService(
         ITextToSpeech textToSpeech,
         ISpeechToText speechToText)
     {

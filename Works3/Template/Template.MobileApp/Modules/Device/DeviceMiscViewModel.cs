@@ -18,6 +18,9 @@ public class DeviceMiscViewModel : AppViewModelBase
     public ICommand VibrateCommand { get; }
     public ICommand VibrateCancelCommand { get; }
 
+    public ICommand FeedbackClickCommand { get; }
+    public ICommand FeedbackLongPressCommand { get; }
+
     public ICommand LightOnCommand { get; }
     public ICommand LightOffCommand { get; }
 
@@ -34,7 +37,10 @@ public class DeviceMiscViewModel : AppViewModelBase
         ApplicationState applicationState,
         IDeviceManager device,
         IStorageManager storage,
-        ISpeechManager speech)
+        ISpeechService speech,
+        IVibration vibration,
+        IHapticFeedback feedback,
+        IFlashlight flashlight)
         : base(applicationState)
     {
         this.device = device;
@@ -45,11 +51,14 @@ public class DeviceMiscViewModel : AppViewModelBase
         OrientationPortraitCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Portrait));
         OrientationLandscapeCommand = MakeDelegateCommand(() => device.SetOrientation(Orientation.Landscape));
 
-        VibrateCommand = MakeDelegateCommand(() => device.Vibrate(5000));
-        VibrateCancelCommand = MakeDelegateCommand(device.VibrateCancel);
+        VibrateCommand = MakeDelegateCommand(() => vibration.Vibrate(5000));
+        VibrateCancelCommand = MakeDelegateCommand(vibration.Cancel);
 
-        LightOnCommand = MakeDelegateCommand(device.LightOn);
-        LightOffCommand = MakeDelegateCommand(device.LightOff);
+        FeedbackClickCommand = MakeDelegateCommand(() => feedback.Perform(HapticFeedbackType.Click));
+        FeedbackLongPressCommand = MakeDelegateCommand(() => feedback.Perform(HapticFeedbackType.LongPress));
+
+        LightOnCommand = MakeAsyncCommand(flashlight.TurnOnAsync);
+        LightOffCommand = MakeAsyncCommand(flashlight.TurnOffAsync);
 
         ScreenshotCommand = MakeAsyncCommand(async () =>
         {

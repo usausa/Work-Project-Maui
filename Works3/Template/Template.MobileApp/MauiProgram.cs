@@ -5,6 +5,10 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+#if ANDROID
+using Android.Views;
+#endif
+
 using CommunityToolkit.Maui;
 
 using MauiComponents.Resolver;
@@ -65,7 +69,7 @@ public static class MauiProgram
 #if DEBUG
             .AddDebug()
 #endif
-#if ANDROID
+#if ANDROID && !DEBUG
             .AddAndroidLogger(options => options.ShortCategory = true)
 #endif
             .AddFileLogger(options =>
@@ -153,9 +157,10 @@ public static class MauiProgram
         // Components
         config.BindSingleton<IDeviceManager, DeviceManager>();
         config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<ISpeechManager, SpeechManager>();
+        config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
+        config.BindSingleton<DeviceState>();
         config.BindSingleton<ApplicationState>();
         config.BindSingleton<Session>();
         config.BindSingleton<Settings>();

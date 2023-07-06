@@ -11,6 +11,12 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout />
+    <VerticalStackLayout>
 
+        <Label Text="[Battery]" />
+        <Label Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='ChargeLevel: {0}'}" />
+        <Label Text="{Binding DeviceState.BatteryState, StringFormat='State: {0}'}" />
+        <Label Text="{Binding DeviceState.BatteryPowerSource, StringFormat='PowerSource: {0}'}" />
+
+    </VerticalStackLayout>
 </ContentView>
