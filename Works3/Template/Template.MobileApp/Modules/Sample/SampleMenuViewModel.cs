@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Sample;
 
+using Template.MobileApp;
+
 public class SampleMenuViewModel : AppViewModelBase
 {
     public ICommand ForwardCommand { get; }

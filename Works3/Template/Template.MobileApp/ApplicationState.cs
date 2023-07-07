@@ -1,4 +1,6 @@
-namespace Template.MobileApp.State;
+namespace Template.MobileApp;
+
+using Template.MobileApp.State;
 
 #pragma warning disable CA1008
 [Flags]
@@ -19,7 +21,7 @@ public enum NetworkState
     Disconnected
 }
 
-public static class DeviceStateExtensions
+public static class ApplicationStateExtensions
 {
     public static bool IsConnected(this NetworkAccess access) =>
         access != NetworkAccess.None && access != NetworkAccess.Unknown;
@@ -31,9 +33,9 @@ public static class DeviceStateExtensions
         state == NetworkState.ConnectedHighSpeed || state == NetworkState.Connected;
 }
 
-public sealed class DeviceState : NotificationObject, IDisposable
+public sealed class ApplicationState : BusyState, IDisposable
 {
-    private readonly ILogger<DeviceState> log;
+    private readonly ILogger<ApplicationState> log;
 
     private readonly List<IDisposable> disposables = new();
 
@@ -88,8 +90,8 @@ public sealed class DeviceState : NotificationObject, IDisposable
         private set => SetProperty(ref networkState, value);
     }
 
-    public DeviceState(
-        ILogger<DeviceState> log,
+    public ApplicationState(
+        ILogger<ApplicationState> log,
         IBattery battery,
         IConnectivity connectivity)
     {

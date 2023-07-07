@@ -160,7 +160,6 @@ public static class MauiProgram
         config.BindSingleton<ISpeechService, SpeechService>();
 
         // State
-        config.BindSingleton<DeviceState>();
         config.BindSingleton<ApplicationState>();
         config.BindSingleton<Session>();
         config.BindSingleton<Settings>();

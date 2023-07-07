@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.Network;
 
+using Template.MobileApp;
+
 public class NetworkViewModel : AppViewModelBase
 {
     public NetworkViewModel(
