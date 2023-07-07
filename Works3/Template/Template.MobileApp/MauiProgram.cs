@@ -21,7 +21,6 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Helpers.Data;
@@ -137,12 +136,13 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
-        config.AddComponentsScreen();
         // TODO PopupPageFactory
         // TODO SourceGenerator?
-        config.AddComponentsPopup(c =>
-            c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.AddComponentsPopup(c => c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
         config.AddComponentsSerializer();
+        config.AddComponentsScreen();
+        config.AddComponentsSpeech();
+        config.AddComponentsLocation();
 
         // Navigator
         config.AddNavigator(c =>
@@ -152,8 +152,7 @@ public static class MauiProgram
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
             // TODO SourceGenerator?
-            c.UseIdViewMapper(m =>
-                m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
+            c.UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
         });
 
         // Components
