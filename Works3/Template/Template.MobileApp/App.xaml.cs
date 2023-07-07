@@ -23,6 +23,10 @@ public partial class App
         // Report previous exception
         await CrashReport.ShowReport();
 
+        // Permissions
+        await Permissions.RequestCameraAsync();
+        await Permissions.RequestLocationAsync();
+
         await navigator.ForwardAsync(ViewId.Menu);
     }
 }
