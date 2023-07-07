@@ -1,6 +1,5 @@
 namespace Template.MobileApp;
 
-using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
@@ -141,8 +140,7 @@ public static class MauiProgram
         });
 #endif
         // TODO PopupPageFactory
-        // TODO SourceGenerator?
-        config.AddComponentsPopup(c => c.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(DialogId))));
+        config.AddComponentsPopup(c => c.AutoRegister(ViewRegistry.DialogSource()));
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
         config.AddComponentsSpeech();
@@ -155,7 +153,7 @@ public static class MauiProgram
             c.AddResolverPlugin();
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
-            c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ListViews()));
+            c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ViewSource()));
         });
 
         // Components
