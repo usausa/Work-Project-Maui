@@ -1,5 +1,6 @@
 namespace Template.MobileApp;
 
+using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
 public partial class App
@@ -13,11 +14,15 @@ public partial class App
         navigator = serviceProvider.GetRequiredService<INavigator>();
         MainPage = serviceProvider.GetRequiredService<MainPage>();
 
+        // Start
         log.InfoApplicationStart();
     }
 
     protected override async void OnStart()
     {
+        // Report previous exception
+        await CrashReport.ShowReport();
+
         await navigator.ForwardAsync(ViewId.Menu);
     }
 }

@@ -23,6 +23,7 @@ using Smart.Resolver;
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
+using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Services;
@@ -102,6 +103,9 @@ public static class MauiProgram
                 typeof(Microsoft.AppCenter.Analytics.Analytics),
                 typeof(Microsoft.AppCenter.Crashes.Crashes));
         }
+
+        // Crash dump
+        CrashReport.Start();
 
         return builder.Build();
     }

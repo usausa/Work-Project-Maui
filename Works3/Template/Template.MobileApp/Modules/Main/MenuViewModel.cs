@@ -10,6 +10,7 @@ public class MenuViewModel : AppViewModelBase
         ApplicationState applicationState)
         : base(applicationState)
     {
-        ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
+        //ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
+        ForwardCommand = MakeAsyncCommand<ViewId>(x => throw new Exception());
     }
 }
