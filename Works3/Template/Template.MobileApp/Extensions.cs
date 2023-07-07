@@ -2,8 +2,19 @@ namespace Template.MobileApp;
 
 using System.Reflection;
 
+using Smart.Navigation.Mappers;
+
 public static class Extensions
 {
+    // TODO delete
+    public static void AutoRegister<T>(this IIdViewRegister register, IEnumerable<KeyValuePair<T, Type>> source)
+    {
+        foreach (var pair in source)
+        {
+            register.Register(pair.Key!, pair.Value);
+        }
+    }
+
     //--------------------------------------------------------------------------------
     // Resource
     //--------------------------------------------------------------------------------

@@ -155,8 +155,7 @@ public static class MauiProgram
             c.AddResolverPlugin();
             // TODO
             //c.AddPlugin<NavigationFocusPlugin>();
-            // TODO SourceGenerator?
-            c.UseIdViewMapper(m => m.AutoRegister(Assembly.GetExecutingAssembly().UnderNamespaceTypes(typeof(ViewId))));
+            c.UseIdViewMapper(m => m.AutoRegister(ViewRegistry.ListViews()));
         });
 
         // Components
