@@ -21,7 +21,6 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Screen;
 using Template.MobileApp.Components.Speech;
 using Template.MobileApp.Components.Storage;
 using Template.MobileApp.Controls;
@@ -138,6 +137,7 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
+        config.AddComponentsScreen();
         // TODO PopupPageFactory
         // TODO SourceGenerator?
         config.AddComponentsPopup(c =>
@@ -157,7 +157,6 @@ public static class MauiProgram
         });
 
         // Components
-        config.BindSingleton<IScreenManager, ScreenManager>();
         config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<ISpeechService, SpeechService>();
 

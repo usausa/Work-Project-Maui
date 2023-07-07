@@ -12,8 +12,7 @@ public interface ISpeechService
 
     // Speech to text
 
-    // TODO
-    ValueTask<string?> RecognizeAsync(Action<string> progress);
+    ValueTask<string?> RecognizeAsync(Action<string> progress, CancellationToken cancel = default);
 }
 
 public sealed class SpeechService : ISpeechService, IDisposable
@@ -66,7 +65,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
     // Speech to text
     // ------------------------------------------------------------
 
-    public async ValueTask<string?> RecognizeAsync(Action<string> progress)
+    public async ValueTask<string?> RecognizeAsync(Action<string> progress, CancellationToken cancel = default)
     {
         var granted = await speechToText.RequestPermissions(default);
         if (!granted)
@@ -77,7 +76,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
         var result = await speechToText.ListenAsync(
             CultureInfo.CurrentCulture,
             new Progress<string>(progress),
-            default);
+            cancel);
         result.EnsureSuccess();
 
         if (result.IsSuccessful)
