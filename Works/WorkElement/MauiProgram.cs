@@ -1,4 +1,4 @@
-﻿namespace WorkKeyFunction;
+﻿namespace WorkElement;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram

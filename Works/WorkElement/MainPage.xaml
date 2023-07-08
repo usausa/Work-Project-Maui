@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkElement.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- header -->
+        <BoxView Grid.Row="0" />
+        <Label Grid.Row="0" />
+
+        <!-- view container -->
+
+        <ContentView Grid.Row="1">
+            <VerticalStackLayout>
+                <Button x:Name="Button1"
+                        Text="SetFocus1"
+                        Clicked="OnButton1Clicked" />
+                <Button x:Name="Button2"
+                        Text="SetFocus2"
+                        Clicked="OnButton2Clicked" />
+
+                <Entry x:Name="Entry1"
+                       Text="Entry" />
+                <Label x:Name="Label1"
+                       Text="Label" />
+
+            </VerticalStackLayout>
+        </ContentView>
+
+        <!-- function -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" />
+            <Button Grid.Column="1"
+                    IsEnabled="False" />
+            <Button Grid.Column="2"
+                    IsEnabled="False" />
+            <Button Grid.Column="3" />
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
