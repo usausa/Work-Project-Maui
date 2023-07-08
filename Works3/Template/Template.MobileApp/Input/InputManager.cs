@@ -12,5 +12,5 @@ public sealed class InputManager
 
     public bool Process(KeyCode key) => handlers.Count > 0 && handlers[^1].Handle(key);
 
-    //public VisualElement? FindFocused() => handlers.Count > 0 ? handlers[^1].FindFocused() : null;
+    public VisualElement? FindFocused() => handlers.Count > 0 ? handlers[^1].FindFocused() : null;
 }
