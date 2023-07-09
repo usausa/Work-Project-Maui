@@ -15,7 +15,7 @@
 
     <ContentPage.Behaviors>
         <sb:AppLifecycleBehavior />
-        <input:InputControlBehavior />
+        <input:InputRootBehavior />
         <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
     </ContentPage.Behaviors>
 
