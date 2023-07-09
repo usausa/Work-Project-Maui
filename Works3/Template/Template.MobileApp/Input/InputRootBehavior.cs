@@ -4,7 +4,7 @@ using Smart.Maui.Interactivity;
 
 using Template.MobileApp.Helpers;
 
-public sealed class InputControlBehavior : BehaviorBase<Page>, IInputHandler
+public sealed class InputRootBehavior : BehaviorBase<Page>, IInputHandler
 {
     protected override void OnAttachedTo(Page bindable)
     {
@@ -30,7 +30,7 @@ public sealed class InputControlBehavior : BehaviorBase<Page>, IInputHandler
         InputManager.Default.PopHandler(this);
     }
 
-    public bool Handle(KeyCode key)
+    public bool Handle(ShortcutKey key)
     {
         if ((AssociatedObject is null) || !AssociatedObject.IsEnabled)
         {
@@ -46,13 +46,13 @@ public sealed class InputControlBehavior : BehaviorBase<Page>, IInputHandler
             }
         }
 
-        if (key == KeyCode.Up)
+        if (key == ShortcutKey.Up)
         {
             ElementHelper.MoveFocus(AssociatedObject, false);
             return true;
         }
 
-        if (key == KeyCode.Down)
+        if (key == ShortcutKey.Down)
         {
             ElementHelper.MoveFocus(AssociatedObject, true);
             return true;

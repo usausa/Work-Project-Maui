@@ -10,9 +10,9 @@ public sealed class KeyInputDriver
 {
     private static readonly ConvertEntry[] OtherEntries =
     {
-        new(Keycode.Del, KeyCode.Del),
-        new(Keycode.Minus, KeyCode.Minus),
-        new(Keycode.Period, KeyCode.Period)
+        new(Keycode.Del, ShortcutKey.Del),
+        new(Keycode.Minus, ShortcutKey.Minus),
+        new(Keycode.Period, ShortcutKey.Period)
     };
 
     private readonly Activity activity;
@@ -22,13 +22,13 @@ public sealed class KeyInputDriver
         this.activity = activity;
     }
 
-    private class ConvertEntry
+    private sealed class ConvertEntry
     {
         public Keycode AndroidKeycode { get; }
 
-        public KeyCode InputKeyCode { get; }
+        public ShortcutKey InputKeyCode { get; }
 
-        public ConvertEntry(Keycode androidKeycode, KeyCode inputKeyCode)
+        public ConvertEntry(Keycode androidKeycode, ShortcutKey inputKeyCode)
         {
             AndroidKeycode = androidKeycode;
             InputKeyCode = inputKeyCode;
@@ -48,7 +48,7 @@ public sealed class KeyInputDriver
 
             if (e.Action == KeyEventActions.Down)
             {
-                InputManager.Default.Process(KeyCode.Up);
+                InputManager.Default.Process(ShortcutKey.Up);
             }
 
             return true;
@@ -66,7 +66,7 @@ public sealed class KeyInputDriver
 
             if (e.Action == KeyEventActions.Down)
             {
-                InputManager.Default.Process(KeyCode.Down);
+                InputManager.Default.Process(ShortcutKey.Down);
             }
 
             return true;
@@ -119,7 +119,7 @@ public sealed class KeyInputDriver
 
             if (e.Action == KeyEventActions.Up)
             {
-                InputManager.Default.Process((KeyCode)((int)KeyCode.Num0 + (e.KeyCode - Keycode.Num0)));
+                InputManager.Default.Process((ShortcutKey)((int)ShortcutKey.Num0 + (e.KeyCode - Keycode.Num0)));
             }
 
             return true;
@@ -130,7 +130,7 @@ public sealed class KeyInputDriver
         {
             if (e.Action == KeyEventActions.Up)
             {
-                InputManager.Default.Process((KeyCode)((int)KeyCode.Function1 + (e.KeyCode - Keycode.F1)));
+                InputManager.Default.Process((ShortcutKey)((int)ShortcutKey.Function1 + (e.KeyCode - Keycode.F1)));
             }
 
             return true;

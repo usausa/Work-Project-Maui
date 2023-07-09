@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Input;
 
-public enum KeyCode : byte
+public enum ShortcutKey : byte
 {
     None = 0,
 
