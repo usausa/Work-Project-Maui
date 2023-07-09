@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Helpers;
 
+using CommunityToolkit.Maui.Views;
+
 using Microsoft.Maui;
 
 public static class ElementHelper
@@ -45,12 +47,15 @@ public static class ElementHelper
     {
         foreach (var child in parent.GetVisualChildren())
         {
-            if ((child is not T element) || (child is not VisualElement visual) || !visual.IsEnabled || !visual.IsVisible)
+            if ((child is not VisualElement visual) || !visual.IsEnabled || !visual.IsVisible)
             {
                 continue;
             }
 
-            yield return element;
+            if (child is T element)
+            {
+                yield return element;
+            }
 
             foreach (var descendant in EnumerateActive<T>(child))
             {
@@ -117,8 +122,14 @@ public static class ElementHelper
         return false;
     }
 
-    public static bool MoveFocus(VisualElement parent, VisualElement current, bool forward)
+    public static bool MoveFocusInRoot(VisualElement current, bool forward)
     {
+        var parent = FindRoot(current);
+        if (parent is null)
+        {
+            return false;
+        }
+
         var find = false;
         var first = default(VisualElement);
         var previous = default(VisualElement);
@@ -155,5 +166,29 @@ public static class ElementHelper
         }
 
         return false;
+    }
+
+    public static VisualElement? FindRoot(this Element element)
+    {
+        while (true)
+        {
+            var parent = element.Parent;
+            if (parent is null)
+            {
+                return null;
+            }
+
+            if (element is Page page)
+            {
+                return page;
+            }
+
+            if (element is Popup popup)
+            {
+                return popup.Content;
+            }
+
+            element = parent;
+        }
     }
 }

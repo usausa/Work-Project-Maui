@@ -46,7 +46,17 @@ public sealed class InputControlBehavior : BehaviorBase<Page>, IInputHandler
             }
         }
 
-        // TODO Move focus
+        if (key == KeyCode.Up)
+        {
+            ElementHelper.MoveFocus(AssociatedObject, false);
+            return true;
+        }
+
+        if (key == KeyCode.Down)
+        {
+            ElementHelper.MoveFocus(AssociatedObject, true);
+            return true;
+        }
 
         var button = ElementHelper.EnumerateActive<Button>(AssociatedObject)
             .FirstOrDefault(x => Shortcut.GetKey(x) == key);
