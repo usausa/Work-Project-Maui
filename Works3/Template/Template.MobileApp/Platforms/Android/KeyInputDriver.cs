@@ -40,6 +40,7 @@ public sealed class KeyInputDriver
         // ↑
         if (e.KeyCode == Keycode.DpadUp)
         {
+            // TODO check
             // MEMO 1 is header
             if ((activity.CurrentFocus is ListView listView) && (listView.SelectedItemPosition > 1))
             {
