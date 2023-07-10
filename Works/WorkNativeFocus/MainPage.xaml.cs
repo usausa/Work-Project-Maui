@@ -1,24 +1,32 @@
 ﻿namespace WorkNativeFocus;
 
+using Android.Views;
+
+using Microsoft.Maui.Platform;
+
 public partial class MainPage : ContentPage
 {
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
+
+        EventHub.Default.Handle += Handle;
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private void Handle(object sender, ForwardEventArgs e)
     {
-        count++;
+        System.Diagnostics.Debug.WriteLine("*****");
 
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
+        var ff = FocusFinder.Instance!;
+        //System.Diagnostics.Debug.WriteLine($" ff{ff}");
+        var vg = (ViewGroup)Content.ToPlatform(Content.Handler!.MauiContext!);
+        //System.Diagnostics.Debug.WriteLine($"content {vg}");
 
-        SemanticScreenReader.Announce(CounterBtn.Text);
+        //var next = ff.FindNextFocus(vg, vg.FindFocus(), e.Forward ? FocusSearchDirection.Forward : FocusSearchDirection.Backward);
+        var next = ff.FindNextFocus(vg, vg.FindFocus(), e.Forward ? FocusSearchDirection.Down : FocusSearchDirection.Up);
+        System.Diagnostics.Debug.WriteLine($"next {next}");
+
+        next?.RequestFocus();
     }
 }
 
