@@ -18,7 +18,22 @@
         <Label Grid.Row="0"
                Text="List" />
 
-        <ListView Grid.Row="1" />
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding List}">
+            <ListView.Behaviors>
+                <workNativeControl:ListViewShortcutBehavior Command="{Binding DeleteCommand}" />
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="workNativeControl:DataEntity">
+                    <ViewCell>
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding Id}" />
+                            <Label Text="{Binding Name}" />
+                        </HorizontalStackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <Button Grid.Row="2"
                 Text="Button" />
