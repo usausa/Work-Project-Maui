@@ -4,7 +4,7 @@ using CommunityToolkit.Maui.Views;
 
 using Microsoft.Maui;
 
-public static class ElementHelper
+public static partial class ElementHelper
 {
     public static VisualElement? FindFocused(IVisualTreeElement parent)
     {
@@ -64,63 +64,8 @@ public static class ElementHelper
         }
     }
 
-    // TODO Nativeでやれるか？
-
-    private static bool IsFocusableElement(VisualElement visualElement) =>
-        visualElement is Button ||
-        visualElement is CheckBox ||
-        visualElement is DatePicker ||
-        visualElement is Editor ||
-        visualElement is Entry ||
-        visualElement is ImageButton ||
-        visualElement is ListView ||
-        visualElement is Picker ||
-        visualElement is RadioButton ||
-        visualElement is SearchBar ||
-        visualElement is Slider ||
-        visualElement is Stepper ||
-        visualElement is Switch ||
-        visualElement is TimePicker;
-
-    public static bool MoveFocus(VisualElement parent, bool forward)
-    {
-        var find = false;
-        var first = default(VisualElement);
-        var previous = default(VisualElement);
-        foreach (var visual in EnumerateActive(parent))
-        {
-            if (IsFocusableElement(visual))
-            {
-                continue;
-            }
-
-            if (visual.IsFocused)
-            {
-                if (forward)
-                {
-                    find = true;
-                }
-                else
-                {
-                    return previous?.Focus() ?? false;
-                }
-            }
-            else if (find)
-            {
-                return visual.Focus();
-            }
-
-            previous = visual;
-            first ??= visual;
-        }
-
-        if (!find)
-        {
-            return first?.Focus() ?? false;
-        }
-
-        return false;
-    }
+    public static bool MoveFocus(VisualElement parent, bool forward) =>
+        PlatformMoveFocus(parent, null, forward);
 
     public static bool MoveFocusInRoot(VisualElement current, bool forward)
     {
@@ -130,42 +75,7 @@ public static class ElementHelper
             return false;
         }
 
-        var find = false;
-        var first = default(VisualElement);
-        var previous = default(VisualElement);
-        foreach (var visual in EnumerateActive(parent))
-        {
-            if (IsFocusableElement(visual))
-            {
-                continue;
-            }
-
-            if (visual == current)
-            {
-                if (forward)
-                {
-                    find = true;
-                }
-                else
-                {
-                    return previous?.Focus() ?? false;
-                }
-            }
-            else if (find)
-            {
-                return visual.Focus();
-            }
-
-            previous = visual;
-            first ??= visual;
-        }
-
-        if (!find)
-        {
-            return first?.Focus() ?? false;
-        }
-
-        return false;
+        return PlatformMoveFocus(parent, current, forward);
     }
 
     public static VisualElement? FindRoot(this Element element)
@@ -191,4 +101,6 @@ public static class ElementHelper
             element = parent;
         }
     }
+
+    private static partial bool PlatformMoveFocus(VisualElement parent, VisualElement? current, bool forward);
 }
