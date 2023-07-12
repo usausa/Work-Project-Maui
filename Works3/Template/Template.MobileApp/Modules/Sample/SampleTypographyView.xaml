@@ -7,7 +7,7 @@
              x:Class="Template.MobileApp.Modules.Sample.SampleTypographyView"
              x:DataType="{x:Type module:SampleTypographyViewModel}"
              sr:BindingContextResolver.Type="{x:Type module:SampleTypographyViewModel}"
-             shell:ShellProperty.Title="Sample"
+             shell:ShellProperty.Title="Typography"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
