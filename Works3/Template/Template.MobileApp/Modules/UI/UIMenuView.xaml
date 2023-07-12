@@ -43,23 +43,23 @@
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Graphics" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Calculator" />
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Calendar" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Chat" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Grid" />
     </Grid>
 
 </ContentView>
