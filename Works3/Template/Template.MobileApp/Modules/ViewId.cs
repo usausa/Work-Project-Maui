@@ -52,6 +52,7 @@ public enum ViewId
 
     // Sample
     SampleMenu,
+    SampleTypography,
 
     // UI
     UIMenu

@@ -40,6 +40,30 @@
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceMisc}"
                 Text="Misc" />
+        <Button Grid.Row="3"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="4"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="5"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="8"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
     </Grid>
 
 </ContentView>

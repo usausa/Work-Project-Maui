@@ -113,7 +113,7 @@
                 <Setter Property="HeightRequest" Value="48" />
             </Style>
 
-            <Style x:Key="TitleLabel"
+            <Style x:Key="HeaderTitleLabel"
                    TargetType="Label">
                 <Setter Property="BackgroundColor" Value="Transparent" />
                 <Setter Property="TextColor" Value="White" />
@@ -269,6 +269,32 @@
                 <Setter Property="Padding" Value="6" />
             </Style>
 
+            <Style x:Key="FillGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+            </Style>
+
+            <Style x:Key="FillVerticalStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Spacing" Value="0" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+            </Style>
+
+            <Style x:Key="FillHorizontalStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Spacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+            </Style>
+
             <!-- ================================================================================ -->
             <!-- Button -->
             <!-- ================================================================================ -->
@@ -307,6 +333,135 @@
             <!-- Label -->
             <!-- ================================================================================ -->
 
+            <!-- Size -->
+
+            <Style x:Key="MicroLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="SmallLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="MediumLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="LargeLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style x:Key="ExtraLargeLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+            </Style>
+
+            <Style x:Key="HugeLeftLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="MicroCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="SmallCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="MediumCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="LargeCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ExtraLargeCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="HugeCenterLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="MicroRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="SmallRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="MediumRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="LargeRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="ExtraLargeRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="HugeRightLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <!-- Semantic -->
+
+            <Style x:Key="NameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="GroupLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="HeaderLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="TitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
 
             <!-- ================================================================================ -->
             <!-- ListView -->
