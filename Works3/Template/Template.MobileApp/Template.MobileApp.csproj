@@ -102,6 +102,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Update="Modules\Device\DeviceAudioView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Device\DeviceBluetoothView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Device\DeviceLocationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Device\DeviceNfcView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Device\DeviceSensorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Device\DeviceWiFiView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Modules\Pattern\PatternListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Modules\Sample\SampleBehaviorView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

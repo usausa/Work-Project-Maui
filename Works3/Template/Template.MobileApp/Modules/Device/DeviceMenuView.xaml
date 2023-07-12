@@ -43,27 +43,27 @@
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Location" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="NFC" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="WiFi" />
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Bluetooth" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Sensor" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Audio" />
     </Grid>
 
 </ContentView>

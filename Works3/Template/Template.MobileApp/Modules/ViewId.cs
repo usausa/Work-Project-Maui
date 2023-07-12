@@ -34,6 +34,12 @@ public enum ViewId
     DeviceInfo,
     DeviceStatus,
     DeviceMisc,
+    DeviceLocation,
+    DeviceNfc,
+    DeviceWiFi,
+    DeviceBluetooth,
+    DeviceSensor,
+    DeviceAudio,
 
     // Database
     Data,
@@ -49,6 +55,7 @@ public enum ViewId
 
     // Pattern
     PatternMenu,
+    PatternList,
 
     // Sample
     SampleMenu,
