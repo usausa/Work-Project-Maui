@@ -144,6 +144,8 @@
                    TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="24" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="BorderWidth" Value="0" />
                 <Setter Property="CornerRadius" Value="0" />
             </Style>
@@ -304,6 +306,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="24" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="BorderWidth" Value="0" />
                 <Setter Property="CornerRadius" Value="0" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
