@@ -22,6 +22,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -81,6 +82,11 @@
                 Text="" />
 
         <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="" />

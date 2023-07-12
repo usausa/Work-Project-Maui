@@ -28,7 +28,8 @@
 
         <!-- header -->
         <Grid Grid.Row="0"
-              Style="{StaticResource HeaderGrid}">
+              Style="{StaticResource HeaderGrid}"
+              IsVisible="{Binding HeaderVisible.Value}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
