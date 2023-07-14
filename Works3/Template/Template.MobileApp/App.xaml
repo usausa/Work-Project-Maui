@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sd="clr-namespace:Smart.Maui.Data;assembly=Smart.Maui"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
@@ -494,6 +495,7 @@
             <Style x:Key="ItemListView"
                    TargetType="ListView">
                 <Setter Property="HasUnevenRows" Value="True" />
+                <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
             </Style>
 
             <Style x:Key="ItemListHeaderGrid"
@@ -502,7 +504,7 @@
                 <Setter Property="RowSpacing" Value="0" />
                 <Setter Property="ColumnSpacing" Value="0" />
                 <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="6,0,6,0" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="VerticalOptions" Value="Fill" />
             </Style>
@@ -513,7 +515,7 @@
                 <Setter Property="RowSpacing" Value="0" />
                 <Setter Property="ColumnSpacing" Value="0" />
                 <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="6,0,6,0" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="VerticalOptions" Value="Fill" />
             </Style>
@@ -547,18 +549,18 @@
                 <Setter Property="CornerRadius" Value="3" />
             </Style>
 
-            <Style x:Key="ListItemButton"
+            <Style x:Key="ListItemButtonPrimary"
                    BasedOn="{StaticResource ListItemButtonBase}"
                    TargetType="Button">
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent2}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenAccent3}" />
             </Style>
 
             <Style x:Key="ListItemButtonDanger"
                    BasedOn="{StaticResource ListItemButtonBase}"
                    TargetType="Button">
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedAccent3}" />
             </Style>
 
         </ResourceDictionary>
