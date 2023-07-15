@@ -1,18 +1,30 @@
 namespace Template.MobileApp.Modules.Navigation;
 
 using Template.MobileApp;
+using Template.MobileApp.Models.Input;
 
 public class NavigationMenuViewModel : AppViewModelBase
 {
     public ICommand ForwardCommand { get; }
     public ICommand SharedCommand { get; }
+    public ICommand DialogCommand { get; }
 
     public NavigationMenuViewModel(
-        ApplicationState applicationState)
+        ApplicationState applicationState,
+        IDialog dialog,
+        IPopupNavigator popupNavigator)
         : base(applicationState)
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         SharedCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(ViewId.NavigationSharedInput, Parameters.MakeNextViewId(x)));
+        DialogCommand = MakeAsyncCommand(async () =>
+        {
+            var result = await popupNavigator.PopupAsync<NumberInputParameter, string>(DialogId.InputNumber, new NumberInputParameter("Input", "0", 5));
+            if (!String.IsNullOrWhiteSpace(result))
+            {
+                await dialog.InformationAsync($"result={result}");
+            }
+        });
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
