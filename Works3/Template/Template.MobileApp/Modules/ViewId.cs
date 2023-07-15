@@ -60,6 +60,7 @@ public enum ViewId
     // Sample
     SampleMenu,
     SampleTypography,
+    SampleStyle,
     SampleConverter,
     SampleBehavior,
     SampleValidation,

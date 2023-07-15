@@ -11,6 +11,38 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Accelerometer" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding AccelerationValue.Value}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Barometer" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding BarometerValue.Value}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Magnetic" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding MagneticValue.Value}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Gyroscope" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding GyroscopeValue.Value}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Magnetometer" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding MagnetometerValue.Value}" />
+
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Orientation" />
+        <Label Style="{StaticResource TextValueLabel}"
+               Text="{Binding OrientationValue.Value}" />
+
+    </VerticalStackLayout>
 
 </ContentView>

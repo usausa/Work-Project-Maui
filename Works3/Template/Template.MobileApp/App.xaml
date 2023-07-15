@@ -420,7 +420,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="InfoButton"
+            <Style x:Key="InformationButton"
                    BasedOn="{StaticResource ActionButtonBase}"
                    TargetType="Button">
                 <Setter Property="VisualStateManager.VisualStateGroups">
