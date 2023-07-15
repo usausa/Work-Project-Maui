@@ -1,13 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             xmlns:app="clr-namespace:WorkQrDisplay1"
              x:Class="WorkQrDisplay1.MainPage">
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
 
     <VerticalStackLayout Padding="30,0"
                          Spacing="25" VerticalOptions="Center">
 
-        <Image x:Name="Image" />
+        <Image>
+            <Image.Behaviors>
+                <app:QrSourceBehavior Text="{Binding Text.Value}" />
+            </Image.Behaviors>
+        </Image>
+
+        <Button Command="{Binding UpdateCommand}"
+                Text="Update" />
 
     </VerticalStackLayout>
 
