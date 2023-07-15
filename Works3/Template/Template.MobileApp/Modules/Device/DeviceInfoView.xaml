@@ -93,6 +93,43 @@
                    Text="{Binding ApplicationBuild.Value}" />
         </Grid>
 
+        <Label Style="{StaticResource GroupLabel}"
+               Text="Display" />
+
+        <Grid Style="{StaticResource FillGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Width" />
+            <Label Grid.Row="0" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayWidth.Value}" />
+
+            <Label Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Height" />
+
+            <Label Grid.Row="1" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayHeight.Value}" />
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Density" />
+            <Label Grid.Row="2" Grid.Column="1"
+                   Style="{StaticResource TextValueLabel}"
+                   Text="{Binding DisplayDensity.Value}" />
+        </Grid>
+
     </VerticalStackLayout>
 
 </ContentView>
