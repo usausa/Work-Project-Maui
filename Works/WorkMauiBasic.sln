@@ -37,15 +37,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Device", "Device", "{395F2A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkDevice", "WorkDevice\WorkDevice.csproj", "{213D41BB-664F-4127-A201-42A53FB332F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkFocus", "WorkFocus\WorkFocus.csproj", "{B436BD47-AE60-48B2-8FDC-3CCB468408E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkFocus", "WorkFocus\WorkFocus.csproj", "{B436BD47-AE60-48B2-8FDC-3CCB468408E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkElement", "WorkElement\WorkElement.csproj", "{F0F7B8F5-AAF1-4826-94BC-5A8037A7E0AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkElement", "WorkElement\WorkElement.csproj", "{F0F7B8F5-AAF1-4826-94BC-5A8037A7E0AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Native", "Native", "{860CC7A7-2FBA-4B1E-9539-A77512B4ABC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkNativeControl", "WorkNativeControl\WorkNativeControl.csproj", "{DB81EA5A-1E48-49F9-8C83-66DDFCC4AEFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkNativeControl", "WorkNativeControl\WorkNativeControl.csproj", "{DB81EA5A-1E48-49F9-8C83-66DDFCC4AEFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkNativeFocus", "WorkNativeFocus\WorkNativeFocus.csproj", "{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkNativeFocus", "WorkNativeFocus\WorkNativeFocus.csproj", "{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkLocalize", "WorkLocalize\WorkLocalize.csproj", "{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Localize", "Localize", "{F5A6FDCD-977C-4AF5-BA72-6B670C34EFCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,11 +121,15 @@ Global
 		{DB81EA5A-1E48-49F9-8C83-66DDFCC4AEFE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB81EA5A-1E48-49F9-8C83-66DDFCC4AEFE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,6 +150,7 @@ Global
 		{F0F7B8F5-AAF1-4826-94BC-5A8037A7E0AF} = {69BFCE90-D775-4F3B-B406-DA1C2A13E473}
 		{DB81EA5A-1E48-49F9-8C83-66DDFCC4AEFE} = {860CC7A7-2FBA-4B1E-9539-A77512B4ABC1}
 		{0A9E6ED4-E57A-4DAA-BCEF-2D7C5D1B8AF5} = {860CC7A7-2FBA-4B1E-9539-A77512B4ABC1}
+		{C5ACFE40-E3D3-4D02-9330-83F25CCEA59A} = {F5A6FDCD-977C-4AF5-BA72-6B670C34EFCD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
