@@ -5,7 +5,7 @@ using Template.MobileApp.Modules;
 
 public class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
 {
-    public PopupController<string> Popup { get; } = new();
+    public PopupController<string?> Popup { get; } = new();
 
     public NotificationValue<string> Title { get; } = new();
 

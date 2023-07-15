@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation;
 
 using Template.MobileApp;
-using Template.MobileApp.Models.Input;
 
 public class NavigationMenuViewModel : AppViewModelBase
 {
@@ -19,7 +18,7 @@ public class NavigationMenuViewModel : AppViewModelBase
         SharedCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(ViewId.NavigationSharedInput, Parameters.MakeNextViewId(x)));
         DialogCommand = MakeAsyncCommand(async () =>
         {
-            var result = await popupNavigator.PopupAsync<NumberInputParameter, string>(DialogId.InputNumber, new NumberInputParameter("Input", "0", 5));
+            var result = await popupNavigator.InputNumberAsync("Input", "0", 5);
             if (!String.IsNullOrWhiteSpace(result))
             {
                 await dialog.InformationAsync($"result={result}");
