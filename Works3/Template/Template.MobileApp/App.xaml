@@ -37,10 +37,15 @@
             <!-- Basic -->
 
             <sd:ReverseConverter x:Key="ReverseConverter" />
+
             <sd:NullToBoolConverter x:Key="NotEmptyConverter"
                                     HandleEmptyString="True"
                                     NullValue="False"
                                     NonNullValue="True" />
+
+            <!-- Application -->
+
+            <converters:QrImageSourceConverter x:Key="QrImageSourceConverter" />
 
             <converters:BatteryIconConverter x:Key="BatteryIconConverter">
                 <converters:BatteryIconConverter.Alert>

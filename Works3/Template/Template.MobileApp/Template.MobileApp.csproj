@@ -62,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Camera.MAUI" Version="1.4.4" />
     <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
     <PackageReference Include="EmbeddedBuildProperty" Version="0.2.0">
       <PrivateAssets>all</PrivateAssets>
@@ -69,8 +70,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.8" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
     <PackageReference Include="Rester" Version="2.3.0" />
     <PackageReference Include="Rester.Serializers.System.Text.Json" Version="2.3.0" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
