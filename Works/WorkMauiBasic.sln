@@ -53,6 +53,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Localize", "Localize", "{F5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkQrDisplay1", "WorkQrDisplay1\WorkQrDisplay1.csproj", "{30AAF05A-B4D5-4BDA-B838-CBB08EE4B9A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "新しいフォルダー1", "新しいフォルダー1", "{2E2AAC9A-6A93-4477-AE77-DF9A0EFDF2F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
