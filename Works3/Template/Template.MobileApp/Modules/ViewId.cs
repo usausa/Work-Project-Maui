@@ -68,7 +68,13 @@ public enum ViewId
     // Sample
     SampleMenu,
     SampleList,
+    SampleObjectDetection,
+    SampleMap,
+    SampleChart,
+    SampleChat,
 
     // UI
-    UIMenu
+    UIMenu,
+    UICalendar,
+    UIGrid
 }
