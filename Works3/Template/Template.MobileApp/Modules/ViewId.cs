@@ -61,6 +61,7 @@ public enum ViewId
     BasicMenu,
     BasicTypography,
     BasicStyle,
+    BasicFont,
     BasicConverter,
     BasicBehavior,
     BasicValidation,

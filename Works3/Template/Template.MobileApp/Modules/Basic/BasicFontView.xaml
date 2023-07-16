@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             x:Class="Template.MobileApp.Modules.Basic.BasicFontView"
+             x:DataType="{x:Type module:BasicFontViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:BasicFontViewModel}"
+             shell:ShellProperty.Title="Font"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+
+        <Label Text="Default"
+               FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontSize="24" />
+        <Label Text="OpenSansRegular"
+               FontFamily="OpenSansRegular" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="OpenSansRegular" FontSize="24" />
+        <Label Text="OpenSansSemibold"
+               FontFamily="OpenSansSemibold" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="OpenSansSemibold" FontSize="24" />
+        <Label Text="RobotoRegular"
+               FontFamily="RobotoRegular" FontSize="36" />
+        <Label Text="1234567890ABC"
+               FontFamily="RobotoRegular" FontSize="24" />
+
+    </VerticalStackLayout>
+
+</ContentView>
