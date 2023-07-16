@@ -65,9 +65,9 @@
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId PatternMenu}"
+                CommandParameter="{markup:ViewId BasicMenu}"
                 input:Shortcut.Key="Num7"
-                Text="7.Pattern" />
+                Text="7.Basic" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"

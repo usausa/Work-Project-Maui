@@ -1,9 +1,9 @@
 namespace Template.MobileApp.Modules.Sample;
 
-[View(ViewId.SampleStyle)]
-public partial class SampleStyleView
+[View(ViewId.SampleList)]
+public partial class SampleListView
 {
-    public SampleStyleView()
+    public SampleListView()
     {
         InitializeComponent();
     }

@@ -4,10 +4,10 @@
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             x:Class="Template.MobileApp.Modules.Sample.SampleBehaviorView"
-             x:DataType="{x:Type module:SampleBehaviorViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:SampleBehaviorViewModel}"
-             shell:ShellProperty.Title="Behavior"
+             x:Class="Template.MobileApp.Modules.Sample.SampleListView"
+             x:DataType="{x:Type module:SampleListViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:SampleListViewModel}"
+             shell:ShellProperty.Title="List"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

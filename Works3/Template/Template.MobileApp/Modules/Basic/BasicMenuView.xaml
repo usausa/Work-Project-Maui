@@ -3,11 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Pattern"
-             x:Class="Template.MobileApp.Modules.Pattern.PatternMenuView"
-             x:DataType="{x:Type module:PatternMenuViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:PatternMenuViewModel}"
-             shell:ShellProperty.Title="Pattern"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             x:Class="Template.MobileApp.Modules.Basic.BasicMenuView"
+             x:DataType="{x:Type module:BasicMenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:BasicMenuViewModel}"
+             shell:ShellProperty.Title="Basic"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -26,24 +27,26 @@
 
         <Button Grid.Row="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="List" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId BasicTypography}"
+                Text="Typography" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="Object detection" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId BasicStyle}"
+                Text="Style" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Map" />
+                Text="Converter" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Chart" />
+                Text="Behavior" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="SSH/FTP" />
+                Text="Validation" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

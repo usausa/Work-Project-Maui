@@ -57,17 +57,17 @@ public enum ViewId
     KeyList,
     KeyMisc,
 
-    // Pattern
-    PatternMenu,
-    PatternList,
+    // Basic
+    BasicMenu,
+    BasicTypography,
+    BasicStyle,
+    BasicConverter,
+    BasicBehavior,
+    BasicValidation,
 
     // Sample
     SampleMenu,
-    SampleTypography,
-    SampleStyle,
-    SampleConverter,
-    SampleBehavior,
-    SampleValidation,
+    SampleList,
 
     // UI
     UIMenu

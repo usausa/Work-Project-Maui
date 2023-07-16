@@ -1,12 +1,12 @@
-namespace Template.MobileApp.Modules.Pattern;
+namespace Template.MobileApp.Modules.Basic;
 
 using Template.MobileApp;
 
-public class PatternMenuViewModel : AppViewModelBase
+public class BasicMenuViewModel : AppViewModelBase
 {
     public ICommand ForwardCommand { get; }
 
-    public PatternMenuViewModel(
+    public BasicMenuViewModel(
         ApplicationState applicationState)
         : base(applicationState)
     {

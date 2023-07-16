@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Pattern"
-             x:Class="Template.MobileApp.Modules.Pattern.PatternListView"
-             x:DataType="{x:Type module:PatternListViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:PatternListViewModel}"
-             shell:ShellProperty.Title="List"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
+             x:Class="Template.MobileApp.Modules.Basic.BasicBehaviorView"
+             x:DataType="{x:Type module:BasicBehaviorViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:BasicBehaviorViewModel}"
+             shell:ShellProperty.Title="Behavior"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
