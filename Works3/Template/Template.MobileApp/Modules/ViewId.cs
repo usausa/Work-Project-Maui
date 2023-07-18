@@ -40,6 +40,8 @@ public enum ViewId
     DeviceCamera,
     DeviceWiFi,
     DeviceBluetooth,
+    DeviceBleHost,
+    DeviceBleClient,
     DeviceNfc,
     DeviceAudio,
     DeviceBiometric,

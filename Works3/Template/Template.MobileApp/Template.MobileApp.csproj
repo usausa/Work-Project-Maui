@@ -107,12 +107,6 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <MauiXaml Update="Modules\Basic\BasicFontView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
