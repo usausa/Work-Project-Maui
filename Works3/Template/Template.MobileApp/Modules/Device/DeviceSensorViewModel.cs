@@ -4,8 +4,6 @@ using System.Numerics;
 
 using Microsoft.Maui.Devices.Sensors;
 
-using Template.MobileApp;
-
 public class DeviceSensorViewModel : AppViewModelBase
 {
     private readonly IAccelerometer accelerometer;

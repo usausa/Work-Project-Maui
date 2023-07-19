@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Main;
 
-using Template.MobileApp;
-
 public class MenuViewModel : AppViewModelBase
 {
     public NotificationValue<string> Flavor { get; } = new();

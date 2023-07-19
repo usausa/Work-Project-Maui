@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Smart.Maui.Resolver;
 
 using Template.MobileApp.Services;
-using Template.MobileApp.State;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
@@ -33,5 +32,11 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         // Service
         var dataService = services.GetRequiredService<DataService>();
         await dataService.RebuildAsync();
+
+        var networkService = services.GetRequiredService<NetworkService>();
+        if (!String.IsNullOrEmpty(settings.ApiEndPoint))
+        {
+            networkService.SetEndPoint(settings.ApiEndPoint);
+        }
     }
 }
