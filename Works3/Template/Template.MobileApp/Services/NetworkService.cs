@@ -83,5 +83,73 @@ public sealed class NetworkService : IDisposable
     // Storage
     //--------------------------------------------------------------------------------
 
-    // TODO
+    public async ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action)
+    {
+        var progress = -1d;
+        return await client.DownloadAsync(
+            $"api/storage/{path}",
+            filename,
+            progress: (processed, total) =>
+            {
+                var percent = Math.Floor((double)processed / total * 100);
+                if (percent > progress)
+                {
+                    progress = percent;
+                    action(percent);
+                }
+            });
+    }
+
+    public async ValueTask<IRestResponse> DownloadAsync(string path, Stream stream, Action<double> action)
+    {
+        var progress = -1d;
+        return await client.DownloadAsync(
+            $"api/storage/{path}",
+            stream,
+            progress: (processed, total) =>
+            {
+                var percent = Math.Floor((double)processed / total * 100);
+                if (percent > progress)
+                {
+                    progress = percent;
+                    action(percent);
+                }
+            });
+    }
+
+    public async ValueTask<IRestResponse> UploadAsync(string path, string filename, Action<double> action)
+    {
+        var progress = -1d;
+        return await client.UploadAsync(
+            $"api/storage/{path}",
+            filename,
+            compress: CompressOption.Gzip,
+            progress: (processed, total) =>
+            {
+                var percent = Math.Floor((double)processed / total * 100);
+                if (percent > progress)
+                {
+                    progress = percent;
+                    action(percent);
+                }
+            });
+    }
+
+    public async ValueTask<IRestResponse> UploadAsync(string path, Stream stream, Action<double> action)
+    {
+        var progress = -1d;
+        return await client.UploadAsync(
+            $"api/storage/{path}",
+            stream,
+            compress: CompressOption.Gzip,
+            progress: (processed, total) =>
+            {
+                var percent = Math.Floor((double)processed / total * 100);
+                if (percent > progress)
+                {
+                    progress = percent;
+                    action(percent);
+                }
+            });
+    }
 }

@@ -174,9 +174,9 @@ public static class MauiProgram
             return new DataServiceOptions
             {
 #if DEBUG
-                Path = Path.Combine(storage.PublicFolder, "Data.db")
+                Path = Path.Combine(storage.PublicFolder, "data.db")
 #else
-                Path = Path.Combine(storage.PrivateFolder, "Data.db")
+                Path = Path.Combine(storage.PrivateFolder, "data.db")
 #endif
             };
         });

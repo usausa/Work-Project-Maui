@@ -45,12 +45,12 @@
                 Text="Data list" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding DownloadCommand}"
+                Text="Download" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding UploadCommand}"
+                Text="Upload" />
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
