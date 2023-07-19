@@ -117,7 +117,7 @@ public static class EntryOption
         }
         else
         {
-            var behavior = element.Behaviors.FirstOrDefault(x => x is NoBorderBehavior);
+            var behavior = element.Behaviors.FirstOrDefault(static x => x is NoBorderBehavior);
             if (behavior is not null)
             {
                 element.Behaviors.Remove(behavior);

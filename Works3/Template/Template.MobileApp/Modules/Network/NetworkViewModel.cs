@@ -9,6 +9,9 @@ public class NetworkViewModel : AppViewModelBase
     private readonly IDialog dialog;
 
     public ICommand ServerTimeCommand { get; }
+    public ICommand TestErrorCommand { get; }
+    public ICommand TestDelayCommand { get; }
+    public ICommand DataListCommand { get; }
 
     public NetworkViewModel(
         ApplicationState applicationState,
@@ -26,6 +29,22 @@ public class NetworkViewModel : AppViewModelBase
             if (result.IsSuccess)
             {
                 await dialog.InformationAsync($"Access success.\r\ntime=[{result.Value.DateTime:yyyy/MM/dd HH:mm:ss}]");
+            }
+        });
+        TestErrorCommand = MakeAsyncCommand<int>(async x =>
+        {
+            await sampleUsecase.GetTestErrorAsync(x);
+        });
+        TestDelayCommand = MakeAsyncCommand<int>(async x =>
+        {
+            await sampleUsecase.GetTestDelayAsync(x);
+        });
+        DataListCommand = MakeAsyncCommand(async () =>
+        {
+            var result = await sampleUsecase.GetDataListAsync();
+            if (result.IsSuccess)
+            {
+                await dialog.InformationAsync($"Access success.\r\ncount=[{result.Value.Entries.Length}]");
             }
         });
     }

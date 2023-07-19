@@ -24,7 +24,7 @@ public sealed class NetworkService : IDisposable
         return new(new HttpClientHandler
         {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-            ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+            ServerCertificateCustomValidationCallback = static (_, _, _, _) => true
         })
         {
             Timeout = new TimeSpan(0, 0, 0, 30)
@@ -51,18 +51,33 @@ public sealed class NetworkService : IDisposable
     // Basic
     //--------------------------------------------------------------------------------
 
-    public async ValueTask<IRestResponse<ServerTimeResponse>> GetServerTimeAsync()
-    {
-        return await client.GetAsync<ServerTimeResponse>(
+    public ValueTask<IRestResponse<ServerTimeResponse>> GetServerTimeAsync() =>
+        client.GetAsync<ServerTimeResponse>(
             "api/server/time",
             headers);
-    }
+
+    //--------------------------------------------------------------------------------
+    // Test
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<IRestResponse<object>> GetTestErrorAsync(int code) =>
+        client.GetAsync<object>(
+            $"api/test/error/{code}",
+            headers);
+
+    public ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout) =>
+        client.GetAsync<object>(
+            $"api/test/delay/{timeout}",
+            headers);
 
     //--------------------------------------------------------------------------------
     // Data
     //--------------------------------------------------------------------------------
 
-    // TODO
+    public ValueTask<IRestResponse<DataListResponse>> GetDataListAsync() =>
+        client.GetAsync<DataListResponse>(
+            "api/data/list",
+            headers);
 
     //--------------------------------------------------------------------------------
     // Storage

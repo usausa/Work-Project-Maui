@@ -15,15 +15,24 @@ public class SampleUsecase
     //--------------------------------------------------------------------------------
 
     public ValueTask<IResult<ServerTimeResponse>> GetServerTimeAsync() =>
-        networkOperator.ExecuteVerbose(n => n.GetServerTimeAsync());
+        networkOperator.ExecuteVerbose(static n => n.GetServerTimeAsync());
 
-    // TODO Error
+    //--------------------------------------------------------------------------------
+    // Test
+    //--------------------------------------------------------------------------------
+
+    public ValueTask<IResult<object>> GetTestErrorAsync(int code) =>
+        networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
+
+    public ValueTask<IResult<object>> GetTestDelayAsync(int timeout) =>
+        networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
 
     //--------------------------------------------------------------------------------
     // Data
     //--------------------------------------------------------------------------------
 
-    // TODO
+    public ValueTask<IResult<DataListResponse>> GetDataListAsync() =>
+        networkOperator.ExecuteVerbose(static n => n.GetDataListAsync());
 
     //--------------------------------------------------------------------------------
     // Download/Upload
