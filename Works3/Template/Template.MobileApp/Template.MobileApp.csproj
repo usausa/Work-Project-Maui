@@ -62,10 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Fonts\Roboto-Regular.ttf" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Camera.MAUI" Version="1.4.4" />
     <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
     <PackageReference Include="EmbeddedBuildProperty" Version="0.2.0">

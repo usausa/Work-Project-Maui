@@ -15,7 +15,7 @@
 
   <!-- Embedded build property -->
   <PropertyGroup>
-    <EmbeddedBuildProperty>DeviceProfile=$(DeviceProfile),Flavor=Develop,AppCenterSecret=,ApiEndPoint=https://server/</EmbeddedBuildProperty>
+    <EmbeddedBuildProperty>DeviceProfile=$(DeviceProfile),Flavor=Development,AppCenterSecret=,ApiEndPoint=https://server/</EmbeddedBuildProperty>
   </PropertyGroup>
 
 </Project>
