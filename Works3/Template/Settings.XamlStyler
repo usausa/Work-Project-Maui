@@ -44,6 +44,7 @@
     "mc:Ignorable, d:IsDataSource, d:LayoutOverrides, d:IsStaticText",
     "x:Key, Key",
     "x:Name, Name",
+    "ClassId",
     "x:TypeArguments",
     "BasedOn, TargetType, x:Uid, Uid, Title",
     "x:Class",

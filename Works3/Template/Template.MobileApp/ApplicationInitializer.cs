@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Smart.Maui.Resolver;
 
 using Template.MobileApp.Services;
+using Template.MobileApp.State;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
@@ -12,6 +13,13 @@ public sealed class ApplicationInitializer : IMauiInitializeService
     {
         // Setup provider
         ResolveProvider.Default.Provider = services;
+
+        // Initial setting
+        var settings = services.GetRequiredService<Settings>();
+        if (String.IsNullOrEmpty(settings.ApiEndPoint) && !String.IsNullOrEmpty(Variants.ApiEndPoint()))
+        {
+            settings.ApiEndPoint = Variants.ApiEndPoint();
+        }
 
         // Setup navigator
         var navigator = services.GetRequiredService<INavigator>();
