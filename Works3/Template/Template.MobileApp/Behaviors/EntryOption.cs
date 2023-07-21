@@ -134,7 +134,9 @@ public static class EntryOption
             base.OnAttachedTo(bindable, platformView);
 
             originalDrawable = platformView.Background;
+            // TODO
             platformView.Background = null;
+            platformView.SetPadding(0, 0, 0, 0);
         }
 
         protected override void OnDetachedFrom(InputView bindable, EditText platformView)
