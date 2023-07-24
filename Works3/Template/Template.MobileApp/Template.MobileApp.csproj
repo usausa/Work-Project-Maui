@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net7.0-android</TargetFrameworks>
@@ -78,6 +78,7 @@
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.2.0" />
     <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
     <PackageReference Include="Usa.Smart.Data" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.3.3" />
