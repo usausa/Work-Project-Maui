@@ -25,7 +25,7 @@ public class BasicStyleViewModel : AppViewModelBase
         Select2Command = MakeAsyncCommand(async () => Value2.Value = await SelectItem(Value2.Value));
         Select3Command = MakeAsyncCommand(async () => Value3.Value = await SelectItem(Value3.Value));
 
-        Items.Value.AddRange(Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null));
+        //Items.Value.AddRange(Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null));
 
         Value1.Value = 1;
         Value2.Value = 2;
@@ -38,7 +38,9 @@ public class BasicStyleViewModel : AppViewModelBase
 
     private async ValueTask<int?> SelectItem(int? current)
     {
-        var selected = await dialog.SelectAsync(Items.Value, static x => x?.Name ?? string.Empty, Items.Value.FindIndex(x => Equals(x?.Key, current)));
-        return (int?)selected?.Key;
+        await dialog.InformationAsync("Not implement.");
+        return current;
+        //var selected = await dialog.SelectAsync(Items.Value, static x => x?.Name ?? string.Empty, Items.Value.FindIndex(x => Equals(x?.Key, current)));
+        //return (int?)selected?.Key;
     }
 }

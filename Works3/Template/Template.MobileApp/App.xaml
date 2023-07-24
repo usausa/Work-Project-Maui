@@ -571,7 +571,6 @@
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="BorderWidth" Value="0" />
                 <Setter Property="CornerRadius" Value="0" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -582,12 +581,12 @@
                             </VisualState>
                             <VisualState x:Name="Focused">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource YellowLighten5}" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource YellowLighten4}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                                    <Setter Property="BackgroundColor" Value="White" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
