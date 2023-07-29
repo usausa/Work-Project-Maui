@@ -3,17 +3,17 @@
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android</TargetFrameworks>
 		<OutputType>Exe</OutputType>
-		<RootNamespace>WorkNativeControl</RootNamespace>
+		<RootNamespace>WorkControlSquare</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>WorkNativeControl</ApplicationTitle>
+		<ApplicationTitle>WorkControlSquare</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.worknativecontrol</ApplicationId>
-		<ApplicationIdGuid>627f491b-ba39-43ad-82ca-fe96ec94bd6c</ApplicationIdGuid>
+		<ApplicationId>com.companyname.workcontrolsquare</ApplicationId>
+		<ApplicationIdGuid>66d7be98-6efb-46f1-83ec-9de4df911385</ApplicationIdGuid>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -22,12 +22,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-android')) != true">
-    <Compile Remove="**\**\*.android.cs" />
-    <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <ItemGroup>
+	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
@@ -45,15 +40,9 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.4" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.4" />
-    <PackageReference Include="Usa.Smart.Reactive" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Usa.Smart.Maui" Version="1.0.4" />
+	</ItemGroup>
 
 </Project>
