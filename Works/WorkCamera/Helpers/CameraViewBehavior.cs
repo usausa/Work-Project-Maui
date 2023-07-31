@@ -29,11 +29,6 @@ public class CameraViewBehavior : BehaviorBase<CameraView>
         }
 
         AssociatedObject.Camera = AssociatedObject.Cameras.FirstOrDefault();
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            if (await AssociatedObject.StartCameraAsync() == CameraResult.Success)
-            {
-            }
-        });
+        AssociatedObject.AutoStartPreview = true;
     }
 }

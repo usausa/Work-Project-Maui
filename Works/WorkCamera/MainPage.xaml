@@ -5,6 +5,10 @@
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI" xmlns:workCamera="clr-namespace:WorkCamera"
              x:Class="WorkCamera.MainPage">
 
+    <ContentPage.BindingContext>
+        <workCamera:MainPageViewModel />
+    </ContentPage.BindingContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -13,7 +17,11 @@
 
         <cv:CameraView x:Name="CameraView"
                        Grid.Row="0"
-                       HeightRequest="{x:Static workCamera:ScreenSize.Width}">
+                       AutoStartPreview="{Binding Preview.Value}"
+                       Camera="{Binding Camera.Value}"
+                       Cameras="{Binding Cameras.Value, Mode=OneWayToSource}"
+                       HeightRequest="{x:Static workCamera:ScreenSize.Width}"
+                       NumCamerasDetected="{Binding NumCamerasDetected.Value, Mode=OneWayToSource}">
             <cv:CameraView.Behaviors>
                 <helpers:CameraViewBehavior />
             </cv:CameraView.Behaviors>
