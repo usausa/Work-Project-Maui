@@ -8,4 +8,9 @@ public partial class App : Application
 
         MainPage = new MainPage();
     }
+
+    protected override async void OnStart()
+    {
+        var status = await Microsoft.Maui.ApplicationModel.Permissions.RequestAsync<Microsoft.Maui.ApplicationModel.Permissions.Camera>();
+    }
 }

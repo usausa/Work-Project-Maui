@@ -9,16 +9,5 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
     }
-
-    private void CameraView_OnCamerasLoaded(object sender, EventArgs e)
-    {
-        CameraView.Camera = CameraView.Cameras.FirstOrDefault();
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            if (await CameraView.StartCameraAsync() == CameraResult.Success)
-            {
-            }
-        });
-    }
 }
 
