@@ -3,22 +3,22 @@ namespace Template.MobileApp.Behaviors;
 using Smart.Maui.Interactivity;
 
 using Template.MobileApp.Helpers;
-using Template.MobileApp.Models.Entry;
+using Template.MobileApp.Messaging;
 
 public static class EntryBind
 {
-    public static readonly BindableProperty ModelProperty = BindableProperty.CreateAttached(
-        "Model",
+    public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
+        "Controller",
         typeof(IEntryController),
         typeof(EntryBind),
         null,
         propertyChanged: BindChanged);
 
-    public static IEntryController GetModel(BindableObject bindable) =>
-        (IEntryController)bindable.GetValue(ModelProperty);
+    public static IEntryController GetController(BindableObject bindable) =>
+        (IEntryController)bindable.GetValue(ControllerProperty);
 
-    public static void SetModel(BindableObject bindable, IEntryController value) =>
-        bindable.SetValue(ModelProperty, value);
+    public static void SetController(BindableObject bindable, IEntryController value) =>
+        bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
@@ -50,7 +50,7 @@ public static class EntryBind
         {
             base.OnAttachedTo(bindable);
 
-            var controller = GetModel(bindable);
+            var controller = GetController(bindable);
             bindable.Completed += BindableOnCompleted;
             bindable.TextChanged += BindableOnTextChanged;
             controller.FocusRequested += ControllerOnFocusRequested;
@@ -59,7 +59,7 @@ public static class EntryBind
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            var controller = GetModel(bindable);
+            var controller = GetController(bindable);
             bindable.Completed -= BindableOnCompleted;
             bindable.TextChanged -= BindableOnTextChanged;
             controller.FocusRequested -= ControllerOnFocusRequested;
@@ -76,16 +76,16 @@ public static class EntryBind
                 return;
             }
 
-            if (e.PropertyName == nameof(EntryModel.Text))
+            if (e.PropertyName == nameof(EntryController.Text))
             {
-                var controller = GetModel(entry);
+                var controller = GetController(entry);
                 updating = true;
                 entry.Text = controller.Text;
                 updating = false;
             }
-            else if (e.PropertyName == nameof(EntryModel.Enable))
+            else if (e.PropertyName == nameof(EntryController.Enable))
             {
-                var controller = GetModel(entry);
+                var controller = GetController(entry);
                 entry.IsEnabled = controller.Enable;
             }
         }
@@ -103,14 +103,14 @@ public static class EntryBind
             }
 
             var entry = (Entry)sender!;
-            var controller = GetModel(entry);
+            var controller = GetController(entry);
             controller.Text = e.NewTextValue;
         }
 
         private static void BindableOnCompleted(object? sender, EventArgs e)
         {
             var entry = (Entry)sender!;
-            var controller = GetModel(entry);
+            var controller = GetController(entry);
             var ice = new EntryCompleteEvent();
             controller.HandleCompleted(ice);
             if (!ice.HasError)
