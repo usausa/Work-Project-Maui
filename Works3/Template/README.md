@@ -4,16 +4,16 @@
 
 # TODO
 
-## Check & Fix for 1.0
+## Check & Fix
 
 - [ ] Dialog size
 - [ ] Select action button
 - [ ] Key behavior test
 - [ ] Check old style splash
 
-## Device for 1.0+
+## Device+
 
-- [ ] QR/Camera
+- [ ] QR/Camera (WIP)
 - [ ] NFC(FeliCa) sample
 - [ ] WiFi manager
 - [ ] Bluetooth (Printer)

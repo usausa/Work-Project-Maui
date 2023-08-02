@@ -69,7 +69,7 @@ EmbeddedBuildPropertyの値の参照は、partialメソッドでBuildProperty属
 - [X] データベースCRUD API
 - [X] サーバー側時刻取得API(簡易NTP)
 - [X] WASM UI フロントエンド基盤
-- [ ] APIリクエスト/レスポンス圧縮
+- [X] APIリクエスト/レスポンス圧縮
 - [ ] デバイスステータス通知
 - [ ] リアルタイムサーバーPush
 - [ ] クラウドサービス向けロギング
