@@ -7,18 +7,18 @@ using Template.MobileApp.Messaging;
 
 public static class EntryBind
 {
-    public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
-        "Controller",
-        typeof(IEntryController),
+    public static readonly BindableProperty MessengerProperty = BindableProperty.CreateAttached(
+        "Messenger",
+        typeof(IEntryMessenger),
         typeof(EntryBind),
         null,
         propertyChanged: BindChanged);
 
-    public static IEntryController GetController(BindableObject bindable) =>
-        (IEntryController)bindable.GetValue(ControllerProperty);
+    public static IEntryMessenger GetMessenger(BindableObject bindable) =>
+        (IEntryMessenger)bindable.GetValue(MessengerProperty);
 
-    public static void SetController(BindableObject bindable, IEntryController value) =>
-        bindable.SetValue(ControllerProperty, value);
+    public static void SetMessenger(BindableObject bindable, IEntryMessenger value) =>
+        bindable.SetValue(MessengerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
@@ -50,25 +50,25 @@ public static class EntryBind
         {
             base.OnAttachedTo(bindable);
 
-            var controller = GetController(bindable);
+            var controller = GetMessenger(bindable);
             bindable.Completed += BindableOnCompleted;
             bindable.TextChanged += BindableOnTextChanged;
-            controller.FocusRequested += ControllerOnFocusRequested;
-            controller.PropertyChanged += ControllerOnPropertyChanged;
+            controller.FocusRequested += MessengerOnFocusRequested;
+            controller.PropertyChanged += MessengerOnPropertyChanged;
         }
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            var controller = GetController(bindable);
+            var controller = GetMessenger(bindable);
             bindable.Completed -= BindableOnCompleted;
             bindable.TextChanged -= BindableOnTextChanged;
-            controller.FocusRequested -= ControllerOnFocusRequested;
-            controller.PropertyChanged -= ControllerOnPropertyChanged;
+            controller.FocusRequested -= MessengerOnFocusRequested;
+            controller.PropertyChanged -= MessengerOnPropertyChanged;
 
             base.OnDetachingFrom(bindable);
         }
 
-        private void ControllerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void MessengerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             var entry = AssociatedObject;
             if (entry is null)
@@ -76,21 +76,21 @@ public static class EntryBind
                 return;
             }
 
-            if (e.PropertyName == nameof(EntryController.Text))
+            if (e.PropertyName == nameof(EntryMessenger.Text))
             {
-                var controller = GetController(entry);
+                var controller = GetMessenger(entry);
                 updating = true;
                 entry.Text = controller.Text;
                 updating = false;
             }
-            else if (e.PropertyName == nameof(EntryController.Enable))
+            else if (e.PropertyName == nameof(EntryMessenger.Enable))
             {
-                var controller = GetController(entry);
+                var controller = GetMessenger(entry);
                 entry.IsEnabled = controller.Enable;
             }
         }
 
-        private void ControllerOnFocusRequested(object? sender, EventArgs e)
+        private void MessengerOnFocusRequested(object? sender, EventArgs e)
         {
             AssociatedObject?.Focus();
         }
@@ -103,14 +103,14 @@ public static class EntryBind
             }
 
             var entry = (Entry)sender!;
-            var controller = GetController(entry);
+            var controller = GetMessenger(entry);
             controller.Text = e.NewTextValue;
         }
 
         private static void BindableOnCompleted(object? sender, EventArgs e)
         {
             var entry = (Entry)sender!;
-            var controller = GetController(entry);
+            var controller = GetMessenger(entry);
             var ice = new EntryCompleteEvent();
             controller.HandleCompleted(ice);
             if (!ice.HasError)
