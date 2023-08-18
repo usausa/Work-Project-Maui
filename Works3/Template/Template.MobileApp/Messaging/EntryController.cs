@@ -5,7 +5,7 @@ public class EntryCompleteEvent
     public bool HasError { get; set; }
 }
 
-public interface IEntryMessenger : INotifyPropertyChanged
+public interface IEntryController : INotifyPropertyChanged
 {
     event EventHandler<EventArgs> FocusRequested;
 
@@ -16,7 +16,7 @@ public interface IEntryMessenger : INotifyPropertyChanged
     void HandleCompleted(EntryCompleteEvent e);
 }
 
-public sealed class EntryMessenger : NotificationObject, IEntryMessenger
+public sealed class EntryController : NotificationObject, IEntryController
 {
     private event EventHandler<EventArgs>? Requested;
 
@@ -42,23 +42,23 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
 
     // Constructor
 
-    public EntryMessenger()
+    public EntryController()
     {
         enable = true;
     }
 
-    public EntryMessenger(bool enable)
+    public EntryController(bool enable)
     {
         this.enable = enable;
     }
 
-    public EntryMessenger(ICommand command)
+    public EntryController(ICommand command)
     {
         enable = true;
         this.command = command;
     }
 
-    public EntryMessenger(bool enable, ICommand command)
+    public EntryController(bool enable, ICommand command)
     {
         this.enable = enable;
         this.command = command;
@@ -66,7 +66,7 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
 
     // Request
 
-    event EventHandler<EventArgs> IEntryMessenger.FocusRequested
+    event EventHandler<EventArgs> IEntryController.FocusRequested
     {
         add => Requested += value;
         remove => Requested -= value;
@@ -79,7 +79,7 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
 
     // Event
 
-    void IEntryMessenger.HandleCompleted(EntryCompleteEvent e)
+    void IEntryController.HandleCompleted(EntryCompleteEvent e)
     {
         if ((command is not null) && command.CanExecute(e))
         {

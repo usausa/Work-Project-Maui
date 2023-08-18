@@ -7,18 +7,18 @@ using Template.MobileApp.Messaging;
 
 public static class EntryBind
 {
-    public static readonly BindableProperty MessengerProperty = BindableProperty.CreateAttached(
-        "Messenger",
-        typeof(IEntryMessenger),
+    public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
+        "Controller",
+        typeof(IEntryController),
         typeof(EntryBind),
         null,
         propertyChanged: BindChanged);
 
-    public static IEntryMessenger GetMessenger(BindableObject bindable) =>
-        (IEntryMessenger)bindable.GetValue(MessengerProperty);
+    public static IEntryController GetController(BindableObject bindable) =>
+        (IEntryController)bindable.GetValue(ControllerProperty);
 
-    public static void SetMessenger(BindableObject bindable, IEntryMessenger value) =>
-        bindable.SetValue(MessengerProperty, value);
+    public static void SetController(BindableObject bindable, IEntryController value) =>
+        bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
@@ -44,33 +44,33 @@ public static class EntryBind
 
     private sealed class EntryBindBehavior : BehaviorBase<Entry>
     {
-        private IEntryMessenger? controller;
+        private IEntryController? controller;
 
         protected override void OnAttachedTo(Entry bindable)
         {
             base.OnAttachedTo(bindable);
 
-            controller = GetMessenger(bindable);
+            controller = GetController(bindable);
             if (controller is not null)
             {
-                controller.FocusRequested += MessengerOnFocusRequested;
+                controller.FocusRequested += ControllerOnFocusRequested;
             }
 
             bindable.Completed += BindableOnCompleted;
 
             bindable.SetBinding(
                 Entry.TextProperty,
-                new Binding(nameof(IEntryMessenger.Text), source: controller));
+                new Binding(nameof(IEntryController.Text), source: controller));
             bindable.SetBinding(
                 VisualElement.IsEnabledProperty,
-                new Binding(nameof(IEntryMessenger.Enable), source: controller));
+                new Binding(nameof(IEntryController.Enable), source: controller));
         }
 
         protected override void OnDetachingFrom(Entry bindable)
         {
             if (controller is not null)
             {
-                controller.FocusRequested -= MessengerOnFocusRequested;
+                controller.FocusRequested -= ControllerOnFocusRequested;
             }
 
             bindable.Completed -= BindableOnCompleted;
@@ -81,7 +81,7 @@ public static class EntryBind
             base.OnDetachingFrom(bindable);
         }
 
-        private void MessengerOnFocusRequested(object? sender, EventArgs e)
+        private void ControllerOnFocusRequested(object? sender, EventArgs e)
         {
             AssociatedObject?.Focus();
         }
