@@ -84,29 +84,29 @@ public static class EntryOption
         // DisableShowSoftInputOnFocus
         if (options.DisableShowSoftInputOnFocus)
         {
-            EntryHandler.Mapper.Add("DisableShowSoftInputOnFocus", static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add("DisableShowSoftInputOnFocus", static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.Add(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add(DisableShowSoftInputOnFocusProperty.PropertyName, static (handler, _) => UpdateDisableShowSoftInputOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // SelectAllOnFocus
         if (options.SelectAllOnFocus)
         {
-            EntryHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add("SelectAllOnFocus", static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.Add(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add(SelectAllOnFocusProperty.PropertyName, static (handler, _) => UpdateSelectAllOnFocus(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // NoBorder
         if (options.NoBorder)
         {
-            EntryHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add("NoBorder", static (handler, _) => UpdateNoBorder((Editor)handler.VirtualView));
+            EntryHandler.Mapper.Add(NoBorderProperty.PropertyName, static (handler, _) => UpdateNoBorder((Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add(NoBorderProperty.PropertyName, static (handler, _) => UpdateNoBorder((Editor)handler.VirtualView));
         }
 
         // InputFilter
         if (options.InputFilter)
         {
-            EntryHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
-            EditorHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
+            EntryHandler.Mapper.Add(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add(InputFilterProperty.PropertyName, static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
         }
 
         // HandleEnter
@@ -157,6 +157,7 @@ public static class EntryOption
             base.OnAttachedTo(bindable, platformView);
 
             originalDrawable = platformView.Background;
+            // TODO ?
             platformView.Background = null;
             platformView.SetPadding(0, 0, 0, 0);
         }

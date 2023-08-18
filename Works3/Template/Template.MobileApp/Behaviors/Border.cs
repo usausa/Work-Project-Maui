@@ -39,14 +39,17 @@ public static class Border
 #if ANDROID
         if (options.Border)
         {
-            EntryHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
 
-            EditorHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 
-            LabelHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
         }
 #endif
     }
@@ -120,7 +123,10 @@ public static class Border
             var width = (int)view.Context.ToPixels(GetWidth(element));
             var color = GetColor(element).ToAndroid();
             drawable.SetStroke(width, color);
-            drawable.SetColor(element.BackgroundColor.ToAndroid());
+            if (element.BackgroundColor is not null)
+            {
+                drawable.SetColor(element.BackgroundColor.ToAndroid());
+            }
         }
     }
 #endif

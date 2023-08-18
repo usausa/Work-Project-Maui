@@ -13,6 +13,7 @@
 
     <!-- Color -->
 
+    <Color x:Key="BorderColor">#616161</Color>
     <Color x:Key="DisabledColor">#BDBDBD</Color>
     <Color x:Key="SelectFocusColor">#FFF9C4</Color>
 
@@ -606,7 +607,7 @@
 
     <Style x:Key="BorderFrame"
            TargetType="Frame">
-        <Setter Property="BorderColor" Value="{StaticResource GrayDarken2}" />
+        <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Padding" Value="1.5" />
@@ -773,6 +774,8 @@
     <Style x:Key="InputEntry"
            TargetType="Entry">
         <Setter Property="FontSize" Value="18" />
+        <Setter Property="behaviors:Border.Color" Value="{StaticResource BorderColor}" />
+        <Setter Property="behaviors:Border.Width" Value="1" />
         <Setter Property="behaviors:EntryOption.HandleEnterKey" Value="True" />
         <Setter Property="behaviors:EntryOption.DisableShowSoftInputOnFocus" Value="True" />
         <Setter Property="behaviors:EntryOption.SelectAllOnFocus" Value="True" />
