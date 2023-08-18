@@ -13,8 +13,6 @@ using Java.Lang;
 
 using Microsoft.Maui.Handlers;
 
-using static Android.Widget.TextView;
-
 public static class EntryOption
 {
     // ReSharper disable InconsistentNaming
@@ -154,7 +152,7 @@ public static class EntryOption
         }
     }
 
-    private static void OnEditorAction(object? sender, EditorActionEventArgs e)
+    private static void OnEditorAction(object? sender, Android.Widget.TextView.EditorActionEventArgs e)
     {
         if ((e.ActionId == ImeAction.ImeNull) && (e.Event?.KeyCode == Keycode.Enter))
         {
