@@ -11,42 +11,42 @@ using Microsoft.Maui.Platform;
 public static class Border
 {
     // ReSharper disable InconsistentNaming
-    public static readonly BindableProperty BorderWidthProperty =
+    public static readonly BindableProperty WidthProperty =
         BindableProperty.CreateAttached(
-            "BorderWidth",
+            "Width",
             typeof(double),
             typeof(Border),
             default(double));
 
-    public static readonly BindableProperty BorderColorProperty =
+    public static readonly BindableProperty ColorProperty =
         BindableProperty.CreateAttached(
-            "BorderColor",
+            "Color",
             typeof(Color),
             typeof(Border),
             Colors.Transparent);
     // ReSharper restore InconsistentNaming
 
-    public static void SetBorderWidth(BindableObject bindable, double value) => bindable.SetValue(BorderWidthProperty, value);
+    public static void SetWidth(BindableObject bindable, double value) => bindable.SetValue(WidthProperty, value);
 
-    public static double GetBorderWidth(BindableObject bindable) => (double)bindable.GetValue(BorderWidthProperty);
+    public static double GetWidth(BindableObject bindable) => (double)bindable.GetValue(WidthProperty);
 
-    public static void SetBorderColor(BindableObject bindable, Color value) => bindable.SetValue(BorderColorProperty, value);
+    public static void SetColor(BindableObject bindable, Color value) => bindable.SetValue(ColorProperty, value);
 
-    public static Color GetBorderColor(BindableObject bindable) => (Color)bindable.GetValue(BorderColorProperty);
+    public static Color GetColor(BindableObject bindable) => (Color)bindable.GetValue(ColorProperty);
 
     public static void UseCustomMapper(BehaviorOptions options)
     {
 #if ANDROID
         if (options.Border)
         {
-            EntryHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
-            EntryHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
 
-            EditorHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
-            EditorHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 
-            LabelHandler.Mapper.Add("BorderWidth", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
-            LabelHandler.Mapper.Add("BorderColor", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add("Width", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add("Color", static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
         }
 #endif
     }
@@ -54,7 +54,7 @@ public static class Border
 #if ANDROID
     private static void UpdateBehaviors(VisualElement element)
     {
-        var width = GetBorderWidth(element);
+        var width = GetWidth(element);
         var on = width > 0;
         var behavior = element.Behaviors.OfType<BorderBehavior>().FirstOrDefault();
         if (on)
@@ -117,8 +117,8 @@ public static class Border
                 return;
             }
 
-            var width = (int)view.Context.ToPixels(GetBorderWidth(element));
-            var color = GetBorderColor(element).ToAndroid();
+            var width = (int)view.Context.ToPixels(GetWidth(element));
+            var color = GetColor(element).ToAndroid();
             drawable.SetStroke(width, color);
             drawable.SetColor(element.BackgroundColor.ToAndroid());
         }

@@ -7,13 +7,13 @@ public class EntryCompleteEvent
 
 public interface IEntryMessenger : INotifyPropertyChanged
 {
-    public event EventHandler<EventArgs> FocusRequested;
+    event EventHandler<EventArgs> FocusRequested;
 
-    public string? Text { get; set; }
+    string? Text { get; set; }
 
-    public bool Enable { get; set; }
+    bool Enable { get; set; }
 
-    public void HandleCompleted(EntryCompleteEvent e);
+    void HandleCompleted(EntryCompleteEvent e);
 }
 
 public sealed class EntryMessenger : NotificationObject, IEntryMessenger
@@ -26,6 +26,8 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
 
     private bool enable;
 
+    // Property
+
     public string? Text
     {
         get => text;
@@ -37,6 +39,8 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
         get => enable;
         set => SetProperty(ref enable, value);
     }
+
+    // Constructor
 
     public EntryMessenger()
     {
@@ -60,16 +64,20 @@ public sealed class EntryMessenger : NotificationObject, IEntryMessenger
         this.command = command;
     }
 
-    public void FocusRequest()
-    {
-        Requested?.Invoke(this, EventArgs.Empty);
-    }
+    // Request
 
     event EventHandler<EventArgs> IEntryMessenger.FocusRequested
     {
         add => Requested += value;
         remove => Requested -= value;
     }
+
+    public void FocusRequest()
+    {
+        Requested?.Invoke(this, EventArgs.Empty);
+    }
+
+    // Event
 
     void IEntryMessenger.HandleCompleted(EntryCompleteEvent e)
     {

@@ -3,6 +3,8 @@ namespace Template.MobileApp.Behaviors;
 #if ANDROID
 using Android.Graphics.Drawables;
 using Android.Text;
+using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 #endif
 
@@ -11,6 +13,8 @@ using Java.Lang;
 #endif
 
 using Microsoft.Maui.Handlers;
+
+using static Android.Widget.TextView;
 
 public static class EntryOption
 {
@@ -62,6 +66,18 @@ public static class EntryOption
 
     public static void SetInputFilter(BindableObject bindable, Func<string, bool>? value) => bindable.SetValue(InputFilterProperty, value);
 
+    // ReSharper disable InconsistentNaming
+    public static readonly BindableProperty HandleEnterKeyProperty = BindableProperty.CreateAttached(
+        "HandleEnterKey",
+        typeof(bool),
+        typeof(EntryOption),
+        false);
+    // ReSharper restore InconsistentNaming
+
+    public static bool GetHandleEnterKey(BindableObject bindable) => (bool)bindable.GetValue(HandleEnterKeyProperty);
+
+    public static void SetHandleEnterKey(BindableObject bindable, bool value) => bindable.SetValue(HandleEnterKeyProperty, value);
+
     public static void UseCustomMapper(BehaviorOptions options)
     {
 #if ANDROID
@@ -91,6 +107,13 @@ public static class EntryOption
         {
             EntryHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Entry)handler.VirtualView));
             EditorHandler.Mapper.Add("InputFilter", static (handler, _) => UpdateInputFilter(handler.PlatformView, (Editor)handler.VirtualView));
+        }
+
+        // HandleEnter
+        if (options.HandleEnter)
+        {
+            EntryHandler.Mapper.Add("HandleEnterKey", static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Entry)handler.VirtualView));
+            EditorHandler.Mapper.Add("HandleEnterKey", static (handler, _) => UpdateHandleEnterKey(handler.PlatformView, (Editor)handler.VirtualView));
         }
 #endif
     }
@@ -134,7 +157,6 @@ public static class EntryOption
             base.OnAttachedTo(bindable, platformView);
 
             originalDrawable = platformView.Background;
-            // TODO
             platformView.Background = null;
             platformView.SetPadding(0, 0, 0, 0);
         }
@@ -166,6 +188,23 @@ public static class EntryOption
         {
             var value = dest!.SubSequence(0, dstart) + source!.SubSequence(start, end) + dest!.SubSequence(dend, dest!.Length());
             return rule(value) ? source : new Java.Lang.String(dest.SubSequence(dstart, dend));
+        }
+    }
+
+    private static void UpdateHandleEnterKey(EditText editText, BindableObject element)
+    {
+        var value = GetHandleEnterKey(element);
+        if (value)
+        {
+            editText.EditorAction += OnEditorAction;
+        }
+    }
+
+    private static void OnEditorAction(object? sender, EditorActionEventArgs e)
+    {
+        if ((e.ActionId == ImeAction.ImeNull) && (e.Event?.KeyCode == Keycode.Enter))
+        {
+            e.Handled = true;
         }
     }
 #endif
