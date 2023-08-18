@@ -72,10 +72,10 @@ public static class MauiProgram
             .ConfigureCustomBehaviors(c =>
             {
 #if DEVICE_HAS_KEYPAD
-                c.HandleEnter = true;
+                c.HandleEnterKey = true;
                 c.DisableShowSoftInputOnFocus = true;
 #else
-                c.HandleEnter = false;
+                c.HandleEnterKey = false;
                 c.DisableShowSoftInputOnFocus = false;
 #endif
             })

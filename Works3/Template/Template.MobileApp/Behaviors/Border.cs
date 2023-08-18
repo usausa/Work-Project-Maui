@@ -14,9 +14,9 @@ public static class Border
     public static readonly BindableProperty WidthProperty =
         BindableProperty.CreateAttached(
             "Width",
-            typeof(double),
+            typeof(double?),
             typeof(Border),
-            default(double));
+            default(double?));
 
     public static readonly BindableProperty ColorProperty =
         BindableProperty.CreateAttached(
@@ -24,15 +24,37 @@ public static class Border
             typeof(Color),
             typeof(Border),
             Colors.Transparent);
+
+    public static readonly BindableProperty PaddingProperty =
+        BindableProperty.CreateAttached(
+            "Padding",
+            typeof(Thickness),
+            typeof(Border),
+            default(Thickness));
+
+    public static readonly BindableProperty RadiusProperty =
+        BindableProperty.CreateAttached(
+            "Radius",
+            typeof(double?),
+            typeof(Border),
+            default(double?));
     // ReSharper restore InconsistentNaming
 
-    public static void SetWidth(BindableObject bindable, double value) => bindable.SetValue(WidthProperty, value);
+    public static void SetWidth(BindableObject bindable, double? value) => bindable.SetValue(WidthProperty, value);
 
-    public static double GetWidth(BindableObject bindable) => (double)bindable.GetValue(WidthProperty);
+    public static double? GetWidth(BindableObject bindable) => (double?)bindable.GetValue(WidthProperty);
 
     public static void SetColor(BindableObject bindable, Color value) => bindable.SetValue(ColorProperty, value);
 
     public static Color GetColor(BindableObject bindable) => (Color)bindable.GetValue(ColorProperty);
+
+    public static void SetPadding(BindableObject bindable, Thickness value) => bindable.SetValue(PaddingProperty, value);
+
+    public static Thickness GetPadding(BindableObject bindable) => (Thickness)bindable.GetValue(PaddingProperty);
+
+    public static void SetRadius(BindableObject bindable, double? value) => bindable.SetValue(RadiusProperty, value);
+
+    public static double? GetRadius(BindableObject bindable) => (double?)bindable.GetValue(RadiusProperty);
 
     public static void UseCustomMapper(BehaviorOptions options)
     {
@@ -41,14 +63,20 @@ public static class Border
         {
             EntryHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
             EntryHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
+            EntryHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
             EntryHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Entry)handler.VirtualView));
 
             EditorHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
             EditorHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
+            EditorHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
             EditorHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Editor)handler.VirtualView));
 
             LabelHandler.Mapper.Add(WidthProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
             LabelHandler.Mapper.Add(ColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add(PaddingProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
+            LabelHandler.Mapper.Add(RadiusProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
             LabelHandler.Mapper.Add(VisualElement.BackgroundColorProperty.PropertyName, static (handler, _) => UpdateBehaviors((Label)handler.VirtualView));
         }
 #endif
@@ -58,9 +86,11 @@ public static class Border
     private static void UpdateBehaviors(VisualElement element)
     {
         var width = GetWidth(element);
-        var on = width > 0;
+        var padding = GetPadding(element);
+        var radius = GetRadius(element);
+
         var behavior = element.Behaviors.OfType<BorderBehavior>().FirstOrDefault();
-        if (on)
+        if (width.HasValue || (padding != Thickness.Zero) || radius.HasValue)
         {
             if (behavior is not null)
             {
@@ -120,13 +150,37 @@ public static class Border
                 return;
             }
 
-            var width = (int)view.Context.ToPixels(GetWidth(element));
-            var color = GetColor(element).ToAndroid();
-            drawable.SetStroke(width, color);
+            var width = GetWidth(element);
+            if (width.HasValue)
+            {
+                var strokeWidth = (int)view.Context.ToPixels(width.Value);
+                var color = GetColor(element).ToAndroid();
+                drawable.SetStroke(strokeWidth, color);
+            }
+
+            var radius = GetRadius(element);
+            if (radius.HasValue)
+            {
+                var cornerRadius = (int)view.Context.ToPixels(radius.Value);
+                drawable.SetCornerRadius(cornerRadius);
+            }
+
             if (element.BackgroundColor is not null)
             {
                 drawable.SetColor(element.BackgroundColor.ToAndroid());
             }
+
+            var padding = GetPadding(element);
+            if (padding != Thickness.Zero)
+            {
+                var paddingLeft = (int)view.Context.ToPixels(padding.Left);
+                var paddingTop = (int)view.Context.ToPixels(padding.Top);
+                var paddingRight = (int)view.Context.ToPixels(padding.Right);
+                var paddingBottom = (int)view.Context.ToPixels(padding.Bottom);
+                view.SetPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+            }
+
+            view.ClipToOutline = true;
         }
     }
 #endif
