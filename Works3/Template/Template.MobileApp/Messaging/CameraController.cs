@@ -126,12 +126,31 @@ public sealed class CameraController : NotificationObject, ICameraController
         set => SetProperty(ref flashMode, value);
     }
 
-    private float zoom;
+    private float zoom = 1f;
 
     public float Zoom
     {
         get => zoom;
-        set => SetProperty(ref zoom, value);
+        set
+        {
+            if (Camera is null)
+            {
+                value = 1f;
+            }
+            else
+            {
+                if (value < Camera.MinZoomFactor)
+                {
+                    value = Camera.MinZoomFactor;
+                }
+                else if (value > Camera.MaxZoomFactor)
+                {
+                    value = Camera.MaxZoomFactor;
+                }
+            }
+
+            SetProperty(ref zoom, value);
+        }
     }
 
     private bool barcodeDetection;
