@@ -1,31 +1,92 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:helpers="clr-namespace:WorkCamera.Helpers"
-             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI" xmlns:workCamera="clr-namespace:WorkCamera"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:local="clr-namespace:WorkCamera"
              x:Class="WorkCamera.MainPage">
 
     <ContentPage.BindingContext>
-        <workCamera:MainPageViewModel />
+        <local:MainPageViewModel />
     </ContentPage.BindingContext>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <cv:CameraView x:Name="CameraView"
                        Grid.Row="0"
-                       AutoStartPreview="{Binding Preview.Value}"
-                       Camera="{Binding Camera.Value}"
-                       Cameras="{Binding Cameras.Value, Mode=OneWayToSource}"
-                       HeightRequest="{x:Static workCamera:ScreenSize.Width}"
-                       NumCamerasDetected="{Binding NumCamerasDetected.Value, Mode=OneWayToSource}">
-            <cv:CameraView.Behaviors>
-                <helpers:CameraViewBehavior />
-            </cv:CameraView.Behaviors>
-        </cv:CameraView>
-    </Grid>
+                       local:CameraBind.Controller="{Binding Controller}" />
 
+        <Label Grid.Row="1"
+               Text="{Binding Controller.Camera}" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Command="{Binding StartPreviewCommand}"
+                    Text="Start" />
+            <Button Grid.Column="1"
+                    Command="{Binding StopPreviewCommand}"
+                    Text="Stop" />
+            <Button Grid.Column="2"
+                    IsEnabled="False" />
+            <Button Grid.Column="3"
+                    IsEnabled="False" />
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Command="{Binding FrontCameraCommand}"
+                    Text="Front" />
+            <Button Grid.Column="1"
+                    Command="{Binding BackCameraCommand}"
+                    Text="Back" />
+            <Button Grid.Column="2"
+                    Command="{Binding SwitchCameraCommand}"
+                    Text="Switch" />
+            <Button Grid.Column="3"
+                    IsEnabled="False" />
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Command="{Binding TorchCommand}"
+                    Text="Torch" />
+            <Button Grid.Column="1"
+                    Command="{Binding MirrorCommand}"
+                    Text="Mirror" />
+            <Button Grid.Column="2"
+                    Command="{Binding FlashModeCommand}"
+                    Text="Flash" />
+            <Button Grid.Column="3"
+                    Command="{Binding ZoomCommand}"
+                    Text="Zoom" />
+        </Grid>
+
+    </Grid>
 </ContentPage>

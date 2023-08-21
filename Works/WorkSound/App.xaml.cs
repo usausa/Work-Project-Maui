@@ -1,4 +1,4 @@
-﻿namespace WorkCamera;
+﻿namespace WorkSound;
 
 public partial class App : Application
 {

@@ -55,9 +55,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkQrDisplay1", "WorkQrDis
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Camera", "Camera", "{2E2AAC9A-6A93-4477-AE77-DF9A0EFDF2F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkControlSquare", "WorkControlSquare\WorkControlSquare.csproj", "{A3548104-E191-4898-B120-8345746D7AFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkControlSquare", "WorkControlSquare\WorkControlSquare.csproj", "{A3548104-E191-4898-B120-8345746D7AFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkCamera", "WorkCamera\WorkCamera.csproj", "{CAE18610-94AE-48F8-B99D-714695AB20B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkCamera", "WorkCamera\WorkCamera.csproj", "{CAE18610-94AE-48F8-B99D-714695AB20B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSound", "WorkSound\WorkSound.csproj", "{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +154,10 @@ Global
 		{CAE18610-94AE-48F8-B99D-714695AB20B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAE18610-94AE-48F8-B99D-714695AB20B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CAE18610-94AE-48F8-B99D-714695AB20B6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{30AAF05A-B4D5-4BDA-B838-CBB08EE4B9A6} = {2E2AAC9A-6A93-4477-AE77-DF9A0EFDF2F0}
 		{A3548104-E191-4898-B120-8345746D7AFC} = {F368FB04-C4B2-49CC-89B0-9AAD1FE4F209}
 		{CAE18610-94AE-48F8-B99D-714695AB20B6} = {2E2AAC9A-6A93-4477-AE77-DF9A0EFDF2F0}
+		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC} = {395F2A00-9E0C-4C43-86E1-27AD84162CA9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}

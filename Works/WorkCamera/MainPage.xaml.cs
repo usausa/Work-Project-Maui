@@ -1,10 +1,10 @@
-﻿namespace WorkCamera;
-
-public partial class MainPage : ContentPage
+﻿namespace WorkCamera
 {
-    public MainPage()
+    public partial class MainPage : ContentPage
     {
-        InitializeComponent();
+        public MainPage()
+        {
+            InitializeComponent();
+        }
     }
 }
-

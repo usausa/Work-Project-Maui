@@ -1,8 +1,8 @@
-﻿namespace WorkCamera;
-
-using Camera.MAUI;
+﻿namespace WorkSound;
 
 using Microsoft.Extensions.Logging;
+
+using Plugin.Maui.Audio;
 
 public static class MauiProgram
 {
@@ -11,7 +11,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMauiCameraView()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -19,7 +18,7 @@ public static class MauiProgram
             });
 
 #if DEBUG
-	builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();

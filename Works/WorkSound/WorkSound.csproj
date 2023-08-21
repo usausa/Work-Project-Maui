@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-    <TargetFrameworks>net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-android</TargetFrameworks>
 		<OutputType>Exe</OutputType>
-		<RootNamespace>WorkCamera</RootNamespace>
+		<RootNamespace>WorkSound</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+		<ImplicitUsings>enable</ImplicitUsings>
 
-    <!-- Display name -->
-		<ApplicationTitle>WorkCamera</ApplicationTitle>
+		<!-- Display name -->
+		<ApplicationTitle>WorkSound</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.workcamera</ApplicationId>
-		<ApplicationIdGuid>3b5a89ef-c112-47bc-8d27-d76eaeeaa27c</ApplicationIdGuid>
+		<ApplicationId>com.companyname.worksound</ApplicationId>
+		<ApplicationIdGuid>6be80819-ee13-4ea3-ad93-ac4c5dfc20d7</ApplicationIdGuid>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -40,12 +40,10 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Camera.MAUI" Version="1.4.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.6" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.6" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="1.0.0" />
+		<PackageReference Include="Usa.Smart.Maui" Version="1.0.6" />
+	</ItemGroup>
 
 </Project>

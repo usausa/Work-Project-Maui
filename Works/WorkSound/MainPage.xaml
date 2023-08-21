@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkSound.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:interactivity="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
+    xmlns:workSound="clr-namespace:WorkSound">
+
+    <ContentPage.BindingContext>
+        <workSound:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <interactivity:EventToCommandBehavior Command="{Binding InitializeCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25"
+            VerticalOptions="Center">
+
+            <Button Command="{Binding PlayCommand}" Text="Play" />
+            <Button Command="{Binding PauseCommand}" Text="Pause" />
+            <Button Command="{Binding StopCommand}" Text="Stop" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
