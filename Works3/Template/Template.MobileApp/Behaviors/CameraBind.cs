@@ -139,7 +139,6 @@ public static class CameraBind
             controller.HandleBarcodeDetected(args.Result[0]);
         }
 
-
         private void ControllerOnPositionRequest(object? sender, CameraPositionEventArgs e)
         {
             if ((AssociatedObject is null) || (controller is null))
