@@ -45,7 +45,7 @@ public class DeviceQrScanViewModel : AppViewModelBase
             Disposables.Add(audioPlayer);
         }
 
-        await Camera.StartPreviewAsync();
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
     public override async void OnNavigatingFrom(INavigationContext context)

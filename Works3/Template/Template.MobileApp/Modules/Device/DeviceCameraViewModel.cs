@@ -34,7 +34,7 @@ public class DeviceCameraViewModel : AppViewModelBase
 
     public override async void OnNavigatedTo(INavigationContext context)
     {
-        await Camera.StartPreviewAsync();
+        await Navigator.PostActionAsync(() => BusyState.UsingAsync(() => Camera.StartPreviewAsync()));
     }
 
     public override async void OnNavigatingFrom(INavigationContext context)
