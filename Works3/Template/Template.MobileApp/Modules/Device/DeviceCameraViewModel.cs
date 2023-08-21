@@ -34,6 +34,16 @@ public class DeviceCameraViewModel : AppViewModelBase
         ZoomCommand = MakeDelegateCommand(SwitchZoom, () => Camera.Camera is not null).Observe(Camera);
     }
 
+    public override void OnNavigatedTo(INavigationContext context)
+    {
+        Camera.Preview = true;
+    }
+
+    public override void OnNavigatingFrom(INavigationContext context)
+    {
+        Camera.Preview = false;
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
