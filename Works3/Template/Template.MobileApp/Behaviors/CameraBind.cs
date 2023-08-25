@@ -188,18 +188,7 @@ public static class CameraBind
                 return;
             }
 
-            var start = cameraView.AutoStartPreview;
-            if (start)
-            {
-                await cameraView.StopCameraAsync();
-            }
-
             cameraView.Camera = newCamera;
-
-            if (start)
-            {
-                await cameraView.StartCameraAsync();
-            }
 
             controller.UpdateCamera(newCamera);
         }
