@@ -61,11 +61,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkCamera", "WorkCamera\Wo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSound", "WorkSound\WorkSound.csproj", "{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkPrinter", "WorkPrinter\WorkPrinter.csproj", "{AA612C45-768C-455B-86A4-A39DE9615E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkPrinter", "WorkPrinter\WorkPrinter.csproj", "{AA612C45-768C-455B-86A4-A39DE9615E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkNfc", "WorkNfc\WorkNfc.csproj", "{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkNfc", "WorkNfc\WorkNfc.csproj", "{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkSwipe", "WorkSwipe\WorkSwipe.csproj", "{A2311E8B-EA3B-41E7-9522-6A196D219277}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSwipe", "WorkSwipe\WorkSwipe.csproj", "{A2311E8B-EA3B-41E7-9522-6A196D219277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,7 +162,6 @@ Global
 		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CEAC44C-E539-4E31-883F-69EEE7D82EDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -173,6 +172,7 @@ Global
 		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Release|Any CPU.Build.0 = Release|Any CPU
