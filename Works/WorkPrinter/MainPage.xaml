@@ -7,7 +7,8 @@
         <VerticalStackLayout Padding="30,0"
                              Spacing="25" VerticalOptions="Center">
 
-            <Image HeightRequest="200" HorizontalOptions="Center" SemanticProperties.Description="Cute dot net bot waving hi to you!" Source="dotnet_bot.png" />
+            <Button Text="Test"
+                    Clicked="Button_OnClicked" />
 
         </VerticalStackLayout>
     </ScrollView>
