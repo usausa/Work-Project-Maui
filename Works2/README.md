@@ -1,1 +1,0 @@
-# WorkMaui project for MAUI
