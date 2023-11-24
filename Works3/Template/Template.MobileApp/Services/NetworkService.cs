@@ -18,7 +18,7 @@ public sealed class NetworkService : IDisposable
         client.Dispose();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     private static HttpClient CreateHttpClient()
     {
         return new(new HttpClientHandler
