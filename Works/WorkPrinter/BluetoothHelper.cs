@@ -6,8 +6,11 @@ using Android.Bluetooth;
 using Android.Content;
 using Android.Util;
 
+using Java.Util;
+
 public sealed class BluetoothHelper
 {
+    // TODO on demand
     private readonly Context context;
 
     private readonly BluetoothAdapter adapter;
@@ -163,13 +166,18 @@ public sealed class BluetoothHelper
 
 public sealed class BluetoothPrinterOption
 {
-    // TODO Filter & pin
+    public Func<BluetoothDevice, bool> FindFilter { get; set; } = default!;
+
+    public byte[] Pin { get; set; } = Array.Empty<byte>();
 }
 
 // TODO permission
 // TODO port
+// TODO primitive + extensions ?
 public sealed class BluetoothSerialPort
 {
+    private static readonly UUID SppUuid = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB")!;
+
 
 }
 
