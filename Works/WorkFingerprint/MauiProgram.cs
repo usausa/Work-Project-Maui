@@ -1,4 +1,4 @@
-﻿namespace WorkNfc;
+﻿namespace WorkFingerprint;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram

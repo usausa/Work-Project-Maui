@@ -1,4 +1,4 @@
-﻿namespace WorkNfc;
+namespace WorkFingerprint;
 
 public partial class App : Application
 {

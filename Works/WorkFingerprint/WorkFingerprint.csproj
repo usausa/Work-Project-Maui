@@ -1,19 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net8.0-android</TargetFrameworks>
+
 		<OutputType>Exe</OutputType>
-		<RootNamespace>WorkNfc</RootNamespace>
+		<RootNamespace>WorkFingerprint</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>WorkNfc</ApplicationTitle>
+		<ApplicationTitle>WorkFingerprint</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.worknfc</ApplicationId>
-		<ApplicationIdGuid>8171f74f-4e6a-4304-8e68-bc71a9299e00</ApplicationIdGuid>
+		<ApplicationId>com.companyname.workfingerprint</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -31,7 +32,7 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -41,10 +42,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Components.Maui" Version="1.8.7" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
-		<PackageReference Include="Usa.Smart.Maui" Version="1.0.7" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
 </Project>

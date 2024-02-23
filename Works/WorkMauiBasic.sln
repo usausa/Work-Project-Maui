@@ -63,9 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSound", "WorkSound\Work
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkPrinter", "WorkPrinter\WorkPrinter.csproj", "{AA612C45-768C-455B-86A4-A39DE9615E9A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkNfc", "WorkNfc\WorkNfc.csproj", "{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSwipe", "WorkSwipe\WorkSwipe.csproj", "{A2311E8B-EA3B-41E7-9522-6A196D219277}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkFingerprint", "WorkFingerprint\WorkFingerprint.csproj", "{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,15 +167,16 @@ Global
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA612C45-768C-455B-86A4-A39DE9615E9A}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A568FC3-4595-4EE6-8EFD-7C44F9A701E4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2311E8B-EA3B-41E7-9522-6A196D219277}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
