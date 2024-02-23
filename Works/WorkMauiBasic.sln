@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkSwipe", "WorkSwipe\Work
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkFingerprint", "WorkFingerprint\WorkFingerprint.csproj", "{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkNfc", "WorkNfc\WorkNfc.csproj", "{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,12 @@ Global
 		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DAD09ADC-BEF7-487B-BEE2-EC387631B9F8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B6F9BC9-BCCB-4D2F-817A-9333E0B80940}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
