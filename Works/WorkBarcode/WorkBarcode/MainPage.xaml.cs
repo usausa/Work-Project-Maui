@@ -1,24 +1,38 @@
-﻿namespace WorkBarcode;
+namespace WorkBarcode;
+
+using System.Diagnostics;
+
+using ZXing.Net.Maui;
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
+
+        CameraBarcodeReaderView.Options = new BarcodeReaderOptions
+        {
+            AutoRotate = true,
+            Multiple = true
+        };
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private void CameraBarcodeReaderView_OnBarcodesDetected(object? sender, BarcodeDetectionEventArgs e)
     {
-        count++;
+        Dispatcher.Dispatch(() =>
+        {
+            foreach (var barcode in e.Results)
+            {
+                Debug.WriteLine($"{barcode.Format} {barcode.Value}");
+                ResultLabel.Text = $"{barcode.Format} {barcode.Value}";
+                foreach (var point in barcode.PointsOfInterest)
+                {
+                    Debug.WriteLine($"  {point.X} {point.Y}");
+                }
 
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
-
-        SemanticScreenReader.Announce(CounterBtn.Text);
+                Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(100));
+            }
+        });
     }
 }
 
