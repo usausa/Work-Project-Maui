@@ -1,4 +1,5 @@
-﻿namespace DeviceSample;
+namespace DeviceSample;
+
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -15,7 +16,7 @@ public static class MauiProgram
             });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
