@@ -54,9 +54,49 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
+    <PackageReference Include="Components.Maui" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.Resolver" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.SourceGenerator" Version="1.9.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="EmbeddedBuildProperty" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Plugin.Maui.Audio" Version="3.0.0" />
+    <PackageReference Include="QRCoder" Version="1.5.1" />
+    <PackageReference Include="Rester" Version="2.5.0" />
+    <PackageReference Include="Shiny.BluetoothLE" version="3.3.3" />
+    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.3.3" />
+    <PackageReference Include="Shiny.Hosting.Maui" Version="3.3.3" />
+    <PackageReference Include="System.Interactive" Version="6.0.1" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.6" />
+    <PackageReference Include="Usa.Smart.Data" Version="2.4.3" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Mapper" Version="0.6.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.SourceGenerator" Version="2.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
 	</ItemGroup>
 
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">

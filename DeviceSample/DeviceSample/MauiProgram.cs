@@ -1,5 +1,7 @@
 namespace DeviceSample;
 
+using CommunityToolkit.Maui;
+
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -13,7 +15,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            .UseMauiCommunityToolkit();
 
 #if DEBUG
         builder.Logging.AddDebug();
