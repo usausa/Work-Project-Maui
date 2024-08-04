@@ -54,6 +54,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Raw\Read.wav" />
+	</ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
     <PackageReference Include="Components.Maui" Version="1.9.0" />
     <PackageReference Include="Components.Maui.Resolver" Version="1.9.0" />
@@ -72,9 +76,6 @@
     <PackageReference Include="Plugin.Maui.Audio" Version="3.0.0" />
     <PackageReference Include="QRCoder" Version="1.5.1" />
     <PackageReference Include="Rester" Version="2.5.0" />
-    <PackageReference Include="Shiny.BluetoothLE" version="3.3.3" />
-    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="3.3.3" />
-    <PackageReference Include="Shiny.Hosting.Maui" Version="3.3.3" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
@@ -97,6 +98,12 @@
     <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Modules\Main\MenuView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">

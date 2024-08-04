@@ -1,22 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DeviceSample.MainPage">
+             xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:local="clr-namespace:DeviceSample"
+             xmlns:shell="clr-namespace:DeviceSample.Shell"
+             xmlns:sb="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
+             x:Class="DeviceSample.MainPage"
+             x:DataType="{x:Type local:MainPageViewModel}"
+             sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             IsEnabled="{Binding ApplicationState.IsBusy, Converter={StaticResource ReverseConverter}}"
+             IsBusy="{Binding ApplicationState.IsBusy}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30,0"
-                             Spacing="25">
-            <Image HeightRequest="185"
-                   Aspect="AspectFit" SemanticProperties.Description="dot net bot in a race car number eight" Source="dotnet_bot.png" />
+    <ContentPage.Behaviors>
+        <sb:AppLifecycleBehavior />
+        <shell:ShellUpdateBehavior Navigator="{Binding Navigator, Mode=OneTime}" />
+    </ContentPage.Behaviors>
 
-            <Label Style="{StaticResource Headline}"
-                   Text="Hello, World!"
-                   SemanticProperties.HeadingLevel="Level1" />
+    <Grid Style="{StaticResource MainGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <Label Style="{StaticResource SubHeadline}"
-                   Text="Welcome to &#10;.NET Multi-platform App UI"
-                   SemanticProperties.Description="Welcome to dot net Multi platform App U I" SemanticProperties.HeadingLevel="Level2" />
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- header -->
+        <Grid Grid.Row="0"
+              Style="{StaticResource HeaderGrid}"
+              IsVisible="{Binding HeaderVisible.Value}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0"
+                   Style="{StaticResource HeaderTitleLabel}"
+                   Text="{Binding Title.Value}" />
+        </Grid>
+
+        <!-- view container -->
+        <AbsoluteLayout Grid.Row="1"
+                        Style="{StaticResource ContainerLayout}">
+            <AbsoluteLayout.Behaviors>
+                <sn:NavigationContainerBehavior Navigator="{Binding Navigator}" />
+            </AbsoluteLayout.Behaviors>
+        </AbsoluteLayout>
+
+        <!-- function -->
+        <Grid Grid.Row="2"
+              Style="{StaticResource FunctionGrid}"
+              IsVisible="{Binding FunctionVisible.Value}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Style="{StaticResource FunctionButton1}"
+                    Command="{Binding Function1Command}"
+                    Text="{Binding Function1Text.Value}" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource FunctionButton2}"
+                    Command="{Binding Function2Command}"
+                    Text="{Binding Function2Text.Value}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource FunctionButton3}"
+                    Command="{Binding Function3Command}"
+                    Text="{Binding Function3Text.Value}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource FunctionButton4}"
+                    Command="{Binding Function4Command}"
+                    Text="{Binding Function4Text.Value}" />
+        </Grid>
+    </Grid>
 
 </ContentPage>

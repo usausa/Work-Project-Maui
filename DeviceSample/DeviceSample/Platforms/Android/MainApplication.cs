@@ -1,4 +1,7 @@
-﻿namespace DeviceSample;
+#pragma warning disable IDE0130
+// ReSharper disable once CheckNamespace
+namespace DeviceSample;
+
 using Android.App;
 using Android.Runtime;
 
