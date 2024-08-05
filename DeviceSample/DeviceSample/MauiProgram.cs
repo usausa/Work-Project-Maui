@@ -14,6 +14,8 @@ using Plugin.Maui.Audio;
 
 using Smart.Resolver;
 
+using ZXing.Net.Maui.Controls;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -27,6 +29,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             })
             .UseMauiCommunityToolkit()
+            .UseBarcodeReader()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);

@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:local="clr-namespace:DeviceSample.Modules.Main"
              xmlns:shell="clr-namespace:DeviceSample.Shell"
              xmlns:markup="clr-namespace:DeviceSample.Markup"
-             xmlns:module="clr-namespace:DeviceSample.Modules.Main"
              x:Class="DeviceSample.Modules.Main.MenuView"
-             x:DataType="{x:Type module:MenuViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:MenuViewModel}"
+             x:DataType="{x:Type local:MenuViewModel}"
+             sr:BindingContextResolver.Type="{x:Type local:MenuViewModel}"
              shell:ShellProperty.Title="Menu"
              shell:ShellProperty.FunctionVisible="False">
 

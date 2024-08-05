@@ -41,6 +41,7 @@
     "xmlns:helpers",
     "xmlns:markup",
     "xmlns:module",
+    "xmlns:zxing",
     "xmlns:*",
     "mc:Ignorable, d:IsDataSource, d:LayoutOverrides, d:IsStaticText",
     "x:Key, Key",

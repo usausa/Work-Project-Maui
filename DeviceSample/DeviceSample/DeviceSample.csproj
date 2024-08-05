@@ -98,9 +98,13 @@
     <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
+    <PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Modules\Device\DeviceQrScanView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Modules\Main\MenuView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
