@@ -1,0 +1,107 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-android</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>OnyxSample</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+
+    <!-- Display name -->
+    <ApplicationTitle>ONYX Sample</ApplicationTitle>
+
+    <!-- App Identifier -->
+    <ApplicationId>onyxsample.mobileapp</ApplicationId>
+
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
+    <MandroidI18n>CJK</MandroidI18n>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+    <EnableLLVM>True</EnableLLVM>
+    <AndroidCreatePackagePerAbi>True</AndroidCreatePackagePerAbi>
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>example</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>example</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>example</AndroidSigningStorePass>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+    <Compile Remove="**\**\*.android.cs" />
+    <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- App Icon -->
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.5" />
+
+    <!-- Splash Screen -->
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFFFFF" BaseSize="128,128" />
+
+    <!-- Images -->
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+
+    <!-- Custom Fonts -->
+    <MauiFont Include="Resources\Fonts\*" />
+
+    <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Camera.MAUI" Version="1.5.1" />
+    <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
+    <PackageReference Include="Components.Maui" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.Resolver" Version="1.9.0" />
+    <PackageReference Include="Components.Maui.SourceGenerator" Version="1.9.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.80" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.18.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.18.1" />
+    <PackageReference Include="Plugin.Maui.Audio" Version="3.0.0" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="System.Interactive" Version="6.0.1" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.8" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Navigation.SourceGenerator" Version="2.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Usa.Smart.Reactive" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
+  </ItemGroup>
+
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:shell="clr-namespace:OnyxSample.Shell"
+             xmlns:behaviors="clr-namespace:OnyxSample.Behaviors"
+             xmlns:module="clr-namespace:OnyxSample.Modules.Device"
+             x:Class="OnyxSample.Modules.Device.DeviceCameraView"
+             x:DataType="{x:Type module:DeviceCameraViewModel}"
+             sr:BindingContextResolver.Type="{x:Type module:DeviceCameraViewModel}"
+             shell:ShellProperty.Title="Camera"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="Shot"
+             shell:ShellProperty.Function3Text="Focus"
+             shell:ShellProperty.Function4Text="Switch"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid Style="{StaticResource FillGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <cv:CameraView x:Name="CameraView"
+                       Grid.Row="0"
+                       behaviors:CameraBind.Controller="{Binding Camera}" />
+
+        <VerticalStackLayout Grid.Row="0"
+                             Style="{StaticResource FillVerticalStack}">
+            <Label TextColor="White"
+                   Text="{Binding Source={x:Reference CameraView}, Path=Camera.Name, StringFormat='Camera: {0}'}"
+                   FontSize="14" />
+            <Label TextColor="White"
+                   Text="{Binding Source={x:Reference CameraView}, Path=ZoomFactor, StringFormat='Zoom: x{0}'}"
+                   FontSize="14" />
+            <Label TextColor="White"
+                   Text="{Binding Source={x:Reference CameraView}, Path=Camera.HasFlashUnit, StringFormat='Flash unit: {0}'}"
+                   FontSize="14" />
+            <Label TextColor="White"
+                   Text="{Binding Source={x:Reference CameraView}, Path=FlashMode, StringFormat='Flash mode: {0}'}"
+                   FontSize="14" />
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1"
+              Style="{StaticResource SubMenuGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding TorchCommand}"
+                    Text="Torch" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding MirrorCommand}"
+                    Text="Mirror" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding FlashModeCommand}"
+                    Text="Flash" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource SubMenuButton}"
+                    Command="{Binding ZoomCommand}"
+                    Text="Zoom" />
+        </Grid>
+    </Grid>
+
+</ContentView>
