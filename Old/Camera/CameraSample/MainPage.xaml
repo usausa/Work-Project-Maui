@@ -10,7 +10,7 @@
     resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
     x:DataType="{x:Type local:MainPageViewModel}">
 
-    <Grid RowDefinitions="360,*,Auto,Auto,Auto,Auto">
+    <Grid RowDefinitions="360,*,120,Auto,Auto,Auto,Auto">
 
         <toolkit:CameraView
             x:Name="CameraView"
@@ -18,6 +18,8 @@
             CameraFlashMode="{Binding FlashMode.Value}"
             ImageCaptureResolution="{Binding Resolution.Value}"
             IsTorchOn="{Binding IsTorchOn.Value}"
+            MediaCaptureFailed="CameraView_OnMediaCaptureFailed"
+            MediaCaptured="CameraView_OnMediaCaptured"
             SelectedCamera="{Binding CameraInfo.Value}"
             ZoomFactor="{Binding Zoom.Value}" />
 
@@ -30,6 +32,8 @@
             <Label Text="{Binding IsCameraBusy, Source={x:Reference CameraView}, StringFormat='IsCameraBusy: {0}'}" />
             <Label Text="{Binding IsTorchOn.Value, StringFormat='IsTorchOn: {0}'}" />
         </VerticalStackLayout>
+
+        <Image x:Name="CameraImage" Grid.Row="2" />
 
         <Picker
             Title="Resolution"
@@ -76,6 +80,11 @@
                 Command="{Binding StopCameraPreviewCommand, Source={x:Reference CameraView}}"
                 Text="Stop" />
         </Grid>
+
+        <Button
+            Grid.Row="6"
+            Clicked="Button_OnClicked"
+            Text="Capture" />
     </Grid>
 
 </ContentPage>
