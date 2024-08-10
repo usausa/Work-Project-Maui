@@ -3,7 +3,11 @@
     x:Class="CameraSample.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    xmlns:local="clr-namespace:CameraSample"
+    xmlns:resolver="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+    x:DataType="{x:Type local:MainPageViewModel}">
 
     <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,30">
         <toolkit:CameraView Grid.Row="0" Grid.ColumnSpan="3" />

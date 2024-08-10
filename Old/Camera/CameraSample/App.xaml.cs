@@ -1,11 +1,14 @@
-﻿namespace CameraSample;
+namespace CameraSample;
 
-public partial class App : Application
+using Smart.Maui.Resolver;
+
+public partial class App
 {
-    public App()
+    public App(IServiceProvider serviceProvider)
     {
         InitializeComponent();
 
-        MainPage = new MainPage();
+        ResolveProvider.Default.Provider = serviceProvider;
+        MainPage = serviceProvider.GetRequiredService<MainPage>();
     }
 }
