@@ -5,12 +5,77 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CameraSample"
     xmlns:resolver="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+    xmlns:threading="clr-namespace:System.Threading;assembly=System.Runtime"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     resolver:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
     x:DataType="{x:Type local:MainPageViewModel}">
 
-    <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,30">
-        <toolkit:CameraView Grid.Row="0" Grid.ColumnSpan="3" />
+    <Grid RowDefinitions="360,*,Auto,Auto,Auto,Auto">
+
+        <toolkit:CameraView
+            x:Name="CameraView"
+            Grid.Row="0"
+            CameraFlashMode="{Binding FlashMode.Value}"
+            ImageCaptureResolution="{Binding Resolution.Value}"
+            IsTorchOn="{Binding IsTorchOn.Value}"
+            SelectedCamera="{Binding CameraInfo.Value}"
+            ZoomFactor="{Binding Zoom.Value}" />
+
+        <VerticalStackLayout Grid.Row="1">
+            <Label Text="{Binding CameraInfo.Value.Name, StringFormat='CameraInfo Name: {0}'}" />
+            <Label Text="{Binding FlashMode.Value, StringFormat='FlashMode: {0}'}" />
+            <Label Text="{Binding Zoom.Value, StringFormat='Zoom: {0}'}" />
+            <Label Text="{Binding Resolution.Value, StringFormat='Resolution: {0}'}" />
+            <Label Text="{Binding IsAvailable, Source={x:Reference CameraView}, StringFormat='IsAvailable: {0}'}" />
+            <Label Text="{Binding IsCameraBusy, Source={x:Reference CameraView}, StringFormat='IsCameraBusy: {0}'}" />
+            <Label Text="{Binding IsTorchOn.Value, StringFormat='IsTorchOn: {0}'}" />
+        </VerticalStackLayout>
+
+        <Picker
+            Title="Resolution"
+            Grid.Row="3"
+            ItemsSource="{Binding CameraInfo.Value.SupportedResolutions}"
+            SelectedItem="{Binding Resolution.Value}" />
+
+        <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto">
+            <Button
+                Grid.Column="0"
+                Command="{Binding ZoomOutCommand}"
+                Text="-" />
+
+            <Slider
+                Grid.Column="1"
+                Maximum="{Binding CameraInfo.Value.MaximumZoomFactor, FallbackValue=1}"
+                Minimum="{Binding CameraInfo.Value.MinimumZoomFactor, FallbackValue=1}"
+                Value="{Binding Zoom.Value}" />
+
+            <Button
+                Grid.Column="2"
+                Command="{Binding ZoomInCommand}"
+                Text="+" />
+        </Grid>
+
+        <Grid Grid.Row="5" ColumnDefinitions="*,*,*,*">
+            <Picker
+                Title="Flash"
+                Grid.Column="0"
+                IsVisible="{Binding Path=CameraInfo.Value.IsFlashSupported, FallbackValue=false}"
+                ItemsSource="{Binding FlashModes}"
+                SelectedItem="{Binding FlashMode}" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding SwitchCommand}"
+                Text="Switch" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding StartCameraPreviewCommand, Source={x:Reference CameraView}}"
+                CommandParameter="{x:Static threading:CancellationToken.None}"
+                Text="Start" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding StopCameraPreviewCommand, Source={x:Reference CameraView}}"
+                Text="Stop" />
+        </Grid>
     </Grid>
 
 </ContentPage>

@@ -9,6 +9,7 @@ public partial class App
         InitializeComponent();
 
         ResolveProvider.Default.Provider = serviceProvider;
+
         MainPage = serviceProvider.GetRequiredService<MainPage>();
     }
 }
