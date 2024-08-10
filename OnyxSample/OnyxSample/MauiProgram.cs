@@ -48,6 +48,7 @@ public static class MauiProgram
             })
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitCamera()
             .UseMauiCameraView()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()

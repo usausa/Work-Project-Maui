@@ -64,6 +64,7 @@
     <PackageReference Include="Camera.MAUI" Version="1.5.1" />
     <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
+    <PackageReference Include="CommunityToolkit.Maui.Camera" Version="1.0.3" />
     <PackageReference Include="Components.Maui" Version="1.9.0" />
     <PackageReference Include="Components.Maui.Resolver" Version="1.9.0" />
     <PackageReference Include="Components.Maui.SourceGenerator" Version="1.9.0">

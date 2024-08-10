@@ -7,6 +7,9 @@ public enum ViewId
     // Navigation
     NavigationMenu,
 
+    // Cognitive
+    CognitiveDetect,
+
     // Device
     DeviceQrDisplay,
     DeviceQrScan,
