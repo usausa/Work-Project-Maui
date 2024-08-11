@@ -1,7 +1,6 @@
 namespace OnyxSample.Behaviors;
 
-using Camera.MAUI;
-using Camera.MAUI.ZXingHelper;
+using CommunityToolkit.Maui.Views;
 
 using Smart.Maui.Interactivity;
 
@@ -54,14 +53,24 @@ public static class CameraBind
             if (controller is not null)
             {
                 controller.PreviewRequest += ControllerOnPreviewRequest;
-                controller.PositionRequest += ControllerOnPositionRequest;
-                controller.TakePhotoRequest += ControllerOnTakePhotoRequest;
-                controller.SaveSnapshotRequest += ControllerOnSaveSnapshotRequest;
-                controller.FocusRequest += ControllerOnFocusRequest;
-            }
+                controller.CaptureRequest += ControllerOnCaptureRequest;
 
-            bindable.CamerasLoaded += BindableOnCamerasLoaded;
-            bindable.BarcodeDetected += BindableOnBarcodeDetected;
+                AssociatedObject!.SetBinding(
+                    CameraView.SelectedCameraProperty,
+                    new Binding(nameof(ICameraController.CameraInfo), source: controller));
+                AssociatedObject.SetBinding(
+                    CameraView.CameraFlashModeProperty,
+                    new Binding(nameof(ICameraController.CameraFlashMode), source: controller));
+                AssociatedObject.SetBinding(
+                    CameraView.ImageCaptureResolutionProperty,
+                    new Binding(nameof(ICameraController.Resolution), source: controller));
+                AssociatedObject.SetBinding(
+                    CameraView.ZoomFactorProperty,
+                    new Binding(nameof(ICameraController.Zoom), source: controller));
+                AssociatedObject.SetBinding(
+                    CameraView.IsTorchOnProperty,
+                    new Binding(nameof(ICameraController.IsTorchOn), source: controller));
+            }
         }
 
         protected override void OnDetachingFrom(CameraView bindable)
@@ -69,71 +78,18 @@ public static class CameraBind
             if (controller is not null)
             {
                 controller.PreviewRequest -= ControllerOnPreviewRequest;
-                controller.PositionRequest -= ControllerOnPositionRequest;
-                controller.TakePhotoRequest -= ControllerOnTakePhotoRequest;
-                controller.SaveSnapshotRequest -= ControllerOnSaveSnapshotRequest;
-                controller.FocusRequest -= ControllerOnFocusRequest;
+                controller.CaptureRequest -= ControllerOnCaptureRequest;
             }
 
-            bindable.CamerasLoaded -= BindableOnCamerasLoaded;
-            bindable.BarcodeDetected -= BindableOnBarcodeDetected;
-
-            bindable.RemoveBinding(CameraView.CameraProperty);
-            bindable.RemoveBinding(CameraView.TorchEnabledProperty);
-            bindable.RemoveBinding(CameraView.MirroredImageProperty);
-            bindable.RemoveBinding(CameraView.FlashModeProperty);
+            bindable.RemoveBinding(CameraView.SelectedCameraProperty);
+            bindable.RemoveBinding(CameraView.CameraFlashModeProperty);
+            bindable.RemoveBinding(CameraView.ImageCaptureResolutionProperty);
             bindable.RemoveBinding(CameraView.ZoomFactorProperty);
-            bindable.RemoveBinding(CameraView.BarCodeDetectionEnabledProperty);
+            bindable.RemoveBinding(CameraView.IsTorchOnProperty);
 
             controller = null;
 
             base.OnDetachingFrom(bindable);
-        }
-
-        private void BindableOnCamerasLoaded(object? sender, EventArgs e)
-        {
-            if (AssociatedObject is null)
-            {
-                return;
-            }
-
-            if (controller is null)
-            {
-                return;
-            }
-
-            var camera = controller.DefaultPosition is not null
-                ? AssociatedObject.Cameras.FirstOrDefault(x => x.Position == controller.DefaultPosition)
-                : AssociatedObject.Cameras.FirstOrDefault();
-            AssociatedObject.Camera = camera;
-
-            AssociatedObject.SetBinding(
-                CameraView.TorchEnabledProperty,
-                new Binding(nameof(ICameraController.Torch), source: controller));
-            AssociatedObject.SetBinding(
-                CameraView.MirroredImageProperty,
-                new Binding(nameof(ICameraController.Mirror), source: controller));
-            AssociatedObject.SetBinding(
-                CameraView.FlashModeProperty,
-                new Binding(nameof(ICameraController.FlashMode), source: controller));
-            AssociatedObject.SetBinding(
-                CameraView.ZoomFactorProperty,
-                new Binding(nameof(ICameraController.Zoom), source: controller));
-            AssociatedObject.SetBinding(
-                CameraView.BarCodeDetectionEnabledProperty,
-                new Binding(nameof(ICameraController.BarcodeDetection), source: controller));
-
-            controller.UpdateCamera(camera);
-        }
-
-        private void BindableOnBarcodeDetected(object sender, BarcodeEventArgs args)
-        {
-            if ((controller is null) || (args.Result.Length == 0))
-            {
-                return;
-            }
-
-            controller.HandleBarcodeDetected(args.Result[0]);
         }
 
         private void ControllerOnPreviewRequest(object? sender, CameraPreviewEventArgs e)
@@ -146,54 +102,18 @@ public static class CameraBind
             e.Task = e.Enable ? StartCameraPreview(AssociatedObject) : StopCameraPreview(AssociatedObject);
         }
 
-        private static async Task<bool> StartCameraPreview(CameraView cameraView)
+        private static async Task StartCameraPreview(CameraView cameraView)
         {
-            var result = await cameraView.StartCameraAsync();
-            return result == CameraResult.Success;
+            await cameraView.StartCameraPreview(CancellationToken.None);
         }
 
-        private static async Task<bool> StopCameraPreview(CameraView cameraView)
+        private static Task StopCameraPreview(CameraView cameraView)
         {
-            var result = await cameraView.StopCameraAsync();
-            return result == CameraResult.Success;
-        }
-
-        private void ControllerOnPositionRequest(object? sender, CameraPositionEventArgs e)
-        {
-            if ((AssociatedObject is null) || (controller is null))
-            {
-                return;
-            }
-
-            e.Task = PositionRequest(AssociatedObject, controller, e.Position);
-        }
-
-        private static Task PositionRequest(CameraView cameraView, ICameraController controller, CameraPosition? position)
-        {
-            CameraInfo? newCamera;
-            if (position is not null)
-            {
-                newCamera = cameraView.Cameras.FirstOrDefault(x => x.Position == position);
-            }
-            else
-            {
-                var current = cameraView.Cameras.IndexOf(cameraView.Camera);
-                newCamera = (current >= 0) && (current + 1 < cameraView.Cameras.Count)
-                    ? cameraView.Cameras[current + 1]
-                    : cameraView.Cameras.FirstOrDefault();
-            }
-
-            if (cameraView.Camera != newCamera)
-            {
-                cameraView.Camera = newCamera;
-
-                controller.UpdateCamera(newCamera);
-            }
-
+            cameraView.StopCameraPreview();
             return Task.CompletedTask;
         }
 
-        private void ControllerOnTakePhotoRequest(object? sender, CameraTakePhotoEventArgs e)
+        private void ControllerOnCaptureRequest(object? sender, CameraCaptureEventArgs e)
         {
             var cameraView = AssociatedObject;
             if (cameraView is null)
@@ -201,23 +121,39 @@ public static class CameraBind
                 return;
             }
 
-            e.Task = cameraView.TakePhotoAsync(e.Format);
+            var capture = new CaptureObject(cameraView);
+            e.Task = capture.CaptureAsync(e.Token);
         }
 
-        private void ControllerOnSaveSnapshotRequest(object? sender, CameraSaveSnapshotEventArgs e)
+        private sealed class CaptureObject
         {
-            var cameraView = AssociatedObject;
-            if (cameraView is null)
+            private readonly TaskCompletionSource<Stream?> result = new();
+
+            private readonly CameraView view;
+
+            public CaptureObject(CameraView view)
             {
-                return;
+                this.view = view;
             }
 
-            e.Task = cameraView.SaveSnapShot(e.Format, e.Path);
-        }
+            public async Task<Stream?> CaptureAsync(CancellationToken token)
+            {
+                view.MediaCaptured += OnMediaCaptured;
+                view.MediaCaptureFailed += OnMediaCaptureFailed;
+                await view.CaptureImage(token);
+                return await result.Task;
+            }
 
-        private void ControllerOnFocusRequest(object? sender, EventArgs e)
-        {
-            AssociatedObject?.ForceAutoFocus();
+            private void OnMediaCaptured(object? sender, MediaCapturedEventArgs e) => OnMediaCaptured(e.Media);
+
+            private void OnMediaCaptureFailed(object? sender, MediaCaptureFailedEventArgs e) => OnMediaCaptured(null);
+
+            private void OnMediaCaptured(Stream? stream)
+            {
+                view.MediaCaptured -= OnMediaCaptured;
+                view.MediaCaptureFailed -= OnMediaCaptureFailed;
+                result.TrySetResult(stream);
+            }
         }
     }
 }

@@ -61,8 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Camera.MAUI" Version="1.5.1" />
-    <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="1.0.3" />
     <PackageReference Include="Components.Maui" Version="1.9.0" />
@@ -76,8 +74,6 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.18.1" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.18.1" />
-    <PackageReference Include="Plugin.Maui.Audio" Version="3.0.0" />
-    <PackageReference Include="QRCoder" Version="1.6.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />

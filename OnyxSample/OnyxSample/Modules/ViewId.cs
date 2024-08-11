@@ -8,10 +8,5 @@ public enum ViewId
     NavigationMenu,
 
     // Cognitive
-    CognitiveDetect,
-
-    // Device
-    DeviceQrDisplay,
-    DeviceQrScan,
-    DeviceCamera
+    CognitiveDetect
 }

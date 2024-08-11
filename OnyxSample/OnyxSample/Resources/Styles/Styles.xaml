@@ -31,10 +31,6 @@
                             NullValue="False"
                             NonNullValue="True" />
 
-    <!-- Application -->
-
-    <converters:QrImageSourceConverter x:Key="QrImageSourceConverter" />
-
     <!-- ================================================================================ -->
     <!-- Main -->
     <!-- ================================================================================ -->

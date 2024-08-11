@@ -1,12 +1,14 @@
 namespace OnyxSample;
 
+using CommunityToolkit.Maui.Core;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Smart.Maui.Resolver;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
-    public void Initialize(IServiceProvider services)
+    public async void Initialize(IServiceProvider services)
     {
         // Setup provider
         ResolveProvider.Default.Provider = services;
@@ -19,5 +21,9 @@ public sealed class ApplicationInitializer : IMauiInitializeService
             System.Diagnostics.Debug.WriteLine(
                 $"Navigated: [{args.Context.FromId}]->[{args.Context.ToId}] : stacked=[{navigator.StackedCount}]");
         };
+
+        // Setup camera
+        var cameraProvider = services.GetRequiredService<ICameraProvider>();
+        await cameraProvider.RefreshAvailableCameras(CancellationToken.None);
     }
 }

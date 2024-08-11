@@ -1,7 +1,5 @@
 namespace OnyxSample;
 
-using Camera.MAUI;
-
 using CommunityToolkit.Maui;
 
 using MauiComponents.Resolver;
@@ -9,8 +7,6 @@ using MauiComponents.Resolver;
 using Microsoft.Maui.LifecycleEvents;
 
 using OnyxSample.Behaviors;
-
-using Plugin.Maui.Audio;
 
 using Smart.Resolver;
 
@@ -49,7 +45,6 @@ public static class MauiProgram
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitCamera()
-            .UseMauiCameraView()
             .UseMauiInterfaces()
             .UseCommunityToolkitInterfaces()
             .ConfigureCustomBehaviors()
@@ -116,8 +111,6 @@ public static class MauiProgram
 
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
-
-        config.BindSingleton(AudioManager.Current);
 
         // State
         config.BindSingleton<ApplicationState>();

@@ -11,25 +11,12 @@
              shell:ShellProperty.Title="Menu"
              shell:ShellProperty.FunctionVisible="False">
 
-    <Grid Style="{StaticResource FillGrid}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*,Auto">
 
         <Grid Grid.Row="0"
-              Style="{StaticResource MenuGrid}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+              Style="{StaticResource MenuGrid}"
+              RowDefinitions="*,*,*,*,*,*,*,*">
 
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
@@ -38,19 +25,16 @@
                     Text="Detect" />
             <Button Grid.Row="1"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId DeviceCamera}"
-                    Text="Camera" />
+                    IsEnabled="False"
+                    Text="" />
             <Button Grid.Row="2"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId DeviceQrDisplay}"
-                    Text="QR Display" />
+                    IsEnabled="False"
+                    Text="" />
             <Button Grid.Row="3"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId DeviceQrScan}"
-                    Text="QR Scan" />
+                    IsEnabled="False"
+                    Text="" />
             <Button Grid.Row="4"
                     Style="{StaticResource MenuButton}"
                     IsEnabled="False"
@@ -67,19 +51,11 @@
                     Style="{StaticResource MenuButton}"
                     IsEnabled="False"
                     Text="" />
-            <Button Grid.Row="8"
-                    Style="{StaticResource MenuButton}"
-                    IsEnabled="False"
-                    Text="" />
         </Grid>
 
         <Grid Grid.Row="1"
-              Style="{StaticResource FooterGrid}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-
+              Style="{StaticResource FooterGrid}"
+              ColumnDefinitions="3*,2*">
             <Label Grid.Column="1"
                    Style="{StaticResource FooterInfoRightLabel}"
                    Text="{Binding Version.Value, StringFormat='Version {0}'}" />
