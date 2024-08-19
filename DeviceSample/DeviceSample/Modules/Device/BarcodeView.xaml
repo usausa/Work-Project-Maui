@@ -15,23 +15,24 @@
 
     <Grid Style="{StaticResource FillGrid}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <zxing:CameraBarcodeReaderView x:Name="CameraBarcodeReaderView"
                                        Grid.Row="0"
                                        Width="{x:Static module:ScreenSize.Width}"
                                        Height="{x:Static module:ScreenSize.Width}"
                                        BarcodesDetected="CameraBarcodeReaderView_OnBarcodesDetected" />
-        <Label Grid.Row="0"
+        <Label Grid.Row="1"
                Margin="0" Padding="0"
                BackgroundColor="Red"
                Opacity="0.2" />
         <Label x:Name="ResultLabel"
-               Grid.Row="1"
+               Grid.Row="2"
                Style="{StaticResource ExtraLargeLeftLabel}" />
-        <Label Grid.Row="2"
+        <Label Grid.Row="3"
                Margin="0" Padding="0"
                BackgroundColor="Blue"
                Opacity="0.2" />
