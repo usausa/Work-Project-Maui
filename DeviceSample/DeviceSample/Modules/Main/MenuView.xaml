@@ -38,8 +38,9 @@
                     Text="Barcode" />
             <Button Grid.Row="1"
                     Style="{StaticResource MenuButton}"
-                    IsEnabled="False"
-                    Text="" />
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId Camera}"
+                    Text="Camera" />
             <Button Grid.Row="2"
                     Style="{StaticResource MenuButton}"
                     IsEnabled="False"

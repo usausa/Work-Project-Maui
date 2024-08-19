@@ -6,9 +6,9 @@
              xmlns:shell="clr-namespace:DeviceSample.Shell"
              xmlns:module="clr-namespace:DeviceSample.Modules"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
-             x:Class="DeviceSample.Modules.Device.BarcodeView"
-             x:DataType="{x:Type local:BarcodeViewModel}"
-             sr:BindingContextResolver.Type="{x:Type local:BarcodeViewModel}"
+             x:Class="DeviceSample.Modules.Device.CameraView"
+             x:DataType="{x:Type local:CameraViewModel}"
+             sr:BindingContextResolver.Type="{x:Type local:CameraViewModel}"
              shell:ShellProperty.Title="Barcode"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
@@ -19,11 +19,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <zxing:CameraBarcodeReaderView x:Name="CameraBarcodeReaderView"
-                                       Grid.Row="0"
-                                       Width="{x:Static module:ScreenSize.Width}"
-                                       Height="{x:Static module:ScreenSize.Width}"
-                                       BarcodesDetected="CameraBarcodeReaderView_OnBarcodesDetected" />
         <Label Grid.Row="0"
                Margin="0" Padding="0"
                BackgroundColor="Red"

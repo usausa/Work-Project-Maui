@@ -4,5 +4,6 @@ public enum ViewId
 {
     Menu,
 
-    Barcode
+    Barcode,
+    Camera
 }
