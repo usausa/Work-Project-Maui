@@ -1,8 +1,8 @@
-﻿namespace WorkTimer;
+namespace WorkTimer;
 
 public class TimerService
 {
-    public event EventHandler<EventArgs> Handle;
+    public event EventHandler<EventArgs>? Handle;
 
     private PeriodicTimer? timer;
     private CancellationTokenSource? cts;
