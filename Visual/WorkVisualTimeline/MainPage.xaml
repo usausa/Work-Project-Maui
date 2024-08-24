@@ -1,36 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WorkVisualTimeline"
              x:Class="WorkVisualTimeline.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
+    <ContentPage.Resources>
+        <ResourceDictionary>
 
-            <Label
-                Text="Hello, World!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+            <Style x:Key="LineStyle"
+                   TargetType="BoxView">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
 
-            <Label
-                Text="Welcome to &#10;.NET Multi-platform App UI"
-                Style="{StaticResource SubHeadline}"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+            <Style x:Key="PointStyle"
+                   TargetType="BoxView">
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Margin" Value="0, 8, 0, 8" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
 
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me" 
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Fill" />
-        </VerticalStackLayout>
-    </ScrollView>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ListView ItemsSource="{Binding Items}"
+              HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="local:Item">
+                <ViewCell>
+                    <Grid ColumnDefinitions="80,*">
+                        <BoxView Grid.Column="0"
+                                 Style="{StaticResource LineStyle}" />
+
+                        <Label Grid.Column="1"
+                               Text="{Binding Name}" />
+                        <BoxView Grid.Row="0"
+                                 Style="{StaticResource PointStyle}"
+                                 Color="{Binding Color}" />
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 
 </ContentPage>
