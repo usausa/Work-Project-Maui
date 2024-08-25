@@ -1,4 +1,4 @@
-﻿namespace WorkVisualGraphic;
+﻿namespace WorkGraphicBasic;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram

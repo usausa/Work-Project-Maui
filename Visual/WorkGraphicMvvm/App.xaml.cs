@@ -1,4 +1,4 @@
-namespace WorkVisualGraphic;
+namespace WorkGraphicMvvm;
 
 public partial class App : Application
 {

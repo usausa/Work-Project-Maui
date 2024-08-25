@@ -1,4 +1,4 @@
-﻿namespace WorkVisualGraphic;
+﻿namespace WorkGraphicBasic;
 
 public partial class MainPage : ContentPage
 {

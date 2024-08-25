@@ -1,4 +1,4 @@
-﻿namespace WorkVisualGraphic;
+﻿namespace WorkGraphicMvvm;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
