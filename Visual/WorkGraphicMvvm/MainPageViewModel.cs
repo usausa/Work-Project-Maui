@@ -7,7 +7,7 @@ using Smart.Maui.ViewModels;
 
 public sealed class MainPageViewModel : ViewModelBase
 {
-    public NotificationValue<Color> Color { get; } = new(Colors.White);
+    public NotificationValue<Color> Color { get; } = new(Colors.Transparent);
 
     public ICommand ColorCommand { get; }
 

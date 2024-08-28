@@ -9,7 +9,8 @@
         <local:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="*,Auto,Auto">
+    <Grid BackgroundColor="LightGoldenrodYellow"
+          RowDefinitions="*,Auto,Auto">
         <local:CustomView Grid.Row="0"
                           CustomColor="{Binding Color.Value}" />
         <Button Grid.Row="1"
