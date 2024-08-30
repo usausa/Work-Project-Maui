@@ -8,15 +8,17 @@
         <local:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <ScrollView>
-        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
-                             Spacing="0">
-            <BindableLayout.ItemTemplate>
+    <VerticalStackLayout Spacing="0">
+        <ListView ItemsSource="{Binding Items}">
+            <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:Item">
-                    <Label Text="{Binding Id}" />
+                    <ViewCell>
+                        <local:TimelineCellView HeightRequest="80"
+                                                Value="{Binding Id}" />
+                    </ViewCell>
                 </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
-    </ScrollView>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
 
 </ContentPage>
