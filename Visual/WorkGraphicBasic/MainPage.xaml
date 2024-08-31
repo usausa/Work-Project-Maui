@@ -8,13 +8,24 @@
         <local:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Spacing="0">
-        <ListView ItemsSource="{Binding Items}">
+    <VerticalStackLayout>
+        <ListView HasUnevenRows="True"
+                  SeparatorVisibility="None"
+                  ItemsSource="{Binding Items}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:Item">
+                <DataTemplate x:DataType="local:CellInfo">
                     <ViewCell>
-                        <local:TimelineCellView HeightRequest="80"
-                                                Value="{Binding Id}" />
+                        <Grid ColumnDefinitions="Auto,Auto,*">
+                            <local:TimelineCellView Grid.Column="0"
+                                                    Cell="{Binding}" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding Id}"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="2"
+                                   Padding="8,0,0,0"
+                                   Text="{Binding Text}"
+                                   VerticalOptions="Center" />
+                        </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

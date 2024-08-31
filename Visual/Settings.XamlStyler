@@ -72,6 +72,8 @@
     "HorizontalTextAlignment, VerticalTextAlignment, HorizontalContentAlignment, VerticalContentAlignment, Panel.ZIndex",
     "Platform, PageSource, PageIndex, Offset, Color, TargetName, Property, Value, StartPoint, EndPoint",
     "Storyboard.*, From, To, Duration",
+    "HasUnevenRows",
+    "SeparatorVisibility",
     "KeyCode",
     "Command, CommandParameter",
     "IsEnabled",
