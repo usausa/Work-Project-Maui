@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkPadBasic", "WorkPadBasic\WorkPadBasic.csproj", "{41440E87-7066-4187-B8C6-E058DFC9CAC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41440E87-7066-4187-B8C6-E058DFC9CAC9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2012B188-6EBB-473C-B022-8C4179428A4A}
+	EndGlobalSection
+EndGlobal
