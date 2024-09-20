@@ -27,7 +27,6 @@ public class DeviceLocationViewModel : AppViewModelBase
     {
         Location.Value = await locationService.GetLastLocationAsync();
 
-        locationService.GeolocationAccuracy = GeolocationAccuracy.Best;
         locationService.Start();
     }
 
