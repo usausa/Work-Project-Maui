@@ -1,3 +1,4 @@
+// ReSharper disable once CheckNamespace
 namespace WorkPadBasic;
 
 using Android.App;
@@ -18,9 +19,13 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        WindowCompat.SetDecorFitsSystemWindows(Window!, false);
-        var windowInsetsController = new WindowInsetsControllerCompat(Window!, Window!.DecorView);
-        windowInsetsController.Hide(WindowInsetsCompat.Type.SystemBars());
-        windowInsetsController.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
+        if (Window is not null)
+        {
+            WindowCompat.SetDecorFitsSystemWindows(Window, false);
+            var windowInsetsController = new WindowInsetsControllerCompat(Window, Window.DecorView);
+            windowInsetsController.Hide(WindowInsetsCompat.Type.SystemBars());
+            windowInsetsController.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
+        }
+
     }
 }
