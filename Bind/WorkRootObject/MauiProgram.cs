@@ -1,4 +1,4 @@
-namespace WorkCommand;
+namespace WorkRootObject;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
