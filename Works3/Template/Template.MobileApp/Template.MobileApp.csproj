@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net9.0-android</TargetFrameworks>
@@ -62,7 +62,7 @@
   <ItemGroup>
     <PackageReference Include="Camera.MAUI" Version="1.5.1" />
     <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
     <PackageReference Include="EmbeddedBuildProperty" Version="1.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -115,11 +115,5 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
-    <ItemGroup>
-      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'CommunityToolkit.Maui.SourceGenerators'" />
-    </ItemGroup>
-  </Target>
 
 </Project>
