@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:fonts="clr-namespace:Template.MobileApp.Resources.Fonts"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity"
              x:Class="Template.MobileApp.Modules.Navigation.Edit.EditListView"
@@ -30,11 +30,13 @@
                                    Style="{StaticResource ListItemLeftLabel}"
                                    Text="{Binding Name}" />
                             <Button Grid.Column="2"
+                                    x:DataType="{x:Type module:EditListViewModel}"
                                     Style="{StaticResource ListItemButtonPrimary}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
                                     CommandParameter="{Binding}"
                                     Text="{x:Static fonts:MaterialIcons.Edit}" />
                             <Button Grid.Column="3"
+                                    x:DataType="{x:Type module:EditListViewModel}"
                                     Style="{StaticResource ListItemButtonDanger}"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
                                     CommandParameter="{Binding}"
