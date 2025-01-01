@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkIcon", "WorkIcon\WorkIcon.csproj", "{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkCalendar", "WorkCalendar\WorkCalendar.csproj", "{C9027427-F441-40CC-8411-F395ED944177}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,8 +15,13 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0CFDE29-3E39-4109-A67F-57B34B28A3F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9027427-F441-40CC-8411-F395ED944177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9027427-F441-40CC-8411-F395ED944177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9027427-F441-40CC-8411-F395ED944177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9027427-F441-40CC-8411-F395ED944177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
