@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkIcon", "WorkIcon\WorkIc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkCalendar", "WorkCalendar\WorkCalendar.csproj", "{C9027427-F441-40CC-8411-F395ED944177}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkGauge", "WorkGauge\WorkGauge.csproj", "{B7B02A98-D8C1-4C30-BD07-62D0EA655F97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{C9027427-F441-40CC-8411-F395ED944177}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9027427-F441-40CC-8411-F395ED944177}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9027427-F441-40CC-8411-F395ED944177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B02A98-D8C1-4C30-BD07-62D0EA655F97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B02A98-D8C1-4C30-BD07-62D0EA655F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B02A98-D8C1-4C30-BD07-62D0EA655F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B02A98-D8C1-4C30-BD07-62D0EA655F97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
