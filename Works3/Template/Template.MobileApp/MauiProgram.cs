@@ -124,10 +124,10 @@ public static class MauiProgram
         });
 
         // Config App Center
-        if (!String.IsNullOrEmpty(Variants.AppCenterSecret()))
+        if (!String.IsNullOrEmpty(Variants.AppCenterSecret))
         {
             Microsoft.AppCenter.AppCenter.Start(
-                Variants.AppCenterSecret(),
+                Variants.AppCenterSecret,
                 typeof(Microsoft.AppCenter.Analytics.Analytics),
                 typeof(Microsoft.AppCenter.Crashes.Crashes));
         }
@@ -173,7 +173,6 @@ public static class MauiProgram
         config.AddComponentsPopupPlugin<PopupFocusPlugin>();
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
-        config.AddComponentsSpeech();
         config.AddComponentsLocation();
 
         // Navigator

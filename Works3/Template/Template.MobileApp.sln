@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{AC8B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.Resolver", "..\MauiComponents\MauiComponents.Resolver\MauiComponents.Resolver.csproj", "{62F9D846-F7F5-445C-8213-2F4B5BE8471E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.SourceGenerator", "..\MauiComponents\MauiComponents.SourceGenerator\MauiComponents.SourceGenerator.csproj", "{129CF3BD-611A-40D1-8D4F-66F18F085FAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiComponents.Generator", "..\MauiComponents\MauiComponents.Generator\MauiComponents.Generator.csproj", "{DAC09FDD-9615-48C7-99DA-8D5C24986433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,10 @@ Global
 		{62F9D846-F7F5-445C-8213-2F4B5BE8471E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62F9D846-F7F5-445C-8213-2F4B5BE8471E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62F9D846-F7F5-445C-8213-2F4B5BE8471E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{129CF3BD-611A-40D1-8D4F-66F18F085FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{129CF3BD-611A-40D1-8D4F-66F18F085FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{129CF3BD-611A-40D1-8D4F-66F18F085FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{129CF3BD-611A-40D1-8D4F-66F18F085FAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAC09FDD-9615-48C7-99DA-8D5C24986433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAC09FDD-9615-48C7-99DA-8D5C24986433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAC09FDD-9615-48C7-99DA-8D5C24986433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAC09FDD-9615-48C7-99DA-8D5C24986433}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,7 +72,7 @@ Global
 		{D3F85424-07D8-46B5-9E69-216900A8FD67} = {AC8B748C-68B4-43DF-91DA-807BA8E6B640}
 		{C2AC416F-6893-4FA4-8648-7DA3AEC4A9EC} = {AC8B748C-68B4-43DF-91DA-807BA8E6B640}
 		{62F9D846-F7F5-445C-8213-2F4B5BE8471E} = {AC8B748C-68B4-43DF-91DA-807BA8E6B640}
-		{129CF3BD-611A-40D1-8D4F-66F18F085FAA} = {AC8B748C-68B4-43DF-91DA-807BA8E6B640}
+		{DAC09FDD-9615-48C7-99DA-8D5C24986433} = {AC8B748C-68B4-43DF-91DA-807BA8E6B640}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
