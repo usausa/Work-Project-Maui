@@ -34,7 +34,7 @@ public class DeviceMiscViewModel : AppViewModelBase
         ApplicationState applicationState,
         IScreen screen,
         IStorageManager storage,
-        //ITextToSpeech textToSpeech,
+        ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
         IFlashlight flashlight)
@@ -65,14 +65,11 @@ public class DeviceMiscViewModel : AppViewModelBase
         });
 
         // TODO
-        SpeakCommand = MakeDelegateCommand(() => { });
-        SpeakCancelCommand = MakeDelegateCommand(() => { });
         RecognizeCommand = MakeDelegateCommand(() => { });
-//#pragma warning disable CA2012
-//        SpeakCommand = MakeDelegateCommand(() => textToSpeech.SpeakAsync("テストです"));
-//#pragma warning restore CA2012
-//        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-
+#pragma warning disable CA2012
+        SpeakCommand = MakeDelegateCommand(() => speech.SpeakAsync("テストです"));
+#pragma warning restore CA2012
+        SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
 //        var progress = new Progress<string>(text =>
 //        {
 //            if (!String.IsNullOrEmpty(text))

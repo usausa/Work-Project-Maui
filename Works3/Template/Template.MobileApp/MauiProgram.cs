@@ -174,6 +174,7 @@ public static class MauiProgram
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
         config.AddComponentsLocation();
+        config.AddComponentsSpeech();
 
         // Navigator
         config.AddNavigator(static c =>
