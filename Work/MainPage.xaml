@@ -3,23 +3,186 @@
     x:Class="WorkMaui.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:app="clr-namespace:WorkMaui">
+    xmlns:app="clr-namespace:WorkMaui"
+    BackgroundColor="{StaticResource GrayDarken4}">
 
     <ContentPage.BindingContext>
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30,0" Spacing="25">
-            <Button
-                Command="{Binding StartCommand}"
-                HorizontalOptions="Fill"
-                Text="Start" />
-            <Button
-                Command="{Binding StopCommand}"
-                HorizontalOptions="Fill"
-                Text="Stop" />
-        </VerticalStackLayout>
-    </ScrollView>
+
+
+    <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*,*,*,*,*">
+        <Button
+            Grid.Row="0"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource RedDefault}"
+            CornerRadius="8"
+            FontSize="20"
+            HeightRequest="80"
+            Text="100%"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource PinkDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource PurpleDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="3"
+            BackgroundColor="{StaticResource DeepPurpleDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+
+        <Button
+            Grid.Row="1"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource IndigoDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource BlueDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource LightBlueDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="3"
+            BackgroundColor="{StaticResource CyanDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource TealDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource GreenDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource LightGreenDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="3"
+            BackgroundColor="{StaticResource LimeDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+
+        <Button
+            Grid.Row="3"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource YellowDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource AmberDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource OrangeDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="3"
+            BackgroundColor="{StaticResource DeepOrangeDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+
+        <Button
+            Grid.Row="4"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource BrownDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="4"
+            Grid.Column="1"
+            BackgroundColor="{StaticResource BlueGrayDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+        <Button
+            Grid.Row="4"
+            Grid.Column="2"
+            BackgroundColor="{StaticResource GrayDefault}"
+            FontSize="28"
+            HeightRequest="80"
+            Text="100"
+            WidthRequest="80" />
+
+        <Button
+            Grid.Row="5"
+            Grid.ColumnSpan="4"
+            Command="{Binding StartCommand}"
+            HorizontalOptions="Fill"
+            Text="Start" />
+        <Button
+            Grid.Row="6"
+            Grid.ColumnSpan="4"
+            Command="{Binding StopCommand}"
+            HorizontalOptions="Fill"
+            Text="Stop" />
+    </Grid>
 
 </ContentPage>

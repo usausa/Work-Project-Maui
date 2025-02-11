@@ -19,8 +19,17 @@ internal class MainPageViewModel : ViewModelBase
         var service = new SpeechService(TextToSpeech.Default, SpeechToText.Default);
         StartCommand = MakeAsyncCommand(async () => await service.StartRecognizeAsync());
         StopCommand = MakeAsyncCommand(async () => await service.StopRecognizeAsync());
+
+        var ret = OperatingSystem.IsAndroidVersionAtLeast(31);
     }
 }
+
+//--------------------------------------------------------------------------------
+
+
+
+
+//--------------------------------------------------------------------------------
 
 //public interface ISpeechService
 //{
