@@ -13,7 +13,8 @@ namespace WorkButton
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                })
+                .ConfigureCustomBehaviors();
 
 #if DEBUG
     		builder.Logging.AddDebug();
