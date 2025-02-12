@@ -45,11 +45,20 @@
             Grid.Row="0"
             Grid.Column="0"
             StyleClass="DeckButtonLayout">
-            <Button
-                BackgroundColor="{StaticResource RedDefault}"
-                StyleClass="DeckButton"
-                Text="100%"
-                TextColor="White" />
+            <Border
+                Padding="0"
+                HorizontalOptions="Center"
+                Stroke="{StaticResource GrayDarken3}"
+                StrokeThickness="3">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+                <Button
+                    BackgroundColor="{StaticResource RedDefault}"
+                    StyleClass="DeckButton"
+                    Text="100%"
+                    TextColor="White" />
+            </Border>
             <Label StyleClass="DeckButtonLabel" Text="test" />
         </VerticalStackLayout>
         <VerticalStackLayout
@@ -252,6 +261,24 @@
                 StyleClass="DeckButton"
                 Text="100%"
                 TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="4"
+            Grid.Column="3"
+            StyleClass="DeckButtonLayout">
+            <Button
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#1FA2FF" />
+                        <GradientStop Offset="1.0" Color="#12D8FA" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
             <Label StyleClass="DeckButtonLabel" Text="test" />
         </VerticalStackLayout>
 
