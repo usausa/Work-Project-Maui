@@ -31,39 +31,43 @@
 
         <workButton:ButtonEx
             Grid.Row="3"
+            workButton:Buttons.EnableTextAlignment="True"
+            workButton:Buttons.HorizontalTextAlignment="Justify"
+            workButton:Buttons.VerticalTextAlignment="Justify"
             FontAttributes="Bold"
             FontSize="24"
             HeightRequest="80"
-            HorizontalTextAlignment="Justify"
-            Text="Justify"
-            VerticalTextAlignment="Justify" />
+            Text="Justify" />
 
         <workButton:ButtonEx
             Grid.Row="4"
+            workButton:Buttons.EnableTextAlignment="True"
+            workButton:Buttons.HorizontalTextAlignment="Center"
+            workButton:Buttons.VerticalTextAlignment="Center"
             FontAttributes="Bold"
             FontSize="24"
             HeightRequest="80"
-            HorizontalTextAlignment="Center"
-            Text="Center"
-            VerticalTextAlignment="Center" />
+            Text="Center" />
 
         <workButton:ButtonEx
             Grid.Row="5"
+            workButton:Buttons.EnableTextAlignment="True"
+            workButton:Buttons.HorizontalTextAlignment="Start"
+            workButton:Buttons.VerticalTextAlignment="End"
             FontAttributes="Bold"
             FontSize="24"
             HeightRequest="80"
-            HorizontalTextAlignment="Start"
-            Text="Left"
-            VerticalTextAlignment="End" />
+            Text="Left" />
 
         <workButton:ButtonEx
             Grid.Row="6"
+            workButton:Buttons.EnableTextAlignment="True"
+            workButton:Buttons.HorizontalTextAlignment="End"
+            workButton:Buttons.VerticalTextAlignment="Start"
             FontAttributes="Bold"
             FontSize="24"
             HeightRequest="80"
-            HorizontalTextAlignment="End"
-            Text="Right"
-            VerticalTextAlignment="Start" />
+            Text="Right" />
 
         <Label HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
 
