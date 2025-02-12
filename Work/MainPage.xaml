@@ -6,22 +6,45 @@
     xmlns:app="clr-namespace:WorkMaui"
     BackgroundColor="{StaticResource GrayDarken4}">
 
+    <!--  ReSharper disable Xaml.RedundantResource  -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style Class="ButtonLayout" TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style Class="ButtonLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!--  ReSharper restore Xaml.RedundantResource  -->
+
     <ContentPage.BindingContext>
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-
+    <!--  TODO local style  -->
 
     <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*,*,*,*,*">
-        <Button
+        <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="0"
-            BackgroundColor="{StaticResource RedDefault}"
-            CornerRadius="8"
-            FontSize="20"
-            HeightRequest="80"
-            Text="100%"
-            WidthRequest="80" />
+            StyleClass="ButtonLayout"
+            VerticalOptions="Center">
+            <Button
+                BackgroundColor="{StaticResource RedDefault}"
+                CornerRadius="8"
+                FontSize="20"
+                HeightRequest="80"
+                Text="100%"
+                WidthRequest="80" />
+            <Label StyleClass="ButtonLabel" Text="test" />
+        </VerticalStackLayout>
         <Button
             Grid.Row="0"
             Grid.Column="1"

@@ -65,12 +65,12 @@ public class ButtonEx : Button
     }
 }
 
-// TODO 継承なしで？、その場合Effectで特定したものだけにする必要性
+// TODO 継承なしで？、その場合Effectで特定したものだけにする必要性？、Nameでわかるか？
 internal static class AppHostBuilderExtensions
 {
     public static MauiAppBuilder ConfigureCustomBehaviors(this MauiAppBuilder builder)
     {
-        Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping("TextAlignment", UpdateTextAlignment);
+        ButtonHandler.Mapper.AppendToMapping("TextAlignment", UpdateTextAlignment);
 
         return builder;
     }
