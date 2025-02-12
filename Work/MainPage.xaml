@@ -10,12 +10,21 @@
     <ContentPage.Resources>
         <ResourceDictionary>
 
-            <Style Class="ButtonLayout" TargetType="VerticalStackLayout">
+            <Style Class="DeckButtonLayout" TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style Class="ButtonLabel" TargetType="Label">
+            <Style Class="DeckButton" TargetType="Button">
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style Class="DeckButtonLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalTextAlignment" Value="Start" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
@@ -31,168 +40,220 @@
     <!--  TODO local style  -->
 
     <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*,*,*,*,*">
+
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="0"
-            StyleClass="ButtonLayout"
-            VerticalOptions="Center">
+            StyleClass="DeckButtonLayout">
             <Button
                 BackgroundColor="{StaticResource RedDefault}"
-                CornerRadius="8"
-                FontSize="20"
-                HeightRequest="80"
+                StyleClass="DeckButton"
                 Text="100%"
-                WidthRequest="80" />
-            <Label StyleClass="ButtonLabel" Text="test" />
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
         </VerticalStackLayout>
-        <Button
+        <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="1"
-            BackgroundColor="{StaticResource PinkDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource PinkDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="2"
-            BackgroundColor="{StaticResource PurpleDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource PurpleDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="3"
-            BackgroundColor="{StaticResource DeepPurpleDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource DeepPurpleDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
 
-        <Button
+        <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="0"
-            BackgroundColor="{StaticResource IndigoDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource IndigoDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="1"
-            BackgroundColor="{StaticResource BlueDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource BlueDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="2"
-            BackgroundColor="{StaticResource LightBlueDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource LightBlueDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="3"
-            BackgroundColor="{StaticResource CyanDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource CyanDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
 
-        <Button
+        <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="0"
-            BackgroundColor="{StaticResource TealDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource TealDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="1"
-            BackgroundColor="{StaticResource GreenDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource GreenDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="2"
-            BackgroundColor="{StaticResource LightGreenDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource LightGreenDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="3"
-            BackgroundColor="{StaticResource LimeDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource LimeDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
 
-        <Button
+        <VerticalStackLayout
             Grid.Row="3"
             Grid.Column="0"
-            BackgroundColor="{StaticResource YellowDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource YellowDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="3"
             Grid.Column="1"
-            BackgroundColor="{StaticResource AmberDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource AmberDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="3"
             Grid.Column="2"
-            BackgroundColor="{StaticResource OrangeDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource OrangeDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="3"
             Grid.Column="3"
-            BackgroundColor="{StaticResource DeepOrangeDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource DeepOrangeDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
 
-        <Button
+        <VerticalStackLayout
             Grid.Row="4"
             Grid.Column="0"
-            BackgroundColor="{StaticResource BrownDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource BrownDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="4"
             Grid.Column="1"
-            BackgroundColor="{StaticResource BlueGrayDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
-        <Button
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource BlueGrayDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
             Grid.Row="4"
             Grid.Column="2"
-            BackgroundColor="{StaticResource GrayDefault}"
-            FontSize="28"
-            HeightRequest="80"
-            Text="100"
-            WidthRequest="80" />
+            StyleClass="DeckButtonLayout">
+            <Button
+                BackgroundColor="{StaticResource GrayDefault}"
+                StyleClass="DeckButton"
+                Text="100%"
+                TextColor="White" />
+            <Label StyleClass="DeckButtonLabel" Text="test" />
+        </VerticalStackLayout>
 
         <Button
             Grid.Row="5"

@@ -1,4 +1,7 @@
-﻿namespace WorkButton;
+﻿using Android.Views;
+using TextAlignment = Microsoft.Maui.TextAlignment;
+
+namespace WorkButton;
 
 using Microsoft.Maui.Handlers;
 
@@ -83,22 +86,35 @@ internal static class AppHostBuilderExtensions
             //handler.PlatformView.VerticalAlignment = UIControlContentVerticalAlignment.Bottom;
             //handler.PlatformView.HorizontalAlignment = UIControlContentHorizontalAlignment.Left;
 #elif ANDROID
-            var horizontalFlag = button.HorizontalTextAlignment switch
-            {
-                TextAlignment.Start => Android.Views.GravityFlags.Left,
-                TextAlignment.Center => Android.Views.GravityFlags.CenterHorizontal,
-                TextAlignment.End => Android.Views.GravityFlags.Right,
-                _ => Android.Views.GravityFlags.Center
-            };
-            var verticalFlag = button.VerticalTextAlignment switch
-            {
-                TextAlignment.Start => Android.Views.GravityFlags.Top,
-                TextAlignment.Center => Android.Views.GravityFlags.CenterVertical,
-                TextAlignment.End => Android.Views.GravityFlags.Bottom,
-                _ => Android.Views.GravityFlags.Center
-            };
-            handler.PlatformView.Gravity = horizontalFlag | verticalFlag;
+            handler.PlatformView.Gravity = button.HorizontalTextAlignment.ToHorizontalGravity() |
+                                           button.VerticalTextAlignment.ToVerticalGravity();
 #endif
         }
     }
 }
+
+public static class AlignmentExtensions
+{
+    public static GravityFlags ToHorizontalGravity(this TextAlignment alignment)
+    {
+        return alignment switch
+        {
+            TextAlignment.Center => GravityFlags.CenterHorizontal,
+            TextAlignment.Start => GravityFlags.Right,
+            TextAlignment.End => GravityFlags.Left,
+            _ => GravityFlags.Center
+        };
+    }
+
+    public static GravityFlags ToVerticalGravity(this TextAlignment alignment)
+    {
+        return alignment switch
+        {
+            TextAlignment.Center => GravityFlags.CenterVertical,
+            TextAlignment.Start => GravityFlags.Top,
+            TextAlignment.End => GravityFlags.Bottom,
+            _ => GravityFlags.Center
+        };
+    }
+}
+
