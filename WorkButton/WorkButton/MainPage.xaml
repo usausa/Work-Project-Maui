@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:workButton="clr-namespace:WorkButton">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="8">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="4">
 
         <Button
             x:Name="MultiLineButton"
@@ -24,13 +24,6 @@
 
         <workButton:ButtonEx
             Grid.Row="2"
-            FontAttributes="Bold"
-            FontSize="24"
-            HeightRequest="80"
-            Text="Default" />
-
-        <workButton:ButtonEx
-            Grid.Row="3"
             workButton:Buttons.EnableTextAlignment="True"
             workButton:Buttons.HorizontalTextAlignment="Justify"
             workButton:Buttons.VerticalTextAlignment="Justify"
@@ -40,7 +33,7 @@
             Text="Justify" />
 
         <workButton:ButtonEx
-            Grid.Row="4"
+            Grid.Row="3"
             workButton:Buttons.EnableTextAlignment="True"
             workButton:Buttons.HorizontalTextAlignment="Center"
             workButton:Buttons.VerticalTextAlignment="Center"
@@ -50,7 +43,7 @@
             Text="Center" />
 
         <workButton:ButtonEx
-            Grid.Row="5"
+            Grid.Row="4"
             workButton:Buttons.EnableTextAlignment="True"
             workButton:Buttons.HorizontalTextAlignment="Start"
             workButton:Buttons.VerticalTextAlignment="End"
@@ -60,7 +53,7 @@
             Text="Left" />
 
         <workButton:ButtonEx
-            Grid.Row="6"
+            Grid.Row="5"
             workButton:Buttons.EnableTextAlignment="True"
             workButton:Buttons.HorizontalTextAlignment="End"
             workButton:Buttons.VerticalTextAlignment="Start"
@@ -70,16 +63,44 @@
             Text="Right" />
 
         <ImageButton
-            Grid.Row="7"
-            BackgroundColor="DeepSkyBlue"
+            Grid.Row="6"
+            CornerRadius="8"
             HeightRequest="80"
-            Source="play_circle.svg" />
+            Source="play_circle.svg">
+            <ImageButton.Background>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0.1" Color="#1FA2FF" />
+                    <GradientStop Offset="1.0" Color="#12D8FA" />
+                </LinearGradientBrush>
+            </ImageButton.Background>
+        </ImageButton>
 
         <ImageButton
-            Grid.Row="8"
-            BackgroundColor="DeepSkyBlue"
+            Grid.Row="7"
+            CornerRadius="8"
             HeightRequest="80"
-            Source="stop_circle2.png" />
+            Source="stop_circle2.png">
+            <ImageButton.Background>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0.1" Color="#1FA2FF" />
+                    <GradientStop Offset="1.0" Color="#12D8FA" />
+                </LinearGradientBrush>
+            </ImageButton.Background>
+        </ImageButton>
+
+        <ImageButton
+            x:Name="SourceButton"
+            Grid.Row="8"
+            CornerRadius="8"
+            HeightRequest="80"
+            Clicked="SourceButton_OnClicked">
+            <ImageButton.Background>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0.1" Color="#1FA2FF" />
+                    <GradientStop Offset="1.0" Color="#12D8FA" />
+                </LinearGradientBrush>
+            </ImageButton.Background>
+        </ImageButton>
 
     </Grid>
 
