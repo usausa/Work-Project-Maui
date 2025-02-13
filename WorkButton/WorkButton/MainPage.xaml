@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:workButton="clr-namespace:WorkButton">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="8">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="8">
 
         <Button
             x:Name="MultiLineButton"
@@ -69,7 +69,17 @@
             HeightRequest="80"
             Text="Right" />
 
-        <Label HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
+        <ImageButton
+            Grid.Row="7"
+            BackgroundColor="DeepSkyBlue"
+            HeightRequest="80"
+            Source="play_circle.svg" />
+
+        <ImageButton
+            Grid.Row="8"
+            BackgroundColor="DeepSkyBlue"
+            HeightRequest="80"
+            Source="stop_circle2.png" />
 
     </Grid>
 
