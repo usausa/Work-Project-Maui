@@ -19,6 +19,13 @@
                 <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style Class="DeckButton" TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="8" />
             </Style>
 
             <Style Class="DeckButtonLabel" TargetType="Label">
@@ -38,98 +45,137 @@
             Grid.Row="0"
             Grid.Column="0"
             StyleClass="DeckButtonLayout">
-            <Border
-                Padding="0"
-                HorizontalOptions="Center"
-                Stroke="{StaticResource GrayDarken3}"
-                StrokeThickness="3">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="8" />
-                </Border.StrokeShape>
-                <Button
-                    BackgroundColor="{StaticResource RedDefault}"
-                    StyleClass="DeckButton"
-                    Text="Color"
-                    TextColor="White" />
-            </Border>
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+            <Button
+                StyleClass="DeckButton"
+                Text="Color"
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource RedDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="1"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource PinkDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource PinkDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="2"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource PurpleDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource PurpleDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource PurpleAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="3"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource DeepPurpleDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource DeepPurpleDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource DeepPurpleAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="4"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource IndigoDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource IndigoDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource IndigoAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="5"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource BlueDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource BlueDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource BlueAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="6"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource LightBlueDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource LightBlueDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource LightBlueAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="0"
             Grid.Column="7"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource CyanDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource CyanDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource CyanAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
 
         <VerticalStackLayout
@@ -137,122 +183,314 @@
             Grid.Column="0"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource TealDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource TealDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource TealAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="1"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource GreenDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource GreenDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource GreenAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="2"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource LightGreenDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource LightGreenDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource LightGreenAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="3"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource LimeDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource LimeDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource LimeAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="4"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource YellowDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource YellowDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource YellowAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="5"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource AmberDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource AmberDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource AmberAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="6"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource OrangeDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource OrangeDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource OrangeAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="1"
             Grid.Column="7"
             StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource DeepOrangeDefault}"
                 StyleClass="DeckButton"
                 Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource DeepOrangeDefault}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource DeepOrangeAccent1}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Test" />
         </VerticalStackLayout>
 
         <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="0"
             StyleClass="DeckButtonLayout">
-            <Button
-                BackgroundColor="{StaticResource BrownDefault}"
-                StyleClass="DeckButton"
-                Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+            <ImageButton Source="folder.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#ffb347" />
+                        <GradientStop Offset="1.0" Color="#ffcc33" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Folder1" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="1"
             StyleClass="DeckButtonLayout">
-            <Button
-                BackgroundColor="{StaticResource BlueGrayDefault}"
-                StyleClass="DeckButton"
-                Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+            <ImageButton Source="folder.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#ffb347" />
+                        <GradientStop Offset="1.0" Color="#ffcc33" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Folder2" />
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Row="2"
             Grid.Column="2"
             StyleClass="DeckButtonLayout">
+            <ImageButton Source="music_note.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#fc00ff" />
+                        <GradientStop Offset="1.0" Color="#00dbde" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Sound1" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="2"
+            Grid.Column="3"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="music_note.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#fc00ff" />
+                        <GradientStop Offset="1.0" Color="#00dbde" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Sound2" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="2"
+            Grid.Column="5"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="timer.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#1FA2FF" />
+                        <GradientStop Offset="1.0" Color="#12D8FA" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="00:30" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="2"
+            Grid.Column="6"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="lock.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#A770EF" />
+                        <GradientStop Offset="1.0" Color="#CF8BF3" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Lock" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="2"
+            Grid.Column="7"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="settings.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#0cebeb" />
+                        <GradientStop Offset="1.0" Color="#20e3b2" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Settings" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="3"
+            Grid.Column="0"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="volume_off.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#f46b45" />
+                        <GradientStop Offset="1.0" Color="#eea849" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Mute" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="3"
+            Grid.Column="1"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="volume_up.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#f46b45" />
+                        <GradientStop Offset="1.0" Color="#eea849" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Volume up" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="3"
+            Grid.Column="2"
+            StyleClass="DeckButtonLayout">
+            <ImageButton Source="volume_down.svg" StyleClass="DeckButton">
+                <ImageButton.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="#f46b45" />
+                        <GradientStop Offset="1.0" Color="#eea849" />
+                    </LinearGradientBrush>
+                </ImageButton.Background>
+            </ImageButton>
+            <Label StyleClass="DeckButtonLabel" Text="Volume down" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="3"
+            Grid.Column="6"
+            StyleClass="DeckButtonLayout">
             <Button
-                BackgroundColor="{StaticResource GrayDefault}"
+                x:Name="CpuButton"
                 StyleClass="DeckButton"
-                Text="Color"
-                TextColor="White" />
-            <Label StyleClass="DeckButtonLabel" Text="color" />
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource GrayDarken2}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource GrayDarken3}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="CPU" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Row="3"
+            Grid.Column="7"
+            StyleClass="DeckButtonLayout">
+            <Button
+                x:Name="MemoryButton"
+                StyleClass="DeckButton"
+                TextColor="White">
+                <Button.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Offset="0.1" Color="{StaticResource GrayDarken2}" />
+                        <GradientStop Offset="1.0" Color="{StaticResource GrayDarken3}" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Label StyleClass="DeckButtonLabel" Text="Memory" />
         </VerticalStackLayout>
 
     </Grid>
