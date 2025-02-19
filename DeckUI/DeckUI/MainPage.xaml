@@ -3,6 +3,8 @@
     x:Class="DeckUI.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:DeckUI"
+    x:DataType="app:DeckModel"
     BackgroundColor="{StaticResource GrayDarken4}">
 
     <!--  ReSharper disable Xaml.RedundantResource  -->
@@ -35,10 +37,58 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
+            <DataTemplate x:Key="TextTemplate" x:DataType="app:ButtonModel">
+                <VerticalStackLayout
+                    Grid.Row="{Binding Row}"
+                    Grid.Column="{Binding Column}"
+                    StyleClass="DeckButtonLayout">
+                    <Button
+                        StyleClass="DeckButton"
+                        Text="{Binding Text}"
+                        TextColor="{Binding TextColor}">
+                        <Button.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <Label StyleClass="DeckButtonLabel" Text="{Binding Label}" />
+                </VerticalStackLayout>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ImageTemplate" x:DataType="app:ButtonModel">
+                <VerticalStackLayout
+                    Grid.Row="{Binding Row}"
+                    Grid.Column="{Binding Column}"
+                    StyleClass="DeckButtonLayout">
+                    <ImageButton Source="{Binding Image}" StyleClass="DeckButton">
+                        <ImageButton.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                            </LinearGradientBrush>
+                        </ImageButton.Background>
+                    </ImageButton>
+                    <Label StyleClass="DeckButtonLabel" Text="{Binding Label}" />
+                </VerticalStackLayout>
+            </DataTemplate>
+
+            <app:ButtonDataTemplateSelector
+                x:Key="ButtonDataTemplateSelector"
+                ImageTemplate="{StaticResource ImageTemplate}"
+                TextTemplate="{StaticResource TextTemplate}" />
+
         </ResourceDictionary>
     </ContentPage.Resources>
     <!--  ReSharper restore Xaml.RedundantResource  -->
 
+    <Grid
+        x:Name="DeckGrid"
+        BindableLayout.ItemTemplateSelector="{StaticResource ButtonDataTemplateSelector}"
+        BindableLayout.ItemsSource="{Binding Buttons}" />
+
+    <!--
     <Grid ColumnDefinitions="*,*,*,*,*,*,*,*" RowDefinitions="*,*,*,*">
 
         <VerticalStackLayout
@@ -494,5 +544,6 @@
         </VerticalStackLayout>
 
     </Grid>
+    -->
 
 </ContentPage>
