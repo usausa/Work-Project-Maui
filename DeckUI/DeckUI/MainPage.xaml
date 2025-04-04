@@ -10,6 +10,7 @@
     <!--  ReSharper disable Xaml.RedundantResource  -->
     <ContentPage.Resources>
         <ResourceDictionary>
+            <app:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
 
             <Style Class="DeckButtonLayout" TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -62,7 +63,7 @@
                     Grid.Row="{Binding Row}"
                     Grid.Column="{Binding Column}"
                     StyleClass="DeckButtonLayout">
-                    <ImageButton Source="{Binding Image}" StyleClass="DeckButton">
+                    <ImageButton Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}" StyleClass="DeckButton">
                         <ImageButton.Background>
                             <LinearGradientBrush>
                                 <GradientStop Offset="0.1" Color="{Binding BackColor1}" />

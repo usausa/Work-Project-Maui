@@ -26,6 +26,11 @@ namespace DeckUI
         {
             InitializeComponent();
 
+            _ = LazyInitAsync();
+        }
+
+        private async Task LazyInitAsync()
+        {
             // https://fonts.google.com/icons
             // https://gradientbuttons.colorion.co/
 
@@ -63,7 +68,7 @@ namespace DeckUI
                 Column = 0,
                 ButtonType = ButtonType.Image,
                 Label = "Folder1",
-                Image = "folder.svg",
+                Image = "folder.png",
                 BackColor1 = Color.FromArgb("#ffb347"),
                 BackColor2 = Color.FromArgb("#ffcc33")
             });
@@ -73,7 +78,7 @@ namespace DeckUI
                 Column = 1,
                 ButtonType = ButtonType.Image,
                 Label = "Folder2",
-                Image = "folder.svg",
+                Image = "folder.png",
                 BackColor1 = Color.FromArgb("#ffb347"),
                 BackColor2 = Color.FromArgb("#ffcc33")
             });
@@ -83,7 +88,7 @@ namespace DeckUI
                 Column = 2,
                 ButtonType = ButtonType.Image,
                 Label = "Sound1",
-                Image = "music_note.svg",
+                Image = "music_note.png",
                 BackColor1 = Color.FromArgb("#fc00ff"),
                 BackColor2 = Color.FromArgb("#00dbde")
             });
@@ -93,7 +98,7 @@ namespace DeckUI
                 Column = 3,
                 ButtonType = ButtonType.Image,
                 Label = "Sound2",
-                Image = "music_note.svg",
+                Image = "music_note.png",
                 BackColor1 = Color.FromArgb("#fc00ff"),
                 BackColor2 = Color.FromArgb("#00dbde")
             });
@@ -104,7 +109,7 @@ namespace DeckUI
                 Column = 5,
                 ButtonType = ButtonType.Image,
                 Label = "00:30",
-                Image = "timer.svg",
+                Image = "timer.png",
                 BackColor1 = Color.FromArgb("#1fa2ff"),
                 BackColor2 = Color.FromArgb("#12d8fa")
             });
@@ -114,7 +119,7 @@ namespace DeckUI
                 Column = 6,
                 ButtonType = ButtonType.Image,
                 Label = "Lock",
-                Image = "lock.svg",
+                Image = "lock.png",
                 BackColor1 = Color.FromArgb("#a770ef"),
                 BackColor2 = Color.FromArgb("#cf8bf3")
             });
@@ -124,7 +129,7 @@ namespace DeckUI
                 Column = 7,
                 ButtonType = ButtonType.Image,
                 Label = "Settings",
-                Image = "settings.svg",
+                Image = "settings.png",
                 BackColor1 = Color.FromArgb("#0cebeb"),
                 BackColor2 = Color.FromArgb("#20e3b2")
             });
@@ -136,7 +141,7 @@ namespace DeckUI
                 Column = 0,
                 ButtonType = ButtonType.Image,
                 Label = "Volume up",
-                Image = "volume_off.svg",
+                Image = "volume_off.png",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849")
             });
@@ -146,7 +151,7 @@ namespace DeckUI
                 Column = 1,
                 ButtonType = ButtonType.Image,
                 Label = "Mute",
-                Image = "volume_up.svg",
+                Image = "volume_up.png",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849")
             });
@@ -156,7 +161,7 @@ namespace DeckUI
                 Column = 2,
                 ButtonType = ButtonType.Image,
                 Label = "Volume down",
-                Image = "volume_down.svg",
+                Image = "volume_down.png",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849")
             });
@@ -181,6 +186,17 @@ namespace DeckUI
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242")
             });
+
+            foreach (var button in model.Buttons)
+            {
+                if (!String.IsNullOrEmpty(button.Image))
+                {
+                    await using var stream = await FileSystem.OpenAppPackageFileAsync(button.Image);
+                    using var memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream);
+                    button.ImageBytes = memoryStream.ToArray();
+                }
+            }
 
             BindingContext = model;
         }

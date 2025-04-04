@@ -27,6 +27,8 @@ public class ButtonModel
     public Color BackColor1 { get; set; } = Colors.Black;
 
     public Color BackColor2 { get; set; } = Colors.Black;
+
+    public byte[]? ImageBytes { get; set; }
 }
 
 public class DeckModel
