@@ -85,10 +85,11 @@
     <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.6.0" />
     <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.6.0" />
     <PackageReference Include="Usa.Smart.Mapper" Version="0.8.2" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.10.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.10.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.10.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.10.0" />
+    <PackageReference Include="Usa.Smart.Mvvm" Version="1.2.1" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.11.0" />
     <PackageReference Include="Usa.Smart.Reactive" Version="2.4.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.6.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.1" />
@@ -98,7 +99,7 @@
     <ProjectReference Include="..\..\MauiComponents\MauiComponents.Resolver\MauiComponents.Resolver.csproj" />
     <ProjectReference Include="..\..\MauiComponents\MauiComponents.Generator\MauiComponents.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
-    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Reactive\Smart.Maui.Reactive.csproj" />
+    <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 

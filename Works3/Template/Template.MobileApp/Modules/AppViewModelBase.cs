@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules;
 
 using Template.MobileApp.Shell;
 
-public abstract class AppViewModelBase : ViewModelBase, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
+public abstract class AppViewModelBase : ExtendViewModelBase, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
 {
     public INavigator Navigator { get; set; } = default!;
 

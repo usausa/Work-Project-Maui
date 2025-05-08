@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Modules;
 
-public abstract class AppDialogViewModelBase : ViewModelBase
+[ObservableGeneratorOption(Reactive = true, ViewModel = true)]
+public abstract class AppDialogViewModelBase : ExtendViewModelBase
 {
     protected override void Dispose(bool disposing)
     {

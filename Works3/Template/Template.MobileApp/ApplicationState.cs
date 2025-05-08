@@ -31,7 +31,7 @@ public static class ApplicationStateExtensions
         state == NetworkState.ConnectedHighSpeed || state == NetworkState.Connected;
 }
 
-public sealed class ApplicationState : BusyState, IDisposable
+public sealed partial class ApplicationState : BusyState, IDisposable
 {
     private readonly ILogger<ApplicationState> log;
 
@@ -39,43 +39,25 @@ public sealed class ApplicationState : BusyState, IDisposable
 
     // Battery
 
-    public double BatteryChargeLevel
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial double BatteryChargeLevel { get; private set; }
 
-    public BatteryState BatteryState
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial BatteryState BatteryState { get; private set; }
 
-    public BatteryPowerSource BatteryPowerSource
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial BatteryPowerSource BatteryPowerSource { get; private set; }
 
     // Connectivity
 
-    public NetworkProfile NetworkProfile
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkProfile NetworkProfile { get; private set; }
 
-    public NetworkAccess NetworkAccess
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkAccess NetworkAccess { get; private set; }
 
-    public NetworkState NetworkState
-    {
-        get;
-        private set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial NetworkState NetworkState { get; private set; }
 
     public ApplicationState(
         ILogger<ApplicationState> log,
