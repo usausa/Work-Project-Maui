@@ -3,7 +3,7 @@ namespace Template.MobileApp;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
-public class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
+public partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
     private readonly IScreen screen;
 
@@ -11,21 +11,32 @@ public class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecyc
 
     public INavigator Navigator { get; }
 
-    public NotificationValue<string> Title { get; } = new();
+    [ObservableProperty]
+    public partial string Title { get; set; } = default!;
 
-    public NotificationValue<bool> HeaderVisible { get; } = new();
+    [ObservableProperty]
+    public partial bool HeaderVisible { get; set; }
 
-    public NotificationValue<bool> FunctionVisible { get; } = new();
+    [ObservableProperty]
+    public partial bool FunctionVisible { get; set; }
 
-    public NotificationValue<string> Function1Text { get; } = new();
-    public NotificationValue<string> Function2Text { get; } = new();
-    public NotificationValue<string> Function3Text { get; } = new();
-    public NotificationValue<string> Function4Text { get; } = new();
+    [ObservableProperty]
+    public partial string Function1Text { get; set; } = default!;
+    [ObservableProperty]
+    public partial string Function2Text { get; set; } = default!;
+    [ObservableProperty]
+    public partial string Function3Text { get; set; } = default!;
+    [ObservableProperty]
+    public partial string Function4Text { get; set; } = default!;
 
-    public NotificationValue<bool> Function1Enabled { get; } = new();
-    public NotificationValue<bool> Function2Enabled { get; } = new();
-    public NotificationValue<bool> Function3Enabled { get; } = new();
-    public NotificationValue<bool> Function4Enabled { get; } = new();
+    [ObservableProperty]
+    public partial bool Function1Enabled { get; set; }
+    [ObservableProperty]
+    public partial bool Function2Enabled { get; set; }
+    [ObservableProperty]
+    public partial bool Function3Enabled { get; set; }
+    [ObservableProperty]
+    public partial bool Function4Enabled { get; set; }
 
     public ICommand Function1Command { get; }
     public ICommand Function2Command { get; }
@@ -50,20 +61,20 @@ public class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecyc
 
         Function1Command = MakeAsyncCommand(
                 () => Navigator.NotifyAsync(ShellEvent.Function1),
-                () => Function1Enabled.Value)
-            .Observe(Function1Enabled);
+                () => Function1Enabled)
+            .Observe(this, nameof(Function1Enabled));
         Function2Command = MakeAsyncCommand(
                 () => Navigator.NotifyAsync(ShellEvent.Function2),
-                () => Function2Enabled.Value)
-            .Observe(Function2Enabled);
+                () => Function2Enabled)
+            .Observe(this, nameof(Function2Enabled));
         Function3Command = MakeAsyncCommand(
                 () => Navigator.NotifyAsync(ShellEvent.Function3),
-                () => Function3Enabled.Value)
-            .Observe(Function3Enabled);
+                () => Function3Enabled)
+            .Observe(this, nameof(Function3Enabled));
         Function4Command = MakeAsyncCommand(
                 () => Navigator.NotifyAsync(ShellEvent.Function4),
-                () => Function4Enabled.Value)
-            .Observe(Function4Enabled);
+                () => Function4Enabled)
+            .Observe(this, nameof(Function4Enabled));
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda

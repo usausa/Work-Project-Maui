@@ -136,31 +136,31 @@ public static class ShellProperty
     {
         if (bindable is null)
         {
-            shell.Title.Value = string.Empty;
-            shell.HeaderVisible.Value = true;
-            shell.FunctionVisible.Value = false;
-            shell.Function1Text.Value = string.Empty;
-            shell.Function2Text.Value = string.Empty;
-            shell.Function3Text.Value = string.Empty;
-            shell.Function4Text.Value = string.Empty;
-            shell.Function1Enabled.Value = false;
-            shell.Function2Enabled.Value = false;
-            shell.Function3Enabled.Value = false;
-            shell.Function4Enabled.Value = false;
+            shell.Title = string.Empty;
+            shell.HeaderVisible = true;
+            shell.FunctionVisible = false;
+            shell.Function1Text = string.Empty;
+            shell.Function2Text = string.Empty;
+            shell.Function3Text = string.Empty;
+            shell.Function4Text = string.Empty;
+            shell.Function1Enabled = false;
+            shell.Function2Enabled = false;
+            shell.Function3Enabled = false;
+            shell.Function4Enabled = false;
         }
         else
         {
-            shell.Title.Value = GetTitle(bindable);
-            shell.HeaderVisible.Value = GetHeaderVisible(bindable);
-            shell.FunctionVisible.Value = GetFunctionVisible(bindable);
-            shell.Function1Text.Value = GetFunction1Text(bindable);
-            shell.Function2Text.Value = GetFunction2Text(bindable);
-            shell.Function3Text.Value = GetFunction3Text(bindable);
-            shell.Function4Text.Value = GetFunction4Text(bindable);
-            shell.Function1Enabled.Value = GetFunction1Enabled(bindable);
-            shell.Function2Enabled.Value = GetFunction2Enabled(bindable);
-            shell.Function3Enabled.Value = GetFunction3Enabled(bindable);
-            shell.Function4Enabled.Value = GetFunction4Enabled(bindable);
+            shell.Title = GetTitle(bindable);
+            shell.HeaderVisible = GetHeaderVisible(bindable);
+            shell.FunctionVisible = GetFunctionVisible(bindable);
+            shell.Function1Text = GetFunction1Text(bindable);
+            shell.Function2Text = GetFunction2Text(bindable);
+            shell.Function3Text = GetFunction3Text(bindable);
+            shell.Function4Text = GetFunction4Text(bindable);
+            shell.Function1Enabled = GetFunction1Enabled(bindable);
+            shell.Function2Enabled = GetFunction2Enabled(bindable);
+            shell.Function3Enabled = GetFunction3Enabled(bindable);
+            shell.Function4Enabled = GetFunction4Enabled(bindable);
         }
     }
 }
