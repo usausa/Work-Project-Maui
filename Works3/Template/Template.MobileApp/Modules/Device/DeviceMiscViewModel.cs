@@ -2,43 +2,42 @@ namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components.Storage;
 
-public class DeviceMiscViewModel : AppViewModelBase
+public partial class DeviceMiscViewModel : AppViewModelBase
 {
     private readonly IScreen screen;
 
-    public ICommand KeepScreenOnCommand { get; }
-    public ICommand KeepScreenOffCommand { get; }
+    public IObserveCommand KeepScreenOnCommand { get; }
+    public IObserveCommand KeepScreenOffCommand { get; }
 
-    public ICommand OrientationPortraitCommand { get; }
-    public ICommand OrientationLandscapeCommand { get; }
+    public IObserveCommand OrientationPortraitCommand { get; }
+    public IObserveCommand OrientationLandscapeCommand { get; }
 
-    public ICommand VibrateCommand { get; }
-    public ICommand VibrateCancelCommand { get; }
+    public IObserveCommand VibrateCommand { get; }
+    public IObserveCommand VibrateCancelCommand { get; }
 
-    public ICommand FeedbackClickCommand { get; }
-    public ICommand FeedbackLongPressCommand { get; }
+    public IObserveCommand FeedbackClickCommand { get; }
+    public IObserveCommand FeedbackLongPressCommand { get; }
 
-    public ICommand LightOnCommand { get; }
-    public ICommand LightOffCommand { get; }
+    public IObserveCommand LightOnCommand { get; }
+    public IObserveCommand LightOffCommand { get; }
 
-    public ICommand ScreenshotCommand { get; }
+    public IObserveCommand ScreenshotCommand { get; }
 
-    public ICommand SpeakCommand { get; }
-    public ICommand SpeakCancelCommand { get; }
+    public IObserveCommand SpeakCommand { get; }
+    public IObserveCommand SpeakCancelCommand { get; }
 
-    public ICommand RecognizeCommand { get; }
+    public IObserveCommand RecognizeCommand { get; }
 
-    public NotificationValue<string> RecognizeText { get; } = new();
+    [ObservableProperty]
+    public partial string RecognizeText { get; set; } = string.Empty;
 
     public DeviceMiscViewModel(
-        ApplicationState applicationState,
         IScreen screen,
         IStorageManager storage,
         ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
         IFlashlight flashlight)
-        : base(applicationState)
     {
         this.screen = screen;
 

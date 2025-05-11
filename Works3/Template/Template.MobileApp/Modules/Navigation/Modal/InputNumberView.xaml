@@ -17,7 +17,7 @@
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <!-- title -->
         <Label Style="{StaticResource DialogTitleLabel}"
-               Text="{Binding Title.Value}" />
+               Text="{Binding Title}" />
 
         <!-- display -->
         <Label Style="{StaticResource LeftInputLabel}"

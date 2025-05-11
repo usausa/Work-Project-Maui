@@ -10,14 +10,12 @@ public class EditListViewModel : AppViewModelBase
 
     public ObservableCollection<WorkEntity> Items { get; } = [];
 
-    public ICommand SelectCommand { get; }
-    public ICommand DeleteCommand { get; }
+    public IObserveCommand SelectCommand { get; }
+    public IObserveCommand DeleteCommand { get; }
 
     public EditListViewModel(
-        ApplicationState applicationState,
         IDialog dialog,
         DataService dataService)
-        : base(applicationState)
     {
         this.dialog = dialog;
         this.dataService = dataService;

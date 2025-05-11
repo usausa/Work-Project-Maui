@@ -8,9 +8,7 @@ public class KeyEntryViewModel : AppViewModelBase
     public EntryController Input2 { get; }
     public EntryController Input3 { get; }
 
-    public KeyEntryViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public KeyEntryViewModel()
     {
         Input1 = new EntryController(MakeDelegateCommand<EntryCompleteEvent>(Input1Complete));
         Input2 = new EntryController(MakeDelegateCommand<EntryCompleteEvent>(Input2Complete));

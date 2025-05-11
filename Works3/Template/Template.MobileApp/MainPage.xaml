@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
+             xmlns:si="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
              xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
+             xmlns:sn="clr-namespace:Smart.Navigation;assembly=Smart.Navigation.Maui"
              xmlns:local="clr-namespace:Template.MobileApp"
              xmlns:input="clr-namespace:Template.MobileApp.Input"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:si="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
-             IsEnabled="{Binding ApplicationState.IsBusy, Converter={StaticResource ReverseConverter}}"
-             IsBusy="{Binding ApplicationState.IsBusy}">
+             IsEnabled="{Binding BusyState.IsBusy, Converter={StaticResource ReverseConverter}}"
+             IsBusy="{Binding BusyState.IsBusy}">
 
     <ContentPage.Behaviors>
         <si:AppLifecycleBehavior />

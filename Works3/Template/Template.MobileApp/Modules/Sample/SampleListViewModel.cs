@@ -2,11 +2,9 @@ namespace Template.MobileApp.Modules.Sample;
 
 public class SampleListViewModel : AppViewModelBase
 {
-    public ICommand ForwardCommand { get; }
+    public IObserveCommand ForwardCommand { get; }
 
-    public SampleListViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public SampleListViewModel()
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }

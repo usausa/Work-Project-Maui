@@ -7,8 +7,6 @@ public partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAp
 {
     private readonly IScreen screen;
 
-    public ApplicationState ApplicationState { get; }
-
     public INavigator Navigator { get; }
 
     [ObservableProperty]
@@ -38,43 +36,28 @@ public partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAp
     [ObservableProperty]
     public partial bool Function4Enabled { get; set; }
 
-    public ICommand Function1Command { get; }
-    public ICommand Function2Command { get; }
-    public ICommand Function3Command { get; }
-    public ICommand Function4Command { get; }
+    public IObserveCommand Function1Command { get; }
+    public IObserveCommand Function2Command { get; }
+    public IObserveCommand Function3Command { get; }
+    public IObserveCommand Function4Command { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
 
     public MainPageViewModel(
-        ApplicationState applicationState,
         ILogger<MainPageViewModel> log,
         INavigator navigator,
         IScreen screen,
         IDialog dialog)
-        : base(applicationState)
     {
         this.screen = screen;
-        ApplicationState = applicationState;
         Navigator = navigator;
 
-        Function1Command = MakeAsyncCommand(
-                () => Navigator.NotifyAsync(ShellEvent.Function1),
-                () => Function1Enabled)
-            .Observe(this, nameof(Function1Enabled));
-        Function2Command = MakeAsyncCommand(
-                () => Navigator.NotifyAsync(ShellEvent.Function2),
-                () => Function2Enabled)
-            .Observe(this, nameof(Function2Enabled));
-        Function3Command = MakeAsyncCommand(
-                () => Navigator.NotifyAsync(ShellEvent.Function3),
-                () => Function3Enabled)
-            .Observe(this, nameof(Function3Enabled));
-        Function4Command = MakeAsyncCommand(
-                () => Navigator.NotifyAsync(ShellEvent.Function4),
-                () => Function4Enabled)
-            .Observe(this, nameof(Function4Enabled));
+        Function1Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function1), () => Function1Enabled);
+        Function2Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function2), () => Function2Enabled);
+        Function3Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function3), () => Function3Enabled);
+        Function4Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function4), () => Function4Enabled);
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda

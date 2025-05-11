@@ -16,32 +16,32 @@
         <Label Style="{StaticResource GroupLabel}"
                Text="Accelerometer" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding AccelerationValue.Value}" />
+               Text="{Binding AccelerationValue}" />
 
         <Label Style="{StaticResource GroupLabel}"
                Text="Barometer" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding BarometerValue.Value}" />
+               Text="{Binding BarometerValue}" />
 
         <Label Style="{StaticResource GroupLabel}"
                Text="Magnetic" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding MagneticValue.Value}" />
+               Text="{Binding MagneticValue}" />
 
         <Label Style="{StaticResource GroupLabel}"
                Text="Gyroscope" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding GyroscopeValue.Value}" />
+               Text="{Binding GyroscopeValue}" />
 
         <Label Style="{StaticResource GroupLabel}"
                Text="Magnetometer" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding MagnetometerValue.Value}" />
+               Text="{Binding MagnetometerValue}" />
 
         <Label Style="{StaticResource GroupLabel}"
                Text="Orientation" />
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding OrientationValue.Value}" />
+               Text="{Binding OrientationValue}" />
 
     </VerticalStackLayout>
 

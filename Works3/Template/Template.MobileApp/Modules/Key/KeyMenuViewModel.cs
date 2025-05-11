@@ -2,11 +2,9 @@ namespace Template.MobileApp.Modules.Key;
 
 public class KeyMenuViewModel : AppViewModelBase
 {
-    public ICommand ForwardCommand { get; }
+    public IObserveCommand ForwardCommand { get; }
 
-    public KeyMenuViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public KeyMenuViewModel()
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
     }

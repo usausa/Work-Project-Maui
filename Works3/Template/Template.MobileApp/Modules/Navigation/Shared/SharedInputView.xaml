@@ -14,7 +14,7 @@
              shell:ShellProperty.Function4Enabled="True">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Entry Text="{Binding No.Value}"
+        <Entry Text="{Binding No}"
                Placeholder="Data1" />
     </VerticalStackLayout>
 

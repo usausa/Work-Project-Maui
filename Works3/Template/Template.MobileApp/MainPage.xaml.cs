@@ -11,7 +11,7 @@ public partial class MainPage
 
     protected override bool OnBackButtonPressed()
     {
-        if ((BindingContext is MainPageViewModel context) && !context.ApplicationState.IsBusy)
+        if (BindingContext is MainPageViewModel { BusyState.IsBusy: false } context)
         {
             context.Navigator.NotifyAsync(ShellEvent.Back);
         }

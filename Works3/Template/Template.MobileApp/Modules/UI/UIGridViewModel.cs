@@ -2,9 +2,7 @@ namespace Template.MobileApp.Modules.UI;
 
 public class UIGridViewModel : AppViewModelBase
 {
-    public UIGridViewModel(
-        ApplicationState applicationState)
-        : base(applicationState)
+    public UIGridViewModel()
     {
     }
 

@@ -78,10 +78,10 @@
               ColumnDefinitions="3*,2*">
             <Label Grid.Column="0"
                    Style="{StaticResource FooterInfoLeftLabel}"
-                   Text="{Binding Flavor.Value, StringFormat='{0} flavor'}" />
+                   Text="{Binding Flavor, StringFormat='{0} flavor'}" />
             <Label Grid.Column="1"
                    Style="{StaticResource FooterInfoRightLabel}"
-                   Text="{Binding Version.Value, StringFormat='Version {0}'}" />
+                   Text="{Binding Version, StringFormat='Version {0}'}" />
         </Grid>
     </Grid>
 

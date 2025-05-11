@@ -5,9 +5,7 @@ public class NavigateCancelViewModel : AppViewModelBase
     private readonly IDialog dialog;
 
     public NavigateCancelViewModel(
-        ApplicationState applicationState,
         IDialog dialog)
-        : base(applicationState)
     {
         this.dialog = dialog;
     }

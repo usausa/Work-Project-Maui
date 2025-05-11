@@ -31,6 +31,7 @@ global using Smart;
 global using Smart.Collections.Generic;
 global using Smart.ComponentModel;
 global using Smart.Maui;
+global using Smart.Maui.Input;
 global using Smart.Maui.ViewModels;
 global using Smart.Mvvm;
 global using Smart.Mvvm.Messaging;

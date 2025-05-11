@@ -50,7 +50,7 @@
                    Text="Count" />
             <Label Grid.Row="0" Grid.Column="1"
                    Style="{StaticResource TextValueLabel}"
-                   Text="{Binding BulkDataCount.Value}" />
+                   Text="{Binding BulkDataCount}" />
         </Grid>
 
         <Grid Grid.Row="4"

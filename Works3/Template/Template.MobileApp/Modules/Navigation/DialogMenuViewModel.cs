@@ -4,22 +4,20 @@ public class DialogMenuViewModel : AppViewModelBase
 {
     private int count;
 
-    public ICommand InformationCommand { get; }
-    public ICommand ConfirmCommand { get; }
-    public ICommand Confirm3Command { get; }
-    public ICommand SelectCommand { get; }
-    public ICommand InputCommand { get; }
-    public ICommand IndicatorCommand { get; }
-    public ICommand LockCommand { get; }
-    public ICommand LoadingCommand { get; }
-    public ICommand ProgressCommand { get; }
-    public ICommand SnackbarCommand { get; }
-    public ICommand ToastCommand { get; }
+    public IObserveCommand InformationCommand { get; }
+    public IObserveCommand ConfirmCommand { get; }
+    public IObserveCommand Confirm3Command { get; }
+    public IObserveCommand SelectCommand { get; }
+    public IObserveCommand InputCommand { get; }
+    public IObserveCommand IndicatorCommand { get; }
+    public IObserveCommand LockCommand { get; }
+    public IObserveCommand LoadingCommand { get; }
+    public IObserveCommand ProgressCommand { get; }
+    public IObserveCommand SnackbarCommand { get; }
+    public IObserveCommand ToastCommand { get; }
 
     public DialogMenuViewModel(
-        ApplicationState applicationState,
         IDialog dialog)
-        : base(applicationState)
     {
         InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("Information"));
         ConfirmCommand = MakeAsyncCommand(async () =>

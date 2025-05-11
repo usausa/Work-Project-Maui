@@ -12,7 +12,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Image Source="{Binding Text.Value, Converter={StaticResource QrImageSourceConverter}}" />
+        <Image Source="{Binding Text, Converter={StaticResource QrImageSourceConverter}}" />
     </VerticalStackLayout>
 
 </ContentView>

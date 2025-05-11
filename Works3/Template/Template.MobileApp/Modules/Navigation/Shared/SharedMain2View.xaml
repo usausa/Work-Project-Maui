@@ -15,7 +15,7 @@
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <Label Style="{StaticResource TextValueLabel}"
-               Text="{Binding No.Value}" />
+               Text="{Binding No}" />
     </VerticalStackLayout>
 
 </ContentView>

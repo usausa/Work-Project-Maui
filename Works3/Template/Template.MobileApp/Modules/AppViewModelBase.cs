@@ -6,14 +6,6 @@ public abstract class AppViewModelBase : ExtendViewModelBase, INavigatorAware, I
 {
     public INavigator Navigator { get; set; } = default!;
 
-    public ApplicationState ApplicationState { get; }
-
-    protected AppViewModelBase(ApplicationState applicationState)
-        : base(applicationState)
-    {
-        ApplicationState = applicationState;
-    }
-
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);

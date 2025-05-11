@@ -81,7 +81,7 @@
         <VerticalStackLayout Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
                              Style="{StaticResource FillVerticalStack}">
             <Label Style="{StaticResource TextValueLabel}"
-                   Text="{Binding RecognizeText.Value}" />
+                   Text="{Binding RecognizeText}" />
         </VerticalStackLayout>
 
     </Grid>

@@ -5,9 +5,7 @@ public class NavigateInitializeViewModel : AppViewModelBase
     private readonly IDialog dialog;
 
     public NavigateInitializeViewModel(
-        ApplicationState applicationState,
         IDialog dialog)
-        : base(applicationState)
     {
         this.dialog = dialog;
     }

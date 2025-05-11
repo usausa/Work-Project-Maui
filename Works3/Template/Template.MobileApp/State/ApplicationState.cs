@@ -1,4 +1,4 @@
-namespace Template.MobileApp;
+namespace Template.MobileApp.State;
 
 #pragma warning disable CA1008
 [Flags]
@@ -28,10 +28,10 @@ public static class ApplicationStateExtensions
         profile.HasFlag(NetworkProfile.Ethernet) || profile.HasFlag(NetworkProfile.WiFi);
 
     public static bool IsConnected(this NetworkState state) =>
-        state == NetworkState.ConnectedHighSpeed || state == NetworkState.Connected;
+        state is NetworkState.ConnectedHighSpeed or NetworkState.Connected;
 }
 
-public sealed partial class ApplicationState : BusyState, IDisposable
+public sealed partial class ApplicationState : ObservableObject, IDisposable
 {
     private readonly ILogger<ApplicationState> log;
 

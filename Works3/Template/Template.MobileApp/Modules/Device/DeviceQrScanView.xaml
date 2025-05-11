@@ -21,7 +21,7 @@
                        behaviors:CameraBind.Controller="{Binding Camera}" />
 
         <Label Style="{StaticResource ExtraLargeLeftLabel}"
-               Text="{Binding Barcode.Value}" />
+               Text="{Binding Barcode}" />
 
     </VerticalStackLayout>
 
