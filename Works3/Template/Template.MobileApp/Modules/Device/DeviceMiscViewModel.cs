@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components.Storage;
 
-public partial class DeviceMiscViewModel : AppViewModelBase
+public sealed partial class DeviceMiscViewModel : AppViewModelBase
 {
     private readonly IScreen screen;
 

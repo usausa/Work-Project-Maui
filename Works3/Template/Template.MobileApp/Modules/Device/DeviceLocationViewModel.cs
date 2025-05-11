@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-public partial class DeviceLocationViewModel : AppViewModelBase
+public sealed partial class DeviceLocationViewModel : AppViewModelBase
 {
     private readonly ILocationService locationService;
 

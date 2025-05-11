@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Network;
 
 using Template.MobileApp.Usecase;
 
-public class NetworkViewModel : AppViewModelBase
+public sealed class NetworkViewModel : AppViewModelBase
 {
     private readonly Settings settings;
 

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-public class SampleListViewModel : AppViewModelBase
+public sealed class SampleListViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
 

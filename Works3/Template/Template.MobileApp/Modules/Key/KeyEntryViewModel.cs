@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Key;
 
 using System.Diagnostics;
 
-public class KeyEntryViewModel : AppViewModelBase
+public sealed class KeyEntryViewModel : AppViewModelBase
 {
     public EntryController Input1 { get; }
     public EntryController Input2 { get; }

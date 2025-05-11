@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation;
 
-public class NavigationMenuViewModel : AppViewModelBase
+public sealed class NavigationMenuViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
     public IObserveCommand SharedCommand { get; }

@@ -3,7 +3,7 @@ namespace Template.MobileApp;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
-public partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
+public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
     private readonly IScreen screen;
 

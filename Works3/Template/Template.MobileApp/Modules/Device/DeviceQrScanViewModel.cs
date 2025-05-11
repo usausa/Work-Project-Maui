@@ -4,7 +4,7 @@ using Camera.MAUI;
 
 using Plugin.Maui.Audio;
 
-public partial class DeviceQrScanViewModel : AppViewModelBase
+public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 

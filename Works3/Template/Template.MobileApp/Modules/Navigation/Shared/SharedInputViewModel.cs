@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation.Shared;
 
-public partial class SharedInputViewModel : AppViewModelBase
+public sealed partial class SharedInputViewModel : AppViewModelBase
 {
     private ViewId nextViewId;
 

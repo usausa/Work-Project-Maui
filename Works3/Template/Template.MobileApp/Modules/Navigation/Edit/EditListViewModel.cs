@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Navigation.Edit;
 
 using Template.MobileApp.Services;
 
-public class EditListViewModel : AppViewModelBase
+public sealed class EditListViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 

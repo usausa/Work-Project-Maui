@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Main;
 
-public partial class MenuViewModel : AppViewModelBase
+public sealed partial class MenuViewModel : AppViewModelBase
 {
     [ObservableProperty]
     public partial string Flavor { get; set; }

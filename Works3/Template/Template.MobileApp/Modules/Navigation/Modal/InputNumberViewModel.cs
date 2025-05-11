@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Navigation.Modal;
 
 using Template.MobileApp.Modules;
 
-public partial class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
+public sealed partial class InputNumberViewModel : AppDialogViewModelBase, IPopupInitialize<NumberInputParameter>
 {
     public PopupController<string?> Popup { get; } = new();
 

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
-public class BasicTypographyViewModel : AppViewModelBase
+public sealed class BasicTypographyViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceBiometricViewModel : AppViewModelBase
+public sealed class DeviceBiometricViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 

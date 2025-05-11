@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceNfcViewModel : AppViewModelBase
+public sealed class DeviceNfcViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 

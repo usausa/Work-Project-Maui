@@ -11,7 +11,7 @@ public enum NetworkOperationResult
     NotFound
 }
 
-public class NetworkOperator
+public sealed class NetworkOperator
 {
     private readonly IDialog dialog;
 

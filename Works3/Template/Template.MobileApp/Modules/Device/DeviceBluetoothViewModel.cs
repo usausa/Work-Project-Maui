@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-public class DeviceBluetoothViewModel : AppViewModelBase
+public sealed class DeviceBluetoothViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 

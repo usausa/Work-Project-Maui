@@ -4,7 +4,7 @@ using Camera.MAUI;
 
 using Template.MobileApp.Components.Storage;
 
-public class DeviceCameraViewModel : AppViewModelBase
+public sealed class DeviceCameraViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 

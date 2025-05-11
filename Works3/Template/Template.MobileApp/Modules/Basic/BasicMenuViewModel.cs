@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
-public class BasicMenuViewModel : AppViewModelBase
+public sealed class BasicMenuViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
 

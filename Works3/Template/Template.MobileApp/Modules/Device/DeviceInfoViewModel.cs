@@ -1,7 +1,7 @@
 #pragma warning disable SA1135
 namespace Template.MobileApp.Modules.Device;
 
-public partial class DeviceInfoViewModel : AppViewModelBase
+public sealed partial class DeviceInfoViewModel : AppViewModelBase
 {
     [ObservableProperty]
     public partial Version DeviceVersion { get; set; }

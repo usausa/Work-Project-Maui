@@ -6,7 +6,7 @@ using MauiComponents;
 
 using Template.MobileApp.Services;
 
-public partial class DataViewModel : AppViewModelBase
+public sealed partial class DataViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 

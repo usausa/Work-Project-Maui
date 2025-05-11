@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Key;
 
-public class KeyMenuViewModel : AppViewModelBase
+public sealed class KeyMenuViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
 

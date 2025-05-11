@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-public class SampleChatViewModel : AppViewModelBase
+public sealed class SampleChatViewModel : AppViewModelBase
 {
     public SampleChatViewModel()
     {

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
-public class BasicConverterViewModel : AppViewModelBase
+public sealed class BasicConverterViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

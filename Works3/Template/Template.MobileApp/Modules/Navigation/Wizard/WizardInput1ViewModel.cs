@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation.Wizard;
 
-public partial class WizardInput1ViewModel : AppViewModelBase
+public sealed partial class WizardInput1ViewModel : AppViewModelBase
 {
     [Scope]
     [ObservableProperty]

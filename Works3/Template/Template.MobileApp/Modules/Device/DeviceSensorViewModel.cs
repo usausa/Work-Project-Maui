@@ -4,7 +4,7 @@ using System.Numerics;
 
 using Microsoft.Maui.Devices.Sensors;
 
-public partial class DeviceSensorViewModel : AppViewModelBase
+public sealed partial class DeviceSensorViewModel : AppViewModelBase
 {
     private readonly IAccelerometer accelerometer;
     private readonly IBarometer barometer;

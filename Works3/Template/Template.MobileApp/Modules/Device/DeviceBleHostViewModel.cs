@@ -5,7 +5,7 @@ using Shiny.BluetoothLE.Hosting;
 
 using Template.MobileApp.Providers;
 
-public partial class DeviceBleHostViewModel : AppViewModelBase
+public sealed partial class DeviceBleHostViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 

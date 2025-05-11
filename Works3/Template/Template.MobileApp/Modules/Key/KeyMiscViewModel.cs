@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Key;
 
-public class KeyMiscViewModel : AppViewModelBase
+public sealed class KeyMiscViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.KeyMenu);
 

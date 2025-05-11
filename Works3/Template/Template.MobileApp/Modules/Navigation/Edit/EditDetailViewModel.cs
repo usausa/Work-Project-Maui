@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.Navigation.Edit;
 
 using Template.MobileApp.Services;
 
-public partial class EditDetailViewModel : AppViewModelBase
+public sealed partial class EditDetailViewModel : AppViewModelBase
 {
     private readonly DataService dataService;
 

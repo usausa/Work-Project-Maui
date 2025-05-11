@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
-public partial class BasicStyleViewModel : AppViewModelBase
+public sealed partial class BasicStyleViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 

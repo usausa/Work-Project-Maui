@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-public partial class DeviceQrDisplayViewModel : AppViewModelBase
+public sealed partial class DeviceQrDisplayViewModel : AppViewModelBase
 {
     [ObservableProperty]
     public partial string Text { get; set; }

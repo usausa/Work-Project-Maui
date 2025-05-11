@@ -2,7 +2,7 @@ namespace Template.MobileApp;
 
 using Template.MobileApp.Shell;
 
-public partial class MainPage
+public sealed partial class MainPage
 {
     public MainPage()
     {

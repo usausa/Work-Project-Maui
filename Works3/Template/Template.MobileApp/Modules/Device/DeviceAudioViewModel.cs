@@ -4,7 +4,7 @@ using Plugin.Maui.Audio;
 
 using Smart.Maui.Input;
 
-public class DeviceAudioViewModel : AppViewModelBase
+public sealed class DeviceAudioViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 

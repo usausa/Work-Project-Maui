@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation.Stack;
 
-public class Stack2ViewModel : AppViewModelBase
+public sealed class Stack2ViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.PopAsync(1);
 
