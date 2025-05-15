@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Library/">
+    <Project Path="../Smart.Maui/Smart.Maui/Smart.Maui.csproj" />
+    <Project Path="../Smart.Maui/Smart.Maui.Extensions/Smart.Maui.Extensions.csproj" />
+  </Folder>
+  <Project Path="WorkSmartMaui/WorkSmartMaui.csproj">
+    <Deploy />
+  </Project>
+</Solution>
