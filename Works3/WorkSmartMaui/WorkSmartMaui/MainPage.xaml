@@ -14,7 +14,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Behaviors>
-        <six:FocusControlBehavior Request="{Binding FocusRequest}" />
+        <six:FocusControlBehavior Controller="{Binding FocusController}" />
     </ContentPage.Behaviors>
 
     <ScrollView>
@@ -37,9 +37,6 @@
                     Text="Target1" />
             <Button Command="{Binding Focus2Command}"
                     Text="Target2" />
-
-            <Button Command="{Binding CancelCommand}"
-                    Text="Cancel" />
 
         </VerticalStackLayout>
     </ScrollView>

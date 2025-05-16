@@ -3,12 +3,12 @@ namespace WorkSmartMaui;
 using System.Diagnostics;
 using System.Windows.Input;
 
+using Smart.Maui.Messaging;
 using Smart.Mvvm;
-using Smart.Mvvm.Messaging;
 
 internal partial class MainPageViewModel : AppViewModelBase
 {
-    public EventRequest<string> FocusRequest { get; } = new();
+    public FocusController FocusController { get; } = new();
 
     [ObservableProperty]
     public partial bool Enable { get; set; }
@@ -32,11 +32,18 @@ internal partial class MainPageViewModel : AppViewModelBase
 
         EnableCommand = MakeDelegateCommand(() => Enable = !Enable);
 
-        Focus1Command = MakeDelegateCommand(() => FocusRequest.Request("Target1"));
+        Focus1Command = MakeDelegateCommand(() => FocusController.FocusRequest("Target1"));
         Focus2Command = MakeAsyncCommand(async () =>
         {
             await Task.Delay(1000);
-            FocusRequest.Request("Target2");
+            FocusController.FocusRequest("Target2");
+
+            // Test
+            Dispatcher.GetForCurrentThread()?.DispatchDelayed(TimeSpan.FromMilliseconds(50), () =>
+            {
+                var focused = FocusController.FindRequest();
+                Debug.WriteLine($"* Focused {focused}");
+            });
         });
     }
 }
