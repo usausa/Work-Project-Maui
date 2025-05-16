@@ -17,6 +17,7 @@
     "xmlns:d",
     "xmlns:mc",
 
+    "xmlns:s",
     "xmlns:sd",
     "xmlns:sdx",
     "xmlns:si",
@@ -58,6 +59,8 @@
     "x:Key, Key",
     "x:Name, Name",
     "x:Uid, Uid",
+
+    "s:Behavior.Key",
 
     "BasedOn, TargetType",
 

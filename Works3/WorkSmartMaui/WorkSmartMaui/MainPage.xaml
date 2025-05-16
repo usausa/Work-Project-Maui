@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="clr-namespace:Smart.Maui;assembly=Smart.Maui"
              xmlns:six="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui.Extensions"
              xmlns:app="using:WorkSmartMaui"
              x:Class="WorkSmartMaui.MainPage"
@@ -12,11 +13,9 @@
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <!--
     <ContentPage.Behaviors>
-        <six:FocusControlBehavior />
+        <six:FocusControlBehavior Request="{Binding FocusRequest}" />
     </ContentPage.Behaviors>
-    -->
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0"
@@ -24,6 +23,23 @@
 
             <Button Command="{Binding BusyCommand}"
                     Text="Busy" />
+
+            <Button Command="{Binding EnableCommand}"
+                    Text="Enable" />
+            <Button IsEnabled="{Binding Enable}"
+                    Text="EnableTarget" />
+
+            <Entry s:Behavior.Key="Target1"
+                   Text="Target1" />
+            <Entry s:Behavior.Key="Target2"
+                   Text="Target2" />
+            <Button Command="{Binding Focus1Command}"
+                    Text="Target1" />
+            <Button Command="{Binding Focus2Command}"
+                    Text="Target2" />
+
+            <Button Command="{Binding CancelCommand}"
+                    Text="Cancel" />
 
         </VerticalStackLayout>
     </ScrollView>
