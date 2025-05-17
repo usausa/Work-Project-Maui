@@ -4,6 +4,7 @@
              xmlns:s="clr-namespace:Smart.Maui;assembly=Smart.Maui"
              xmlns:six="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui.Extensions"
              xmlns:app="using:WorkSmartMaui"
+             xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              x:Class="WorkSmartMaui.MainPage"
              x:DataType="{x:Type app:MainPageViewModel}"
              IsEnabled="{Binding BusyState.IsBusy, Converter={StaticResource ReverseConverter}}"
@@ -18,8 +19,8 @@
     </ContentPage.Behaviors>
 
     <ScrollView>
-        <VerticalStackLayout Padding="30,0"
-                             Spacing="25">
+        <VerticalStackLayout Padding="8"
+                             Spacing="8">
 
             <Button Command="{Binding BusyCommand}"
                     Text="Busy" />
@@ -37,6 +38,17 @@
                     Text="Target1" />
             <Button Command="{Binding Focus2Command}"
                     Text="Target2" />
+
+            <Entry s:Behavior.Key="Text1"
+                   Text="{Binding Text1}"
+                   sv:ValidationProperty.ClearErrorOnFocus="True" sv:ValidationProperty.ValidateOnTextChanged="True" />
+
+            <Label Text="{Binding Errors[Text1]}" />
+            <Button Command="{Binding ErrorCommand}"
+                    Text="Error" />
+            <Button Command="{Binding ClearCommand}"
+                    Text="Clear" />
+
 
         </VerticalStackLayout>
     </ScrollView>

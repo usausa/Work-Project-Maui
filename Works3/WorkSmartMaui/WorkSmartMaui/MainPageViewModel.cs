@@ -13,6 +13,9 @@ internal partial class MainPageViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Enable { get; set; }
 
+    [ObservableProperty]
+    public partial string Text1 { get; set; } = default!;
+
     public ICommand BusyCommand { get; }
 
     public ICommand EnableCommand { get; }
@@ -21,6 +24,7 @@ internal partial class MainPageViewModel : AppViewModelBase
     public ICommand Focus2Command { get; }
 
     public ICommand ErrorCommand { get; }
+    public ICommand ClearCommand { get; }
 
     public MainPageViewModel()
     {
@@ -45,6 +49,15 @@ internal partial class MainPageViewModel : AppViewModelBase
                 var focused = FocusController.FindRequest();
                 Debug.WriteLine($"* Focused {focused}");
             });
+        });
+
+        ErrorCommand = MakeDelegateCommand(() =>
+        {
+            Errors.AddError(nameof(Text1), "Manual error");
+        });
+        ClearCommand = MakeDelegateCommand(() =>
+        {
+            Errors.ClearErrors(nameof(Text1));
         });
     }
 }
