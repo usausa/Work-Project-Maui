@@ -41,7 +41,7 @@
 
             <Entry s:Behavior.Key="Text1"
                    Text="{Binding Text1}"
-                   sv:ValidationProperty.ClearErrorOnFocus="True" sv:ValidationProperty.ValidateOnTextChanged="True" />
+                   sv:ValidationProperty.ClearErrorOnFocus="True" sv:ValidationProperty.ValidateOnUnfocused="True" />
 
             <Label Text="{Binding Errors[Text1]}" />
             <Button Command="{Binding ErrorCommand}"

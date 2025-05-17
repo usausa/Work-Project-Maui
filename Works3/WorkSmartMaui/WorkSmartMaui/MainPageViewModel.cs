@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WorkSmartMaui;
 
 using System.Diagnostics;
@@ -13,6 +15,7 @@ internal partial class MainPageViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Enable { get; set; }
 
+    [Required(ErrorMessage = "Required")]
     [ObservableProperty]
     public partial string Text1 { get; set; } = default!;
 
