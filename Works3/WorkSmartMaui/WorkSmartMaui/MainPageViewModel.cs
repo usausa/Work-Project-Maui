@@ -18,8 +18,9 @@ internal partial class MainPageViewModel : AppViewModelBase
     public ICommand EnableCommand { get; }
 
     public ICommand Focus1Command { get; }
-
     public ICommand Focus2Command { get; }
+
+    public ICommand ErrorCommand { get; }
 
     public MainPageViewModel()
     {
