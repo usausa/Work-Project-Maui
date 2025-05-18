@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Library/">
+    <Project Path="../MauiComponents/MauiComponents/MauiComponents.csproj" />
     <Project Path="../Smart.Maui/Smart.Maui/Smart.Maui.csproj" />
     <Project Path="../Smart.Maui/Smart.Maui.Extensions/Smart.Maui.Extensions.csproj" />
   </Folder>
