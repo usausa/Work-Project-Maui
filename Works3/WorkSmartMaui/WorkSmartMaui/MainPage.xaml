@@ -7,8 +7,7 @@
              xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              x:Class="WorkSmartMaui.MainPage"
              x:DataType="{x:Type app:MainPageViewModel}"
-             IsEnabled="{Binding BusyState.IsBusy, Converter={StaticResource ReverseConverter}}"
-             IsBusy="{Binding BusyState.IsBusy}">
+             app:OverlayBehavior.IsBusy="{Binding BusyState.IsBusy}">
 
     <ContentPage.BindingContext>
         <app:MainPageViewModel />
