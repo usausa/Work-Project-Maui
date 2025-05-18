@@ -15,6 +15,7 @@
 
     <ContentPage.Behaviors>
         <six:FocusControlBehavior Controller="{Binding FocusController}" />
+        <sv:ValidationFocusBehavior Request="{Binding ValidationFocusRequest}" />
     </ContentPage.Behaviors>
 
     <ScrollView>
@@ -47,6 +48,8 @@
                     Text="Error" />
             <Button Command="{Binding ClearCommand}"
                     Text="Clear" />
+            <Button Command="{Binding FocusErrorCommand}"
+                    Text="Focus" />
 
 
         </VerticalStackLayout>

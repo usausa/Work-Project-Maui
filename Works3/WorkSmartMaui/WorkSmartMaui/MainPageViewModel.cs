@@ -11,6 +11,8 @@ internal partial class MainPageViewModel : AppViewModelBase
 {
     public FocusController FocusController { get; } = new();
 
+    public ValidationFocusRequest ValidationFocusRequest { get; } = new();
+
     [ObservableProperty]
     public partial bool Enable { get; set; }
 
@@ -27,6 +29,7 @@ internal partial class MainPageViewModel : AppViewModelBase
 
     public ICommand ErrorCommand { get; }
     public ICommand ClearCommand { get; }
+    public ICommand FocusErrorCommand { get; }
 
     public MainPageViewModel()
     {
@@ -60,6 +63,10 @@ internal partial class MainPageViewModel : AppViewModelBase
         ClearCommand = MakeDelegateCommand(() =>
         {
             Errors.ClearErrors(nameof(Text1));
+        });
+        FocusErrorCommand = MakeDelegateCommand(() =>
+        {
+            ValidationFocusRequest.FocusRequest();
         });
     }
 }
