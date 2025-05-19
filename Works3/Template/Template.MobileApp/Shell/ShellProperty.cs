@@ -13,15 +13,6 @@ public static class ShellProperty
 
     public static void SetTitle(BindableObject bindable, string value) => bindable.SetValue(TitleProperty, value);
 
-    private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var parent = ((ContentView)bindable).Parent;
-        if (parent?.BindingContext is IShellControl shell)
-        {
-            UpdateShellControl(shell, bindable);
-        }
-    }
-
     public static readonly BindableProperty HeaderVisibleProperty = BindableProperty.CreateAttached(
         "HeaderVisible",
         typeof(bool),
@@ -131,6 +122,15 @@ public static class ShellProperty
     public static bool GetFunction4Enabled(BindableObject bindable) => (bool)bindable.GetValue(Function4EnabledProperty);
 
     public static void SetFunction4Enabled(BindableObject bindable, bool value) => bindable.SetValue(Function4EnabledProperty, value);
+
+    private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var parent = ((ContentView)bindable).Parent;
+        if (parent?.BindingContext is IShellControl shell)
+        {
+            UpdateShellControl(shell, bindable);
+        }
+    }
 
     public static void UpdateShellControl(IShellControl shell, BindableObject? bindable)
     {

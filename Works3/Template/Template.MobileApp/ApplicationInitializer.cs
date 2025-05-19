@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Smart.Mvvm.Resolver;
 
+using Template.MobileApp.Helpers;
 using Template.MobileApp.Services;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
@@ -11,6 +12,9 @@ public sealed class ApplicationInitializer : IMauiInitializeService
     // ReSharper disable once AsyncVoidMethod
     public async void Initialize(IServiceProvider services)
     {
+        // Report previous exception
+        await CrashReport.ShowReport();
+
         // Setup provider
         ResolveProvider.Default.Provider = services;
 
