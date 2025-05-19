@@ -4,10 +4,11 @@
              xmlns:s="clr-namespace:Smart.Maui;assembly=Smart.Maui"
              xmlns:six="clr-namespace:Smart.Maui.Interactivity;assembly=Smart.Maui.Extensions"
              xmlns:app="using:WorkSmartMaui"
+             xmlns:shell="using:WorkSmartMaui.Shell"
              xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              x:Class="WorkSmartMaui.MainPage"
              x:DataType="{x:Type app:MainPageViewModel}"
-             app:OverlayBehavior.IsBusy="{Binding BusyState.IsBusy}">
+             shell:OverlayBehavior.IsBusy="{Binding BusyState.IsBusy}">
 
     <ContentPage.BindingContext>
         <app:MainPageViewModel />
