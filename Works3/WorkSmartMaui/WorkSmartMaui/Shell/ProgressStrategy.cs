@@ -3,31 +3,17 @@ namespace WorkSmartMaui.Shell;
 using System;
 using System.Timers;
 
-public interface IOverlayCallback
+// TODO config?
+
+public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
 {
-    void Invalidate();
-}
-
-public interface IOverlayStrategy
-{
-    void Attach(IOverlayCallback value);
-
-    void Detach();
-
-    void Draw(ICanvas canvas, RectF dirtyRect);
-}
-
-public sealed class CircleOverlayStrategy : IOverlayStrategy, IDisposable
-{
-    public static CircleOverlayStrategy Instance { get; } = new();
-
     private readonly Timer timer;
 
-    private IOverlayCallback? callback;
+    private IProgressStrategyCallback? callback;
 
     private float progress;
 
-    public CircleOverlayStrategy()
+    public CircleProgressStrategy()
     {
         timer = new Timer(16);
         timer.Elapsed += TimerOnElapsed;
@@ -39,8 +25,7 @@ public sealed class CircleOverlayStrategy : IOverlayStrategy, IDisposable
         timer.Dispose();
     }
 
-
-    public void Attach(IOverlayCallback value)
+    public void Attach(IProgressStrategyCallback value)
     {
         callback = value;
         progress = 0;
@@ -66,13 +51,6 @@ public sealed class CircleOverlayStrategy : IOverlayStrategy, IDisposable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        canvas.FillColor = new(255, 255, 255, 64);
-        canvas.FillRectangle(dirtyRect);
-
-        // Background
-        canvas.FillColor = new(255, 255, 255, 64);
-        canvas.FillRectangle(dirtyRect);
-
         var size = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.8f;
         var cx = dirtyRect.Center.X;
         var cy = dirtyRect.Center.Y;
@@ -88,10 +66,6 @@ public sealed class CircleOverlayStrategy : IOverlayStrategy, IDisposable
         canvas.StrokeSize = 8;
         var sweepAngle = 270;
         var startAngle = (progress * 360) % 360;
-        canvas.DrawArc(
-            cx - radius, cy - radius,
-            radius * 2, radius * 2,
-            startAngle, sweepAngle,
-            false, false);
+        canvas.DrawArc(cx - radius, cy - radius, radius * 2, radius * 2, startAngle, sweepAngle, false, false);
     }
 }

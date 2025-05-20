@@ -1,3 +1,5 @@
+using WorkSmartMaui.Shell;
+
 namespace WorkSmartMaui;
 
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +11,8 @@ using Smart.Mvvm;
 
 internal partial class MainPageViewModel : AppViewModelBase
 {
+    public IProgressView ProgressView { get; }
+
     public FocusController FocusController { get; } = new();
 
     public ValidationFocusRequest ValidationFocusRequest { get; } = new();
@@ -33,13 +37,16 @@ internal partial class MainPageViewModel : AppViewModelBase
 
     public MainPageViewModel()
     {
+        ProgressView = ProgressResolver.ResolveView();
+        var progress = ProgressResolver.ResolveController();
+
         BusyCommand = MakeAsyncCommand(async () =>
         {
             Debug.WriteLine("* Start");
             await Task.Delay(2000);
-            Overlay.Circle();
+            progress.Circle();
             await Task.Delay(3000);
-            Overlay.Clear();
+            progress.Clear();
             await Task.Delay(2000);
             Debug.WriteLine("* End");
         });
