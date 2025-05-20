@@ -2,7 +2,11 @@ namespace WorkSmartMaui.Shell;
 
 public interface IProgressController
 {
-    public void Clear();
+    void Clear();
 
-    public void Circle();
+    IMessageProgress Message();
+
+    IRateProgress Rate();
+
+    void Circle();
 }

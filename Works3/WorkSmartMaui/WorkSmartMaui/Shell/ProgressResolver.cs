@@ -9,29 +9,49 @@ public sealed class ProgressResolver
 
     private static ProgressController? progressController;
 
-    private static IProgressStrategy? circleStrategy;
+    private static MessageProgressStrategy? messageStrategy;
+    private static RateProgressStrategy? rateStrategy;
+    private static CircleProgressStrategy? circleStrategy;
 
     public static void Configure(Action<ProgressConfig> action)
     {
         action(defaultConfig);
     }
 
-    private static IWindow ResolveWindow() =>
+    public static IProgressView ResolveView() => ResolveViewInternal();
+
+    public static IProgressController ResolveController() => ResolveControllerInternal();
+
+    //--------------------------------------------------------------------------------
+
+    private static IWindow ResolveWindowInternal() =>
         Application.Current!.Windows[0];
 
-    public static IProgressView ResolveView()
+    private static ProgressView ResolveViewInternal()
     {
         progressView ??= new(defaultConfig, null);
         return progressView;
     }
 
-    public static IProgressController ResolveController()
+    private static ProgressController ResolveControllerInternal()
     {
-        progressController ??= new ProgressController((ProgressView)ResolveView());
+        progressController ??= new ProgressController(ResolveViewInternal());
         return progressController;
     }
 
-    private static IProgressStrategy ResolveCircleStrategy()
+    private static MessageProgressStrategy ResolveMessageProgressStrategyInternal()
+    {
+        messageStrategy ??= new MessageProgressStrategy(defaultConfig);
+        return messageStrategy;
+    }
+
+    private static RateProgressStrategy ResolveRateProgressStrategyInternal()
+    {
+        rateStrategy ??= new RateProgressStrategy(defaultConfig);
+        return rateStrategy;
+    }
+
+    private static CircleProgressStrategy ResolveCircleStrategyInternal()
     {
         circleStrategy ??= new CircleProgressStrategy();
         return circleStrategy;
@@ -59,7 +79,7 @@ public sealed class ProgressResolver
 
         private ProgressOverlay GetOverlay()
         {
-            overlay ??= new ProgressOverlay(ResolveWindow(), this);
+            overlay ??= new ProgressOverlay(ResolveWindowInternal(), this);
             return overlay;
         }
 
@@ -141,10 +161,26 @@ public sealed class ProgressResolver
             view.Update(null);
         }
 
+        public IMessageProgress Message()
+        {
+            // Delay
+            var strategy = ResolveMessageProgressStrategyInternal();
+            view.Update(strategy);
+            return strategy;
+        }
+
+        public IRateProgress Rate()
+        {
+            // Delay
+            var strategy = ResolveRateProgressStrategyInternal();
+            view.Update(strategy);
+            return strategy;
+        }
+
         public void Circle()
         {
             // Delay
-            view.Update(ResolveCircleStrategy());
+            view.Update(ResolveCircleStrategyInternal());
         }
     }
 }

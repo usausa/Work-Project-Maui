@@ -3,6 +3,147 @@ namespace WorkSmartMaui.Shell;
 using System;
 using System.Timers;
 
+// Message
+
+public interface IMessageProgress
+{
+    void Update(string value);
+}
+
+public sealed class MessageProgressStrategy : IProgressStrategy, IMessageProgress
+{
+    private readonly ProgressConfig config;
+
+    private IProgressStrategyCallback? callback;
+
+    private string message = string.Empty;
+
+    public MessageProgressStrategy(ProgressConfig config)
+    {
+        this.config = config;
+    }
+
+    public void Attach(IProgressStrategyCallback value)
+    {
+        callback = value;
+        message = string.Empty;
+    }
+
+    public void Detach()
+    {
+        callback = null;
+    }
+
+    public void Draw(ICanvas canvas, RectF dirtyRect)
+    {
+        if (String.IsNullOrEmpty(message))
+        {
+            return;
+        }
+
+        var messageRect = new RectF(
+            config.MessageSideMargin,
+            (dirtyRect.Height / 2) - (config.MessageHeight / 2),
+            dirtyRect.Width - (config.MessageSideMargin * 2),
+            config.MessageHeight);
+
+        canvas.FillColor = config.MessageBackgroundColor;
+        canvas.FillRoundedRectangle(messageRect, config.MessageCornerRadius);
+
+        canvas.FontColor = config.MessageColor;
+        canvas.FontSize = config.MessageFontSize;
+        canvas.DrawString(message, messageRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+    }
+
+    public void Update(string value)
+    {
+        message = value;
+        callback?.Invalidate();
+    }
+}
+
+// Rate
+
+public interface IRateProgress
+{
+    void Update(double value);
+}
+
+public sealed class RateProgressStrategy : IProgressStrategy, IRateProgress
+{
+    private readonly ProgressConfig config;
+
+    private IProgressStrategyCallback? callback;
+
+    private double rate;
+
+    public RateProgressStrategy(ProgressConfig config)
+    {
+        this.config = config;
+    }
+
+    public void Attach(IProgressStrategyCallback value)
+    {
+        callback = value;
+        rate = 0;
+    }
+
+    public void Detach()
+    {
+        callback = null;
+    }
+
+    public void Draw(ICanvas canvas, RectF dirtyRect)
+    {
+        canvas.FillColor = config.ProgressAreaBackgroundColor;
+        canvas.FillRoundedRectangle(
+            new RectF(
+                (dirtyRect.Width / 2) - config.ProgressAreaSize,
+                (dirtyRect.Height / 2) - config.ProgressAreaSize,
+                config.ProgressAreaSize * 2,
+                config.ProgressAreaSize * 2),
+            config.ProgressAreaCornerRadius);
+
+        var arcRect = new RectF(
+            (dirtyRect.Width / 2) - config.ProgressSize,
+            (dirtyRect.Height / 2) - config.ProgressSize,
+            config.ProgressSize * 2,
+            config.ProgressSize * 2);
+
+        canvas.StrokeSize = config.ProgressWidth;
+        canvas.StrokeColor = config.ProgressCircleColor2;
+        canvas.DrawArc(arcRect, 0, 360, false, false);
+
+        canvas.StrokeColor = config.ProgressCircleColor1;
+        var endAngle = 90 - (int)(360 * rate / 100);
+        if (endAngle <= -270)
+        {
+            canvas.DrawArc(arcRect, 0, 360, false, false);
+        }
+        else
+        {
+            canvas.DrawArc(arcRect, 90, endAngle, true, false);
+        }
+
+        canvas.FontColor = config.ProgressValueColor;
+        canvas.FontSize = config.ProgressValueFontSize;
+        canvas.DrawString($"{rate:F1}%", arcRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+    }
+
+    public void Update(double value)
+    {
+        rate = value switch
+        {
+            > 100 => 100,
+            < 0 => 0,
+            _ => value
+        };
+        callback?.Invalidate();
+    }
+}
+
+// Circle
+
 // TODO config?
 
 public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
