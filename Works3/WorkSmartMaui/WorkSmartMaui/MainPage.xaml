@@ -8,8 +8,8 @@
              xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              x:Class="WorkSmartMaui.MainPage"
              x:DataType="{x:Type app:MainPageViewModel}"
-             shell:Progress.View="{Binding ProgressView}"
-             shell:Progress.Visible="{Binding BusyState.IsBusy}">
+             shell:ShellProperty.ProgressView="{Binding ProgressView}"
+             shell:ShellProperty.ProgressVisible="{Binding BusyState.IsBusy}">
 
     <ContentPage.BindingContext>
         <app:MainPageViewModel />

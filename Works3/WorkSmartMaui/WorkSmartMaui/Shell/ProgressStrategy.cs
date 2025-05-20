@@ -95,26 +95,26 @@ public sealed class RateProgressStrategy : IProgressStrategy, IRateProgress
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        canvas.FillColor = config.ProgressAreaBackgroundColor;
+        canvas.FillColor = config.RateAreaBackgroundColor;
         canvas.FillRoundedRectangle(
             new RectF(
-                (dirtyRect.Width / 2) - config.ProgressAreaSize,
-                (dirtyRect.Height / 2) - config.ProgressAreaSize,
-                config.ProgressAreaSize * 2,
-                config.ProgressAreaSize * 2),
-            config.ProgressAreaCornerRadius);
+                (dirtyRect.Width / 2) - config.RateAreaSize,
+                (dirtyRect.Height / 2) - config.RateAreaSize,
+                config.RateAreaSize * 2,
+                config.RateAreaSize * 2),
+            config.RateAreaCornerRadius);
 
         var arcRect = new RectF(
-            (dirtyRect.Width / 2) - config.ProgressSize,
-            (dirtyRect.Height / 2) - config.ProgressSize,
-            config.ProgressSize * 2,
-            config.ProgressSize * 2);
+            (dirtyRect.Width / 2) - config.RateSize,
+            (dirtyRect.Height / 2) - config.RateSize,
+            config.RateSize * 2,
+            config.RateSize * 2);
 
-        canvas.StrokeSize = config.ProgressWidth;
-        canvas.StrokeColor = config.ProgressCircleColor2;
+        canvas.StrokeSize = config.RateWidth;
+        canvas.StrokeColor = config.RateCircleColor2;
         canvas.DrawArc(arcRect, 0, 360, false, false);
 
-        canvas.StrokeColor = config.ProgressCircleColor1;
+        canvas.StrokeColor = config.RateCircleColor1;
         var endAngle = 90 - (int)(360 * rate / 100);
         if (endAngle <= -270)
         {
@@ -125,8 +125,8 @@ public sealed class RateProgressStrategy : IProgressStrategy, IRateProgress
             canvas.DrawArc(arcRect, 90, endAngle, true, false);
         }
 
-        canvas.FontColor = config.ProgressValueColor;
-        canvas.FontSize = config.ProgressValueFontSize;
+        canvas.FontColor = config.RateValueColor;
+        canvas.FontSize = config.RateValueFontSize;
         canvas.DrawString($"{rate:F1}%", arcRect, HorizontalAlignment.Center, VerticalAlignment.Center);
     }
 
