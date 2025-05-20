@@ -17,25 +17,6 @@ public interface IOverlayStrategy
     void Draw(ICanvas canvas, RectF dirtyRect);
 }
 
-public sealed class DefaultOverlayStrategy : IOverlayStrategy
-{
-    public static DefaultOverlayStrategy Instance { get; } = new();
-
-    public void Attach(IOverlayCallback value)
-    {
-    }
-
-    public void Detach()
-    {
-    }
-
-    public void Draw(ICanvas canvas, RectF dirtyRect)
-    {
-        canvas.FillColor = new(255, 255, 255, 64);
-        canvas.FillRectangle(dirtyRect);
-    }
-}
-
 public sealed class CircleOverlayStrategy : IOverlayStrategy, IDisposable
 {
     public static CircleOverlayStrategy Instance { get; } = new();

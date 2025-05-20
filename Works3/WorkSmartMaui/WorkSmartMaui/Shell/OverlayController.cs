@@ -8,7 +8,7 @@ public sealed class OverlayController
 
     public void Clear()
     {
-        OverlayView.Instance.UpdateStrategy(DefaultOverlayStrategy.Instance);
+        OverlayView.Instance.UpdateStrategy(null);
     }
 
     public void Circle()

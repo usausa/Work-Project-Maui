@@ -1,6 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace WorkSmartMaui.Shell;
+
+using System.Diagnostics.CodeAnalysis;
 
 public sealed class OverlayView : WindowOverlay, IOverlayCallback
 {
@@ -19,35 +19,31 @@ public sealed class OverlayView : WindowOverlay, IOverlayCallback
     private OverlayView()
         : base(Application.Current!.Windows[0])
     {
-        element = new OverlayElement(DefaultOverlayStrategy.Instance);
+        element = new OverlayElement();
         AddWindowElement(element);
         EnableDrawableTouchHandling = true;
     }
 
     public void Show()
     {
-        var strategy = DefaultOverlayStrategy.Instance;
-        element.UpdateStrategy(strategy);
-        strategy.Attach(this);
+        element.UpdateStrategy(null);
 
         Window.AddOverlay(this);
     }
 
     public void Hide()
     {
-        var strategy = DefaultOverlayStrategy.Instance;
-        element.UpdateStrategy(strategy);
-
         Window.RemoveOverlay(this);
+
+        element.UpdateStrategy(null);
     }
 
     public void UpdateStrategy(IOverlayStrategy? value)
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            var strategy = value ?? DefaultOverlayStrategy.Instance;
-            element.UpdateStrategy(strategy);
-            strategy.Attach(this);
+            element.UpdateStrategy(value);
+            value?.Attach(this);
 
             Invalidate();
         });
@@ -55,21 +51,21 @@ public sealed class OverlayView : WindowOverlay, IOverlayCallback
 
     private sealed class OverlayElement : IWindowOverlayElement
     {
-        private IOverlayStrategy strategy;
+        private IOverlayStrategy? strategy;
 
-        public OverlayElement(IOverlayStrategy strategy)
+        public void UpdateStrategy(IOverlayStrategy? value)
         {
-            this.strategy = strategy;
-        }
-
-        public void UpdateStrategy(IOverlayStrategy value)
-        {
-            strategy.Detach();
+            strategy?.Detach();
             strategy = value;
         }
 
-        public void Draw(ICanvas canvas, RectF dirtyRect) =>
-            strategy.Draw(canvas, dirtyRect);
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            canvas.FillColor = new(255, 255, 255, 64);
+            canvas.FillRectangle(dirtyRect);
+
+            strategy?.Draw(canvas, dirtyRect);
+        }
 
         public bool Contains(Point point) => true;
     }
