@@ -1,5 +1,7 @@
 using Smart.Mvvm.Resolver;
 
+using WorkSmartMaui.Shell;
+
 namespace WorkSmartMaui;
 
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +11,8 @@ using Smart.Maui.ViewModels;
 internal class AppViewModelBase : ExtendViewModelBase, IValidatable
 {
     private List<ValidationResult>? validationResults;
+
+    protected OverlayController Overlay { get; } = OverlayController.Instance;
 
     public void Validate(string name)
     {

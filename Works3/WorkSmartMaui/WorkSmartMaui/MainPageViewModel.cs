@@ -36,7 +36,11 @@ internal partial class MainPageViewModel : AppViewModelBase
         BusyCommand = MakeAsyncCommand(async () =>
         {
             Debug.WriteLine("* Start");
-            await Task.Delay(5000);
+            await Task.Delay(2000);
+            Overlay.Circle();
+            await Task.Delay(3000);
+            Overlay.Clear();
+            await Task.Delay(2000);
             Debug.WriteLine("* End");
         });
 

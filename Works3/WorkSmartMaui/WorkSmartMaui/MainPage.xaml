@@ -8,7 +8,7 @@
              xmlns:sv="clr-namespace:Smart.Maui.Validation;assembly=Smart.Maui.Extensions"
              x:Class="WorkSmartMaui.MainPage"
              x:DataType="{x:Type app:MainPageViewModel}"
-             shell:OverlayBehavior.IsBusy="{Binding BusyState.IsBusy}">
+             shell:Overlay.Visible="{Binding BusyState.IsBusy}">
 
     <ContentPage.BindingContext>
         <app:MainPageViewModel />
