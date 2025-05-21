@@ -19,7 +19,7 @@ public enum NetworkState
     Disconnected
 }
 
-public static class ApplicationStateExtensions
+public static class DeviceStateExtensions
 {
     public static bool IsConnected(this NetworkAccess access) =>
         access != NetworkAccess.None && access != NetworkAccess.Unknown;
@@ -31,9 +31,9 @@ public static class ApplicationStateExtensions
         state is NetworkState.ConnectedHighSpeed or NetworkState.Connected;
 }
 
-public sealed partial class ApplicationState : ObservableObject, IDisposable
+public sealed partial class DeviceState : ObservableObject, IDisposable
 {
-    private readonly ILogger<ApplicationState> log;
+    private readonly ILogger<DeviceState> log;
 
     private readonly List<IDisposable> disposables = [];
 
@@ -59,8 +59,8 @@ public sealed partial class ApplicationState : ObservableObject, IDisposable
     [ObservableProperty]
     public partial NetworkState NetworkState { get; private set; }
 
-    public ApplicationState(
-        ILogger<ApplicationState> log,
+    public DeviceState(
+        ILogger<DeviceState> log,
         IBattery battery,
         IConnectivity connectivity)
     {

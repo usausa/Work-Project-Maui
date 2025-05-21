@@ -175,9 +175,6 @@ public static class MauiProgram
         config.AddComponentsLocation();
         config.AddComponentsSpeech();
 
-        // Application
-        config.BindSingleton<IApplication>(Application.Current!);
-
         // Navigator
         config.AddNavigator(static c =>
         {
@@ -193,7 +190,7 @@ public static class MauiProgram
         config.BindSingleton(AudioManager.Current);
 
         // State
-        config.BindSingleton<ApplicationState>();
+        config.BindSingleton<DeviceState>();
         config.BindSingleton<Session>();
         config.BindSingleton<Settings>();
 
