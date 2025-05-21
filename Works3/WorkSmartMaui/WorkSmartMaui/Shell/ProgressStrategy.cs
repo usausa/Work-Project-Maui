@@ -181,7 +181,7 @@ public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
-        progress += 0.01f;
+        progress += 0.02f;
         if (progress > 1f)
         {
             progress = 0;
