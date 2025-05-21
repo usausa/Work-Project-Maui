@@ -61,11 +61,10 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("SegoeUI-Semibold.ttf", "SegoeSemibold");
-                fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
                 fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
+                fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
+                fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
                 fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
-                fonts.AddFont("Font Awesome 6 Free-Regular-400.otf", FontAwesomeIcons.FontAwesome);
             })
             //.ConfigureEssentials(static c => { })
             .UseMauiCommunityToolkit()
@@ -175,6 +174,9 @@ public static class MauiProgram
         config.AddComponentsScreen();
         config.AddComponentsLocation();
         config.AddComponentsSpeech();
+
+        // Application
+        config.BindSingleton<IApplication>(Application.Current!);
 
         // Navigator
         config.AddNavigator(static c =>
