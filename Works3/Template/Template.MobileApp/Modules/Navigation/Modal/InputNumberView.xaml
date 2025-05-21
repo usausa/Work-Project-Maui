@@ -12,7 +12,7 @@
            sr:BindingContextResolver.Type="{x:Type modules:InputNumberViewModel}"
            mcs:PopupBind.Controller="{Binding Popup}"
            CanBeDismissedByTappingOutsideOfPopup="False"
-           Size="{x:Static m:DialogSize.Large}">
+           Size="{x:Static m:ScreenSize.LargeDialog}">
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <!-- title -->

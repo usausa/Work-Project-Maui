@@ -38,7 +38,7 @@ using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
 using Template.MobileApp.Usecase;
 
-public static class MauiProgram
+public static partial class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
@@ -168,7 +168,7 @@ public static class MauiProgram
             c.EnablePromptSelectAll = true;
         });
 #endif
-        config.AddComponentsPopup(static c => c.AutoRegister(ViewRegistry.DialogSource()));
+        config.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
         config.AddComponentsPopupPlugin<PopupFocusPlugin>();
         config.AddComponentsSerializer();
         config.AddComponentsScreen();
@@ -181,7 +181,7 @@ public static class MauiProgram
             c.UseMauiNavigationProvider();
             c.AddResolverPlugin();
             c.AddPlugin<NavigationFocusPlugin>();
-            c.UseIdViewMapper(static m => m.AutoRegister(ViewRegistry.ViewSource()));
+            c.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
 
         // Components
@@ -220,4 +220,10 @@ public static class MauiProgram
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
     }
+
+    [ViewSource]
+    public static partial IEnumerable<KeyValuePair<ViewId, Type>> ViewSource();
+
+    [PopupSource]
+    public static partial IEnumerable<KeyValuePair<DialogId, Type>> DialogSource();
 }
