@@ -1,6 +1,7 @@
 namespace WorkSmartMaui.Shell;
 
 using System;
+using System.Reflection.Metadata;
 using System.Timers;
 
 // Message
@@ -148,14 +149,18 @@ public sealed class RateProgressStrategy : IProgressStrategy, IRateProgress
 
 public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
 {
+    private readonly ProgressConfig config;
+
     private readonly Timer timer;
 
     private IProgressStrategyCallback? callback;
 
-    private float progress;
+    //private float progress;
+    private float start;
 
-    public CircleProgressStrategy()
+    public CircleProgressStrategy(ProgressConfig config)
     {
+        this.config = config;
         timer = new Timer(16);
         timer.Elapsed += TimerOnElapsed;
         timer.Enabled = false;
@@ -169,7 +174,8 @@ public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
     public void Attach(IProgressStrategyCallback value)
     {
         callback = value;
-        progress = 0;
+        //progress = 0;
+        start = 0;
         timer.Start();
     }
 
@@ -181,31 +187,131 @@ public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
-        progress += 0.02f;
-        if (progress > 1f)
+        //　TODOここも設定
+        start += 3f;
+        if (start >= 360f)
         {
-            progress = 0;
+            start -= 360f;
         }
         MainThread.BeginInvokeOnMainThread(() => callback?.Invalidate());
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        var size = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.8f;
+        // 中心座標と半径
         var cx = dirtyRect.Center.X;
         var cy = dirtyRect.Center.Y;
-        var radius = size / 2;
+        var radius = config.IndicatorSize / 2;
 
-        // Back circle
-        canvas.StrokeColor = Colors.LightGray;
-        canvas.StrokeSize = 8;
+        // アンチエイリアス
+        canvas.Antialias = true;
+
+        // --- 背景の360°円を白で描画 ---
+        canvas.StrokeColor = config.IndicatorColor;
+        canvas.StrokeSize = 4;
+        // DrawArc で 0°→360° の円を描く
         canvas.DrawCircle(cx, cy, radius);
+        //canvas.DrawArc(
+        //    cx - radius, cy - radius,
+        //    radius * 2, radius * 2,
+        //    0f, 360f,
+        //    false, false);
 
-        // Loading circle
-        canvas.StrokeColor = Colors.Blue;
-        canvas.StrokeSize = 8;
-        var sweepAngle = 270;
-        var startAngle = (progress * 360) % 360;
-        canvas.DrawArc(cx - radius, cy - radius, radius * 2, radius * 2, startAngle, sweepAngle, false, false);
+        // --- インジケーター本体（90°の弧） ---
+        canvas.StrokeColor = Colors.White;
+        canvas.StrokeSize = 4;
+        canvas.StrokeLineCap = LineCap.Round;
+
+        // 開始角度を正規化し、90°分のスイープ角度を計算
+        var startAngle = start;
+        var sweep = 30f;
+        var endAngle = startAngle + sweep;
+
+        if (endAngle < 360)
+        //if (endAngle <= 360f)
+        {
+            // 360°を超えない場合
+            canvas.DrawArc(
+                cx - radius, cy - radius,
+                radius * 2, radius * 2,
+                startAngle, endAngle,
+                false, false);
+        }
+        else
+        {
+            // 360° をまたぐ場合はふたつに分割して描画
+            // 1) startAngle → 360°
+            canvas.DrawArc(
+                cx - radius, cy - radius,
+                radius * 2, radius * 2,
+                startAngle, 360f,
+                false, false);
+            // 2) 0° → (endAngle - 360f)
+            canvas.DrawArc(
+                cx - radius, cy - radius,
+                radius * 2, radius * 2,
+                0f, endAngle - 360f,
+                false, false);
+        }
+
+        //// 中心へ移動して回転
+        //var centerX = dirtyRect.Center.X;
+        //var centerY = dirtyRect.Center.Y;
+        //canvas.Translate(centerX, centerY);
+        //canvas.Rotate(start);
+
+        //// 描画スタイル
+        //canvas.StrokeColor = Colors.DodgerBlue;
+        //canvas.StrokeSize = 8;
+        //canvas.StrokeLineCap = LineCap.Round;
+
+        //// 半径を計算
+        //float radius = 32;
+
+        //// 中心から外周に向かう線分を描画
+        //// (0, -radius) から (0, -radius + 長さ) へ
+        //float lineLength = 40;
+        //canvas.DrawLine(0, -radius, 0, -radius + lineLength);
+
+        //Style = SKPaintStyle.Stroke,
+        //Color = SKColors.DeepSkyBlue,    // 青い色
+        //StrokeCap = SKStrokeCap.Round
+
+        // Calculate center and radius
+        //var cx = width / 2f;
+        //    var cy = height / 2f;
+        //    var radius = Math.Min(width, height) / 2f - paint.StrokeWidth * 1.5f;
+
+        //     Define the spinner arc (270° sweep)
+        //    var startAngle = _angle;
+        //    var sweepAngle = 270f;
+
+        //     Convert to SKRect
+        //    var rect = new SKRect(
+        //        cx - radius,
+        //        cy - radius,
+        //        cx + radius,
+        //        cy + radius);
+
+        //     Draw the arc
+        //    canvas.DrawArc(rect, startAngle, sweepAngle, false, paint);
+        //}
+
+        //var size = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.8f;
+        //var cx = dirtyRect.Center.X;
+        //var cy = dirtyRect.Center.Y;
+        //var radius = size / 2;
+
+        //// Back circle
+        //canvas.StrokeColor = Colors.LightGray;
+        //canvas.StrokeSize = 8;
+        //canvas.DrawCircle(cx, cy, radius);
+
+        //// Loading circle
+        //canvas.StrokeColor = Colors.Blue;
+        //canvas.StrokeSize = 8;
+        //var sweepAngle = 270;
+        //var startAngle = (progress * 360) % 360;
+        //canvas.DrawArc(cx - radius, cy - radius, radius * 2, radius * 2, startAngle, sweepAngle, false, false);
     }
 }

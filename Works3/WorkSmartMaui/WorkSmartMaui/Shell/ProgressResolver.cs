@@ -53,7 +53,7 @@ public sealed class ProgressResolver
 
     private static CircleProgressStrategy ResolveCircleStrategyInternal()
     {
-        circleStrategy ??= new CircleProgressStrategy();
+        circleStrategy ??= new CircleProgressStrategy(defaultConfig);
         return circleStrategy;
     }
 

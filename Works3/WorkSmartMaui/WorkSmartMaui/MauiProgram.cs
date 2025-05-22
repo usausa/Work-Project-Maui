@@ -2,6 +2,8 @@ namespace WorkSmartMaui;
 
 using Microsoft.Extensions.Logging;
 
+using WorkSmartMaui.Shell;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -18,6 +20,13 @@ public static class MauiProgram
 #if DEBUG
     	builder.Logging.AddDebug();
 #endif
+
+        ProgressResolver.Configure(c =>
+        {
+            c.IndicatorColor = Color.FromArgb("448AFF");
+            c.RateCircleColor1 = Color.FromArgb("448AFF");
+            c.RateCircleColor2 = Color.FromArgb("E0E0E0");
+        });
 
         return builder.Build();
     }
