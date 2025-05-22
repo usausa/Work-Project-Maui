@@ -189,7 +189,6 @@ public sealed class CircleProgressStrategy : IProgressStrategy, IDisposable
         MainThread.BeginInvokeOnMainThread(() => callback?.Invalidate());
     }
 
-
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var size = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.8f;

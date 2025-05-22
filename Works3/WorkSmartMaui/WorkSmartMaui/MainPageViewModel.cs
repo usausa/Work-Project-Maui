@@ -1,5 +1,3 @@
-using WorkSmartMaui.Shell;
-
 namespace WorkSmartMaui;
 
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +6,8 @@ using System.Windows.Input;
 
 using Smart.Maui.Messaging;
 using Smart.Mvvm;
+
+using WorkSmartMaui.Shell;
 
 internal partial class MainPageViewModel : AppViewModelBase
 {
@@ -91,9 +91,6 @@ internal partial class MainPageViewModel : AppViewModelBase
         {
             Errors.ClearErrors(nameof(Text1));
         });
-        FocusErrorCommand = MakeDelegateCommand(() =>
-        {
-            ValidationFocusRequest.FocusRequest();
-        });
+        FocusErrorCommand = MakeDelegateCommand(ValidationFocusRequest.FocusRequest);
     }
 }
