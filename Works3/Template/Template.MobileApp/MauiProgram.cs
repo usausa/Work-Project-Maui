@@ -70,8 +70,8 @@ public static partial class MauiProgram
             .UseMauiCommunityToolkit()
             .UseShiny()
             .UseMauiCameraView()
-            .UseMauiInterfaces()
-            .UseCommunityToolkitInterfaces()
+            .UseMauiServices()
+            .UseCommunityToolkitServices()
             .ConfigureCustomControls()
             .ConfigureCustomBehaviors(static c =>
             {

@@ -11,7 +11,7 @@
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
              IsEnabled="{Binding BusyState.IsBusy, Converter={StaticResource ReverseConverter}}"
-             IsBusy="{Binding BusyState.IsBusy}">
+             IsBusy="False">
 
     <ContentPage.Behaviors>
         <si:AppLifecycleBehavior />
