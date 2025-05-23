@@ -2,6 +2,7 @@ namespace Template.MobileApp.Modules;
 
 using Template.MobileApp.Shell;
 
+[ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public abstract class AppViewModelBase : ExtendViewModelBase, INavigatorAware, INavigationEventSupport, INotifySupportAsync<ShellEvent>
 {
     public INavigator Navigator { get; set; } = default!;

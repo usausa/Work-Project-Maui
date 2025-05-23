@@ -10,8 +10,10 @@
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
-             IsEnabled="{Binding BusyState.IsBusy, Converter={StaticResource ReverseConverter}}"
-             IsBusy="False">
+             IsEnabled="True"
+             IsBusy="False"
+             shell:ShellProperty.ProgressView="{Binding ProgressView}"
+             shell:ShellProperty.ProgressVisible="{Binding BusyState.IsBusy}">
 
     <ContentPage.Behaviors>
         <si:AppLifecycleBehavior />

@@ -1,5 +1,7 @@
 namespace Template.MobileApp;
 
+using Smart.Maui;
+
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
@@ -8,6 +10,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     private readonly IScreen screen;
 
     public INavigator Navigator { get; }
+
+    public IProgressView ProgressView { get; }
 
     [ObservableProperty]
     public partial string Title { get; set; } = default!;
@@ -48,11 +52,13 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public MainPageViewModel(
         ILogger<MainPageViewModel> log,
         INavigator navigator,
+        IProgressView progressView,
         IScreen screen,
         IDialog dialog)
     {
-        this.screen = screen;
         Navigator = navigator;
+        ProgressView = progressView;
+        this.screen = screen;
 
         Function1Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function1), () => Function1Enabled);
         Function2Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function2), () => Function2Enabled);

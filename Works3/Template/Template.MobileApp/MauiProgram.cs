@@ -36,64 +36,49 @@ using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
+using Template.MobileApp.Shell;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        // Builder
         var builder = MauiApp.CreateBuilder();
-        builder
+        MauiApp.CreateBuilder()
             .UseMauiApp<App>()
-#if ANDROID
-            // ReSharper disable UnusedParameter.Local
-            .ConfigureLifecycleEvents(static events =>
-            {
-                // Lifecycle
-#if DEVICE_FULL_SCREEN
-                events.AddAndroid(static android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
-#endif
-            })
-            // ReSharper restore UnusedParameter.Local
-#endif
-            .ConfigureFonts(static fonts =>
-            {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
-                fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
-                fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
-                fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
-            })
-            //.ConfigureEssentials(static c => { })
+            .ConfigureFonts(ConfigureFonts)
+            .ConfigureLifecycleEvents(ConfigureLifecycle)
+            .ConfigureEssentials(ConfigureEssentials)
+            .ConfigureLogging()
             .UseMauiCommunityToolkit()
             .UseShiny()
             .UseMauiCameraView()
             .UseMauiServices()
             .UseCommunityToolkitServices()
-            .ConfigureCustomControls()
-            .ConfigureCustomBehaviors(static c =>
-            {
-#if DEVICE_HAS_KEYPAD
-                c.HandleEnterKey = true;
-                c.DisableShowSoftInputOnFocus = true;
-#else
-                c.HandleEnterKey = false;
-                c.DisableShowSoftInputOnFocus = false;
-#endif
-            })
+            .ConfigureGlobalSettings()
+            .ConfigureViewSettings()
+            .ConfigureServices()
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
+        return builder.Build();
+    }
 
-        // Logging
-        builder.Logging
+    // ------------------------------------------------------------
+    // Logging
+    // ------------------------------------------------------------
+
+    private static MauiAppBuilder ConfigureLogging(this MauiAppBuilder builder)
+    {
+        // Debug
 #if DEBUG
-            .AddDebug()
+        builder.Logging.AddDebug();
 #endif
-#if ANDROID && !DEBUG
-            .AddAndroidLogger(static options => options.ShortCategory = true)
+
+        // Android
+#if ANDROID
+        builder.Logging.AddAndroidLogger(static options => options.ShortCategory = true);
 #endif
-            .AddFileLogger(static options =>
+        // File
+        builder.Logging.AddFileLogger(static options =>
             {
 #if ANDROID
                 options.Directory = Path.Combine(AndroidHelper.GetExternalFilesDir(), "log");
@@ -102,11 +87,30 @@ public static partial class MauiProgram
             })
             .AddFilter(typeof(MauiProgram).Namespace, LogLevel.Debug);
 
-        // Components
-        builder.Services.AddBluetoothLE();
-        builder.Services.AddBleHostedCharacteristic<UserCharacteristic>();
-        builder.Services.AddBluetoothLeHosting();
+        return builder;
+    }
 
+    // ------------------------------------------------------------
+    // Application
+    // ------------------------------------------------------------
+
+    // ReSharper disable UnusedParameter.Local
+    private static void ConfigureLifecycle(ILifecycleBuilder effects)
+    {
+#if ANDROID && DEVICE_FULL_SCREEN
+        events.AddAndroid(static android => android.OnCreate(static (activity, _) => AndroidHelper.FullScreen(activity)));
+#endif
+    }
+    // ReSharper restore UnusedParameter.Local
+
+    // ReSharper disable UnusedParameter.Local
+    private static void ConfigureEssentials(IEssentialsBuilder config)
+    {
+    }
+    // ReSharper restore UnusedParameter.Local
+
+    private static MauiAppBuilder ConfigureGlobalSettings(this MauiAppBuilder builder)
+    {
         // Config DataMapper
         SqlMapperConfig.Default.ConfigureTypeHandlers(static config =>
         {
@@ -122,19 +126,85 @@ public static partial class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // Config App Center
-        if (!String.IsNullOrEmpty(Variants.AppCenterSecret))
-        {
-            Microsoft.AppCenter.AppCenter.Start(
-                Variants.AppCenterSecret,
-                typeof(Microsoft.AppCenter.Analytics.Analytics),
-                typeof(Microsoft.AppCenter.Crashes.Crashes));
-        }
+        // TODO App center alternative
 
         // Crash dump
         CrashReport.Start();
 
-        return builder.Build();
+        return builder;
+    }
+
+    private static MauiAppBuilder ConfigureViewSettings(this MauiAppBuilder builder)
+    {
+        // Controls
+        builder.ConfigureCustomControls();
+
+        // Behaviors
+        builder.ConfigureCustomBehaviors(static options =>
+        {
+#if DEVICE_HAS_KEYPAD
+            options.HandleEnterKey = true;
+            options.DisableShowSoftInputOnFocus = true;
+#else
+            options.HandleEnterKey = false;
+            options.DisableShowSoftInputOnFocus = false;
+#endif
+        });
+
+        // Progress
+        builder.UseCustomProgress(ConfigureProgressDesign);
+
+        return builder;
+    }
+
+    // ------------------------------------------------------------
+    // Design
+    // ------------------------------------------------------------
+
+    private static void ConfigureFonts(IFontCollection fonts)
+    {
+        fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+        fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+        fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular");
+        fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
+        fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
+        fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
+    }
+
+    private static void ConfigureProgressDesign(ProgressConfig config)
+    {
+        var resources = Application.Current!.Resources;
+        config.IndicatorColor1 = resources.FindResource<Color>("BlueAccent2");
+        config.IndicatorColor2 = resources.FindResource<Color>("BlueAccent4");
+        config.RateCircleColor1 = resources.FindResource<Color>("BlueAccent2");
+        config.RateCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+    }
+
+    private static void ConfigureDialogDesign(DialogConfig config)
+    {
+        var resources = Application.Current!.Resources;
+        config.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
+        config.LoadingMessageBackgroundColor = Colors.White;
+        config.LoadingMessageColor = Colors.Black;
+        config.LoadingMessageFontSize = 28;
+        config.ProgressValueColor = Colors.Black;
+        config.ProgressAreaBackgroundColor = Colors.White;
+        config.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
+        config.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+    }
+
+    // ------------------------------------------------------------
+    // Components
+    // ------------------------------------------------------------
+
+    private static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
+    {
+        // Components
+        builder.Services.AddBluetoothLE();
+        builder.Services.AddBleHostedCharacteristic<UserCharacteristic>();
+        builder.Services.AddBluetoothLeHosting();
+
+        return builder;
     }
 
     private static void ConfigureContainer(ResolverConfig config)
@@ -147,18 +217,9 @@ public static partial class MauiProgram
             .UsePageContextScope();
 
         // MauiComponents
-#if ANDROID
         config.AddComponentsDialog(static c =>
         {
-            var resources = Application.Current!.Resources;
-            c.IndicatorColor = resources.FindResource<Color>("BlueAccent2");
-            c.LoadingMessageBackgroundColor = Colors.White;
-            c.LoadingMessageColor = Colors.Black;
-            c.LoadingMessageFontSize = 28;
-            c.ProgressValueColor = Colors.Black;
-            c.ProgressAreaBackgroundColor = Colors.White;
-            c.ProgressCircleColor1 = resources.FindResource<Color>("BlueAccent2");
-            c.ProgressCircleColor2 = resources.FindResource<Color>("GrayLighten2");
+            ConfigureDialogDesign(c);
 #if DEVICE_HAS_KEYPAD
             c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
             c.IgnorePromptDismissKeys = new[] { Keycode.Del };
@@ -167,7 +228,6 @@ public static partial class MauiProgram
             c.EnablePromptEnterAction = true;
             c.EnablePromptSelectAll = true;
         });
-#endif
         config.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
         config.AddComponentsPopupPlugin<PopupFocusPlugin>();
         config.AddComponentsSerializer();
@@ -220,6 +280,10 @@ public static partial class MauiProgram
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
     }
+
+    // ------------------------------------------------------------
+    // View & Dialog
+    // ------------------------------------------------------------
 
     [ViewSource]
     public static partial IEnumerable<KeyValuePair<ViewId, Type>> ViewSource();
