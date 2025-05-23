@@ -43,8 +43,9 @@ public static partial class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Builder
         var builder = MauiApp.CreateBuilder();
-        MauiApp.CreateBuilder()
+        builder
             .UseMauiApp<App>()
             .ConfigureFonts(ConfigureFonts)
             .ConfigureLifecycleEvents(ConfigureLifecycle)
