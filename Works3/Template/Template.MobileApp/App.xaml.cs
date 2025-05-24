@@ -2,7 +2,6 @@ namespace Template.MobileApp;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
 public sealed partial class App
@@ -12,6 +11,9 @@ public sealed partial class App
     public App(IServiceProvider serviceProvider, ILogger<App> log)
     {
         this.serviceProvider = serviceProvider;
+
+        // Default theme light
+        Current!.UserAppTheme = AppTheme.Light;
 
         InitializeComponent();
 

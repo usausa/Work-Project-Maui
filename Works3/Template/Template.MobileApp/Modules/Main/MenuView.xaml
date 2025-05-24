@@ -20,15 +20,15 @@
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId NavigationMenu}"
+                    CommandParameter="{markup:ViewId BasicMenu}"
                     input:Shortcut.Key="Num1"
-                    Text="1.Navigation" />
+                    Text="1.Basic" />
             <Button Grid.Row="1"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId DialogMenu}"
+                    CommandParameter="{markup:ViewId NavigationMenu}"
                     input:Shortcut.Key="Num2"
-                    Text="2.Dialog" />
+                    Text="2.Navigation" />
             <Button Grid.Row="2"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
@@ -56,21 +56,20 @@
             <Button Grid.Row="6"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId BasicMenu}"
+                    CommandParameter="{markup:ViewId SampleMenu}"
                     input:Shortcut.Key="Num7"
-                    Text="7.Basic" />
+                    Text="7.Sample" />
             <Button Grid.Row="7"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId SampleMenu}"
+                    CommandParameter="{markup:ViewId UIMenu}"
                     input:Shortcut.Key="Num8"
-                    Text="8.Sample" />
+                    Text="8.UI" />
             <Button Grid.Row="8"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId UIMenu}"
+                    IsEnabled="False"
                     input:Shortcut.Key="Num9"
-                    Text="9.UI" />
+                    Text="" />
         </Grid>
 
         <Grid Grid.Row="1"

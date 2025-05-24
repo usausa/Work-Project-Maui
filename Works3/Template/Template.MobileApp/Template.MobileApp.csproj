@@ -101,4 +101,19 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Modules\Basic\BasicProgressView.xaml.cs">
+      <DependentUpon>BasicProgressView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Modules\Basic\BasicDialogView.xaml.cs">
+      <DependentUpon>BasicDialogView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Modules\Basic\BasicProgressView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
 </Project>

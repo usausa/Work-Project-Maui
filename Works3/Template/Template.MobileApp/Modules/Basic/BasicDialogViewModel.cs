@@ -1,6 +1,6 @@
-namespace Template.MobileApp.Modules.Navigation;
+namespace Template.MobileApp.Modules.Basic;
 
-public sealed class DialogMenuViewModel : AppViewModelBase
+public sealed class BasicDialogViewModel : AppViewModelBase
 {
     private int count;
 
@@ -16,7 +16,7 @@ public sealed class DialogMenuViewModel : AppViewModelBase
     public IObserveCommand SnackbarCommand { get; }
     public IObserveCommand ToastCommand { get; }
 
-    public DialogMenuViewModel(
+    public BasicDialogViewModel(
         IDialog dialog)
     {
         InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("Information"));
@@ -84,7 +84,7 @@ public sealed class DialogMenuViewModel : AppViewModelBase
         });
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }
