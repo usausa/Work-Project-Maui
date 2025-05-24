@@ -152,8 +152,8 @@ public static partial class MauiProgram
 #endif
         });
 
-        // Progress
-        builder.UseCustomProgress(ConfigureProgressDesign);
+        // Busy
+        builder.UseCustomBusyOverlay();
 
         return builder;
     }
@@ -170,15 +170,6 @@ public static partial class MauiProgram
         fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
         fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
         fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
-    }
-
-    private static void ConfigureProgressDesign(ProgressConfig config)
-    {
-        var resources = Application.Current!.Resources;
-        config.IndicatorColor1 = resources.FindResource<Color>("BlueAccent2");
-        config.IndicatorColor2 = resources.FindResource<Color>("BlueAccent4");
-        config.RateCircleColor1 = resources.FindResource<Color>("BlueAccent2");
-        config.RateCircleColor2 = resources.FindResource<Color>("GrayLighten2");
     }
 
     private static void ConfigureDialogDesign(DialogConfig config)

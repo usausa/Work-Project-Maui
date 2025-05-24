@@ -169,43 +169,43 @@ public static class ShellProperty
     }
 
     // ------------------------------------------------------------
-    // Progress
+    // Busy
     // ------------------------------------------------------------
 
-    public static readonly BindableProperty ProgressVisibleProperty = BindableProperty.CreateAttached(
-        "ProgressVisible",
+    public static readonly BindableProperty BusyVisibleProperty = BindableProperty.CreateAttached(
+        "BusyVisible",
         typeof(bool),
         typeof(ShellProperty),
         false,
-        propertyChanged: HandleProgressVisibleChanged);
+        propertyChanged: HandleBusyVisibleChanged);
 
-    public static readonly BindableProperty ProgressViewProperty = BindableProperty.CreateAttached(
-        "ProgressView",
-        typeof(IProgressView),
+    public static readonly BindableProperty BusyViewProperty = BindableProperty.CreateAttached(
+        "BusyView",
+        typeof(IBusyView),
         typeof(ShellProperty),
         null,
-        propertyChanged: HandleProgressViewChanged);
+        propertyChanged: HandleBusyViewChanged);
 
-    public static bool GetProgressVisible(BindableObject obj) =>
-        (bool)obj.GetValue(ProgressVisibleProperty);
+    public static bool GetBusyVisible(BindableObject obj) =>
+        (bool)obj.GetValue(BusyVisibleProperty);
 
-    public static void SetProgressVisible(BindableObject obj, bool value) =>
-        obj.SetValue(ProgressVisibleProperty, value);
+    public static void SetBusyVisible(BindableObject obj, bool value) =>
+        obj.SetValue(BusyVisibleProperty, value);
 
-    public static IProgressView? GetProgressView(BindableObject obj) =>
-        (IProgressView?)obj.GetValue(ProgressViewProperty);
+    public static IBusyView? GetBusyView(BindableObject obj) =>
+        (IBusyView?)obj.GetValue(BusyViewProperty);
 
-    public static void SetProgressView(BindableObject obj, IProgressView? value) =>
-        obj.SetValue(ProgressViewProperty, value);
+    public static void SetBusyView(BindableObject obj, IBusyView? value) =>
+        obj.SetValue(BusyViewProperty, value);
 
-    private static void HandleProgressVisibleChanged(BindableObject bindable, object? oldValue, object? newValue)
+    private static void HandleBusyVisibleChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
         if (oldValue == newValue)
         {
             return;
         }
 
-        var view = GetProgressView(bindable);
+        var view = GetBusyView(bindable);
         if (view is null)
         {
             return;
@@ -221,27 +221,27 @@ public static class ShellProperty
         }
     }
 
-    private static void HandleProgressViewChanged(BindableObject bindable, object? oldValue, object? newValue)
+    private static void HandleBusyViewChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
         if (oldValue == newValue)
         {
             return;
         }
 
-        if (oldValue is IProgressView oldProgressView)
+        if (oldValue is IBusyView oldBusyView)
         {
-            oldProgressView.Hide();
+            oldBusyView.Hide();
         }
-        if (newValue is IProgressView newProgressView)
+        if (newValue is IBusyView newBusyView)
         {
-            var visible = GetProgressVisible(bindable);
+            var visible = GetBusyVisible(bindable);
             if (visible)
             {
-                newProgressView.Show();
+                newBusyView.Show();
             }
             else
             {
-                newProgressView.Hide();
+                newBusyView.Hide();
             }
         }
     }

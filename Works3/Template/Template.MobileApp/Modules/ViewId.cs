@@ -12,7 +12,6 @@ public enum ViewId
     BasicConverter,
     BasicBehavior,
     BasicDialog,
-    BasicProgress,
     BasicValidation,
 
     // Navigation

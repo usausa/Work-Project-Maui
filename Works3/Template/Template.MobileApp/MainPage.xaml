@@ -12,8 +12,8 @@
              sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
              IsEnabled="True"
              IsBusy="False"
-             shell:ShellProperty.ProgressView="{Binding ProgressView}"
-             shell:ShellProperty.ProgressVisible="{Binding BusyState.IsBusy}">
+             shell:ShellProperty.BusyView="{Binding BusyView}"
+             shell:ShellProperty.BusyVisible="{Binding BusyState.IsBusy}">
 
     <ContentPage.Behaviors>
         <si:AppLifecycleBehavior />

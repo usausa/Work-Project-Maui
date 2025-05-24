@@ -2,6 +2,7 @@ namespace Template.MobileApp;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
 public sealed partial class App
@@ -29,6 +30,9 @@ public sealed partial class App
     // ReSharper disable once AsyncVoidMethod
     protected override async void OnStart()
     {
+        // Report previous exception
+        await CrashReport.ShowReport();
+
         // Permissions
         await Permissions.RequestCameraAsync();
         await Permissions.RequestLocationAsync();

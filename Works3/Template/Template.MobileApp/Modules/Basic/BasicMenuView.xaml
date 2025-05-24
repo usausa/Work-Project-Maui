@@ -45,12 +45,11 @@
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId BasicProgress}"
-                Text="Progress" />
+                CommandParameter="{markup:ViewId BasicValidation}"
+                Text="Validation" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId BasicValidation}"
+                IsEnabled="False"
                 Text="Validation" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"

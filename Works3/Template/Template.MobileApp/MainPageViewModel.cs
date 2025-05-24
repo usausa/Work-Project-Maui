@@ -11,7 +11,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public INavigator Navigator { get; }
 
-    public IProgressView ProgressView { get; }
+    public IBusyView BusyView { get; }
 
     [ObservableProperty]
     public partial string Title { get; set; } = default!;
@@ -52,12 +52,12 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public MainPageViewModel(
         ILogger<MainPageViewModel> log,
         INavigator navigator,
-        IProgressView progressView,
+        IBusyView progressView,
         IScreen screen,
         IDialog dialog)
     {
         Navigator = navigator;
-        ProgressView = progressView;
+        BusyView = progressView;
         this.screen = screen;
 
         Function1Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function1), () => Function1Enabled);

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Shell;
 
-public interface IProgressView
+public interface IBusyView
 {
     void Show();
 
