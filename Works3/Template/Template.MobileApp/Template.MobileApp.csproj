@@ -101,10 +101,4 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Modules\Basic\BasicDialogView.xaml.cs">
-      <DependentUpon>BasicDialogView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>
