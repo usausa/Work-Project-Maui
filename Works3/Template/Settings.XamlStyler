@@ -25,7 +25,7 @@
     "xmlns:sm",
     "xmlns:smx",
     "xmlns:sr",
-    "xmlns:sn",
+    "xmlns:sv",
 
     "xmlns:mcs",
     "xmlns:mct",
@@ -60,7 +60,8 @@
     "x:Name, Name",
     "x:Uid, Uid",
 
-    "s:Key",
+    "s:Behavior.Key",
+    "sv:ValidationProperty.*",
 
     "BasedOn, TargetType",
 
