@@ -1,0 +1,32 @@
+<Solution>
+  <Folder Name="/CameraQr/">
+    <Project Path="WorkCameraQr/DeviceSample/DeviceSample.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/CssStyle/">
+    <Project Path="WorkCssStyle/StyleSample/StyleSample.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/DrawMvvm/">
+    <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/LibIcon/">
+    <Project Path="WorkIcon/WorkIcon.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/StatusWifi/">
+    <Project Path="WorkStatusWifi/DeviceStatusExample/DeviceStatusExample.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+  </Folder>
+  <Folder Name="/VisualTimeline/">
+    <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+</Solution>
