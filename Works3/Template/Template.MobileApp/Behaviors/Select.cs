@@ -7,30 +7,30 @@ public static class Select
 {
     public static readonly BindableProperty ListProperty = BindableProperty.CreateAttached(
         "List",
-        typeof(ICollection<SelectItem>),
-        typeof(SelectItem),
+        typeof(IList<SelectItem>),
+        typeof(Select),
         null,
         propertyChanged: HandlePropertyChanged);
 
     public static readonly BindableProperty ValueProperty = BindableProperty.CreateAttached(
         "Value",
         typeof(object),
-        typeof(SelectItem),
+        typeof(Select),
         null,
         propertyChanged: HandlePropertyChanged);
 
     public static readonly BindableProperty EmptyStringProperty = BindableProperty.CreateAttached(
         "EmptyString",
         typeof(string),
-        typeof(SelectItem),
+        typeof(Select),
         null,
         propertyChanged: HandlePropertyChanged);
 
-    public static List<SelectItem>? GetList(BindableObject view) => (List<SelectItem>)view.GetValue(ListProperty);
+    public static IList<SelectItem>? GetList(BindableObject view) => (IList<SelectItem>)view.GetValue(ListProperty);
 
-    public static void SetList(BindableObject view, List<SelectItem>? value) => view.SetValue(ListProperty, value);
+    public static void SetList(BindableObject view, IList<SelectItem>? value) => view.SetValue(ListProperty, value);
 
-    public static object? GetValue(BindableObject view) => (string)view.GetValue(ValueProperty);
+    public static object? GetValue(BindableObject view) => view.GetValue(ValueProperty);
 
     public static void SetValue(BindableObject view, object? value) => view.SetValue(ValueProperty, value);
 
@@ -43,6 +43,15 @@ public static class Select
         var list = GetList(bindable);
         if (list is null)
         {
+            var text = GetEmptyString(bindable) ?? string.Empty;
+            if (bindable is Button button)
+            {
+                button.Text = text;
+            }
+            else if (bindable is Label label)
+            {
+                label.Text = text;
+            }
             return;
         }
 
