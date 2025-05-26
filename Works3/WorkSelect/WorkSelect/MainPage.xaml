@@ -12,7 +12,16 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
-            <Button Command="{Binding ExecuteCommand}" Text="{Binding Value}" />
+            <Button
+                app:Select.EmptyString="-"
+                app:Select.Value="{Binding Value1}"
+                Command="{Binding Execute1Command}"
+                Text="{Binding Value1}" />
+            <Button
+                app:Select.EmptyString="-"
+                app:Select.Value="{Binding Value2}"
+                Command="{Binding Execute2Command}"
+                Text="{Binding Value2}" />
         </VerticalStackLayout>
     </ScrollView>
 
