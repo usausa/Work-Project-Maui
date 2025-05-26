@@ -7,7 +7,7 @@ public static class Select
 {
     public static readonly BindableProperty ListProperty = BindableProperty.CreateAttached(
         "List",
-        typeof(IList<SelectItem>),
+        typeof(IEnumerable<SelectItem>),
         typeof(Select),
         null,
         propertyChanged: HandlePropertyChanged);
@@ -26,17 +26,17 @@ public static class Select
         null,
         propertyChanged: HandlePropertyChanged);
 
-    public static IList<SelectItem>? GetList(BindableObject view) => (IList<SelectItem>)view.GetValue(ListProperty);
+    public static IEnumerable<SelectItem?>? GetList(BindableObject obj) => (IEnumerable<SelectItem>)obj.GetValue(ListProperty);
 
-    public static void SetList(BindableObject view, IList<SelectItem>? value) => view.SetValue(ListProperty, value);
+    public static void SetList(BindableObject obj, IEnumerable<SelectItem?>? value) => obj.SetValue(ListProperty, value);
 
-    public static object? GetValue(BindableObject view) => view.GetValue(ValueProperty);
+    public static object? GetValue(BindableObject obj) => obj.GetValue(ValueProperty);
 
-    public static void SetValue(BindableObject view, object? value) => view.SetValue(ValueProperty, value);
+    public static void SetValue(BindableObject obj, object? value) => obj.SetValue(ValueProperty, value);
 
-    public static string? GetEmptyString(BindableObject view) => (string?)view.GetValue(EmptyStringProperty);
+    public static string? GetEmptyString(BindableObject obj) => (string?)obj.GetValue(EmptyStringProperty);
 
-    public static void SetEmptyString(BindableObject view, string? value) => view.SetValue(EmptyStringProperty, value);
+    public static void SetEmptyString(BindableObject obj, string? value) => obj.SetValue(EmptyStringProperty, value);
 
     private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -56,7 +56,7 @@ public static class Select
         }
 
         var key = GetValue(bindable);
-        var entity = list.FirstOrDefault(x => Equals(x.Key, key));
+        var entity = list.FirstOrDefault(x => Equals(x?.Key, key));
         if (entity is null)
         {
             var text = GetEmptyString(bindable) ?? string.Empty;
