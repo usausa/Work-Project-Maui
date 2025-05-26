@@ -1,9 +1,14 @@
-using System.Diagnostics;
-
 namespace WorkSelect;
 
 public static class Select
 {
+    public static readonly BindableProperty ListProperty = BindableProperty.CreateAttached(
+        "List",
+        typeof(IEnumerable<SelectItem>),
+        typeof(Select),
+        null,
+        propertyChanged: HandlePropertyChanged);
+
     public static readonly BindableProperty ValueProperty = BindableProperty.CreateAttached(
         "Value",
         typeof(object),
@@ -18,6 +23,10 @@ public static class Select
         null,
         propertyChanged: HandlePropertyChanged);
 
+    public static IEnumerable<SelectItem>? GetList(BindableObject obj) => (IEnumerable<SelectItem>)obj.GetValue(ListProperty);
+
+    public static void SetList(BindableObject obj, IEnumerable<SelectItem>? value) => obj.SetValue(ListProperty, value);
+
     public static object? GetValue(BindableObject obj) => obj.GetValue(ValueProperty);
 
     public static void SetValue(BindableObject obj, object? value) => obj.SetValue(ValueProperty, value);
@@ -28,6 +37,45 @@ public static class Select
 
     private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        Debug.WriteLine("** " + newValue);
+        var list = GetList(bindable);
+        if (list is null)
+        {
+            var text = GetEmptyString(bindable) ?? string.Empty;
+            if (bindable is Button button)
+            {
+                button.Text = text;
+            }
+            else if (bindable is Label label)
+            {
+                label.Text = text;
+            }
+            return;
+        }
+
+        var key = GetValue(bindable);
+        var entity = list.FirstOrDefault(x => Equals(x.Key, key));
+        if (entity is null)
+        {
+            var text = GetEmptyString(bindable) ?? string.Empty;
+            if (bindable is Button button)
+            {
+                button.Text = text;
+            }
+            else if (bindable is Label label)
+            {
+                label.Text = text;
+            }
+        }
+        else
+        {
+            if (bindable is Button button)
+            {
+                button.Text = entity.Name;
+            }
+            else if (bindable is Label label)
+            {
+                label.Text = entity.Name;
+            }
+        }
     }
 }

@@ -14,14 +14,14 @@
         <VerticalStackLayout Padding="30,0" Spacing="25">
             <Button
                 app:Select.EmptyString="-"
+                app:Select.List="{Binding Items}"
                 app:Select.Value="{Binding Value1}"
-                Command="{Binding Execute1Command}"
-                Text="{Binding Value1}" />
+                Command="{Binding Execute1Command}" />
             <Button
                 app:Select.EmptyString="-"
+                app:Select.List="{Binding Items}"
                 app:Select.Value="{Binding Value2}"
-                Command="{Binding Execute2Command}"
-                Text="{Binding Value2}" />
+                Command="{Binding Execute2Command}" />
         </VerticalStackLayout>
     </ScrollView>
 
