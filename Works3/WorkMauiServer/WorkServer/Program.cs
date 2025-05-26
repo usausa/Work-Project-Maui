@@ -8,11 +8,47 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using WorkServer.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //--------------------------------------------------------------------------------
 // Add services to the container.
 //--------------------------------------------------------------------------------
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+});
+
+var jwtSetting = builder.Configuration.GetSection("Jwt").Get<JwtSetting>()!;
+builder.Services.AddSingleton(jwtSetting);
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        //options.SaveToken = true;
+        //options.IncludeErrorDetails = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSetting.Issuer,
+            ValidAudience = jwtSetting.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecretKey))
+        };
+    });
 
 builder.Services.Configure<RouteOptions>(static options =>
 {
@@ -60,8 +96,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(static o => o.SwaggerEndpoint("/openapi/v1.json", "v1"));
 }
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 // Compression
 app.UseRequestDecompression();
