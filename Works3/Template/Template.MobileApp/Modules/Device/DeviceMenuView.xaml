@@ -55,8 +55,9 @@
                 Text="Camera" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId DeviceOcr}"
+                Text="OCR" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"

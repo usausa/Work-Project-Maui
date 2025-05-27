@@ -38,20 +38,26 @@ public enum ViewId
 
     // Device
     DeviceMenu,
+
     DeviceInfo,
     DeviceStatus,
     DeviceSensor,
     DeviceLocation,
+
     DeviceQrDisplay,
     DeviceQrScan,
     DeviceCamera,
+    DeviceOcr,
+
     DeviceWiFi,
     DeviceBluetooth,
     DeviceBleHost,
     DeviceBleClient,
+
     DeviceNfc,
     DeviceAudio,
     DeviceBiometric,
+
     DeviceMisc,
 
     // Database
