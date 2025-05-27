@@ -84,10 +84,10 @@
     <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.6.0" />
     <PackageReference Include="Usa.Smart.Mapper" Version="0.8.2" />
     <PackageReference Include="Usa.Smart.Mvvm" Version="1.6.0" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.12.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.12.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.12.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.12.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="2.13.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.13.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.13.1" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.13.1" />
     <PackageReference Include="Usa.Smart.Reactive" Version="2.4.1" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.6.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.1" />

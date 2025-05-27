@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sm="clr-namespace:Smart.Maui.Markup;assembly=Smart.Maui"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui.Extensions"
+             xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkView"
              x:DataType="{x:Type module:NetworkViewModel}"
-             sr:BindingContextResolver.Type="{x:Type module:NetworkViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:NetworkViewModel}"
              shell:ShellProperty.Title="Network"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
@@ -21,12 +20,12 @@
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding TestErrorCommand}"
-                CommandParameter="{sm:Int32 500}"
+                CommandParameter="{s:Int32 500}"
                 Text="Test error" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding TestDelayCommand}"
-                CommandParameter="{sm:Int32 5000}"
+                CommandParameter="{s:Int32 5000}"
                 Text="Test delay" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
