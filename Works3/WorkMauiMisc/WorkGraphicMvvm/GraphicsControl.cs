@@ -38,7 +38,6 @@ public sealed class GraphicsControl : GraphicsView
         {
             newValue.PropertyChanged += HandlePropertyChanged;
             Drawable = newValue;
-            Invalidate();
         }
     }
 
