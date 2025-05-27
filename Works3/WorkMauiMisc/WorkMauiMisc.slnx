@@ -1,33 +1,42 @@
 <Solution>
   <Folder Name="/BCssStyle/">
     <Project Path="WorkCssStyle/StyleSample/StyleSample.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
   <Folder Name="/BDrawMvvm/">
     <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
   <Folder Name="/BLibIcon/">
     <Project Path="WorkIcon/WorkIcon.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
   <Folder Name="/DCameraQr/">
     <Project Path="WorkCameraQr/DeviceSample/DeviceSample.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
   <Folder Name="/DStatusWifi/">
     <Project Path="WorkStatusWifi/DeviceStatusExample/DeviceStatusExample.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
   <Folder Name="/UVisualTimeline/">
     <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
+      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae" />
+  <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c" />
 </Solution>
