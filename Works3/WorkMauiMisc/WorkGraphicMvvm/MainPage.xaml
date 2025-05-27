@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:WorkGraphicMvvm"
-             xmlns:graphics="clr-namespace:Microsoft.Maui.Graphics;assembly=Microsoft.Maui.Graphics"
-             x:Class="WorkGraphicMvvm.MainPage">
+<ContentPage
+    x:Class="WorkGraphicMvvm.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:graphics="clr-namespace:Microsoft.Maui.Graphics;assembly=Microsoft.Maui.Graphics"
+    xmlns:local="clr-namespace:WorkGraphicMvvm">
 
     <ContentPage.BindingContext>
         <local:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid BackgroundColor="LightGoldenrodYellow"
-          RowDefinitions="*,Auto,Auto">
+    <Grid BackgroundColor="LightGoldenrodYellow" RowDefinitions="*,Auto,Auto">
+        <!--
         <local:CustomView Grid.Row="0"
                           CustomColor="{Binding Color.Value}" />
-        <Button Grid.Row="1"
-                Command="{Binding ColorCommand}"
-                CommandParameter="{x:Static graphics:Colors.Red}"
-                Text="Red" />
-        <Button Grid.Row="2"
-                Command="{Binding ColorCommand}"
-                CommandParameter="{x:Static graphics:Colors.Blue}"
-                Text="Blue" />
+        -->
+        <local:GraphicsControl Graphics="{Binding Graphics}" />
+        <Button
+            Grid.Row="1"
+            Command="{Binding ColorCommand}"
+            CommandParameter="{x:Static graphics:Colors.Red}"
+            Text="Red" />
+        <Button
+            Grid.Row="2"
+            Command="{Binding ColorCommand}"
+            CommandParameter="{x:Static graphics:Colors.Blue}"
+            Text="Blue" />
     </Grid>
 
 </ContentPage>
