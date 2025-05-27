@@ -29,4 +29,5 @@
       <Deploy />
     </Project>
   </Folder>
+  <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae" />
 </Solution>
