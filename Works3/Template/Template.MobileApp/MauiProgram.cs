@@ -8,6 +8,8 @@ using System.Text.Unicode;
 using Android.Views;
 #endif
 
+using BarcodeScanning;
+
 using Camera.MAUI;
 
 using CommunityToolkit.Maui;
@@ -51,6 +53,7 @@ public static partial class MauiProgram
             .UseMauiCommunityToolkit()
             .UseShiny()
             .UseMauiCameraView()
+            .UseBarcodeScanning()
             .UseMauiServices()
             .UseCommunityToolkitServices()
             .ConfigureGlobalSettings()
