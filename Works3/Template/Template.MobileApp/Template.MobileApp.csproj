@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.5.0" />
+    <PackageReference Include="BunnyTail.MemberAccessor" Version="1.7.0" />
     <PackageReference Include="Camera.MAUI" Version="1.5.1" />
     <PackageReference Include="Camera.MAUI.ZXing" Version="1.0.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />

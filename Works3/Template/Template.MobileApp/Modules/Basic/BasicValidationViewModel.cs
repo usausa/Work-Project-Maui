@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
+[GenerateAccessor]
 public sealed partial class BasicValidationViewModel : AppViewModelBase
 {
     public ValidationFocusRequest ValidationFocusRequest { get; } = new();
