@@ -50,14 +50,15 @@ public static partial class MauiProgram
             .ConfigureLifecycleEvents(ConfigureLifecycle)
             .ConfigureEssentials(ConfigureEssentials)
             .ConfigureLogging()
+            .ConfigureGlobalSettings()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitCamera()
             .UseShiny()
-            .UseMauiCameraView()
+            .UseMauiCameraView() // TODO Delete
             .UseBarcodeScanning()
             .UseMauiServices()
             .UseCommunityToolkitServices()
-            .ConfigureGlobalSettings()
-            .ConfigureViewSettings()
+            .UseCustomView()
             .ConfigureComponents()
             .ConfigureHttpClient()
             .ConfigureContainer()
@@ -135,7 +136,7 @@ public static partial class MauiProgram
         return builder;
     }
 
-    private static MauiAppBuilder ConfigureViewSettings(this MauiAppBuilder builder)
+    private static MauiAppBuilder UseCustomView(this MauiAppBuilder builder)
     {
         // Controls
         builder.ConfigureCustomControls();

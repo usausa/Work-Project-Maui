@@ -22,7 +22,7 @@
 
     "xmlns:mcs",
     "xmlns:mct",
-    "xmlns:cv",
+    "xmlns:scanner",
 
     "xmlns:app",
     "xmlns:local",
