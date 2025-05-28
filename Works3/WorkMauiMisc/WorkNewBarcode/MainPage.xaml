@@ -12,14 +12,16 @@
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="*,30">
+    <Grid RowDefinitions="*,30,Auto">
         <scanner:CameraView
             Grid.Row="0"
-            AimMode="True"
-            CameraEnabled="True"
-            OnDetectionFinishedCommand="{Binding DetectCommand}"
-            VibrationOnDetected="True" />
+            app:BarcodeBind.Controller="{Binding Controller}"
+            OnDetectionFinishedCommand="{Binding DetectCommand}" />
         <Label Grid.Row="1" Text="{Binding Text}" />
+        <Button
+            Grid.Row="2"
+            Command="{Binding FlipCommand}"
+            Text="Flip" />
     </Grid>
 
 </ContentPage>
