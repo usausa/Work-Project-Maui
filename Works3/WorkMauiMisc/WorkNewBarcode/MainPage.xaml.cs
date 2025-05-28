@@ -1,24 +1,31 @@
-﻿namespace WorkNewBarcode
+namespace WorkNewBarcode
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private async void MainPage_OnLoaded(object? sender, EventArgs e)
         {
-            count++;
+            if (!await IsGrantedCameraPermissionAsync())
+            {
+                await DisplayAlert("警告", "カメラ権限がありません。", "OK");
+                return;
+            }
+        }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+        private async Task<bool> IsGrantedCameraPermissionAsync()
+        {
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+            if (status == PermissionStatus.Granted)
+            {
+                return true;
+            }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            status = await Permissions.RequestAsync<Permissions.Camera>();
+            return status == PermissionStatus.Granted;
         }
     }
 }

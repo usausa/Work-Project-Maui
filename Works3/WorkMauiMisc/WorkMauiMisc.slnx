@@ -7,7 +7,6 @@
   </Folder>
   <Folder Name="/BDrawMvvm/">
     <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
-      <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
   </Folder>
