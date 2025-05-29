@@ -37,5 +37,8 @@
   <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
     <Build Solution="Debug|*" Project="false" />
   </Project>
-  <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c" />
+  <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="WorkNewCamera/WorkNewCamera.csproj" Id="a59093a0-0efa-4559-be97-59df7f5dd876" />
 </Solution>
