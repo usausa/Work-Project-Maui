@@ -39,7 +39,10 @@
                 Grid.Column="2"
                 Command="{Binding FlipCommand}"
                 Text="Flip" />
-            <Button Grid.Column="3" Text="Shot" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding CaptureCommand}"
+                Text="Shot" />
         </Grid>
         <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*">
             <Button
@@ -50,14 +53,26 @@
                 Grid.Column="1"
                 Command="{Binding FlashCommand}"
                 Text="Flash" />
-            <Button Grid.Column="2" Text="Zoom-" />
-            <Button Grid.Column="3" Text="Zoom-" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding ZoomOutCommand}"
+                Text="Zoom-" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding ZoomInCommand}"
+                Text="Zoom+" />
         </Grid>
         <Grid Grid.Row="5" ColumnDefinitions="*,*,*,*">
             <Button Grid.Column="0" Text="Size-" />
             <Button Grid.Column="1" Text="Size+" />
-            <Button Grid.Column="2" Text="Start" />
-            <Button Grid.Column="3" Text="Stop" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding StartCommand}"
+                Text="Start" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding StopCommand}"
+                Text="Stop" />
         </Grid>
     </Grid>
 

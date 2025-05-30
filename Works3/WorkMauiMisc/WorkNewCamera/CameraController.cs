@@ -39,8 +39,6 @@ public sealed class CameraGetAvailableListEventArgs : ValueTaskEventArgs<IReadOn
 
 public sealed partial class CameraController : ObservableObject
 {
-    private static readonly PropertyChangedEventArgs ZoomFactorChangedEventArgs = new(nameof(ZoomFactor));
-
     [EditorBrowsable(EditorBrowsableState.Never)]
     public event EventHandler<CameraGetAvailableListEventArgs>? GetAvailableListRequest;
 
@@ -65,32 +63,8 @@ public sealed partial class CameraController : ObservableObject
     [ObservableProperty]
     public partial Size CaptureResolution { get; set; } = CameraViewDefaults.ImageCaptureResolution;
 
-    public float ZoomFactor
-    {
-        get;
-        set
-        {
-            var camera = Selected;
-            if (camera is null)
-            {
-                value = 1;
-            }
-            else if (value < camera.MinimumZoomFactor)
-            {
-                value = camera.MinimumZoomFactor;
-            }
-            else if (value > camera.MaximumZoomFactor)
-            {
-                value = camera.MaximumZoomFactor;
-            }
-
-            if (!EqualityComparer<float>.Default.Equals(field, value))
-            {
-                field = value;
-                RaisePropertyChanged(ZoomFactorChangedEventArgs);
-            }
-        }
-    } = CameraViewDefaults.ZoomFactor;
+    [ObservableProperty]
+    public partial float ZoomFactor { get; set; } = CameraViewDefaults.ZoomFactor;
 
     [ObservableProperty]
     public partial bool IsTorchOn { get; set; }

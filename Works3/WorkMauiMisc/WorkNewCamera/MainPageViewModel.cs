@@ -1,11 +1,11 @@
-using System.Diagnostics;
-using System.Windows.Input;
-using CommunityToolkit.Maui.Core.Primitives;
-using Smart;
-using Smart.Linq;
-
 namespace WorkNewCamera;
 
+using System.Diagnostics;
+using System.Windows.Input;
+
+using CommunityToolkit.Maui.Core.Primitives;
+
+using Smart.Linq;
 using Smart.Maui.ViewModels;
 
 public class MainPageViewModel : ExtendViewModelBase
@@ -17,11 +17,11 @@ public class MainPageViewModel : ExtendViewModelBase
     public ICommand FlipCommand { get; }
     public ICommand TorchCommand { get; }
     public ICommand FlashCommand { get; }
-    //public ICommand SizeCommand { get; }
-    //public ICommand ZoomCommand { get; }
-    //public ICommand StartCommand { get; }
-    //public ICommand StopCommand { get; }
-    //public ICommand CaptureCommand { get; }
+    public ICommand ZoomInCommand { get; }
+    public ICommand ZoomOutCommand { get; }
+    public ICommand StartCommand { get; }
+    public ICommand StopCommand { get; }
+    public ICommand CaptureCommand { get; }
 
     public MainPageViewModel()
     {
@@ -49,46 +49,88 @@ public class MainPageViewModel : ExtendViewModelBase
             var list = await Controller.GetAvailableListAsync();
             Debug.WriteLine($"* Count: {list.Count}");
         });
-        FlipCommand = MakeAsyncCommand(async () =>
+        FlipCommand = MakeAsyncCommand(async () => await Controller.SwitchCameraAsync());
+        TorchCommand = MakeDelegateCommand(() => Controller.IsTorchOn = !Controller.IsTorchOn);
+        FlashCommand = MakeDelegateCommand(() => { Controller.SwitchFlashMode(); });
+        ZoomInCommand = MakeDelegateCommand(() => Controller.ZoomIn());
+        ZoomOutCommand = MakeDelegateCommand(() => Controller.ZoomOut());
+        StartCommand = MakeAsyncCommand(async () => await Controller.StartPreviewAsync());
+        StopCommand = MakeAsyncCommand(async () => await Controller.StopPreviewAsync());
+        CaptureCommand = MakeAsyncCommand(async () =>
         {
-            var list = await Controller.GetAvailableListAsync();
-            if (Controller.Selected is null)
+            await using var stream = await Controller.CaptureAsync();
+            if (stream is not null)
             {
-                Controller.Selected = list.FirstOrDefault();
+                Debug.WriteLine(stream.Length);
+            }
+        });
+    }
+}
+
+public static class CameraControllerExtensions
+{
+    public static async ValueTask SwitchCameraAsync(this CameraController controller)
+    {
+        var list = await controller.GetAvailableListAsync();
+        if (controller.Selected is null)
+        {
+            controller.Selected = list.FirstOrDefault();
+        }
+        else
+        {
+            var index = list.FindIndex(x => x.DeviceId == controller.Selected.DeviceId);
+            if ((index < 0) || (index == list.Count - 1))
+            {
+                controller.Selected = list.FirstOrDefault();
             }
             else
             {
-                var index = list.FindIndex(x => x.DeviceId == Controller.Selected.DeviceId);
-                if ((index < 0) || (index == list.Count - 1))
-                {
-                    Controller.Selected = list.FirstOrDefault();
-                }
-                else
-                {
-                    Controller.Selected = list[index + 1];
-                }
+                controller.Selected = list[index + 1];
+            }
+        }
+    }
 
-            }
-        });
-        TorchCommand = MakeDelegateCommand(() => Controller.IsTorchOn = !Controller.IsTorchOn);
-        FlashCommand = MakeDelegateCommand(() =>
+    public static void SwitchFlashMode(this CameraController controller)
+    {
+        if (controller.Selected?.IsFlashSupported ?? false)
         {
-            if (Controller.Selected?.IsFlashSupported ?? false)
+            switch (controller.CameraFlashMode)
             {
-                switch (Controller.CameraFlashMode)
-                {
-                    case CameraFlashMode.Off:
-                        Controller.CameraFlashMode = CameraFlashMode.On;
-                        break;
-                    case CameraFlashMode.On:
-                        Controller.CameraFlashMode = CameraFlashMode.Auto;
-                        break;
-                    case CameraFlashMode.Auto:
-                        Controller.CameraFlashMode = CameraFlashMode.Off;
-                        break;
-                }
+                case CameraFlashMode.Off:
+                    controller.CameraFlashMode = CameraFlashMode.On;
+                    break;
+                case CameraFlashMode.On:
+                    controller.CameraFlashMode = CameraFlashMode.Auto;
+                    break;
+                case CameraFlashMode.Auto:
+                    controller.CameraFlashMode = CameraFlashMode.Off;
+                    break;
             }
-        });
+        }
+    }
+
+    public static void ZoomIn(this CameraController controller)
+    {
+        var camera = controller.Selected;
+        if (camera is null)
+        {
+            controller.ZoomFactor = 1;
+            return;
+        }
+
+        controller.ZoomFactor = Math.Min((float)Math.Floor(camera.MaximumZoomFactor), controller.ZoomFactor + 1);
+    }
+
+    public static void ZoomOut(this CameraController controller)
+    {
+        var camera = controller.Selected;
+        if (camera is null)
+        {
+            controller.ZoomFactor = 1;
+            return;
+        }
+
+        controller.ZoomFactor = Math.Max(1, controller.ZoomFactor - 1);
     }
 }
 
