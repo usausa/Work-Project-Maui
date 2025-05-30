@@ -11,12 +11,22 @@
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="*,Auto,Auto">
+    <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto">
         <toolkit:CameraView
             Grid.Row="0"
             Grid.ColumnSpan="3"
             app:CameraBind.Controller="{Binding Controller}" />
         <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*">
+            <Label Grid.Column="0" Text="{Binding Controller.IsAvailable}" />
+            <Label Grid.Column="1" Text="{Binding Controller.IsCameraBusy}" />
+            <Label Grid.Column="2" Text="{Binding Controller.IsTorchOn}" />
+            <Label Grid.Column="3" Text="{Binding Controller.CameraFlashMode}" />
+        </Grid>
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*">
+            <Label Grid.Column="0" Text="{Binding Controller.ZoomFactor}" />
+            <Label Grid.Column="1" Text="{Binding Controller.CaptureResolution}" />
+        </Grid>
+        <Grid Grid.Row="3" ColumnDefinitions="*,*,*,*">
             <Button
                 Grid.Column="0"
                 Command="{Binding InfoCommand}"
@@ -25,14 +35,29 @@
                 Grid.Column="1"
                 Command="{Binding ListCommand}"
                 Text="List" />
-            <Button Grid.Column="2" />
-            <Button Grid.Column="3" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding FlipCommand}"
+                Text="Flip" />
+            <Button Grid.Column="3" Text="Shot" />
         </Grid>
-        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*">
-            <Button Grid.Column="0" />
-            <Button Grid.Column="1" />
-            <Button Grid.Column="2" />
-            <Button Grid.Column="3" />
+        <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*">
+            <Button
+                Grid.Column="0"
+                Command="{Binding TorchCommand}"
+                Text="Torch" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding FlashCommand}"
+                Text="Flash" />
+            <Button Grid.Column="2" Text="Zoom-" />
+            <Button Grid.Column="3" Text="Zoom-" />
+        </Grid>
+        <Grid Grid.Row="5" ColumnDefinitions="*,*,*,*">
+            <Button Grid.Column="0" Text="Size-" />
+            <Button Grid.Column="1" Text="Size+" />
+            <Button Grid.Column="2" Text="Start" />
+            <Button Grid.Column="3" Text="Stop" />
         </Grid>
     </Grid>
 
