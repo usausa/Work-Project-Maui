@@ -101,7 +101,8 @@ public sealed partial class CameraController : ObservableObject
     {
         var args = new CameraGetAvailableListEventArgs
         {
-            Token = token
+            Token = token,
+            CameraList = []
         };
         GetAvailableListRequest?.Invoke(this, args);
         return args.Task;

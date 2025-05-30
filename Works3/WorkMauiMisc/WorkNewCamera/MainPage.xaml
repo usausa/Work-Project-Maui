@@ -11,8 +11,29 @@
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,30">
-        <toolkit:CameraView Grid.Row="0" Grid.ColumnSpan="3" />
+    <Grid RowDefinitions="*,Auto,Auto">
+        <toolkit:CameraView
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            app:CameraBind.Controller="{Binding Controller}" />
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*">
+            <Button
+                Grid.Column="0"
+                Command="{Binding InfoCommand}"
+                Text="Info" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding ListCommand}"
+                Text="List" />
+            <Button Grid.Column="2" />
+            <Button Grid.Column="3" />
+        </Grid>
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*">
+            <Button Grid.Column="0" />
+            <Button Grid.Column="1" />
+            <Button Grid.Column="2" />
+            <Button Grid.Column="3" />
+        </Grid>
     </Grid>
 
 </ContentPage>
