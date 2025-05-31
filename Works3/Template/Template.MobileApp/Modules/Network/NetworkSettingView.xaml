@@ -11,9 +11,7 @@
              s:BindingContextResolver.Type="{x:Type module:NetworkSettingViewModel}"
              shell:ShellProperty.Title="NetworkSetting"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function4Text="Retry"
-             shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function4Enabled="{Binding Controller.Enable, Converter={StaticResource ReverseConverter}}">
+             shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*,Auto">
