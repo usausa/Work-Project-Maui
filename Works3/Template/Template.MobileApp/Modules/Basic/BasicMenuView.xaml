@@ -50,11 +50,11 @@
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Graphics" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Animation" />
     </Grid>
 
 </ContentView>

@@ -20,35 +20,35 @@
         <Button Grid.Row="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Profile" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Portal" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Calendar" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Grid" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Timeline" />
         <Button Grid.Row="6"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Gauge" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Calendar" />
+                Text="Radar" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Grid" />
+                Text="" />
     </Grid>
 
 </ContentView>

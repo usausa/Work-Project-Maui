@@ -44,7 +44,7 @@
             <Button Grid.Row="4"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
-                    CommandParameter="{markup:ViewId Network}"
+                    CommandParameter="{markup:ViewId NetworkMenu}"
                     input:Shortcut.Key="Num5"
                     Text="5.Network" />
             <Button Grid.Row="5"

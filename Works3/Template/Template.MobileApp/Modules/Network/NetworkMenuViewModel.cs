@@ -3,7 +3,7 @@ namespace Template.MobileApp.Modules.Network;
 using Template.MobileApp.Services;
 using Template.MobileApp.Usecase;
 
-public sealed class NetworkViewModel : AppViewModelBase
+public sealed class NetworkMenuViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
@@ -16,7 +16,7 @@ public sealed class NetworkViewModel : AppViewModelBase
     public IObserveCommand DownloadCommand { get; }
     public IObserveCommand UploadCommand { get; }
 
-    public NetworkViewModel(
+    public NetworkMenuViewModel(
         IDialog dialog,
         ApiContext apiContext,
         SampleUsecase sampleUsecase)

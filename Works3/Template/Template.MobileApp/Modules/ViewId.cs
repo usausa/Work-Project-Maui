@@ -13,6 +13,8 @@ public enum ViewId
     BasicBehavior,
     BasicDialog,
     BasicValidation,
+    BasicGraphics,
+    BasicAnimation,
 
     // Navigation
     NavigationMenu,
@@ -64,7 +66,9 @@ public enum ViewId
     Data,
 
     // Network
-    Network,
+    NetworkMenu,
+    NetworkRealtime,
+    NetworkSetting,
 
     // Key
     KeyMenu,
@@ -75,13 +79,19 @@ public enum ViewId
     // Sample
     SampleMenu,
     SampleList,
-    SampleObjectDetection,
-    SampleMap,
     SampleChart,
+    SampleMap,
+    SampleObjectDetection,
     SampleChat,
 
     // UI
     UIMenu,
+    UILogin,
+    UIProfile,
+    UIPortal,
     UICalendar,
-    UIGrid
+    UIGrid,
+    UITimeline,
+    UIGauge,
+    UIRadar,
 }
