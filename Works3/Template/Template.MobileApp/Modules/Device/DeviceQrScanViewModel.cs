@@ -2,57 +2,46 @@ namespace Template.MobileApp.Modules.Device;
 
 using BarcodeScanning;
 
-using Plugin.Maui.Audio;
-
 public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
-    private readonly IFileSystem fileSystem;
-
-    private readonly IAudioManager audioManager;
-
-#pragma warning disable CA2213
-    private IAudioPlayer? audioPlayer;
-#pragma warning restore CA2213
-
     public BarcodeController Controller { get; } = new();
 
     [ObservableProperty]
     public partial string Barcode { get; set; } = string.Empty;
 
+    public IObserveCommand TorchCommand { get; }
+    public IObserveCommand AimCommand { get; }
+    public IObserveCommand ZoomOutCommand { get; }
+    public IObserveCommand ZoomInCommand { get; }
+
     public IObserveCommand DetectCommand { get; }
 
-    public DeviceQrScanViewModel(
-        IFileSystem fileSystem,
-        IAudioManager audioManager)
+    public DeviceQrScanViewModel()
     {
-        this.fileSystem = fileSystem;
-        this.audioManager = audioManager;
-
+        //Controller.TapToFocus = true;
         Controller.AimMode = true;
+
+        TorchCommand = MakeDelegateCommand(Controller.ToggleTorch);
+        AimCommand = MakeDelegateCommand(Controller.ToggleAimMode);
+        ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
+        ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
 
         DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
+            Controller.PauseScanning = true;
+
+            // TODO
             if (x.Count > 0)
             {
-                var barcode = x.First().DisplayValue;
-                if (Barcode != barcode)
-                {
-                    Barcode = barcode;
-                    audioPlayer?.Play();
-                }
+                Barcode = x.First().DisplayValue;
             }
+
+            Controller.PauseScanning = false;
         });
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    public override async void OnNavigatedTo(INavigationContext context)
+    public override void OnNavigatedTo(INavigationContext context)
     {
-        if (!context.Attribute.IsRestore())
-        {
-            audioPlayer = audioManager.CreatePlayer(await fileSystem.OpenAppPackageFileAsync("Read.wav"));
-            Disposables.Add(audioPlayer);
-        }
-
         Controller.Enable = true;
     }
 
@@ -64,4 +53,22 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction2()
+    {
+        Controller.SwitchCameraFace();
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyFunction3()
+    {
+        Controller.ToggleForceInvert();
+        return Task.CompletedTask;
+    }
+
+    protected override Task OnNotifyFunction4()
+    {
+        Controller.ToggleVibrationOnDetect();
+        return Task.CompletedTask;
+    }
 }
