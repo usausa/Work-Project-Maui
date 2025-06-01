@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkAutoLabel.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkAutoLabel">
+
+    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*" RowDefinitions="*,*,*,*,*,*,*,*">
+
+        <Label
+            Grid.Row="0"
+            Grid.ColumnSpan="8"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="1"
+            Grid.ColumnSpan="7"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="2"
+            Grid.ColumnSpan="6"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="3"
+            Grid.ColumnSpan="5"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="4"
+            Grid.ColumnSpan="4"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="5"
+            Grid.ColumnSpan="3"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="6"
+            Grid.ColumnSpan="2"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+        <Label
+            Grid.Row="7"
+            Grid.ColumnSpan="1"
+            app:LabelOption.AutoSize="True"
+            Text="Test" />
+
+    </Grid>
+
+</ContentPage>

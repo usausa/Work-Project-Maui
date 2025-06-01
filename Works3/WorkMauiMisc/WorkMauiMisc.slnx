@@ -5,27 +5,10 @@
       <Deploy />
     </Project>
   </Folder>
-  <Folder Name="/BDrawMvvm/">
-    <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
-      <Deploy />
-    </Project>
-  </Folder>
   <Folder Name="/BLibIcon/">
     <Project Path="WorkIcon/WorkIcon.csproj">
       <Build Solution="Debug|*" Project="false" />
       <Deploy />
-    </Project>
-  </Folder>
-  <Folder Name="/DCameraQr/">
-    <Project Path="WorkCameraQr/DeviceSample/DeviceSample.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Deploy />
-    </Project>
-    <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
-      <Deploy Solution="Debug|*" />
-    </Project>
-    <Project Path="WorkNewCamera/WorkNewCamera.csproj" Id="a59093a0-0efa-4559-be97-59df7f5dd876">
-      <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
   <Folder Name="/DStatusWifi/">
@@ -40,7 +23,27 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
+  <Folder Name="/_/">
+    <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/_/BDrawMvvm/">
+    <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/_/DCameraQr/">
+    <Project Path="WorkCameraQr/DeviceSample/DeviceSample.csproj">
+      <Build Solution="Debug|*" Project="false" />
+      <Deploy />
+    </Project>
+    <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkNewCamera/WorkNewCamera.csproj" Id="a59093a0-0efa-4559-be97-59df7f5dd876">
+      <Deploy Solution="Debug|*" />
+    </Project>
+  </Folder>
+  <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac" />
 </Solution>
