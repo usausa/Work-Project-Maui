@@ -93,6 +93,7 @@
     <PackageReference Include="Usa.Smart.Reactive" Version="2.4.1" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.6.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.1" />
+    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.3" />
   </ItemGroup>
 
   <ItemGroup>
