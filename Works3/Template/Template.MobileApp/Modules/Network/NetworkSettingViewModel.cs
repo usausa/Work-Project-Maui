@@ -26,14 +26,14 @@ public sealed partial class NetworkSettingViewModel : AppViewModelBase
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
-            if (!Controller.Enable)
+            if (Controller.PauseScanning)
             {
                 return;
             }
 
             if (x.Count > 0)
             {
-                Controller.Enable = false;
+                Controller.PauseScanning = true;
 
                 var barcode = x.First().DisplayValue;
                 try
@@ -53,7 +53,7 @@ public sealed partial class NetworkSettingViewModel : AppViewModelBase
                     await dialog.InformationAsync("Invalid url.");
                 }
 
-                Controller.Enable = true;
+                Controller.PauseScanning = false;
             }
         });
     }

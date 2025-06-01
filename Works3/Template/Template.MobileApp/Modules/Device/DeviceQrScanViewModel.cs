@@ -2,9 +2,13 @@ namespace Template.MobileApp.Modules.Device;
 
 using BarcodeScanning;
 
+using Template.MobileApp.Graphics;
+
 public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
     public BarcodeController Controller { get; } = new();
+
+    public BarcodeGraphics Graphics { get; } = new();
 
     [ObservableProperty]
     public partial string Barcode { get; set; } = string.Empty;
@@ -18,8 +22,7 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 
     public DeviceQrScanViewModel()
     {
-        //Controller.TapToFocus = true;
-        Controller.AimMode = true;
+        Controller.TapToFocus = true;
 
         TorchCommand = MakeDelegateCommand(Controller.ToggleTorch);
         AimCommand = MakeDelegateCommand(Controller.ToggleAimMode);
@@ -28,15 +31,16 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 
         DetectCommand = MakeDelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
-            Controller.PauseScanning = true;
+            Graphics.Update(x);
 
-            // TODO
             if (x.Count > 0)
             {
-                Barcode = x.First().DisplayValue;
-            }
+                Controller.PauseScanning = true;
 
-            Controller.PauseScanning = false;
+                Barcode = x.First().DisplayValue;
+
+                Controller.PauseScanning = false;
+            }
         });
     }
 
