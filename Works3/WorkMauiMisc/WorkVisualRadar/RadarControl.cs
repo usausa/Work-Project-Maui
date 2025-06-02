@@ -1,17 +1,21 @@
 namespace WorkVisualRadar;
 
+using Microsoft.Maui.Graphics;
+
+using System;
+
 #pragma warning disable CA1001
 public sealed class RadarControl : GraphicsView, IDrawable
 {
     // スイープの幅（度数法）
-    private const float SweepWidth = 60f;
+    private const float SweepLength = 60f;
 
     private static readonly TimeSpan Interval = TimeSpan.FromMilliseconds(1000d / 60);
 
     private CancellationTokenSource? cts;
 
     // 現在のスイープ開始角度（度数法）
-    private float currentAngle;
+    private float currentAngle = 30;
 
     public float CurrentAngle
     {
@@ -73,16 +77,16 @@ public sealed class RadarControl : GraphicsView, IDrawable
                     break;
                 }
 
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    currentAngle += 2f;
-                    if (currentAngle >= 360f)
-                    {
-                        currentAngle -= 360f;
-                    }
+                //MainThread.BeginInvokeOnMainThread(() =>
+                //{
+                //    currentAngle += 2f;
+                //    if (currentAngle >= 360f)
+                //    {
+                //        currentAngle -= 360f;
+                //    }
 
-                    Invalidate();
-                });
+                //    Invalidate();
+                //});
             }
         }
         catch (OperationCanceledException)
@@ -96,15 +100,42 @@ public sealed class RadarControl : GraphicsView, IDrawable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
+        var margin = 5;
+        var centerX = dirtyRect.Width / 2;
+        var centerY = dirtyRect.Height / 2;
+        var radius = (dirtyRect.Width / 2) - margin;
+
+        var isClockWise = true;
+        var progress = 60f;
+        var progressAngle = progress / 100;
+
+        var startAngle = 90f;
+        var endAngle = startAngle - (progressAngle * 360f);
+
+        var path = new PathF();
+        path.MoveTo(centerX, centerY);
+        // We need to add an adjustment of 0.5 due to how addarc calculate arcs. To make it aligned with the other circles.
+        //path.AddArc(centerX - radius + 0.5f, centerY - radius + 0.5f, centerX + radius - 0.5f, centerY + radius - 0.5f, startAngle, endAngle, isClockWise);
+        path.AddArc(centerX - radius, centerY - radius, centerX + radius, centerY + radius, startAngle, endAngle, isClockWise);
+        path.Close();
+        //path.LineTo(centerX, centerY);
+
+        canvas.FillColor = new Color(0, 255, 0, 64);
+        canvas.FillPath(path);
+    }
+
+    public void Draw2(ICanvas canvas, RectF dirtyRect)
+    {
         var width = dirtyRect.Width;
         var height = dirtyRect.Height;
 
         // 中心座標
         var cx = width / 2f;
         var cy = height / 2f;
-
         // 半径（外枠はキャンバスの最小辺の90%）
         var radius = Math.Min(cx, cy) * 0.9f;
+
+        canvas.Antialias = true;
 
         // 背景クリア
         canvas.FillColor = Colors.Black;
@@ -146,37 +177,96 @@ public sealed class RadarControl : GraphicsView, IDrawable
             canvas.DrawLine(x1, y1, x2, y2);
         }
 
-        //// スイープエリア (先端が濃く、後ろが薄いグラデーション)
-        //var sweepSteps = 30;
-        //var stepAngle = SweepWidth / sweepSteps;
-        //for (var i = 0; i < sweepSteps; i++)
+        //// スイープエリア(外周に沿った円弧をグラデーションで描画)
+        //float stepAngle = 1;
+        //// アークはすべて同じ半径、中心(cx,cy)を使って描画
+        //for (int i = 0; i < 3; i++)
         //{
-        //    // 各スライスの開始角度
-        //    var angle = currentAngle - SweepWidth / 2f + stepAngle * i;
-
+        //    float start = currentAngle + stepAngle * i;
         //    // α: 後ろが薄く（20）、先端が濃く（255）
-        //    var alpha = 20f + (235f * (i + 1) / sweepSteps);
+        //    float alpha = 20f + (235f * (i + 1) / 30);
 
-        //    canvas.FillColor = new Color(0, 255, 0, alpha / 255f);
-        //    // center フラグを true にすると扇形 (Pie) 描画になる
-        //    canvas.FillArc(
+        //    canvas.FillColor = new Color(0f, 255, 0f, 64);
+        //    //canvas.StrokeSize = 2;
+        //    var path = new PathF();
+        //    path.MoveTo(cx, cy);
+        //    path.AddArc(
         //        cx - radius,
         //        cy - radius,
-        //        radius * 2,
-        //        radius * 2,
-        //        angle,
+        //        cx + radius,
+        //        cy + radius,
+        //        start,
         //        stepAngle,
-        //        true);
+        //        false);
+        //    path.LineTo(cx, cy);
+        //    path.Close();
+
+        //    canvas.DrawPath(path);
+
+        //    // 円弧だけ描画（中心線は含めない）
+        //    //canvas.DrawArc(
+        //    //    cx - radius,
+        //    //    cy - radius,
+        //    //    radius * 2,
+        //    //    radius * 2,
+        //    //    0,
+        //    //    350,
+        //    //    true,
+        //    //    true);
         //}
+
+        // スイープ尾を Path で描画 (扇形)
+        float startAngle = (currentAngle - SweepLength + 360f) % 360f;
+        var circleBounds = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
+        var path = new PathF();
+        // 中心→尾の始点
+        var sRad = DegreesToRadians(startAngle);
+
+        path.MoveTo(cx, cy);
+        //path.LineTo(ex, ey);
+        // 扇形の外周 arc
+        // TODO
+        path.AddArc(cx - radius, cy - radius, radius * 2, radius * 2, startAngle, startAngle + 30, false);
+        path.LineTo(cx, cy);
+        //path.AddArc(cx, cy, radius * 2, radius * 2, startAngle, currentAngle, true);
+        //path.AddArc(cx - radius, cy - radius, radius * 2, radius * 2, 45, 0, true);
+        //path.AddArc(circleBounds, startAngle, SweepLength);
+        // 閉じる
+        path.Close();
+
+        // グラデーションブラシ
+        var stops = new GradientStopCollection
+        {
+            new GradientStop(Colors.Green.WithAlpha(0f), 0f),
+            new GradientStop(Colors.Lime.WithAlpha(0.7f), 1f)
+        };
+        // 線の方向に合わせて水平グラデーション
+        var brush = new LinearGradientBrush(stops, new Point(0, 0), new Point(1, 0));
+
+        canvas.SetFillPaint(brush, circleBounds);
+        //canvas.FillPath(path);
+
+        //canvas.FillArc(circleBounds, 45, 345, true);
+        //canvas.FillArc(cx - radius, cy - radius, radius * 2, radius * 2, 345, 45, false);
+        //canvas.StrokeColor = Colors.Red;
+        //canvas.DrawArc(cx - radius, cy - radius, radius * 2, radius * 2, 345, 45, false, false);
+
+        var path2 = new PathF();
+        path2.MoveTo(cx, cy);
+        path2.AddArc(cx - radius, cy - radius, radius * 2, radius * 2, 45, 345, true);
+        path2.LineTo(cx, cy);
+        canvas.FillColor = new Color(235, 243, 231);
+        canvas.FillPath(path2);
+
 
         // スイープ先端ライン（弧の最後の部分）
         canvas.StrokeColor = Colors.Lime;
         canvas.StrokeSize = 3;
 
-        var endAngle = currentAngle + SweepWidth / 2f;
-        var radEnd = DegreesToRadians(endAngle);
+        var radEnd = DegreesToRadians(currentAngle);
         var ex = cx + radius * (float)Math.Cos(radEnd);
         var ey = cy + radius * (float)Math.Sin(radEnd);
+
         canvas.DrawLine(cx, cy, ex, ey);
     }
 }
