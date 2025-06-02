@@ -45,11 +45,13 @@
                 Text="Timeline" />
         <Button Grid.Row="7"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGauge}"
                 Text="Gauge" />
         <Button Grid.Row="8"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIRadar}"
                 Text="Radar" />
     </Grid>
 
