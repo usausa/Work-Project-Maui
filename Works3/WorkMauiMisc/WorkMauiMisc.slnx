@@ -17,12 +17,6 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
-  <Folder Name="/UVisualTimeline/">
-    <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Deploy />
-    </Project>
-  </Folder>
   <Folder Name="/_/">
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
@@ -37,10 +31,6 @@
     </Project>
   </Folder>
   <Folder Name="/_/DCameraQr/">
-    <Project Path="WorkCameraQr/DeviceSample/DeviceSample.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Deploy />
-    </Project>
     <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -48,4 +38,13 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
+  <Folder Name="/_/UVisualTimeline/">
+    <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
+      <Build Solution="Debug|*" Project="false" />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>
