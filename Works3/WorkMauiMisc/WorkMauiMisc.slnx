@@ -44,11 +44,15 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982" />
+  <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkGridBind/WorkGridBind.csproj" Id="1baf1a8e-4dde-4f79-949a-b73082dbdde5">
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
     <Deploy Solution="Debug|*" />
   </Project>
+  <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5" />
+  <Project Path="WorkVisualRadar/WorkVisualRadar.csproj" Id="134571eb-934a-471f-8760-4981f15b62f1" />
 </Solution>
