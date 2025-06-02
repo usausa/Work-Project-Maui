@@ -24,6 +24,9 @@
     </Project>
   </Folder>
   <Folder Name="/_/">
+    <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
       <Build Solution="Debug|*" Project="false" />
     </Project>
@@ -45,5 +48,4 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
-  <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac" />
 </Solution>
