@@ -36,12 +36,15 @@ public static class LabelOption
         LabelHandler.Mapper.AppendToMapping("AutoSize", (handler, view) =>
         {
             var label = (Label)view;
-            label.LineBreakMode = LineBreakMode.NoWrap;
+            if (GetAutoSize(label))
+            {
+                label.LineBreakMode = LineBreakMode.NoWrap;
 #pragma warning disable CA1416
-            handler.PlatformView.SetAutoSizeTextTypeWithDefaults(AutoSizeTextType.Uniform);
+                handler.PlatformView.SetAutoSizeTextTypeWithDefaults(AutoSizeTextType.Uniform);
 #pragma warning restore CA1416
 
-            UpdateLabelSize(handler, label);
+                UpdateLabelSize(handler, label);
+            }
         });
         LabelHandler.Mapper.AppendToMapping("MaxSize", (handler, view) =>
         {
