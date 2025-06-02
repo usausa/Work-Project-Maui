@@ -44,7 +44,10 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkGridBind/WorkGridBind.csproj" Id="1baf1a8e-4dde-4f79-949a-b73082dbdde5" />
+  <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982" />
+  <Project Path="WorkGridBind/WorkGridBind.csproj" Id="1baf1a8e-4dde-4f79-949a-b73082dbdde5">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
     <Deploy Solution="Debug|*" />
   </Project>
