@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Controls;
 
-using Template.MobileApp.Models.Timeline;
+using Template.MobileApp.Models.UI;
 
 public sealed class TimelineCell : GraphicsView, IDrawable
 {
