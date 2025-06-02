@@ -2,15 +2,19 @@
 <ContentPage
     x:Class="WorkTimer.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkTimer">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30,0" Spacing="25">
-            <Label
-                SemanticProperties.HeadingLevel="Level1"
-                Style="{StaticResource Headline}"
-                Text="Hello, World!" />
-        </VerticalStackLayout>
-    </ScrollView>
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="30,0" Spacing="25">
+
+        <Label Text="{Binding Value}" />
+
+        <app:TimerHostView />
+
+    </VerticalStackLayout>
 
 </ContentPage>
