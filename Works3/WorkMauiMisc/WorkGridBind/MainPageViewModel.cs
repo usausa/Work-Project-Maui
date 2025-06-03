@@ -1,3 +1,5 @@
+using Smart.IO;
+
 namespace WorkGridBind;
 
 using System.Collections.ObjectModel;
@@ -205,9 +207,7 @@ public partial class MainPageViewModel : ViewModelBase
         if (!String.IsNullOrEmpty(image))
         {
             await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("DeckButtons", image));
-            using var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            return memoryStream.ToArray();
+            return await stream.ReadAllBytesAsync();
         }
 
         return [];
