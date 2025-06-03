@@ -1,7 +1,5 @@
 namespace WorkGridBind;
 
-using WorkGridBind;
-
 public class ButtonDataTemplateSelector : DataTemplateSelector
 {
     public DataTemplate TextTemplate { get; set; } = default!;
