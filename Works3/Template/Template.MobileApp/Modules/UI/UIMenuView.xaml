@@ -28,7 +28,8 @@
                 Text="Portal" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIDock}"
                 Text="Dock" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuButton}"

@@ -278,4 +278,4 @@ public sealed class RadarControl : GraphicsView, IDrawable
         canvas.DrawLine(cx, cy, ex, ey);
     }
 }
-#pragma warning re
+#pragma warning restore CA1001
