@@ -2,8 +2,102 @@
 <ContentPage
     x:Class="WorkGridBind.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkGridBind"
+    BackgroundColor="#263238">
 
-    <Grid />
+    <!--  ReSharper disable Xaml.RedundantResource  -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <app:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter" />
+
+            <Style Class="DeckButtonLayout" TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style Class="DeckButton" TargetType="Button">
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style Class="DeckButton" TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="80" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="CornerRadius" Value="8" />
+            </Style>
+
+            <Style Class="DeckButtonLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="VerticalTextAlignment" Value="Start" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <DataTemplate x:Key="TextTemplate" x:DataType="app:DeckButtonInfo">
+                <VerticalStackLayout
+                    Grid.Row="{Binding Row}"
+                    Grid.Column="{Binding Column}"
+                    StyleClass="DeckButtonLayout">
+                    <Button
+                        Command="{Binding Command}"
+                        CommandParameter="{Binding Parameter}"
+                        StyleClass="DeckButton"
+                        Text="{Binding Text}"
+                        TextColor="{Binding TextColor}">
+                        <Button.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <Label StyleClass="DeckButtonLabel" Text="{Binding Label}" />
+                </VerticalStackLayout>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ImageTemplate" x:DataType="app:DeckButtonInfo">
+                <VerticalStackLayout
+                    Grid.Row="{Binding Row}"
+                    Grid.Column="{Binding Column}"
+                    StyleClass="DeckButtonLayout">
+                    <ImageButton
+                        Command="{Binding Command}"
+                        CommandParameter="{Binding Parameter}"
+                        Source="{Binding ImageBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                        StyleClass="DeckButton">
+                        <ImageButton.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Offset="0.1" Color="{Binding BackColor1}" />
+                                <GradientStop Offset="1.0" Color="{Binding BackColor2}" />
+                            </LinearGradientBrush>
+                        </ImageButton.Background>
+                    </ImageButton>
+                    <Label StyleClass="DeckButtonLabel" Text="{Binding Label}" />
+                </VerticalStackLayout>
+            </DataTemplate>
+
+            <app:ButtonDataTemplateSelector
+                x:Key="ButtonDataTemplateSelector"
+                ImageTemplate="{StaticResource ImageTemplate}"
+                TextTemplate="{StaticResource TextTemplate}" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!--  ReSharper restore Xaml.RedundantResource  -->
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid
+        BindableLayout.ItemTemplateSelector="{StaticResource ButtonDataTemplateSelector}"
+        BindableLayout.ItemsSource="{Binding Buttons}"
+        ColumnDefinitions="*,*,*,*"
+        RowDefinitions="*,*,*,*,*,*,*,*" />
+
 
 </ContentPage>

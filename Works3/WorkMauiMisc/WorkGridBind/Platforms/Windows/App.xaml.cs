@@ -19,8 +19,8 @@ public partial class App : MauiWinUIApplication
     {
         this.InitializeComponent();
 
-        var windowWidth = 480;
-        var windowHeight = 800;
+        var windowWidth = 600;
+        var windowHeight = 1024;
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
             var mauiWindow = handler.VirtualView;
