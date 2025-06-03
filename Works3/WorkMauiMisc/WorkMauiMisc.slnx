@@ -21,6 +21,9 @@
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkGridBind/WorkGridBind.csproj" Id="1baf1a8e-4dde-4f79-949a-b73082dbdde5">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
       <Build Solution="Debug|*" Project="false" />
     </Project>
@@ -51,9 +54,6 @@
     </Project>
   </Folder>
   <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982">
-    <Deploy Solution="Debug|*" />
-  </Project>
-  <Project Path="WorkGridBind/WorkGridBind.csproj" Id="1baf1a8e-4dde-4f79-949a-b73082dbdde5">
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5" />
