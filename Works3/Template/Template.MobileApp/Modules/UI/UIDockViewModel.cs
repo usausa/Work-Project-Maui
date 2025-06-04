@@ -106,44 +106,6 @@ public sealed class UIDockViewModel : AppViewModelBase
             Buttons.Add(new DeckButtonInfo
             {
                 Row = 5,
-                Column = 1,
-                ButtonType = DeckButtonType.Image,
-                Label = "00:30",
-                BackColor1 = Color.FromArgb("#1fa2ff"),
-                BackColor2 = Color.FromArgb("#12d8fa"),
-                ImageBytes = await LoadImageAsync("timer.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "Timer"
-            });
-            Buttons.Add(new DeckButtonInfo
-            {
-                Row = 5,
-                Column = 2,
-                ButtonType = DeckButtonType.Image,
-                Label = "Lock",
-                BackColor1 = Color.FromArgb("#a770ef"),
-                BackColor2 = Color.FromArgb("#cf8bf3"),
-                ImageBytes = await LoadImageAsync("lock.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "Lock"
-            });
-            Buttons.Add(new DeckButtonInfo
-            {
-                Row = 5,
-                Column = 3,
-                ButtonType = DeckButtonType.Image,
-                Label = "Settings",
-                BackColor1 = Color.FromArgb("#0cebeb"),
-                BackColor2 = Color.FromArgb("#20e3b2"),
-                ImageBytes = await LoadImageAsync("settings.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "Settings"
-            });
-
-            // Row6
-            Buttons.Add(new DeckButtonInfo
-            {
-                Row = 6,
                 Column = 0,
                 ButtonType = DeckButtonType.Image,
                 Label = "Volume up",
@@ -155,7 +117,7 @@ public sealed class UIDockViewModel : AppViewModelBase
             });
             Buttons.Add(new DeckButtonInfo
             {
-                Row = 6,
+                Row = 5,
                 Column = 1,
                 ButtonType = DeckButtonType.Image,
                 Label = "Mute",
@@ -167,7 +129,7 @@ public sealed class UIDockViewModel : AppViewModelBase
             });
             Buttons.Add(new DeckButtonInfo
             {
-                Row = 6,
+                Row = 5,
                 Column = 2,
                 ButtonType = DeckButtonType.Image,
                 Label = "Volume down",
@@ -177,7 +139,46 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "VolumeDown"
             });
-            // ROw7
+
+            // Row6
+            Buttons.Add(new DeckButtonInfo
+            {
+                Row = 6,
+                Column = 1,
+                ButtonType = DeckButtonType.Image,
+                Label = "00:30",
+                BackColor1 = Color.FromArgb("#1fa2ff"),
+                BackColor2 = Color.FromArgb("#12d8fa"),
+                ImageBytes = await LoadImageAsync("timer.png"),
+                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Parameter = "Timer"
+            });
+            Buttons.Add(new DeckButtonInfo
+            {
+                Row = 6,
+                Column = 2,
+                ButtonType = DeckButtonType.Image,
+                Label = "Lock",
+                BackColor1 = Color.FromArgb("#a770ef"),
+                BackColor2 = Color.FromArgb("#cf8bf3"),
+                ImageBytes = await LoadImageAsync("lock.png"),
+                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Parameter = "Lock"
+            });
+            Buttons.Add(new DeckButtonInfo
+            {
+                Row = 6,
+                Column = 3,
+                ButtonType = DeckButtonType.Image,
+                Label = "Settings",
+                BackColor1 = Color.FromArgb("#0cebeb"),
+                BackColor2 = Color.FromArgb("#20e3b2"),
+                ImageBytes = await LoadImageAsync("settings.png"),
+                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Parameter = "Settings"
+            });
+
+            // Row7
             Buttons.Add(new DeckButtonInfo
             {
                 Row = 7,
