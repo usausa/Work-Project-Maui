@@ -57,4 +57,5 @@
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5" />
+  <Project Path="WorkVisualMeter/WorkVisualMeter.csproj" Id="93228d26-e0b9-4224-83a9-257db87b2d82" />
 </Solution>
