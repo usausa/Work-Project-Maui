@@ -38,15 +38,15 @@ public sealed class Rectangle : IShape
 
 public sealed class ShapeGraphics : GraphicsObject
 {
-    public SizeF Scale { get; set; }
+    public SizeF Size { get; set; }
 
     public List<IShape> Shapes { get; } = new();
 
     public override void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        if ((Scale.Width != 0) && (Scale.Height != 0))
+        if ((Size.Width != 0) && (Size.Height != 0))
         {
-            canvas.Scale(dirtyRect.Width / Scale.Width, dirtyRect.Height / Scale.Height);
+            canvas.Scale(dirtyRect.Width / Size.Width, dirtyRect.Height / Size.Height);
         }
 
         foreach (var shape in Shapes)
