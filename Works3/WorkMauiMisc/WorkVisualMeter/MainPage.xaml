@@ -9,12 +9,40 @@
         <app:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout>
-        <Button>
+    <Grid RowDefinitions="*,Auto">
+
+        <app:MeterControl
+            Grid.Row="0"
+            BackgroundColor="#2E2F45"
+            GaugeColor="#484D5F"
+            MaxSpeed="255"
+            Speed="200"
+            ValueColor="Turquoise" />
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center">
+            <Label
+                FontFamily="Gkktt"
+                FontSize="96"
+                HorizontalTextAlignment="Center"
+                Text="123"
+                TextColor="White" />
+            <Label
+                FontFamily="Gkktt"
+                FontSize="24"
+                HorizontalTextAlignment="Center"
+                Text="km/h"
+                TextColor="White" />
+        </VerticalStackLayout>
+
+
+        <Button
+            Grid.Row="1"
+            FontFamily="Gkktt"
+            Text="Test">
             <Button.Behaviors>
                 <app:PressStateBehavior IsPressed="{Binding Pressed}" />
             </Button.Behaviors>
         </Button>
-    </VerticalStackLayout>
+
+    </Grid>
 
 </ContentPage>

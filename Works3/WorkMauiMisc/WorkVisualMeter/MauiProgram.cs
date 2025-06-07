@@ -1,4 +1,4 @@
-﻿namespace WorkVisualMeter;
+namespace WorkVisualMeter;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -12,6 +12,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
             });
 
 #if DEBUG
