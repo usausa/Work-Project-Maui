@@ -4,41 +4,35 @@ Template project for MAUI.
 
 # TODO
 
-## Fix
+## Cleanup
 
-- [ ] Dialog size
-- [ ] Speach recognization
-
-## ReCheck
-
-- [ ] HW key input
+- [ ] Style sheat
 - [ ] Behavior samples
 - [ ] Converter samples
 
-## Feature
+## Device
 
-### Basic
-
-- [ ] Style sheat
-
-### Device
-
-- [ ] NFC
-- [ ] BLE/Bluetooth client
-- [ ] WiFi manager
+- [ ] **NFC**
+- [ ] **BLE/Bluetooth client**
+- [ ] **WiFi manager**
 - [ ] Biometric
 
-### UI
+## UI
 
-- [ ] Meter
-- [ ] Gauge
+- [ ] **Meter**
+- [ ] **Gauge**
 - [ ] Load
 - [ ] Chart
 - [ ] Calendar
 - [ ] Grid
 
-### Other
+## Other
 
-- [ ] Cognitive service
+- [ ] **Cognitive service**
 - [ ] Chat
 - [ ] HybridWebView
+- [ ] Push
+
+## ReCheck
+
+- [ ] HW key input
