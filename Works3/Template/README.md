@@ -19,7 +19,6 @@ Template project for MAUI.
 
 ## UI
 
-- [ ] **Meter**
 - [ ] **Gauge**
 - [ ] Load
 - [ ] Chart
