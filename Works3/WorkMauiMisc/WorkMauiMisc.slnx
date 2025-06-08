@@ -33,6 +33,9 @@
     <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkVisualMeter/WorkVisualMeter.csproj" Id="93228d26-e0b9-4224-83a9-257db87b2d82">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkVisualRadar/WorkVisualRadar.csproj" Id="134571eb-934a-471f-8760-4981f15b62f1">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -58,9 +61,6 @@
   </Folder>
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5" />
   <Project Path="WorkVisualLoad/WorkVisualLoad.csproj" Id="448c4104-b36f-4ec3-b7bb-6baee84c7bf8">
-    <Deploy Solution="Debug|*" />
-  </Project>
-  <Project Path="WorkVisualMeter/WorkVisualMeter.csproj" Id="93228d26-e0b9-4224-83a9-257db87b2d82">
     <Deploy Solution="Debug|*" />
   </Project>
 </Solution>
