@@ -8,6 +8,8 @@ using Android.Content;
 using Android.Nfc;
 using Android.Nfc.Tech;
 
+using System.ComponentModel;
+
 using static Android.Icu.Text.IDNA;
 
 using Application = Android.App.Application;
@@ -118,10 +120,13 @@ public partial class NfcReader
                 }
 
                 var access = ConvertToAccessData(block.BlockData);
-                blocks1.Concat(blocks2).Concat(blocks3).Select(x => Suica.ConvertToLogData(x.BlockData))
 
                 System.Diagnostics.Debug.WriteLine($"Idm: {Convert.ToHexString(idm)}");
                 System.Diagnostics.Debug.WriteLine($"Balance: {access.Balance}");
+                foreach (var data in blocks1.Concat(blocks2).Concat(blocks3).Select(x => ConvertToLogData(x.BlockData)))
+                {
+                    System.Diagnostics.Debug.WriteLine($"{data!.DateTime:yyyy/MM/dd HH:mm:ss} {data.Balance}");
+                }
             }
         }
         catch (TagLostException)
@@ -157,6 +162,38 @@ public partial class NfcReader
             Balance = BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(10, 2)),
             TransactionId = BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(13, 2))
         };
+    }
+
+    private static readonly HashSet<byte> ProcessOfSales = new(new byte[] { 70, 72, 73, 74, 75 });
+
+    private static readonly HashSet<byte> ProcessOfBus = new(new byte[] { 13, 15, 31, 35 });
+
+    public static bool IsProcessOfSales(byte process)
+    {
+        var processType = ConvertProcessType(process);
+        return ProcessOfSales.Contains(processType);
+    }
+
+    public static byte ConvertProcessType(byte process)
+    {
+        return (byte)(process & 0b01111111);
+    }
+    public static DateTime ConvertDate(byte[] bytes, int offset)
+    {
+        var year = 2000 + (bytes[offset] >> 1);
+        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset, 2)) >> 5 & 0b1111;
+        var day = bytes[offset + 1] & 0b11111;
+        return new DateTime(year, month, day);
+    }
+
+    public static DateTime ConvertDateTime(byte[] bytes, int offset)
+    {
+        var year = 2000 + (bytes[offset] >> 1);
+        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset, 2)) >> 5 & 0b1111;
+        var day = bytes[offset + 1] & 0b11111;
+        var hour = bytes[offset + 2] >> 3;
+        var minute = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset + 2, 2)) >> 5 & 0b111111;
+        return new DateTime(year, month, day, hour, minute, 0);
     }
 }
 
