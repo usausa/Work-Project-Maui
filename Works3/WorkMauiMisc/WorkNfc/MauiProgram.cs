@@ -36,20 +36,10 @@ public static class MauiProgram
                     android.OnCreate((activity, bundle) =>
                     {
                         ActivityResolver.CurrentActivity = activity;
-                        Debug.WriteLine("* Created 2");
                     });
                     android.OnResume(activity =>
                     {
-                        Debug.WriteLine("* OnResume 2");
                         ActivityResolver.CurrentActivity = activity;
-                    });
-                    android.OnNewIntent((activity, intent) =>
-                    {
-                        Debug.WriteLine($"* OnNewIntent {intent?.Action}");
-                        if (intent?.Action == NfcAdapter.ActionTechDiscovered)
-                        {
-                            NfcReader.ProcessIntent(intent);
-                        }
                     });
                 });
 #endif

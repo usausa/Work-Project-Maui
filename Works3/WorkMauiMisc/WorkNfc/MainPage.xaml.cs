@@ -1,5 +1,7 @@
 namespace WorkNfc;
 
+using Android.OS;
+
 using System.Buffers.Binary;
 
 using Android.App;
@@ -18,6 +20,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
 
         reader = new NfcReader();
+        reader.Detected += ReaderOnDetected;
     }
 
     private void OnStartClicked(object? sender, EventArgs e)
@@ -29,17 +32,68 @@ public partial class MainPage : ContentPage
     {
         reader.Stop();
     }
+
+    private void ReaderOnDetected(object? sender, NfcEventArgs e)
+    {
+        var nfcF = e.Tag;
+
+        //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
+        var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
+        if (idm.Length == 0)
+        {
+            return;
+        }
+
+        var block = new ReadBlock { BlockNo = 0 };
+        if (!nfcF.ExecuteReadWoe(idm, 0x008B, block))
+        {
+            return;
+        }
+
+        var blocks1 = Enumerable.Range(0, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+        var blocks2 = Enumerable.Range(8, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+        var blocks3 = Enumerable.Range(16, 4).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+        if (!nfcF.ExecuteReadWoe(idm, 0x090F, blocks1) ||
+            !nfcF.ExecuteReadWoe(idm, 0x090F, blocks2) ||
+            !nfcF.ExecuteReadWoe(idm, 0x090F, blocks3))
+        {
+            return;
+        }
+
+        var access = Suica.ConvertToAccessData(block.BlockData);
+
+        System.Diagnostics.Debug.WriteLine($"Idm: {Convert.ToHexString(idm)}");
+        System.Diagnostics.Debug.WriteLine($"Balance: {access.Balance}");
+        foreach (var data in blocks1.Concat(blocks2).Concat(blocks3).Select(x => Suica.ConvertToLogData(x.BlockData)))
+        {
+            System.Diagnostics.Debug.WriteLine($"{data!.DateTime:yyyy/MM/dd HH:mm:ss} {data.Balance}");
+        }
+    }
+}
+
+public sealed class NfcEventArgs : EventArgs
+{
+    public INfc Tag { get; }
+
+    public NfcEventArgs(INfc tag)
+    {
+        Tag = tag;
+    }
 }
 
 public partial class NfcReader
 {
-    // TODO
+    public event EventHandler<NfcEventArgs>? Detected;
 }
 
 #if ANDROID
-public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
+public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback, Application.IActivityLifecycleCallbacks
 {
     private NfcAdapter? nfcAdapter;
+
+    private Activity? currentActivity;
+
+    private bool enabled;
 
     public void Start()
     {
@@ -49,27 +103,45 @@ public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
             nfcAdapter = nfcManager.DefaultAdapter!;
         }
 
-        var activity = ActivityResolver.CurrentActivity;
+        currentActivity = ActivityResolver.CurrentActivity;
+        currentActivity.Application!.RegisterActivityLifecycleCallbacks(this);
 
-        //var techLists = new List<string[]>();
-        //techLists.Add(["android.nfc.tech.NfcF"]);
+        nfcAdapter.EnableReaderMode(currentActivity, this, NfcReaderFlags.NfcF, null);
 
-        //var intent = new Intent(activity, activity.GetType()).AddFlags(ActivityFlags.SingleTop);
-        //nfcAdapter.EnableForegroundDispatch(
-        //    activity,
-        //    PendingIntent.GetActivity(activity, 0, intent, PendingIntentFlags.Mutable),
-        //    [new IntentFilter(NfcAdapter.ActionNdefDiscovered)],
-        //    techLists.ToArray());
-        nfcAdapter.EnableReaderMode(activity, this, NfcReaderFlags.NfcF, null);
+        enabled = true;
     }
 
     public void Stop()
     {
-        // TODO 再取得しない形にする？
-        var activity = ActivityResolver.CurrentActivity;
-        nfcAdapter?.DisableReaderMode(activity);
+        if (!enabled)
+        {
+            return;
+        }
 
-        //nfcAdapter?.DisableForegroundDispatch(activity);
+        nfcAdapter?.DisableReaderMode(currentActivity);
+        currentActivity = null;
+
+        enabled = false;
+    }
+
+    private void Pause()
+    {
+        if (!enabled)
+        {
+            return;
+        }
+
+        nfcAdapter?.DisableReaderMode(currentActivity);
+    }
+
+    private void Resume()
+    {
+        if (!enabled)
+        {
+            return;
+        }
+
+        nfcAdapter?.EnableReaderMode(currentActivity, this, NfcReaderFlags.NfcF, null);
     }
 
     public void OnTagDiscovered(Tag? tag)
@@ -84,43 +156,9 @@ public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
             var list = tag.GetTechList()!;
             if (list.Any(x => x == "android.nfc.tech.NfcF"))
             {
+                var id = tag.GetId()!;
                 var nfc = NfcF.Get(tag)!;
-                //nfc.Timeout = 1000;
-                nfc.Connect();
-
-                var nfcF = new AndroidNfcF(nfc);
-
-                //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
-                var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
-                if (idm.Length == 0)
-                {
-                    return;
-                }
-
-                var block = new ReadBlock { BlockNo = 0 };
-                if (!nfcF.ExecuteReadWoe(idm, 0x008B, block))
-                {
-                    return;
-                }
-
-                var blocks1 = Enumerable.Range(0, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                var blocks2 = Enumerable.Range(8, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                var blocks3 = Enumerable.Range(16, 4).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                if (!nfcF.ExecuteReadWoe(idm, 0x090F, blocks1) ||
-                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks2) ||
-                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks3))
-                {
-                    return;
-                }
-
-                var access = ConvertToAccessData(block.BlockData);
-
-                System.Diagnostics.Debug.WriteLine($"Idm: {Convert.ToHexString(idm)}");
-                System.Diagnostics.Debug.WriteLine($"Balance: {access.Balance}");
-                foreach (var data in blocks1.Concat(blocks2).Concat(blocks3).Select(x => ConvertToLogData(x.BlockData)))
-                {
-                    System.Diagnostics.Debug.WriteLine($"{data!.DateTime:yyyy/MM/dd HH:mm:ss} {data.Balance}");
-                }
+                Detected?.Invoke(this, new NfcEventArgs(new AndroidNfcF(id, nfc)));
             }
         }
         catch (TagLostException)
@@ -132,68 +170,45 @@ public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
         }
     }
 
-    public static void ProcessIntent(Android.Content.Intent intent)
+    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------
+
+    public void OnActivityCreated(Activity activity, Bundle? savedInstanceState)
     {
-        try
-        {
-            var id = intent.GetByteArrayExtra(NfcAdapter.ExtraId)!;
-            // TODO
-            var tag = (Tag?)intent.GetParcelableExtra(NfcAdapter.ExtraTag);
-            if (tag is null)
-            {
-                return;
-            }
-
-            var list = tag.GetTechList()!;
-            if (list.Any(x => x == "android.nfc.tech.NfcF"))
-            {
-                var nfc = NfcF.Get(tag)!;
-                //nfc.Timeout = 1000;
-                nfc.Connect();
-
-                var nfcF = new AndroidNfcF(nfc);
-
-                //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
-                var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
-                if (idm.Length == 0)
-                {
-                    return;
-                }
-
-                var block = new ReadBlock { BlockNo = 0 };
-                if (!nfcF.ExecuteReadWoe(idm, 0x008B, block))
-                {
-                    return;
-                }
-
-                var blocks1 = Enumerable.Range(0, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                var blocks2 = Enumerable.Range(8, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                var blocks3 = Enumerable.Range(16, 4).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
-                if (!nfcF.ExecuteReadWoe(idm, 0x090F, blocks1) ||
-                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks2) ||
-                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks3))
-                {
-                    return;
-                }
-
-                var access = ConvertToAccessData(block.BlockData);
-
-                System.Diagnostics.Debug.WriteLine($"Idm: {Convert.ToHexString(idm)}");
-                System.Diagnostics.Debug.WriteLine($"Balance: {access.Balance}");
-                foreach (var data in blocks1.Concat(blocks2).Concat(blocks3).Select(x => ConvertToLogData(x.BlockData)))
-                {
-                    System.Diagnostics.Debug.WriteLine($"{data!.DateTime:yyyy/MM/dd HH:mm:ss} {data.Balance}");
-                }
-            }
-        }
-        catch (TagLostException)
-        {
-        }
-        catch (Exception e)
-        {
-            System.Diagnostics.Debug.WriteLine(e);
-        }
     }
+
+    public void OnActivityDestroyed(Activity activity)
+    {
+    }
+
+    public void OnActivityPaused(Activity activity)
+    {
+        Pause();
+    }
+
+    public void OnActivityResumed(Activity activity)
+    {
+        Resume();
+    }
+
+    public void OnActivitySaveInstanceState(Activity activity, Bundle outState)
+    {
+    }
+
+    public void OnActivityStarted(Activity activity)
+    {
+    }
+
+    public void OnActivityStopped(Activity activity)
+    {
+    }
+}
+
+public static class Suica
+{
+    // --------------------------------------------------------------------------------
+    // Helpers
+    // --------------------------------------------------------------------------------
 
     public static SuicaAccessData ConvertToAccessData(byte[] data)
     {
@@ -221,9 +236,7 @@ public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
         };
     }
 
-    private static readonly HashSet<byte> ProcessOfSales = new(new byte[] { 70, 72, 73, 74, 75 });
-
-    private static readonly HashSet<byte> ProcessOfBus = new(new byte[] { 13, 15, 31, 35 });
+    private static readonly HashSet<byte> ProcessOfSales = [70, 72, 73, 74, 75];
 
     public static bool IsProcessOfSales(byte process)
     {
@@ -283,21 +296,38 @@ public static class ActivityResolver
 #pragma warning disable CA1819
 public interface INfc
 {
+    byte[] Id { get; }
+
+    void SetTimeout(int timeout);
+
     byte[] Access(byte[] command);
 }
 #pragma warning restore CA1819
 
 public sealed class AndroidNfcF : INfc
 {
+    public byte[] Id { get; }
+
     private readonly NfcF nfc;
 
-    public AndroidNfcF(NfcF nfc)
+    public AndroidNfcF(byte[] id, NfcF nfc)
     {
+        Id = id;
         this.nfc = nfc;
+    }
+
+    public void SetTimeout(int timeout)
+    {
+        nfc.Timeout = timeout;
     }
 
     public byte[] Access(byte[] command)
     {
+        if (!nfc.IsConnected)
+        {
+            nfc.Connect();
+        }
+
         try
         {
             var response = nfc.Transceive(command);
