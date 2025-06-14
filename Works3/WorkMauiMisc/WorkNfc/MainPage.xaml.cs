@@ -1,16 +1,11 @@
-using System.Buffers.Binary;
-
 namespace WorkNfc;
 
+using System.Buffers.Binary;
+
 using Android.App;
-using Android.App.Slices;
 using Android.Content;
 using Android.Nfc;
 using Android.Nfc.Tech;
-
-using System.ComponentModel;
-
-using static Android.Icu.Text.IDNA;
 
 using Application = Android.App.Application;
 
@@ -42,7 +37,7 @@ public partial class NfcReader
 }
 
 #if ANDROID
-public partial class NfcReader
+public partial class NfcReader : Java.Lang.Object, NfcAdapter.IReaderCallback
 {
     private NfcAdapter? nfcAdapter;
 
@@ -54,28 +49,90 @@ public partial class NfcReader
             nfcAdapter = nfcManager.DefaultAdapter!;
         }
 
-        var techLists = new List<string[]>();
-        techLists.Add(["android.nfc.tech.NfcF"]);
-
         var activity = ActivityResolver.CurrentActivity;
 
-        var intent = new Intent(activity, activity.GetType()).AddFlags(ActivityFlags.SingleTop);
-        nfcAdapter.EnableForegroundDispatch(
-            activity,
-            PendingIntent.GetActivity(activity, 0, intent, PendingIntentFlags.Mutable),
-            [new IntentFilter(NfcAdapter.ActionNdefDiscovered)],
-            techLists.ToArray());
+        //var techLists = new List<string[]>();
+        //techLists.Add(["android.nfc.tech.NfcF"]);
+
+        //var intent = new Intent(activity, activity.GetType()).AddFlags(ActivityFlags.SingleTop);
+        //nfcAdapter.EnableForegroundDispatch(
+        //    activity,
+        //    PendingIntent.GetActivity(activity, 0, intent, PendingIntentFlags.Mutable),
+        //    [new IntentFilter(NfcAdapter.ActionNdefDiscovered)],
+        //    techLists.ToArray());
+        nfcAdapter.EnableReaderMode(activity, this, NfcReaderFlags.NfcF, null);
     }
 
     public void Stop()
     {
         // TODO 再取得しない形にする？
         var activity = ActivityResolver.CurrentActivity;
+        nfcAdapter?.DisableReaderMode(activity);
 
-        nfcAdapter?.DisableForegroundDispatch(activity);
+        //nfcAdapter?.DisableForegroundDispatch(activity);
     }
 
-    public static void ProcessIntent(Intent intent)
+    public void OnTagDiscovered(Tag? tag)
+    {
+        try
+        {
+            if (tag is null)
+            {
+                return;
+            }
+
+            var list = tag.GetTechList()!;
+            if (list.Any(x => x == "android.nfc.tech.NfcF"))
+            {
+                var nfc = NfcF.Get(tag)!;
+                //nfc.Timeout = 1000;
+                nfc.Connect();
+
+                var nfcF = new AndroidNfcF(nfc);
+
+                //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
+                var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
+                if (idm.Length == 0)
+                {
+                    return;
+                }
+
+                var block = new ReadBlock { BlockNo = 0 };
+                if (!nfcF.ExecuteReadWoe(idm, 0x008B, block))
+                {
+                    return;
+                }
+
+                var blocks1 = Enumerable.Range(0, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+                var blocks2 = Enumerable.Range(8, 8).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+                var blocks3 = Enumerable.Range(16, 4).Select(x => new ReadBlock { BlockNo = (byte)x }).ToArray();
+                if (!nfcF.ExecuteReadWoe(idm, 0x090F, blocks1) ||
+                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks2) ||
+                    !nfcF.ExecuteReadWoe(idm, 0x090F, blocks3))
+                {
+                    return;
+                }
+
+                var access = ConvertToAccessData(block.BlockData);
+
+                System.Diagnostics.Debug.WriteLine($"Idm: {Convert.ToHexString(idm)}");
+                System.Diagnostics.Debug.WriteLine($"Balance: {access.Balance}");
+                foreach (var data in blocks1.Concat(blocks2).Concat(blocks3).Select(x => ConvertToLogData(x.BlockData)))
+                {
+                    System.Diagnostics.Debug.WriteLine($"{data!.DateTime:yyyy/MM/dd HH:mm:ss} {data.Balance}");
+                }
+            }
+        }
+        catch (TagLostException)
+        {
+        }
+        catch (Exception e)
+        {
+            System.Diagnostics.Debug.WriteLine(e);
+        }
+    }
+
+    public static void ProcessIntent(Android.Content.Intent intent)
     {
         try
         {
@@ -94,7 +151,7 @@ public partial class NfcReader
                 //nfc.Timeout = 1000;
                 nfc.Connect();
 
-                var nfcF = new AndroidNfcF(id, nfc);
+                var nfcF = new AndroidNfcF(nfc);
 
                 //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
                 var idm = nfcF.ExecutePolling(unchecked((short)0xFFFF));
@@ -226,8 +283,6 @@ public static class ActivityResolver
 #pragma warning disable CA1819
 public interface INfc
 {
-    byte[] Id { get; }
-
     byte[] Access(byte[] command);
 }
 #pragma warning restore CA1819
@@ -236,11 +291,8 @@ public sealed class AndroidNfcF : INfc
 {
     private readonly NfcF nfc;
 
-    public byte[] Id { get; }
-
-    public AndroidNfcF(byte[] id, NfcF nfc)
+    public AndroidNfcF(NfcF nfc)
     {
-        Id = id;
         this.nfc = nfc;
     }
 
