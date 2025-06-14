@@ -56,6 +56,7 @@ public static partial class MauiProgram
             .UseShiny()
             .UseBarcodeScanning()
             .UseMauiServices()
+            .UseMauiComponents()
             .UseCommunityToolkitServices()
             .UseCustomView()
             .ConfigureComponents()
