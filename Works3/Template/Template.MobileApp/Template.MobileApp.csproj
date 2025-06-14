@@ -118,10 +118,4 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Components\Ocr\OcrReader.android.cs">
-      <DependentUpon>OcrReader.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

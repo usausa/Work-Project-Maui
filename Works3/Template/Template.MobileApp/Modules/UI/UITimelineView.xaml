@@ -14,11 +14,22 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <ContentView.Resources>
+
+        <Style x:Key="TimelineListView"
+               TargetType="ListView">
+            <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
+            <Setter Property="HasUnevenRows" Value="True" />
+            <Setter Property="SeparatorVisibility" Value="None" />
+            <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
+        </Style>
+
+    </ContentView.Resources>
+
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <ListView ItemsSource="{Binding Rows}"
-                  behaviors:ListViewOption.DisableOverScroll="True"
-                  HasUnevenRows="True" SeparatorVisibility="None">
+        <ListView Style="{StaticResource TimelineListView}"
+                  ItemsSource="{Binding Rows}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:TimelineRow">
                     <ViewCell>
