@@ -8,11 +8,8 @@ public sealed class AndroidNfcF : INfc
 {
     private readonly NfcF nfc;
 
-    public byte[] Id { get; }
-
-    public AndroidNfcF(byte[] id, NfcF nfc)
+    public AndroidNfcF(NfcF nfc)
     {
-        Id = id;
         this.nfc = nfc;
     }
 
