@@ -1,4 +1,4 @@
-namespace WodkDecibel;
+namespace WorkDecibel;
 
 public partial class App : Application
 {

@@ -1,4 +1,4 @@
-﻿namespace WodkDecibel;
+﻿namespace WorkDecibel;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
