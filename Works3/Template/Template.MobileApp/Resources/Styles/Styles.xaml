@@ -844,7 +844,7 @@
     <Style x:Key="ItemListView"
            TargetType="ListView">
         <Setter Property="HasUnevenRows" Value="True" />
-        <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
+        <Setter Property="behaviors:ItemsViewOption.DisableOverScroll" Value="True" />
     </Style>
 
     <Style x:Key="ItemListHeaderGrid"

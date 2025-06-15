@@ -77,33 +77,45 @@
 
         <!-- Style -->
 
-        <Style x:Key="IdmLabelContentView"
-               TargetType="ContentView">
+        <Style x:Key="BalanceGrid"
+               TargetType="Grid">
+            <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="3" />
-            <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
-        </Style>
-
-        <Style x:Key="BalanceLabelContentView"
-               TargetType="ContentView">
-            <Setter Property="Padding" Value="3" />
+            <Setter Property="ColumnSpacing" Value="0" />
+            <Setter Property="RowSpacing" Value="0" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="VerticalOptions" Value="Fill" />
             <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkDarker}" />
         </Style>
 
-        <Style x:Key="LabelContentView"
-               TargetType="ContentView">
+        <Style x:Key="LogBalanceGrid"
+               TargetType="Grid">
+            <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="3" />
-        </Style>
-
-        <Style x:Key="LogUpperContentView"
-               TargetType="ContentView">
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkBrighter}" />
-        </Style>
-
-        <Style x:Key="LogLowerLabelContentView"
-               TargetType="ContentView">
-            <Setter Property="Padding" Value="3" />
+            <Setter Property="ColumnSpacing" Value="0" />
+            <Setter Property="RowSpacing" Value="0" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="VerticalOptions" Value="Fill" />
             <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+        </Style>
+
+        <Style x:Key="DateTimeVerticalStackLayout"
+               TargetType="VerticalStackLayout">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="VerticalOptions" Value="Fill" />
+        </Style>
+
+        <Style x:Key="TerminalHorizontalStackLayout"
+               TargetType="HorizontalStackLayout">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+        </Style>
+
+        <Style x:Key="LogBorder"
+               TargetType="Border">
+            <Setter Property="StrokeThickness" Value="1" />
         </Style>
 
         <Style x:Key="IdmLabel"
@@ -112,6 +124,7 @@
             <Setter Property="TextColor" Value="White" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
         </Style>
 
         <Style x:Key="YenLabel"
@@ -132,7 +145,7 @@
 
         <Style x:Key="DateTimeLabel"
                TargetType="Label">
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="TextColor" Value="White" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -140,17 +153,16 @@
 
         <Style x:Key="TerminalProcessLabel"
                TargetType="Label">
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="TextColor" Value="White" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
         </Style>
 
-        <Style x:Key="LogListView"
-               TargetType="ListView">
+        <Style x:Key="LogCollectionView"
+               TargetType="CollectionView">
+            <Setter Property="behaviors:ItemsViewOption.DisableOverScroll" Value="True" />
             <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
-            <Setter Property="HasUnevenRows" Value="True" />
-            <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
         </Style>
 
     </ContentView.Resources>
@@ -161,82 +173,71 @@
         <Grid Grid.Row="0"
               Style="{StaticResource FillGrid}"
               ColumnDefinitions="*,*">
-            <ContentView Grid.Column="0"
-                         Style="{StaticResource IdmLabelContentView}">
-                <Label Style="{StaticResource IdmLabel}"
-                       Text="{Binding Idm}" />
-            </ContentView>
-            <ContentView Grid.Column="1"
-                         Style="{StaticResource BalanceLabelContentView}">
-                <Grid Style="{StaticResource FillGrid}"
-                      ColumnDefinitions="Auto,*">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource YenLabel}"
-                           Text="￥" />
-                    <Label Grid.Column="1"
-                           Style="{StaticResource BalanceLabel}"
-                           Text="{Binding Access.Balance, StringFormat='{0:#,0}', FallbackValue='0'}" />
-
-                </Grid>
-            </ContentView>
+            <Label Grid.Column="0"
+                   Style="{StaticResource IdmLabel}"
+                   Text="{Binding Idm}" />
+            <Grid Grid.Column="1"
+                  Style="{StaticResource BalanceGrid}"
+                  ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource YenLabel}"
+                       Text="￥" />
+                <Label Grid.Column="1"
+                       Style="{StaticResource BalanceLabel}"
+                       Text="{Binding Access.Balance, StringFormat='{0:#,0}', FallbackValue='0'}" />
+            </Grid>
         </Grid>
 
-        <ListView Grid.Row="1"
-                  Style="{StaticResource LogListView}"
-                  ItemsSource="{Binding Logs}">
-            <ListView.Behaviors>
-                <s:ListViewSelectedToCommandBehavior />
-            </ListView.Behaviors>
-            <ListView.ItemTemplate>
+        <CollectionView Grid.Row="1"
+                        Style="{StaticResource LogCollectionView}"
+                        ItemsSource="{Binding Logs}">
+            <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:SuicaLogData">
-                    <ViewCell>
+                    <Border Style="{StaticResource LogBorder}">
+
                         <Grid Style="{StaticResource FillGrid}"
                               RowDefinitions="*,*"
-                              ColumnDefinitions="*,3*">
+                              ColumnDefinitions="*,2*">
 
-                            <ContentView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                         Style="{StaticResource LabelContentView}"
-                                         BackgroundColor="{Binding Process, Converter={StaticResource ProcessColorConverter}}">
-                                <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-                                    <Label Style="{StaticResource DateTimeLabel}"
-                                           Text="{Binding DateTime, StringFormat='{0:yyyy年}'}" />
-                                    <Label Style="{StaticResource DateTimeLabel}"
-                                           Text="{Binding DateTime, StringFormat='{0:MM月dd日}'}" />
-                                    <Label Style="{StaticResource DateTimeLabel}"
-                                           Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat='{0:HH時mm分}'}" />
-                                </VerticalStackLayout>
-                            </ContentView>
+                            <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                                 Style="{StaticResource DateTimeVerticalStackLayout}"
+                                                 BackgroundColor="{Binding Process, Converter={StaticResource ProcessColorConverter}}">
+                                <Label Style="{StaticResource DateTimeLabel}"
+                                       Text="{Binding DateTime, StringFormat='{0:yyyy年}'}" />
+                                <Label Style="{StaticResource DateTimeLabel}"
+                                       Text="{Binding DateTime, StringFormat='{0:MM月dd日}'}" />
+                                <Label Style="{StaticResource DateTimeLabel}"
+                                       Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat='{0:HH時mm分}'}" />
+                            </VerticalStackLayout>
 
-                            <ContentView Grid.Row="0" Grid.Column="1"
-                                         Style="{StaticResource LogUpperContentView}">
-                                <HorizontalStackLayout Style="{StaticResource FillHorizontalStack}">
-                                    <Label Style="{StaticResource TerminalProcessLabel}"
-                                           Text="{Binding Terminal, Converter={StaticResource TerminalTextConverter}}" />
-                                    <Label Style="{StaticResource TerminalProcessLabel}"
-                                           Text=" - " />
-                                    <Label Style="{StaticResource TerminalProcessLabel}"
-                                           Text="{Binding Process, Converter={StaticResource ProcessTextConverter}}" />
-                                </HorizontalStackLayout>
-                            </ContentView>
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
+                                                   Style="{StaticResource TerminalHorizontalStackLayout}"
+                                                   Background="{StaticResource MetroGrayDarkBrighter}">
+                                <Label Style="{StaticResource TerminalProcessLabel}"
+                                       Text="{Binding Terminal, Converter={StaticResource TerminalTextConverter}}" />
+                                <Label Style="{StaticResource TerminalProcessLabel}"
+                                       Text=" - " />
+                                <Label Style="{StaticResource TerminalProcessLabel}"
+                                       Text="{Binding Process, Converter={StaticResource ProcessTextConverter}}" />
+                            </HorizontalStackLayout>
 
-                            <ContentView Grid.Row="1" Grid.Column="1"
-                                         Style="{StaticResource LogLowerLabelContentView}">
-                                <Grid Style="{StaticResource FillGrid}"
-                                      ColumnDefinitions="Auto,*">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource YenLabel}"
-                                           Text="￥" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource BalanceLabel}"
-                                           Text="{Binding Balance, StringFormat='{0:#,0}'}" />
-                                </Grid>
-                            </ContentView>
+                            <Grid Grid.Row="1" Grid.Column="1"
+                                  Style="{StaticResource LogBalanceGrid}"
+                                  ColumnDefinitions="Auto,*">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource YenLabel}"
+                                       Text="￥" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource BalanceLabel}"
+                                       Text="{Binding Balance, StringFormat='{0:#,0}'}" />
+                            </Grid>
 
                         </Grid>
-                    </ViewCell>
+                    </Border>
+
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </Grid>
 

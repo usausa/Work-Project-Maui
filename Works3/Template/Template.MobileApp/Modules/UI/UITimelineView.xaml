@@ -21,7 +21,7 @@
             <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             <Setter Property="HasUnevenRows" Value="True" />
             <Setter Property="SeparatorVisibility" Value="None" />
-            <Setter Property="behaviors:ListViewOption.DisableOverScroll" Value="True" />
+            <Setter Property="behaviors:ItemsViewOption.DisableOverScroll" Value="True" />
         </Style>
 
     </ContentView.Resources>

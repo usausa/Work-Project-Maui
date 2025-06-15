@@ -46,6 +46,8 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
 
     private void OnReaderDetected(NfcEventArgs args)
     {
+        Logs.Clear();
+
         var nfcF = args.Tag;
 
         //var idm = nfcF.ExecutePolling(unchecked((short)0x0003));
