@@ -30,6 +30,9 @@
     <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
       <Build Solution="Debug|*" Project="false" />
     </Project>
+    <Project Path="WorkNfc/WorkNfc.csproj" Id="c87fc4df-0693-4f65-b948-5ad62a9e6d77">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -59,8 +62,12 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkNfc/WorkNfc.csproj" Id="c87fc4df-0693-4f65-b948-5ad62a9e6d77" />
-  <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5" />
+  <Project Path="WodkDecibel/WodkDecibel.csproj" Id="249905c3-e8cf-4bf9-a9d0-069ceb3af18d">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkVisualLoad/WorkVisualLoad.csproj" Id="448c4104-b36f-4ec3-b7bb-6baee84c7bf8">
     <Deploy Solution="Debug|*" />
   </Project>
