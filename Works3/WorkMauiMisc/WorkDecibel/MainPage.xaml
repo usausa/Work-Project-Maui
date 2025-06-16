@@ -5,10 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <VerticalStackLayout Padding="30,0" Spacing="25">
-        <Label
-            SemanticProperties.HeadingLevel="Level1"
-            Style="{StaticResource Headline}"
-            Text="Hello, World!" />
+        <Button Text="Start" Clicked="Button_OnClicked"></Button>
     </VerticalStackLayout>
 
 </ContentPage>
