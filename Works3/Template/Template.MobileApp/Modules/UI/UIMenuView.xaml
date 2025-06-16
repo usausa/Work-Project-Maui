@@ -57,7 +57,8 @@
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGauge}"
                 Text="Gauge" />
         <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"

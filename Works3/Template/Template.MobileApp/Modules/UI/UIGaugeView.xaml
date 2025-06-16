@@ -11,6 +11,8 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+        <Label Text="{Binding Decibel, StringFormat='{0:F2} dB'}" />
+    </VerticalStackLayout>
 
 </ContentView>

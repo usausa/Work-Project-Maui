@@ -4,6 +4,7 @@ using System.Reflection;
 
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components.Nfc;
+using Template.MobileApp.Components.Noise;
 using Template.MobileApp.Helpers;
 
 public static class Extensions
@@ -117,4 +118,10 @@ public static class Extensions
 
     public static IObservable<NfcEventArgs> ObserveDetectedOnCurrentContext(this INfcReader nfcReader) =>
         nfcReader.ObserveDetected().ObserveOn(SynchronizationContext.Current!);
+
+    public static IObservable<NoiseEventArgs> ObserveMeasured(this INoiseMonitor noiseMonitor) =>
+        Observable.FromEvent<EventHandler<NoiseEventArgs>, NoiseEventArgs>(static h => (_, e) => h(e), h => noiseMonitor.Measured += h, h => noiseMonitor.Measured -= h);
+
+    public static IObservable<NoiseEventArgs> ObserveMeasuredOnCurrentContext(this INoiseMonitor noiseMonitor) =>
+        noiseMonitor.ObserveMeasured().ObserveOn(SynchronizationContext.Current!);
 }
