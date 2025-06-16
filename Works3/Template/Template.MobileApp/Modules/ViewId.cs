@@ -82,6 +82,10 @@ public enum ViewId
     SampleMap,
     SampleObjectDetection,
     SampleChat,
+    SampleMedia,
+    SampleMarkdown,
+    SampleWeb,
+    SampleBlazor,
 
     // UI
     UIMenu,
