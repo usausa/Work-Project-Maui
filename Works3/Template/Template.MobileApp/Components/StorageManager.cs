@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Storage;
+namespace Template.MobileApp.Components;
 
 public interface IStorageManager
 {

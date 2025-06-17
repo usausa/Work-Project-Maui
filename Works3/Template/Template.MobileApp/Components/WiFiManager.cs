@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Network;
+namespace Template.MobileApp.Components;
 
 public interface IWiFiManager
 {

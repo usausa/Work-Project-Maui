@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Ocr;
+namespace Template.MobileApp.Components;
 
 public interface IOcrReader
 {

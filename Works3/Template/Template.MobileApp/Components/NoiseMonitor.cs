@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Noise;
+namespace Template.MobileApp.Components;
 
 public sealed class NoiseEventArgs : EventArgs
 {

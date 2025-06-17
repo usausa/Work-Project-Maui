@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Nfc;
+namespace Template.MobileApp.Components;
 
 #pragma warning disable CA1819
 public interface INfc

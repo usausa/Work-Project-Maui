@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Nfc;
+using Template.MobileApp.Components;
 using Template.MobileApp.Domain.FeliCa;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase

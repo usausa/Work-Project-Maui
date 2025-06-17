@@ -9,6 +9,10 @@
             Clicked="OnTest1Click"
             HorizontalOptions="Fill"
             Text="Test1" />
+        <Button
+            Clicked="OnTest2Click"
+            HorizontalOptions="Fill"
+            Text="Test2" />
     </VerticalStackLayout>
 
 </ContentPage>

@@ -3,8 +3,7 @@ namespace Template.MobileApp;
 using System.Reflection;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Nfc;
-using Template.MobileApp.Components.Noise;
+using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
 
 public static class Extensions

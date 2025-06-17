@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Nfc;
+namespace Template.MobileApp.Components;
 
 using Android.App;
 using Android.Content;

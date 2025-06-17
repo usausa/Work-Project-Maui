@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Device;
+namespace Template.MobileApp.Components;
 
 public interface IDeviceManager
 {

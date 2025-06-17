@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp.Components.Noise;
+using Template.MobileApp.Components;
 
 public sealed partial class UIGaugeViewModel : AppViewModelBase
 {

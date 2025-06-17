@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Noise;
+namespace Template.MobileApp.Components;
 
 using Android.Media;
 

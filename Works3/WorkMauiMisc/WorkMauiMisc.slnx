@@ -62,8 +62,9 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkDecibel/WorkDecibel.csproj" Id="e23fd426-b8a6-405a-9e30-9d70e1beb2fd" />
-  <Project Path="WorkPopup2/WorkPopup2.csproj" Id="3bf84d96-920a-4878-bd3f-56656576a00c" />
+  <Project Path="WorkPopup2/WorkPopup2.csproj" Id="3bf84d96-920a-4878-bd3f-56656576a00c">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>

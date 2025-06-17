@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Nfc;
+namespace Template.MobileApp.Components;
 
 #pragma warning disable CA1819
 public sealed class ReadBlock
@@ -9,7 +9,7 @@ public sealed class ReadBlock
 }
 #pragma warning restore CA1819
 
-public static class FeliCaExtensions
+public static class NfcExtensions
 {
     public static byte[] ExecutePolling(this INfc nfc, short systemCode)
     {

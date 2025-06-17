@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Components.Storage;
+namespace Template.MobileApp.Components;
 
 #pragma warning disable CA1822
 public sealed partial class StorageManager

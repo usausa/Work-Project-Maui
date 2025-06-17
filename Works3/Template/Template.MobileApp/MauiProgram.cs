@@ -28,11 +28,7 @@ using Smart.Data.Mapper;
 using Smart.Resolver;
 
 using Template.MobileApp.Behaviors;
-using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Nfc;
-using Template.MobileApp.Components.Noise;
-using Template.MobileApp.Components.Ocr;
-using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Components;
 using Template.MobileApp.Controls;
 using Template.MobileApp.Extender;
 using Template.MobileApp.Helpers;

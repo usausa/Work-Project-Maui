@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
-using Template.MobileApp.Components.Device;
-using Template.MobileApp.Components.Storage;
+using Template.MobileApp.Components;
 
 public sealed partial class DeviceMiscViewModel : AppViewModelBase
 {
