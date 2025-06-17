@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkBle.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Padding="20,0" Spacing="10">
+        <Button x:Name="PluginButton" Clicked="OnPluginClicked" />
+        <Button x:Name="ShinyButton" Clicked="OnShinyClicked" />
+        <CollectionView ItemsSource="{Binding Advertisements}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label
+                        FontFamily="Courier New"
+                        FontSize="12"
+                        Text="{Binding .}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+
+</ContentPage>

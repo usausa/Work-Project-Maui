@@ -62,6 +62,7 @@
       <Deploy />
     </Project>
   </Folder>
+  <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982" />
   <Project Path="WorkPopup2/WorkPopup2.csproj" Id="3bf84d96-920a-4878-bd3f-56656576a00c">
     <Deploy Solution="Debug|*" />
   </Project>
