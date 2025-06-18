@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView
+<toolkit:Popup
     x:Class="WorkPopup2.InputDialog"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    HeightRequest="400"
-    WidthRequest="200">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    WidthRequest="320">
     <VerticalStackLayout>
         <Label
             HorizontalOptions="Center"
@@ -12,4 +12,4 @@
             VerticalOptions="Center" />
         <Button Clicked="OnCloseClicked" Text="Close" />
     </VerticalStackLayout>
-</ContentView>
+</toolkit:Popup>

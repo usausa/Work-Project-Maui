@@ -2,7 +2,7 @@ using CommunityToolkit.Maui.Extensions;
 
 namespace WorkPopup2;
 
-public partial class InputDialog : ContentView
+public partial class InputDialog
 {
 	public InputDialog()
 	{
