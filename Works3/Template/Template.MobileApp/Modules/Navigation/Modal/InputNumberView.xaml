@@ -9,10 +9,10 @@
            xmlns:modules="clr-namespace:Template.MobileApp.Modules"
            x:Class="Template.MobileApp.Modules.Navigation.Modal.InputNumberView"
            x:DataType="{x:Type module:InputNumberViewModel}"
-           s:BindingContextResolver.Type="{x:Type module:InputNumberViewModel}">
+           s:BindingContextResolver.Type="{x:Type module:InputNumberViewModel}"
+           WidthRequest="{x:Static modules:ScreenSize.LargeDialogWidth}">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}"
-                         WidthRequest="{x:Static modules:ScreenSize.LargeDialogWidth}">
+    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
         <!-- title -->
         <Label Style="{StaticResource DialogTitleLabel}"
                Text="{Binding Title}" />
