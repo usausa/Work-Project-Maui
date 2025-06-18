@@ -47,6 +47,7 @@ public partial class MainPage : ContentPage
         ShinyButton.Text = scanning is not null ? "Stop" : "Start";
     }
 
+    // TODO permission再確認
     private async void OnPluginClicked(object? sender, EventArgs e)
     {
         if (!ble.IsOn)
@@ -86,14 +87,16 @@ public partial class MainPage : ContentPage
         var ts = DateTime.Now.ToString("HH:mm:ss");
         var dump = $"{ts} | {e.Device.Id} | {e.Device.Name} | {e.Device.Rssi} | {MakeDump(e.Device.AdvertisementRecords)}";
 
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Advertisements.Insert(0, dump);
-            if (Advertisements.Count > 100)
-            {
-                Advertisements.RemoveAt(Advertisements.Count - 1);
-            }
-        });
+        System.Diagnostics.Debug.WriteLine(dump);
+
+        //MainThread.BeginInvokeOnMainThread(() =>
+        //{
+        //    Advertisements.Insert(0, dump);
+        //    if (Advertisements.Count > 100)
+        //    {
+        //        Advertisements.RemoveAt(Advertisements.Count - 1);
+        //    }
+        //});
     }
 
     private string MakeDump(IReadOnlyList<AdvertisementRecord> records)
@@ -148,16 +151,17 @@ public partial class MainPage : ContentPage
         var ts = DateTime.Now.ToString("HH:mm:ss");
         var dump = $"{ts} | {result.Peripheral.Uuid} | {result.Peripheral.Name} | {result.Rssi} | {MakeDump(result.AdvertisementData)}";
 
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            Advertisements.Insert(0, dump);
-            if (Advertisements.Count > 100)
-            {
-                Advertisements.RemoveAt(Advertisements.Count - 1);
-            }
-        });
-    }
+        System.Diagnostics.Debug.WriteLine(dump);
 
+        //MainThread.BeginInvokeOnMainThread(() =>
+        //{
+        //    Advertisements.Insert(0, dump);
+        //    if (Advertisements.Count > 100)
+        //    {
+        //        Advertisements.RemoveAt(Advertisements.Count - 1);
+        //    }
+        //});
+    }
 
     private string MakeDump(IAdvertisementData data)
     {
