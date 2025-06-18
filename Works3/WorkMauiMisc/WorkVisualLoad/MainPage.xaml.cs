@@ -46,7 +46,7 @@ public partial class MainPage : ContentPage, IDrawable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        // TODO scaleも
+        // TODO scaleも?
         canvas.FillColor = Colors.Black;
         canvas.FillRectangle(dirtyRect);
 
@@ -68,7 +68,7 @@ public partial class MainPage : ContentPage, IDrawable
             startPoint: new Point(0, 1),   // 下端が green
             endPoint: new Point(0, 0));    // 上端が red
 
-
+        // TODO 2phase方式に分離？
         for (int i = 0; i < count; i++)
         {
             int idx = (writeIndex - 1 - i + MaxBars) % MaxBars;
@@ -85,14 +85,13 @@ public partial class MainPage : ContentPage, IDrawable
             // 1) full-height でグラデーション描画
             canvas.SetFillPaint(gradientPaint, fullRect);
             canvas.FillRectangle(fullRect);
+            canvas.RestoreState();
 
             // 2) 上側 (1 - value) 部分を黒で塗りつぶし
             float maskHeight = fullHeight * (1f - value);
             var maskRect = new RectF(x, yTop, barWidth, maskHeight);
             canvas.FillColor = Colors.Black;
             canvas.FillRectangle(maskRect);
-
-            canvas.RestoreState();
         }
     }
 }
