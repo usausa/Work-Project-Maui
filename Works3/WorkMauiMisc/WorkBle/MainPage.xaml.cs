@@ -1,3 +1,5 @@
+using System.Reactive.Linq;
+
 namespace WorkBle;
 
 using Plugin.BLE;
@@ -5,6 +7,7 @@ using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 
+using Shiny;
 using Shiny.BluetoothLE;
 
 using System.Collections.ObjectModel;
@@ -108,6 +111,13 @@ public partial class MainPage : ContentPage
 
     private async void OnShinyClicked(object? sender, EventArgs e)
     {
+        var access = await bleManager.RequestAccess();
+        if (access != AccessState.Available)
+        {
+            await DisplayAlert("Bluetooth Off", "Please turn on Bluetooth", "OK");
+            return;
+        }
+
         if (scanning is null)
         {
             if (OperatingSystem.IsAndroid())
