@@ -46,7 +46,6 @@ public partial class MainPage : ContentPage, IDrawable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        // TODO scaleも?
         canvas.FillColor = Colors.Black;
         canvas.FillRectangle(dirtyRect);
 
@@ -64,21 +63,23 @@ public partial class MainPage : ContentPage, IDrawable
                 new PaintGradientStop(0f, Colors.LimeGreen),
                 new PaintGradientStop(0.5f, Colors.Gold),
                 new PaintGradientStop(1f, Colors.Red)
+                //new PaintGradientStop(0f, new Color(0x69, 0xf0, 0xae)),
+                //new PaintGradientStop(0.5f, new Color(0xff, 0xab, 0x40)),
+                //new PaintGradientStop(1f, new Color(0xff, 0x52, 0x52))
             ],
             startPoint: new Point(0, 1),   // 下端が green
             endPoint: new Point(0, 0));    // 上端が red
 
-        // TODO 2phase方式に分離？
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
-            int idx = (writeIndex - 1 - i + MaxBars) % MaxBars;
-            float value = buffer[idx];
+            var idx = (writeIndex - 1 - i + MaxBars) % MaxBars;
+            var value = buffer[idx];
             if (value <= 0f)
                 continue;
 
-            float x = dirtyRect.Right - (i + 1) * barWidth;
-            float fullHeight = dirtyRect.Height;
-            float yTop = dirtyRect.Top;
+            var x = dirtyRect.Right - (i + 1) * barWidth;
+            var fullHeight = dirtyRect.Height;
+            var yTop = dirtyRect.Top;
             var fullRect = new RectF(x + (gap / 2), yTop, barWidth - gap, fullHeight);
 
             canvas.SaveState();
@@ -88,7 +89,7 @@ public partial class MainPage : ContentPage, IDrawable
             canvas.RestoreState();
 
             // 2) 上側 (1 - value) 部分を黒で塗りつぶし
-            float maskHeight = fullHeight * (1f - value);
+            var maskHeight = fullHeight * (1f - value);
             var maskRect = new RectF(x, yTop, barWidth, maskHeight);
             canvas.FillColor = Colors.Black;
             canvas.FillRectangle(maskRect);
