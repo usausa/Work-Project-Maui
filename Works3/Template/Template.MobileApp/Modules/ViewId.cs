@@ -53,7 +53,7 @@ public enum ViewId
 
     DeviceWiFi,
     DeviceBluetooth,
-    DeviceBleClient,
+    DeviceBleScan,
     DeviceBleHost,
 
     DeviceNfc,

@@ -87,12 +87,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public void OnActivated()
     {
-        // TODO Device activate
     }
 
     public void OnDeactivated()
     {
-        // TODO Device deactivate
     }
 
     public void OnStopped()

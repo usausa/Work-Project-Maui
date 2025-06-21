@@ -71,8 +71,8 @@
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId DeviceBleClient}"
-                Text="BLE Client" />
+                CommandParameter="{markup:ViewId DeviceBleScan}"
+                Text="BLE Scan" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"

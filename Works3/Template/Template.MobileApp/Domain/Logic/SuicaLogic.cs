@@ -65,10 +65,8 @@ public static class SuicaLogic
         { 3, "その他" }
     };
 
-    public static string ConvertTerminalString(byte type)
-    {
-        return TerminalNames.TryGetValue(type, out var value) ? value : type.ToString("X");
-    }
+    public static string ConvertTerminalString(byte type) =>
+        TerminalNames.TryGetValue(type, out var value) ? value : type.ToString("X");
 
     public static string ConvertProcessString(byte process)
     {
@@ -80,10 +78,8 @@ public static class SuicaLogic
         return withCache ? name + " 現金併用" : name;
     }
 
-    public static byte ConvertProcessType(byte process)
-    {
-        return (byte)(process & 0b01111111);
-    }
+    public static byte ConvertProcessType(byte process) =>
+        (byte)(process & 0b01111111);
 
     public static bool IsProcessOfSales(byte process)
     {
@@ -97,54 +93,48 @@ public static class SuicaLogic
         return ProcessOfBus.Contains(processType);
     }
 
-    public static string ConvertRegionString(int region)
-    {
-        return RegionNames.TryGetValue(region, out var value) ? value : region.ToString("X");
-    }
+    public static string ConvertRegionString(int region) =>
+        RegionNames.TryGetValue(region, out var value) ? value : region.ToString("X");
 
-    public static DateTime ConvertDate(byte[] bytes, int offset)
+    private static DateTime ExtractDate(Span<byte> bytes)
     {
-        var year = 2000 + (bytes[offset] >> 1);
-        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset, 2)) >> 5 & 0b1111;
-        var day = bytes[offset + 1] & 0b11111;
+        var year = 2000 + (bytes[0] >> 1);
+        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
+        var day = bytes[1] & 0b11111;
         return new DateTime(year, month, day);
     }
 
-    public static DateTime ConvertDateTime(byte[] bytes, int offset)
+    private static DateTime ExtractDateTime(Span<byte> bytes)
     {
-        var year = 2000 + (bytes[offset] >> 1);
-        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset, 2)) >> 5 & 0b1111;
-        var day = bytes[offset + 1] & 0b11111;
-        var hour = bytes[offset + 2] >> 3;
-        var minute = BinaryPrimitives.ReadUInt16BigEndian(bytes.AsSpan(offset + 2, 2)) >> 5 & 0b111111;
+        var year = 2000 + (bytes[0] >> 1);
+        var month = BinaryPrimitives.ReadUInt16BigEndian(bytes[..2]) >> 5 & 0b1111;
+        var day = bytes[1] & 0b11111;
+        var hour = bytes[2] >> 3;
+        var minute = BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(2, 2)) >> 5 & 0b111111;
         return new DateTime(year, month, day, hour, minute, 0);
     }
 
-    // TODO
-    public static SuicaAccessData ConvertToAccessData(byte[] data)
-    {
-        return new SuicaAccessData
-        {
-            Balance = BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(11, 2)),
-            TransactionId = BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(14, 2))
-        };
-    }
+    public static int ExtractAccessBalance(Span<byte> bytes) =>
+        BinaryPrimitives.ReadUInt16LittleEndian(bytes.Slice(11, 2));
 
-    // TODO
-    public static SuicaLogData? ConvertToLogData(byte[] data)
-    {
-        if (data[1] == 0x00)
-        {
-            return null;
-        }
+    public static int ExtractAccessTransactionId(Span<byte> bytes) =>
+        BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(14, 2));
 
-        return new SuicaLogData
-        {
-            Terminal = data[0],
-            Process = data[1],
-            DateTime = IsProcessOfSales(data[1]) ? ConvertDateTime(data, 4) : ConvertDate(data, 4),
-            Balance = BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(10, 2)),
-            TransactionId = BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(13, 2))
-        };
-    }
+    public static bool IsValidLog(Span<byte> bytes) =>
+        bytes[1] != 0x00;
+
+    public static byte ExtractLogTerminal(Span<byte> bytes) =>
+        bytes[0];
+
+    public static byte ExtractLogProcess(Span<byte> bytes) =>
+        bytes[1];
+
+    public static DateTime ExtractLogDateTime(Span<byte> bytes) =>
+        IsProcessOfSales(ExtractLogProcess(bytes)) ? ExtractDateTime(bytes[4..]) : ExtractDate(bytes[4..]);
+
+    public static int ExtractLogBalance(Span<byte> bytes) =>
+        BinaryPrimitives.ReadUInt16LittleEndian(bytes.Slice(10, 2));
+
+    public static int ExtractLogTransactionId(Span<byte> bytes) =>
+        BinaryPrimitives.ReadUInt16BigEndian(bytes.Slice(13, 2));
 }

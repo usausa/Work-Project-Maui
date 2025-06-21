@@ -1,9 +1,10 @@
 namespace Template.MobileApp.Models.Sample;
 
-// TODO
-public class SuicaAccessData
+public partial class SuicaAccessData : ObservableObject
 {
-    public int Balance { get; set; }
+    [ObservableProperty]
+    public partial int Balance { get; set; }
 
-    public int TransactionId { get; set; }
+    [ObservableProperty]
+    public partial int TransactionId { get; set; }
 }

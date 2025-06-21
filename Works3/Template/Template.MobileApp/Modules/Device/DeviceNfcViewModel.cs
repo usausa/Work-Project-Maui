@@ -73,7 +73,22 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         }
 
         Idm = Convert.ToHexString(idm);
-        Access = SuicaLogic.ConvertToAccessData(block.BlockData);
-        Logs.AddRange(blocks1.Concat(blocks2).Concat(blocks3).Select(x => SuicaLogic.ConvertToLogData(x.BlockData)).OfType<SuicaLogData>().ToArray());
+        Access = new SuicaAccessData
+        {
+            Balance = SuicaLogic.ExtractAccessBalance(block.BlockData),
+            TransactionId = SuicaLogic.ExtractAccessTransactionId(block.BlockData)
+        };
+
+        Logs.AddRange(blocks1.Concat(blocks2).Concat(blocks3)
+            .Where(static x => SuicaLogic.IsValidLog(x.BlockData))
+            .Select(static x => new SuicaLogData
+            {
+                Terminal = SuicaLogic.ExtractLogTerminal(x.BlockData),
+                Process = SuicaLogic.ExtractLogProcess(x.BlockData),
+                DateTime = SuicaLogic.ExtractLogDateTime(x.BlockData),
+                Balance = SuicaLogic.ExtractLogBalance(x.BlockData),
+                TransactionId = SuicaLogic.ExtractLogTransactionId(x.BlockData)
+            })
+            .ToArray());
     }
 }

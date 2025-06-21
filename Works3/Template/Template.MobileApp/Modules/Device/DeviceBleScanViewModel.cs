@@ -2,11 +2,11 @@ namespace Template.MobileApp.Modules.Device;
 
 using Shiny.BluetoothLE;
 
-public sealed class DeviceBleClientViewModel : AppViewModelBase
+public sealed class DeviceBleScanViewModel : AppViewModelBase
 {
     public ObservableCollection<SwitchBotTemperature> Devices { get; } = new();
 
-    public DeviceBleClientViewModel(IBleManager bleManager)
+    public DeviceBleScanViewModel(IBleManager bleManager)
     {
         Disposables.Add(bleManager.Scan()
             .Select(ConvertData)

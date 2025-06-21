@@ -5,10 +5,10 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
-             x:Class="Template.MobileApp.Modules.Device.DeviceBleClientView"
-             x:DataType="{x:Type module:DeviceBleClientViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:DeviceBleClientViewModel}"
-             shell:ShellProperty.Title="BleClient"
+             x:Class="Template.MobileApp.Modules.Device.DeviceBleScanView"
+             x:DataType="{x:Type module:DeviceBleScanViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:DeviceBleScanViewModel}"
+             shell:ShellProperty.Title="BleScan"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

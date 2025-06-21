@@ -1,15 +1,19 @@
 namespace Template.MobileApp.Models.Sample;
 
-// TODO
-public class SuicaLogData
+public partial class SuicaLogData : ObservableObject
 {
-    public byte Terminal { get; set; }
+    [ObservableProperty]
+    public partial byte Terminal { get; set; }
 
-    public byte Process { get; set; }
+    [ObservableProperty]
+    public partial byte Process { get; set; }
 
-    public DateTime DateTime { get; set; }
+    [ObservableProperty]
+    public partial DateTime DateTime { get; set; }
 
-    public int Balance { get; set; }
+    [ObservableProperty]
+    public partial int Balance { get; set; }
 
-    public int TransactionId { get; set; }
+    [ObservableProperty]
+    public partial int TransactionId { get; set; }
 }
