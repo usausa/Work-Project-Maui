@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models.UI;
+namespace Template.MobileApp.Models.Sample;
 
 public enum DeckButtonType
 {

@@ -1,7 +1,6 @@
 namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components;
-using Template.MobileApp.Domain.FeliCa;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase
 {
@@ -74,7 +73,7 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         }
 
         Idm = Convert.ToHexString(idm);
-        Access = Suica.ConvertToAccessData(block.BlockData);
-        Logs.AddRange(blocks1.Concat(blocks2).Concat(blocks3).Select(x => Suica.ConvertToLogData(x.BlockData)).OfType<SuicaLogData>().ToArray());
+        Access = SuicaLogic.ConvertToAccessData(block.BlockData);
+        Logs.AddRange(blocks1.Concat(blocks2).Concat(blocks3).Select(x => SuicaLogic.ConvertToLogData(x.BlockData)).OfType<SuicaLogData>().ToArray());
     }
 }

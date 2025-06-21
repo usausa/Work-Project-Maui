@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models.UI;
+namespace Template.MobileApp.Models.Sample;
 
 #pragma warning disable CA1819
 public sealed class TimelineRow

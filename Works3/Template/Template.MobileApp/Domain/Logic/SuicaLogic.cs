@@ -1,8 +1,8 @@
-namespace Template.MobileApp.Domain.FeliCa;
+namespace Template.MobileApp.Domain.Logic;
 
 using System.Buffers.Binary;
 
-public static class Suica
+public static class SuicaLogic
 {
     private static readonly Dictionary<byte, string> TerminalNames = new()
     {
@@ -120,6 +120,7 @@ public static class Suica
         return new DateTime(year, month, day, hour, minute, 0);
     }
 
+    // TODO
     public static SuicaAccessData ConvertToAccessData(byte[] data)
     {
         return new SuicaAccessData
@@ -129,6 +130,7 @@ public static class Suica
         };
     }
 
+    // TODO
     public static SuicaLogData? ConvertToLogData(byte[] data)
     {
         if (data[1] == 0x00)

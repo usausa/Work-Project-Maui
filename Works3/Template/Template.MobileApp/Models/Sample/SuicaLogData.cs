@@ -1,5 +1,6 @@
-namespace Template.MobileApp.Domain.FeliCa;
+namespace Template.MobileApp.Models.Sample;
 
+// TODO
 public class SuicaLogData
 {
     public byte Terminal { get; set; }
