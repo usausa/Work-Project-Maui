@@ -94,42 +94,18 @@ public static class Extensions
     // Reactive
     //--------------------------------------------------------------------------------
 
-    // TODO Smartへ移動？
-    // TODO これはベースへ移動？、結合は分離、呼び出し箇所修正
-
-    public static IObservable<TSource> WhereNotNull<TSource>(this IObservable<TSource?> source) =>
-        source.Where(static x => x is not null)!;
-
-    public static IObservable<TSource> ObserveOnCurrentContext<TSource>(this IObservable<TSource> source) =>
-        source.ObserveOn(SynchronizationContext.Current!);
-
-    public static IObservable<ScreenStateEventArgs> ObserveStateChanged(this IScreen screen) =>
+    public static IObservable<ScreenStateEventArgs> StateChangedAsObservable(this IScreen screen) =>
         Observable.FromEvent<EventHandler<ScreenStateEventArgs>, ScreenStateEventArgs>(static h => (_, e) => h(e), h => screen.ScreenStateChanged += h, h => screen.ScreenStateChanged -= h);
 
-    public static IObservable<ScreenStateEventArgs> ObserveStateChangedOnCurrentContext(this IScreen screen) =>
-        screen.ObserveStateChanged().ObserveOnCurrentContext();
-
-    public static IObservable<LocationEventArgs> ObserveLocationChanged(this ILocationService locationService) =>
+    public static IObservable<LocationEventArgs> LocationChangedAsObservable(this ILocationService locationService) =>
         Observable.FromEvent<EventHandler<LocationEventArgs>, LocationEventArgs>(static h => (_, e) => h(e), h => locationService.LocationChanged += h, h => locationService.LocationChanged -= h);
 
-    public static IObservable<LocationEventArgs> ObserveLocationChangedOnCurrentContext(this ILocationService locationService) =>
-        locationService.ObserveLocationChanged().ObserveOnCurrentContext();
-
-    public static IObservable<SpeechRecognizeEventArgs> ObserveRecognized(this ISpeechService speechService) =>
+    public static IObservable<SpeechRecognizeEventArgs> RecognizedAsObservable(this ISpeechService speechService) =>
         Observable.FromEvent<EventHandler<SpeechRecognizeEventArgs>, SpeechRecognizeEventArgs>(static h => (_, e) => h(e), h => speechService.Recognized += h, h => speechService.Recognized -= h);
 
-    public static IObservable<SpeechRecognizeEventArgs> ObserveRecognizedOnCurrentContext(this ISpeechService speechService) =>
-        speechService.ObserveRecognized().ObserveOnCurrentContext();
-
-    public static IObservable<NfcEventArgs> ObserveDetected(this INfcReader nfcReader) =>
+    public static IObservable<NfcEventArgs> DetectedAsObservable(this INfcReader nfcReader) =>
         Observable.FromEvent<EventHandler<NfcEventArgs>, NfcEventArgs>(static h => (_, e) => h(e), h => nfcReader.Detected += h, h => nfcReader.Detected -= h);
 
-    public static IObservable<NfcEventArgs> ObserveDetectedOnCurrentContext(this INfcReader nfcReader) =>
-        nfcReader.ObserveDetected().ObserveOnCurrentContext();
-
-    public static IObservable<NoiseEventArgs> ObserveMeasured(this INoiseMonitor noiseMonitor) =>
+    public static IObservable<NoiseEventArgs> MeasuredAsObservable(this INoiseMonitor noiseMonitor) =>
         Observable.FromEvent<EventHandler<NoiseEventArgs>, NoiseEventArgs>(static h => (_, e) => h(e), h => noiseMonitor.Measured += h, h => noiseMonitor.Measured -= h);
-
-    public static IObservable<NoiseEventArgs> ObserveMeasuredOnCurrentContext(this INoiseMonitor noiseMonitor) =>
-        noiseMonitor.ObserveMeasured().ObserveOnCurrentContext();
 }

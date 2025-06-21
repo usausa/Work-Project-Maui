@@ -25,7 +25,7 @@ public sealed partial class UILoadViewModel : AppViewModelBase
     {
         this.noiseMonitor = noiseMonitor;
 
-        Disposables.Add(noiseMonitor.ObserveMeasuredOnCurrentContext().Subscribe(x =>
+        Disposables.Add(noiseMonitor.MeasuredAsObservable().ObserveOnCurrentContext().Subscribe(x =>
         {
             Current = x.Decibel;
             Graphics.AddValue((float)x.Decibel);

@@ -34,6 +34,7 @@ global using Smart;
 global using Smart.Collections.Generic;
 global using Smart.ComponentModel;
 global using Smart.IO;
+global using Smart.Linq;
 global using Smart.Maui;
 global using Smart.Maui.Input;
 global using Smart.Maui.Messaging;
@@ -45,6 +46,7 @@ global using Smart.Navigation;
 global using Smart.Navigation.Attributes;
 global using Smart.Navigation.Plugins.Parameter;
 global using Smart.Navigation.Plugins.Scope;
+global using Smart.Reactive;
 global using Smart.Text;
 
 global using Template.MobileApp;

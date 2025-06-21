@@ -78,7 +78,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 #pragma warning restore CA2012
         });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-        Disposables.Add(speech.ObserveRecognizedOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
+        Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
         RecognizeCommand = MakeAsyncCommand(async () =>
         {
             RecognizeText = string.Empty;

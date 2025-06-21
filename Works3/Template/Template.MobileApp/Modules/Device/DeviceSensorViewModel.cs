@@ -46,12 +46,12 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         this.magnetometer = magnetometer;
         this.orientation = orientation;
 
-        Disposables.Add(accelerometer.ObserveReadingChangedOnCurrentContext().Subscribe(x => AccelerationValue = x.Reading.Acceleration));
-        Disposables.Add(barometer.ObserveReadingChangedOnCurrentContext().Subscribe(x => BarometerValue = x.Reading.PressureInHectopascals));
-        Disposables.Add(compass.ObserveReadingChangedOnCurrentContext().Subscribe(x => MagneticValue = x.Reading.HeadingMagneticNorth));
-        Disposables.Add(gyroscope.ObserveReadingChangedOnCurrentContext().Subscribe(x => GyroscopeValue = x.Reading.AngularVelocity));
-        Disposables.Add(magnetometer.ObserveReadingChangedOnCurrentContext().Subscribe(x => MagnetometerValue = x.Reading.MagneticField));
-        Disposables.Add(orientation.ObserveReadingChangedOnCurrentContext().Subscribe(x => OrientationValue = x.Reading.Orientation));
+        Disposables.Add(accelerometer.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => AccelerationValue = x.Reading.Acceleration));
+        Disposables.Add(barometer.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => BarometerValue = x.Reading.PressureInHectopascals));
+        Disposables.Add(compass.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => MagneticValue = x.Reading.HeadingMagneticNorth));
+        Disposables.Add(gyroscope.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => GyroscopeValue = x.Reading.AngularVelocity));
+        Disposables.Add(magnetometer.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => MagnetometerValue = x.Reading.MagneticField));
+        Disposables.Add(orientation.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => OrientationValue = x.Reading.Orientation));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

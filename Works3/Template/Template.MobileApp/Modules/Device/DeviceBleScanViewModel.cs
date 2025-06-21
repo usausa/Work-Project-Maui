@@ -42,7 +42,7 @@ public sealed class DeviceBleScanViewModel : AppViewModelBase
 
     private void UpdateList(SwitchBotTemperature data)
     {
-        var current = Devices.FirstOrDefault(x => x.DeviceId == data.DeviceId);
+        var current = Devices.FirstOrDefault(data, static (x, s) => x.DeviceId == s.DeviceId);
         if (current == null)
         {
             Devices.Add(data);
