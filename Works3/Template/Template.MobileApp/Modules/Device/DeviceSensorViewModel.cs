@@ -54,11 +54,7 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         Disposables.Add(orientation.ReadingChangedAsObservable().ObserveOnCurrentContext().Subscribe(x => OrientationValue = x.Reading.Orientation));
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         accelerometer.Start(SensorSpeed.Default);
         barometer.Start(SensorSpeed.Default);
@@ -66,9 +62,10 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         gyroscope.Start(SensorSpeed.Default);
         magnetometer.Start(SensorSpeed.Default);
         orientation.Start(SensorSpeed.Default);
+        return Task.CompletedTask;
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         accelerometer.Stop();
         barometer.Stop();
@@ -76,5 +73,10 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
         gyroscope.Stop();
         magnetometer.Stop();
         orientation.Stop();
+        return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

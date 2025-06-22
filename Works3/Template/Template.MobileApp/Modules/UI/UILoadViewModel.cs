@@ -36,14 +36,16 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         }));
     }
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         noiseMonitor.Start();
+        return Task.CompletedTask;
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         noiseMonitor.Stop();
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);

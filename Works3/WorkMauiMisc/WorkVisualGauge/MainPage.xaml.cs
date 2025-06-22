@@ -30,19 +30,32 @@ public partial class MainPage : ContentPage, IDrawable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
-        canvas.SaveState();
+        canvas.FillColor = Colors.Gray;
+        canvas.FillRectangle(dirtyRect);
 
-        float cx = dirtyRect.Center.X;
-        float cy = dirtyRect.Bottom;
-        float radius = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.45f;
+        Draw2(canvas, new RectF(dirtyRect.X, dirtyRect.Y, dirtyRect.Width, dirtyRect.Height / 4));
+    }
+    public void Draw2(ICanvas canvas, RectF dirtyRect)
+    {
+        canvas.FillColor = Colors.Black;
+        canvas.FillRectangle(dirtyRect);
 
-        // draw gauge arc (top half)
-        canvas.StrokeColor = Colors.White;
-        canvas.StrokeSize = 2;
+        // TODO margin & base size
+        // TODO circle size
 
-        var arcRect = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
-        float sweep = (float)(StartAngle - EndAngle); // negative ⇒ clockwise half-circle
-        canvas.DrawArc(arcRect, (float)StartAngle, (float)EndAngle, true, false);
+        //canvas.SaveState();
+
+        //float cx = dirtyRect.Center.X;
+        //float cy = dirtyRect.Bottom;
+        //float radius = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.45f;
+
+        //// draw gauge arc (top half)
+        //canvas.StrokeColor = Colors.White;
+        //canvas.StrokeSize = 2;
+
+        //var arcRect = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
+        //float sweep = (float)(StartAngle - EndAngle); // negative ⇒ clockwise half-circle
+        //canvas.DrawArc(arcRect, (float)StartAngle, (float)EndAngle, true, false);
 
         //// draw ticks and labels
         //for (double v = Min; v <= Max + 0.001; v += MinorStep)

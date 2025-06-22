@@ -27,14 +27,16 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         }));
     }
 
-    public override void OnNavigatedTo(INavigationContext context)
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         nfcReader.Enabled = true;
+        return Task.CompletedTask;
     }
 
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         nfcReader.Enabled = false;
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

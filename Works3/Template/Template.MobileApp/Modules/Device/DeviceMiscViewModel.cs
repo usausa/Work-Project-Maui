@@ -86,14 +86,16 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         });
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    public override void OnNavigatingFrom(INavigationContext context)
+    public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         screen.SetOrientation(DisplayOrientation.Portrait);
 
         speech.RecognizeCancel();
+
+        return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }
