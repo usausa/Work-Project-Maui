@@ -10,7 +10,7 @@ public class ProcessColor
 public sealed class SuicaProcessColorConverter : IValueConverter
 {
 #pragma warning disable CA1819
-    public ProcessColor[] Values { get; set; } = default!;
+    public ProcessColor[] Values { get; set; } = [];
 #pragma warning restore CA1819
 
     public Color DefaultColor { get; set; } = Colors.Gray;
