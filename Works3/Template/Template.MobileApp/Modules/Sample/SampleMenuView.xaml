@@ -12,40 +12,86 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*">
-        <Button Grid.Row="0"
+          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*">
+
+        <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Web" />
-        <Button Grid.Row="1"
+        <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Blazor" />
-        <Button Grid.Row="2"
+
+        <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Map" />
-        <Button Grid.Row="3"
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Map2" />
+
+        <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Media" />
-        <Button Grid.Row="4"
+        <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Markdown" />
-        <Button Grid.Row="5"
+
+        <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Chart" />
-        <Button Grid.Row="6"
+        <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Object detection" />
-        <Button Grid.Row="7"
+                Text="" />
+
+        <Button Grid.Row="4" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="CV Net" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="CV Local" />
+
+        <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Chat" />
-        <Button Grid.Row="8"
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="6" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="7" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="7" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="8" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="8" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="" />

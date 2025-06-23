@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-public sealed class SampleMapViewModel : AppViewModelBase
+public sealed class SampleCvLocalViewModel : AppViewModelBase
 {
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
