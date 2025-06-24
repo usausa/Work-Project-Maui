@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleMenuView"
              x:DataType="{x:Type module:SampleMenuViewModel}"
@@ -57,7 +58,8 @@
                 Text="CV Net" />
         <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleCvLocal}"
                 Text="CV Local" />
 
         <Button Grid.Row="5" Grid.Column="0"
