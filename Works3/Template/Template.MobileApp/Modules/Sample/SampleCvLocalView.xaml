@@ -5,15 +5,14 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvLocalView"
              x:DataType="{x:Type module:SampleCvLocalViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleCvLocalViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="Custom Vision"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function2Text="Out"
-             shell:ShellProperty.Function3Text="In"
+             shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
+             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
              shell:ShellProperty.Function4Text="{Binding IsPreview, Converter={s:BoolToText True='Detect', False='Retry'}}"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="{Binding IsPreview}"
@@ -28,10 +27,8 @@
                         behaviors:CameraBind.Controller="{Binding Controller}" />
         <Image Grid.Row="0"
                IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
+               BackgroundColor="Black"
                Source="{Binding Image}" />
-        <graphics:GraphicsControl Grid.Row="0"
-                                  IsVisible="{Binding IsPreview, Converter={x:StaticResource ReverseConverter}}"
-                                  Graphics="{Binding Graphics}" />
 
     </Grid>
 

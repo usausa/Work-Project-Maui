@@ -57,11 +57,9 @@ public sealed class CognitiveUsecase : IDisposable
         initialized = true;
     }
 
-    public Task<List<DetectResult>> DetectAsync(Stream stream, float threshold = 0.5f) => Task.Run(async () =>
+    public async Task<DetectResult[]> DetectAsync(SKBitmap bitmap)
     {
         await PrepareSessionAsync();
-
-        var bitmap = SKBitmap.Decode(stream);
 
         var metadata = session.InputMetadata.First();
         var dimensions = metadata.Value.Dimensions;
@@ -82,18 +80,15 @@ public sealed class CognitiveUsecase : IDisposable
         var classes = values.First(x => x.Name == "detected_classes").AsTensor<long>();
         var scores = values.First(x => x.Name == "detected_scores").AsTensor<float>();
 
-        var results = new List<DetectResult>();
+        var results = new DetectResult[scores.Length];
+        // ReSharper disable once LoopCanBeConvertedToQuery
         for (var i = 0; i < scores.Length; i++)
         {
-            var score = scores[0, i];
-            if (score >= threshold)
-            {
-                results.Add(new DetectResult(boxes[0, i, 0], boxes[0, i, 1], boxes[0, i, 2], boxes[0, i, 3], score, labels[classes[0, i]]));
-            }
+            results[i] = new DetectResult(boxes[0, i, 0], boxes[0, i, 1], boxes[0, i, 2], boxes[0, i, 3], scores[0, i], labels[classes[0, i]]);
         }
 
         return results;
-    });
+    }
 
     private static void PrepareTensor(SKBitmap bitmap, DenseTensor<float> tensor, int width, int height)
     {

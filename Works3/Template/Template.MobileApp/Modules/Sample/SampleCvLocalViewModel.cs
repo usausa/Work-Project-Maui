@@ -1,8 +1,11 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics;
+using SkiaSharp;
+
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
+
+// TODO default quality ?
 
 public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 {
@@ -16,8 +19,6 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     public CameraController Controller { get; } = new();
 
-    public DetectGraphics Graphics { get; } = new();
-
     public SampleCvLocalViewModel(
         CognitiveUsecase cognitiveUsecase)
     {
@@ -28,7 +29,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     {
         if (IsPreview)
         {
-            await Controller.StartPreviewAsync();
+            await Controller.StartPreviewAsync().ConfigureAwait(true);
         }
     }
 
@@ -36,7 +37,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     {
         if (IsPreview)
         {
-            await Controller.StopPreviewAsync();
+            await Controller.StopPreviewAsync().ConfigureAwait(true);
         }
     }
 
@@ -60,32 +61,44 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     {
         if (IsPreview)
         {
-            await using var input = await Controller.CaptureAsync();
+            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
             if (input is null)
             {
                 return;
             }
 
-            await Controller.StopPreviewAsync();
+            await Controller.StopPreviewAsync().ConfigureAwait(true);
 
-            var ms = ImageHelper.ToMemoryStream(input);
+            await BusyState.Using(async () =>
+            {
+                using var bitmap = ImageHelper.ToNormalizeBitmap(input);
+                var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
 
-            // TODO
-            var copy = new MemoryStream();
-            await ms.CopyToAsync(copy);
-            ms.Seek(0, SeekOrigin.Begin);
-            copy.Seek(0, SeekOrigin.Begin);
+                // TODO
+                using var canvas = new SKCanvas(bitmap);
+                using var paint = new SKPaint();
+                paint.Color = SKColors.Red;
+                paint.StrokeWidth = 25;
+                paint.IsStroke = true;
+                foreach (var result in results)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{result.Score} : {result.Left} {result.Top} {result.Right} {result.Bottom}");
+                    if (result.Score >= 0.5f)
+                    {
+                        canvas.DrawRect(new SKRect(bitmap.Width * result.Left, bitmap.Height * result.Top, bitmap.Width * result.Right, bitmap.Height * result.Bottom), paint);
+                    }
+                }
 
-            var results = await cognitiveUsecase.DetectAsync(ms);
-            Graphics.Update(results);
+                var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
 
-            Image = ImageSource.FromStream(() => copy);
+                Image = ImageSource.FromStream(() => data.AsStream());
+            });
 
             IsPreview = false;
         }
         else
         {
-            await Controller.StartPreviewAsync();
+            await Controller.StartPreviewAsync().ConfigureAwait(true);
             IsPreview = true;
         }
     }
