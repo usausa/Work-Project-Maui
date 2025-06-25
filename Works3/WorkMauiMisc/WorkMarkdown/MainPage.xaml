@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkMarkdown.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkMarkdown"
+    xmlns:markdown="clr-namespace:Indiko.Maui.Controls.Markdown;assembly=Indiko.Maui.Controls.Markdown"
+    x:DataType="{x:Type app:MainPageViewModel}">
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <markdown:MarkdownView
+            BlockQuoteBackgroundColor="{StaticResource Yellow300Accent}"
+            BlockQuoteBorderColor="{StaticResource Yellow100Accent}"
+            BlockQuoteFontFace="OpenSansRegular"
+            BlockQuoteTextColor="{StaticResource Gray600}"
+            CodeBlockBackgroundColor="{StaticResource GrayQuote}"
+            CodeBlockBorderColor="{StaticResource GrayQuoteBorder}"
+            CodeBlockFontFace="OpenSansRegular"
+            CodeBlockFontSize="12"
+            CodeBlockTextColor="{StaticResource Gray600}"
+            EMailCommand="{Binding EmailCommand}"
+            H1Color="{StaticResource Blue100Accent}"
+            H1FontSize="22"
+            H2Color="{StaticResource Blue200Accent}"
+            H2FontSize="20"
+            H3Color="{StaticResource Blue300Accent}"
+            H3FontSize="18"
+            HyperlinkColor="{StaticResource Yellow100Accent}"
+            ImageAspect="Fill"
+            LineColor="{StaticResource Gray300}"
+            LinkCommand="{Binding LinkCommand}"
+            MarkdownText="{Binding Text}"
+            ParagraphSpacing="1.3"
+            TableHeaderBackgroundColor="{StaticResource Gray100}"
+            TableHeaderFontFace="OpenSansRegular"
+            TableHeaderFontSize="14"
+            TableHeaderTextColor="{StaticResource Gray900}"
+            TableRowBackgroundColor="{StaticResource White}"
+            TableRowFontFace="OpenSansRegular"
+            TableRowFontSize="12"
+            TableRowTextColor="{StaticResource Gray600}"
+            TextColor="{StaticResource Black}"
+            TextFontFace="OpenSansRegular"
+            TextFontSize="14" />
+    </ScrollView>
+
+</ContentPage>
