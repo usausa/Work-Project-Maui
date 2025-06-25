@@ -19,15 +19,6 @@ public partial class MainPage : ContentPage, IDrawable
         GraphicsView.Drawable = this;
     }
 
-    const double MajorStep = 20;
-    const double MinorStep = 10;
-    const float MajorTickLength = 20f;
-    const float MinorTickLength = 10f;
-    const float LabelOffset = 30f;
-
-    const double StartAngle = 150;   // degrees
-    const double EndAngle = 30;     // degrees
-
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         canvas.FillColor = Colors.Gray;
@@ -37,78 +28,95 @@ public partial class MainPage : ContentPage, IDrawable
     }
     public void Draw2(ICanvas canvas, RectF dirtyRect)
     {
-        canvas.FillColor = Colors.Black;
+        canvas.FillColor = new Color(64, 64, 64);
         canvas.FillRectangle(dirtyRect);
+        canvas.Antialias = true;
 
-        // TODO margin & base size
-        // TODO circle size
+        var margin = 10;
+        var tickSize = 20;
 
-        //canvas.SaveState();
+        // dummy
+        canvas.FillColor = new Color(96, 96, 96);
+        canvas.FillRectangle(dirtyRect.Inflate(-margin, -margin));
+        canvas.FillColor = new Color(48, 48, 48);
+        canvas.FillRectangle(dirtyRect.Inflate(-(margin + tickSize), -(margin + tickSize)));
+        // dummy
 
-        //float cx = dirtyRect.Center.X;
-        //float cy = dirtyRect.Bottom;
-        //float radius = Math.Min(dirtyRect.Width, dirtyRect.Height) * 0.45f;
+        var baseSize = Math.Min((dirtyRect.Width - ((margin + tickSize) * 2)) / 4, (dirtyRect.Height - ((margin + tickSize) * 2)));
+        var baseTop= dirtyRect.Height - margin - baseSize;
+        var baseHeight = dirtyRect.Height - baseTop - margin;
 
-        //// draw gauge arc (top half)
-        //canvas.StrokeColor = Colors.White;
-        //canvas.StrokeSize = 2;
+        var sweepRect = new RectF(dirtyRect.X + margin + tickSize, baseTop, dirtyRect.Width - ((margin + tickSize) * 2), baseHeight);
 
-        //var arcRect = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
-        //float sweep = (float)(StartAngle - EndAngle); // negative ⇒ clockwise half-circle
-        //canvas.DrawArc(arcRect, (float)StartAngle, (float)EndAngle, true, false);
+        canvas.FillColor = Colors.Black;
+        canvas.FillRectangle(sweepRect);
 
-        //// draw ticks and labels
-        //for (double v = Min; v <= Max + 0.001; v += MinorStep)
-        //{
-        //    bool isMajor = Math.Abs(v % MajorStep) < 0.001;
-        //    float len = isMajor ? MajorTickLength : MinorTickLength;
-        //    double angle = Map(v, Min, Max, StartAngle, EndAngle);
+        // dummy
+        canvas.FillColor = new Color(32, 32, 32);
+        canvas.FillRectangle(new RectF(sweepRect.X, sweepRect.Y + baseHeight, sweepRect.Width, sweepRect.Height));
+        canvas.FillColor = new Color(48, 48, 48);
+        canvas.FillRectangle(new RectF(sweepRect.X, sweepRect.Y + (baseHeight * 2), sweepRect.Width, sweepRect.Height));
+        canvas.FillRectangle(new RectF(sweepRect.X, sweepRect.Y + (baseHeight * 3), sweepRect.Width, sweepRect.Height));
+        // dummy
 
-        //    canvas.SaveState();
-        //    canvas.Translate(cx, cy);
-        //    canvas.Rotate((float)angle);
+        var cx = sweepRect.Center.X;
+        var cy = sweepRect.Y + (baseHeight * 2);
+        var radius = baseHeight * 2;
+        var arcRect = new RectF(cx - radius, cy - radius, radius * 2, radius * 2);
 
-        //    // draw tick (white)
-        //    canvas.StrokeColor = Colors.White;
-        //    canvas.StrokeSize = isMajor ? 2 : 1;
-        //    canvas.DrawLine(
-        //        0f, -radius,
-        //        0f, -radius + len
-        //    );
+        // Tick
+        canvas.StrokeLineCap = LineCap.Round;
+        for (var i = 0; i <= 100; i += 10)
+        {
+            var isMajor = i % 20 == 0;
+            var angle = (120f * i / 100) - 60;
+            var len = isMajor ? tickSize - 5 : tickSize - 10;
 
-        //    // draw label for major ticks
-        //    if (isMajor)
-        //    {
-        //        var text = ((int)v).ToString();
-        //        canvas.FontSize = 16;
-        //        canvas.FontColor = v >= Threshold ? Colors.Red : Colors.White;
-        //        canvas.DrawString(
-        //            text,
-        //            0, -radius + len - LabelOffset,
-        //            HorizontalAlignment.Center);
-        //    }
+            canvas.SaveState();
 
-        //    canvas.RestoreState();
-        //}
+            canvas.Translate(cx, cy);
+            canvas.Rotate(angle);
 
-        //// draw needle (OrangeRed)
-        //double clamped = Math.Clamp(Value, Min, Max);
-        //double needleAngle = Map(clamped, Min, Max, StartAngle, EndAngle);
-        //canvas.SaveState();
-        //canvas.Translate(cx, cy);
-        //canvas.Rotate((float)needleAngle);
+            canvas.StrokeColor = i >= 80 ? Colors.Red : Colors.White;
+            canvas.StrokeSize = isMajor ? 3 : 2;
+            canvas.DrawLine(0f, -radius, 0f, -radius - len);
 
-        //canvas.StrokeColor = Colors.OrangeRed;
-        //canvas.StrokeSize = 4;
-        //canvas.DrawLine(
-        //    0f, 0f,
-        //    0f, -radius + MajorTickLength
-        //);
+            if (isMajor)
+            {
+                canvas.FontColor = i >= 80 ? Colors.Red : Colors.White;
+                canvas.FontSize = 14;
+                canvas.DrawString($"{i}", 0, -radius - tickSize, HorizontalAlignment.Center);
+            }
 
-        //canvas.RestoreState();
-        //canvas.RestoreState();
+            canvas.ResetState();
+        }
+
+        // Arc
+        canvas.StrokeSize = 3;
+        canvas.StrokeColor = Colors.White;
+        canvas.DrawArc(arcRect, 150f, 30f, true, false);
+
+        var redStart = 150f - ((150f - 30f) * 80 / 100);
+        canvas.StrokeColor = Colors.Red;
+        canvas.DrawArc(arcRect, redStart, 30f, true, false);
+
+        // Needle
+        var valueAngle = (120f * 45 / 100) - 60;
+
+
+        canvas.SaveState();
+
+        canvas.ClipRectangle(dirtyRect.Inflate(-margin, -margin));
+
+        canvas.Translate(cx, cy);
+        canvas.Rotate(valueAngle);
+
+        canvas.StrokeLineCap = LineCap.Round;
+        canvas.StrokeSize = 5;
+        canvas.StrokeColor = Colors.OrangeRed;
+
+        canvas.DrawLine(0, 0, 0, - radius - 20);
+
+        canvas.ResetState();
     }
-
-    double Map(double v, double min, double max, double a, double b)
-        => a + (v - min) / (max - min) * (b - a);
 }
