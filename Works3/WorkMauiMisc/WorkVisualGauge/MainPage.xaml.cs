@@ -4,7 +4,7 @@ using Microsoft.Maui.Graphics;
 
 public partial class MainPage : ContentPage, IDrawable
 {
-    public double Value { get; set; } = 50;
+    public int Value { get; set; }
 
     public double Min { get; set; } = 20;
 
@@ -17,6 +17,29 @@ public partial class MainPage : ContentPage, IDrawable
         InitializeComponent();
 
         GraphicsView.Drawable = this;
+
+        _ = RunTimerAsync();
+    }
+
+    private async Task RunTimerAsync()
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
+            while (await timer.WaitForNextTickAsync().ConfigureAwait(true))
+            {
+                Value += 1;
+                if (Value > 100)
+                {
+                    Value = 0;
+                }
+
+                GraphicsView.Invalidate();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
@@ -26,6 +49,8 @@ public partial class MainPage : ContentPage, IDrawable
 
         Draw2(canvas, new RectF(dirtyRect.X, dirtyRect.Y, dirtyRect.Width, dirtyRect.Height / 4));
     }
+
+    // TODO calc2
     public void Draw2(ICanvas canvas, RectF dirtyRect)
     {
         canvas.FillColor = new Color(64, 64, 64);
@@ -101,8 +126,7 @@ public partial class MainPage : ContentPage, IDrawable
         canvas.DrawArc(arcRect, redStart, 30f, true, false);
 
         // Needle
-        var valueAngle = (120f * 45 / 100) - 60;
-
+        var valueAngle = (120f * (float)Value / 100) - 60;
 
         canvas.SaveState();
 
