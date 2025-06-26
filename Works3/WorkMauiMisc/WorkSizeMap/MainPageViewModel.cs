@@ -11,9 +11,12 @@ public partial class MainPageViewModel : ExtendViewModelBase
     [ObservableProperty]
     public partial Size DesiredSize { get; set; }
 
-    public ImageSource Image { get; }
+    [ObservableProperty]
+    public partial ImageSource? Image { get; set; }
 
     public ICommand TestCommand { get; }
+
+    public ICommand LoadCommand { get; }
 
     public MainPageViewModel()
     {
@@ -21,7 +24,9 @@ public partial class MainPageViewModel : ExtendViewModelBase
         {
             Debug.WriteLine(DesiredSize);
         });
-
-        Image = ImageSource.FromFile("dotnet_bot.png");
+        LoadCommand = MakeDelegateCommand(() =>
+        {
+            Image = ImageSource.FromFile("dummy.png");
+        });
     }
 }
