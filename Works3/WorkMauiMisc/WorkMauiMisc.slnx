@@ -21,6 +21,9 @@
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -68,16 +71,16 @@
       <Deploy />
     </Project>
   </Folder>
-  <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
-    <Deploy Solution="Debug|*" />
-  </Project>
+  <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9" />
   <Project Path="WorkMarkdown/WorkMarkdown.csproj" Id="454619d6-2034-42a6-88b0-f4dcc06f3247">
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkPopup2/WorkPopup2.csproj" Id="3bf84d96-920a-4878-bd3f-56656576a00c">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkRepeat/WorkRepeat.csproj" Id="411aac46-2cde-4472-9cc3-53e5a48801db" />
+  <Project Path="WorkRepeat/WorkRepeat.csproj" Id="411aac46-2cde-4472-9cc3-53e5a48801db">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>
