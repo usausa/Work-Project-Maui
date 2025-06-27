@@ -33,6 +33,9 @@
     <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
       <Build Solution="Debug|*" Project="false" />
     </Project>
+    <Project Path="WorkMarkdown/WorkMarkdown.csproj" Id="454619d6-2034-42a6-88b0-f4dcc06f3247">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkNfc/WorkNfc.csproj" Id="c87fc4df-0693-4f65-b948-5ad62a9e6d77">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -81,9 +84,6 @@
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9" />
-  <Project Path="WorkMarkdown/WorkMarkdown.csproj" Id="454619d6-2034-42a6-88b0-f4dcc06f3247">
-    <Deploy Solution="Debug|*" />
-  </Project>
   <Project Path="WorkRepeat/WorkRepeat.csproj" Id="411aac46-2cde-4472-9cc3-53e5a48801db">
     <Deploy Solution="Debug|*" />
   </Project>
