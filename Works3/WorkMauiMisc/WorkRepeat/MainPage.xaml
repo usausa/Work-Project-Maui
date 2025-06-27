@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:app="clr-namespace:WorkRepeat"
+    xmlns:s="http://smart/maui"
     x:DataType="{x:Type app:MainPageViewModel}">
 
     <ContentPage.BindingContext>

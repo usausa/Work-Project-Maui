@@ -18,7 +18,8 @@ public partial class MainPage : ContentPage, IDrawable
 
         GraphicsView.Drawable = this;
 
-        _ = RunTimerAsync();
+        //_ = RunTimerAsync();
+        Value = 45;
     }
 
     private async Task RunTimerAsync()
@@ -57,8 +58,8 @@ public partial class MainPage : ContentPage, IDrawable
         canvas.FillRectangle(dirtyRect);
         canvas.Antialias = true;
 
-        var margin = 10;
-        var tickSize = 20;
+        var margin = 12;
+        var tickSize = 24;
 
         // dummy
         canvas.FillColor = new Color(96, 96, 96);
@@ -68,8 +69,10 @@ public partial class MainPage : ContentPage, IDrawable
         // dummy
 
         var baseSize = Math.Min((dirtyRect.Width - ((margin + tickSize) * 2)) / 4, (dirtyRect.Height - ((margin + tickSize) * 2)));
-        var baseTop= dirtyRect.Height - margin - baseSize;
-        var baseHeight = dirtyRect.Height - baseTop - margin;
+        //var baseTop= dirtyRect.Height - margin - baseSize;
+        //var baseHeight = dirtyRect.Height - baseTop - margin;
+        var baseTop = margin + tickSize;
+        var baseHeight = baseSize;
 
         var sweepRect = new RectF(dirtyRect.X + margin + tickSize, baseTop, dirtyRect.Width - ((margin + tickSize) * 2), baseHeight);
 
@@ -95,7 +98,7 @@ public partial class MainPage : ContentPage, IDrawable
         {
             var isMajor = i % 20 == 0;
             var angle = (120f * i / 100) - 60;
-            var len = isMajor ? tickSize - 5 : tickSize - 10;
+            var len = isMajor ? tickSize - 12 : tickSize - 16;
 
             canvas.SaveState();
 
@@ -110,7 +113,7 @@ public partial class MainPage : ContentPage, IDrawable
             {
                 canvas.FontColor = i >= 80 ? Colors.Red : Colors.White;
                 canvas.FontSize = 14;
-                canvas.DrawString($"{i}", 0, -radius - tickSize, HorizontalAlignment.Center);
+                canvas.DrawString($"{i}", 0, -radius - len - 4, HorizontalAlignment.Center);
             }
 
             canvas.ResetState();
@@ -126,7 +129,7 @@ public partial class MainPage : ContentPage, IDrawable
         canvas.DrawArc(arcRect, redStart, 30f, true, false);
 
         // Needle
-        var valueAngle = (120f * (float)Value / 100) - 60;
+        var valueAngle = (120f * Value / 100) - 60;
 
         canvas.SaveState();
 
@@ -139,7 +142,7 @@ public partial class MainPage : ContentPage, IDrawable
         canvas.StrokeSize = 5;
         canvas.StrokeColor = Colors.OrangeRed;
 
-        canvas.DrawLine(0, 0, 0, - radius - 20);
+        canvas.DrawLine(0, 0, 0, -radius - 20);
 
         canvas.ResetState();
     }

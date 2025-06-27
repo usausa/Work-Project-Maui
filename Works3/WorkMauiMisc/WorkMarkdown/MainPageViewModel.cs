@@ -16,11 +16,11 @@ public class MainPageViewModel : ExtendViewModelBase
 
     public MainPageViewModel()
     {
-        LinkCommand = MakeDelegateCommand<object>(x =>
+        LinkCommand = MakeDelegateCommand<string>(x =>
         {
             System.Diagnostics.Debug.WriteLine($"*Link: {x}");
         });
-        EmailCommand = MakeDelegateCommand<object>(x =>
+        EmailCommand = MakeDelegateCommand<string>(x =>
         {
             System.Diagnostics.Debug.WriteLine($"*Email: {x}");
         });
