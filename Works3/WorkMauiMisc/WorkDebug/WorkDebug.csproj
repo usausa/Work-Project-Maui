@@ -62,6 +62,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
+		<PackageReference Include="Plugin.Maui.DebugOverlay" Version="1.0.0-preview3" />
+		<PackageReference Include="Plugin.Maui.DebugRainbows" Version="1.2.2" />
 		<PackageReference Include="Usa.Smart.Maui" Version="2.4.1" />
 		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.4.1" />
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.6.2" />
