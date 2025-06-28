@@ -3,9 +3,6 @@ namespace WorkRepeat;
 using Smart.Maui.Input;
 using Smart.Maui.ViewModels;
 
-using System.Globalization;
-using System.Windows.Input;
-
 public class MainPageViewModel : ExtendViewModelBase
 {
     private bool executing;
@@ -16,8 +13,6 @@ public class MainPageViewModel : ExtendViewModelBase
     {
         RepeatCommand = MakeAsyncCommand(async () =>
         {
-            RepeatCommand!.RaiseCanExecuteChanged();
-
             if (executing)
             {
                 System.Diagnostics.Debug.WriteLine("* B");

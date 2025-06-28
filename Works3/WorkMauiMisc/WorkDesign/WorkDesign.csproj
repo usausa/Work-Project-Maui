@@ -71,9 +71,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
-		<PackageReference Include="Usa.Smart.Maui" Version="2.3.1" />
-		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.3.1" />
-		<PackageReference Include="Usa.Smart.Mvvm" Version="1.6.1" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.4.1" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.4.1" />
+		<PackageReference Include="Usa.Smart.Mvvm" Version="1.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>
