@@ -58,10 +58,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         BusyView = progressView;
         this.screen = screen;
 
-        Function1Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function1), () => Function1Enabled);
-        Function2Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function2), () => Function2Enabled);
-        Function3Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function3), () => Function3Enabled);
-        Function4Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function4), () => Function4Enabled);
+        Function1Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function1), () => !BusyState.IsBusy && Function1Enabled);
+        Function2Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function2), () => !BusyState.IsBusy && Function2Enabled);
+        Function3Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function3), () => !BusyState.IsBusy && Function3Enabled);
+        Function4Command = MakeAsyncCommand(() => Navigator.NotifyAsync(ShellEvent.Function4), () => !BusyState.IsBusy && Function4Enabled);
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
