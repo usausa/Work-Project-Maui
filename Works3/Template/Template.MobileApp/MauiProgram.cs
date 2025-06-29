@@ -307,8 +307,9 @@ public static partial class MauiProgram
         // Usecase
         config.BindSingleton<NetworkOperator>();
 
-        config.BindSingleton<SampleUsecase>();
+        config.BindSingleton<NetworkUsecase>();
         config.BindSingleton<CognitiveUsecase>();
+        config.BindSingleton<SampleUsecase>();
 
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();

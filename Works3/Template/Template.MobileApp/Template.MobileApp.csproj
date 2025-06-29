@@ -74,6 +74,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord.Math" Version="3.8.0" />
+    <PackageReference Include="Accord.MachineLearning" Version="3.8.0" />
     <PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
     <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.5.0" />
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.7.0" />
@@ -120,6 +122,18 @@
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Modules\UI\UITreeMapView.xaml.cs">
+      <DependentUpon>UITreeMapView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Modules\UI\UITreeMapView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>
