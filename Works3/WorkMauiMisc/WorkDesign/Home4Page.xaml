@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.Home4Page"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Home4Page">
+
+    <!--  全体を Grid で構成  -->
+    <Grid BackgroundColor="LightGray" RowDefinitions="*,Auto">
+
+        <!--  メイン画面領域  -->
+        <StackLayout Grid.Row="0" Padding="20">
+            <Label
+                HorizontalOptions="Center"
+                Text="ここに画面のコンテンツを配置"
+                VerticalOptions="Center" />
+        </StackLayout>
+
+        <!--  下部ナビゲーションエリア  -->
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="#F8F8F8"
+            HeightRequest="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  左側ボタン  -->
+            <Button
+                Grid.Column="0"
+                BackgroundColor="Transparent"
+                FontSize="14"
+                Text="Home"
+                TextColor="#333" />
+
+            <!--  右側ボタン  -->
+            <Button
+                Grid.Column="2"
+                BackgroundColor="Transparent"
+                FontSize="14"
+                Text="Profile"
+                TextColor="#333" />
+        </Grid>
+
+        <!--  真ん中に浮かぶフローティングボタン  -->
+        <AbsoluteLayout Grid.Row="1" HeightRequest="48">
+            <!--  Grid.Row=1 の上に重ねるため高さ 0  -->
+
+            <Button
+                x:Name="FloatingButton"
+                AbsoluteLayout.LayoutBounds="0.5,0,70,70"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                BackgroundColor="#FF4081"
+                CornerRadius="35"
+                FontSize="30"
+                HeightRequest="70"
+                Shadow="0,5,10,#80000000"
+                Text="+"
+                TextColor="White"
+                TranslationY="-18"
+                WidthRequest="70" />
+        </AbsoluteLayout>
+    </Grid>
+
+</ContentPage>

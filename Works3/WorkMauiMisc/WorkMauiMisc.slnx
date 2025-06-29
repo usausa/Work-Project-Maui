@@ -24,6 +24,9 @@
     <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -83,11 +86,11 @@
   <Project Path="WorkBlazor/WorkBlazor.csproj" Id="8f514d01-3b9e-4b59-bfa0-a71348ba12e2">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f" />
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9" />
+  <Project Path="WorkTreeMap/WorkTreeMap.csproj" Id="2f316410-a25b-48f4-aeff-767069c6fc4f" />
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>

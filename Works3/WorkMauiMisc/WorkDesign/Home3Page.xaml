@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.Home3Page"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Home3Page">
+
+    <Grid>
+        <!--  1. 画面全体を2行に分割（本文＋ボトムバー）  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!--  メインコンテンツ  -->
+            <RowDefinition Height="64" />
+            <!--  ボトムバーの高さ  -->
+        </Grid.RowDefinitions>
+
+        <!--  2. メインコンテンツ（上部）  -->
+        <ContentView Grid.Row="0" BackgroundColor="LightGray">
+            <!--  ここにページの内容を記述  -->
+        </ContentView>
+
+        <!--  3. ボトムバー（下部）  -->
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="Blue"
+            ColumnSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="Home" />
+            <!--  中央は空白、中央ボタンを重ねる用  -->
+            <Button Grid.Column="2" Text="Profile" />
+        </Grid>
+
+        <!--  4. 中央ボタンをGrid全体の一番上に重ねて配置  -->
+        <Frame
+            Margin="0,0,0,32"
+            BackgroundColor="DodgerBlue"
+            CornerRadius="36"
+            HasShadow="True"
+            HeightRequest="72"
+            HorizontalOptions="Center"
+            IsClippedToBounds="False"
+            TranslationY="-18"
+            VerticalOptions="End"
+            WidthRequest="72">
+            <!--  下方向のマージンで位置微調整  -->
+            <ImageButton Source="plus_icon.png" />
+        </Frame>
+    </Grid>
+
+</ContentPage>
