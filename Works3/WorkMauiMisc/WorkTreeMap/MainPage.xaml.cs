@@ -9,13 +9,33 @@ public partial class MainPage : ContentPage
         InitializeComponent();
 
         // サンプルデータ（ラベルと重み）
-        var data = new Dictionary<string, double>
+        var data = new List<TreeMapNode>
         {
-            { "Category A", 6 },
-            { "Category B", 4 },
-            { "Category C", 3 },
-            { "Category D", 2 },
-            { "Category E", 1 },
+            new(Color.FromRgb(55, 54, 57), "1", 147108),
+            new(Color.FromRgb(67, 68, 78), "2", 89474),
+            new(Color.FromRgb(42, 39, 37), "3", 83509),
+            new(Color.FromRgb(82, 88, 104), "4", 44901),
+            new(Color.FromRgb(179, 149, 118), "5", 30217),
+            new(Color.FromRgb(18, 16, 13), "6", 29373),
+            new(Color.FromRgb(104, 118, 139), "7", 28429),
+            new(Color.FromRgb(132, 147, 179), "8", 28332),
+            new(Color.FromRgb(83, 54, 30), "9", 25446),
+            new(Color.FromRgb(116, 88, 58), "10", 22547),
+            new(Color.FromRgb(162, 180, 208), "11", 21125),
+            new(Color.FromRgb(145, 103, 19), "12", 20988),
+            new(Color.FromRgb(202, 218, 232), "13", 19795),
+            new(Color.FromRgb(68, 185, 242), "14", 19785),
+            new(Color.FromRgb(216, 51, 40), "15", 19641),
+            new(Color.FromRgb(236, 190, 111), "16", 19253),
+            new(Color.FromRgb(148, 123, 94), "17", 17557),
+            new(Color.FromRgb(208, 183, 172), "18", 17426),
+            new(Color.FromRgb(172, 126, 60), "19", 14489),
+            new(Color.FromRgb(3, 86, 33), "20", 14355),
+            new(Color.FromRgb(35, 129, 162), "21", 13003),
+            new(Color.FromRgb(216, 172, 5), "22", 11042),
+            new(Color.FromRgb(17, 183, 93), "23", 10379),
+            new(Color.FromRgb(171, 220, 10), "24", 7724),
+            new(Color.FromRgb(144, 22, 17), "25", 6150)
         };
 
         // 重みを元に二分木を構築
@@ -29,11 +49,11 @@ public partial class MainPage : ContentPage
 public class TreeMapDrawable : IDrawable
 {
     private readonly TreeMapNode _root;
-    private readonly Color[] _palette = new[]
-    {
-        Colors.SkyBlue, Colors.MediumSeaGreen, Colors.Orange,
-        Colors.Tomato, Colors.Goldenrod, Colors.Plum
-    };
+    //private readonly Color[] _palette = new[]
+    //{
+    //    Colors.SkyBlue, Colors.MediumSeaGreen, Colors.Orange,
+    //    Colors.Tomato, Colors.Goldenrod, Colors.Plum
+    //};
 
     public TreeMapDrawable(TreeMapNode root)
     {
@@ -56,16 +76,17 @@ public class TreeMapDrawable : IDrawable
         if (node.IsLeaf)
         {
             // 葉ノード：矩形とラベルを描画
-            var color = _palette[depth % _palette.Length];
-            canvas.FillColor = color;
+            //var color = _palette[depth % _palette.Length];
+            //canvas.FillColor = color;
+            canvas.FillColor = node.Color;
             canvas.StrokeColor = Colors.Black;
             canvas.StrokeSize = 1;
             canvas.FillRectangle(rect);
-            canvas.DrawRectangle(rect);
+            //canvas.DrawRectangle(rect);
 
-            canvas.FontColor = Colors.Black;
-            canvas.FontSize = 14;
-            canvas.DrawString(node.Label, rect.X + 4, rect.Y + 4, HorizontalAlignment.Left);
+            //canvas.FontColor = Colors.Black;
+            //canvas.FontSize = 14;
+            //canvas.DrawString(node.Label, rect.X + 4, rect.Y + 4, HorizontalAlignment.Left);
         }
         else
         {
@@ -97,12 +118,14 @@ public class TreeMapNode
 {
     public double Value { get; }
     public string Label { get; }
+    public Color Color { get; }
     public TreeMapNode Left { get; }
     public TreeMapNode Right { get; }
 
     // 葉ノード用コンストラクタ
-    public TreeMapNode(string label, double value)
+    public TreeMapNode(Color color, string label, double value)
     {
+        Color = color;
         Label = label;
         Value = value;
     }
@@ -120,13 +143,8 @@ public class TreeMapNode
 
 public static class TreeMapBuilder
 {
-    public static TreeMapNode Build(IDictionary<string, double> data)
+    public static TreeMapNode Build(List<TreeMapNode> leaves)
     {
-        // 葉ノードリストを作成
-        var leaves = data.Select(kv => new TreeMapNode(kv.Key, kv.Value))
-            .OrderByDescending(n => n.Value)
-            .ToList();
-
         return BuildRecursive(leaves);
     }
 
