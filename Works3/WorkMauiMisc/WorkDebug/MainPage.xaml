@@ -9,6 +9,9 @@
             SemanticProperties.HeadingLevel="Level1"
             Style="{StaticResource Headline}"
             Text="Hello, World!" />
+        <Button
+            Text="Click Me!"
+            Clicked="Button_OnClicked" />
     </VerticalStackLayout>
 
 </ContentPage>
