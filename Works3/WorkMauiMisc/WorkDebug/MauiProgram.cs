@@ -14,7 +14,8 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseDebugRibbon(Colors.Orange)
+            .UseDebugOverlay()
+            //.UseDebugRibbon(Colors.Orange)
 #if DEBUG
             //.UseDebugRainbows()
             .UseDebugRainbows(new DebugRainbowsOptions
