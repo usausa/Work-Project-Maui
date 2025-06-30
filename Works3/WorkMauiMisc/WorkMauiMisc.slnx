@@ -24,6 +24,16 @@
     <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
+      <Build Solution="Debug|*" Project="false" />
+      <Deploy />
+    </Project>
+    <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
+      <Deploy />
+    </Project>
     <Project Path="WorkGraphicsShape/WorkGraphicsShape.csproj" Id="1d5dd211-f4a4-4e4c-9625-b577d5a32982">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -34,6 +44,12 @@
       <Build Solution="Debug|*" Project="false" />
     </Project>
     <Project Path="WorkMarkdown/WorkMarkdown.csproj" Id="454619d6-2034-42a6-88b0-f4dcc06f3247">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkNewCamera/WorkNewCamera.csproj" Id="a59093a0-0efa-4559-be97-59df7f5dd876">
       <Deploy Solution="Debug|*" />
     </Project>
     <Project Path="WorkNfc/WorkNfc.csproj" Id="c87fc4df-0693-4f65-b948-5ad62a9e6d77">
@@ -61,29 +77,7 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
-  <Folder Name="/_/BDrawMvvm/">
-    <Project Path="WorkGraphicMvvm/WorkGraphicMvvm.csproj">
-      <Deploy />
-    </Project>
-  </Folder>
-  <Folder Name="/_/DCameraQr/">
-    <Project Path="WorkNewBarcode/WorkNewBarcode.csproj" Id="24ed404c-84ef-42c1-9932-759dc3177f2c">
-      <Deploy Solution="Debug|*" />
-    </Project>
-    <Project Path="WorkNewCamera/WorkNewCamera.csproj" Id="a59093a0-0efa-4559-be97-59df7f5dd876">
-      <Deploy Solution="Debug|*" />
-    </Project>
-  </Folder>
-  <Folder Name="/_/UVisualTimeline/">
-    <Project Path="WorkGraphicBasic/WorkGraphicBasic.csproj">
-      <Build Solution="Debug|*" Project="false" />
-      <Deploy />
-    </Project>
-  </Folder>
   <Project Path="WorkBlazor/WorkBlazor.csproj" Id="8f514d01-3b9e-4b59-bfa0-a71348ba12e2">
-    <Deploy Solution="Debug|*" />
-  </Project>
-  <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f">
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
