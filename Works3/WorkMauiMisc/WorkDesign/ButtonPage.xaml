@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.ButtonPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="ButtonPage">
+
+    <!--  TODO アイコン、文字を、選択を赤、非選択をGray  -->
+    <!--  TODO コーナーなし  -->
+    <!--  TODO フローティング  -->
+    <Grid RowDefinitions="*,Auto">
+        <ContentView Grid.Row="0" BackgroundColor="LightGray" />
+
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="Snow"
+            ColumnDefinitions="*,*,*,*,*">
+            <Button
+                Grid.Column="0"
+                BackgroundColor="Snow"
+                ContentLayout="Top, 0"
+                FontSize="12"
+                ImageSource="home_select.png"
+                Text="ホーム"
+                TextColor="DarkGray" />
+            <Button
+                Grid.Column="1"
+                BackgroundColor="Snow"
+                ContentLayout="Top, 0"
+                FontSize="12"
+                ImageSource="search.png"
+                Text="検索"
+                TextColor="DarkGray" />
+            <Button
+                Grid.Column="3"
+                BackgroundColor="Snow"
+                ContentLayout="Top, 0"
+                FontSize="12"
+                ImageSource="notifications.png"
+                Text="お知らせ"
+                TextColor="DarkGray" />
+            <Button
+                Grid.Column="4"
+                BackgroundColor="Snow"
+                ContentLayout="Top, 0"
+                FontSize="12"
+                ImageSource="account.png"
+                Text="マイページ"
+                TextColor="DarkGray" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

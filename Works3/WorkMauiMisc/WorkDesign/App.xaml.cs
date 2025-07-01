@@ -12,7 +12,9 @@ public partial class App : Application
         //return new Window(new MainPage());
         //return new Window(new Home2Page());
         //return new Window(new Home3Page());
-        return new Window(new Home4Page());
         //return new Window(new Home5Page());
+        //return new Window(new Home4Page());
+
+        return new Window(new ButtonPage());
     }
 }

@@ -67,6 +67,7 @@
     <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkTreeMap/WorkTreeMap.csproj" Id="2f316410-a25b-48f4-aeff-767069c6fc4f" />
     <Project Path="WorkVisualLoad/WorkVisualLoad.csproj" Id="448c4104-b36f-4ec3-b7bb-6baee84c7bf8">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -84,7 +85,6 @@
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9" />
-  <Project Path="WorkTreeMap/WorkTreeMap.csproj" Id="2f316410-a25b-48f4-aeff-767069c6fc4f" />
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>
