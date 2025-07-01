@@ -3,10 +3,15 @@
     x:Class="WorkDesign.ButtonPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="ButtonPage">
+    xmlns:app="clr-namespace:WorkDesign"
+    Title="ButtonPage"
+    x:DataType="{x:Type app:ButtonPageViewModel}">
 
-    <!--  TODO アイコン、文字を、選択を赤、非選択をGray  -->
-    <!--  TODO コーナーなし  -->
+    <ContentPage.BindingContext>
+        <app:ButtonPageViewModel />
+    </ContentPage.BindingContext>
+
+    <!--  TODO ちらつき確認  -->
     <!--  TODO フローティング  -->
     <Grid RowDefinitions="*,Auto">
         <ContentView Grid.Row="0" BackgroundColor="LightGray" />
@@ -18,35 +23,47 @@
             <Button
                 Grid.Column="0"
                 BackgroundColor="Snow"
+                Command="{Binding ChangeCommand}"
+                CommandParameter="{x:Static app:SelectedPage.Home}"
                 ContentLayout="Top, 0"
-                FontSize="12"
-                ImageSource="home_select.png"
+                CornerRadius="0"
+                FontSize="14"
+                ImageSource="{Binding Selected, Converter={app:SelectedToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}"
                 Text="ホーム"
-                TextColor="DarkGray" />
+                TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Home, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="1"
                 BackgroundColor="Snow"
+                Command="{Binding ChangeCommand}"
+                CommandParameter="{x:Static app:SelectedPage.Search}"
                 ContentLayout="Top, 0"
-                FontSize="12"
-                ImageSource="search.png"
+                CornerRadius="0"
+                FontSize="14"
+                ImageSource="{Binding Selected, Converter={app:SelectedToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}"
                 Text="検索"
-                TextColor="DarkGray" />
+                TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Search, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="3"
                 BackgroundColor="Snow"
+                Command="{Binding ChangeCommand}"
+                CommandParameter="{x:Static app:SelectedPage.Notifications}"
                 ContentLayout="Top, 0"
-                FontSize="12"
-                ImageSource="notifications.png"
+                CornerRadius="0"
+                FontSize="14"
+                ImageSource="{Binding Selected, Converter={app:SelectedToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}"
                 Text="お知らせ"
-                TextColor="DarkGray" />
+                TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Notifications, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="4"
                 BackgroundColor="Snow"
+                Command="{Binding ChangeCommand}"
+                CommandParameter="{x:Static app:SelectedPage.Account}"
                 ContentLayout="Top, 0"
-                FontSize="12"
-                ImageSource="account.png"
+                CornerRadius="0"
+                FontSize="14"
+                ImageSource="{Binding Selected, Converter={app:SelectedToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}"
                 Text="マイページ"
-                TextColor="DarkGray" />
+                TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Account, Selected=#f44336, Default=#9e9e9e}}" />
         </Grid>
     </Grid>
 

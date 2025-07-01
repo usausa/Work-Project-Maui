@@ -19,6 +19,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
 
 		<!-- Display name -->
 		<ApplicationTitle>WorkDesign</ApplicationTitle>
@@ -60,44 +61,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="新しいフォルダー\**" />
-	  <Compile Remove="新しいフォルダー\**" />
-	  <EmbeddedResource Remove="新しいフォルダー\**" />
-	  <MauiCss Remove="新しいフォルダー\**" />
-	  <MauiXaml Remove="新しいフォルダー\**" />
-	  <None Remove="新しいフォルダー\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
 		<PackageReference Include="Usa.Smart.Maui" Version="2.4.1" />
 		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.4.1" />
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.6.2" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="ButtonPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Home1Page.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Home2Page.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Home3Page.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Home4Page.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Home5Page.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\HomeView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
