@@ -104,7 +104,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
                     using var resized = ImageHelper.Resize(bitmap, 0.25);
 
                     var watch = Stopwatch.StartNew();
-                    var colors = sampleUsecase.ClusterColors(resized, 25, 20, 1e-3);
+                    var colors = sampleUsecase.ClusterColors(resized, 25, 25, 1e-3);
                     Debug.WriteLine($"Color clustering completed. elapsed=[{watch.ElapsedMilliseconds}]");
 
                     var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);

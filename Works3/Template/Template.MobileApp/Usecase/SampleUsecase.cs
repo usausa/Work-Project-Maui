@@ -21,8 +21,8 @@ public sealed class SampleUsecase
     public List<ColorCount> ClusterColors(
         SKBitmap bitmap,
         int maxClusters,
-        int maxIterations,
-        double tolerance)
+        int maxIterations = 0,
+        double tolerance = 1e-5)
     {
         var width = bitmap.Width;
         var height = bitmap.Height;
@@ -40,11 +40,17 @@ public sealed class SampleUsecase
         var actualClusters = Math.Min(maxClusters, observations.Length);
 
         // KMeans
-        var algorithm = new KMeans(actualClusters)
+        var algorithm = new MiniBatchKMeans(actualClusters, 25)
         {
             MaxIterations = maxIterations,
             Tolerance = tolerance
         };
+        //var algorithm = new KMeans(actualClusters)
+        //{
+        //    MaxIterations = maxIterations,
+        //    Tolerance = tolerance
+        //};
+
         var clusters = algorithm.Learn(observations);
         var labels = clusters.Decide(observations);
 
