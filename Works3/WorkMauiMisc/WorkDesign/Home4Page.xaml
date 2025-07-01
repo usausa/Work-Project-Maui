@@ -47,7 +47,6 @@
         <!--  真ん中に浮かぶフローティングボタン  -->
         <AbsoluteLayout Grid.Row="1" HeightRequest="48">
             <!--  Grid.Row=1 の上に重ねるため高さ 0  -->
-
             <Button
                 x:Name="FloatingButton"
                 AbsoluteLayout.LayoutBounds="0.5,0,70,70"

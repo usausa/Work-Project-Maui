@@ -36,14 +36,14 @@
 
         <!--  4. 中央ボタンをGrid全体の一番上に重ねて配置  -->
         <Frame
-            Margin="0,0,0,32"
+            Margin="0,0,0,0"
             BackgroundColor="DodgerBlue"
             CornerRadius="36"
             HasShadow="True"
             HeightRequest="72"
             HorizontalOptions="Center"
             IsClippedToBounds="False"
-            TranslationY="-18"
+            TranslationY="36"
             VerticalOptions="End"
             WidthRequest="72">
             <!--  下方向のマージンで位置微調整  -->

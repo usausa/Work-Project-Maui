@@ -68,4 +68,13 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.6.2" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="Login1Page.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Profile1Page.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
