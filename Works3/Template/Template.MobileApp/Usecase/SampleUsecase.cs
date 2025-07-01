@@ -17,6 +17,7 @@ public sealed class SampleUsecase
     //--------------------------------------------------------------------------------
 
 #pragma warning disable CA1822
+    // ReSharper disable once MemberCanBeMadeStatic.Global
     public List<ColorCount> ClusterColors(
         SKBitmap bitmap,
         int maxClusters,

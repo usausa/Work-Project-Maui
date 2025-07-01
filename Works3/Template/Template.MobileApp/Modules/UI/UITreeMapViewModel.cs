@@ -1,11 +1,19 @@
 namespace Template.MobileApp.Modules.UI;
 
+using System.Diagnostics;
+
 using SkiaSharp;
 
+using Template.MobileApp.Graphics;
 using Template.MobileApp.Helpers;
+using Template.MobileApp.Usecase;
 
 public sealed partial class UITreeMapViewModel : AppViewModelBase
 {
+    private readonly IDialog dialog;
+
+    private readonly SampleUsecase sampleUsecase;
+
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
@@ -14,8 +22,15 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
     public CameraController Controller { get; } = new();
 
-    public UITreeMapViewModel()
+    public ColorTreeMapGraphics Graphics { get; } = new();
+
+    public UITreeMapViewModel(
+        IDialog dialog,
+        SampleUsecase sampleUsecase)
     {
+        this.dialog = dialog;
+        this.sampleUsecase = sampleUsecase;
+
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ =>
         {
             // Select minimum resolution
@@ -80,13 +95,26 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
                 await Controller.StopPreviewAsync().ConfigureAwait(true);
 
-                // Bitmap
-                using var bitmap = ImageHelper.ToNormalizeBitmap(input);
+                using var loading = dialog.Indicator();
 
-                var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
+                // ReSharper disable once AccessToDisposedClosure
+                var (data, colors) = await Task.Run(() =>
+                {
+                    using var bitmap = ImageHelper.ToNormalizeBitmap(input);
+                    using var resized = ImageHelper.Resize(bitmap, 0.25);
+
+                    var watch = Stopwatch.StartNew();
+                    var colors = sampleUsecase.ClusterColors(resized, 25, 20, 1e-3);
+                    Debug.WriteLine($"Color clustering completed. elapsed=[{watch.ElapsedMilliseconds}]");
+
+                    var data = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
+
+                    return (data, colors);
+                }).ConfigureAwait(true);
+
+                // Update
                 Image = ImageSource.FromStream(() => data.AsStream());
-
-                // TODO
+                Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
                 IsPreview = false;
             }
