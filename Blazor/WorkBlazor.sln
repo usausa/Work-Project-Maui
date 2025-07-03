@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkBlazor", "WorkBlazor\Wo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkBlazor.Shared", "WorkBlazor\WorkBlazor.Shared\WorkBlazor.Shared.csproj", "{2C3DE645-B63C-4FB3-941D-1085E91C1326}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkBlazor.Web", "WorkBlazor\WorkBlazor.Web\WorkBlazor.Web.csproj", "{689F4FDF-012C-4B96-962A-841C59B043FD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{2C3DE645-B63C-4FB3-941D-1085E91C1326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C3DE645-B63C-4FB3-941D-1085E91C1326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C3DE645-B63C-4FB3-941D-1085E91C1326}.Release|Any CPU.Build.0 = Release|Any CPU
-		{689F4FDF-012C-4B96-962A-841C59B043FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{689F4FDF-012C-4B96-962A-841C59B043FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{689F4FDF-012C-4B96-962A-841C59B043FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{689F4FDF-012C-4B96-962A-841C59B043FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
