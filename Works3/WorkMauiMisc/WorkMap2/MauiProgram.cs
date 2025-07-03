@@ -1,4 +1,6 @@
-﻿namespace WorkMap2;
+using SkiaSharp.Views.Maui.Controls.Hosting;
+
+namespace WorkMap2;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -8,6 +10,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseSkiaSharp(true)
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
