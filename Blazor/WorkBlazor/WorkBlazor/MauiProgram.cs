@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
-using WorkBlazor.Services;
-using WorkBlazor.Shared.Services;
 
 namespace WorkBlazor
 {
@@ -16,9 +14,6 @@ namespace WorkBlazor
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-
-            // Add device-specific services used by the WorkBlazor.Shared project
-            builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddFluentUIComponents();
