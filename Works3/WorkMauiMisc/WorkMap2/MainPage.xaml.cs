@@ -1,13 +1,7 @@
-using Mapsui;
-using Map = Mapsui.Map;
-
 namespace WorkMap2;
 
 using Mapsui.Extensions;
 using Mapsui.Projections;
-using Mapsui.Tiling;
-using Mapsui.UI;
-using Mapsui.UI.Maui;
 
 public partial class MainPage : ContentPage
 {
@@ -29,6 +23,10 @@ public partial class MainPage : ContentPage
         var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(InitialLongitude, InitialLatitude).ToMPoint();
         var resolutions = MapView.Map.Navigator.Resolutions;
         MapView.Map.Navigator.CenterOnAndZoomTo(sphericalMercatorCoordinate, resolutions[9]);
+    }
+
+    private void TestClicked(object? sender, EventArgs e)
+    {
     }
 
     private void ZoomInClicked(object? sender, EventArgs e)
