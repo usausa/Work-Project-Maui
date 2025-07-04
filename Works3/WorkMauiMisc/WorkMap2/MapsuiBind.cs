@@ -116,15 +116,15 @@ internal class MapsuiBind
 
                 AssociatedObject.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
 
-                var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(controller.HomeLongitude, controller.HomeLatitude).ToMPoint();
-                if (controller.InitialResolution.HasValue)
-                {
-                    AssociatedObject.Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[controller.InitialResolution.Value]);
-                }
-                else
-                {
-                    AssociatedObject.Map.Home = n => n.CenterOn(sphericalMercatorCoordinate);
-                }
+                //var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(controller.HomeLongitude, controller.HomeLatitude).ToMPoint();
+                //if (controller.InitialResolution.HasValue)
+                //{
+                //    AssociatedObject.Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[controller.InitialResolution.Value]);
+                //}
+                //else
+                //{
+                //    AssociatedObject.Map.Home = n => n.CenterOn(sphericalMercatorCoordinate);
+                //}
 
                 controller.MoveToRequest += OnMoveToRequest;
                 controller.ZoomInRequest += OnZoomInRequest;

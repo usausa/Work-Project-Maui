@@ -15,7 +15,7 @@ public partial class MainPage : ContentPage
         MapView.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
 
         var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(InitialLongitude, InitialLatitude).ToMPoint();
-        MapView.Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[9]);
+        MapView.Map.Navigator.CenterOnAndZoomTo(sphericalMercatorCoordinate, MapView.Map.Navigator.Resolutions[9]);
     }
 
     private void HomeClicked(object? sender, EventArgs e)
@@ -25,8 +25,9 @@ public partial class MainPage : ContentPage
         MapView.Map.Navigator.CenterOnAndZoomTo(sphericalMercatorCoordinate, resolutions[9]);
     }
 
-    private void TestClicked(object? sender, EventArgs e)
+    private async void TestClicked(object? sender, EventArgs e)
     {
+        var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
     }
 
     private void ZoomInClicked(object? sender, EventArgs e)
