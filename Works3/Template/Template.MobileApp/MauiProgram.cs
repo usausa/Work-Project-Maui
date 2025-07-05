@@ -277,6 +277,9 @@ public static partial class MauiProgram
             c.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
 
+        // Messenger
+        config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
+
         // Components
         config.BindSingleton<IStorageManager, StorageManager>();
         config.BindSingleton<INfcReader, NfcReader>();
