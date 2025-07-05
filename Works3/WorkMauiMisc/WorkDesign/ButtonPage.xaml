@@ -11,9 +11,12 @@
         <app:ButtonPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto,Auto">
 
-        <ScrollView Grid.Row="0" BackgroundColor="#F5F5F5 ">
+        <ScrollView
+            Grid.Row="0"
+            app:ScrollViewOption.DisableOverScroll="True"
+            BackgroundColor="#F5F5F5 ">
             <VerticalStackLayout Padding="12" Spacing="12">
 
                 <Border BackgroundColor="White">
@@ -113,12 +116,18 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid
+        <BoxView
             Grid.Row="1"
+            HeightRequest="0.5"
+            Color="#bdbdbd" />
+
+        <Grid
+            Grid.Row="2"
             BackgroundColor="White"
             ColumnDefinitions="*,*,72,*,*">
             <Button
                 Grid.Column="0"
+                app:ButtonOption.DisableRippleEffect="True"
                 BackgroundColor="White"
                 Command="{Binding ChangeCommand}"
                 CommandParameter="{x:Static app:SelectedPage.Home}"
@@ -130,6 +139,7 @@
                 TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Home, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="1"
+                app:ButtonOption.DisableRippleEffect="True"
                 BackgroundColor="White"
                 Command="{Binding ChangeCommand}"
                 CommandParameter="{x:Static app:SelectedPage.Search}"
@@ -141,6 +151,7 @@
                 TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Search, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="3"
+                app:ButtonOption.DisableRippleEffect="True"
                 BackgroundColor="White"
                 Command="{Binding ChangeCommand}"
                 CommandParameter="{x:Static app:SelectedPage.Notifications}"
@@ -152,6 +163,7 @@
                 TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Notifications, Selected=#f44336, Default=#9e9e9e}}" />
             <Button
                 Grid.Column="4"
+                app:ButtonOption.DisableRippleEffect="True"
                 BackgroundColor="White"
                 Command="{Binding ChangeCommand}"
                 CommandParameter="{x:Static app:SelectedPage.Account}"
@@ -159,17 +171,27 @@
                 CornerRadius="0"
                 FontSize="12"
                 ImageSource="{Binding Selected, Converter={app:SelectedToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}"
-                Text="マイページ"
+                Text="アカウント"
                 TextColor="{Binding Selected, Converter={app:SelectedToColor Page=Account, Selected=#f44336, Default=#9e9e9e}}" />
         </Grid>
 
-        <!--  TODO 上ボーダー、エフェクトをやめてタブっぽく？  -->
-        <!-- TODO 1 & 3 Grid全体を下位、Endで配置Borderをする？、このパターンベースにする？
-            IsClippedToBounds="False"
-            <ImageButton Source="plus_icon.png" />
-        -->
-        <Border
-            Grid.RowSpan="2"
+        <Button
+            Grid.RowSpan="3"
+            BackgroundColor="#f44336"
+            ContentLayout="Top, 0"
+            CornerRadius="36"
+            FontSize="12"
+            HeightRequest="72"
+            HorizontalOptions="Center"
+            ImageSource="qr_code.png"
+            Text="支払い"
+            TextColor="White"
+            TranslationY="-12"
+            VerticalOptions="End"
+            WidthRequest="72" />
+
+        <!--<Border
+            Grid.RowSpan="3"
             BackgroundColor="White"
             HeightRequest="72"
             HorizontalOptions="Center"
@@ -188,7 +210,7 @@
                 ImageSource="qr_code.png"
                 Text="支払い"
                 TextColor="White" />
-        </Border>
+        </Border>-->
     </Grid>
 
 </ContentPage>
