@@ -1,71 +1,15 @@
+namespace Template.MobileApp.Behaviors;
+
+using System;
+using System.Linq;
+
 using Mapsui.Extensions;
-
-namespace WorkMap2;
-
 using Mapsui.Projections;
 using Mapsui.UI.Maui;
 
 using Smart.Maui.Interactivity;
 
-using System.ComponentModel;
-
-public sealed class MoveToEventArgs : EventArgs
-{
-    public double Longitude { get; set; }
-
-    public double Latitude { get; set; }
-
-    public int? Resolution { get; set; }
-}
-
-
-internal class MapsuiController
-{
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<MoveToEventArgs>? MoveToRequest;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<EventArgs>? ZoomInRequest;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<EventArgs>? ZoomOutRequest;
-
-    public double HomeLongitude { get; }
-
-    public double HomeLatitude { get; }
-
-    public int? InitialResolution { get; }
-
-    public MapsuiController(double homeLongitude, double homeLatitude, int? initialResolution = null)
-    {
-        HomeLongitude = homeLongitude;
-        HomeLatitude = homeLatitude;
-        InitialResolution = initialResolution;
-    }
-
-    public void MoveTo(double longitude, double latitude, int? resolution = null)
-    {
-        var args = new MoveToEventArgs
-        {
-            Longitude = longitude,
-            Latitude = latitude,
-            Resolution = resolution
-        };
-        MoveToRequest?.Invoke(this, args);
-    }
-
-    public void ZoomIn()
-    {
-        ZoomInRequest?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void ZoomOut()
-    {
-        ZoomOutRequest?.Invoke(this, EventArgs.Empty);
-    }
-}
-
-internal class MapsuiBind
+public sealed class MapsuiBind
 {
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
@@ -113,8 +57,9 @@ internal class MapsuiBind
             controller = GetController(bindable);
             if ((controller is not null) && (AssociatedObject is not null))
             {
-
+#pragma warning disable CA2000
                 AssociatedObject.Map.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
+#pragma warning restore CA2000
 
                 var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(controller.HomeLongitude, controller.HomeLatitude).ToMPoint();
                 if (controller.InitialResolution.HasValue)
@@ -169,23 +114,13 @@ internal class MapsuiBind
         private void OnZoomInRequest(object? sender, EventArgs e)
         {
             var mapControl = AssociatedObject;
-            if (mapControl is null)
-            {
-                return;
-            }
-
-            mapControl.Map.Navigator.ZoomIn();
+            mapControl?.Map.Navigator.ZoomIn();
         }
 
         private void OnZoomOutRequest(object? sender, EventArgs e)
         {
             var mapControl = AssociatedObject;
-            if (mapControl is null)
-            {
-                return;
-            }
-
-            mapControl.Map.Navigator.ZoomOut();
+            mapControl?.Map.Navigator.ZoomOut();
         }
     }
 }
