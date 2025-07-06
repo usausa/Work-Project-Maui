@@ -9,10 +9,10 @@ public class HomeController : Controller
     public IActionResult Home()
     {
         var req = HttpContext.Request;
-        var url = $"{req.Scheme}://{req.Host}";
+        var content = $"ApiEndPoint={req.Scheme}://{req.Host}";
 
         using var generator = new QRCodeGenerator();
-        using var data = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+        using var data = generator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
         using var png = new PngByteQRCode(data);
         var bytes = png.GetGraphic(20);
 
