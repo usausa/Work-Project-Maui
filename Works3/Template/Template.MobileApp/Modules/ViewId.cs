@@ -93,7 +93,7 @@ public enum ViewId
     UIMenu,
     UILogin,
     UIProfile,
-    UIPortal,
+    UIMoney,
     UIDock,
     UICalendar,
     UIGrid,
