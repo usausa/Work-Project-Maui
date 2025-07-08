@@ -28,7 +28,7 @@ public sealed partial class BluetoothSerialFactory
             adapter = ((BluetoothManager)context.GetSystemService(Context.BluetoothService)!).Adapter!;
         }
 
-        public async ValueTask<BluetoothDevice?> FindDeviceAsync(Func<BluetoothDevice, bool> predicate)
+        private async ValueTask<BluetoothDevice?> FindDeviceAsync(Func<BluetoothDevice, bool> predicate)
         {
             var tcs = new TaskCompletionSource<BluetoothDevice?>();
 
@@ -53,7 +53,7 @@ public sealed partial class BluetoothSerialFactory
             return device;
         }
 
-        public class FindReceiver : BroadcastReceiver
+        private sealed class FindReceiver : BroadcastReceiver
         {
             private readonly TaskCompletionSource<BluetoothDevice?> tcs;
 
@@ -117,7 +117,7 @@ public sealed partial class BluetoothSerialFactory
             return result;
         }
 
-        public class BondReceiver : BroadcastReceiver
+        private sealed class BondReceiver : BroadcastReceiver
         {
             private readonly TaskCompletionSource<bool> tcs;
 

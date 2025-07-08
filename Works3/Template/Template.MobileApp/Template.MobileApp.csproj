@@ -122,19 +122,4 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Modules\Sample\SampleCvNetFaceView.xaml.cs">
-      <DependentUpon>SampleCvNetFaceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Modules\Sample\SampleCvNetMenuView.xaml.cs">
-      <DependentUpon>SampleCvNetMenuView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <MauiXaml Update="Modules\Sample\SampleCvNetFaceView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
 </Project>
