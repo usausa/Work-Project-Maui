@@ -21,21 +21,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         CognitiveUsecase cognitiveUsecase)
     {
         this.cognitiveUsecase = cognitiveUsecase;
-        Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ =>
-        {
-            // Select minimum resolution
-            var resolutions = Controller.Selected?.SupportedResolutions ?? [];
-            var size = Size.Zero;
-            foreach (var resolution in resolutions)
-            {
-                if ((resolution.Width < size.Width) || (resolution.Height < size.Height) || size.IsZero)
-                {
-                    size = resolution;
-                }
-            }
-
-            Controller.CaptureResolution = size;
-        }));
+        Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
