@@ -1,6 +1,6 @@
-using System.Windows.Input;
-
 namespace WorkDesign;
+
+using System.Windows.Input;
 
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
@@ -22,9 +22,39 @@ public partial class ChatPageViewModel : ExtendViewModelBase
     public ChatPageViewModel()
     {
         SendCommand = MakeAsyncCommand(SendMessage);
+
+        InitializeData();
     }
 
-
+    private void InitializeData()
+    {
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.Send,
+            DateTime = DateTime.Now.AddDays(-1),
+            Author = "You",
+            TextContent = "This is a sent message sample."
+        });
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.Receive,
+            DateTime = DateTime.Now.AddDays(-1).AddMinutes(3),
+            Author = "Alice",
+            TextContent = "This is a received message sample."
+        });
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.System,
+            DateTime = DateTime.Today
+        });
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.Send,
+            DateTime = DateTime.Now.AddMinutes(-1),
+            Author = "You",
+            TextContent = "This is a resent message."
+        });
+    }
 
     private async Task SendMessage()
     {
@@ -33,7 +63,26 @@ public partial class ChatPageViewModel : ExtendViewModelBase
             return;
         }
 
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.Send,
+            DateTime = DateTime.Now,
+            Author = "You",
+            TextContent = Message
+        });
+
+        Status = "Echo is messaging...";
+
         await Task.Delay(1000); // Simulate network delay
+
+        Status = string.Empty;
+
+        ChatMessages.Add(new ChatMessage()
+        {
+            Type = MessageType.Receive,
+            Author = "Echo",
+            TextContent = $"Echo: {ChatMessages.Last().TextContent}"
+        });
     }
 }
 
@@ -48,7 +97,7 @@ public sealed class ChatMessage
 {
     public MessageType Type { get; set; }
 
-    public DateTime DateTime { get; } = DateTime.Now;
+    public DateTime DateTime { get; set; }
 
     public string Author { get; set; } = default!;
 
