@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.PathPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="PathPage">
+
+    <Grid BackgroundColor="LightGray" RowDefinitions="220,*,50">
+
+        <Path
+            Aspect="Fill"
+            Data="m152,108l320,0l0,140c-160,0 -156,55 -320,24l0,-160z"
+            Fill="#a0ff00"
+            StrokeThickness="0" />
+
+        <StackLayout>
+            <Frame
+                Margin="0,100,0,0"
+                Padding="0"
+                BackgroundColor="SkyBlue "
+                CornerRadius="30"
+                HeightRequest="60"
+                HorizontalOptions="Center"
+                WidthRequest="60" />
+        </StackLayout>
+
+    </Grid>
+
+</ContentPage>

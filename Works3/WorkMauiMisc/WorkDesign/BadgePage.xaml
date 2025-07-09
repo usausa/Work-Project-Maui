@@ -4,10 +4,47 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="BadgePage">
-    <VerticalStackLayout>
-        <Label
-            HorizontalOptions="Center"
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid>
+        <AbsoluteLayout
+            BackgroundColor="DarkGray"
+            HeightRequest="72"
+            WidthRequest="72">
+            <!--  丸ボタン  -->
+            <Frame
+                x:Name="MainButton"
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="0.5,0.5,60,60"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                BackgroundColor="DodgerBlue"
+                CornerRadius="30"
+                HasShadow="True"
+                HeightRequest="60"
+                WidthRequest="60">
+                <ImageButton BackgroundColor="Transparent" Source="home.png" />
+            </Frame>
+            <!--  バッジ  -->
+            <Frame
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="1,0,28,28"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                BackgroundColor="Red"
+                BorderColor="White"
+                CornerRadius="14"
+                HasShadow="True"
+                HeightRequest="28"
+                WidthRequest="28">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Text="5"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center" />
+            </Frame>
+        </AbsoluteLayout>
+    </Grid>
+
 </ContentPage>
