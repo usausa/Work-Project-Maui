@@ -2,17 +2,17 @@ namespace Template.MobileApp.Components;
 
 public interface IBluetoothSerial : IDisposable
 {
-    ValueTask WriteAsync(byte[] buffer, int offset, int count);
+    Stream Input { get; }
 
-    ValueTask<int> ReadAsync(byte[] buffer, int offset, int count);
+    Stream Output { get; }
 }
 
 public interface IBluetoothSerialFactory
 {
-    ValueTask<IBluetoothSerial?> ConnectAsync(string name, string? pin = null);
+    ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin = null);
 }
 
 public sealed partial class BluetoothSerialFactory : IBluetoothSerialFactory
 {
-    public partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, string? pin = null);
+    public partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin = null);
 }
