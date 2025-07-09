@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using System.Text;
+using Java.Util;
+
 namespace WorkBluetooth;
 
 using Android.Bluetooth;
@@ -5,6 +9,8 @@ using Android.Content;
 using Android.Util;
 
 using MauiComponents;
+
+using Microsoft.Maui.Controls;
 
 public partial class MainPage : ContentPage
 {
@@ -15,183 +21,245 @@ public partial class MainPage : ContentPage
 
     private async void OnTestClicked(object? sender, EventArgs e)
     {
-        var context = ActivityResolver.CurrentActivity.ApplicationContext;
         var factory = new BluetoothSerialFactory();
-        var socket = await factory.ConnectAsync("DummyPrinter");
+        using var socket = await factory.ConnectAsync("DummyPrinter");
+        if (socket is null)
+        {
+            return;
+        }
+
+        var send = Encoding.ASCII.GetBytes("test\r\n");
+        await socket.Output.WriteAsync(send, 0, send.Length);
+
+        // Read
+        var receive = new byte[16];
+        var read = await socket.Input.ReadAsync(receive, 0, receive.Length);
+        if (read > 0)
+        {
+            // TODO \r\n余分
+            var result = Encoding.ASCII.GetString(receive, 0, read);
+            Debug.WriteLine(result);
+        }
     }
 }
 
 public interface IBluetoothSerial : IDisposable
 {
-    ValueTask WriteAsync(byte[] buffer, int offset, int count);
+    Stream Input { get; }
 
-    ValueTask<int> ReadAsync(byte[] buffer, int offset, int count);
+    Stream Output { get; }
 }
 
 public interface IBluetoothSerialFactory
 {
-    ValueTask<IBluetoothSerial?> ConnectAsync(string name, string? pin = null);
+    ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin = null);
 }
 
 public sealed partial class BluetoothSerialFactory : IBluetoothSerialFactory
 {
-    public partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, string? pin = null);
+    public partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin = null);
 }
 
 public sealed partial class BluetoothSerialFactory
 {
-    // TODO
-#pragma warning disable CA1822
-    public partial ValueTask<IBluetoothSerial?> ConnectAsync(string name, string? pin)
+    private static readonly UUID SppUuid = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB")!;
+
+    private readonly Context context;
+
+    private readonly BluetoothAdapter adapter;
+
+    public BluetoothSerialFactory()
     {
-        return ValueTask.FromResult((IBluetoothSerial?)null);
+        context = ActivityResolver.CurrentActivity.ApplicationContext!;
+        var bluetoothManager = (BluetoothManager)context.GetSystemService(Context.BluetoothService)!;
+        adapter = bluetoothManager.Adapter!;
     }
-#pragma warning restore CA1822
 
-    // TODO delete & merge to BluetoothSerialFactory
-    // ReSharper disable once UnusedType.Local
-    private sealed class BluetoothHelper
+    public partial async ValueTask<IBluetoothSerial?> ConnectAsync(string name, byte[]? pin)
     {
-        private readonly Context context;
-
-        private readonly BluetoothAdapter adapter;
-
-        public BluetoothHelper(Context context)
+        var status = await Permissions.CheckStatusAsync<Permissions.Bluetooth>();
+        if (status != PermissionStatus.Granted)
         {
-            this.context = context;
-            adapter = ((BluetoothManager)context.GetSystemService(Context.BluetoothService)!).Adapter!;
+            status = await Permissions.RequestAsync<Permissions.Bluetooth>();
+            if (status != PermissionStatus.Granted)
+            {
+                return null;
+            }
         }
 
-        private async ValueTask<BluetoothDevice?> FindDeviceAsync(Func<BluetoothDevice, bool> predicate)
+        // Find
+        var device = await FindAsync(name);
+        if (device is null)
         {
-            var tcs = new TaskCompletionSource<BluetoothDevice?>();
+            return null;
+        }
 
-            using var receiver = new FindReceiver(tcs, predicate);
-            using var filter = new IntentFilter();
-            filter.AddAction(BluetoothDevice.ActionFound);
-            filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
-            context.RegisterReceiver(receiver, filter);
-
-            if (!adapter.StartDiscovery())
+        var socket = default(BluetoothSocket?);
+        try
+        {
+            // Bond
+            if (device.BondState != Bond.Bonded)
             {
-                context.UnregisterReceiver(receiver);
+                if (!await BondAsync(device, pin ?? []))
+                {
+                    device.Dispose();
+                    return null;
+                }
+            }
+
+            socket = device.CreateRfcommSocketToServiceRecord(SppUuid);
+            if (socket is null)
+            {
                 return null;
             }
 
-            var device = await tcs.Task;
+            await socket.ConnectAsync();
 
-            adapter.CancelDiscovery();
+            return new BluetoothSerial(socket);
+        }
+        catch (Java.Lang.Throwable ex)
+        {
+            Log.Error(nameof(BluetoothSerialFactory), ex, "Unknown exception.");
+            socket?.Dispose();
+            device.Dispose();
+            return null;
+        }
+    }
 
+    private async ValueTask<BluetoothDevice?> FindAsync(string name)
+    {
+        // Find
+        var tcs = new TaskCompletionSource<BluetoothDevice?>();
+
+        using var receiver = new FindReceiver(tcs, name);
+        using var filter = new IntentFilter();
+        filter.AddAction(BluetoothDevice.ActionFound);
+        filter.AddAction(BluetoothAdapter.ActionDiscoveryFinished);
+        context.RegisterReceiver(receiver, filter);
+
+        if (!adapter.StartDiscovery())
+        {
             context.UnregisterReceiver(receiver);
-
-            return device;
+            return null;
         }
 
-        private sealed class FindReceiver : BroadcastReceiver
+        var device = await tcs.Task;
+
+        adapter.CancelDiscovery();
+
+        context.UnregisterReceiver(receiver);
+
+        return device;
+    }
+
+    private async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+
+        using var receiver = new BondReceiver(tcs, pin);
+        using var filter = new IntentFilter();
+        filter.AddAction(BluetoothDevice.ActionPairingRequest);
+        filter.AddAction(BluetoothDevice.ActionBondStateChanged);
+        //filter.Priority = (int)IntentFilterPriority.HighPriority;
+        context.RegisterReceiver(receiver, filter);
+
+        // Timeout
+        //var cts = new CancellationTokenSource(10_000);
+        //cts.Token.Register(() => tcs.TrySetResult(false));
+
+        if (!device.CreateBond())
         {
-            private readonly TaskCompletionSource<BluetoothDevice?> tcs;
-
-            private readonly Func<BluetoothDevice, bool> predicate;
-
-            public FindReceiver(TaskCompletionSource<BluetoothDevice?> tcs, Func<BluetoothDevice, bool> predicate)
-            {
-                this.tcs = tcs;
-                this.predicate = predicate;
-            }
-
-            public override void OnReceive(Context? context, Intent? intent)
-            {
-                switch (intent!.Action)
-                {
-                    case BluetoothDevice.ActionFound:
-#pragma warning disable CA1422
-                        var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
-#pragma warning restore CA1422
-                        Log.Debug(nameof(BluetoothHelper), $"[BluetoothDevice.ActionFound] {device.Name}");
-                        if (predicate(device))
-                        {
-                            tcs.TrySetResult(device);
-                        }
-                        break;
-
-                    case BluetoothAdapter.ActionDiscoveryFinished:
-                        Log.Debug(nameof(BluetoothHelper), "[BluetoothAdapter.ActionDiscoveryFinished]");
-                        tcs.TrySetResult(null);
-                        break;
-                }
-            }
-        }
-
-        public async ValueTask<bool> BondAsync(BluetoothDevice device, byte[] pin)
-        {
-            var tcs = new TaskCompletionSource<bool>();
-
-            using var receiver = new BondReceiver(tcs, pin);
-            using var filter = new IntentFilter();
-            filter.AddAction(BluetoothDevice.ActionPairingRequest);
-            filter.AddAction(BluetoothDevice.ActionBondStateChanged);
-            //filter.Priority = (int)IntentFilterPriority.HighPriority;
-            context.RegisterReceiver(receiver, filter);
-
-            // Timeout
-            //var cts = new CancellationTokenSource(10_000);
-            //cts.Token.Register(() => tcs.TrySetResult(false));
-
-            if (!device.CreateBond())
-            {
-                context.UnregisterReceiver(receiver);
-                return false;
-            }
-
-            var result = await tcs.Task;
-
-            //cts.Dispose();
             context.UnregisterReceiver(receiver);
-
-            return result;
+            return false;
         }
 
-        private sealed class BondReceiver : BroadcastReceiver
+        var result = await tcs.Task;
+
+        //cts.Dispose();
+        context.UnregisterReceiver(receiver);
+
+        return result;
+    }
+
+    // ------------------------------------------------------------
+    // Receiver
+    // ------------------------------------------------------------
+
+    private sealed class FindReceiver : BroadcastReceiver
+    {
+        private readonly TaskCompletionSource<BluetoothDevice?> tcs;
+
+        private readonly string name;
+
+        public FindReceiver(TaskCompletionSource<BluetoothDevice?> tcs, string name)
         {
-            private readonly TaskCompletionSource<bool> tcs;
+            this.tcs = tcs;
+            this.name = name;
+        }
 
-            private readonly byte[] pin;
-
-            public BondReceiver(TaskCompletionSource<bool> tcs, byte[] pin)
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            switch (intent!.Action)
             {
-                this.tcs = tcs;
-                this.pin = pin;
-            }
-
-            public override void OnReceive(Context? context, Intent? intent)
-            {
-                switch (intent!.Action)
-                {
-                    case BluetoothDevice.ActionPairingRequest:
+                case BluetoothDevice.ActionFound:
 #pragma warning disable CA1422
-                        var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
+                    var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
 #pragma warning restore CA1422
-                        Log.Debug(nameof(BluetoothHelper), $"[BluetoothDevice.ActionPairingRequest] {device.Name}");
-                        if (pin.Length > 0)
-                        {
-                            device.SetPin(pin);
-                        }
-                        break;
+                    Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionFound] {device.Name}");
+                    if ((device.Name is not null) && device.Name.Contains(name))
+                    {
+                        tcs.TrySetResult(device);
+                    }
+                    break;
 
-                    case BluetoothDevice.ActionBondStateChanged:
-                        var state = (Bond)intent.GetIntExtra(BluetoothDevice.ExtraBondState, BluetoothDevice.Error);
-                        var previousState = (Bond)intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
-                        Log.Debug(nameof(BluetoothHelper), $"[BluetoothDevice.ActionBondStateChanged] {previousState} -> {state}");
-                        if (state == Bond.Bonded)
-                        {
-                            tcs.TrySetResult(true);
-                        }
-                        else if (state == Bond.None)
-                        {
-                            tcs.TrySetResult(false);
-                        }
-                        break;
-                }
+                case BluetoothAdapter.ActionDiscoveryFinished:
+                    Log.Debug(nameof(BluetoothSerialFactory), "[BluetoothAdapter.ActionDiscoveryFinished]");
+                    tcs.TrySetResult(null);
+                    break;
+            }
+        }
+    }
+
+    private sealed class BondReceiver : BroadcastReceiver
+    {
+        private readonly TaskCompletionSource<bool> tcs;
+
+        private readonly byte[] pin;
+
+        public BondReceiver(TaskCompletionSource<bool> tcs, byte[] pin)
+        {
+            this.tcs = tcs;
+            this.pin = pin;
+        }
+
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            switch (intent!.Action)
+            {
+                case BluetoothDevice.ActionPairingRequest:
+#pragma warning disable CA1422
+                    var device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice)!;
+#pragma warning restore CA1422
+                    Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionPairingRequest] {device.Name}");
+                    if (pin.Length > 0)
+                    {
+                        device.SetPin(pin);
+                    }
+                    break;
+
+                case BluetoothDevice.ActionBondStateChanged:
+                    var state = (Bond)intent.GetIntExtra(BluetoothDevice.ExtraBondState, BluetoothDevice.Error);
+                    var previousState = (Bond)intent.GetIntExtra(BluetoothDevice.ExtraPreviousBondState, BluetoothDevice.Error);
+                    Log.Debug(nameof(BluetoothSerialFactory), $"[BluetoothDevice.ActionBondStateChanged] {previousState} -> {state}");
+                    if (state == Bond.Bonded)
+                    {
+                        tcs.TrySetResult(true);
+                    }
+                    else if (state == Bond.None)
+                    {
+                        tcs.TrySetResult(false);
+                    }
+                    break;
             }
         }
     }
@@ -200,11 +268,14 @@ public sealed partial class BluetoothSerialFactory
     // BluetoothSerial
     // ------------------------------------------------------------
 
-    // TODO delete
     // ReSharper disable once UnusedType.Local
     private sealed class BluetoothSerial : IBluetoothSerial
     {
         private readonly BluetoothSocket socket;
+
+        public Stream Input => socket.InputStream!;
+
+        public Stream Output => socket.OutputStream!;
 
         public BluetoothSerial(BluetoothSocket socket)
         {
@@ -214,20 +285,6 @@ public sealed partial class BluetoothSerialFactory
         public void Dispose()
         {
             socket.Close();
-        }
-
-        public async ValueTask WriteAsync(byte[] buffer, int offset, int count)
-        {
-#pragma warning disable CA1835
-            await socket.OutputStream!.WriteAsync(buffer, offset, count);
-#pragma warning restore CA1835
-        }
-
-        public async ValueTask<int> ReadAsync(byte[] buffer, int offset, int count)
-        {
-#pragma warning disable CA1835
-            return await socket.InputStream!.ReadAsync(buffer, offset, count);
-#pragma warning restore CA1835
         }
     }
 }
