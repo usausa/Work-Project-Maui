@@ -78,6 +78,7 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
+  <Project Path="WorkBluetooth/WorkBluetooth.csproj" Id="4a5c2e1c-5143-41ec-8367-2b9c2b7b14ab" />
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy Solution="Debug|*" />
   </Project>
