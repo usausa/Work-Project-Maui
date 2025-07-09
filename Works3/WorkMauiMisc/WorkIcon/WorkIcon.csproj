@@ -54,8 +54,8 @@
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material.Outlined" Version="4.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material.Rounded" Version="4.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material.Sharp" Version="4.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.81" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
 	</ItemGroup>
 
 </Project>

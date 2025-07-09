@@ -1,4 +1,9 @@
-﻿namespace WorkBluetooth;
+namespace WorkBluetooth;
+
+using CommunityToolkit.Maui;
+
+using MauiComponents;
+
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -12,10 +17,12 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            .UseMauiCommunityToolkit()
+            .UseMauiComponents();
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
