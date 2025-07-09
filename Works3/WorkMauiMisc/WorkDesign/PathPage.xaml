@@ -9,7 +9,7 @@
 
         <Path
             Aspect="Fill"
-            Data="m152,108l320,0l0,140c-160,0 -156,55 -320,24l0,-160z"
+            Data="M 0 0 L 100 0 L 100 50 A 50 50 0 0 1 0 50 Z"
             Fill="#a0ff00"
             StrokeThickness="0" />
 
