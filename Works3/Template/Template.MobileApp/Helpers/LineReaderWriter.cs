@@ -124,7 +124,7 @@ public sealed class LineReaderWriter : IAsyncDisposable
                 var bytes = length <= 512 ? stackalloc byte[length] : (pooledBytes = ArrayPool<byte>.Shared.Rent(length)).AsSpan();
 
                 l.CopyTo(bytes);
-                line = option.Encoding.GetString(bytes);
+                line = option.Encoding.GetString(bytes[..length]);
 
                 if (pooledBytes is not null)
                 {
