@@ -10,6 +10,7 @@
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             BackgroundColor="LightBlue"
+            IsVisible="True"
             Opacity="0"
             ZIndex="1000" />
 
