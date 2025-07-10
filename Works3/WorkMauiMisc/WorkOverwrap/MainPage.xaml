@@ -2,27 +2,23 @@
 <ContentPage
     x:Class="WorkOverwrap.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:workOverwrap="clr-namespace:WorkOverwrap">
 
-    <AbsoluteLayout>
+    <workOverwrap:OverwrapLayout x:Name="OverwrapLayout">
 
-        <ContentView
-            AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            BackgroundColor="LightBlue"
-            IsVisible="True"
-            Opacity="0"
-            ZIndex="1000" />
+        <!--
+        <workOverwrap:OverwrapLayout.Overwrap>
+            <ContentView BackgroundColor="LightBlue" />
+        </workOverwrap:OverwrapLayout.Overwrap>
+        -->
 
-        <ContentView
-            AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            BackgroundColor="LightCoral">
+        <ContentView BackgroundColor="LightCoral">
             <VerticalStackLayout>
                 <Button Clicked="Button_OnClicked" Text="Test" />
             </VerticalStackLayout>
         </ContentView>
 
-    </AbsoluteLayout>
+    </workOverwrap:OverwrapLayout>
 
 </ContentPage>
