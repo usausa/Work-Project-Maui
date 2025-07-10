@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkWifi.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Padding="30,0" Spacing="25">
+        <Button
+            Clicked="OnStartClick"
+            HorizontalOptions="Fill"
+            Text="Start" />
+        <Button
+            Clicked="OnStopClick"
+            HorizontalOptions="Fill"
+            Text="Stop" />
+    </VerticalStackLayout>
+
+</ContentPage>

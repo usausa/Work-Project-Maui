@@ -9,8 +9,8 @@
 
         <Path
             Aspect="Fill"
-            Data="M 0 0 L 100 0 L 100 50 A 50 50 0 0 1 0 50 Z"
-            Fill="#a0ff00"
+            Data="M0 0 L112 0 L112 48 A12 12 90 0 1 100 60 L12 60 A12 12 90 0 1 0 48 L0 0 Z"
+            Fill="#03a9f4"
             StrokeThickness="0" />
 
         <StackLayout>
@@ -18,11 +18,11 @@
                 Margin="0,100,0,0"
                 Padding="0"
                 BackgroundColor="SkyBlue "
-                CornerRadius="30"
-                HeightRequest="60"
+                CornerRadius="32"
+                HeightRequest="64"
                 HorizontalOptions="Center"
-                WidthRequest="60">
-                <Image Source="home.png" />
+                WidthRequest="64">
+                <Image Source="account.png" />
             </Frame>
         </StackLayout>
 

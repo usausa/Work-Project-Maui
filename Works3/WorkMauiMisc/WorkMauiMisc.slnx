@@ -24,6 +24,9 @@
     <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkBluetooth/WorkBluetooth.csproj" Id="4a5c2e1c-5143-41ec-8367-2b9c2b7b14ab">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -78,9 +81,6 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
-  <Project Path="WorkBluetooth/WorkBluetooth.csproj" Id="4a5c2e1c-5143-41ec-8367-2b9c2b7b14ab">
-    <Deploy Solution="Debug|*" />
-  </Project>
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy Solution="Debug|*" />
   </Project>
@@ -92,4 +92,5 @@
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>
+  <Project Path="WorkWifi/WorkWifi.csproj" Id="adb19be9-c6d2-47b0-9a63-b3ea9b3e146a" />
 </Solution>
