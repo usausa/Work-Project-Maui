@@ -12,10 +12,10 @@ public partial class ChatPageViewModel : ExtendViewModelBase
     public ObservableCollection<ChatMessage> ChatMessages { get; } = [];
 
     [ObservableProperty]
-    public string? Status { get; set; }
+    public partial string? Status { get; set; }
 
     [ObservableProperty]
-    public string? Message { get; set; }
+    public partial string? Message { get; set; }
 
     public ICommand SendCommand { get; }
 

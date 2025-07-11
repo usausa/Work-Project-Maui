@@ -38,7 +38,6 @@ using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
-using Template.MobileApp.Shell;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -183,9 +182,6 @@ public static partial class MauiProgram
         {
             options.DisableShowSoftInputOnFocus = false;
         });
-
-        // Busy
-        builder.UseCustomBusyOverlay();
 
         return builder;
     }

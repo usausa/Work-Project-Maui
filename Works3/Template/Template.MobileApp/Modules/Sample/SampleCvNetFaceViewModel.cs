@@ -54,34 +54,31 @@ public sealed partial class SampleCvNetFaceViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyFunction4()
+    protected override async Task OnNotifyFunction4()
     {
-        return BusyState.Using(async () =>
+        if (IsPreview)
         {
-            if (IsPreview)
+            // Capture
+            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+            if (input is null)
             {
-                // Capture
-                await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-                if (input is null)
-                {
-                    return;
-                }
-
-                await Controller.StopPreviewAsync().ConfigureAwait(true);
-
-                // Bitmap
-                using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-                Image.Bitmap = bitmap;
-
-                // TODO
-
-                IsPreview = false;
+                return;
             }
-            else
-            {
-                await Controller.StartPreviewAsync().ConfigureAwait(true);
-                IsPreview = true;
-            }
-        });
+
+            await Controller.StopPreviewAsync().ConfigureAwait(true);
+
+            // Bitmap
+            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
+            Image.Bitmap = bitmap;
+
+            // TODO
+
+            IsPreview = false;
+        }
+        else
+        {
+            await Controller.StartPreviewAsync().ConfigureAwait(true);
+            IsPreview = true;
+        }
     }
 }
