@@ -1,12 +1,14 @@
-using System.Diagnostics;
-using System.Windows.Input;
 using Smart.Maui.Input;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm.ViewModels;
 
+using System.Diagnostics;
+using System.Globalization;
+using System.Windows.Input;
+
 namespace WorkOverwrap;
 
-public sealed class MainPageViewModel : ExtendViewModelBase
+public sealed class MainPageViewModel : ExtendViewModelBase2
 {
     public ICommand StandaloneCommand { get; }
 
@@ -50,5 +52,18 @@ public sealed class MainPageViewModel : ExtendViewModelBase
 
         OtherWithBusyDelegateCommand = MakeDelegateCommand(() => {}, () => !BusyState.IsBusy);
         OtherWithBusyAsyncCommand = MakeAsyncCommand(() => Task.CompletedTask, () => !BusyState.IsBusy);
+    }
+}
+
+public sealed class ReverseConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is bool boolValue ? !boolValue : value;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is bool boolValue ? !boolValue : value;
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkOverwrap.MainPage2"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:workOverwrap="clr-namespace:WorkOverwrap"
+    x:DataType="{x:Type workOverwrap:MainPageViewModel}"
+    IsEnabled="{Binding BusyState.IsBusy, Converter={x:StaticResource ReverseConverter}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <workOverwrap:ReverseConverter x:Key="ReverseConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <workOverwrap:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentView>
+        <VerticalStackLayout Spacing="15">
+            <Button Command="{Binding StandaloneCommand}" Text="Standalone" />
+            <Button Command="{Binding StandaloneWithBusyCommand}" Text="Standalone" />
+            <Button Command="{Binding LinkedCommand}" Text="Linked" />
+
+            <Button Command="{Binding OtherLinkedDelegateCommand}" Text="Other Linked Delegate" />
+            <Button Command="{Binding OtherLinkedAsyncCommand}" Text="Other Linked Async" />
+
+            <Button Command="{Binding OtherWithBusyDelegateCommand}" Text="Other Busy Delegate" />
+            <Button Command="{Binding OtherWithBusyAsyncCommand}" Text="Other Busy Async" />
+        </VerticalStackLayout>
+    </ContentView>
+
+</ContentPage>

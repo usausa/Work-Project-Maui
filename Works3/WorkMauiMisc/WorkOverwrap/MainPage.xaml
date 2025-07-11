@@ -13,7 +13,9 @@
     <workOverwrap:OverwrapLayout OverwrapVisible="{Binding BusyState.IsBusy}">
 
         <workOverwrap:OverwrapLayout.Overwrap>
-            <ContentView BackgroundColor="LightBlue" />
+            <ContentView BackgroundColor="LightBlue" Opacity="0.2" >
+
+            </ContentView>
         </workOverwrap:OverwrapLayout.Overwrap>
 
         <ContentView>

@@ -39,6 +39,8 @@ public sealed class OverwrapLayout : AbsoluteLayout
             BackgroundColor = Colors.Transparent,
             ZIndex = 1000
         };
+        // ref https://github.com/dotnet/maui/issues/10252
+        overwrapView.GestureRecognizers.Add(new TapGestureRecognizer());
 
         var bindable = (BindableObject)overwrapView;
         SetLayoutBounds(bindable, new Rect(0, 0, 1, 1));
