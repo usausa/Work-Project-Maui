@@ -136,15 +136,14 @@ public static partial class MauiProgram
 
     private static void ConfigureMauiCommunityToolkit(Options options)
     {
-        // TODO
         options.SetPopupDefaults(new DefaultPopupSettings
         {
-            CanBeDismissedByTappingOutsideOfPopup = true,
+            CanBeDismissedByTappingOutsideOfPopup = false,
             Padding = 0
         });
         options.SetPopupOptionsDefaults(new DefaultPopupOptionsSettings
         {
-            CanBeDismissedByTappingOutsideOfPopup = true,
+            CanBeDismissedByTappingOutsideOfPopup = false,
             Shadow = null,
             Shape = null
         });
