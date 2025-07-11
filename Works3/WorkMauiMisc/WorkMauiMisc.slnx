@@ -87,7 +87,6 @@
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkModal/WorkModal.csproj" Id="7ec8bf9d-0e7a-45a3-858d-9393306e7b51" />
   <Project Path="WorkOverwrap/WorkOverwrap.csproj" Id="252319fd-71a0-4257-83ef-23b733f22939" />
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
