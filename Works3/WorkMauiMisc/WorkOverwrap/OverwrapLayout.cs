@@ -18,8 +18,6 @@ public sealed class OverwrapLayout : AbsoluteLayout
         set => SetValue(OverwrapVisibleProperty, value);
     }
 
-    // TODO Color ?
-
     private readonly ContentView overwrapView;
 
     public View Overwrap

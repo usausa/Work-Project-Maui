@@ -3,19 +3,30 @@
     x:Class="WorkOverwrap.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:workOverwrap="clr-namespace:WorkOverwrap">
+    xmlns:workOverwrap="clr-namespace:WorkOverwrap"
+    x:DataType="{x:Type workOverwrap:MainPageViewModel}">
 
-    <workOverwrap:OverwrapLayout x:Name="OverwrapLayout">
+    <ContentPage.BindingContext>
+        <workOverwrap:MainPageViewModel />
+    </ContentPage.BindingContext>
 
-        <!--
+    <workOverwrap:OverwrapLayout OverwrapVisible="{Binding BusyState.IsBusy}">
+
         <workOverwrap:OverwrapLayout.Overwrap>
             <ContentView BackgroundColor="LightBlue" />
         </workOverwrap:OverwrapLayout.Overwrap>
-        -->
 
-        <ContentView BackgroundColor="LightCoral">
-            <VerticalStackLayout>
-                <Button Clicked="Button_OnClicked" Text="Test" />
+        <ContentView>
+            <VerticalStackLayout Spacing="15">
+                <Button Command="{Binding StandaloneCommand}" Text="Standalone" />
+                <Button Command="{Binding StandaloneWithBusyCommand}" Text="Standalone" />
+                <Button Command="{Binding LinkedCommand}" Text="Linked" />
+
+                <Button Command="{Binding OtherLinkedDelegateCommand}" Text="Other Linked Delegate" />
+                <Button Command="{Binding OtherLinkedAsyncCommand}" Text="Other Linked Async" />
+
+                <Button Command="{Binding OtherWithBusyDelegateCommand}" Text="Other Busy Delegate" />
+                <Button Command="{Binding OtherWithBusyAsyncCommand}" Text="Other Busy Async" />
             </VerticalStackLayout>
         </ContentView>
 
