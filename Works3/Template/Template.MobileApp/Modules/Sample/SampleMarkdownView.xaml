@@ -15,6 +15,7 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
             <Style Class="DefaultMarkdownView"
                    TargetType="markdown:MarkdownView">
                 <Setter Property="TextColor" Value="Black" />
@@ -48,6 +49,7 @@
                 <Setter Property="TableRowFontSize" Value="12" />
                 <Setter Property="TableRowTextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->

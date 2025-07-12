@@ -14,24 +14,28 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Style Class="TimelineCollectionView"
-               TargetType="CollectionView">
-            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-        </Style>
+            <Style Class="TimelineCollectionView"
+                   TargetType="CollectionView">
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            </Style>
 
-        <Style Class="TimelineIdLabel"
-               TargetType="Label">
-            <Setter Property="VerticalOptions" Value="Center" />
-        </Style>
+            <Style Class="TimelineIdLabel"
+                   TargetType="Label">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
-        <Style Class="TimelineTextLabel"
-               TargetType="Label">
-            <Setter Property="Padding" Value="8,0,0,0" />
-        </Style>
+            <Style Class="TimelineTextLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="8,0,0,0" />
+            </Style>
 
+        </ResourceDictionary>
     </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 

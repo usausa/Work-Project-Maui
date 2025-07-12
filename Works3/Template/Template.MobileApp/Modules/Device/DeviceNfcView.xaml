@@ -18,154 +18,156 @@
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
+        <ResourceDictionary>
 
-        <!-- Converter -->
+            <!-- Converter -->
 
-        <converters:SuicaProcessColorConverter x:Key="ProcessColorConverter">
-            <converters:SuicaProcessColorConverter.Values>
-                <x:Array Type="{x:Type converters:ProcessColor}">
-                    <converters:ProcessColor Color="{StaticResource MetroTeal}"
-                                             ProcessType="1" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
-                                             ProcessType="2" />
-                    <converters:ProcessColor Color="{StaticResource MetroTeal}"
-                                             ProcessType="3" />
-                    <converters:ProcessColor Color="{StaticResource MetroTeal}"
-                                             ProcessType="4" />
-                    <converters:ProcessColor Color="{StaticResource MetroTeal}"
-                                             ProcessType="5" />
-                    <converters:ProcessColor Color="{StaticResource MetroTeal}"
-                                             ProcessType="6" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
-                                             ProcessType="7" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
-                                             ProcessType="8" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlue}"
-                                             ProcessType="13" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlue}"
-                                             ProcessType="15" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
-                                             ProcessType="17" />
-                    <converters:ProcessColor Color="{StaticResource MetroLightGreen}"
-                                             ProcessType="19" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
-                                             ProcessType="20" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
-                                             ProcessType="21" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
-                                             ProcessType="31" />
-                    <converters:ProcessColor Color="{StaticResource MetroBlue}"
-                                             ProcessType="35" />
-                    <converters:ProcessColor Color="{StaticResource MetroMagenta}"
-                                             ProcessType="70" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDarkBrighter}"
-                                             ProcessType="72" />
-                    <converters:ProcessColor Color="{StaticResource MetroOrangeDarkBrighter}"
-                                             ProcessType="73" />
-                    <converters:ProcessColor Color="{StaticResource MetroYellow}"
-                                             ProcessType="74" />
-                    <converters:ProcessColor Color="{StaticResource MetroMagenta}"
-                                             ProcessType="75" />
-                </x:Array>
-            </converters:SuicaProcessColorConverter.Values>
-        </converters:SuicaProcessColorConverter>
+            <converters:SuicaProcessColorConverter x:Key="ProcessColorConverter">
+                <converters:SuicaProcessColorConverter.Values>
+                    <x:Array Type="{x:Type converters:ProcessColor}">
+                        <converters:ProcessColor Color="{StaticResource MetroTeal}"
+                                                 ProcessType="1" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
+                                                 ProcessType="2" />
+                        <converters:ProcessColor Color="{StaticResource MetroTeal}"
+                                                 ProcessType="3" />
+                        <converters:ProcessColor Color="{StaticResource MetroTeal}"
+                                                 ProcessType="4" />
+                        <converters:ProcessColor Color="{StaticResource MetroTeal}"
+                                                 ProcessType="5" />
+                        <converters:ProcessColor Color="{StaticResource MetroTeal}"
+                                                 ProcessType="6" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
+                                                 ProcessType="7" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
+                                                 ProcessType="8" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlue}"
+                                                 ProcessType="13" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlue}"
+                                                 ProcessType="15" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlueDarkBrighter}"
+                                                 ProcessType="17" />
+                        <converters:ProcessColor Color="{StaticResource MetroLightGreen}"
+                                                 ProcessType="19" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
+                                                 ProcessType="20" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
+                                                 ProcessType="21" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDark}"
+                                                 ProcessType="31" />
+                        <converters:ProcessColor Color="{StaticResource MetroBlue}"
+                                                 ProcessType="35" />
+                        <converters:ProcessColor Color="{StaticResource MetroMagenta}"
+                                                 ProcessType="70" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDarkBrighter}"
+                                                 ProcessType="72" />
+                        <converters:ProcessColor Color="{StaticResource MetroOrangeDarkBrighter}"
+                                                 ProcessType="73" />
+                        <converters:ProcessColor Color="{StaticResource MetroYellow}"
+                                                 ProcessType="74" />
+                        <converters:ProcessColor Color="{StaticResource MetroMagenta}"
+                                                 ProcessType="75" />
+                    </x:Array>
+                </converters:SuicaProcessColorConverter.Values>
+            </converters:SuicaProcessColorConverter>
 
-        <converters:SuicaLogDateTimeConverter x:Key="LogTimeConverter" />
+            <converters:SuicaLogDateTimeConverter x:Key="LogTimeConverter" />
 
-        <converters:SuicaTerminalTextConverter x:Key="TerminalTextConverter" />
+            <converters:SuicaTerminalTextConverter x:Key="TerminalTextConverter" />
 
-        <converters:SuicaProcessTextConverter x:Key="ProcessTextConverter" />
+            <converters:SuicaProcessTextConverter x:Key="ProcessTextConverter" />
 
-        <!-- Style -->
+            <!-- Style -->
 
-        <Style Class="BalanceGrid"
-               TargetType="Grid">
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="ColumnSpacing" Value="0" />
-            <Setter Property="RowSpacing" Value="0" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-            <Setter Property="VerticalOptions" Value="Fill" />
-            <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkDarker}" />
-        </Style>
+            <Style Class="BalanceGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkDarker}" />
+            </Style>
 
-        <Style Class="LogBalanceGrid"
-               TargetType="Grid">
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="ColumnSpacing" Value="0" />
-            <Setter Property="RowSpacing" Value="0" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-            <Setter Property="VerticalOptions" Value="Fill" />
-            <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
-        </Style>
+            <Style Class="LogBalanceGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+            </Style>
 
-        <Style Class="DateTimeVerticalStackLayout"
-               TargetType="VerticalStackLayout">
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="VerticalOptions" Value="Fill" />
-        </Style>
+            <Style Class="DateTimeVerticalStackLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="VerticalOptions" Value="Fill" />
+            </Style>
 
-        <Style Class="TerminalHorizontalStackLayout"
-               TargetType="HorizontalStackLayout">
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-        </Style>
+            <Style Class="TerminalHorizontalStackLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+            </Style>
 
-        <Style Class="LogBorder"
-               TargetType="Border">
-            <Setter Property="StrokeThickness" Value="1" />
-        </Style>
+            <Style Class="LogBorder"
+                   TargetType="Border">
+                <Setter Property="StrokeThickness" Value="1" />
+            </Style>
 
-        <Style Class="IdmLabel"
-               TargetType="Label">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-            <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
-        </Style>
+            <Style Class="IdmLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
+            </Style>
 
-        <Style Class="YenLabel"
-               TargetType="Label">
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HorizontalTextAlignment" Value="Start" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-        </Style>
+            <Style Class="YenLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
 
-        <Style Class="BalanceLabel"
-               TargetType="Label">
-            <Setter Property="FontSize" Value="32" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HorizontalTextAlignment" Value="End" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-        </Style>
+            <Style Class="BalanceLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
 
-        <Style Class="DateTimeLabel"
-               TargetType="Label">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-        </Style>
+            <Style Class="DateTimeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
 
-        <Style Class="TerminalProcessLabel"
-               TargetType="Label">
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
-        </Style>
+            <Style Class="TerminalProcessLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
 
-        <Style Class="LogCollectionView"
-               TargetType="CollectionView">
-            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-            <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
-        </Style>
+            <Style Class="LogCollectionView"
+                   TargetType="CollectionView">
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
 
+        </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 

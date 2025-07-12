@@ -16,46 +16,48 @@
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Style Class="ContentScrollView"
-               TargetType="ScrollView">
-            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-        </Style>
+            <Style Class="ContentScrollView"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            </Style>
 
-        <Style Class="SeparatorBoxView"
-               TargetType="BoxView">
-            <Setter Property="HeightRequest" Value="0.5" />
-            <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
-        </Style>
+            <Style Class="SeparatorBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
 
-        <Style Class="BottomSelectGrid"
-               TargetType="Grid">
-            <Setter Property="BackgroundColor" Value="White" />
-        </Style>
+            <Style Class="BottomSelectGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
 
-        <Style Class="BottomSelectButton"
-               TargetType="Button">
-            <Setter Property="BackgroundColor" Value="White" />
-            <Setter Property="CornerRadius" Value="0" />
-            <Setter Property="ContentLayout" Value="Top, 0" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
-        </Style>
+            <Style Class="BottomSelectButton"
+                   TargetType="Button">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
+            </Style>
 
-        <Style Class="CenterFloatingButton"
-               TargetType="Button">
-            <Setter Property="WidthRequest" Value="72" />
-            <Setter Property="HeightRequest" Value="72" />
-            <Setter Property="CornerRadius" Value="36" />
-            <Setter Property="TranslationY" Value="-12" />
-            <Setter Property="HorizontalOptions" Value="Center" />
-            <Setter Property="VerticalOptions" Value="End" />
-            <Setter Property="ContentLayout" Value="Top, 0" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="ZIndex" Value="100" />
-        </Style>
+            <Style Class="CenterFloatingButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="CornerRadius" Value="36" />
+                <Setter Property="TranslationY" Value="-12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="ZIndex" Value="100" />
+            </Style>
 
+        </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
