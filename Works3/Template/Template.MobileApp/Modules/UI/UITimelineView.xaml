@@ -16,17 +16,17 @@
 
     <ContentView.Resources>
 
-        <Style x:Key="TimelineCollectionView"
+        <Style Class="TimelineCollectionView"
                TargetType="CollectionView">
             <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
         </Style>
 
-        <Style x:Key="TimelineIdLabel"
+        <Style Class="TimelineIdLabel"
                TargetType="Label">
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
-        <Style x:Key="TimelineTextLabel"
+        <Style Class="TimelineTextLabel"
                TargetType="Label">
             <Setter Property="Padding" Value="8,0,0,0" />
         </Style>
@@ -35,7 +35,7 @@
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <CollectionView Style="{StaticResource TimelineCollectionView}"
+        <CollectionView StyleClass="TimelineCollectionView"
                         ItemsSource="{Binding Rows}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TimelineRow">
@@ -43,10 +43,10 @@
                         <controls:TimelineCell Grid.Column="0"
                                                Row="{Binding}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource TimelineIdLabel}"
+                               StyleClass="TimelineIdLabel"
                                Text="{Binding Id}" />
                         <Label Grid.Column="2"
-                               Style="{StaticResource TimelineTextLabel}"
+                               StyleClass="TimelineTextLabel"
                                Text="{Binding Text}" />
                     </Grid>
                 </DataTemplate>
