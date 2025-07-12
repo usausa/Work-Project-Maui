@@ -18,25 +18,25 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style Class="ContentScrollView"
-                   TargetType="ScrollView">
+            <Style TargetType="ScrollView"
+                   Class="ContentScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
                 <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
-            <Style Class="SeparatorBoxView"
-                   TargetType="BoxView">
+            <Style TargetType="BoxView"
+                   Class="SeparatorBoxView">
                 <Setter Property="HeightRequest" Value="0.5" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style Class="BottomSelectGrid"
-                   TargetType="Grid">
+            <Style TargetType="Grid"
+                   Class="BottomSelectGrid">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style Class="BottomSelectButton"
-                   TargetType="Button">
+            <Style TargetType="Button"
+                   Class="BottomSelectButton">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="CornerRadius" Value="0" />
                 <Setter Property="ContentLayout" Value="Top, 0" />
@@ -44,8 +44,8 @@
                 <Setter Property="behaviors:ButtonOption.DisableRippleEffect" Value="True" />
             </Style>
 
-            <Style Class="CenterFloatingButton"
-                   TargetType="Button">
+            <Style TargetType="Button"
+                   Class="CenterFloatingButton">
                 <Setter Property="WidthRequest" Value="72" />
                 <Setter Property="HeightRequest" Value="72" />
                 <Setter Property="CornerRadius" Value="36" />

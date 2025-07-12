@@ -79,8 +79,8 @@
 
             <!-- Style -->
 
-            <Style Class="BalanceGrid"
-                   TargetType="Grid">
+            <Style TargetType="Grid"
+                   Class="BalanceGrid">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="ColumnSpacing" Value="0" />
@@ -90,8 +90,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkDarker}" />
             </Style>
 
-            <Style Class="LogBalanceGrid"
-                   TargetType="Grid">
+            <Style TargetType="Grid"
+                   Class="LogBalanceGrid">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="ColumnSpacing" Value="0" />
@@ -101,27 +101,27 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
             </Style>
 
-            <Style Class="DateTimeVerticalStackLayout"
-                   TargetType="VerticalStackLayout">
+            <Style TargetType="VerticalStackLayout"
+                   Class="DateTimeVerticalStackLayout">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="VerticalOptions" Value="Fill" />
             </Style>
 
-            <Style Class="TerminalHorizontalStackLayout"
-                   TargetType="HorizontalStackLayout">
+            <Style TargetType="HorizontalStackLayout"
+                   Class="TerminalHorizontalStackLayout">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="3" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
             </Style>
 
-            <Style Class="LogBorder"
-                   TargetType="Border">
+            <Style TargetType="Border"
+                   Class="LogBorder">
                 <Setter Property="StrokeThickness" Value="1" />
             </Style>
 
-            <Style Class="IdmLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="IdmLabel">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -129,40 +129,40 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
             </Style>
 
-            <Style Class="YenLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="YenLabel">
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Start" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style Class="BalanceLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="BalanceLabel">
                 <Setter Property="FontSize" Value="32" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style Class="DateTimeLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="DateTimeLabel">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style Class="TerminalProcessLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="TerminalProcessLabel">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style Class="LogCollectionView"
-                   TargetType="CollectionView">
+            <Style TargetType="CollectionView"
+                   Class="LogCollectionView">
                 <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             </Style>

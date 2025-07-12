@@ -18,18 +18,18 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style Class="TimelineCollectionView"
-                   TargetType="CollectionView">
+            <Style TargetType="CollectionView"
+                   Class="TimelineCollectionView">
                 <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
-            <Style Class="TimelineIdLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="TimelineIdLabel">
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style Class="TimelineTextLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="TimelineTextLabel">
                 <Setter Property="Padding" Value="8,0,0,0" />
             </Style>
 

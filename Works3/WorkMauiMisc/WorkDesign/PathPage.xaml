@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="PathPage">
 
-    <Grid BackgroundColor="LightGray" RowDefinitions="220,*,50">
+    <Grid BackgroundColor="LightGray" RowDefinitions="200,*">
 
         <Path
             Aspect="Fill"
@@ -15,7 +15,7 @@
 
         <StackLayout>
             <Frame
-                Margin="0,100,0,0"
+                Margin="0,80,0,0"
                 Padding="0"
                 BackgroundColor="SkyBlue "
                 CornerRadius="32"

@@ -16,8 +16,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style Class="DefaultMarkdownView"
-                   TargetType="markdown:MarkdownView">
+            <Style TargetType="markdown:MarkdownView"
+                   Class="DefaultMarkdownView">
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="TextFontFace" Value="OpenSansRegular" />
                 <Setter Property="TextFontSize" Value="14" />

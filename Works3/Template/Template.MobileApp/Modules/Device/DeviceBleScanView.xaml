@@ -17,71 +17,71 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style Class="SensorCollectionView"
-                   TargetType="CollectionView">
+            <Style TargetType="CollectionView"
+                   Class="SensorCollectionView">
                 <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
-            <Style Class="SensorBorder"
-                   TargetType="Border">
+            <Style TargetType="Border"
+                   Class="SensorBorder">
                 <Setter Property="Margin" Value="6,3" />
                 <Setter Property="Padding" Value="12,6,12,12" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten4}" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style Class="SeparatorWideBoxView"
-                   TargetType="BoxView">
+            <Style TargetType="BoxView"
+                   Class="SeparatorWideBoxView">
                 <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style Class="SeparatorNarrowBoxView"
-                   TargetType="BoxView">
+            <Style TargetType="BoxView"
+                   Class="SeparatorNarrowBoxView">
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style Class="MarginBoxView"
-                   TargetType="BoxView">
+            <Style TargetType="BoxView"
+                   Class="MarginBoxView">
                 <Setter Property="HeightRequest" Value="9" />
             </Style>
 
-            <Style Class="DeviceIdLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="DeviceIdLabel">
                 <Setter Property="FontFamily" Value="OpenSansSemibold" />
                 <Setter Property="FontSize" Value="24" />
             </Style>
 
-            <Style Class="TimestampLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="TimestampLabel">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style Class="ValueHorizontalStack"
-                   TargetType="HorizontalStackLayout">
+            <Style TargetType="HorizontalStackLayout"
+                   Class="ValueHorizontalStack">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Spacing" Value="3" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style Class="IconLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="IconLabel">
                 <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style Class="ValueLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="ValueLabel">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="48" />
             </Style>
 
-            <Style Class="UnitLabel"
-                   TargetType="Label">
+            <Style TargetType="Label"
+                   Class="UnitLabel">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="VerticalTextAlignment" Value="End" />
             </Style>
