@@ -14,14 +14,12 @@ public sealed partial class BasicConverterViewModel : AppViewModelBase
     public partial bool ToChecked { get; set; }
 
     [ObservableProperty]
-    public partial string Text { get; set; }
+    public partial string Text { get; set; } = string.Empty;
 
     public IObserveCommand SwitchTextCommand { get; }
 
     public BasicConverterViewModel()
     {
-        Text = string.Empty;
-
         SwitchTextCommand = MakeDelegateCommand(() => Text = String.IsNullOrEmpty(Text) ? "Hello World" : string.Empty);
     }
 
