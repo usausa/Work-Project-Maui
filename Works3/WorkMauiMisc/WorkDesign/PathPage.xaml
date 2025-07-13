@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="PathPage">
 
-    <Grid BackgroundColor="LightGray" RowDefinitions="200,*">
+    <Grid BackgroundColor="LightGray" RowDefinitions="192,*">
 
         <Path
             Aspect="Fill"
@@ -13,18 +13,17 @@
             Fill="#03a9f4"
             StrokeThickness="0" />
 
-        <StackLayout>
-            <Frame
-                Margin="0,80,0,0"
+        <VerticalStackLayout>
+            <Border
+                Margin="0,48,0,0"
                 Padding="0"
-                BackgroundColor="SkyBlue "
-                CornerRadius="32"
-                HeightRequest="64"
+                HeightRequest="96"
                 HorizontalOptions="Center"
-                WidthRequest="64">
-                <Image Source="account.png" />
-            </Frame>
-        </StackLayout>
+                StrokeShape="RoundRectangle 48"
+                WidthRequest="96">
+                <Image Aspect="AspectFill" Source="profile.jpg" />
+            </Border>
+        </VerticalStackLayout>
 
         <!--  TODO RowDefinitionsみなおし  -->
         <Grid
