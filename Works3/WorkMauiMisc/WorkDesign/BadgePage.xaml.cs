@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace WorkDesign;
 
 public partial class BadgePage : ContentPage
@@ -6,4 +8,9 @@ public partial class BadgePage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void Button_OnClicked(object? sender, EventArgs e)
+    {
+		Debug.WriteLine("*");
+    }
 }

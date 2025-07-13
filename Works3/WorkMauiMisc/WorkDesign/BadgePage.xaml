@@ -5,46 +5,39 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="BadgePage">
 
-    <Grid>
-        <AbsoluteLayout
-            BackgroundColor="DarkGray"
-            HeightRequest="72"
-            WidthRequest="72">
-            <!--  丸ボタン  -->
-            <Frame
-                x:Name="MainButton"
-                Padding="0"
-                AbsoluteLayout.LayoutBounds="0.5,0.5,60,60"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                BackgroundColor="DodgerBlue"
-                CornerRadius="30"
-                HasShadow="True"
-                HeightRequest="60"
-                WidthRequest="60">
-                <ImageButton BackgroundColor="Transparent" Source="home.png" />
-            </Frame>
-            <!--  バッジ  -->
-            <Frame
-                Padding="0"
-                AbsoluteLayout.LayoutBounds="1,0,28,28"
+    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="48">
+        <!--  例：1列目にバッジ付きボタンを配置  -->
+        <AbsoluteLayout Grid.Column="0">
+            <!--  画面いっぱいのボタン  -->
+            <Button
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                BackgroundColor="LightBlue"
+                Clicked="Button_OnClicked"
+                FontSize="14"
+                Text="ボタン" />
+
+            <!--  右上に小さめのバッジ（数字入りの円）  -->
+            <Border
+                AbsoluteLayout.LayoutBounds="1,0,24,24"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 BackgroundColor="Red"
-                BorderColor="White"
-                CornerRadius="14"
-                HasShadow="True"
-                HeightRequest="28"
-                WidthRequest="28">
+                HeightRequest="24"
+                StrokeShape="Ellipse"
+                StrokeThickness="0"
+                WidthRequest="24">
                 <Label
                     FontAttributes="Bold"
-                    FontSize="16"
+                    FontSize="12"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
-                    Text="5"
+                    Text="99"
                     TextColor="White"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center" />
-            </Frame>
+            </Border>
         </AbsoluteLayout>
+        <!--  他のセルにも同様に必要に応じて配置できます  -->
     </Grid>
 
 </ContentPage>
