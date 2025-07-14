@@ -90,6 +90,7 @@
   <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
     <Deploy Solution="Debug|*" />
   </Project>
+  <Project Path="WorkVisualMusic/WorkVisualMusic.csproj" Id="2a91f110-67e3-4d37-9daa-4d0a7082fd20" />
   <Project Path="WorkVisualTimeline/WorkVisualTimeline.csproj" Id="c9ba32b2-dc8b-4b59-b909-96d4b751f096">
     <Deploy Solution="Debug|*" />
   </Project>
