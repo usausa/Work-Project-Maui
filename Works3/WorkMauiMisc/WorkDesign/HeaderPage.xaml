@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.HeaderPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="HeaderPage"
+    BackgroundColor="#ffe6d5">
+
+    <StackLayout Spacing="0">
+        <!--  Header  -->
+        <Grid
+            Padding="14,18,14,0"
+            ColumnSpacing="0"
+            RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!--  Hamburger Menu Button  -->
+            <Border
+                Grid.Column="0"
+                Background="#fff"
+                HeightRequest="54"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 27"
+                StrokeThickness="0"
+                WidthRequest="54">
+                <StackLayout
+                    HorizontalOptions="Center"
+                    Spacing="4"
+                    VerticalOptions="Center">
+                    <BoxView
+                        CornerRadius="1.5"
+                        HeightRequest="3"
+                        WidthRequest="34"
+                        Color="#111" />
+                    <BoxView
+                        CornerRadius="1.5"
+                        HeightRequest="3"
+                        WidthRequest="34"
+                        Color="#111" />
+                    <BoxView
+                        CornerRadius="1.5"
+                        HeightRequest="3"
+                        WidthRequest="34"
+                        Color="#111" />
+                </StackLayout>
+            </Border>
+            <!--  Empty Center  -->
+            <BoxView
+                Grid.Column="1"
+                HeightRequest="1"
+                Color="Transparent" />
+            <!--  Notification Bell  -->
+            <Grid Grid.Column="2">
+                <Border
+                    Background="#fff"
+                    HeightRequest="54"
+                    Stroke="Transparent"
+                    StrokeShape="RoundRectangle 27"
+                    StrokeThickness="0"
+                    WidthRequest="54">
+                    <Grid>
+                        <Image
+                            HeightRequest="28"
+                            HorizontalOptions="Center"
+                            Source="bell_icon.png"
+                            VerticalOptions="Center"
+                            WidthRequest="28" />
+                        <!--  バッジ  -->
+                        <Border
+                            Margin="0,-9,-7,0"
+                            Background="#ff3b3b"
+                            HeightRequest="24"
+                            HorizontalOptions="End"
+                            Stroke="White"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="2"
+                            VerticalOptions="Start"
+                            WidthRequest="28">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="17"
+                                HorizontalOptions="Center"
+                                Text="26"
+                                TextColor="White"
+                                VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!--  Card  -->
+        <Border
+            Margin="18,10,18,0"
+            Padding="0"
+            Background="#fff"
+            Stroke="Transparent"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0">
+            <StackLayout Padding="22,28,22,22" Spacing="0">
+                <!--  Top Row  -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackLayout
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                        <Image
+                            HeightRequest="52"
+                            Source="nyanyaco_giraffe.png"
+                            WidthRequest="52" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="25"
+                            Text="nyanyaco残高"
+                            VerticalOptions="Center" />
+                    </StackLayout>
+                    <Button
+                        Grid.Column="2"
+                        Padding="24,6"
+                        BackgroundColor="White"
+                        BorderColor="#b5b5b5"
+                        BorderWidth="1.5"
+                        CornerRadius="8"
+                        FontSize="19"
+                        Text="詳細"
+                        TextColor="#333" />
+                </Grid>
+                <!--  Balance  -->
+                <StackLayout
+                    Margin="0,12,0,0"
+                    HorizontalOptions="Start"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="Roboto"
+                        FontSize="55"
+                        Text="9,622"
+                        TextColor="#222" />
+                    <Label
+                        FontSize="27"
+                        Text="円"
+                        TextColor="#444"
+                        VerticalOptions="End" />
+                </StackLayout>
+                <!--  Points  -->
+                <StackLayout
+                    Margin="0,-22,0,0"
+                    HorizontalOptions="End"
+                    Orientation="Horizontal"
+                    Spacing="4">
+                    <Label
+                        FontSize="15"
+                        Text="ポイント残高"
+                        TextColor="#444"
+                        VerticalOptions="Center" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="Roboto"
+                        FontSize="30"
+                        Text="140"
+                        TextColor="#222"
+                        VerticalOptions="Center" />
+                    <Label
+                        FontSize="15"
+                        Text="P"
+                        TextColor="#444"
+                        VerticalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+        </Border>
+
+        <!--  Pay Tabs  -->
+        <Grid Margin="14,18,14,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  会員コード  -->
+            <Border
+                Grid.Column="0"
+                Margin="7,0"
+                Padding="0,16,0,10"
+                Background="#fff"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 14"
+                StrokeThickness="0">
+                <StackLayout HorizontalOptions="Center" Spacing="6">
+                    <Image
+                        HeightRequest="38"
+                        Source="seveneleven_logo.png"
+                        WidthRequest="38" />
+                    <Label
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="会員コード" />
+                </StackLayout>
+            </Border>
+            <!--  UsaPay  -->
+            <Border
+                Grid.Column="1"
+                Margin="7,0"
+                Padding="0,16,0,10"
+                Background="#fff"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 14"
+                StrokeThickness="0">
+                <StackLayout HorizontalOptions="Center" Spacing="6">
+                    <Image
+                        HeightRequest="38"
+                        Source="usapay_logo.png"
+                        WidthRequest="38" />
+                    <Label
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="UsaPay残高" />
+                </StackLayout>
+            </Border>
+            <!--  nyanyaco (selected)  -->
+            <Border
+                Grid.Column="2"
+                Margin="7,0"
+                Padding="0,16,0,10"
+                Background="#fff"
+                Stroke="#ffb53b"
+                StrokeShape="RoundRectangle 14"
+                StrokeThickness="2">
+                <StackLayout HorizontalOptions="Center" Spacing="6">
+                    <Image
+                        HeightRequest="38"
+                        Source="nyanyaco_giraffe.png"
+                        WidthRequest="38" />
+                    <Label
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="nyanyaco残高" />
+                </StackLayout>
+            </Border>
+            <!--  マイル  -->
+            <Border
+                Grid.Column="3"
+                Margin="7,0"
+                Padding="0,16,0,10"
+                Background="#fff"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 14"
+                StrokeThickness="0">
+                <StackLayout HorizontalOptions="Center" Spacing="6">
+                    <Image
+                        HeightRequest="38"
+                        Source="mile_logo.png"
+                        WidthRequest="38" />
+                    <Label
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="マイル残高" />
+                </StackLayout>
+            </Border>
+        </Grid>
+
+        <!--  Rank Footer  -->
+        <Border
+            Margin="12,30,12,0"
+            Padding="0"
+            Background="#fff"
+            HeightRequest="54"
+            Stroke="Transparent"
+            StrokeShape="RoundRectangle 22"
+            StrokeThickness="0"
+            VerticalOptions="End">
+            <Grid Padding="18,0" VerticalOptions="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <!--  Medal  -->
+                <StackLayout
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="12"
+                    VerticalOptions="Center">
+                    <Image
+                        HeightRequest="38"
+                        Source="bronze_medal.png"
+                        WidthRequest="38" />
+                </StackLayout>
+                <!--  ランク  -->
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    Text="ブロンズランク"
+                    TextColor="#b37d3a"
+                    VerticalOptions="Center" />
+                <!--  Rank Bar  -->
+                <Grid
+                    Grid.Column="2"
+                    HeightRequest="15"
+                    VerticalOptions="Center">
+                    <BoxView
+                        BackgroundColor="#eee"
+                        CornerRadius="8"
+                        HeightRequest="15"
+                        WidthRequest="120" />
+                    <BoxView
+                        BackgroundColor="#c07d45"
+                        CornerRadius="8,0,0,8"
+                        HeightRequest="15"
+                        WidthRequest="72" />
+                </Grid>
+                <!--  Spacer  -->
+                <BoxView
+                    Grid.Column="3"
+                    WidthRequest="1"
+                    Color="Transparent" />
+                <!--  もっと見る  -->
+                <Label
+                    Grid.Column="4"
+                    FontAttributes="Bold"
+                    FontSize="21"
+                    Text="もっと見る"
+                    TextColor="#888"
+                    VerticalOptions="Center" />
+            </Grid>
+        </Border>
+    </StackLayout>
+
+</ContentPage>
