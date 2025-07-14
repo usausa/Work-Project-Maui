@@ -73,6 +73,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.AI.Vision.Face" Version="1.0.0-beta.2" />
+    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
     <PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
     <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.5.0" />
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.7.0" />
@@ -120,6 +122,15 @@
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Modules\Sample\SampleCvNetPeopleView.xaml.cs">
+      <DependentUpon>SampleCvNetPeopleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Modules\Sample\SampleCvNetTagView.xaml.cs">
+      <DependentUpon>SampleCvNetTagView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
