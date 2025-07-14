@@ -9,9 +9,15 @@
 
         <Path
             Aspect="Fill"
-            Data="M0 0 L112 0 L112 48 A12 12 90 0 1 100 60 L12 60 A12 12 90 0 1 0 48 L0 0 Z"
-            Fill="#03a9f4"
-            StrokeThickness="0" />
+            Data="M0 0 L112 0 L112 48 A16 24 90 0 1 100 60 L12 60 A16 24 90 0 1 0 48 L0 0 Z"
+            StrokeThickness="0">
+            <Path.Fill>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.0" Color="LightSkyBlue" />
+                    <GradientStop Offset="1.0" Color="DarkBlue" />
+                </LinearGradientBrush>
+            </Path.Fill>
+        </Path>
 
         <VerticalStackLayout>
             <Border
