@@ -68,22 +68,4 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.7.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="HeaderPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="LabelPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\BadgePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="ChatPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="PathPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 </Project>
