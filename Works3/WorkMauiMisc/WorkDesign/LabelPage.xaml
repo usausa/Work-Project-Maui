@@ -81,6 +81,19 @@
             <Label StyleClass="UnitLabel" Text="ppm" />
         </HorizontalStackLayout>
 
+        <Label VerticalTextAlignment="End">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span FontSize="36" Text="🌡" />
+                    <Span
+                        FontFamily="DSEG7"
+                        FontSize="48"
+                        Text="99" />
+                    <Span FontSize="18" Text="%" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
     </VerticalStackLayout>
 
 </ContentPage>
