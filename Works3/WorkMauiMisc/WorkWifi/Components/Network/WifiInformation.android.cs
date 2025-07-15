@@ -1,4 +1,4 @@
-﻿namespace DeviceStatusExample.Components.Network;
+namespace WorkWifi.Components.Network;
 
 using Android.Content;
 using Android.Net;

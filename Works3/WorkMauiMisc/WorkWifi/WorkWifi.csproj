@@ -58,11 +58,37 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == true">
+		<Compile Update="**\*.android.cs">
+			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == false">
+		<Compile Remove="**\*.android.cs" />
+		<None Include="**\*.android.cs">
+			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+		</None>
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == true">
+		<Compile Update="**\*.ios.cs">
+			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == false">
+		<Compile Remove="**\*.ios.cs" />
+		<None Include="**\*.ios.cs">
+			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+		</None>
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
 		<PackageReference Include="Components.Maui" Version="1.22.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.8.0" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.8.0" />
+		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 		<PackageReference Include="WifiManager.Maui" Version="9.0.2" />
 	</ItemGroup>
 

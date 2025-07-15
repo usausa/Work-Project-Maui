@@ -1,11 +1,11 @@
-﻿namespace DeviceStatusExample;
+namespace WorkWifi;
 
-using DeviceStatusExample.Components.Network;
+using WorkWifi.Components.Network;
 
 using Smart.ComponentModel;
 using Smart.Maui.ViewModels;
 
-public class MainPageViewModel : ViewModelBase
+public class MainPageViewModel : ExtendViewModelBase
 {
     public NotificationValue<string?> BatteryLevel { get; } = new();
 

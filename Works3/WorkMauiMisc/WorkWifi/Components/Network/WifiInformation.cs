@@ -1,4 +1,4 @@
-﻿namespace DeviceStatusExample.Components.Network;
+namespace WorkWifi.Components.Network;
 
 // [MEMO] 接続状態はConnectivity併用？
 

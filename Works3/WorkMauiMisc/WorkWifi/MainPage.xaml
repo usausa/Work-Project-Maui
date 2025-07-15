@@ -2,17 +2,57 @@
 <ContentPage
     x:Class="WorkWifi.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkWifi"
+    x:DataType="{x:Type app:MainPageViewModel}">
 
-    <VerticalStackLayout Padding="30,0" Spacing="25">
-        <Button
-            Clicked="OnStartClick"
-            HorizontalOptions="Fill"
-            Text="Start" />
-        <Button
-            Clicked="OnStopClick"
-            HorizontalOptions="Fill"
-            Text="Stop" />
-    </VerticalStackLayout>
+
+    <ContentPage.BindingContext>
+        <app:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25"
+            VerticalOptions="Center">
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding BatteryLevel.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding BatteryState.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding BatterySource.Value}" />
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding Connection.Value}" />
+
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiActive.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiSsid.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiLevel.Value}" />
+            <Label
+                FontSize="32"
+                HorizontalOptions="Center"
+                Text="{Binding WifiAddress.Value}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>
