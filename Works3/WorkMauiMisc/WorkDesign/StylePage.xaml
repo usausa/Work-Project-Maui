@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.StylePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="StylePage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="RedLabel" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="PaleVioletRed" />
+            </Style>
+
+            <Style Class="Small" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style Class="Medium" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style Class="Bold" TargetType="Label">
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+
+            <Style Class="Normal" TargetType="Label">
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="TextColor" Value="CornflowerBlue" />
+            </Style>
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="185"
+                Source="dotnet_bot.png" />
+
+            <Label
+                Style="{StaticResource RedLabel}"
+                StyleClass="Medium, Bold"
+                Text="Medium Bold Label" />
+            <Label StyleClass="Medium, Normal" Text="Medium Normal Label" />
+            <Label StyleClass="Small, Bold" Text="Small Bold Label" />
+            <Label StyleClass="Small, Normal" Text="Small Normal Label" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

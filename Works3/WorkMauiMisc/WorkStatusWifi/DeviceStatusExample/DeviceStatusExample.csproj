@@ -47,15 +47,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Maui" Version="2.6.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.Maui.Controls" Version="9.0.82" />
+    <PackageReference Update="Microsoft.Maui.Controls" Version="9.0.90" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="9.0.82" />
+    <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="9.0.90" />
   </ItemGroup>
 
 </Project>
