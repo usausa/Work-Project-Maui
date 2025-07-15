@@ -124,13 +124,4 @@
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Modules\Sample\SampleCvNetPeopleView.xaml.cs">
-      <DependentUpon>SampleCvNetPeopleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Modules\Sample\SampleCvNetTagView.xaml.cs">
-      <DependentUpon>SampleCvNetTagView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

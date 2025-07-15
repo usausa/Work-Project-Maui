@@ -93,12 +93,14 @@ public enum ViewId
     UIProfile,
     UIMoney,
     UIDock,
-    UICalendar,
-    UIGrid,
-    UITimeline,
-    UIRadar,
-    UIGauge,
+    UISchedule,
+    UIMail,
     UIMeter,
+    UIGauge,
     UILoad,
-    UITreeMap
+    UIMixer,
+    UITimeline,
+    UITreeMap,
+    UIRadar,
+    UICockpit
 }
