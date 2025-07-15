@@ -3,6 +3,9 @@
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkBlazorViewModel/WorkBlazorViewModel.csproj" Id="fbc6c7ba-4fdb-48bb-8fc9-d3218282d58f">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkBle/WorkBle.csproj" Id="a014b0a1-36eb-4ec4-9f4b-8d60f71d5982">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -70,7 +73,6 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
-  <Project Path="WorkBlazorViewModel/WorkBlazorViewModel.csproj" Id="fbc6c7ba-4fdb-48bb-8fc9-d3218282d58f" />
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy Solution="Debug|*" />
   </Project>
