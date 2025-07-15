@@ -1,4 +1,7 @@
-﻿namespace WorkBlazorViewModel;
+using Smart.Maui.Messaging;
+using Smart.Mvvm.ViewModels;
+
+namespace WorkBlazorViewModel;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -19,6 +22,9 @@ public static class MauiProgram
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
+
+        builder.Services.AddSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
+        builder.Services.AddSingleton(BusyState.Default);
 
         return builder.Build();
     }

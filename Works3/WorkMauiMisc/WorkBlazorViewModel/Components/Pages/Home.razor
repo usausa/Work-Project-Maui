@@ -1,5 +1,19 @@
-﻿@page "/"
+@page "/"
+@inherits AppComponentBase
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<div>Busy: @BusyState.IsBusy</div>
+<div>
+    <button class="btn btn-primary" @onclick="OnDelayClick">Delay</button>
+</div>
+
+@code
+{
+    private Task OnDelayClick() => ExecuteAsync(async () =>
+    {
+        System.Diagnostics.Debug.WriteLine("* Start");
+        await Task.Delay(3000);
+        System.Diagnostics.Debug.WriteLine("* End");
+    });
+}
