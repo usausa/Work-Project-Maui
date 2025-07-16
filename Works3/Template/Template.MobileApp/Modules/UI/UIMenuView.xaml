@@ -90,11 +90,11 @@
         <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Super" />
         <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Social" />
 
         <Button Grid.Row="8" Grid.Column="0"
                 Style="{StaticResource MenuButton}"

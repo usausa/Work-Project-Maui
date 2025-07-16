@@ -102,5 +102,7 @@ public enum ViewId
     UITimeline,
     UITreeMap,
     UIRadar,
-    UICockpit
+    UICockpit,
+    UISuper,
+    UISocial
 }
