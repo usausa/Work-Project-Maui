@@ -4,9 +4,9 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             x:Class="Template.MobileApp.Modules.Sample.SampleWebView"
-             x:DataType="{x:Type module:SampleWebViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:SampleWebViewModel}"
+             x:Class="Template.MobileApp.Modules.Sample.SampleWebBasicView"
+             x:DataType="{x:Type module:SampleWebBasicViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:SampleWebBasicViewModel}"
              shell:ShellProperty.Title="List"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">

@@ -19,11 +19,12 @@
         <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Web" />
+                Text="WebBasic" />
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleWebApp}"
+                Text="WebApp" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
