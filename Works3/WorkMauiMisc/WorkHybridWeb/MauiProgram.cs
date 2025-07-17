@@ -15,6 +15,8 @@ public static class MauiProgram
             });
 
 #if DEBUG
+        AppContext.SetSwitch("HybridWebView.InvokeJavaScriptThrowsExceptions", true);
+
         // Developer tools
         builder.Services.AddHybridWebViewDeveloperTools();
 
