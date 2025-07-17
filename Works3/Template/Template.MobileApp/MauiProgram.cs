@@ -73,6 +73,7 @@ public static partial class MauiProgram
     private static MauiAppBuilder ConfigureDebug(this MauiAppBuilder builder)
     {
 #if DEBUG
+        AppContext.SetSwitch("HybridWebView.InvokeJavaScriptThrowsExceptions", true);
         builder.Services.AddHybridWebViewDeveloperTools();
 
 #if false
