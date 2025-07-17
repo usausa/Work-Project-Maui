@@ -60,14 +60,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="WebAppPage.xaml.cs">
-	    <DependentUpon>WebAppPage.xaml</DependentUpon>
-	  </Compile>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
 	</ItemGroup>
 
 </Project>

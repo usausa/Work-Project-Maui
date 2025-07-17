@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkHybridWeb.WebBasicPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="WebBasicPage">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <HybridWebView
+            Grid.Row="0"
+            DefaultFile="index.html"
+            HorizontalOptions="FillAndExpand"
+            HybridRoot="webbasic"
+            VerticalOptions="FillAndExpand" />
+
+        <Button Grid.Row="1" Text="Native button" />
+    </Grid>
+
+</ContentPage>

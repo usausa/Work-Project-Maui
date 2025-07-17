@@ -1,4 +1,4 @@
-﻿namespace WorkHybridWeb;
+namespace WorkHybridWeb;
 using Microsoft.Extensions.Logging;
 
 public static class MauiProgram
@@ -15,7 +15,10 @@ public static class MauiProgram
             });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        // Developer tools
+        builder.Services.AddHybridWebViewDeveloperTools();
+
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
