@@ -68,4 +68,10 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="CalendarPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.CalendarPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:workDesign="clr-namespace:WorkDesign"
+    Title="CalendarPage">
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  カレンダーのヘッダー部分  -->
+        <Grid
+            Grid.Row="0"
+            Padding="10"
+            ColumnDefinitions="Auto,*,Auto">
+            <Button
+                Grid.Column="0"
+                Clicked="OnPreviousMonthClicked"
+                Text="前月" />
+            <Label
+                x:Name="MonthYearLabel"
+                Grid.Column="1"
+                FontAttributes="Bold"
+                FontSize="18"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+            <Button
+                Grid.Column="2"
+                Clicked="OnNextMonthClicked"
+                Text="次月" />
+        </Grid>
+
+        <!--  カレンダー本体  -->
+        <workDesign:CalendarView
+            x:Name="CalendarViewControl"
+            Grid.Row="1"
+            HeightRequest="500" />
+    </Grid>
+
+</ContentPage>
