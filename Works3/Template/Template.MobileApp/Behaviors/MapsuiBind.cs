@@ -9,7 +9,7 @@ using Mapsui.UI.Maui;
 
 using Smart.Maui.Interactivity;
 
-public sealed class MapsuiBind
+public static class MapsuiBind
 {
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",

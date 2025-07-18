@@ -11,6 +11,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <HybridWebView DefaultFile="index.html" HybridRoot="webapp" />
+    <HybridWebView DefaultFile="index.html" HybridRoot="web-app" />
 
 </ContentView>
