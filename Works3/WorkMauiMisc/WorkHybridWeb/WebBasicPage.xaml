@@ -3,31 +3,35 @@
     x:Class="WorkHybridWeb.WebBasicPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:workHybridWeb="using:WorkHybridWeb"
     Title="WebBasicPage">
+
+    <ContentPage.BindingContext>
+        <workHybridWeb:WebBasicPageViewModel />
+    </ContentPage.BindingContext>
 
     <Grid RowDefinitions="*,Auto,Auto,Auto">
 
         <HybridWebView
-            x:Name="HybridWebView"
             Grid.Row="0"
+            workHybridWeb:WebViewBind.Controller="{Binding Controller}"
             DefaultFile="index.html"
             HorizontalOptions="FillAndExpand"
             HybridRoot="webbasic"
-            RawMessageReceived="OnHybridWebViewRawMessageReceived"
             VerticalOptions="FillAndExpand" />
 
         <Button
             Grid.Row="1"
-            Clicked="OnRawMessageClicked"
+            Command="{Binding MessageCommand}"
             Text="Raw message" />
         <Button
             Grid.Row="2"
-            Clicked="OnJavascriptClicked"
+            Command="{Binding AddCommand}"
             Text="Javascript 1" />
         <Button
             Grid.Row="3"
-            Clicked="OnJavascriptAsyncClicked"
-            Text="Javascript 2" />
+            Command="{Binding BackCommand}"
+            Text="Navigate" />
     </Grid>
 
 </ContentPage>
