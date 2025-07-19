@@ -2,8 +2,6 @@ namespace Template.MobileApp.Messaging;
 
 using CommunityToolkit.Maui.Core;
 
-using Smart.Linq;
-
 using Template.MobileApp.Helpers;
 
 public sealed class CameraPreviewEventArgs : ValueTaskEventArgs
