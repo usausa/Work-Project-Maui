@@ -22,7 +22,7 @@ public interface IEntryController : INotifyPropertyChanged
     void Detach();
 }
 
-public sealed class EntryController : NotificationObject, IEntryController
+public sealed partial class EntryController : ObservableObject, IEntryController
 {
     // Field
 
@@ -32,17 +32,11 @@ public sealed class EntryController : NotificationObject, IEntryController
 
     // Property
 
-    public string? Text
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial string? Text { get; set; }
 
-    public bool Enable
-    {
-        get;
-        set => SetProperty(ref field, value);
-    }
+    [ObservableProperty]
+    public partial bool Enable { get; set; }
 
     // Constructor
 
