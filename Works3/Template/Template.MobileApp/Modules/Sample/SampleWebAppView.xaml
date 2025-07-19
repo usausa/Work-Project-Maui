@@ -7,10 +7,16 @@
              x:Class="Template.MobileApp.Modules.Sample.SampleWebAppView"
              x:DataType="{x:Type module:SampleWebAppViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleWebAppViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="WebApp"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <HybridWebView DefaultFile="index.html" HybridRoot="web-app" />
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="*">
+
+        <HybridWebView Grid.Row="0"
+                       DefaultFile="index.html" HybridRoot="web-app" />
+
+    </Grid>
 
 </ContentView>
