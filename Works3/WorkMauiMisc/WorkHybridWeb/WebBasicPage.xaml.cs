@@ -8,4 +8,8 @@ public partial class WebBasicPage : ContentPage
 	{
 		InitializeComponent();
     }
+
+    private void HybridWebView_OnRawMessageReceived(object? sender, HybridWebViewRawMessageReceivedEventArgs e)
+    {
+    }
 }

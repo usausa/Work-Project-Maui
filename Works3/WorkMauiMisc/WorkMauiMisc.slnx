@@ -31,6 +31,9 @@
     <Project Path="WorkHttpClient/WorkHttpClient.csproj" Id="41303a29-3cc2-4062-b16d-60b6a76f8cae">
       <Build Solution="Debug|*" Project="false" />
     </Project>
+    <Project Path="WorkHybridWeb/WorkHybridWeb.csproj" Id="5739dff1-7558-4767-ae3c-50516e7c7ff2">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkIcon/WorkIcon.csproj">
       <Build Solution="Debug|*" Project="false" />
       <Deploy />
@@ -76,7 +79,6 @@
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkHybridWeb/WorkHybridWeb.csproj" Id="5739dff1-7558-4767-ae3c-50516e7c7ff2" />
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy Solution="Debug|*" />
   </Project>

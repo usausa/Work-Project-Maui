@@ -15,6 +15,7 @@
         <HybridWebView
             Grid.Row="0"
             workHybridWeb:WebViewBind.Controller="{Binding Controller}"
+            RawMessageReceived="HybridWebView_OnRawMessageReceived"
             DefaultFile="index.html"
             HorizontalOptions="FillAndExpand"
             HybridRoot="webbasic"

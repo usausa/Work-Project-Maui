@@ -115,6 +115,7 @@ public static class WebViewBind
         protected override void OnDetachingFrom(HybridWebView bindable)
         {
             controller?.Detach();
+            controller = null;
 
             base.OnDetachingFrom(bindable);
         }
