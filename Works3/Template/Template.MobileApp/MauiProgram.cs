@@ -199,6 +199,7 @@ public static partial class MauiProgram
         fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
         fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
+        fonts.AddFont("Quicksand-Regular.ttf", "Quicksand");
         fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
         fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
     }
@@ -279,6 +280,7 @@ public static partial class MauiProgram
         config.BindSingleton<INfcReader, NfcReader>();
         config.BindSingleton<INoiseMonitor, NoiseMonitor>();
         config.BindSingleton<IOcrReader, OcrReader>();
+        config.BindSingleton<IActivityRecognizer, ActivityRecognizer>();
 
         config.BindSingleton(AudioManager.Current);
 

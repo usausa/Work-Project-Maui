@@ -59,6 +59,7 @@ public enum ViewId
 
     DeviceNfc,
     DeviceAudio,
+    DeviceActivity,
     DeviceBiometric,
 
     DeviceMisc,
