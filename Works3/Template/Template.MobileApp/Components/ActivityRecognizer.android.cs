@@ -10,6 +10,8 @@ public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventL
 {
     private SensorManager? sensorManager;
 
+    private Sensor? stepCounter;
+
     private bool started;
 
     private int baseCount;
@@ -31,17 +33,15 @@ public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventL
 
     private partial void Start()
     {
-        if (sensorManager is not null)
-        {
-            sensorManager = (SensorManager)Application.Context.GetSystemService(Context.SensorService)!;
-        }
+        sensorManager ??= (SensorManager)Application.Context.GetSystemService(Context.SensorService)!;
+        stepCounter ??= sensorManager.GetDefaultSensor(SensorType.StepCounter);
 
         if (OperatingSystem.IsAndroidVersionAtLeast(29))
         {
             ActivityCompat.RequestPermissions(Platform.CurrentActivity, [Android.Manifest.Permission.ActivityRecognition], 1337);
         }
 
-        sensorManager?.RegisterListener(this, sensorManager.GetDefaultSensor(SensorType.StepCounter), SensorDelay.Normal);
+        sensorManager?.RegisterListener(this, stepCounter, SensorDelay.Ui);
     }
 
     private partial void Stop()
