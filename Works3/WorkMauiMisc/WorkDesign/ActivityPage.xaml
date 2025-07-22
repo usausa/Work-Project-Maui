@@ -12,7 +12,7 @@
         <app:ActivityPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid BackgroundColor="White" RowDefinitions="*,Auto,*">
+    <Grid BackgroundColor="White" RowDefinitions="*,*,Auto">
         <graphics:GraphicsControl Grid.Row="0" Graphics="{Binding Graphics}" />
         <VerticalStackLayout
             Grid.Row="0"
@@ -34,10 +34,140 @@
             Source="home.png"
             VerticalOptions="End"
             WidthRequest="64" />
+
         <Button
-            Grid.Row="1"
+            Grid.Row="2"
             Command="{Binding StepCommand}"
             Text="Step" />
+
+
+        <VerticalStackLayout
+            Grid.Row="1"
+            Padding="12"
+            HorizontalOptions="Fill"
+            VerticalOptions="Start">
+
+            <Border
+                Padding="0"
+                Stroke="#CCCCCC"
+                StrokeShape="RoundRectangle 4"
+                StrokeThickness="1">
+                <Border.Shadow>
+                    <Shadow
+                        Brush="Black"
+                        Opacity="0.2"
+                        Offset="8,8" />
+                </Border.Shadow>
+
+                <Grid BackgroundColor="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="HorizontalOptions" Value="Center" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="Padding" Value="6" />
+                            <Setter Property="FontSize" Value="14" />
+                        </Style>
+                        <Style TargetType="BoxView">
+                            <Setter Property="Color" Value="#DDDDDD" />
+                            <Setter Property="HeightRequest" Value="1" />
+                            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                        </Style>
+                    </Grid.Resources>
+
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        BackgroundColor="#E0F7FA"
+                        Text="R0C0" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        BackgroundColor="#E0F7FA"
+                        Text="R0C1" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        BackgroundColor="#E0F7FA"
+                        HorizontalOptions="End"
+                        Text="R0C2" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        BackgroundColor="#E0F7FA"
+                        Text="R0C3" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4" />
+
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        BackgroundColor="#FFFDE7"
+                        Text="R1C0" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        BackgroundColor="#FFFDE7"
+                        Text="R1C1" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        BackgroundColor="#FFFDE7"
+                        HorizontalOptions="End"
+                        Text="R1C2" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        BackgroundColor="#FFFDE7"
+                        Text="R1C3" />
+
+                    <BoxView
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4" />
+
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        BackgroundColor="#E8F5E9"
+                        Text="R2C0" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        BackgroundColor="#E8F5E9"
+                        Text="R2C1" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="2"
+                        BackgroundColor="#E8F5E9"
+                        HorizontalOptions="End"
+                        Text="R2C2" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="3"
+                        BackgroundColor="#E8F5E9"
+                        Text="R2C3" />
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
     </Grid>
 
 </ContentPage>
