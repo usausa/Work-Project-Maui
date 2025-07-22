@@ -70,7 +70,7 @@ public sealed partial class ActivityRecognizer : Java.Lang.Object, ISensorEventL
                 }
 
                 var count = (int)e.Values[0] - baseCount;
-                Changed?.Invoke(this, new ActivityEventArgs(DateTimeOffset.Now, count));
+                Changed?.Invoke(this, new ActivityEventArgs(DateTime.Now, count));
             }
         }
     }

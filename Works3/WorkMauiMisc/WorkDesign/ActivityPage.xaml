@@ -31,9 +31,16 @@
             Grid.Row="0"
             HeightRequest="64"
             HorizontalOptions="Center"
+            IsVisible="False"
             Source="home.png"
             VerticalOptions="End"
             WidthRequest="64" />
+        <Label
+            Grid.Row="0"
+            FontSize="48"
+            HorizontalOptions="Center"
+            Text="👟"
+            VerticalOptions="End" />
 
         <Button
             Grid.Row="2"

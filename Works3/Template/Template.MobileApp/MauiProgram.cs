@@ -313,6 +313,9 @@ public static partial class MauiProgram
         config.BindSingleton<CognitiveUsecase>();
         config.BindSingleton<SampleUsecase>();
 
+        // Models
+        config.BindSingleton(new ActivityCalculator(0.0005, 65, 0.6));
+
         // Startup
         config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
     }

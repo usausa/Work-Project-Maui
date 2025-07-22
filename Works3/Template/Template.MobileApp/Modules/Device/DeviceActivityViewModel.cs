@@ -1,22 +1,29 @@
 namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components;
+using Template.MobileApp.Graphics;
 
-public sealed partial class DeviceActivityViewModel : AppViewModelBase
+public sealed class DeviceActivityViewModel : AppViewModelBase
 {
     private readonly IActivityRecognizer activityRecognizer;
 
-    [ObservableProperty]
-    public partial int Count { get; set; }
+    public ActivityGraphics Graphics { get; } = new();
 
-    public DeviceActivityViewModel(IActivityRecognizer activityRecognizer)
+    public ActivityCalculator Calculator { get; }
+
+    public DeviceActivityViewModel(
+        IActivityRecognizer activityRecognizer,
+        ActivityCalculator activityCalculator)
     {
         this.activityRecognizer = activityRecognizer;
+        Calculator = activityCalculator;
 
-        Disposables.Add(activityRecognizer.ChangedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
-        {
-            Count = x.Counter;
-        }));
+        Disposables.Add(activityRecognizer.ChangedAsObservable().ObserveOnCurrentContext()
+            .Subscribe(x =>
+            {
+                Calculator.Update(x.Counter, x.Timestamp);
+                Graphics.Step = Calculator.Step;
+            }));
     }
 
     public override Task OnNavigatedToAsync(INavigationContext context)

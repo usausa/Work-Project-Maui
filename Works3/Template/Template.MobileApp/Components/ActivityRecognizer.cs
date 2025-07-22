@@ -2,11 +2,11 @@ namespace Template.MobileApp.Components;
 
 public sealed class ActivityEventArgs : EventArgs
 {
-    public DateTimeOffset Timestamp { get; }
+    public DateTime Timestamp { get; }
 
     public int Counter { get; }
 
-    public ActivityEventArgs(DateTimeOffset timestamp, int counter)
+    public ActivityEventArgs(DateTime timestamp, int counter)
     {
         Timestamp = timestamp;
         Counter = counter;
