@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.Timers;
+
 namespace WorkVisualGauge;
 
 using Microsoft.Maui.Graphics;
@@ -7,6 +10,10 @@ public partial class MainPage : ContentPage, IDrawable
     private const float StartAngle = 210f;
     private const float EndAngle = -30f;
     private const float RangeAngle = StartAngle - EndAngle;
+
+    private double animatedValue;
+
+    private readonly System.Timers.Timer animationTimer = new(1000d / 60);
 
     // Value
 
@@ -72,30 +79,56 @@ public partial class MainPage : ContentPage, IDrawable
 
         // Dummy
         Value = Min;
-        _ = RunTimerAsync();
+        //_ = RunTimerAsync();
         //Value = 0;
+
+        animationTimer.Elapsed += TimerOnElapsed;
     }
 
     // Dummy
-    private async Task RunTimerAsync()
-    {
-        try
-        {
-            using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(200));
-            while (await timer.WaitForNextTickAsync().ConfigureAwait(true))
-            {
-                Value += 1;
-                if (Value > 120)
-                {
-                    Value = 20;
-                }
+    //private async Task RunTimerAsync()
+    //{
+    //    try
+    //    {
+    //        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(200));
+    //        while (await timer.WaitForNextTickAsync().ConfigureAwait(true))
+    //        {
+    //            Value += 1;
+    //            if (Value > 120)
+    //            {
+    //                Value = 20;
+    //            }
 
-                GraphicsView.Invalidate();
-            }
-        }
-        catch (OperationCanceledException)
+    //            GraphicsView.Invalidate();
+    //        }
+    //    }
+    //    catch (OperationCanceledException)
+    //    {
+    //    }
+    //}
+
+    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (Math.Abs(animatedValue - Value) < 0.1)
         {
+            animationTimer.Stop();
+            animatedValue = Value;
         }
+        else
+        {
+            var diff = Value - animatedValue;
+            animatedValue += diff * 0.1;
+        }
+
+        Dispatcher.Dispatch(() => GraphicsView.Invalidate());
+    }
+
+    private void Slider_OnValueChanged(object? sender, ValueChangedEventArgs e)
+    {
+        // [MEMO] In property changed
+        animatedValue = Value;
+        Value = e.NewValue;
+        animationTimer.Start();
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
@@ -158,7 +191,7 @@ public partial class MainPage : ContentPage, IDrawable
         canvas.DrawArc(rect, warningStart, EndAngle, true, false);
 
         // Needle
-        var needleRadian = (float)((StartAngle - (RangeAngle * (Value - Min) / range)) * MathF.PI / 180);
+        var needleRadian = (float)((StartAngle - (RangeAngle * (animatedValue - Min) / range)) * MathF.PI / 180);
 
         var needleLength = (radius - MajorTickLength) * NeedleLengthPercentage;
         var needleBackLength = (radius - MajorTickLength) * NeedleBackLengthPercentage;
