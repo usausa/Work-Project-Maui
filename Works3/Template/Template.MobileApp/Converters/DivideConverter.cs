@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Converters;
 
-public abstract class DivideConverter : IValueConverter
+public sealed class DivideConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

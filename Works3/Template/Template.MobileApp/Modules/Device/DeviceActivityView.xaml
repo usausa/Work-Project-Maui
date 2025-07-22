@@ -24,7 +24,7 @@
             <Style x:Key="ActivityValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="Quicksand" />
-                <Setter Property="FontSize" Value="72" />
+                <Setter Property="FontSize" Value="96" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
@@ -43,7 +43,7 @@
 
             <Style x:Key="DetailVerticalStack"
                    TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
+                <Setter Property="Padding" Value="12,24" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
@@ -64,7 +64,7 @@
             <Style x:Key="DetailIconLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
@@ -72,7 +72,7 @@
             <Style x:Key="DetailNameLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="HorizontalTextAlignment" Value="Start" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
@@ -80,7 +80,7 @@
             <Style x:Key="DetailValueLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
@@ -88,7 +88,7 @@
             <Style x:Key="DetailUnitLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="6" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="HorizontalTextAlignment" Value="Start" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
@@ -102,13 +102,13 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="*,*"
+    <Grid RowDefinitions="18,*,*"
           BackgroundColor="White">
 
-        <graphics:GraphicsControl Grid.Row="0"
+        <graphics:GraphicsControl Grid.Row="1"
                                   Graphics="{Binding Graphics}" />
 
-        <VerticalStackLayout Grid.Row="0"
+        <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource ActivityVerticalStack}">
             <Label Style="{StaticResource ActivityValueLabel}"
                    Text="{Binding Calculator.Step, StringFormat='{0:N0}'}" />
@@ -116,11 +116,11 @@
                    Text="歩" />
         </VerticalStackLayout>
 
-        <Label Grid.Row="0"
+        <Label Grid.Row="1"
                Style="{StaticResource ActivityIconLabel}"
                Text="👟" />
 
-        <VerticalStackLayout Grid.Row="1"
+        <VerticalStackLayout Grid.Row="2"
                              Style="{StaticResource DetailVerticalStack}">
             <Border Style="{StaticResource DetailBorder}">
                 <Grid Style="{StaticResource DetailGrid}"
@@ -133,10 +133,10 @@
                     <Label Grid.Row="0" Grid.Column="1"
                            Style="{StaticResource DetailNameLabel}"
                            Text="消費カロリー" />
-                    <Label Grid.Row="0" Grid.Column="1"
+                    <Label Grid.Row="0" Grid.Column="2"
                            Style="{StaticResource DetailValueLabel}"
-                           Text="{Binding Calculator.Calories, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F1}'}" />
-                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding Calculator.Calories, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
+                    <Label Grid.Row="0" Grid.Column="3"
                            Style="{StaticResource DetailUnitLabel}"
                            Text="kcal" />
 
@@ -149,10 +149,10 @@
                     <Label Grid.Row="2" Grid.Column="1"
                            Style="{StaticResource DetailNameLabel}"
                            Text="距離" />
-                    <Label Grid.Row="2" Grid.Column="1"
+                    <Label Grid.Row="2" Grid.Column="2"
                            Style="{StaticResource DetailValueLabel}"
                            Text="{Binding Calculator.Distance, Converter={StaticResource DivideConverter}, ConverterParameter={s:Double 1000}, StringFormat='{0:F2}'}" />
-                    <Label Grid.Row="2" Grid.Column="1"
+                    <Label Grid.Row="2" Grid.Column="3"
                            Style="{StaticResource DetailUnitLabel}"
                            Text="km" />
 
@@ -165,10 +165,10 @@
                     <Label Grid.Row="4" Grid.Column="1"
                            Style="{StaticResource DetailNameLabel}"
                            Text="活動時間" />
-                    <Label Grid.Row="4" Grid.Column="1"
+                    <Label Grid.Row="4" Grid.Column="2"
                            Style="{StaticResource DetailValueLabel}"
-                           Text="{Binding Calculator.ActivityTime.TotalHours, StringFormat='{0:F1}'}" />
-                    <Label Grid.Row="4" Grid.Column="1"
+                           Text="{Binding Calculator.ActivityTime.TotalHours, StringFormat='{0:F2}'}" />
+                    <Label Grid.Row="4" Grid.Column="3"
                            Style="{StaticResource DetailUnitLabel}"
                            Text="時間" />
 
