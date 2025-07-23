@@ -86,7 +86,7 @@
                     <Span Style="{StaticResource ValueSpan}"
                           Text="{Binding Current, StringFormat='{0:F1}'}" />
                     <Span Style="{StaticResource UnitSpan}"
-                          Text="dB" />
+                          Text=" dB" />
                 </FormattedString>
             </Label.FormattedText>
         </Label>
@@ -111,7 +111,7 @@
                         <Span Style="{StaticResource SummaryValueSpan}"
                               Text="{Binding Min, StringFormat='{0:F1}'}" />
                         <Span Style="{StaticResource SummaryUnitSpan}"
-                              Text="dB" />
+                              Text=" dB" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
@@ -122,7 +122,7 @@
                         <Span Style="{StaticResource SummaryValueSpan}"
                               Text="{Binding Average, StringFormat='{0:F1}'}" />
                         <Span Style="{StaticResource SummaryUnitSpan}"
-                              Text="dB" />
+                              Text=" dB" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
@@ -133,7 +133,7 @@
                         <Span Style="{StaticResource SummaryValueSpan}"
                               Text="{Binding Max, StringFormat='{0:F1}'}" />
                         <Span Style="{StaticResource SummaryUnitSpan}"
-                              Text="dB" />
+                              Text=" dB" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
