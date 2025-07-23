@@ -23,7 +23,6 @@
 
             <Style x:Key="ActivityValueLabel"
                    TargetType="Label">
-                <Setter Property="FontFamily" Value="Quicksand" />
                 <Setter Property="FontSize" Value="96" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
