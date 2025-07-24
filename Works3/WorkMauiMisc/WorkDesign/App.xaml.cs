@@ -14,9 +14,11 @@ public partial class App : Application
         //return new Window(new ButtonPage());
         //return new Window(new PathPage());
         // -----
-        return new Window(new ChatPage());
+        //return new Window(new ChatPage());
         // -----
         //return new Window(new MailPage());
+        // -----
+        return new Window(new MoneyPage());
         // -----
         //return new Window(new SchedulePage());
         //return new Window(new CalendarPage());
