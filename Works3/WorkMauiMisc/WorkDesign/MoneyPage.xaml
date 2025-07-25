@@ -13,16 +13,26 @@
 
     <Grid RowDefinitions="*,36,*">
 
-        <toolkit:SfEffectsView
+        <BoxView Grid.Row="0" BackgroundColor="AntiqueWhite" />
+        <BoxView Grid.Row="2" BackgroundColor="AntiqueWhite" />
+
+        <Border
             Grid.Row="1"
-            BackgroundColor="Snow"
-            TouchDownEffects="Ripple"
-            TouchUpCommand="{Binding Execute}">
-            <Label
-                HorizontalOptions="Center"
-                Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" />
-        </toolkit:SfEffectsView>
+            StrokeShape="RoundRectangle 18"
+            StrokeThickness="0"
+            TranslationY="-18"
+            WidthRequest="320">
+            <toolkit:SfEffectsView
+                BackgroundColor="Snow"
+                TouchDownEffects="Ripple"
+                TouchUpCommand="{Binding Execute}">
+                <Label
+                    HorizontalOptions="Center"
+                    Text="Welcome to .NET MAUI!"
+                    VerticalOptions="Center" />
+            </toolkit:SfEffectsView>
+        </Border>
+
     </Grid>
 
 </ContentPage>
