@@ -11,9 +11,60 @@
         <app:MoneyPageViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="*,36,*">
+    <Grid RowDefinitions="224,36,*">
 
-        <BoxView Grid.Row="0" BackgroundColor="AntiqueWhite" />
+        <Border Grid.Row="0" StrokeThickness="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0.0" Color="{StaticResource RedLighten5}" />
+                    <GradientStop Offset="1.0" Color="{StaticResource RedLighten4}" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,36,36" />
+            </Border.StrokeShape>
+        </Border>
+
+
+        <Border
+            Grid.Row="0"
+            Margin="24,24,24,48"
+            BackgroundColor="White"
+            StrokeShape="RoundRectangle 18"
+            StrokeThickness="0">
+            <Grid ColumnDefinitions="3*,2*" RowDefinitions="*,*">
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    FontSize="36"
+                    HorizontalOptions="Center"
+                    Text="🐰うさぎペイ"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    FontSize="24"
+                    HorizontalOptions="Center"
+                    Text="ポイント"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontSize="24"
+                    HorizontalOptions="Center"
+                    Text="20,000 円"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    Text="4"
+                    VerticalOptions="Center" />
+
+            </Grid>
+        </Border>
+
+
         <BoxView Grid.Row="2" BackgroundColor="AntiqueWhite" />
 
         <Border
