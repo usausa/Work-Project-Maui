@@ -2,9 +2,9 @@ namespace WorkDesign;
 
 using System.Windows.Input;
 
-public partial class MoneyPage : ContentPage
+public partial class MoneyPage2 : ContentPage
 {
-	public MoneyPage()
+	public MoneyPage2()
 	{
 		InitializeComponent();
 	}

@@ -18,7 +18,7 @@ public partial class App : Application
         // -----
         //return new Window(new MailPage());
         // -----
-        return new Window(new MoneyPage());
+        return new Window(new MoneyPage2());
         // -----
         //return new Window(new SchedulePage());
         //return new Window(new CalendarPage());

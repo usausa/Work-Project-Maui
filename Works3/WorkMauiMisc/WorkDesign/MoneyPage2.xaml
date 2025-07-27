@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WorkDesign.MoneyPage2"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:WorkDesign"
+    xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+    Title="MoneyPage"
+    x:DataType="{x:Type app:MoneyPage2ViewModel}">
+
+    <!--  ReSharper disable Xaml.RedundantResource  -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <app:MoneyPageToEffectConverter x:Key="MoneyPageToEffectConverter" />
+
+
+            <Style x:Key="HeaderBackgroundBorder" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.0" Color="{StaticResource RedLighten5}" />
+                            <GradientStop Offset="1.0" Color="{StaticResource RedLighten4}" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="0,0,36,36" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+
+            <Style x:Key="SeparatorBoxView" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="BottomSelectGrid" TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+
+
+            <Style x:Key="BottomSelectBadgeBorder" TargetType="Border">
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="TranslationX" Value="20" />
+                <Setter Property="TranslationY" Value="4" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="BottomSelectBadgeLabel" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!--  ReSharper restore Xaml.RedundantResource  -->
+
+    <ContentPage.BindingContext>
+        <app:MoneyPage2ViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,Auto,Auto">
+
+        <ScrollView Grid.Row="0">
+
+            <Grid BackgroundColor="{StaticResource RedLighten5}" RowDefinitions="196,36,Auto,*">
+
+                <Border Grid.Row="0" Style="{StaticResource HeaderBackgroundBorder}" />
+
+                <Border
+                    Grid.Row="0"
+                    Margin="16,16,16,40"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 18"
+                    StrokeThickness="0">
+                    <Grid
+                        Margin="8"
+                        ColumnDefinitions="3*,2*"
+                        RowDefinitions="*,*">
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span FontSize="36" Text="🐰" />
+                                    <Span FontSize="24" Text="うさうさペイ残高" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            FontSize="18"
+                            HeightRequest="40"
+                            Text="詳細"
+                            WidthRequest="108" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span FontSize="36" Text="20,000" />
+                                    <Span FontSize="18" Text=" 円" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <VerticalStackLayout
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalOptions="Center">
+                            <Label
+                                FontSize="10"
+                                HorizontalOptions="Center"
+                                Text="ポイント残高" />
+                            <Label HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span FontSize="18" Text="1,234" />
+                                        <Span FontSize="12" Text=" pt" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Border>
+
+                <Border
+                    Grid.Row="1"
+                    StrokeShape="RoundRectangle 18"
+                    StrokeThickness="0"
+                    TranslationY="-18"
+                    WidthRequest="320">
+                    <Border.Shadow>
+                        <Shadow
+                            Brush="{StaticResource RedLighten1}"
+                            Opacity="0.5"
+                            Radius="12" />
+                    </Border.Shadow>
+                    <toolkit:SfEffectsView BackgroundColor="White" TouchDownEffects="Ripple">
+                        <Grid ColumnDefinitions="36,*,36">
+                            <Border
+                                Grid.Column="0"
+                                Margin="2"
+                                BackgroundColor="Silver"
+                                StrokeShape="Ellipse">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    HorizontalOptions="Center"
+                                    TextColor="White"
+                                    VerticalOptions="Center">
+                                    S
+                                </Label>
+                            </Border>
+                            <Label
+                                Grid.Column="1"
+                                FontSize="18"
+                                HorizontalOptions="Center"
+                                Text="シルバーランク会員"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Grid.Column="2"
+                                FontSize="18"
+                                HorizontalOptions="Center"
+                                Text="›"
+                                VerticalOptions="Center" />
+                        </Grid>
+
+                    </toolkit:SfEffectsView>
+                </Border>
+
+                <Border
+                    Grid.Row="2"
+                    Margin="16,0,16,16"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 8"
+                    StrokeThickness="0">
+
+                    <Grid
+                        Padding="0,16"
+                        ColumnDefinitions="*,*,*,*"
+                        RowDefinitions="*,*"
+                        RowSpacing="16">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="stars.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">クーポン</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="view_compact.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">スタンプ</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="2">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="paid.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">ポイント</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="3">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="add_circle.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">チャージ</Label>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="scan.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">スキャン</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="send_money.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">送る</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="2">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="receipt.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">履歴</Label>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="3">
+                            <ImageButton
+                                CornerRadius="8"
+                                HeightRequest="64"
+                                Source="shopping_cart.png"
+                                WidthRequest="64">
+                                <ImageButton.Background>
+                                    <LinearGradientBrush>
+                                        <GradientStop Offset="0.1" Color="{StaticResource PinkAccent2}" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource PinkAccent1}" />
+                                    </LinearGradientBrush>
+                                </ImageButton.Background>
+                            </ImageButton>
+                            <Label FontSize="12" HorizontalOptions="Center">カート</Label>
+                        </VerticalStackLayout>
+
+                    </Grid>
+
+                </Border>
+
+
+                <VerticalStackLayout Grid.Row="3" Margin="16,0,16,16">
+                    <Border
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 8"
+                        StrokeThickness="0">
+                        <VerticalStackLayout>
+                            <toolkit:SfEffectsView BackgroundColor="White" TouchDownEffects="Ripple">
+                                <Grid
+                                    Padding="8,8,0,8"
+                                    ColumnDefinitions="*,*,36"
+                                    HeightRequest="44">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="14"
+                                        Text="💰 利用可能額"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Grid.Column="1"
+                                        FontSize="14"
+                                        HorizontalOptions="End"
+                                        Text="21,234 円"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Grid.Column="2"
+                                        FontSize="18"
+                                        HorizontalOptions="Center"
+                                        Text="›"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+
+                            <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                            <toolkit:SfEffectsView BackgroundColor="White" TouchDownEffects="Ripple">
+                                <Grid
+                                    Padding="8,8,0,8"
+                                    ColumnDefinitions="*,*,36"
+                                    HeightRequest="44">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="14"
+                                        Text="🪙 うさうさポイント"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Grid.Column="1"
+                                        FontSize="14"
+                                        HorizontalOptions="End"
+                                        Text="1,234 pt"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Grid.Column="2"
+                                        FontSize="18"
+                                        HorizontalOptions="Center"
+                                        Text="›"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+
+                            <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                            <toolkit:SfEffectsView BackgroundColor="White" TouchDownEffects="Ripple">
+                                <Grid
+                                    Padding="8"
+                                    ColumnDefinitions="*,Auto"
+                                    HeightRequest="44">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="14"
+                                        Text="💳 うさうさカード"
+                                        VerticalOptions="Center" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Padding="8,2"
+                                        FontSize="14"
+                                        Text="クレジット設定" />
+                                </Grid>
+                            </toolkit:SfEffectsView>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+            </Grid>
+
+        </ScrollView>
+
+        <BoxView Grid.Row="1" Style="{StaticResource SeparatorBoxView}" />
+
+        <Grid
+            Grid.Row="2"
+            ColumnDefinitions="*,*,72,*,*"
+            Style="{StaticResource BottomSelectGrid}">
+
+            <toolkit:SfEffectsView
+                Grid.Column="0"
+                TouchDownCommand="{Binding PageCommand}"
+                TouchDownCommandParameter="{x:Static app:MoneyPage.Home}"
+                TouchDownEffects="{Binding Selected, Converter={app:MoneyPageToEffect Page=Home, Selected=None, Default=Ripple}}">
+                <Grid RowDefinitions="*,Auto">
+                    <Image
+                        Grid.Row="0"
+                        Aspect="Fill"
+                        HeightRequest="48"
+                        Source="{Binding Selected, Converter={app:MoneyPageToImageSource Page=Home, Selected=home_selected.png, Default=home.png}}"
+                        WidthRequest="48" />
+                    <Label
+                        Grid.Row="1"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="ホーム"
+                        TextColor="{Binding Selected, Converter={app:MoneyPageToColor Page=Home, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView
+                Grid.Column="1"
+                TouchDownCommand="{Binding PageCommand}"
+                TouchDownCommandParameter="{x:Static app:MoneyPage.Search}"
+                TouchDownEffects="{Binding Selected, Converter={app:MoneyPageToEffect Page=Search, Selected=None, Default=Ripple}}">
+                <Grid RowDefinitions="*,Auto">
+                    <Image
+                        Grid.Row="0"
+                        Aspect="Fill"
+                        HeightRequest="48"
+                        Source="{Binding Selected, Converter={app:MoneyPageToImageSource Page=Search, Selected=search_selected.png, Default=search.png}}"
+                        WidthRequest="48" />
+                    <Label
+                        Grid.Row="1"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="検索"
+                        TextColor="{Binding Selected, Converter={app:MoneyPageToColor Page=Search, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView
+                Grid.Column="3"
+                TouchDownCommand="{Binding PageCommand}"
+                TouchDownCommandParameter="{x:Static app:MoneyPage.Notifications}"
+                TouchDownEffects="{Binding Selected, Converter={app:MoneyPageToEffect Page=Notifications, Selected=None, Default=Ripple}}">
+                <Grid RowDefinitions="*,Auto">
+                    <Image
+                        Grid.Row="0"
+                        Aspect="Fill"
+                        HeightRequest="48"
+                        Source="{Binding Selected, Converter={app:MoneyPageToImageSource Page=Notifications, Selected=notifications_selected.png, Default=notifications.png}}"
+                        WidthRequest="48" />
+                    <Label
+                        Grid.Row="1"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="お知らせ"
+                        TextColor="{Binding Selected, Converter={app:MoneyPageToColor Page=Notifications, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                    <Border
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        BackgroundColor="{StaticResource OrangeDefault}"
+                        IsVisible="{Binding HasAccountAlert}"
+                        Style="{StaticResource BottomSelectBadgeBorder}">
+                        <Label Style="{StaticResource BottomSelectBadgeLabel}" Text="{Binding NotificationCount}" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView
+                Grid.Column="4"
+                TouchDownCommand="{Binding PageCommand}"
+                TouchDownCommandParameter="{x:Static app:MoneyPage.Account}"
+                TouchDownEffects="{Binding Selected, Converter={app:MoneyPageToEffect Page=Account, Selected=None, Default=Ripple}}">
+                <Grid RowDefinitions="*,Auto">
+                    <Image
+                        Grid.Row="0"
+                        Aspect="Fill"
+                        HeightRequest="48"
+                        Source="{Binding Selected, Converter={app:MoneyPageToImageSource Page=Account, Selected=account_selected.png, Default=account.png}}"
+                        WidthRequest="48" />
+                    <Label
+                        Grid.Row="1"
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="アカウント"
+                        TextColor="{Binding Selected, Converter={app:MoneyPageToColor Page=Account, Selected={StaticResource PinkAccent3}, Default={StaticResource GrayDefault}}}" />
+                    <Border
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        BackgroundColor="{StaticResource OrangeDefault}"
+                        IsVisible="{Binding HasAccountAlert}"
+                        Style="{StaticResource BottomSelectBadgeBorder}">
+                        <Label Style="{StaticResource BottomSelectBadgeLabel}" Text="!" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+
+        </Grid>
+
+        <Border
+            Grid.RowSpan="3"
+            BackgroundColor="{StaticResource PinkDefault}"
+            HeightRequest="72"
+            HorizontalOptions="Center"
+            StrokeShape="Ellipse"
+            StrokeThickness="0"
+            TranslationY="-12"
+            VerticalOptions="End"
+            WidthRequest="72">
+            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                <VerticalStackLayout VerticalOptions="Center">
+                    <Image
+                        Aspect="AspectFit"
+                        HeightRequest="36"
+                        Source="qr_code.png"
+                        WidthRequest="36" />
+                    <Label
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="支払い"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                </VerticalStackLayout>
+            </toolkit:SfEffectsView>
+        </Border>
+
+    </Grid>
+
+</ContentPage>
