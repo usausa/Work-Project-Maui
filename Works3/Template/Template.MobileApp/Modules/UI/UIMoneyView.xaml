@@ -126,20 +126,23 @@
                    TargetType="Span">
                 <Setter Property="FontSize" Value="12" />
             </Style>
+
             <!-- Rank -->
             <Style x:Key="RankBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="320" />
-                <Setter Property="TranslationY" Value="-18" />
+                <Setter Property="TranslationY" Value="-20" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 18" />
-                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Stroke" Value="{StaticResource RedLighten3}" />
+                <!-- TranslationY is not applied to Shadow on Android
                 <Setter Property="Shadow">
                     <Shadow Brush="{StaticResource RedLighten1}"
                             Opacity="0.5" Radius="12" />
                 </Setter>
+                -->
             </Style>
-
             <Style x:Key="RankView"
                    TargetType="toolkit:SfEffectsView">
                 <Setter Property="TouchDownEffects" Value="Ripple" />
@@ -387,7 +390,7 @@
         <ScrollView Grid.Row="0">
 
             <Grid Style="{StaticResource BackgroundGrid}"
-                  RowDefinitions="196,36,Auto,*">
+                  RowDefinitions="196,40,Auto,*">
 
                 <!-- Header -->
                 <Border Grid.Row="0"
@@ -443,13 +446,7 @@
 
                 <!-- Rank -->
                 <Border Grid.Row="1"
-                        Style="{StaticResource RankBorder}"
-                        WidthRequest="320"
-                        StrokeShape="RoundRectangle 18" StrokeThickness="0" TranslationY="-18">
-                    <Border.Shadow>
-                        <Shadow Brush="{StaticResource RedLighten1}"
-                                Opacity="0.5" Radius="12" />
-                    </Border.Shadow>
+                        Style="{StaticResource RankBorder}">
                     <toolkit:SfEffectsView Style="{StaticResource RankView}">
                         <Grid ColumnDefinitions="36,*,36">
                             <Border Grid.Column="0"
@@ -462,7 +459,7 @@
                                    Text="シルバーランク会員" />
                             <Label Grid.Column="2"
                                    Style="{StaticResource RankLinkLabel}"
-                                   Text="›" />
+                                   Text="➡️" />
                         </Grid>
                     </toolkit:SfEffectsView>
                 </Border>
@@ -543,7 +540,7 @@
                                            Text="21,234 円" />
                                     <Label Grid.Column="2"
                                            Style="{StaticResource DetailNextLabel}"
-                                           Text="›" />
+                                           Text="➡️" />
                                 </Grid>
                             </toolkit:SfEffectsView>
 
@@ -560,7 +557,7 @@
                                            Text="1,234 pt" />
                                     <Label Grid.Column="2"
                                            Style="{StaticResource DetailNextLabel}"
-                                           Text="›" />
+                                           Text="➡️" />
                                 </Grid>
                             </toolkit:SfEffectsView>
 
