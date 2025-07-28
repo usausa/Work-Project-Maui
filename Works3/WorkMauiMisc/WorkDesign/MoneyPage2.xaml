@@ -31,7 +31,55 @@
             </Style>
 
             <!-- Rank -->
+            <Style x:Key="RankBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="320" />
+                <Setter Property="TranslationY" Value="-18" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="{StaticResource RedLighten1}"
+                            Opacity="0.5" Radius="12" />
+                </Setter>
+            </Style>
 
+            <Style x:Key="RankView"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RankBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="BackgroundColor" Value="Silver" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="RankBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="RankValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="RankLinkLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
 
             <!-- Menu -->
             <Style x:Key="MenuBorder"
@@ -309,37 +357,29 @@
                     </Grid>
                 </Border>
 
+                <!-- Rank -->
                 <Border Grid.Row="1"
+                        Style="{StaticResource RankBorder}"
                         WidthRequest="320"
                         StrokeShape="RoundRectangle 18" StrokeThickness="0" TranslationY="-18">
                     <Border.Shadow>
                         <Shadow Brush="{StaticResource RedLighten1}"
                                 Opacity="0.5" Radius="12" />
                     </Border.Shadow>
-                    <toolkit:SfEffectsView BackgroundColor="White"
-                                           TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView Style="{StaticResource RankView}">
                         <Grid ColumnDefinitions="36,*,36">
                             <Border Grid.Column="0"
-                                    Margin="2"
-                                    BackgroundColor="Silver"
-                                    StrokeShape="Ellipse">
-                                <Label FontSize="18" FontAttributes="Bold"
-                                       TextColor="White"
-                                       HorizontalOptions="Center" VerticalOptions="Center">
-                                    S
-                                </Label>
+                                    Style="{StaticResource RankBadgeBorder}">
+                                <Label Style="{StaticResource RankBadgeLabel}"
+                                       Text="S" />
                             </Border>
                             <Label Grid.Column="1"
-                                   FontSize="18"
-                                   Text="シルバーランク会員"
-                                   HorizontalOptions="Center" VerticalOptions="Center" />
-
+                                   Style="{StaticResource RankValueLabel}"
+                                   Text="シルバーランク会員" />
                             <Label Grid.Column="2"
-                                   FontSize="18"
-                                   Text="›"
-                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                                   Style="{StaticResource RankLinkLabel}"
+                                   Text="›" />
                         </Grid>
-
                     </toolkit:SfEffectsView>
                 </Border>
 
