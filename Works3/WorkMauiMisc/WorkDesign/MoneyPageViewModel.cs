@@ -71,21 +71,6 @@ public sealed class MoneyPageToImageSourceExtension : IMarkupExtension<MoneyPage
 }
 
 
-[AcceptEmptyServiceProvider]
-public sealed class MoneyPageToEffectExtension : IMarkupExtension<MoneyPageToEffectConverter>
-{
-    public MoneyPage Page { get; set; }
-
-    public SfEffects Default { get; set; } = SfEffects.Ripple;
-
-    public SfEffects Selected { get; set; } = SfEffects.None;
-
-    public MoneyPageToEffectConverter ProvideValue(IServiceProvider serviceProvider) =>
-        new() { Page = Page, Default = Default, Selected = Selected };
-
-    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
-}
-
 public abstract class MoneyPageToConverter<T> : IValueConverter
 {
     public MoneyPage Page { get; set; }
@@ -107,9 +92,5 @@ public sealed class MoneyPageToColorConverter : MoneyPageToConverter<Color>
 }
 
 public sealed class MoneyPageToImageSourceConverter : MoneyPageToConverter<ImageSource>
-{
-}
-
-public sealed class MoneyPageToEffectConverter : MoneyPageToConverter<SfEffects>
 {
 }

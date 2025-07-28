@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!--  Material  -->
-    <!--  Primary:Default, Dark:Darken2, Light:Lighten4  -->
-    <!--  Secondary/Accent:Accent2, Dark:Accent4, Light:Accent1  -->
+    <Color x:Key="TextPrimary">#DE000000</Color>
+    <Color x:Key="TextSecondary">#8A000000</Color>
+
+    <!-- Material -->
+    <!-- Primary:Default, Dark:Darken2, Light:Lighten4 -->
+    <!-- Secondary/Accent:Accent2, Dark:Accent4, Light:Accent1 -->
 
     <Color x:Key="RedDefault">#F44336</Color>
     <Color x:Key="RedLighten5">#FFEBEE</Color>
@@ -279,7 +283,7 @@
     <Color x:Key="GrayDarken3">#424242</Color>
     <Color x:Key="GrayDarken4">#212121</Color>
 
-    <!--  Metro  -->
+    <!-- Metro -->
 
     <Color x:Key="MetroBlue">#2D89EF</Color>
     <Color x:Key="MetroBlueBrighter">#4AA6FF</Color>
