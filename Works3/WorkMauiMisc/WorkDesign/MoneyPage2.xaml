@@ -11,6 +11,12 @@
     <ContentPage.Resources>
         <ResourceDictionary>
 
+            <!-- Background -->
+            <Style x:Key="BackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
             <!-- Header -->
             <Style x:Key="HeaderBackgroundBorder"
                    TargetType="Border">
@@ -30,6 +36,89 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="HeaderBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,16,16,40" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="StrokeThickness" Value="0" />
+            </Style>
+
+            <Style x:Key="HeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderLogoLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderLogoIconSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="HeaderLogoNameSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style x:Key="HeaderInformationButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="108" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBlueDefault}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderAmountLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderAmountValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="36" />
+            </Style>
+
+            <Style x:Key="HeaderAmountUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderPointLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderPointNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+
+            <Style x:Key="HeaderPointValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="HeaderPointValueSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="HeaderPointUnitSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="12" />
+            </Style>
             <!-- Rank -->
             <Style x:Key="RankBorder"
                    TargetType="Border">
@@ -291,69 +380,61 @@
 
     <Grid RowDefinitions="*,Auto,Auto">
 
+        <!-- Content -->
         <ScrollView Grid.Row="0">
 
-            <Grid RowDefinitions="196,36,Auto,*"
-                  BackgroundColor="{StaticResource RedLighten5}">
+            <Grid Style="{StaticResource BackgroundGrid}"
+                  RowDefinitions="196,36,Auto,*">
 
+                <!-- Header -->
                 <Border Grid.Row="0"
                         Style="{StaticResource HeaderBackgroundBorder}" />
 
                 <Border Grid.Row="0"
-                        Margin="16,16,16,40"
-                        BackgroundColor="White"
-                        StrokeShape="RoundRectangle 18" StrokeThickness="0">
-                    <Grid RowDefinitions="*,*"
-                          ColumnDefinitions="3*,2*"
-                          Margin="8">
+                        Style="{StaticResource HeaderBorder}">
+                    <Grid Style="{StaticResource HeaderGrid}"
+                          RowDefinitions="*,*"
+                          ColumnDefinitions="3*,2*">
                         <Label Grid.Row="0" Grid.Column="0"
-                               HorizontalOptions="Start" VerticalOptions="Center">
+                               Style="{StaticResource HeaderLogoLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span FontSize="36"
+                                    <Span Style="{StaticResource HeaderLogoIconSpan}"
                                           Text="🐰" />
-                                    <Span FontSize="24"
+                                    <Span Style="{StaticResource HeaderLogoNameSpan}"
                                           Text="うさペイ残高" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                         <Button Grid.Row="0" Grid.Column="1"
-                                WidthRequest="108" HeightRequest="40"
-                                Margin="0" Padding="0"
-                                FontSize="18"
-                                Text="詳細"
-                                TextColor="White"
-                                BackgroundColor="{StaticResource LightBlueDefault}"
-                                CornerRadius="4" />
+                                Style="{StaticResource HeaderInformationButton}"
+                                Text="詳細" />
                         <Label Grid.Row="1" Grid.Column="0"
-                               HorizontalOptions="Center" VerticalOptions="Center">
+                               Style="{StaticResource HeaderAmountLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span FontSize="36"
+                                    <Span Style="{StaticResource HeaderAmountValueSpan}"
                                           Text="20,000" />
-                                    <Span FontSize="18"
+                                    <Span Style="{StaticResource HeaderAmountUnitSpan}"
                                           Text=" 円" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1"
-                                             VerticalOptions="Center">
-                            <Label FontSize="10"
-                                   Text="ポイント残高"
-                                   HorizontalOptions="Center" />
-                            <Label HorizontalOptions="Center" VerticalOptions="Center">
+                                             Style="{StaticResource HeaderPointLayout}">
+                            <Label Style="{StaticResource HeaderPointNameLabel}"
+                                   Text="ポイント残高" />
+                            <Label Style="{StaticResource HeaderPointValueLabel}">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span FontSize="18"
+                                        <Span Style="{StaticResource HeaderPointValueSpan}"
                                               Text="1,234" />
-                                        <Span FontSize="12"
+                                        <Span Style="{StaticResource HeaderPointUnitSpan}"
                                               Text=" pt" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-
                         </VerticalStackLayout>
-
                     </Grid>
                 </Border>
 
