@@ -673,7 +673,6 @@
         </Grid>
 
         <!-- Center button -->
-
         <Border Grid.RowSpan="3"
                 Style="{StaticResource CenterButtonBorder}">
             <toolkit:SfEffectsView Style="{StaticResource CenterButtonView}">
