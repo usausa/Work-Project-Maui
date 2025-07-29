@@ -12,6 +12,8 @@ using Fonts;
 
 using Indiko.Maui.Controls.Markdown;
 
+using Maui.PDFView;
+
 using MauiComponents.Resolver;
 
 using Microsoft.Maui.LifecycleEvents;
@@ -60,6 +62,7 @@ public static partial class MauiProgram
             .UseBarcodeScanning()
             .UseShiny()
             .UseMarkdownView()
+            .UseMauiPdfView()
             .UseMauiServices()
             .UseMauiComponents()
             .UseCommunityToolkitServices()
