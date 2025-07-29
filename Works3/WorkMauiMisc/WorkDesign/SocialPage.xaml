@@ -1,17 +1,153 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit" xmlns:workDesign="clr-namespace:WorkDesign"
              x:Class="WorkDesign.SocialPage"
              Title="SocialPage">
-    <VerticalStackLayout>
-        <Label FontFamily="NotoSerifJPRegular" FontSize="36"
-               Text="電流、電圧"
-               HorizontalOptions="Center" VerticalOptions="Center" />
-        <Label FontFamily="NotoSerifJPMedium" FontSize="36"
-               Text="電流、電圧"
-               HorizontalOptions="Center" VerticalOptions="Center" />
-        <Label FontSize="36"
-               Text="電流、電圧"
-               HorizontalOptions="Center" VerticalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid RowDefinitions="108,100,100,*"
+          BackgroundColor="LightBlue">
+
+        <Grid Grid.Row="0"
+              RowDefinitions="*,*"
+              ColumnDefinitions="*,*,*,*"
+              Padding="4"
+              ColumnSpacing="4" RowSpacing="4">
+            <toolkit:SfEffectsView Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="*">
+                    <Grid.Shadow>
+                        <Shadow Offset="4,4"
+                                Brush="Black" Opacity="0.25" />
+                    </Grid.Shadow>
+                    <BoxView Grid.Column="0"
+                             WidthRequest="3"
+                             BackgroundColor="{StaticResource OrangeDefault}"
+                             HorizontalOptions="Start" ZIndex="100" />
+                    <Border Grid.Column="0"
+                            BackgroundColor="LightGrey"
+                            Opacity="0.5" Stroke="White" StrokeThickness="1">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label FontFamily="NotoSerifJP-Medium" FontSize="18"
+                                   Text="電流"
+                                   TextColor="{StaticResource GrayDarken4}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Label FontSize="10"
+                                   Text="CURRENT"
+                                   TextColor="{StaticResource GrayDarken4}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="*">
+                    <Grid.Shadow>
+                        <Shadow Offset="4,4"
+                                Brush="Black" Opacity="0.25" />
+                    </Grid.Shadow>
+                    <BoxView Grid.Column="0"
+                             WidthRequest="3"
+                             BackgroundColor="{StaticResource OrangeDefault}"
+                             HorizontalOptions="Start" ZIndex="100" />
+                    <Border Grid.Column="0"
+                            BackgroundColor="LightGrey"
+                            Opacity="0.5" Stroke="White" StrokeThickness="1">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label FontFamily="NotoSerifJP-Medium" FontSize="18"
+                                   Text="電流"
+                                   TextColor="{StaticResource GrayDarken4}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Label FontSize="10"
+                                   Text="CURRENT"
+                                   TextColor="{StaticResource GrayDarken4}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <workDesign:SocialMenuButton />
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <workDesign:CustomFontSkiaView TextColor="Black"
+                                               DrawText="電圧" />
+            </toolkit:SfEffectsView>
+
+            <toolkit:SfEffectsView Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="4,*">
+                    <Grid.Shadow>
+                        <Shadow Offset="4,4"
+                                Brush="Black" Opacity="0.25" />
+                    </Grid.Shadow>
+                    <BoxView Grid.Column="0"
+                             BackgroundColor="{StaticResource OrangeDefault}" />
+                    <Border Grid.Column="1"
+                            BackgroundColor="LightGrey"
+                            Opacity="0.5" Stroke="White" StrokeThickness="2">
+                        <Label FontFamily="NotoSerifJP-Medium" FontSize="18"
+                               Text="電圧"
+                               TextColor="{StaticResource GrayDarken4}"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="4,*">
+                    <Grid.Shadow>
+                        <Shadow Offset="4,4"
+                                Brush="Black" Opacity="0.25" />
+                    </Grid.Shadow>
+                    <BoxView Grid.Column="0"
+                             BackgroundColor="{StaticResource OrangeDefault}" />
+                    <Border Grid.Column="1"
+                            BackgroundColor="LightGrey"
+                            Opacity="0.5" Stroke="White" StrokeThickness="2">
+                        <Label FontFamily="NotoSerifJP-Medium" FontSize="18"
+                               Text="電力"
+                               TextColor="{StaticResource GrayDarken4}"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+        </Grid>
+
+
+        <VerticalStackLayout Grid.Row="4">
+            <Label FontFamily="NotoSerifJPRegular" FontSize="36"
+                   Text="電流、電圧"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label FontFamily="NotoSerifJP-Medium" FontSize="36"
+                   Text="電流、電圧"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label FontSize="36"
+                   Text="電流、電圧"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+
+            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                <Border WidthRequest="60" HeightRequest="50"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Center" StrokeThickness="0" VerticalOptions="Center">
+                    <!--
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCustomShapeButtonClicked" />
+                </Border.GestureRecognizers>
+                    -->
+                    <Path Aspect="Uniform" Data="M 60,10 A 50,50 0 0,1 110,60 L 60,110 L 10,60 A 50,50 0 0,1 60,10 Z" Fill="LightCoral" HorizontalOptions="Fill"
+                          Stroke="DarkRed" StrokeThickness="1" VerticalOptions="Fill" />
+                </Border>
+            </toolkit:SfEffectsView>
+
+        </VerticalStackLayout>
+    </Grid>
+
+
 </ContentPage>

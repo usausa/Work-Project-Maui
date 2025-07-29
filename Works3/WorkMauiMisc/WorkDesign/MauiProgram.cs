@@ -1,3 +1,5 @@
+using SkiaSharp.Views.Maui.Controls.Hosting;
+
 namespace WorkDesign;
 using Microsoft.Extensions.Logging;
 
@@ -10,14 +12,18 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseSkiaSharp()
             .ConfigureSyncfusionToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
-                fonts.AddFont("NotoSerifJP-Medium.otf", "NotoSerifJPMedium");
-                fonts.AddFont("NotoSerifJP-Regular.otf", "NotoSerifJPRegular");
+                //fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
+                SKFontFactory.AddFont(fonts, "DSEG7Classic-Regular.ttf", "DSEG7");
+                //fonts.AddFont("NotoSerifJP-Medium.ttf", "NotoSerifJPMedium");
+                //fonts.AddFont("NotoSerifJP-Regular.ttf", "NotoSerifJPRegular");
+                SKFontFactory.AddFont(fonts, "NotoSerifJP-Medium.ttf", "NotoSerifJP-Medium");
+                SKFontFactory.AddFont(fonts, "NotoSerifJP-Regular.ttf", "NotoSerifJP-Regular");
             })
             .ConfigureCustomBehaviors();
 
