@@ -4,10 +4,10 @@
              x:Class="WorkDesign.SocialPage"
              Title="SocialPage">
     <VerticalStackLayout>
-        <Label FontFamily="SourceHanSansRegular" FontSize="36"
+        <Label FontFamily="NotoSerifJPRegular" FontSize="36"
                Text="電流、電圧"
                HorizontalOptions="Center" VerticalOptions="Center" />
-        <Label FontFamily="SourceHanSansMedium" FontSize="36"
+        <Label FontFamily="NotoSerifJPMedium" FontSize="36"
                Text="電流、電圧"
                HorizontalOptions="Center" VerticalOptions="Center" />
         <Label FontSize="36"
