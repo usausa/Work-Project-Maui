@@ -4,9 +4,14 @@
              x:Class="WorkDesign.SocialPage"
              Title="SocialPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label FontFamily="SourceHanSansRegular" FontSize="36"
+               Text="電流、電圧"
+               HorizontalOptions="Center" VerticalOptions="Center" />
+        <Label FontFamily="SourceHanSansMedium" FontSize="36"
+               Text="電流、電圧"
+               HorizontalOptions="Center" VerticalOptions="Center" />
+        <Label FontSize="36"
+               Text="電流、電圧"
+               HorizontalOptions="Center" VerticalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
