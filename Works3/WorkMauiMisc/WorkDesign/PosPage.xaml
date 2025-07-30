@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="WorkDesign.PosPage"
              Title="PosPage">
     <Grid RowDefinitions="48,*,48">
 
         <BoxView Grid.Row="0"
-                 BackgroundColor="{StaticResource BlueDefault}" />
+                 BackgroundColor="{StaticResource GrayDefault}" />
         <BoxView Grid.Row="2"
-                 BackgroundColor="{StaticResource BlueDefault}" />
+                 BackgroundColor="{StaticResource GrayDefault}" />
 
         <Grid Grid.Row="1"
               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto"
               BackgroundColor="White">
 
             <Grid Grid.Row="0"
-                  ColumnDefinitions="*,Auto"
-                  Padding="16,8,16,8">
+                  ColumnDefinitions="*,Auto,24"
+                  Padding="16,8,0,8">
                 <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="数量" />
+                       FontSize="18" FontAttributes="Bold"
+                       Text="数量"
+                       VerticalOptions="End" />
                 <Label Grid.Column="1"
-                       Text="3点" />
+                       FontSize="18"
+                       Text="3点"
+                       TextColor="{StaticResource BlueDarken2}"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="1"
@@ -30,13 +36,17 @@
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
             <Grid Grid.Row="2"
-                  ColumnDefinitions="*,Auto"
-                  Padding="16,8,16,8">
+                  ColumnDefinitions="*,Auto,24"
+                  Padding="16,8,0,8">
                 <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="小計" />
+                       FontSize="18" FontAttributes="Bold"
+                       Text="小計"
+                       VerticalOptions="End" />
                 <Label Grid.Column="1"
-                       Text="￥ 888" />
+                       FontSize="18"
+                       Text="￥ 888"
+                       TextColor="{StaticResource BlueDarken2}"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="3"
@@ -44,17 +54,26 @@
                      Margin="16,0,0,0"
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
-            <Grid Grid.Row="4"
-                  ColumnDefinitions="*,Auto,Auto"
-                  Padding="16,8,16,8">
-                <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="値引・割引" />
-                <Label Grid.Column="1"
-                       Text="￥ 0" />
-                <Label Grid.Column="2"
-                       Text="&gt;" />
-            </Grid>
+            <toolkit:SfEffectsView Grid.Row="4"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="*,Auto,24"
+                      Padding="16,8,0,8">
+                    <Label Grid.Column="0"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="値引・割引"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="1"
+                           FontSize="18"
+                           Text="￥ 0"
+                           TextColor="{StaticResource BlueDarken2}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="2"
+                           FontSize="18"
+                           Text="›"
+                           TextColor="{StaticResource GrayDarken1}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
             <BoxView Grid.Row="5"
                      HeightRequest="0.5"
@@ -62,28 +81,43 @@
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
             <Grid Grid.Row="6"
-                  ColumnDefinitions="*,Auto"
-                  Padding="16,8,16,8">
+                  ColumnDefinitions="*,Auto,24"
+                  Padding="16,8,0,8">
                 <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="外税 8%" />
+                       VerticalOptions="End">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span FontSize="18" FontAttributes="Bold"
+                                  Text="外税" />
+                            <Span FontSize="14" FontAttributes="Bold"
+                                  Text=" 8%"
+                                  TextColor="{StaticResource GrayDefault}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
                 <Label Grid.Column="1"
-                       Text="￥ 0" />
+                       FontSize="18"
+                       Text="￥ 0"
+                       TextColor="{StaticResource BlueDarken2}"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="7"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
             <Grid Grid.Row="8"
-                  ColumnDefinitions="*,Auto"
-                  Padding="16,8,16,8">
+                  ColumnDefinitions="*,Auto,24"
+                  Padding="16,8,0,8">
                 <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="合計" />
+                       FontSize="18" FontAttributes="Bold"
+                       Text="合計"
+                       VerticalOptions="End" />
                 <Label Grid.Column="1"
                        FontSize="36"
-                       Text="￥ 888" />
+                       Text="￥ 888"
+                       TextColor="{StaticResource BlueDarken2}"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="9"
@@ -91,21 +125,31 @@
                      Margin="16,0,0,0"
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
-            <Grid Grid.Row="10"
-                  ColumnDefinitions="*,Auto,Auto"
-                  Padding="16,8,16,8">
-                <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="内消費税" />
-                <Label Grid.Column="1"
-                       Text="(￥ 65)" />
-                <Label Grid.Column="2"
-                       Text="&gt;" />
-            </Grid>
+            <toolkit:SfEffectsView Grid.Row="10"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="*,Auto,24"
+                      Padding="16,8,0,8">
+                    <Label Grid.Column="0"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="内消費税"
+                           TextColor="{StaticResource GrayDefault}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="1"
+                           FontSize="18"
+                           Text="(￥ 65)"
+                           TextColor="{StaticResource GrayDefault}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="2"
+                           FontSize="18"
+                           Text="›"
+                           TextColor="{StaticResource GrayDarken1}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
             <BoxView Grid.Row="11"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
             <BoxView Grid.Row="12"
                      HeightRequest="16"
@@ -113,49 +157,74 @@
 
             <Grid Grid.Row="13"
                   ColumnDefinitions="*"
-                  Padding="16,8,16,8"
+                  Padding="16,8,0,8"
                   BackgroundColor="{StaticResource GrayLighten3}">
                 <Label Grid.Column="1"
-                       FontSize="18"
-                       Text="預金り" />
+                       FontSize="18" FontAttributes="Bold"
+                       Text="預金り"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="14"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
-            <Grid Grid.Row="15"
-                  ColumnDefinitions="16,*,Auto,Auto"
-                  Padding="16,8,16,8">
-                <Label Grid.Column="0"
-                       Text="○" />
-                <Label Grid.Column="1"
-                       FontSize="18"
-                       Text="現金預り" />
-                <Label Grid.Column="2"
-                       Text="￥888" />
-                <Label Grid.Column="3"
-                       Text="&gt;" />
-            </Grid>
+            <toolkit:SfEffectsView Grid.Row="15"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="24,*,Auto,24"
+                      Padding="16,8,0,8">
+                    <Label Grid.Column="0"
+                           FontFamily="MaterialIcons" FontSize="18"
+                           Text="{x:Static fonts:MaterialIcons.Money}"
+                           TextColor="{StaticResource BlueDarken1}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="現金預り"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="2"
+                           FontSize="18"
+                           Text="￥ 888"
+                           TextColor="{StaticResource BlueDarken2}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="3"
+                           FontSize="18"
+                           Text="›"
+                           TextColor="{StaticResource GrayDarken1}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
             <BoxView Grid.Row="16"
                      HeightRequest="0.5"
                      Margin="16,0,0,0"
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
-            <Grid Grid.Row="17"
-                  ColumnDefinitions="16,*,Auto,Auto"
-                  Padding="16,8,16,8">
-                <Label Grid.Column="0"
-                       Text="○" />
-                <Label Grid.Column="1"
-                       FontSize="18"
-                       Text="クレジット" />
-                <Label Grid.Column="2"
-                       Text="￥ 0" />
-                <Label Grid.Column="3"
-                       Text="&gt;" />
-            </Grid>
+            <toolkit:SfEffectsView Grid.Row="17"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="24,*,Auto,24"
+                      Padding="16,8,0,8">
+                    <Label Grid.Column="0"
+                           FontFamily="MaterialIcons" FontSize="18"
+                           Text="{x:Static fonts:MaterialIcons.Credit_card}"
+                           TextColor="{StaticResource BlueDarken1}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="クレジット"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="2"
+                           FontSize="18"
+                           Text="￥ 0"
+                           TextColor="{StaticResource BlueDarken2}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="3"
+                           FontSize="18"
+                           Text="›"
+                           TextColor="{StaticResource GrayDarken1}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
             <BoxView Grid.Row="18"
                      HeightRequest="0.5"
@@ -163,19 +232,22 @@
                      BackgroundColor="{StaticResource GrayLighten1}" />
 
             <Grid Grid.Row="19"
-                  ColumnDefinitions="*,Auto"
-                  Padding="16,8,16,8">
+                  ColumnDefinitions="*,Auto,24"
+                  Padding="16,8,0,8">
                 <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="お釣り" />
+                       FontSize="18" FontAttributes="Bold"
+                       Text="お釣り"
+                       VerticalOptions="End" />
                 <Label Grid.Column="1"
                        FontSize="28"
-                       Text="￥ 0" />
+                       Text="￥ 0"
+                       TextColor="{StaticResource BlueDarken2}"
+                       VerticalOptions="End" />
             </Grid>
 
             <BoxView Grid.Row="20"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
             <BoxView Grid.Row="21"
                      HeightRequest="16"
@@ -183,23 +255,32 @@
 
             <BoxView Grid.Row="22"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
-            <Grid Grid.Row="23"
-                  ColumnDefinitions="*,Auto,Auto"
-                  Padding="16,8,16,8">
-                <Label Grid.Column="0"
-                       FontSize="18"
-                       Text="担当者" />
-                <Label Grid.Column="1"
-                       Text="うさうさ" />
-                <Label Grid.Column="2"
-                       Text="&gt;" />
-            </Grid>
+            <toolkit:SfEffectsView Grid.Row="23"
+                                   TouchDownEffects="Ripple">
+                <Grid ColumnDefinitions="*,Auto,24"
+                      Padding="16,8,0,8">
+                    <Label Grid.Column="0"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="担当者"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="1"
+                           FontSize="18"
+                           Text="うさうさ"
+                           TextColor="{StaticResource BlueDarken2}"
+                           VerticalOptions="End" />
+                    <Label Grid.Column="2"
+                           FontSize="18"
+                           Text="›"
+                           TextColor="{StaticResource GrayDefault}"
+                           HorizontalOptions="Center" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
             <BoxView Grid.Row="24"
                      HeightRequest="1"
-                     BackgroundColor="{StaticResource GrayDarken1}" />
+                     BackgroundColor="{StaticResource GrayLighten1}" />
 
             <BoxView Grid.Row="25"
                      BackgroundColor="{StaticResource GrayLighten3}" />
@@ -210,28 +291,50 @@
                         HeightRequest="72"
                         Padding="0"
                         FontSize="14"
-                        Text="閉店セール" />
+                        Text="価格リセット"
+                        TextColor="White"
+                        BackgroundColor="{StaticResource RedDefault}"
+                        CornerRadius="0" />
                 <Button Grid.Column="1"
                         HeightRequest="72"
                         Padding="0"
                         FontSize="14"
-                        Text="価格リセット" />
+                        Text="閉店セール"
+                        TextColor="White"
+                        BackgroundColor="{StaticResource OrangeDefault}"
+                        CornerRadius="0" />
                 <Button Grid.Column="2"
                         HeightRequest="72"
                         Padding="0"
                         FontSize="14"
-                        Text="会員得点" />
+                        Text="会員得点"
+                        TextColor="White"
+                        BackgroundColor="{StaticResource CyanDefault}"
+                        CornerRadius="0" />
                 <Button Grid.Column="3"
                         HeightRequest="72"
                         Padding="0"
                         FontSize="14"
-                        Text="メルマガ割引" />
+                        Text="メルマガ割引"
+                        TextColor="White"
+                        BackgroundColor="{StaticResource GreenDefault}"
+                        CornerRadius="0" />
             </Grid>
 
             <Button Grid.Row="28"
                     HeightRequest="72"
                     FontSize="24"
-                    Text="チェックアウト" />
+                    Text="チェックアウト"
+                    TextColor="White"
+                    BackgroundColor="{StaticResource LightBlueDefault}"
+                    ContentLayout="Left" CornerRadius="0">
+                <Button.ImageSource>
+                    <FontImageSource Color="White"
+                                     FontFamily="MaterialIcons"
+                                     Glyph="{x:Static fonts:MaterialIcons.Check_circle_outline}"
+                                     Size="24" />
+                </Button.ImageSource>
+            </Button>
 
         </Grid>
 

@@ -20,8 +20,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
-                fonts.AddFont("OpenSans-Regular.ttf", "NotoSerifJPMedium");
-                fonts.AddFont("OpenSans-Semibold.ttf", "NotoSerifJPRegular");
+                fonts.AddFont("ipaexm.ttf", "IPAexMincho");
+                fonts.AddFont("Oxanium-Regular.ttf", "OxaniumRegular");
             });
 
 #if DEBUG

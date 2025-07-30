@@ -1,6 +1,9 @@
+namespace WorkDesign;
+
+using Fonts;
+
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
-namespace WorkDesign;
 using Microsoft.Extensions.Logging;
 
 using Syncfusion.Maui.Toolkit.Hosting;
@@ -18,6 +21,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
                 fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
                 fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
                 fonts.AddFont("ipaexm.ttf", "IPAexMincho");
