@@ -23,6 +23,7 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Login.png" />
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/UI_Pos.png" />
 <img width="25%" src="Document/UI_Radar.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
