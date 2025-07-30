@@ -3,10 +3,238 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkDesign.PosPage"
              Title="PosPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="48,*,48">
+
+        <BoxView Grid.Row="0"
+                 BackgroundColor="{StaticResource BlueDefault}" />
+        <BoxView Grid.Row="2"
+                 BackgroundColor="{StaticResource BlueDefault}" />
+
+        <Grid Grid.Row="1"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto"
+              BackgroundColor="White">
+
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="数量" />
+                <Label Grid.Column="1"
+                       Text="3点" />
+            </Grid>
+
+            <BoxView Grid.Row="1"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="小計" />
+                <Label Grid.Column="1"
+                       Text="￥ 888" />
+            </Grid>
+
+            <BoxView Grid.Row="3"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="4"
+                  ColumnDefinitions="*,Auto,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="値引・割引" />
+                <Label Grid.Column="1"
+                       Text="￥ 0" />
+                <Label Grid.Column="2"
+                       Text="&gt;" />
+            </Grid>
+
+            <BoxView Grid.Row="5"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="6"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="外税 8%" />
+                <Label Grid.Column="1"
+                       Text="￥ 0" />
+            </Grid>
+
+            <BoxView Grid.Row="7"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <Grid Grid.Row="8"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="合計" />
+                <Label Grid.Column="1"
+                       FontSize="36"
+                       Text="￥ 888" />
+            </Grid>
+
+            <BoxView Grid.Row="9"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="10"
+                  ColumnDefinitions="*,Auto,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="内消費税" />
+                <Label Grid.Column="1"
+                       Text="(￥ 65)" />
+                <Label Grid.Column="2"
+                       Text="&gt;" />
+            </Grid>
+
+            <BoxView Grid.Row="11"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <BoxView Grid.Row="12"
+                     HeightRequest="16"
+                     BackgroundColor="{StaticResource GrayLighten3}" />
+
+            <Grid Grid.Row="13"
+                  ColumnDefinitions="*"
+                  Padding="16,8,16,8"
+                  BackgroundColor="{StaticResource GrayLighten3}">
+                <Label Grid.Column="1"
+                       FontSize="18"
+                       Text="預金り" />
+            </Grid>
+
+            <BoxView Grid.Row="14"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <Grid Grid.Row="15"
+                  ColumnDefinitions="16,*,Auto,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       Text="○" />
+                <Label Grid.Column="1"
+                       FontSize="18"
+                       Text="現金預り" />
+                <Label Grid.Column="2"
+                       Text="￥888" />
+                <Label Grid.Column="3"
+                       Text="&gt;" />
+            </Grid>
+
+            <BoxView Grid.Row="16"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="17"
+                  ColumnDefinitions="16,*,Auto,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       Text="○" />
+                <Label Grid.Column="1"
+                       FontSize="18"
+                       Text="クレジット" />
+                <Label Grid.Column="2"
+                       Text="￥ 0" />
+                <Label Grid.Column="3"
+                       Text="&gt;" />
+            </Grid>
+
+            <BoxView Grid.Row="18"
+                     HeightRequest="0.5"
+                     Margin="16,0,0,0"
+                     BackgroundColor="{StaticResource GrayLighten1}" />
+
+            <Grid Grid.Row="19"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="お釣り" />
+                <Label Grid.Column="1"
+                       FontSize="28"
+                       Text="￥ 0" />
+            </Grid>
+
+            <BoxView Grid.Row="20"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <BoxView Grid.Row="21"
+                     HeightRequest="16"
+                     BackgroundColor="{StaticResource GrayLighten3}" />
+
+            <BoxView Grid.Row="22"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <Grid Grid.Row="23"
+                  ColumnDefinitions="*,Auto,Auto"
+                  Padding="16,8,16,8">
+                <Label Grid.Column="0"
+                       FontSize="18"
+                       Text="担当者" />
+                <Label Grid.Column="1"
+                       Text="うさうさ" />
+                <Label Grid.Column="2"
+                       Text="&gt;" />
+            </Grid>
+
+            <BoxView Grid.Row="24"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource GrayDarken1}" />
+
+            <BoxView Grid.Row="25"
+                     BackgroundColor="{StaticResource GrayLighten3}" />
+
+            <Grid Grid.Row="26"
+                  ColumnDefinitions="*,*,*,*">
+                <Button Grid.Column="0"
+                        HeightRequest="72"
+                        Padding="0"
+                        FontSize="14"
+                        Text="閉店セール" />
+                <Button Grid.Column="1"
+                        HeightRequest="72"
+                        Padding="0"
+                        FontSize="14"
+                        Text="価格リセット" />
+                <Button Grid.Column="2"
+                        HeightRequest="72"
+                        Padding="0"
+                        FontSize="14"
+                        Text="会員得点" />
+                <Button Grid.Column="3"
+                        HeightRequest="72"
+                        Padding="0"
+                        FontSize="14"
+                        Text="メルマガ割引" />
+            </Grid>
+
+            <Button Grid.Row="28"
+                    HeightRequest="72"
+                    FontSize="24"
+                    Text="チェックアウト" />
+
+        </Grid>
+
+    </Grid>
+
 </ContentPage>

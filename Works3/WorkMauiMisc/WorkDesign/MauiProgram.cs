@@ -18,12 +18,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                //fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
-                SKFontFactory.AddFont(fonts, "DSEG7Classic-Regular.ttf", "DSEG7");
-                //fonts.AddFont("NotoSerifJP-Medium.ttf", "NotoSerifJPMedium");
-                //fonts.AddFont("NotoSerifJP-Regular.ttf", "NotoSerifJPRegular");
-                SKFontFactory.AddFont(fonts, "NotoSerifJP-Medium.ttf", "NotoSerifJP-Medium");
-                SKFontFactory.AddFont(fonts, "NotoSerifJP-Regular.ttf", "NotoSerifJP-Regular");
+                fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
             })
             .ConfigureCustomBehaviors();
 
