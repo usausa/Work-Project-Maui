@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.FontPage"
+             Title="FontPage">
+    <VerticalStackLayout>
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Default" />
+        <Label FontSize="18"
+               Text="1234567890" />
+        <Label FontSize="18"
+               Text="作戦 編成 出撃" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="IPAex明朝" />
+        <Label FontFamily="IPAexMincho" FontSize="18"
+               Text="1234567890" />
+        <Label FontFamily="IPAexMincho" FontSize="18"
+               Text="作戦 編成 出撃" />
+        <Label FontFamily="IPAexMincho" FontSize="18" FontAttributes="Bold"
+               Text="1234567890" />
+        <Label FontFamily="IPAexMincho" FontSize="18" FontAttributes="Bold"
+               Text="作戦 編成 出撃" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="DSEG7" />
+        <Label FontFamily="DSEG7" FontSize="18"
+               Text="1234567890" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="851Gkktt" />
+        <Label FontFamily="Gkktt" FontSize="18"
+               Text="+(1234567890) ABCDEFG" />
+
+        <!--
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="NotoSerifJP" />
+        <Label FontFamily="NotoSerifJPRegular" FontSize="12"
+               Text="作戦 編成 出撃" />
+        <Label FontFamily="NotoSerifJPRegular" FontSize="18"
+               Text="作戦 編成 出撃" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="NotoSerifJP" />
+        <Label FontFamily="NotoSerifJPMedium" FontSize="12"
+               Text="作戦 編成 出撃" />
+        <Label FontFamily="NotoSerifJPMedium" FontSize="18"
+               Text="作戦 編成 出撃" />
+        -->
+
+        <!--
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Michroma" />
+        <Label FontFamily="Michroma" FontSize="12"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="Michroma" FontSize="18"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="Michroma" FontSize="24"
+               Text="+(1234567890) ABCDEFG" />
+        -->
+
+        <!--
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Orbitron" />
+        <Label FontFamily="OrbitronRegular" FontSize="12"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OrbitronRegular" FontSize="18"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OrbitronRegular" FontSize="24"
+               Text="+(1234567890) ABCDEFG" />
+        -->
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Oxanium" />
+        <Label FontFamily="OxaniumRegular" FontSize="12"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OxaniumRegular" FontSize="18"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OxaniumRegular" FontSize="24"
+               Text="+(1234567890) ABCDEFG" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Oxanium" />
+        <Label FontFamily="OxaniumMedium" FontSize="12"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OxaniumMedium" FontSize="18"
+               Text="+(1234567890) ABCDEFG" />
+        <Label FontFamily="OxaniumMedium" FontSize="24"
+               Text="+(1234567890) ABCDEFG" />
+
+    </VerticalStackLayout>
+</ContentPage>
