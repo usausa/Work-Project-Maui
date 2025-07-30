@@ -205,6 +205,8 @@ public static partial class MauiProgram
         fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
         fonts.AddFont("MaterialIcons-Regular.ttf", MaterialIcons.FontFamily);
+        fonts.AddFont("ipaexm.ttf", "IPAexMincho");
+        fonts.AddFont("Oxanium-Regular.ttf", "OxaniumRegular");
         fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
         fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
     }
