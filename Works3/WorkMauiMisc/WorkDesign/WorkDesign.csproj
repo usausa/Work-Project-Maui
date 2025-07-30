@@ -71,13 +71,4 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="PosPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="StickPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 </Project>
