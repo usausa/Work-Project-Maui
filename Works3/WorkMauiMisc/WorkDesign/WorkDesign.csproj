@@ -75,9 +75,6 @@
 	  <MauiXaml Update="PosPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="SocialPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="StickPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
