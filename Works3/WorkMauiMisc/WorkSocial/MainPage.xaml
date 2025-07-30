@@ -3,9 +3,137 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkSocial.MainPage">
 
-    <Grid RowDefinitions="*">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
 
-        <Image Aspect="AspectFill" Source="background.png" />
+        <Image Grid.RowSpan="8"
+               Aspect="AspectFill" Source="background.png" />
+
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,Auto,Auto,*,Auto"
+              Padding="1"
+              ColumnSpacing="1">
+            <BoxView Grid.Column="0"
+                     WidthRequest="48" HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" VerticalOptions="Start" />
+            <BoxView Grid.Column="1"
+                     WidthRequest="48" HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" VerticalOptions="Start" />
+            <BoxView Grid.Column="2"
+                     WidthRequest="48" HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" VerticalOptions="Start" />
+
+            <BoxView Grid.Column="4"
+                     WidthRequest="180" HeightRequest="80"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto,Auto,Auto"
+              Padding="1"
+              ColumnSpacing="1">
+            <BoxView Grid.Column="1"
+                     WidthRequest="120" HeightRequest="24"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Column="2"
+                     WidthRequest="120" HeightRequest="24"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Column="3"
+                     WidthRequest="120" HeightRequest="24"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+        </Grid>
+
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*,Auto"
+              Padding="1"
+              ColumnSpacing="1" RowSpacing="1">
+
+            <BoxView Grid.Column="1"
+                     WidthRequest="144" HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="1" />
+
+        </Grid>
+
+        <Grid Grid.Row="5"
+              ColumnDefinitions="*,*"
+              Padding="1"
+              ColumnSpacing="1" RowSpacing="1">
+
+            <BoxView Grid.Row="0" Grid.Column="0"
+                     HeightRequest="120"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+
+            <BoxView Grid.Row="0" Grid.Column="1"
+                     HeightRequest="120"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+
+        </Grid>
+
+        <Grid Grid.Row="7"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="*,*,*,*"
+              Padding="1"
+              ColumnSpacing="1" RowSpacing="1">
+            <BoxView Grid.Column="0"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Column="1"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Column="2"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Column="3"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+
+            <BoxView Grid.Row="1" Grid.Column="0"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="1" Grid.Column="1"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="1" Grid.Column="2"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="1" Grid.Column="3"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+
+            <BoxView Grid.Row="2" Grid.Column="0"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="2" Grid.Column="1"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="2" Grid.Column="2"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+            <BoxView Grid.Row="2" Grid.Column="3"
+                     HeightRequest="48"
+                     BackgroundColor="Black"
+                     Opacity="0.5" />
+        </Grid>
 
     </Grid>
 

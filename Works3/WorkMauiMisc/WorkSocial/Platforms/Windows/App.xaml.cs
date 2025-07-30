@@ -19,8 +19,8 @@ public partial class App : MauiWinUIApplication
     {
         this.InitializeComponent();
 
-        var windowWidth = 480;
-        var windowHeight = 960;
+        var windowWidth = 540;
+        var windowHeight = 1080;
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
             var nativeWindow = handler.PlatformView;
