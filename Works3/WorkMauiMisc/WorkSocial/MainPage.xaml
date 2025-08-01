@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:app="clr-namespace:WorkSocial"
              x:Class="WorkSocial.MainPage">
 
     <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
@@ -9,56 +10,41 @@
                Aspect="AspectFill" Source="background.png" />
 
         <Grid Grid.Row="0"
-              ColumnDefinitions="Auto,Auto,Auto,*,Auto"
+              ColumnDefinitions="Auto,*,Auto"
               Padding="1"
               ColumnSpacing="1">
-            <BoxView Grid.Column="0"
-                     WidthRequest="48" HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" VerticalOptions="Start" />
-            <BoxView Grid.Column="1"
-                     WidthRequest="48" HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" VerticalOptions="Start" />
-            <BoxView Grid.Column="2"
-                     WidthRequest="48" HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" VerticalOptions="Start" />
+            <HorizontalStackLayout Grid.Column="0"
+                                   Spacing="1" VerticalOptions="Start">
+                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
+                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
+                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
+            </HorizontalStackLayout>
 
-            <BoxView Grid.Column="4"
-                     WidthRequest="180" HeightRequest="80"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialPlayer Grid.Column="2"
+                              WidthRequest="180" HeightRequest="80" />
         </Grid>
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*,Auto,Auto,Auto"
               Padding="1"
               ColumnSpacing="1">
-            <BoxView Grid.Column="1"
-                     WidthRequest="120" HeightRequest="24"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Column="2"
-                     WidthRequest="120" HeightRequest="24"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Column="3"
-                     WidthRequest="120" HeightRequest="24"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialCounter Grid.Column="1"
+                               WidthRequest="120" HeightRequest="24" />
+            <app:SocialCounter Grid.Column="2"
+                               WidthRequest="120" HeightRequest="24" />
+            <app:SocialCounter Grid.Column="3"
+                               WidthRequest="120" HeightRequest="24" />
         </Grid>
 
         <Grid Grid.Row="3"
               ColumnDefinitions="*,Auto"
               Padding="1"
               ColumnSpacing="1" RowSpacing="1">
-
-            <BoxView Grid.Column="1"
-                     WidthRequest="144" HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="1" />
-
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="1">
+                <app:SocialNotification WidthRequest="144" HeightRequest="48" />
+                <app:SocialNotification WidthRequest="144" HeightRequest="48" />
+            </VerticalStackLayout>
         </Grid>
 
         <Grid Grid.Row="5"
@@ -66,15 +52,11 @@
               Padding="1"
               ColumnSpacing="1" RowSpacing="1">
 
-            <BoxView Grid.Row="0" Grid.Column="0"
-                     HeightRequest="120"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialStatus Grid.Row="0" Grid.Column="0"
+                              HeightRequest="120" />
 
-            <BoxView Grid.Row="0" Grid.Column="1"
-                     HeightRequest="120"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialInformation Grid.Row="0" Grid.Column="1"
+                                   HeightRequest="120" />
 
         </Grid>
 
@@ -83,56 +65,32 @@
               ColumnDefinitions="*,*,*,*"
               Padding="1"
               ColumnSpacing="1" RowSpacing="1">
-            <BoxView Grid.Column="0"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Column="1"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Column="2"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Column="3"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialMenu Grid.Column="0"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Column="1"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Column="2"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Column="3"
+                            HeightRequest="48" />
 
-            <BoxView Grid.Row="1" Grid.Column="0"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="1" Grid.Column="1"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="1" Grid.Column="2"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="1" Grid.Column="3"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialMenu Grid.Row="1" Grid.Column="0"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="1" Grid.Column="1"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="1" Grid.Column="2"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="1" Grid.Column="3"
+                            HeightRequest="48" />
 
-            <BoxView Grid.Row="2" Grid.Column="0"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="2" Grid.Column="1"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="2" Grid.Column="2"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
-            <BoxView Grid.Row="2" Grid.Column="3"
-                     HeightRequest="48"
-                     BackgroundColor="Black"
-                     Opacity="0.5" />
+            <app:SocialMenu Grid.Row="2" Grid.Column="0"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="2" Grid.Column="1"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="2" Grid.Column="2"
+                            HeightRequest="48" />
+            <app:SocialMenu Grid.Row="2" Grid.Column="3"
+                            HeightRequest="48" />
         </Grid>
 
     </Grid>
