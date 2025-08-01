@@ -24,10 +24,10 @@ public sealed class SocialIcon : SKCanvasView
 
         Debug.WriteLine($"* Icon ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
 
-        var rect = new SKRoundRect(e.Info.Rect, 4);
+        var rect = new SKRoundRect(e.Info.Rect, (int)(4 * DeviceDisplay.MainDisplayInfo.Density));
         canvas.ClipRoundRect(rect, SKClipOperation.Intersect, true);
 
-        canvas.Clear(SKColors.Black.WithAlpha(128));
+        canvas.Clear(new SKColor(248, 248, 248));
 
         // TODO
     }
