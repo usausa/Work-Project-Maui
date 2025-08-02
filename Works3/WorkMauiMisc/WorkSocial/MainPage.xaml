@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!-- ReSharper disable MarkupAttributeTypo -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="clr-namespace:WorkSocial"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="WorkSocial.MainPage">
 
     <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
@@ -11,28 +13,29 @@
 
         <Grid Grid.Row="0"
               ColumnDefinitions="Auto,*,Auto"
-              Padding="1"
-              ColumnSpacing="1">
+              Padding="2"
+              ColumnSpacing="2">
             <Border Grid.Column="0"
                     WidthRequest="154" HeightRequest="56"
                     BackgroundColor="White"
                     Opacity="0.5" StrokeShape="RoundRectangle 4" StrokeThickness="0" VerticalOptions="Start" />
             <HorizontalStackLayout Grid.Column="0"
                                    Padding="4"
-                                   Spacing="1" VerticalOptions="Start">
+                                   Spacing="2" VerticalOptions="Start">
                 <app:SocialIcon WidthRequest="48" HeightRequest="48" />
                 <app:SocialIcon WidthRequest="48" HeightRequest="48" />
                 <app:SocialIcon WidthRequest="48" HeightRequest="48" />
             </HorizontalStackLayout>
 
             <app:SocialPlayer Grid.Column="2"
-                              WidthRequest="180" HeightRequest="80" />
+                              WidthRequest="180" HeightRequest="80"
+                              Color="{StaticResource TealAccent3}" />
         </Grid>
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*,Auto,Auto,Auto"
-              Padding="1"
-              ColumnSpacing="1">
+              Padding="2"
+              ColumnSpacing="2">
             <app:SocialCounter Grid.Column="1"
                                WidthRequest="120" HeightRequest="24" />
             <app:SocialCounter Grid.Column="2"
@@ -43,61 +46,161 @@
 
         <Grid Grid.Row="3"
               ColumnDefinitions="*,Auto"
-              Padding="1"
-              ColumnSpacing="1" RowSpacing="1">
+              Padding="2"
+              ColumnSpacing="2" RowSpacing="2">
             <VerticalStackLayout Grid.Column="1"
-                                 Spacing="1">
-                <app:SocialNotification WidthRequest="144" HeightRequest="48" />
-                <app:SocialNotification WidthRequest="144" HeightRequest="48" />
+                                 Spacing="2">
+                <app:SocialNotification WidthRequest="168" HeightRequest="48"
+                                        Color="{StaticResource YellowDefault}"
+                                        Percent="87" Text1="Melee Weapon" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
+                <app:SocialNotification WidthRequest="168" HeightRequest="48"
+                                        Color="{StaticResource YellowDefault}"
+                                        Percent="65" Text1="Golem" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
+                <app:SocialNotification WidthRequest="168" HeightRequest="48"
+                                        Color="{StaticResource YellowDefault}"
+                                        Percent="23" Text1="Vehicle" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
             </VerticalStackLayout>
         </Grid>
 
         <Grid Grid.Row="5"
               ColumnDefinitions="*,*"
-              Padding="1"
-              ColumnSpacing="1" RowSpacing="1">
+              Padding="2"
+              ColumnSpacing="2" RowSpacing="2">
 
             <app:SocialStatus Grid.Row="0" Grid.Column="0"
-                              HeightRequest="120" />
+                              HeightRequest="120"
+                              Color="{StaticResource PinkDefault}" />
 
             <app:SocialInformation Grid.Row="0" Grid.Column="1"
-                                   HeightRequest="120" />
+                                   HeightRequest="120"
+                                   Color="{StaticResource LimeDefault}" />
 
         </Grid>
 
         <Grid Grid.Row="7"
               RowDefinitions="Auto,Auto,Auto"
-              ColumnDefinitions="*,*,*,*"
-              Padding="1"
-              ColumnSpacing="1" RowSpacing="1">
-            <app:SocialMenu Grid.Column="0"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Column="1"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Column="2"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Column="3"
-                            HeightRequest="48" />
+              ColumnDefinitions="*,*,*"
+              Padding="2"
+              ColumnSpacing="2" RowSpacing="2">
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="作戦" Text2="OPERATION" />
+                    <Border WidthRequest="16" HeightRequest="16"
+                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
+                            VerticalOptions="Start">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label FontSize="12" FontAttributes="Bold"
+                               Text="!"
+                               TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="編成" Text2="FORMATION" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    FontSize1="20" Text1="法術支援要請" Text2="ART" />
+                </Grid>
+            </toolkit:SfEffectsView>
 
-            <app:SocialMenu Grid.Row="1" Grid.Column="0"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="1" Grid.Column="1"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="1" Grid.Column="2"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="1" Grid.Column="3"
-                            HeightRequest="48" />
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="騎体整備" Text2="HANGAR" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="倉庫" Text2="WEAPON STORAGE" />
+                    <Border WidthRequest="16" HeightRequest="16"
+                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
+                            VerticalOptions="Start">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label FontSize="12" FontAttributes="Bold"
+                               Text="!"
+                               TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="技術開発" Text2="DEVELOPMENT" />
+                    <Border WidthRequest="16" HeightRequest="16"
+                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
+                            VerticalOptions="Start">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label FontSize="12" FontAttributes="Bold"
+                               Text="!"
+                               TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
 
-            <app:SocialMenu Grid.Row="2" Grid.Column="0"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="2" Grid.Column="1"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="2" Grid.Column="2"
-                            HeightRequest="48" />
-            <app:SocialMenu Grid.Row="2" Grid.Column="3"
-                            HeightRequest="48" />
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="作戦中止" Text2="ABORT MISSION" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="司令部" Text2="HEADQUARTER" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialMenu HeightRequest="48"
+                                    Color="{StaticResource OrangeDefault}"
+                                    Text1="公演" Text2="LIVE" />
+                </Grid>
+            </toolkit:SfEffectsView>
         </Grid>
 
     </Grid>
 
 </ContentPage>
+<!-- ReSharper restore MarkupAttributeTypo -->

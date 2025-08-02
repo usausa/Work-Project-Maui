@@ -28,6 +28,8 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        FontFaces.Initialize();
+
         return builder.Build();
     }
 }
