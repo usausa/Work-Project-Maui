@@ -9,18 +9,12 @@ Template project for MAUI.
 
 # イメージ
 
-## Device
+## Device/Sample/UI
 
 <img width="25%" src="Document/Device_BLE.png" />
 <img width="25%" src="Document/Device_NFC.png" />
 <img width="25%" src="Document/Device_Activity.png" />
-
-## Sample
-
 <img width="25%" src="Document/Sample_CV.png" />
-
-## UI
-
 <img width="25%" src="Document/UI_Deck.png" />
 <img width="25%" src="Document/UI_Load.png" />
 <img width="25%" src="Document/UI_Login.png" />
