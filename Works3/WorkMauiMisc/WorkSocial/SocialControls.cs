@@ -37,9 +37,16 @@ public static class DrawResources
 {
     public static SKBitmap PlayerBitmap { get; private set; } = default!;
 
+    public static SKBitmap GemBitmap { get; private set; } = default!;
+    public static SKBitmap WrenchBitmap { get; private set; } = default!;
+    public static SKBitmap MoneyBitmap { get; private set; } = default!;
+
     public static void Initialize()
     {
         PlayerBitmap = LoadBitmap("player.jpg");
+        WrenchBitmap = LoadBitmap("wrench.png");
+        GemBitmap = LoadBitmap("gem.png");
+        MoneyBitmap = LoadBitmap("moneybag.png");
     }
 
     private static SKBitmap LoadBitmap(string fontName)
@@ -48,7 +55,6 @@ public static class DrawResources
         return SKBitmap.Decode(stream);
     }
 }
-
 
 //--------------------------------------------------------------------------------
 // Icon
@@ -95,10 +101,81 @@ public sealed class SocialIcon : SKCanvasView
 
         canvas.Clear(SKColors.Black.WithAlpha(128));
 
-        paint.Color = new SKColor(238, 238, 238);
+        paint.Color = new SKColor(224, 224, 224);
         var x = (info.Width - font.MeasureText(text)) / 2;
-        var y = (info.Height - fontHeight) / 2;
-        canvas.DrawText(text, x, y + fontHeight, font, paint);
+        var y = ((info.Height - fontHeight) / 2) + fontHeight;
+        canvas.DrawText(text, x, y, font, paint);
+    }
+}
+
+//--------------------------------------------------------------------------------
+// Episode
+//--------------------------------------------------------------------------------
+public sealed class SocialEpisode : SKCanvasView
+{
+    public static readonly BindableProperty ColorProperty = BindableProperty.Create(
+        nameof(Color),
+        typeof(Color),
+        typeof(SocialPlayer),
+        propertyChanged: Invalidate);
+
+    public Color Color
+    {
+        get => (Color)GetValue(ColorProperty);
+        set => SetValue(ColorProperty, value);
+    }
+
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(
+        nameof(Text),
+        typeof(string),
+        typeof(SocialAlert),
+        propertyChanged: Invalidate);
+
+    public string Text
+    {
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
+
+    public SocialEpisode()
+    {
+        BackgroundColor = Colors.Transparent;
+        PaintSurface += OnPaintSurface;
+    }
+
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((SocialEpisode)bindable).InvalidateSurface();
+    }
+
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
+    {
+        var canvas = e.Surface.Canvas;
+        var info = e.Info;
+
+        var leftBorder = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
+        var margin = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
+
+        var text = Text;
+
+        using var font = new SKFont(FontFaces.NotoSerifJP, size: (int)(16 * DeviceDisplay.MainDisplayInfo.Density));
+
+        using var paint = new SKPaint();
+        paint.Style = SKPaintStyle.Fill;
+        paint.IsAntialias = true;
+
+        var fontHeight = (int)Math.Ceiling(-font.Metrics.Ascent);
+
+        // Border
+        canvas.Clear(SKColors.Black.WithAlpha(128));
+
+        paint.Color = Color.ToSKColor();
+        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
+
+        paint.Color = new SKColor(238, 238, 238);
+        var x = margin + leftBorder;
+        var y = fontHeight;
+        canvas.DrawText(text, x, y, font, paint);
     }
 }
 
@@ -207,6 +284,29 @@ public sealed class SocialPlayer : SKCanvasView
 //--------------------------------------------------------------------------------
 public sealed class SocialCounter : SKCanvasView
 {
+    public static readonly BindableProperty IconProperty = BindableProperty.Create(
+        nameof(Icon),
+        typeof(string),
+        typeof(SocialCounter),
+        propertyChanged: Invalidate);
+
+    public string Icon
+    {
+        get => (string)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public static readonly BindableProperty CounterProperty = BindableProperty.Create(
+        nameof(Counter),
+        typeof(int),
+        typeof(SocialCounter),
+        propertyChanged: Invalidate);
+
+    public int Counter
+    {
+        get => (int)GetValue(CounterProperty);
+        set => SetValue(CounterProperty, value);
+    }
 
     public SocialCounter()
     {
@@ -214,14 +314,54 @@ public sealed class SocialCounter : SKCanvasView
         PaintSurface += OnPaintSurface;
     }
 
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((SocialCounter)bindable).InvalidateSurface();
+    }
+
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
 
-        // TODO
+        using var font = new SKFont(FontFaces.Oxanium, size: (int)(16 * DeviceDisplay.MainDisplayInfo.Density));
+
+        using var paint = new SKPaint();
+        paint.Style = SKPaintStyle.Fill;
+        paint.IsAntialias = true;
+
+        var space = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
+
+        var fontHeight = (int)Math.Ceiling(-font.Metrics.Ascent);
 
         canvas.Clear(SKColors.Black.WithAlpha(128));
+
+        // Icon
+        var bitmap = Icon switch
+        {
+            "wrench" => DrawResources.WrenchBitmap,
+            "gem" => DrawResources.GemBitmap,
+            "money" => DrawResources.MoneyBitmap,
+            _ => default!
+        };
+        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(space, space, info.Height - space, info.Height - space));
+
+        // Button
+        paint.Color = new SKColor(96, 125, 139);
+        canvas.DrawRect(new SKRect(info.Rect.Right - info.Height + space, space, info.Rect.Right - space, info.Height - space), paint);
+
+        paint.Color = new SKColor(224, 224, 224);
+        var text = "+";
+        var x = info.Rect.Right - info.Height + ((info.Height - font.MeasureText(text)) / 2);
+        var y = ((info.Height - fontHeight) / 2) + fontHeight;
+        canvas.DrawText(text, x, y, font, paint);
+
+        // Counter
+        paint.Color = new SKColor(224, 224, 224);
+        text = $"{Counter:N0}";
+        x = info.Rect.Right - info.Height - font.MeasureText(text);
+        y = ((info.Height - fontHeight) / 2) + fontHeight;
+        canvas.DrawText(text, x, y, font, paint);
     }
 }
 
@@ -242,7 +382,7 @@ public sealed class SocialAlert : SKCanvasView
         set => SetValue(ColorProperty, value);
     }
 
-    public static readonly BindableProperty Text1Property = BindableProperty.Create(
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(
         nameof(Text),
         typeof(string),
         typeof(SocialAlert),
@@ -250,8 +390,8 @@ public sealed class SocialAlert : SKCanvasView
 
     public string Text
     {
-        get => (string)GetValue(Text1Property);
-        set => SetValue(Text1Property, value);
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
     }
 
     public SocialAlert()
@@ -285,10 +425,8 @@ public sealed class SocialAlert : SKCanvasView
         paint.IsAntialias = true;
 
         // Background
-        paint.Color = SKColors.Black.WithAlpha(160);
-        canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
-        paint.Color = SKColors.Black.WithAlpha(128);
-        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Height), paint);
+        paint.Color = SKColors.Black.WithAlpha(192);
+        canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, info.Height), paint);
 
         // Border
         paint.Color = Color.ToSKColor();
@@ -400,6 +538,7 @@ public sealed class SocialNotification : SKCanvasView
         var margin = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
         var leftBorder = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
         var bottomBorder = (int)(3 * DeviceDisplay.MainDisplayInfo.Density);
+        var progressWidth = info.Width - leftBorder - (space * 2);
 
         using var font1 = new SKFont(FontFaces.Oxanium, size: (int)(12 * DeviceDisplay.MainDisplayInfo.Density));
         using var font2 = new SKFont(FontFaces.NotoSerifJP, size: (int)(14 * DeviceDisplay.MainDisplayInfo.Density));
@@ -423,8 +562,8 @@ public sealed class SocialNotification : SKCanvasView
         paint.Color = Color.ToSKColor();
         canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
 
-        paint.Color = ProgressColor.ToSKColor();//.WithAlpha(128);
-        canvas.DrawRect(new SKRect(leftBorder, info.Height - bottomBorder, (float)((info.Width - leftBorder) * Percent / 100), info.Height), paint);
+        paint.Color = ProgressColor.ToSKColor();
+        canvas.DrawRect(new SKRect(leftBorder + space, info.Height - bottomBorder, leftBorder + space + (int)(progressWidth * Percent / 100), info.Height), paint);
 
         var x = margin + leftBorder;
         var y = margin;
@@ -460,6 +599,114 @@ public sealed class SocialStatus : SKCanvasView
         set => SetValue(ColorProperty, value);
     }
 
+    public static readonly BindableProperty Color1Property = BindableProperty.Create(
+        nameof(Color1),
+        typeof(Color),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public Color Color1
+    {
+        get => (Color)GetValue(Color1Property);
+        set => SetValue(Color1Property, value);
+    }
+
+    public static readonly BindableProperty Color2Property = BindableProperty.Create(
+        nameof(Color2),
+        typeof(Color),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public Color Color2
+    {
+        get => (Color)GetValue(Color2Property);
+        set => SetValue(Color2Property, value);
+    }
+
+    public static readonly BindableProperty Color3Property = BindableProperty.Create(
+        nameof(Color3),
+        typeof(Color),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public Color Color3
+    {
+        get => (Color)GetValue(Color3Property);
+        set => SetValue(Color3Property, value);
+    }
+
+    public static readonly BindableProperty Value1Property = BindableProperty.Create(
+        nameof(Value1),
+        typeof(int),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public int Value1
+    {
+        get => (int)GetValue(Value1Property);
+        set => SetValue(Value1Property, value);
+    }
+
+    public static readonly BindableProperty Value2Property = BindableProperty.Create(
+        nameof(Value2),
+        typeof(int),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public int Value2
+    {
+        get => (int)GetValue(Value2Property);
+        set => SetValue(Value2Property, value);
+    }
+
+    public static readonly BindableProperty Value3Property = BindableProperty.Create(
+        nameof(Value3),
+        typeof(int),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public int Value3
+    {
+        get => (int)GetValue(Value3Property);
+        set => SetValue(Value3Property, value);
+    }
+
+    public static readonly BindableProperty Text1Property = BindableProperty.Create(
+        nameof(Text1),
+        typeof(string),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public string Text1
+    {
+        get => (string)GetValue(Text1Property);
+        set => SetValue(Text1Property, value);
+    }
+
+    public static readonly BindableProperty Text2Property = BindableProperty.Create(
+        nameof(Text2),
+        typeof(string),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public string Text2
+    {
+        get => (string)GetValue(Text2Property);
+        set => SetValue(Text2Property, value);
+    }
+
+    public static readonly BindableProperty Text3Property = BindableProperty.Create(
+        nameof(Text3),
+        typeof(string),
+        typeof(SocialStatus),
+        propertyChanged: Invalidate);
+
+    public string Text3
+    {
+        get => (string)GetValue(Text3Property);
+        set => SetValue(Text3Property, value);
+    }
+
     public SocialStatus()
     {
         BackgroundColor = Colors.Transparent;
@@ -478,10 +725,14 @@ public sealed class SocialStatus : SKCanvasView
 
         var margin = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
         var leftBorder = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
+        var circleRadius = (int)(9 * DeviceDisplay.MainDisplayInfo.Density);
+        var circleMargin = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
+        var statusHeight = (int)(32 * DeviceDisplay.MainDisplayInfo.Density);
+        var levelHeight = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
 
         using var font1 = new SKFont(FontFaces.NotoSerifJP, size: (int)(16 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(FontFaces.NotoSerifJP, size: (int)(14 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font3 = new SKFont(FontFaces.Oxanium, size: (int)(10 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font2 = new SKFont(FontFaces.Oxanium, size: (int)(16 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font3 = new SKFont(FontFaces.MaterialIcons, size: (int)(12 * DeviceDisplay.MainDisplayInfo.Density));
 
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
@@ -511,7 +762,92 @@ public sealed class SocialStatus : SKCanvasView
         y += font1Height;
         canvas.DrawText("甲種聖装 瑠璃", x, y, font1, paint);
 
-        // TODO
+        // TODO form
+
+        y += margin * 2;
+
+        var centerX = x + circleMargin + circleRadius;
+        var centerY = y + (statusHeight / 2);
+        var levelStart = centerX + circleMargin + circleRadius;
+        var levelWidth = info.Rect.Right - margin - leftBorder - levelStart;
+
+        // TODO Color2?
+
+        // Status1
+        paint.Color = Color1.ToSKColor();
+        canvas.DrawCircle(centerX, centerY, circleRadius, paint);
+
+        paint.Color = new SKColor(238, 238, 238);
+        var text1 = Text1;
+        x = (int)(centerX - (font3.MeasureText(text1) / 2));
+        y = centerY + (font3Height / 2);
+        canvas.DrawText(text1, x, y, font3, paint);
+
+        // Value1
+        var value1 = Value1;
+        var value1Text = $"{value1:N0}";
+        x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
+        y = centerY + (font2Height / 2) - levelHeight;
+        canvas.DrawText(value1Text, x, y, font2, paint);
+
+        // Line1
+        y = centerY + (font2Height / 2);
+        paint.Color = new SKColor(33, 33, 33);
+        canvas.DrawRect(levelStart, y, levelWidth, levelHeight, paint);
+        paint.Color = Color1.ToSKColor();
+        canvas.DrawRect(levelStart, y, (int)((double)levelWidth * value1 / 65536), levelHeight, paint);
+
+        centerY += statusHeight;
+
+        // Status2
+        paint.Color = Color2.ToSKColor();
+        canvas.DrawCircle(centerX, centerY, circleRadius, paint);
+
+        paint.Color = new SKColor(238, 238, 238);
+        var text2 = Text2;
+        x = (int)(centerX - (font3.MeasureText(text2) / 2));
+        y = centerY + (font3Height / 2);
+        canvas.DrawText(text2, x, y, font3, paint);
+
+        // Value2
+        var value2 = Value2;
+        var value2Text = $"{value2:N0}";
+        x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
+        y = centerY + (font2Height / 2) - levelHeight;
+        canvas.DrawText(value2Text, x, y, font2, paint);
+
+        // Line2
+        y = centerY + (font2Height / 2);
+        paint.Color = new SKColor(33, 33, 33);
+        canvas.DrawRect(levelStart, y, levelWidth, levelHeight, paint);
+        paint.Color = Color2.ToSKColor();
+        canvas.DrawRect(levelStart, y, (int)((double)levelWidth * value2 / 65536), levelHeight, paint);
+
+        centerY += statusHeight;
+
+        // Status3
+        paint.Color = Color3.ToSKColor();
+        canvas.DrawCircle(centerX, centerY, circleRadius, paint);
+
+        paint.Color = new SKColor(238, 238, 238);
+        var text3 = Text3;
+        x = (int)(centerX - (font3.MeasureText(text3) / 2));
+        y = centerY + (font3Height / 2);
+        canvas.DrawText(text3, x, y, font3, paint);
+
+        // Value3
+        var value3 = Value3;
+        var value3Text = $"{value3:N0}";
+        x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
+        y = centerY + (font2Height / 2) - levelHeight;
+        canvas.DrawText(value3Text, x, y, font2, paint);
+
+        // Line3
+        y = centerY + (font2Height / 2);
+        paint.Color = new SKColor(33, 33, 33);
+        canvas.DrawRect(levelStart, y, levelWidth, levelHeight, paint);
+        paint.Color = Color3.ToSKColor();
+        canvas.DrawRect(levelStart, y, (int)((double)levelWidth * value3 / 65536), levelHeight, paint);
     }
 }
 

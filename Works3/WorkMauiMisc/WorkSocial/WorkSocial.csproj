@@ -60,7 +60,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Raw\player.jpg" />
+	  <MauiImage Include="Resources\Raw\gem.png" />
+	  <MauiImage Include="Resources\Raw\moneybag.png" />
 	</ItemGroup>
 
 	<ItemGroup>
