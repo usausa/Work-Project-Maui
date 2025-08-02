@@ -33,6 +33,23 @@ public static class FontFaces
 }
 // ReSharper restore InconsistentNaming
 
+public static class DrawResources
+{
+    public static SKBitmap PlayerBitmap { get; private set; } = default!;
+
+    public static void Initialize()
+    {
+        PlayerBitmap = LoadBitmap("player.jpg");
+    }
+
+    private static SKBitmap LoadBitmap(string fontName)
+    {
+        using var stream = FileSystem.OpenAppPackageFileAsync(fontName).GetAwaiter().GetResult();
+        return SKBitmap.Decode(stream);
+    }
+}
+
+
 //--------------------------------------------------------------------------------
 // Icon
 //--------------------------------------------------------------------------------
@@ -79,8 +96,8 @@ public sealed class SocialIcon : SKCanvasView
         canvas.Clear(SKColors.Black.WithAlpha(128));
 
         paint.Color = new SKColor(238, 238, 238);
-        var x = (info.Rect.Width - font.MeasureText(text)) / 2;
-        var y = (info.Rect.Height - fontHeight) / 2;
+        var x = (info.Width - font.MeasureText(text)) / 2;
+        var y = (info.Height - fontHeight) / 2;
         canvas.DrawText(text, x, y + fontHeight, font, paint);
     }
 }
@@ -102,6 +119,30 @@ public sealed class SocialPlayer : SKCanvasView
         set => SetValue(ColorProperty, value);
     }
 
+    public static readonly BindableProperty PercentProperty = BindableProperty.Create(
+        nameof(Percent),
+        typeof(double),
+        typeof(SocialPlayer),
+        propertyChanged: Invalidate);
+
+    public double Percent
+    {
+        get => (double)GetValue(PercentProperty);
+        set => SetValue(PercentProperty, value);
+    }
+
+    public static readonly BindableProperty ProgressColorProperty = BindableProperty.Create(
+        nameof(ProgressColor),
+        typeof(Color),
+        typeof(SocialPlayer),
+        propertyChanged: Invalidate);
+
+    public Color ProgressColor
+    {
+        get => (Color)GetValue(ProgressColorProperty);
+        set => SetValue(ProgressColorProperty, value);
+    }
+
     public SocialPlayer()
     {
         BackgroundColor = Colors.Transparent;
@@ -119,20 +160,45 @@ public sealed class SocialPlayer : SKCanvasView
         var info = e.Info;
 
         var leftBorder = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
-        var bottomBorder = (int)(1 * DeviceDisplay.MainDisplayInfo.Density);
+        var imageBorder = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
+        var expHeight = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
+        var imageSize = info.Height - (imageBorder * 2);
+        var imageRight = leftBorder + imageSize + (imageBorder * 2);
+        var space = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
+        var expWidth = (info.Rect.Right - imageBorder) - (imageRight + space);
 
-        canvas.Clear(SKColors.Black.WithAlpha(128));
+        using var font1 = new SKFont(FontFaces.Oxanium, size: (int)(14 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font2 = new SKFont(FontFaces.NotoSerifJP, size: (int)(18 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font3 = new SKFont(FontFaces.Oxanium, size: (int)(16 * DeviceDisplay.MainDisplayInfo.Density));
+        var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
+        var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
+
+        using var paint = new SKPaint();
+        paint.Style = SKPaintStyle.Fill;
+        paint.IsAntialias = true;
 
         // Border
-        using var borderPaint = new SKPaint();
-        borderPaint.Color = Color.ToSKColor();
-        borderPaint.Style = SKPaintStyle.Fill;
-        var leftRect = new SKRect(0, 0, leftBorder, info.Rect.Height);
-        canvas.DrawRect(leftRect, borderPaint);
-        var borderRect = new SKRect(0, info.Rect.Height - bottomBorder, info.Rect.Width, info.Rect.Height);
-        canvas.DrawRect(borderRect, borderPaint);
+        paint.Color = Color.ToSKColor();
+        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
+        paint.Color = SKColors.Black.WithAlpha(224);
+        canvas.DrawRect(new SKRect(leftBorder, 0, imageRight, info.Height), paint);
+        paint.Color = SKColors.Black.WithAlpha(128);
+        canvas.DrawRect(new SKRect(imageRight, 0, info.Rect.Right, info.Height), paint);
 
-        // TODO
+        var bitmap = DrawResources.PlayerBitmap;
+        canvas.DrawBitmap(bitmap, new SKRect(0, 0, bitmap.Width, bitmap.Height), new SKRect(leftBorder + imageBorder, imageBorder, leftBorder + imageBorder + imageSize, imageBorder + imageSize));
+
+        paint.Color = new SKColor(238, 238, 238);
+        canvas.DrawText("PLAYER", imageRight + space, imageBorder + font1Height, font1, paint);
+        canvas.DrawText("山奥通信", imageRight + space, imageBorder + font1Height + font2Height, font2, paint);
+
+        var level = "LEVEL 13";
+        canvas.DrawText(level, info.Rect.Right - font3.MeasureText(level) - imageBorder, info.Height - imageBorder - expHeight - space, font3, paint);
+
+        paint.Color = new SKColor(33, 33, 33);
+        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + expWidth, info.Height - imageBorder - expHeight), paint);
+        paint.Color = ProgressColor.ToSKColor();
+        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + (int)(expWidth * Percent / 100), info.Height - imageBorder - expHeight), paint);
     }
 }
 
@@ -152,6 +218,10 @@ public sealed class SocialCounter : SKCanvasView
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+
+        // TODO
+
+        canvas.Clear(SKColors.Black.WithAlpha(128));
     }
 }
 
@@ -215,12 +285,11 @@ public sealed class SocialAlert : SKCanvasView
         paint.IsAntialias = true;
 
         // Background
-        paint.Color = SKColors.Black.WithAlpha(192);
+        paint.Color = SKColors.Black.WithAlpha(160);
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SKColors.Black.WithAlpha(128);
-        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Height), paint);
 
-        // TODO
         // Border
         paint.Color = Color.ToSKColor();
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, border), paint);
@@ -228,9 +297,9 @@ public sealed class SocialAlert : SKCanvasView
         canvas.DrawRect(new SKRect(0, 0, sideBorder, titleHeight), paint);
         canvas.DrawRect(new SKRect(info.Rect.Right - sideBorder, 0, info.Rect.Right, titleHeight), paint);
 
-        canvas.DrawText("BEAST ALERT", (info.Rect.Width - font1.MeasureText("BEAST ALERT")) / 2, border + space + font1Height, font1, paint);
+        canvas.DrawText("BEAST ALERT", (info.Width - font1.MeasureText("BEAST ALERT")) / 2, border + space + font1Height, font1, paint);
 
-        canvas.DrawText("牛鬼級旅団出現", (info.Rect.Width - font2.MeasureText("牛鬼級旅団出現")) / 2, titleHeight + font2Height, font2, paint);
+        canvas.DrawText("牛鬼級旅団出現", (info.Width - font2.MeasureText("牛鬼級旅団出現")) / 2, titleHeight + font2Height, font2, paint);
     }
 }
 
@@ -299,6 +368,18 @@ public sealed class SocialNotification : SKCanvasView
         set => SetValue(PercentProperty, value);
     }
 
+    public static readonly BindableProperty ProgressColorProperty = BindableProperty.Create(
+        nameof(ProgressColor),
+        typeof(Color),
+        typeof(SocialNotification),
+        propertyChanged: Invalidate);
+
+    public Color ProgressColor
+    {
+        get => (Color)GetValue(ProgressColorProperty);
+        set => SetValue(ProgressColorProperty, value);
+    }
+
     public SocialNotification()
     {
         BackgroundColor = Colors.Transparent;
@@ -333,17 +414,17 @@ public sealed class SocialNotification : SKCanvasView
         paint.IsAntialias = true;
 
         // Background
-        paint.Color = SKColors.Black.WithAlpha(192);
+        paint.Color = SKColors.Black.WithAlpha(160);
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SKColors.Black.WithAlpha(128);
-        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Height), paint);
 
         // Border
         paint.Color = Color.ToSKColor();
-        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
 
-        paint.Color = new SKColor(224, 224, 224).WithAlpha(128);
-        canvas.DrawRect(new SKRect(leftBorder, info.Rect.Height - bottomBorder, (float)((info.Rect.Width - leftBorder) * Percent / 100), info.Rect.Height), paint);
+        paint.Color = ProgressColor.ToSKColor();//.WithAlpha(128);
+        canvas.DrawRect(new SKRect(leftBorder, info.Height - bottomBorder, (float)((info.Width - leftBorder) * Percent / 100), info.Height), paint);
 
         var x = margin + leftBorder;
         var y = margin;
@@ -412,14 +493,14 @@ public sealed class SocialStatus : SKCanvasView
         paint.IsAntialias = true;
 
         // Background
-        paint.Color = SKColors.Black.WithAlpha(192);
+        paint.Color = SKColors.Black.WithAlpha(160);
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SKColors.Black.WithAlpha(128);
-        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Height), paint);
 
         // Border
         paint.Color = Color.ToSKColor();
-        var leftRect = new SKRect(0, 0, leftBorder, info.Rect.Height);
+        var leftRect = new SKRect(0, 0, leftBorder, info.Height);
         canvas.DrawRect(leftRect, paint);
 
         var x = leftBorder + margin;
@@ -484,14 +565,14 @@ public sealed class SocialInformation : SKCanvasView
         paint.IsAntialias = true;
 
         // Background
-        paint.Color = SKColors.Black.WithAlpha(192);
+        paint.Color = SKColors.Black.WithAlpha(160);
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SKColors.Black.WithAlpha(128);
-        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Height), paint);
 
         // Border
         paint.Color = Color.ToSKColor();
-        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Rect.Height), paint);
+        canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
 
         var x = leftBorder + margin;
         var y = 0;
@@ -613,7 +694,7 @@ public sealed class SocialMenu : SKCanvasView
 
         var border = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
         var leftBorder = (int)(8 * DeviceDisplay.MainDisplayInfo.Density);
-        var clientRect = new SKRect(leftBorder, border, info.Rect.Width - border, info.Rect.Height - border);
+        var clientRect = new SKRect(leftBorder, border, info.Width - border, info.Height - border);
 
         var text1 = Text1;
         var text2 = Text2;
@@ -636,7 +717,7 @@ public sealed class SocialMenu : SKCanvasView
         using var paint = new SKPaint();
         paint.Color = Color.ToSKColor();
         paint.Style = SKPaintStyle.Fill;
-        var leftRect = new SKRect(0, 0, leftBorder, info.Rect.Height);
+        var leftRect = new SKRect(0, 0, leftBorder, info.Height);
         canvas.DrawRect(leftRect, paint);
 
         // Text1
@@ -647,7 +728,7 @@ public sealed class SocialMenu : SKCanvasView
         var text1Width = font1.MeasureText(text1, text1Paint);
         var text1X = (int)((clientRect.Width - text1Width) / 2) + leftBorder;
         var text1H = (int)Math.Ceiling(-font1.Metrics.Ascent);
-        var text1Y = ((info.Rect.Height - text2Height - (border * 5)) / 2) + (text1H / 2);
+        var text1Y = ((info.Height - text2Height - (border * 5)) / 2) + (text1H / 2);
         canvas.DrawText(text1, text1X, text1Y, font1, text1Paint);
 
         // Text2
@@ -658,6 +739,6 @@ public sealed class SocialMenu : SKCanvasView
 
         var text2Width = font2.MeasureText(text2, text2Paint);
         var text2X = (int)((clientRect.Width - text2Width) / 2) + leftBorder;
-        canvas.DrawText(text2, text2X, info.Rect.Height - (border * 3), font2, text2Paint);
+        canvas.DrawText(text2, text2X, info.Height - (border * 3), font2, text2Paint);
     }
 }

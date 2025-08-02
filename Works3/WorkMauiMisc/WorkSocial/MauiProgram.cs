@@ -29,6 +29,7 @@ public static class MauiProgram
 #endif
 
         FontFaces.Initialize();
+        DrawResources.Initialize();
 
         return builder.Build();
     }

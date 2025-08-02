@@ -71,8 +71,10 @@
 
 
             <app:SocialPlayer Grid.Column="4"
-                              WidthRequest="180" HeightRequest="80"
-                              Color="{StaticResource TealAccent3}" />
+                              WidthRequest="208" HeightRequest="64"
+                              Color="{StaticResource TealAccent3}"
+                              Percent="45"
+                              ProgressColor="{StaticResource TealLighten4}" />
         </Grid>
 
         <Grid Grid.Row="1"
@@ -108,13 +110,19 @@
                                  Spacing="2">
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="87" Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
+                                        Percent="87"
+                                        ProgressColor="{StaticResource YellowLighten4}"
+                                        Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="65" Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
+                                        Percent="65"
+                                        ProgressColor="{StaticResource YellowLighten4}"
+                                        Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="23" Text1="VECICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
+                                        Percent="23"
+                                        ProgressColor="{StaticResource YellowLighten4}"
+                                        Text1="VECICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
             </VerticalStackLayout>
         </Grid>
 
