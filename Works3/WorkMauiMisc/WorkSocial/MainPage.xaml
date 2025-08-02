@@ -3,6 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="clr-namespace:WorkSocial"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="WorkSocial.MainPage">
 
@@ -12,22 +13,64 @@
                Aspect="AspectFill" Source="background.png" />
 
         <Grid Grid.Row="0"
-              ColumnDefinitions="Auto,*,Auto"
+              ColumnDefinitions="Auto,Auto,Auto,*,Auto"
               Padding="2"
               ColumnSpacing="2">
-            <Border Grid.Column="0"
-                    WidthRequest="154" HeightRequest="56"
-                    BackgroundColor="White"
-                    Opacity="0.5" StrokeShape="RoundRectangle 4" StrokeThickness="0" VerticalOptions="Start" />
-            <HorizontalStackLayout Grid.Column="0"
-                                   Padding="4"
-                                   Spacing="2" VerticalOptions="Start">
-                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
-                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
-                <app:SocialIcon WidthRequest="48" HeightRequest="48" />
-            </HorizontalStackLayout>
+            <toolkit:SfEffectsView Grid.Column="0"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialIcon WidthRequest="48" HeightRequest="48"
+                                    Text="{x:Static fonts:MaterialIcons.Settings}"
+                                    VerticalOptions="Start" />
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Column="1"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialIcon WidthRequest="48" HeightRequest="48"
+                                    Text="{x:Static fonts:MaterialIcons.Mail}"
+                                    VerticalOptions="Start" />
+                    <Border WidthRequest="16" HeightRequest="16"
+                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
+                            VerticalOptions="Start">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label FontSize="12" FontAttributes="Bold"
+                               Text="!"
+                               TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
+            <toolkit:SfEffectsView Grid.Column="2"
+                                   TouchDownEffects="Ripple">
+                <Grid>
+                    <app:SocialIcon WidthRequest="48" HeightRequest="48"
+                                    Text="{x:Static fonts:MaterialIcons.Info}"
+                                    VerticalOptions="Start" />
+                    <Border WidthRequest="16" HeightRequest="16"
+                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
+                            VerticalOptions="Start">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
+                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label FontSize="12" FontAttributes="Bold"
+                               Text="!"
+                               TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </toolkit:SfEffectsView>
 
-            <app:SocialPlayer Grid.Column="2"
+
+            <app:SocialPlayer Grid.Column="4"
                               WidthRequest="180" HeightRequest="80"
                               Color="{StaticResource TealAccent3}" />
         </Grid>
@@ -44,21 +87,34 @@
                                WidthRequest="120" HeightRequest="24" />
         </Grid>
 
+        <Grid Grid.Row="2"
+              ColumnDefinitions="Auto,*"
+              Padding="2"
+              ColumnSpacing="2" RowSpacing="2">
+
+            <VerticalStackLayout Grid.Column="0"
+                                 Spacing="2">
+                <app:SocialAlert WidthRequest="120" HeightRequest="40"
+                                 Color="{StaticResource RedDefault}" />
+            </VerticalStackLayout>
+        </Grid>
+
         <Grid Grid.Row="3"
               ColumnDefinitions="*,Auto"
               Padding="2"
               ColumnSpacing="2" RowSpacing="2">
+
             <VerticalStackLayout Grid.Column="1"
                                  Spacing="2">
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="87" Text1="Melee Weapon" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
+                                        Percent="87" Text1="MELEE WEAPON" Text2="04式単分子長刀" Text3="SWOARD OF SLASSING" />
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="65" Text1="Golem" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
+                                        Percent="65" Text1="GOLEM" Text2="大型機動兵器戦鎚IV型" Text3="WARHAMMER TYPE=4R" />
                 <app:SocialNotification WidthRequest="168" HeightRequest="48"
                                         Color="{StaticResource YellowDefault}"
-                                        Percent="23" Text1="Vehicle" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
+                                        Percent="23" Text1="VECICLE" Text2="08式騎士輸送用装甲車両" Text3="SLEIPNIR" />
             </VerticalStackLayout>
         </Grid>
 

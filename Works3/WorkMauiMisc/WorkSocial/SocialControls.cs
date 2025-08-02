@@ -1,17 +1,10 @@
-using System.Diagnostics;
-
 namespace WorkSocial;
 
-using Android.Text;
-
-using Microsoft.Maui;
+using Microsoft.Maui.Controls;
 
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
-
-using static Android.Print.PrintAttributes;
-using static System.Net.Mime.MediaTypeNames;
 
 // ReSharper disable InconsistentNaming
 public static class FontFaces
@@ -22,11 +15,14 @@ public static class FontFaces
 
     public static SKTypeface Gkktt { get; private set; } = default!;
 
+    public static SKTypeface MaterialIcons { get; private set; } = default!;
+
     public static void Initialize()
     {
         NotoSerifJP = LoadFont("NotoSerifJP-Medium.ttf");
         Oxanium = LoadFont("Oxanium-Regular.ttf");
         Gkktt = LoadFont("851Gkktt_005.ttf");
+        MaterialIcons = LoadFont("MaterialIcons-Regular.ttf");
     }
 
     private static SKTypeface LoadFont(string fontName)
@@ -42,10 +38,27 @@ public static class FontFaces
 //--------------------------------------------------------------------------------
 public sealed class SocialIcon : SKCanvasView
 {
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(
+        nameof(Text),
+        typeof(string),
+        typeof(SocialAlert),
+        propertyChanged: Invalidate);
+
+    public string Text
+    {
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
+
     public SocialIcon()
     {
         BackgroundColor = Colors.Transparent;
         PaintSurface += OnPaintSurface;
+    }
+
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((SocialIcon)bindable).InvalidateSurface();
     }
 
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
@@ -53,14 +66,22 @@ public sealed class SocialIcon : SKCanvasView
         var canvas = e.Surface.Canvas;
         var info = e.Info;
 
-        Debug.WriteLine($"* Icon ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
+        var text = Text;
 
-        var rect = new SKRoundRect(e.Info.Rect, (int)(4 * DeviceDisplay.MainDisplayInfo.Density));
-        canvas.ClipRoundRect(rect, SKClipOperation.Intersect, true);
+        using var font = new SKFont(FontFaces.MaterialIcons, size: (int)(48 * DeviceDisplay.MainDisplayInfo.Density));
 
-        canvas.Clear(new SKColor(248, 248, 248));
+        using var paint = new SKPaint();
+        paint.Style = SKPaintStyle.Fill;
+        paint.IsAntialias = true;
 
-        // TODO
+        var fontHeight = (int)Math.Ceiling(-font.Metrics.Ascent);
+
+        canvas.Clear(SKColors.Black.WithAlpha(128));
+
+        paint.Color = new SKColor(238, 238, 238);
+        var x = (info.Rect.Width - font.MeasureText(text)) / 2;
+        var y = (info.Rect.Height - fontHeight) / 2;
+        canvas.DrawText(text, x, y + fontHeight, font, paint);
     }
 }
 
@@ -97,11 +118,8 @@ public sealed class SocialPlayer : SKCanvasView
         var canvas = e.Surface.Canvas;
         var info = e.Info;
 
-        Debug.WriteLine($"* Player ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
-
         var leftBorder = (int)(4 * DeviceDisplay.MainDisplayInfo.Density);
         var bottomBorder = (int)(1 * DeviceDisplay.MainDisplayInfo.Density);
-
 
         canvas.Clear(SKColors.Black.WithAlpha(128));
 
@@ -123,6 +141,7 @@ public sealed class SocialPlayer : SKCanvasView
 //--------------------------------------------------------------------------------
 public sealed class SocialCounter : SKCanvasView
 {
+
     public SocialCounter()
     {
         BackgroundColor = Colors.Transparent;
@@ -133,15 +152,87 @@ public sealed class SocialCounter : SKCanvasView
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
-
-        Debug.WriteLine($"* Counter ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
-
-        canvas.Clear(SKColors.Black.WithAlpha(128));
-
-        // TODO
     }
 }
 
+//--------------------------------------------------------------------------------
+// Alert
+//--------------------------------------------------------------------------------
+public sealed class SocialAlert : SKCanvasView
+{
+    public static readonly BindableProperty ColorProperty = BindableProperty.Create(
+        nameof(Color),
+        typeof(Color),
+        typeof(SocialAlert),
+        propertyChanged: Invalidate);
+
+    public Color Color
+    {
+        get => (Color)GetValue(ColorProperty);
+        set => SetValue(ColorProperty, value);
+    }
+
+    public static readonly BindableProperty Text1Property = BindableProperty.Create(
+        nameof(Text),
+        typeof(string),
+        typeof(SocialAlert),
+        propertyChanged: Invalidate);
+
+    public string Text
+    {
+        get => (string)GetValue(Text1Property);
+        set => SetValue(Text1Property, value);
+    }
+
+    public SocialAlert()
+    {
+        BackgroundColor = Colors.Transparent;
+        PaintSurface += OnPaintSurface;
+    }
+
+    private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
+    {
+        ((SocialAlert)bindable).InvalidateSurface();
+    }
+
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
+    {
+        var canvas = e.Surface.Canvas;
+        var info = e.Info;
+
+        var space = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
+        var border = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
+        var sideBorder = (int)(8 * DeviceDisplay.MainDisplayInfo.Density);
+
+        using var font1 = new SKFont(FontFaces.Oxanium, size: (int)(14 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font2 = new SKFont(FontFaces.NotoSerifJP, size: (int)(14 * DeviceDisplay.MainDisplayInfo.Density));
+        var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
+        var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
+        var titleHeight = font1Height + (border * 2) + (space * 2);
+
+        using var paint = new SKPaint();
+        paint.Style = SKPaintStyle.Fill;
+        paint.IsAntialias = true;
+
+        // Background
+        paint.Color = SKColors.Black.WithAlpha(192);
+        canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
+        paint.Color = SKColors.Black.WithAlpha(128);
+        canvas.DrawRect(new SKRect(0, titleHeight, info.Rect.Right, info.Rect.Height), paint);
+
+        // TODO
+        // Border
+        paint.Color = Color.ToSKColor();
+        canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, border), paint);
+        canvas.DrawRect(new SKRect(0, titleHeight - border, info.Rect.Right, titleHeight), paint);
+        canvas.DrawRect(new SKRect(0, 0, sideBorder, titleHeight), paint);
+        canvas.DrawRect(new SKRect(info.Rect.Right - sideBorder, 0, info.Rect.Right, titleHeight), paint);
+
+        canvas.DrawText("BEAST ALERT", (info.Rect.Width - font1.MeasureText("BEAST ALERT")) / 2, border + space + font1Height, font1, paint);
+
+        canvas.DrawText("牛鬼級旅団出現", (info.Rect.Width - font2.MeasureText("牛鬼級旅団出現")) / 2, titleHeight + font2Height, font2, paint);
+    }
+}
 
 //--------------------------------------------------------------------------------
 // Notification
@@ -236,8 +327,6 @@ public sealed class SocialNotification : SKCanvasView
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
         var font3Height = (int)Math.Ceiling(font3.Metrics.Descent - font3.Metrics.Ascent);
         var titleHeight = font1Height + (margin * 2);
-
-        Debug.WriteLine($"* Notification ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
 
         using var paint = new SKPaint();
         paint.Style = SKPaintStyle.Fill;
@@ -390,8 +479,6 @@ public sealed class SocialInformation : SKCanvasView
         var font3Height = (int)Math.Ceiling(font3.Metrics.Descent - font3.Metrics.Ascent);
         var titleHeight = font1Height + (margin * 2);
 
-        Debug.WriteLine($"* Information ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
-
         using var paint = new SKPaint();
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
@@ -419,7 +506,7 @@ public sealed class SocialInformation : SKCanvasView
         y += font2Height;
         canvas.DrawText("辺境伯直属戦術機甲大隊", x, y, font2, paint);
         y += font3Height;
-        canvas.DrawText("WOLF grp", x, y, font3, paint);
+        canvas.DrawText("WOLF GRP", x, y, font3, paint);
         canvas.DrawText("MF-4000 x36", info.Rect.Right - margin - font3.MeasureText("MF-4000 x36"), y, font3, paint);
 
         y += margin;
@@ -427,7 +514,7 @@ public sealed class SocialInformation : SKCanvasView
         y += font2Height;
         canvas.DrawText("第二騎士団聖女計画特務中隊", x, y, font2, paint);
         y += font3Height;
-        canvas.DrawText("HOUND sqd", x, y, font3, paint);
+        canvas.DrawText("HOUND SQD", x, y, font3, paint);
         canvas.DrawText("TYPE-19E x10 + JXD-20", info.Rect.Right - margin - font3.MeasureText("TYPE-19E x10 + JXD-20"), y, font3, paint);
 
         y += margin;
@@ -436,7 +523,7 @@ public sealed class SocialInformation : SKCanvasView
         canvas.DrawText("第三騎士団突撃前衛部隊", x, y, font2, paint);
         y += font3Height;
         canvas.DrawText("VIPPERS", x, y, font3, paint);
-        canvas.DrawText("TYPE-19 Blood x8", info.Rect.Right - margin - font3.MeasureText("TYPE-19 Blood x8"), y, font3, paint);
+        canvas.DrawText("TYPE-19 BLOOD x8", info.Rect.Right - margin - font3.MeasureText("TYPE-19 BLOOD x8"), y, font3, paint);
     }
     // ReSharper restore StringLiteralTypo
 }
@@ -523,8 +610,6 @@ public sealed class SocialMenu : SKCanvasView
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
-
-        Debug.WriteLine($"* Menu ({info.Rect.Left},{info.Rect.Top},{info.Rect.Width},{info.Rect.Height}) ({info.Rect.Width / DeviceDisplay.MainDisplayInfo.Density},{info.Rect.Height / DeviceDisplay.MainDisplayInfo.Density})");
 
         var border = (int)(2 * DeviceDisplay.MainDisplayInfo.Density);
         var leftBorder = (int)(8 * DeviceDisplay.MainDisplayInfo.Density);
