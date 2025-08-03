@@ -761,8 +761,7 @@ public sealed class SocialStatus : SKCanvasView
 
         y += font1Height;
         canvas.DrawText("甲種聖装 瑠璃", x, y, font1, paint);
-
-        // TODO form
+        canvas.DrawText("A FORM", info.Rect.Right - margin - font2.MeasureText("A FORM"), y, font2, paint);
 
         y += margin * 2;
 
@@ -770,8 +769,6 @@ public sealed class SocialStatus : SKCanvasView
         var centerY = y + (statusHeight / 2);
         var levelStart = centerX + circleMargin + circleRadius;
         var levelWidth = info.Rect.Right - margin - leftBorder - levelStart;
-
-        // TODO Color2?
 
         // Status1
         paint.Color = Color1.ToSKColor();
