@@ -61,7 +61,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="Plugin.Maui.Calendar" Version="2.0.7" />
 		<PackageReference Include="Usa.Smart.Maui" Version="2.8.0" />
 		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.8.0" />
