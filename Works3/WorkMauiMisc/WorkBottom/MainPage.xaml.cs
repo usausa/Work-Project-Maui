@@ -6,4 +6,10 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
     }
+
+    private async void Button_OnClicked(object? sender, EventArgs e)
+    {
+        var sheet = new MyBottomSheet();
+        await sheet.ShowAsync();
+    }
 }

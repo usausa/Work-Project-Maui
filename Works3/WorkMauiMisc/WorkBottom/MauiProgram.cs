@@ -1,5 +1,7 @@
-﻿namespace WorkBottom;
+namespace WorkBottom;
 using Microsoft.Extensions.Logging;
+
+using Syncfusion.Maui.Toolkit.Hosting;
 
 public static class MauiProgram
 {
@@ -12,7 +14,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            .ConfigureSyncfusionToolkit();
 
 #if DEBUG
 		builder.Logging.AddDebug();
