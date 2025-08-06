@@ -267,6 +267,7 @@ public static partial class MauiProgram
         config.AddComponentsScreen();
         config.AddComponentsLocation();
         config.AddComponentsSpeech();
+        config.AddCommunication();
 
         // Messenger
         config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
