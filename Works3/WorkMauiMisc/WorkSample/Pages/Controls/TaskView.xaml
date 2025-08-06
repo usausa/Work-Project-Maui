@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:models="clr-namespace:WorkSample.Models"
+        xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit" xmlns:pageModels="clr-namespace:WorkSample.PageModels" xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+        x:Class="WorkSample.Pages.Controls.TaskView"
+        x:DataType="models:ProjectTask"
+        Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},
+                                     Dark={StaticResource DarkSecondaryBackground}}"
+        StrokeShape="RoundRectangle 20">
+
+    <effectsView:SfEffectsView HighlightBackground="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                                                     Dark={StaticResource LightOnDarkBackground}}"
+                               TouchDownEffects="Highlight">
+        <shimmer:SfShimmer BackgroundColor="Transparent"
+                           IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}"
+                           VerticalOptions="FillAndExpand">
+            <shimmer:SfShimmer.CustomView>
+                <Grid ColumnDefinitions="Auto,*"
+                      Padding="{OnIdiom 15,
+                                        Desktop=20}">
+                    <BoxView Style="{StaticResource ShimmerCustomViewStyle}"
+                             WidthRequest="24" HeightRequest="24"
+                             Margin="12,0" />
+                    <BoxView Grid.Column="1"
+                             Style="{StaticResource ShimmerCustomViewStyle}"
+                             HeightRequest="24"
+                             Margin="12,0" />
+                </Grid>
+            </shimmer:SfShimmer.CustomView>
+            <shimmer:SfShimmer.Content>
+                <Grid ColumnDefinitions="Auto,*"
+                      Padding="{OnIdiom 15,
+                                        Desktop=20}"
+                      ColumnSpacing="15">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToTaskCommand, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}"
+                                              CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+
+                    <CheckBox Grid.Column="0"
+                              CheckedChanged="CheckBox_CheckedChanged"
+                              IsChecked="{Binding IsCompleted, Mode=OneTime}"
+                              SemanticProperties.Description="{Binding Title}"
+                              VerticalOptions="Center" />
+
+                    <Label Grid.Column="1"
+                           Text="{Binding Title}"
+                           AutomationProperties.IsInAccessibleTree="False" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                </Grid>
+            </shimmer:SfShimmer.Content>
+        </shimmer:SfShimmer>
+    </effectsView:SfEffectsView>
+</Border>

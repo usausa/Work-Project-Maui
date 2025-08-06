@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:models="clr-namespace:WorkSample.Models"
+        x:Class="WorkSample.Pages.Controls.TagView"
+        x:DataType="models:Tag"
+        HeightRequest="32"
+        Padding="{OnPlatform '12,0,12,8',
+                             Android='12,0,12,0'}"
+        Background="{Binding DisplayColor}"
+        StrokeShape="RoundRectangle 16" StrokeThickness="0">
+
+    <Label x:Name="TitleLabel"
+           VerticalTextAlignment="Center"
+           FontSize="14"
+           Text="{Binding Title}"
+           TextColor="{AppThemeBinding Light={StaticResource LightBackground},
+                                       Dark={StaticResource DarkBackground}}"
+           VerticalOptions="Center" />
+</Border>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:WorkSample.Models"
+             xmlns:pageModels="clr-namespace:WorkSample.PageModels" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="WorkSample.Pages.ManageMetaPage"
+             x:DataType="pageModels:ManageMetaPageModel"
+             Title="Categories and Tags">
+
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}"
+                                        EventName="Appearing" />
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle"
+               TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="FontFamily" Value="OpenSansRegular" />
+            <Setter Property="FontSize" Value="{OnIdiom 16, Desktop=24}" />
+            <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
+            <Setter Property="MinimumHeightRequest" Value="44" />
+            <Setter Property="MinimumWidthRequest" Value="44" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding ResetCommand}"
+                     Text="Reset App" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource LayoutPadding}"
+                             Spacing="{StaticResource LayoutSpacing}">
+            <Label Style="{StaticResource Title2}"
+                   Text="Categories" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}"
+                                 Spacing="{StaticResource LayoutSpacing}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:Category">
+                        <Grid ColumnDefinitions="4*,3*,30,Auto"
+                              ColumnSpacing="{StaticResource LayoutSpacing}">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding Title}"
+                                   SemanticProperties.Description="Title" />
+                            <Entry x:Name="ColorEntry"
+                                   Grid.Column="1"
+                                   Text="{Binding Color}"
+                                   SemanticProperties.Description="Color" SemanticProperties.Hint="Category color in HEX format">
+                                <Entry.Behaviors>
+                                    <toolkit:TextValidationBehavior Flags="ValidateOnUnfocusing"
+                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                                    RegexPattern="^#(?:[0-9a-fA-F]{3}){1,2}$" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <BoxView Grid.Column="2"
+                                     WidthRequest="30" HeightRequest="30"
+                                     Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}"
+                                     SemanticProperties.HeadingLevel="None" VerticalOptions="Center" />
+
+                            <Button Grid.Column="3"
+                                    Command="{Binding DeleteCategoryCommand, Source={RelativeSource AncestorType={x:Type pageModels:ManageMetaPageModel}}, x:DataType=pageModels:ManageMetaPageModel}"
+                                    CommandParameter="{Binding .}"
+                                    Background="Transparent"
+                                    ImageSource="{StaticResource IconDelete}"
+                                    SemanticProperties.Description="Delete" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  Margin="0,10"
+                  ColumnSpacing="{StaticResource LayoutSpacing}">
+                <Button Grid.Column="0"
+                        HeightRequest="{OnIdiom 44,
+                                                Desktop=60}"
+                        Command="{Binding SaveCategoriesCommand}"
+                        Text="Save" />
+
+                <Button Grid.Column="1"
+                        Command="{Binding AddCategoryCommand}"
+                        ImageSource="{StaticResource IconAdd}"
+                        SemanticProperties.Description="Add" />
+            </Grid>
+
+            <Label Style="{StaticResource Title2}"
+                   Text="Tags" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tags}"
+                                 Spacing="{StaticResource LayoutSpacing}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:Tag">
+                        <Grid ColumnDefinitions="4*,3*,30,Auto"
+                              ColumnSpacing="{StaticResource LayoutSpacing}">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding Title}"
+                                   SemanticProperties.Description="Title" />
+                            <Entry x:Name="ColorEntry"
+                                   Grid.Column="1"
+                                   Text="{Binding Color}"
+                                   SemanticProperties.Description="Color" SemanticProperties.Hint="Tag color in HEX format">
+                                <Entry.Behaviors>
+                                    <toolkit:TextValidationBehavior Flags="ValidateOnUnfocusing"
+                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                                    RegexPattern="^#(?:[0-9a-fA-F]{3}){1,2}$" />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <BoxView Grid.Column="2"
+                                     WidthRequest="30" HeightRequest="30"
+                                     Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}"
+                                     SemanticProperties.HeadingLevel="None" VerticalOptions="Center" />
+
+                            <Button Grid.Column="3"
+                                    Command="{Binding DeleteTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ManageMetaPageModel}}, x:DataType=pageModels:ManageMetaPageModel}"
+                                    CommandParameter="{Binding .}"
+                                    Background="Transparent"
+                                    ImageSource="{StaticResource IconDelete}" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  Margin="0,10"
+                  ColumnSpacing="{StaticResource LayoutSpacing}">
+                <Button Grid.Column="0"
+                        HeightRequest="{OnIdiom 44,
+                                                Desktop=60}"
+                        Command="{Binding SaveTagsCommand}"
+                        Text="Save" />
+
+                <Button Grid.Column="1"
+                        Command="{Binding AddTagCommand}"
+                        ImageSource="{StaticResource IconAdd}"
+                        SemanticProperties.Description="Add" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

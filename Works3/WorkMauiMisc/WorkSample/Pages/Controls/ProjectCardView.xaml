@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:controls="clr-namespace:WorkSample.Pages.Controls"
+        xmlns:fonts="clr-namespace:Fonts"
+        xmlns:models="clr-namespace:WorkSample.Models"
+        xmlns:pageModels="clr-namespace:WorkSample.PageModels" xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+        x:Class="WorkSample.Pages.Controls.ProjectCardView"
+        x:DataType="models:Project"
+        Style="{StaticResource CardStyle}">
+    <shimmer:SfShimmer BackgroundColor="Transparent"
+                       IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}"
+                       VerticalOptions="FillAndExpand">
+        <shimmer:SfShimmer.CustomView>
+            <VerticalStackLayout Spacing="15">
+                <BoxView Style="{StaticResource ShimmerCustomViewStyle}"
+                         WidthRequest="24" HeightRequest="24"
+                         CornerRadius="48" HorizontalOptions="Start" VerticalOptions="Start" />
+                <BoxView Style="{StaticResource ShimmerCustomViewStyle}"
+                         HeightRequest="24" />
+                <BoxView Style="{StaticResource ShimmerCustomViewStyle}"
+                         HeightRequest="48" />
+                <BoxView Style="{StaticResource ShimmerCustomViewStyle}"
+                         HeightRequest="24"
+                         Margin="0,12" />
+            </VerticalStackLayout>
+        </shimmer:SfShimmer.CustomView>
+        <shimmer:SfShimmer.Content>
+            <VerticalStackLayout Spacing="15">
+                <Image Aspect="Center" HorizontalOptions="Start">
+                    <Image.Source>
+                        <FontImageSource Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                                                 Dark={StaticResource LightOnDarkBackground}}"
+                                         FontFamily="{x:Static fonts:FluentUI.FontFamily}"
+                                         Glyph="{Binding Icon}"
+                                         Size="{StaticResource IconSize}" />
+                    </Image.Source>
+                </Image>
+                <Label FontSize="14"
+                       Text="{Binding Name}"
+                       TextColor="{StaticResource Gray400}"
+                       TextTransform="Uppercase" />
+                <Label Text="{Binding Description}"
+                       LineBreakMode="WordWrap" />
+                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Tags}"
+                                       Spacing="15">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:Tag">
+                            <controls:TagView />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </shimmer:SfShimmer.Content>
+    </shimmer:SfShimmer>
+</Border>
