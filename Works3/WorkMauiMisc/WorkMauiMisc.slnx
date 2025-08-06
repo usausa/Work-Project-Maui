@@ -66,6 +66,9 @@
       <Deploy Solution="Debug|*" />
     </Project>
     <Project Path="WorkTreeMap/WorkTreeMap.csproj" Id="2f316410-a25b-48f4-aeff-767069c6fc4f" />
+    <Project Path="WorkTrim/WorkTrim.csproj" Id="835071d9-3443-4e63-9edb-2a41b7d5773c">
+      <Deploy Solution="Release|*" />
+    </Project>
     <Project Path="WorkVisualGauge/WorkVisualGauge.csproj" Id="112b87b0-aba3-40f0-8d4b-ebb23e137ed5">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -80,29 +83,28 @@
     </Project>
   </Folder>
   <Project Path="WorkBottom/WorkBottom.csproj" Id="2f1a4c9a-69f9-4c61-b7b4-5c45a054314f">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
-  <Project Path="WorkTrim/WorkTrim.csproj" Id="835071d9-3443-4e63-9edb-2a41b7d5773c" />
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkVisualMusic/WorkVisualMusic.csproj" Id="2a91f110-67e3-4d37-9daa-4d0a7082fd20">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkVisualTimeline/WorkVisualTimeline.csproj" Id="c9ba32b2-dc8b-4b59-b909-96d4b751f096">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
   <Project Path="WorkWifi/WorkWifi.csproj" Id="adb19be9-c6d2-47b0-9a63-b3ea9b3e146a" />
 </Solution>
