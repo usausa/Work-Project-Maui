@@ -2,60 +2,87 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="clr-namespace:WorkDesign"
+             xmlns:fonts="clr-namespace:Fonts"
              x:Class="WorkDesign.MiscPage"
              Title="MiscPage">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-          RowSpacing="8">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <FontImageSource x:Key="SettingsIconImageSource"
+                             Color="Black"
+                             FontFamily="MaterialIcons"
+                             Glyph="{x:Static fonts:MaterialIcons.Eco}"
+                             Size="36" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-        <Label Grid.Row="0"
-               Text="1" />
-        <BoxView Grid.Row="1"
-                 HeightRequest="1"
-                 Color="Black" />
+    <VerticalStackLayout>
 
-        <Label Grid.Row="2"
-               Text="1" />
-        <BoxView Grid.Row="3"
-                 HeightRequest="{x:Static app:ScreenSize.Width1}"
-                 Color="Black" />
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              RowSpacing="8">
 
-        <Label Grid.Row="4"
-               Text="2" />
-        <BoxView Grid.Row="5"
-                 HeightRequest="{x:Static app:ScreenSize.Width2}"
-                 Color="Black" />
+            <Label Grid.Row="0"
+                   Text="1" />
+            <BoxView Grid.Row="1"
+                     HeightRequest="1"
+                     Color="Black" />
 
-        <Label Grid.Row="6"
-               Text="3" />
-        <BoxView Grid.Row="7"
-                 HeightRequest="{x:Static app:ScreenSize.Width3}"
-                 Color="Black" />
+            <Label Grid.Row="2"
+                   Text="1" />
+            <BoxView Grid.Row="3"
+                     HeightRequest="{x:Static app:ScreenSize.Width1}"
+                     Color="Black" />
 
-        <Label Grid.Row="8"
-               Text="4" />
-        <BoxView Grid.Row="9"
-                 HeightRequest="{x:Static app:ScreenSize.Width4}"
-                 Color="Black" />
+            <Label Grid.Row="4"
+                   Text="2" />
+            <BoxView Grid.Row="5"
+                     HeightRequest="{x:Static app:ScreenSize.Width2}"
+                     Color="Black" />
 
-        <Label Grid.Row="10"
-               Text="5" />
-        <BoxView Grid.Row="11"
-                 HeightRequest="{x:Static app:ScreenSize.Width5}"
-                 Color="Black" />
+            <Label Grid.Row="6"
+                   Text="3" />
+            <BoxView Grid.Row="7"
+                     HeightRequest="{x:Static app:ScreenSize.Width3}"
+                     Color="Black" />
 
-        <Label Grid.Row="12"
-               Text="6" />
-        <BoxView Grid.Row="13"
-                 HeightRequest="{x:Static app:ScreenSize.Width6}"
-                 Color="Black" />
+            <Label Grid.Row="8"
+                   Text="4" />
+            <BoxView Grid.Row="9"
+                     HeightRequest="{x:Static app:ScreenSize.Width4}"
+                     Color="Black" />
 
-        <Label Grid.Row="14"
-               Text="8" />
-        <BoxView Grid.Row="15"
-                 HeightRequest="{x:Static app:ScreenSize.Width8}"
-                 Color="Black" />
+            <Label Grid.Row="10"
+                   Text="5" />
+            <BoxView Grid.Row="11"
+                     HeightRequest="{x:Static app:ScreenSize.Width5}"
+                     Color="Black" />
 
-    </Grid>
+            <Label Grid.Row="12"
+                   Text="6" />
+            <BoxView Grid.Row="13"
+                     HeightRequest="{x:Static app:ScreenSize.Width6}"
+                     Color="Black" />
+
+            <Label Grid.Row="14"
+                   Text="8" />
+            <BoxView Grid.Row="15"
+                     HeightRequest="{x:Static app:ScreenSize.Width8}"
+                     Color="Black" />
+
+        </Grid>
+
+        <HorizontalStackLayout>
+            <Image Source="{StaticResource SettingsIconImageSource}" />
+            <Image>
+                <Image.Source>
+                    <FontImageSource Color="Black"
+                                     FontFamily="MaterialIcons"
+                                     Glyph="{x:Static fonts:MaterialIcons.Error}"
+                                     Size="36" />
+                </Image.Source>
+            </Image>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
 
 </ContentPage>
