@@ -88,8 +88,13 @@
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306" />
-  <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4" />
+  <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="WorkTrim/WorkTrim.csproj" Id="835071d9-3443-4e63-9edb-2a41b7d5773c" />
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
     <Deploy Solution="Debug|*" />
   </Project>
