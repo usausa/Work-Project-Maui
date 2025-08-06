@@ -6,8 +6,6 @@ Template project for MAUI.
 
 # Image
 
-## Device/Sample/UI
-
 <img width="25%" src="Document/Device_BLE.png" />
 <img width="25%" src="Document/Device_NFC.png" />
 <img width="25%" src="Document/Device_Activity.png" />
@@ -19,6 +17,7 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Money.png" />
 <img width="25%" src="Document/UI_Pos.png" />
 <img width="25%" src="Document/UI_Radar.png" />
+<img width="25%" src="Document/UI_Social.png" />
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
 
