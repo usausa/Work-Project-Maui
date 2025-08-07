@@ -12,6 +12,9 @@
     <Project Path="WorkBluetooth/WorkBluetooth.csproj" Id="4a5c2e1c-5143-41ec-8367-2b9c2b7b14ab">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkCommunication/WorkCommunication.csproj" Id="f2aa85b4-112e-4cbb-9a23-3fbe54f1ffad">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkDebug/WorkDebug.csproj" Id="3231a80e-09bc-43ad-8ff6-33cf7cd4ca3f">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -85,14 +88,15 @@
   <Project Path="WorkBottom/WorkBottom.csproj" Id="2f1a4c9a-69f9-4c61-b7b4-5c45a054314f">
     <Deploy />
   </Project>
-  <Project Path="WorkCommunication/WorkCommunication.csproj" Id="f2aa85b4-112e-4cbb-9a23-3fbe54f1ffad" />
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy />
   </Project>
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy />
   </Project>
-  <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a" />
+  <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
     <Deploy />
   </Project>

@@ -9,8 +9,6 @@ public partial class MainPage : ContentPage
         InitializeComponent();
     }
 
-    // TODO Wrapper
-
     //  Add to AndroidManifest.xml
     //
     //  <queries>
