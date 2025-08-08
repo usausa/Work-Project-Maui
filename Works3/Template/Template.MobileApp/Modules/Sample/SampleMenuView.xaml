@@ -18,77 +18,78 @@
 
         <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="Collection" />
+        <Button Grid.Row="0" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="1" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleLocale}"
+                Text="Locale" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                Text="" />
+
+        <Button Grid.Row="2" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleWebBasic}"
                 Text="WebBasic" />
-        <Button Grid.Row="0" Grid.Column="1"
+        <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleWebApp}"
                 Text="WebApp" />
 
-        <Button Grid.Row="1" Grid.Column="0"
+        <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Map" />
-        <Button Grid.Row="1" Grid.Column="1"
+        <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Map2" />
 
-        <Button Grid.Row="2" Grid.Column="0"
+        <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Chart" />
-        <Button Grid.Row="2" Grid.Column="1"
+        <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="Media" />
 
-        <Button Grid.Row="3" Grid.Column="0"
+        <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleMarkdown}"
                 Text="Markdown" />
-        <Button Grid.Row="3" Grid.Column="1"
+        <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SamplePdf}"
                 Text="PDF" />
 
-        <Button Grid.Row="4" Grid.Column="0"
+        <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetMenu}"
                 Text="CV Net" />
-        <Button Grid.Row="4" Grid.Column="1"
+        <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvLocal}"
                 Text="CV Local" />
 
-        <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="Chat" />
-        <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
-
-        <Button Grid.Row="6" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
-        <Button Grid.Row="6" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
-
         <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="" />
+                Text="Chat" />
         <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

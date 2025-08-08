@@ -78,6 +78,7 @@ Template project for MAUI.
 - Network
   - Web API
 - Sample
+  - Localization
   - Object detection(Local)
   - Markdown
   - PDF reader

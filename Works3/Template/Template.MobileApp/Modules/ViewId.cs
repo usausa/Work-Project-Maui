@@ -74,14 +74,23 @@ public enum ViewId
 
     // Sample
     SampleMenu,
+
+    SampleCollection,
+
+    SampleLocale,
+
     SampleWebBasic,
     SampleWebApp,
+
     SampleMap1,
     SampleMap2,
+
     SampleChart,
     SampleMedia,
+
     SampleMarkdown,
     SamplePdf,
+
     SampleCvNetMenu,
     SampleCvNetObject,
     SampleCvNetTag,
@@ -89,6 +98,7 @@ public enum ViewId
     SampleCvNetOcr,
     SampleCvNetFace,
     SampleCvLocal,
+
     SampleChat,
 
     // UI
