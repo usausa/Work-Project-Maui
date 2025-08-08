@@ -70,7 +70,6 @@ public sealed class MoneyPageToImageSourceExtension : IMarkupExtension<MoneyPage
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
 }
 
-
 public abstract class MoneyPageToConverter<T> : IValueConverter
 {
     public MoneyPage Page { get; set; }

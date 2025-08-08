@@ -36,7 +36,7 @@ public class CalendarView : GraphicsView
         StartInteraction += CalendarView_StartInteraction;
     }
 
-    private void CalendarView_StartInteraction(object sender, TouchEventArgs e)
+    private void CalendarView_StartInteraction(object? sender, TouchEventArgs e)
     {
         var point = e.Touches[0];
         var date = _drawable.GetDateFromPoint(point.X, point.Y);
