@@ -91,7 +91,6 @@
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy />
   </Project>
-  <Project Path="WorkLeak/WorkLeak.csproj" Id="d892565b-3578-4211-8ddd-e36b1e4e6c0d" />
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy />
   </Project>
