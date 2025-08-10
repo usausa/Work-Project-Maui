@@ -3,6 +3,8 @@
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkBind/WorkBind.csproj" Id="1efdd499-814c-41fd-b065-2d31554b0298" />
+    <Project Path="WorkBindLibrary/WorkBindLibrary.csproj" Id="d77e3354-2fe0-48af-b709-0bb001e92f8b" />
     <Project Path="WorkBlazorViewModel/WorkBlazorViewModel.csproj" Id="fbc6c7ba-4fdb-48bb-8fc9-d3218282d58f">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -62,6 +64,9 @@
     <Project Path="WorkRepeat/WorkRepeat.csproj" Id="411aac46-2cde-4472-9cc3-53e5a48801db">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkResource/WorkResource.csproj" Id="399dbeb1-be1e-4ac1-95d6-9a448fbc9354">
+      <Deploy Solution="Debug|*" />
+    </Project>
     <Project Path="WorkSizeMap/WorkSizeMap.csproj" Id="03860309-8a78-404d-8820-6b6164613342">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -94,7 +99,6 @@
   <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
     <Deploy />
   </Project>
-  <Project Path="WorkResource/WorkResource.csproj" Id="399dbeb1-be1e-4ac1-95d6-9a448fbc9354" />
   <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
     <Deploy Solution="Debug|*" />
   </Project>
