@@ -101,6 +101,10 @@ public enum ViewId
 
     SampleChat,
 
+    // Graphics/Anime
+
+    GraphicsMenu,
+
     // UI
     UIMenu,
     UILogin,
