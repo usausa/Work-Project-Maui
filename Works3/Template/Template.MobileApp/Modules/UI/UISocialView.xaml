@@ -8,9 +8,14 @@
              x:DataType="{x:Type module:UISocialViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
              shell:ShellProperty.Title="Social"
-             shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.HeaderVisible="False"
+             shell:ShellProperty.FunctionVisible="False">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
+
+        <Image Grid.RowSpan="8"
+               Aspect="AspectFill" Source="social_background.png" />
+
+    </Grid>
 
 </ContentView>

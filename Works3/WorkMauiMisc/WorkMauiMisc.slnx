@@ -90,22 +90,24 @@
       <Deploy Solution="Debug|*" />
     </Project>
   </Folder>
+  <Folder Name="/__/">
+    <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
+      <Deploy />
+    </Project>
+    <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
+      <Deploy />
+    </Project>
+  </Folder>
   <Project Path="WorkBottom/WorkBottom.csproj" Id="2f1a4c9a-69f9-4c61-b7b4-5c45a054314f">
     <Deploy />
   </Project>
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy />
   </Project>
-  <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
-    <Deploy />
-  </Project>
-  <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
-    <Deploy Solution="Debug|*" />
-  </Project>
   <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
-    <Deploy />
-  </Project>
-  <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
     <Deploy />
   </Project>
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
