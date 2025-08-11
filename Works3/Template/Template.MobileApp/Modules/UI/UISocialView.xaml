@@ -18,18 +18,41 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Shared -->
+            <Style x:Key="LayoutGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="ColumnSpacing" Value="2" />
+                <Setter Property="RowSpacing" Value="2" />
+            </Style>
+
+            <Style x:Key="NotificationBadge"
+                   TargetType="controls:SocialNotificationBadge">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ButtonEffect"
+                   TargetType="toolkit:SfEffectsView">
+                <Setter Property="TouchDownEffects" Value="Ripple" />
+            </Style>
+
+            <!-- TODO background -->
+
             <!-- TODO style -->
 
             <!-- Menu -->
-            <Style x:Key="MenuButtonView"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
+            <Style x:Key="Menu"
+                   TargetType="controls:SocialMenu">
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Color" Value="{StaticResource OrangeDefault}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
+    <!-- ReSharper disable MarkupAttributeTypo -->
     <Grid RowDefinitions="Auto,Auto,*,Auto,2,Auto,2,Auto">
 
         <!-- TODO style -->
@@ -39,13 +62,12 @@
 
         <!-- TODO style -->
         <Grid Grid.Row="0"
+              Style="{StaticResource LayoutGrid}"
               RowDefinitions="Auto,Auto"
-              ColumnDefinitions="Auto,Auto,Auto,*,Auto"
-              Padding="2"
-              ColumnSpacing="2" RowSpacing="2">
+              ColumnDefinitions="Auto,Auto,Auto,*,Auto">
 
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
-                                   TouchDownEffects="Ripple">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
                     <controls:SocialIcon WidthRequest="48" HeightRequest="48"
                                          Text="{x:Static fonts:MaterialIcons.Settings}"
@@ -53,47 +75,21 @@
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
-                                   TouchDownEffects="Ripple">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
                     <controls:SocialIcon WidthRequest="48" HeightRequest="48"
                                          Text="{x:Static fonts:MaterialIcons.Mail}"
                                          VerticalOptions="Start" />
-                    <Border WidthRequest="16" HeightRequest="16"
-                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
-                            VerticalOptions="Start">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
-                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Label FontSize="12" FontAttributes="Bold"
-                               Text="!"
-                               TextColor="White"
-                               HorizontalOptions="Center" VerticalOptions="Center" />
-                    </Border>
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
-                                   TouchDownEffects="Ripple">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
                     <controls:SocialIcon WidthRequest="48" HeightRequest="48"
                                          Text="{x:Static fonts:MaterialIcons.Info}"
                                          VerticalOptions="Start" />
-                    <Border WidthRequest="16" HeightRequest="16"
-                            HorizontalOptions="End" StrokeShape="Ellipse" StrokeThickness="0" TranslationY="0"
-                            VerticalOptions="Start">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Offset="0.0" Color="{StaticResource RedAccent4}" />
-                                <GradientStop Offset="1.0" Color="{StaticResource RedAccent1}" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Label FontSize="12" FontAttributes="Bold"
-                               Text="!"
-                               TextColor="White"
-                               HorizontalOptions="Center" VerticalOptions="Center" />
-                    </Border>
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
@@ -112,9 +108,8 @@
 
         <!-- TODO style -->
         <Grid Grid.Row="1"
-              ColumnDefinitions="*,*,*"
-              Padding="2"
-              ColumnSpacing="2">
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,*,*">
             <controls:SocialCounter Grid.Column="0"
                                     HeightRequest="24"
                                     Counter="65536" Icon="wrench" />
@@ -128,9 +123,8 @@
 
         <!-- TODO style -->
         <Grid Grid.Row="2"
-              ColumnDefinitions="Auto,*"
-              Padding="2"
-              ColumnSpacing="2" RowSpacing="2">
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="Auto,*">
             <VerticalStackLayout Grid.Column="0"
                                  Spacing="2" VerticalOptions="End">
                 <controls:SocialAlert WidthRequest="128" HeightRequest="40"
@@ -140,9 +134,8 @@
 
         <!-- TODO style -->
         <Grid Grid.Row="3"
-              ColumnDefinitions="*,Auto"
-              Padding="2"
-              ColumnSpacing="2" RowSpacing="2">
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,Auto">
             <VerticalStackLayout Grid.Column="1"
                                  Spacing="2">
                 <controls:SocialNotification WidthRequest="168" HeightRequest="48"
@@ -165,9 +158,8 @@
 
         <!-- TODO style -->
         <Grid Grid.Row="5"
-              ColumnDefinitions="*,*"
-              Padding="2"
-              ColumnSpacing="2" RowSpacing="2">
+              Style="{StaticResource LayoutGrid}"
+              ColumnDefinitions="*,*">
             <controls:SocialStatus Grid.Row="0" Grid.Column="0"
                                    HeightRequest="120"
                                    Color="{StaticResource PinkDefault}"
@@ -183,93 +175,83 @@
                                         Color="{StaticResource LimeDefault}" />
         </Grid>
 
-        <!-- TODO style -->
         <!-- Menu -->
         <Grid Grid.Row="7"
+              Style="{StaticResource LayoutGrid}"
               RowDefinitions="Auto,Auto,Auto"
-              ColumnDefinitions="*,*,*"
-              Padding="2"
-              ColumnSpacing="2" RowSpacing="2">
+              ColumnDefinitions="*,*,*">
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="0"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="作戦" Text2="OPERATION" />
-                    <controls:SocialNotificationBadge HorizontalOptions="End" StrokeThickness="0" TranslationY="0" VerticalOptions="Start" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="編成" Text2="FORMATION" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          FontSize1="20" Text1="法術支援要請" Text2="ART" />
                 </Grid>
             </toolkit:SfEffectsView>
 
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="0"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="騎体整備" Text2="HANGAR" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="倉庫" Text2="WEAPON STORAGE" />
-                    <controls:SocialNotificationBadge HorizontalOptions="End" StrokeThickness="0" TranslationY="0" VerticalOptions="Start" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="技術開発" Text2="DEVELOPMENT" />
-                    <controls:SocialNotificationBadge HorizontalOptions="End" StrokeThickness="0" TranslationY="0" VerticalOptions="Start" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
             <toolkit:SfEffectsView Grid.Row="2" Grid.Column="0"
-                                   Style="{StaticResource MenuButtonView}"
+                                   Style="{StaticResource ButtonEffect}"
                                    TouchDownCommand="{Binding BackCommand}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="作戦中止" Text2="ABORT MISSION" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="2" Grid.Column="1"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="司令部" Text2="HEADQUARTER" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
-                                   Style="{StaticResource MenuButtonView}">
+                                   Style="{StaticResource ButtonEffect}">
                 <Grid>
-                    <controls:SocialMenu HeightRequest="48"
-                                         Color="{StaticResource OrangeDefault}"
+                    <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="公演" Text2="LIVE" />
                 </Grid>
             </toolkit:SfEffectsView>
         </Grid>
 
     </Grid>
+    <!-- ReSharper restore MarkupAttributeTypo -->
 
 </ContentView>
