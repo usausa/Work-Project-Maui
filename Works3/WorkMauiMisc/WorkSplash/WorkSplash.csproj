@@ -59,6 +59,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\drawable\avd_logo.xml" />
+	  <None Remove="Platforms\Android\Resources\values\themes.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.16" />

@@ -1,0 +1,8 @@
+<resources>
+	<style name="Theme.StartLogo" parent="Theme.SplashScreen">
+		<item name="windowSplashScreenBackground">@android:color/white</item>
+		<item name="windowSplashScreenAnimationDuration">1300</item>
+		<item name="windowSplashScreenAnimatedIcon">@drawable/avd_logo</item>
+		<item name="postSplashScreenTheme">@style/Maui.MainTheme.NoActionBar</item>
+	</style>
+</resources>
