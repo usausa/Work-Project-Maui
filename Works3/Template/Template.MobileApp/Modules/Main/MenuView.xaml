@@ -48,8 +48,9 @@
                     Text="6.Sample" />
             <Button Grid.Row="6"
                     Style="{StaticResource MenuButton}"
-                    IsEnabled="False"
-                    Text="7.Graphics/Anime" />
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId ViewMenu}"
+                    Text="7.View" />
             <Button Grid.Row="7"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"

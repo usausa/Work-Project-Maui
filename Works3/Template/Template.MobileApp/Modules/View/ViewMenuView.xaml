@@ -4,11 +4,11 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             x:Class="Template.MobileApp.Modules.Sample.SampleMenuView"
-             x:DataType="{x:Type module:SampleMenuViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:SampleMenuViewModel}"
-             shell:ShellProperty.Title="Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewMenuView"
+             x:DataType="{x:Type module:ViewMenuViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewMenuViewModel}"
+             shell:ShellProperty.Title="View"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -19,58 +19,53 @@
         <Button Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleWebBasic}"
-                Text="Web Basic" />
+                CommandParameter="{markup:ViewId ViewCollection}"
+                Text="Collection" />
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleWebApp}"
-                Text="Web App" />
+                IsEnabled="False"
+                Text="" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Map" />
+                Text="Graphics" />
         <Button Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Map2" />
+                Text="" />
 
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Chart" />
+                Text="Lottie" />
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Media" />
+                Text="Svg" />
 
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleMarkdown}"
-                Text="Markdown" />
+                IsEnabled="False"
+                Text="Animation" />
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SamplePdf}"
-                Text="PDF" />
+                IsEnabled="False"
+                Text="" />
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleCvNetMenu}"
-                Text="CV Net" />
+                IsEnabled="False"
+                Text="Drawing" />
         <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleCvLocal}"
-                Text="CV Local" />
+                IsEnabled="False"
+                Text="" />
 
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
-                Text="Chat" />
+                Text="" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
@@ -102,7 +97,7 @@
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="" />
-
     </Grid>
+
 
 </ContentView>

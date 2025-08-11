@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
-             x:Class="Template.MobileApp.Modules.Sample.SampleCollectionView"
-             x:DataType="{x:Type module:SampleCollectionViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:SampleCollectionViewModel}"
-             shell:ShellProperty.Title="Collection"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             x:Class="Template.MobileApp.Modules.View.ViewLottieView"
+             x:DataType="{x:Type module:ViewLottieViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ViewLottieViewModel}"
+             shell:ShellProperty.Title="Lottie"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

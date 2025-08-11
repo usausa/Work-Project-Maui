@@ -12,9 +12,9 @@ public enum ViewId
     BasicFont,
     BasicConverter,
     BasicBehavior,
+    BasicLocale,
     BasicDialog,
     BasicValidation,
-    BasicGraphics,
     BasicAnimation,
 
     // Navigation
@@ -75,10 +75,6 @@ public enum ViewId
     // Sample
     SampleMenu,
 
-    SampleCollection,
-
-    SampleLocale,
-
     SampleWebBasic,
     SampleWebApp,
 
@@ -101,9 +97,19 @@ public enum ViewId
 
     SampleChat,
 
-    // Graphics/Anime
+    // View
 
-    GraphicsMenu,
+    ViewMenu,
+
+    ViewCollection,
+
+    ViewGraphics,
+
+    ViewLottie,
+    ViewSvg,
+    ViewAnimation,
+
+    ViewDrawing,
 
     // UI
     UIMenu,
