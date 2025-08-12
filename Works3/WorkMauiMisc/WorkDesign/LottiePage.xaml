@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="clr-namespace:Smart.Maui.Markup;assembly=Smart.Maui"
+             xmlns:app="clr-namespace:WorkDesign"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             x:Class="WorkDesign.LottiePage"
+             x:DataType="{x:Type app:LottiePageViewModel}"
+             Title="LottiePage">
+
+    <ContentPage.BindingContext>
+        <app:LottiePageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <app:TimeSpanToDoubleConverter x:Key="TimeSpanToDouble" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+    <Grid RowDefinitions="*,Auto,Auto">
+        <extended:SKLottieView Duration="{Binding Duration}"
+                               IsAnimationEnabled="{Binding IsAnimationEnabled}"
+                               Progress="{Binding Progress}"
+                               Source="popping.json" />
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*">
+            <Label Grid.Column="0"
+                   Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.fff}'}" />
+            <Label Grid.Column="1"
+                   Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.fff}'}"
+                   HorizontalOptions="End" />
+        </Grid>
+
+        <HorizontalStackLayout Grid.Row="2">
+            <Button Command="{Binding ResetCommand}"
+                    Text="Reset" />
+            <Button Command="{Binding PlayCommand}"
+                    Text="{Binding IsAnimationEnabled, Converter={s:BoolToText True='Pause', False='Play'}}" />
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentPage>
