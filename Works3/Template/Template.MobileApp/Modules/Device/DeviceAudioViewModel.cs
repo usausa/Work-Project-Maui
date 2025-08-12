@@ -32,7 +32,7 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            AudioPlayer = audioManager.CreatePlayer(await fileSystem.OpenAppPackageFileAsync("Sample.mp3"));
+            AudioPlayer = audioManager.CreatePlayer(await fileSystem.OpenAppPackageFileAsync(Path.Combine("Sounds", "Sample.mp3")));
             Disposables.Add(AudioPlayer);
         }
     }
