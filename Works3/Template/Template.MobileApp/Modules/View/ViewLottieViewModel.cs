@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.View;
 
+// ref https://lottiefiles.com/
 public sealed partial class ViewLottieViewModel : AppViewModelBase
 {
     [ObservableProperty]
