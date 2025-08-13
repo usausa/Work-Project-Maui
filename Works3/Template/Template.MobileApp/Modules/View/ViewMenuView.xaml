@@ -28,7 +28,8 @@
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewGraphics}"
                 Text="Graphics" />
         <Button Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
@@ -42,7 +43,8 @@
                 Text="Lottie" />
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewSvg}"
                 Text="Svg" />
 
         <Button Grid.Row="3" Grid.Column="0"

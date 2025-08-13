@@ -1,36 +1,8 @@
-using SkiaSharp;
+namespace Template.MobileApp.Controls;
+
 using SkiaSharp.Views.Maui;
-using SkiaSharp.Views.Maui.Controls;
 
 using Svg.Skia;
-
-using Smart.Maui.ViewModels;
-using Smart.Mvvm;
-
-namespace WorkDesign;
-
-public partial class SvgPage : ContentPage
-{
-	public SvgPage()
-	{
-		InitializeComponent();
-	}
-}
-
-public sealed partial class SvgPageViewModel : ExtendViewModelBase
-{
-    [ObservableProperty]
-    public partial SKSvg? Svg { get; set; }
-
-    public SvgPageViewModel()
-    {
-        var svg = new SKSvg();
-        using var stream = FileSystem.OpenAppPackageFileAsync("dotnet_bot.svg").Result;
-        svg.Load(stream);
-
-        Svg = svg;
-    }
-}
 
 public sealed class SvgView : SKCanvasView
 {
@@ -55,7 +27,6 @@ public sealed class SvgView : SKCanvasView
     {
         ((SvgView)bindable).InvalidateSurface();
     }
-
 
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {

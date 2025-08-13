@@ -28,7 +28,7 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
         StopCommand = new DelegateCommand(Stop);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {
