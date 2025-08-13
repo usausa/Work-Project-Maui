@@ -12,7 +12,8 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new LottiePage());
+        return new Window(new SvgPage());
+        //return new Window(new LottiePage());
         //return new Window(new CollectionPage());
         //return new Window(new MiscPage());
         //return new Window(new HeaderPage());
