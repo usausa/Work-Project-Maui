@@ -13,10 +13,12 @@
     <Grid RowDefinitions="*">
 
         <CollectionView ItemsSource="{Binding Items}"
-                        SelectionMode="Single">
+                        SelectedItems="{Binding SelectedItems}"
+                        SelectionChangedCommand="{Binding SelectedCommand}"
+                        SelectionMode="Multiple">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="app:CollectionData">
-                    <Border Margin="8" Padding="8"
+                    <Border Padding="8"
                             StrokeShape="RoundRectangle 8">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
