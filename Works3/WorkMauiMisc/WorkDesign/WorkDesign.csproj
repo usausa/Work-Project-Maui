@@ -76,6 +76,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="AnimePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="DrawingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

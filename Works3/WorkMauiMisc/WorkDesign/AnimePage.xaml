@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.AnimePage"
+             Title="AnimePage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="16"
+            Spacing="14">
+
+            <Label Text="BoxView Animation Samples"
+                   FontSize="22"
+                   HorizontalOptions="Center" />
+
+            <BoxView x:Name="AnimatedBox"
+                     WidthRequest="120"
+                     HeightRequest="120"
+                     HorizontalOptions="Center"
+                     Color="#FF6F61"
+                     CornerRadius="12"
+                     TranslationX="0"
+                     TranslationY="0" />
+
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                  ColumnSpacing="8"
+                  RowSpacing="8">
+
+                <!-- 1 行目 -->
+                <Button Grid.Row="0" Grid.Column="0" Text="Move (→ →)" Clicked="OnMoveClicked" />
+                <Button Grid.Row="0" Grid.Column="1" Text="Bounce Move" Clicked="OnBounceMoveClicked"/>
+
+                <!-- 2 行目 -->
+                <Button Grid.Row="1" Grid.Column="0" Text="Rotate 360" Clicked="OnRotateClicked"/>
+                <Button Grid.Row="1" Grid.Column="1" Text="Rotate (Relative)" Clicked="OnRelRotateClicked"/>
+
+                <!-- 3 行目 -->
+                <Button Grid.Row="2" Grid.Column="0" Text="Scale Pulse" Clicked="OnScalePulseClicked"/>
+                <Button Grid.Row="2" Grid.Column="1" Text="Fade Blink" Clicked="OnFadeBlinkClicked"/>
+
+                <!-- 4 行目 -->
+                <Button Grid.Row="3" Grid.Column="0" Text="Color Shift" Clicked="OnColorShiftClicked"/>
+                <Button Grid.Row="3" Grid.Column="1" Text="Rainbow Loop" Clicked="OnRainbowLoopClicked"/>
+
+                <!-- 5 行目 -->
+                <Button Grid.Row="4" Grid.Column="0" Text="Parallel Combo" Clicked="OnParallelComboClicked"/>
+                <Button Grid.Row="4" Grid.Column="1" Text="Sequence Combo" Clicked="OnSequenceComboClicked"/>
+
+                <!-- 6 行目 -->
+                <Button Grid.Row="5" Grid.Column="0" Text="Breath Start" Clicked="OnBreathStartClicked"/>
+                <Button Grid.Row="5" Grid.Column="1" Text="Breath Stop" Clicked="OnBreathStopClicked"/>
+
+                <!-- 7 行目 -->
+                <Button Grid.Row="6" Grid.Column="0" Text="Cancel Current" Clicked="OnCancelClicked"/>
+                <Button Grid.Row="6" Grid.Column="1" Text="Reset State" Clicked="OnResetClicked"/>
+
+                <!-- 8 行目 -->
+                <Button Grid.Row="7" Grid.Column="0" Text="FlipY (Skew)" Clicked="OnFlipYClicked"/>
+                <Button Grid.Row="7" Grid.Column="1" Text="FlipX (Skew)" Clicked="OnFlipXClicked"/>
+
+                <!-- 9 行目 -->
+                <Button Grid.Row="8" Grid.Column="0" Text="Spring Move" Clicked="OnSpringMoveClicked"/>
+                <Button Grid.Row="8" Grid.Column="1" Text="Elastic Scale" Clicked="OnElasticScaleClicked"/>
+
+                <!-- 10 行目 -->
+                <Button Grid.Row="9" Grid.Column="0" Text="Chain Example" Clicked="OnChainExampleClicked"/>
+                <Button Grid.Row="9" Grid.Column="1" Text="Stress (Fire / Forget)" Clicked="OnStressClicked"/>
+
+            </Grid>
+
+            <Label x:Name="StatusLabel"
+                   Text="Status: Ready"
+                   FontSize="14"
+                   TextColor="Gray"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

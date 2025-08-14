@@ -12,7 +12,7 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new DrawingPage());
+        return new Window(new AnimePage());
         //return new Window(new CollectionPage());
         //return new Window(new MiscPage());
         //return new Window(new HeaderPage());
@@ -36,5 +36,6 @@ public partial class App : Application
         //return new Window(new FontPage());
         //return new Window(new SvgPage());
         //return new Window(new LottiePage());
+        //return new Window(new DrawingPage());
     }
 }
