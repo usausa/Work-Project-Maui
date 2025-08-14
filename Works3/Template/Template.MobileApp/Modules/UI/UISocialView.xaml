@@ -144,7 +144,6 @@
                 <Grid>
                     <controls:SocialIcon Style="{StaticResource Icon}"
                                          Text="{x:Static fonts:MaterialIcons.Settings}" />
-                    <!-- TODO bind -->
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
@@ -152,8 +151,8 @@
                 <Grid>
                     <controls:SocialIcon Style="{StaticResource Icon}"
                                          Text="{x:Static fonts:MaterialIcons.Mail}" />
-                    <!-- TODO bind -->
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasIconNotificationMail}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
@@ -161,35 +160,35 @@
                 <Grid>
                     <controls:SocialIcon Style="{StaticResource Icon}"
                                          Text="{x:Static fonts:MaterialIcons.Info}" />
-                    <!-- TODO bind -->
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasIconNotificationInfo}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
-            <!-- TODO bind -->
             <controls:SocialEpisode Grid.Row="1" Grid.ColumnSpan="4"
                                     Style="{StaticResource Episode}"
-                                    Text="EP10 豊穣の雨作戦" />
+                                    Text="{Binding Episode}" />
 
-            <!-- TODO bind -->
             <controls:SocialPlayer Grid.RowSpan="2" Grid.Column="4"
                                    Style="{StaticResource Player}"
-                                   Percent="45" />
+                                   Percent="{Binding PlayerExpPercent}" />
         </Grid>
 
         <Grid Grid.Row="1"
               Style="{StaticResource LayoutGrid}"
               ColumnDefinitions="*,*,*">
-            <!-- TODO bind -->
             <controls:SocialCounter Grid.Column="0"
                                     Style="{StaticResource Counter}"
-                                    Counter="65536" Icon="wrench" />
+                                    Counter="{Binding CountParts}"
+                                    Icon="wrench" />
             <controls:SocialCounter Grid.Column="1"
                                     Style="{StaticResource Counter}"
-                                    Counter="30000" Icon="gem" />
+                                    Counter="{Binding CountGem}"
+                                    Icon="gem" />
             <controls:SocialCounter Grid.Column="2"
                                     Style="{StaticResource Counter}"
-                                    Counter="1024000" Icon="money" />
+                                    Counter="{Binding CountMoney}"
+                                    Icon="money" />
         </Grid>
 
         <Grid Grid.Row="2"
@@ -226,7 +225,9 @@
                                    Text1="{x:Static fonts:MaterialIcons.Favorite}"
                                    Text2="{x:Static fonts:MaterialIcons.Star}"
                                    Text3="{x:Static fonts:MaterialIcons.Shield}"
-                                   Value1="37200" Value2="48800" Value3="23500" />
+                                   Value1="{Binding StatusHeal}"
+                                   Value2="{Binding StatusBuff}"
+                                   Value3="{Binding StatusDebuff}" />
             <!-- TODO bind -->
             <controls:SocialInformation Grid.Row="0" Grid.Column="1"
                                         Style="{StaticResource Information}" />
@@ -242,7 +243,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="作戦" Text2="OPERATION" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationOperation}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="1"
@@ -250,6 +252,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="編成" Text2="FORMATION" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationFormation}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="0" Grid.Column="2"
@@ -257,6 +261,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          FontSize1="20" Text1="法術支援要請" Text2="ART" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationArt}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
@@ -265,6 +271,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="騎体整備" Text2="HANGAR" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationHangar}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="1"
@@ -272,7 +280,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="倉庫" Text2="WEAPON STORAGE" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationWeaponStorage}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="1" Grid.Column="2"
@@ -280,7 +289,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="技術開発" Text2="DEVELOPMENT" />
-                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationDevelopment}" />
                 </Grid>
             </toolkit:SfEffectsView>
 
@@ -297,6 +307,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="司令部" Text2="HEADQUARTER" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationHeadquarter}" />
                 </Grid>
             </toolkit:SfEffectsView>
             <toolkit:SfEffectsView Grid.Row="2" Grid.Column="2"
@@ -304,6 +316,8 @@
                 <Grid>
                     <controls:SocialMenu Style="{StaticResource Menu}"
                                          Text1="公演" Text2="LIVE" />
+                    <controls:SocialNotificationBadge Style="{StaticResource NotificationBadge}"
+                                                      IsVisible="{Binding HasMenuNotificationLive}" />
                 </Grid>
             </toolkit:SfEffectsView>
         </Grid>
