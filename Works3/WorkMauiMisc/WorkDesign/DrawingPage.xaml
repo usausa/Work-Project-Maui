@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:app="clr-namespace:WorkDesign"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="WorkDesign.DrawingPage"
+             Title="DrawingPage">
+
+    <ContentPage.BindingContext>
+        <app:DrawingPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,Auto">
+        <toolkit:DrawingView Grid.Row="0"
+                             BackgroundColor="White"
+                             IsMultiLineModeEnabled="True" LineColor="Blue"
+                             Lines="{Binding Lines}" />
+        <Button Grid.Row="1"
+                Command="{Binding ClearCommand}"
+                Text="Clear" />
+    </Grid>
+
+</ContentPage>

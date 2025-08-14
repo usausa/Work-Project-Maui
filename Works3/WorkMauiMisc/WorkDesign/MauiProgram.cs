@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui;
+
 namespace WorkDesign;
 
 using Fonts;
@@ -16,6 +18,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseSkiaSharp()
+            .UseMauiCommunityToolkit()
             .ConfigureSyncfusionToolkit()
             .ConfigureFonts(fonts =>
             {
