@@ -25,6 +25,8 @@
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Property="BackgroundColor" Value="Red" />
+                                        <Setter TargetName="IdLabel" Property="Label.TextColor" Value="White" />
+                                        <Setter TargetName="NameLabel" Property="Label.TextColor" Value="White" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Normal">
@@ -35,10 +37,12 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Grid ColumnDefinitions="*,2*,3*">
-                            <Label Grid.Column="0"
+                            <Label x:Name="IdLabel"
+                                   Grid.Column="0"
                                    FontSize="28"
                                    Text="{Binding Id}" />
-                            <Label Grid.Column="1"
+                            <Label x:Name="NameLabel"
+                                   Grid.Column="1"
                                    Margin="3"
                                    FontSize="28"
                                    Text="{Binding Name}" />
