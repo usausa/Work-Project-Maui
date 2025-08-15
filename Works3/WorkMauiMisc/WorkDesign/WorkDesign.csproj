@@ -79,7 +79,7 @@
 	  <MauiXaml Update="AnimePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DrawingPage.xaml">
+	  <MauiXaml Update="Views\DrawingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
