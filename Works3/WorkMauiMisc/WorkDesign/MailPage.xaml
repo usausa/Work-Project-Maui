@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="clr-namespace:WorkDesign"
+             xmlns:fonts="clr-namespace:Fonts"
              x:Class="WorkDesign.MailPage"
              x:DataType="{x:Type app:MailPageViewModel}"
              Title="MailPage">
@@ -16,37 +17,195 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="48,40,*,72">
+    <Grid RowDefinitions="48,40,*,64">
 
         <!-- Header1 -->
         <FlexLayout Grid.Row="0"
-                    BackgroundColor="#0878d3">
-            <!--  -->
+                    Padding="6,0"
+                    BackgroundColor="#0878d3"
+                    JustifyContent="SpaceBetween">
+            <HorizontalStackLayout Spacing="12">
+                <Button WidthRequest="36" HeightRequest="36"
+                        Padding="0"
+                        FontFamily="MaterialIcons" FontSize="28"
+                        Text="{x:Static fonts:MaterialIcons.Inbox}"
+                        TextColor="#0878d3" BackgroundColor="White"
+                        BorderWidth="0" CornerRadius="18" />
+
+                <Label VerticalTextAlignment="Center"
+                       FontSize="28" FontAttributes="Bold"
+                       Text="受信トレイ"
+                       TextColor="White"
+                       HorizontalOptions="Start" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Spacing="12">
+                <Button WidthRequest="24" HeightRequest="24"
+                        Padding="0"
+                        FontFamily="MaterialIcons" FontSize="24"
+                        Text="{x:Static fonts:MaterialIcons.Notifications}"
+                        TextColor="White" BackgroundColor="Transparent"
+                        BorderWidth="0" CornerRadius="16" />
+
+                <Button WidthRequest="24" HeightRequest="24"
+                        Padding="0"
+                        FontFamily="MaterialIcons" FontSize="24"
+                        Text="{x:Static fonts:MaterialIcons.Search}"
+                        TextColor="White" BackgroundColor="Transparent"
+                        BorderWidth="0" CornerRadius="16" />
+            </HorizontalStackLayout>
         </FlexLayout>
 
         <!-- Header2 -->
         <FlexLayout Grid.Row="1"
-                    BackgroundColor="#0878d3">
-            <!--  -->
+                    Padding="6,0"
+                    BackgroundColor="#0878d3"
+                    JustifyContent="SpaceBetween">
+            <HorizontalStackLayout Spacing="12">
+                <!-- TODO toggle -->
+                <Label WidthRequest="160" HeightRequest="32"
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                       Text="(Toggle)"
+                       TextColor="White" BackgroundColor="Blue"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Spacing="12">
+                <Button WidthRequest="120" HeightRequest="32"
+                        Padding="0"
+                        FontSize="14"
+                        Text="フィルター"
+                        TextColor="White" BackgroundColor="#717171"
+                        BorderWidth="0" ContentLayout="Left, 8" CornerRadius="16">
+                    <Button.ImageSource>
+                        <FontImageSource Color="White"
+                                         FontFamily="MaterialIcons"
+                                         Glyph="{x:Static fonts:MaterialIcons.Filter_list}"
+                                         Size="24" />
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
         </FlexLayout>
 
         <!-- Messages -->
         <CollectionView Grid.Row="2"
-                        ItemsSource="{Binding Messages}">
+                        ItemsSource="{Binding Messages}"
+                        BackgroundColor="White">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type app:MailMessage}">
+                    <Grid RowDefinitions="24,20,48"
+                          ColumnDefinitions="48,*,64"
+                          Padding="6,3"
+                          ColumnSpacing="4">
+                        <Image Grid.RowSpan="3"
+                               WidthRequest="48" HeightRequest="48"
+                               Aspect="AspectFill" Source="profile.jpg" VerticalOptions="Start">
+                            <Image.Clip>
+                                <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                            </Image.Clip>
+                        </Image>
 
-                    <Label Text="-" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               FontSize="18" FontAttributes="Bold"
+                               Text="うさうささん"
+                               TextColor="Black"
+                               VerticalOptions="Start" />
+
+                        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                               Text="タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん"
+                               TextColor="Black"
+                               LineBreakMode="TailTruncation" VerticalOptions="Start" />
+
+                        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                               FontSize="14"
+                               Text="こんにちは。&#x0a;私はうさうさです。&#x0a;どうぞよろしくお願いしますだよもん。&#x0a;文章はまだ続きます。"
+                               TextColor="#717171"
+                               LineBreakMode="WordWrap" VerticalOptions="Start" />
+
+                        <Label Grid.Row="0" Grid.Column="2"
+                               FontSize="12"
+                               Text="Saturday"
+                               TextColor="#717171"
+                               HorizontalOptions="End" VerticalOptions="Center" />
+                    </Grid>
+
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- Floating Button -->
+        <!-- Indicator -->
+        <ActivityIndicator Grid.Row="2"
+                           Color="#0878d3"
+                           IsEnabled="True"
+                           HorizontalOptions="Center" IsRunning="False" VerticalOptions="Center" />
 
+        <!-- Floating Button -->
+        <Button Grid.Row="2"
+                WidthRequest="56" HeightRequest="56"
+                Margin="16" Padding="0"
+                FontSize="28"
+                BackgroundColor="#0878d3"
+                CornerRadius="28" HorizontalOptions="End" VerticalOptions="End">
+            <Button.ImageSource>
+                <FontImageSource FontFamily="MaterialIcons"
+                                 Glyph="{x:Static fonts:MaterialIcons.Add}"
+                                 Size="36" />
+            </Button.ImageSource>
+            <Button.Shadow>
+                <Shadow Offset="4,4"
+                        Brush="Black" Opacity="0.5" Radius="8" />
+            </Button.Shadow>
+        </Button>
 
         <!-- Tab -->
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*,*,*"
+              BackgroundColor="#f1edec">
 
+            <Button Grid.Column="0"
+                    Padding="0"
+                    FontSize="12"
+                    Text="メール"
+                    TextColor="#0878d3" BackgroundColor="#f1edec"
+                    BorderWidth="0" ContentLayout="Top, 0">
+                <Button.ImageSource>
+                    <FontImageSource Color="#0878d3"
+                                     FontFamily="MaterialIcons"
+                                     Glyph="{x:Static fonts:MaterialIcons.Mail}"
+                                     Size="48" />
+                </Button.ImageSource>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Padding="0"
+                    FontSize="12"
+                    Text="予定表"
+                    TextColor="#717171" BackgroundColor="#f1edec"
+                    BorderWidth="0" ContentLayout="Top, 0">
+                <Button.ImageSource>
+                    <FontImageSource Color="#717171"
+                                     FontFamily="MaterialIcons"
+                                     Glyph="{x:Static fonts:MaterialIcons.Calendar_month}"
+                                     Size="48" />
+                </Button.ImageSource>
+            </Button>
+
+            <Button Grid.Column="2"
+                    Padding="0"
+                    FontSize="12"
+                    Text="アプリ"
+                    TextColor="#717171" BackgroundColor="#f1edec"
+                    BorderWidth="0" ContentLayout="Top, 0">
+                <Button.ImageSource>
+                    <FontImageSource Color="#717171"
+                                     FontFamily="MaterialIcons"
+                                     Glyph="{x:Static fonts:MaterialIcons.Apps}"
+                                     Size="48" />
+                </Button.ImageSource>
+            </Button>
+
+        </Grid>
 
     </Grid>
 

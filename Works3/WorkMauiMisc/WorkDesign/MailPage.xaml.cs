@@ -39,6 +39,15 @@ public partial class MailPageViewModel : ExtendViewModelBase
         Messages.Add(new MailMessage
         {
         });
+        Messages.Add(new MailMessage
+        {
+        });
+        Messages.Add(new MailMessage
+        {
+        });
+        Messages.Add(new MailMessage
+        {
+        });
     }
 }
 
