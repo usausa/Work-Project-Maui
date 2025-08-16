@@ -79,6 +79,9 @@
 	  <MauiXaml Update="AnimePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="AnimeTestPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\DrawingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

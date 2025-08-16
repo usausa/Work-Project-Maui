@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.AnimeTestPage"
+             Title="AnimeTestPage">
+
+    <VerticalStackLayout Spacing="15">
+
+        <BoxView x:Name="AnimatedBox"
+                 WidthRequest="120" HeightRequest="120"
+                 Color="#FF6F61"
+                 CornerRadius="12" HorizontalOptions="Center" TranslationX="0" TranslationY="0" />
+
+        <Label FontSize="22"
+               Text="BoxView Animation Samples"
+               HorizontalOptions="Center" />
+
+        <Grid RowDefinitions="Auto"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="8" RowSpacing="8">
+
+            <Button Grid.Row="0" Grid.Column="0"
+                    Text="Test1"
+                    Clicked="OnTest1Clicked" />
+
+        </Grid>
+
+    </VerticalStackLayout>
+
+</ContentPage>
