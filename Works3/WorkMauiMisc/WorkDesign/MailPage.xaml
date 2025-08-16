@@ -13,7 +13,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <!--  -->
+            <app:MailDateTimeStringConverter x:Key="MailDateTimeStringConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -93,13 +93,30 @@
                         BackgroundColor="White">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type app:MailMessage}">
-                    <Grid RowDefinitions="24,20,48"
-                          ColumnDefinitions="48,*,64"
+                    <Grid RowDefinitions="24,20,40"
+                          ColumnDefinitions="48,*,56"
                           Padding="6,3"
                           ColumnSpacing="4">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Red" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="Transparent" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
                         <Image Grid.RowSpan="3"
                                WidthRequest="48" HeightRequest="48"
-                               Aspect="AspectFill" Source="profile.jpg" VerticalOptions="Start">
+                               Aspect="AspectFill"
+                               Source="{Binding Image}"
+                               VerticalOptions="Start">
                             <Image.Clip>
                                 <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
                             </Image.Clip>
@@ -107,24 +124,24 @@
 
                         <Label Grid.Row="0" Grid.Column="1"
                                FontSize="18" FontAttributes="Bold"
-                               Text="うさうささん"
+                               Text="{Binding From}"
                                TextColor="Black"
                                VerticalOptions="Start" />
 
                         <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                               Text="タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん"
+                               Text="{Binding Title}"
                                TextColor="Black"
                                LineBreakMode="TailTruncation" VerticalOptions="Start" />
 
                         <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
                                FontSize="14"
-                               Text="こんにちは。&#x0a;私はうさうさです。&#x0a;どうぞよろしくお願いしますだよもん。&#x0a;文章はまだ続きます。"
+                               Text="{Binding Body}"
                                TextColor="#717171"
                                LineBreakMode="WordWrap" VerticalOptions="Start" />
 
                         <Label Grid.Row="0" Grid.Column="2"
                                FontSize="12"
-                               Text="Saturday"
+                               Text="{Binding DateTime, Converter={StaticResource MailDateTimeStringConverter}}"
                                TextColor="#717171"
                                HorizontalOptions="End" VerticalOptions="Center" />
                     </Grid>
@@ -137,8 +154,9 @@
         <!-- Indicator -->
         <ActivityIndicator Grid.Row="2"
                            Color="#0878d3"
-                           IsEnabled="True"
-                           HorizontalOptions="Center" IsRunning="False" VerticalOptions="Center" />
+                           HorizontalOptions="Center"
+                           IsRunning="{Binding IsLoading}"
+                           VerticalOptions="Center" />
 
         <!-- Floating Button -->
         <Button Grid.Row="2"
