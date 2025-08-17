@@ -11,6 +11,7 @@ using SkiaSharp.Views.Maui.Controls;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
 
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -68,7 +69,7 @@ public partial class MailPageViewModel : ExtendViewModelBase
         {
             DateTime = DateTime.Now.AddDays(-1),
             Image = ImageSource.FromFile("usausa.jpg"),
-            From = "うさうさメープルフレンチトースト",
+            From = "うさうさ・メープル・フレンチトースト",
             Title = "Re: Re: おはようございます！",
             Body = "こんにちは！\n先日はありがとうございました"
         });
@@ -152,13 +153,26 @@ public class MailDateTimeStringConverter : IValueConverter
     }
 }
 
+public sealed class ToggleChangedEventArgs : EventArgs
+{
+    public static readonly ToggleChangedEventArgs On = new(true);
+    public static readonly ToggleChangedEventArgs Off = new(false);
+
+    public bool IsToggled { get; }
+
+    private ToggleChangedEventArgs(bool isToggled)
+    {
+        IsToggled = isToggled;
+    }
+}
+
 public class TextToggle : SKCanvasView
 {
     private static readonly SKTypeface Typeface = SKFontManager.Default.MatchCharacter('あ');
 
-    public event EventHandler<bool>? ToggleChanged;
+    public event EventHandler<ToggleChangedEventArgs>? ToggleChanged;
 
-    private float animationProgress = 0f;
+    private float animationProgress;
 
     // State
 
@@ -167,7 +181,7 @@ public class TextToggle : SKCanvasView
         typeof(bool),
         typeof(TextToggle),
         false,
-        propertyChanged: (b, o, n) => ((TextToggle)b).AnimateToggle((bool)n));
+        propertyChanged: (b, _, n) => ((TextToggle)b).AnimateToggle((bool)n));
 
     public bool IsToggled
     {
@@ -276,7 +290,7 @@ public class TextToggle : SKCanvasView
         Touch += (_, _) =>
         {
             IsToggled = !IsToggled;
-            ToggleChanged?.Invoke(this, IsToggled);
+            ToggleChanged?.Invoke(this, IsToggled ? ToggleChangedEventArgs.On : ToggleChangedEventArgs.Off);
             AnimateToggle(IsToggled);
         };
     }
@@ -307,36 +321,47 @@ public class TextToggle : SKCanvasView
         using var paint = new SKPaint();
         paint.IsAntialias = true;
 
-        var radius = e.Info.Height / 2f;
-
         using var font = new SKFont(Typeface, size: (float)(FontSize * DeviceDisplay.MainDisplayInfo.Density));
 
+        var radius = e.Info.Height / 2f;
         var onTextWidth = font.MeasureText(OnText);
         var offTextWidth = font.MeasureText(OffText);
-        var onWidth = e.Info.Width * onTextWidth / (onTextWidth + offTextWidth);
+        var onWidth = e.Info.Width * (onTextWidth + (radius * 2)) / (onTextWidth + offTextWidth + (radius * 4));
         var offWidth = e.Info.Width - onWidth;
 
         // Background
         paint.Color = UnselectedBackgroundColor.ToSKColor();
         canvas.DrawRoundRect(new SKRoundRect(e.Info.Rect, radius), paint);
 
-        // Selected background
-        var animStart = Lerp(0, onWidth, animationProgress);
-        var animWidth = Lerp(onWidth, offWidth, animationProgress);
+        // Active background
+        var animStart = onWidth * animationProgress;
+        var animWidth = onWidth + (offWidth - onWidth) * animationProgress;
+        var activeRect = new SKRoundRect(new SKRect(animStart, e.Info.Rect.Top, animStart + animWidth, e.Info.Rect.Bottom), radius);
         paint.Color = SelectedBackgroundColor.ToSKColor();
-        canvas.DrawRoundRect(new SKRoundRect(new SKRect(animStart, e.Info.Rect.Top, animStart + animWidth, e.Info.Rect.Bottom), radius), paint);
+        canvas.DrawRoundRect(activeRect, paint);
 
         // Unselected text
-        //paint.Color = UnselectedTextColor.ToSKColor();
-        paint.Color = SKColors.Black;
+        paint.Color = UnselectedTextColor.ToSKColor();
         var onTextX = (onWidth - onTextWidth) / 2f;
         var offTextX = onWidth + ((offWidth - offTextWidth) / 2f);
         var textY = (e.Info.Height - font.Metrics.Ascent - font.Metrics.Descent) / 2f;
         canvas.DrawText(OnText, onTextX, textY, font, paint);
         canvas.DrawText(OffText, offTextX, textY, font, paint);
 
-        // TODO
+        // Active mask
+        canvas.SaveLayer();
 
-        float Lerp(float from, float to, float progress) => from + (to - from) * progress;
+        // Background
+        paint.Color = SelectedBackgroundColor.ToSKColor();
+        canvas.DrawRoundRect(activeRect, paint);
+
+        // Selected text
+        paint.Color = SelectedTextColor.ToSKColor();
+        paint.BlendMode = SKBlendMode.SrcIn;
+        canvas.DrawText(OnText, onTextX, textY, font, paint);
+        canvas.DrawText(OffText, offTextX, textY, font, paint);
+
+        // Reset mode
+        canvas.Restore();
     }
 }
