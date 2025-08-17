@@ -1,3 +1,5 @@
+using Smart.Maui.Input;
+
 namespace WorkDesign;
 
 using Android.Text;
@@ -14,6 +16,7 @@ using Smart.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Input;
 
 using static Microsoft.Maui.LifecycleEvents.AndroidLifecycle;
 
@@ -25,15 +28,29 @@ public partial class MailPage : ContentPage
 	}
 }
 
+public enum MailPageType
+{
+    Mail,
+    Schedule,
+    Application
+}
+
 public partial class MailPageViewModel : ExtendViewModelBase
 {
+    [ObservableProperty]
+    public partial MailPageType Selected { get; set; }
+
     [ObservableProperty]
     public partial bool IsLoading { get; set; }
 
     public ObservableCollection<MailMessage> Messages { get; } = [];
 
+    public IObserveCommand SelectCommand { get; }
+
     public MailPageViewModel()
     {
+        SelectCommand = MakeDelegateCommand<MailPageType>(x => Selected = x);
+
         _ = Task.Run(InitializeData);
     }
 

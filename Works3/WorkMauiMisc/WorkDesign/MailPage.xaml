@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
              xmlns:app="clr-namespace:WorkDesign"
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="WorkDesign.MailPage"
@@ -15,6 +16,11 @@
         <ResourceDictionary>
 
             <app:MailDateTimeStringConverter x:Key="MailDateTimeStringConverter" />
+
+            <s:CompareToColorConverter x:Key="EqualToSelectColorConverter"
+                                       Expression="{x:Static s:CompareExpressions.Equal}"
+                                       TrueValue="{StaticResource BlueDarken2}"
+                                       FalseValue="{StaticResource GrayDarken1}" />
 
             <Style x:Key="HeaderRowLayout"
                    TargetType="FlexLayout">
@@ -279,10 +285,12 @@
               ColumnDefinitions="*,*,*">
             <Button Grid.Column="0"
                     Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static app:MailPageType.Mail}"
                     Text="メール"
-                    TextColor="{StaticResource BlueDarken2}">
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Mail}}">
                 <Button.ImageSource>
-                    <FontImageSource Color="{StaticResource BlueDarken2}"
+                    <FontImageSource Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Mail}}"
                                      FontFamily="MaterialIcons"
                                      Glyph="{x:Static fonts:MaterialIcons.Mail}"
                                      Size="36" />
@@ -290,10 +298,12 @@
             </Button>
             <Button Grid.Column="1"
                     Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static app:MailPageType.Schedule}"
                     Text="予定表"
-                    TextColor="{StaticResource GrayDarken1}">
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Schedule}}">
                 <Button.ImageSource>
-                    <FontImageSource Color="{StaticResource GrayDarken1}"
+                    <FontImageSource Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Schedule}}"
                                      FontFamily="MaterialIcons"
                                      Glyph="{x:Static fonts:MaterialIcons.Calendar_month}"
                                      Size="36" />
@@ -301,10 +311,12 @@
             </Button>
             <Button Grid.Column="2"
                     Style="{StaticResource MenuButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static app:MailPageType.Application}"
                     Text="アプリ"
-                    TextColor="{StaticResource GrayDarken1}">
+                    TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Application}}">
                 <Button.ImageSource>
-                    <FontImageSource Color="{StaticResource GrayDarken1}"
+                    <FontImageSource Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static app:MailPageType.Application}}"
                                      FontFamily="MaterialIcons"
                                      Glyph="{x:Static fonts:MaterialIcons.Apps}"
                                      Size="36" />
