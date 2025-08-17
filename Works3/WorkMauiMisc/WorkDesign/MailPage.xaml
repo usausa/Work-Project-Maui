@@ -62,12 +62,10 @@
                     BackgroundColor="#0878d3"
                     JustifyContent="SpaceBetween">
             <HorizontalStackLayout Spacing="12">
-                <!-- TODO toggle -->
-                <Label WidthRequest="160" HeightRequest="32"
-                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                       Text="(Toggle)"
-                       TextColor="White" BackgroundColor="Blue"
-                       VerticalOptions="Center" />
+                <app:TextToggle WidthRequest="120" HeightRequest="32"
+                                FontSize="14"
+                                OffText="その他" OnText="優先" SelectedBackgroundColor="#FFFFFF" SelectedTextColor="#2860C2"
+                                UnselectedBackgroundColor="#1F4993" UnselectedTextColor="#FFFFFF" VerticalOptions="Center" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Spacing="12">
@@ -93,7 +91,7 @@
                         BackgroundColor="White">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type app:MailMessage}">
-                    <Grid RowDefinitions="24,20,40"
+                    <Grid RowDefinitions="24,20,32"
                           ColumnDefinitions="48,*,56"
                           Padding="6,3"
                           ColumnSpacing="4">
@@ -123,18 +121,19 @@
                         </Image>
 
                         <Label Grid.Row="0" Grid.Column="1"
-                               FontSize="18" FontAttributes="Bold"
+                               FontSize="16" FontAttributes="Bold"
                                Text="{Binding From}"
                                TextColor="Black"
                                VerticalOptions="Start" />
 
                         <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                               FontSize="14"
                                Text="{Binding Title}"
                                TextColor="Black"
                                LineBreakMode="TailTruncation" VerticalOptions="Start" />
 
                         <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
-                               FontSize="14"
+                               FontSize="12"
                                Text="{Binding Body}"
                                TextColor="#717171"
                                LineBreakMode="WordWrap" VerticalOptions="Start" />
