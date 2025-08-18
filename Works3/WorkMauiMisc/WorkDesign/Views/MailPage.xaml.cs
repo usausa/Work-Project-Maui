@@ -1,8 +1,8 @@
-using Smart.Maui.Input;
-
 namespace WorkDesign;
 
-using Android.Text;
+using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
 
 using Microsoft.Maui;
 
@@ -10,15 +10,9 @@ using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
+using Smart.Maui.Input;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Windows.Input;
-
-using static Microsoft.Maui.LifecycleEvents.AndroidLifecycle;
 
 public partial class MailPage : ContentPage
 {

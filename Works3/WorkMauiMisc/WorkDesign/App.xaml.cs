@@ -13,12 +13,12 @@ public partial class App : Application
     protected override Window CreateWindow(IActivationState? activationState)
     {
         //return new Window(new AnimeTestPage());
-        //return new Window(new AnimePage());
+        return new Window(new AnimePage());
         //return new Window(new PathPage());
         // -----
         //return new Window(new CollectionPage());
         //return new Window(new ChatPage());
-        return new Window(new MailPage());
+        //return new Window(new MailPage());
         //return new Window(new PosPage());
         // -----
         //return new Window(new SchedulePage());

@@ -4,27 +4,26 @@
              x:Class="WorkDesign.AnimeTestPage"
              Title="AnimeTestPage">
 
-    <VerticalStackLayout Spacing="15">
+    <Grid RowDefinitions="*,Auto">
 
         <BoxView x:Name="AnimatedBox"
+                 Grid.Row="0"
                  WidthRequest="120" HeightRequest="120"
                  Color="#FF6F61"
-                 CornerRadius="12" HorizontalOptions="Center" TranslationX="0" TranslationY="0" />
+                 CornerRadius="12" HorizontalOptions="Center" TranslationX="0" TranslationY="0"
+                 VerticalOptions="Center" />
 
-        <Label FontSize="22"
-               Text="BoxView Animation Samples"
-               HorizontalOptions="Center" />
-
-        <Grid RowDefinitions="Auto"
+        <Grid Grid.Row="1"
+              RowDefinitions="Auto"
               ColumnDefinitions="*,*"
               ColumnSpacing="8" RowSpacing="8">
 
             <Button Grid.Row="0" Grid.Column="0"
-                    Text="Test1"
+                    Text="TranslationX"
                     Clicked="OnTest1Clicked" />
 
         </Grid>
 
-    </VerticalStackLayout>
+    </Grid>
 
 </ContentPage>
