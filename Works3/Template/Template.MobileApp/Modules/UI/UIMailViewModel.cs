@@ -11,9 +11,11 @@ public sealed partial class UIMailViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 
-    [ObservableProperty] public partial MailPage Selected { get; set; } = MailPage.Mail;
+    [ObservableProperty]
+    public partial MailPage Selected { get; set; } = MailPage.Mail;
 
-    [ObservableProperty] public partial bool IsLoading { get; set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; set; }
 
     public ObservableCollection<MailMessage> Messages { get; } = [];
 

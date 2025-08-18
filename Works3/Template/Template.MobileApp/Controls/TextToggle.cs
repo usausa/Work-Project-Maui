@@ -151,13 +151,13 @@ public class TextToggle : SKCanvasView
 
     private void AnimateToggle(bool newState)
     {
-        var start = animationProgress;
-        var end = newState ? 1f : 0f;
+#pragma warning disable CA2000
         var animation = new Animation(v =>
         {
             animationProgress = (float)v;
             InvalidateSurface();
-        }, start, end);
+        }, animationProgress, newState ? 1f : 0f);
+#pragma warning restore CA2000
 
         animation.Commit(this, "ToggleAnimation", 16, 200, Easing.SinInOut);
     }
@@ -180,12 +180,13 @@ public class TextToggle : SKCanvasView
 
         // Background
         paint.Color = UnselectedBackgroundColor.ToSKColor();
-        canvas.DrawRoundRect(new SKRoundRect(e.Info.Rect, radius), paint);
+        using var backgroundRect = new SKRoundRect(e.Info.Rect, radius);
+        canvas.DrawRoundRect(backgroundRect, paint);
 
         // Active background
         var animStart = onWidth * animationProgress;
-        var animWidth = onWidth + (offWidth - onWidth) * animationProgress;
-        var activeRect = new SKRoundRect(new SKRect(animStart, e.Info.Rect.Top, animStart + animWidth, e.Info.Rect.Bottom), radius);
+        var animWidth = onWidth + ((offWidth - onWidth) * animationProgress);
+        using var activeRect = new SKRoundRect(new SKRect(animStart, e.Info.Rect.Top, animStart + animWidth, e.Info.Rect.Bottom), radius);
         paint.Color = SelectedBackgroundColor.ToSKColor();
         canvas.DrawRoundRect(activeRect, paint);
 
