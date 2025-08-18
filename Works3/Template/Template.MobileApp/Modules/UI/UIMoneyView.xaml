@@ -475,51 +475,99 @@
                           ColumnDefinitions="*,*,*,*">
 
                         <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="stars.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Stars}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="クーポン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="view_compact.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.View_comfy}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スタンプ" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="paid.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Paid}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="ポイント" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="add_circle.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add_circle}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="チャージ" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="scan.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Document_scanner}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スキャン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="send_money.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Send}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="送る" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="receipt.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Receipt_long}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="履歴" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}"
-                                         Source="shopping_cart.png" />
+                            <ImageButton Style="{StaticResource MenuImageButton}">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Shopping_cart}"
+                                                     FontFamily="MaterialIcons"
+                                                     Color="White"
+                                                     Size="36" />
+                                </Image.Source>
+                            </ImageButton>
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="カート" />
                         </VerticalStackLayout>
@@ -701,8 +749,14 @@
                 Style="{StaticResource CenterButtonBorder}">
             <toolkit:SfEffectsView Style="{StaticResource CenterButtonEffect}">
                 <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
-                    <Image Style="{StaticResource CenterButtonImage}"
-                           Source="qr_code.png" />
+                    <Image Style="{StaticResource CenterButtonImage}">
+                        <Image.Source>
+                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Qr_code}"
+                                             FontFamily="MaterialIcons"
+                                             Color="White"
+                                             Size="36" />
+                        </Image.Source>
+                    </Image>
                     <Label Style="{StaticResource CenterButtonLabel}"
                            Text="支払い" />
                 </VerticalStackLayout>
