@@ -21,8 +21,9 @@ public partial class MainPage : ContentPage
     private void HomeClicked(object? sender, EventArgs e)
     {
         var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(InitialLongitude, InitialLatitude).ToMPoint();
-        var resolutions = MapView.Map.Navigator.Resolutions;
-        MapView.Map.Navigator.CenterOnAndZoomTo(sphericalMercatorCoordinate, resolutions[9]);
+        MapView.Map.Navigator.CenterOn(sphericalMercatorCoordinate);
+        //var resolutions = MapView.Map.Navigator.Resolutions;
+        //MapView.Map.Navigator.CenterOnAndZoomTo(sphericalMercatorCoordinate, resolutions[9]);
     }
 
     private async void TestClicked(object? sender, EventArgs e)
