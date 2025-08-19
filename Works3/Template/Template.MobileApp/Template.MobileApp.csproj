@@ -8,6 +8,7 @@
     <SingleProject>true</SingleProject>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Template</ApplicationTitle>
@@ -22,11 +23,23 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
-
   <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-android'">
     <MandroidI18n>CJK</MandroidI18n>
   </PropertyGroup>
+
+  <!---
+  <PropertyGroup>
+    <ConstantFlavor>Development</ConstantFlavor>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Constant Include="Flavor" Value="$(ConstantFlavor)" />
+  </ItemGroup>
+
+  <Import Project="..\.Variants.props" Condition="Exists('..\.Variants.props')" />
+  -->
+
+  <Import Project="..\.DeviceProfile.props" Condition="Exists('..\.DeviceProfile.props')" />
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
     <AndroidKeyStore>True</AndroidKeyStore>
@@ -130,7 +143,7 @@
     <PackageReference Include="Usa.Smart.Resolver" Version="2.6.2" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.2" />
     <PackageReference Include="Vitvov.Maui.PDFView" Version="1.5.0" />
-    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.5" />
+    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.4" />
   </ItemGroup>
 
   <ItemGroup>
