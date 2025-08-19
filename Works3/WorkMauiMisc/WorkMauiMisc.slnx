@@ -43,6 +43,9 @@
       <Build Solution="Debug|*" Project="false" />
       <Deploy />
     </Project>
+    <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
+      <Deploy />
+    </Project>
     <Project Path="WorkMarkdown/WorkMarkdown.csproj" Id="454619d6-2034-42a6-88b0-f4dcc06f3247">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -94,9 +97,6 @@
     </Project>
   </Folder>
   <Folder Name="/__/">
-    <Project Path="WorkMap2/WorkMap2.csproj" Id="ae128788-097e-4bf2-a6ba-45ed91e64db9">
-      <Deploy />
-    </Project>
     <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
       <Deploy Solution="Debug|*" />
     </Project>
