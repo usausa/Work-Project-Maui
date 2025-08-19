@@ -14,14 +14,55 @@
                  VerticalOptions="Center" />
 
         <Grid Grid.Row="1"
-              RowDefinitions="Auto"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="*,*"
               ColumnSpacing="8" RowSpacing="8">
 
             <Button Grid.Row="0" Grid.Column="0"
                     Text="TranslationX"
                     Clicked="OnTest1Clicked" />
+            <Button Grid.Row="0" Grid.Column="1"
+                    Text="TranslationY"
+                    Clicked="OnTest2Clicked" />
 
+            <Button Grid.Row="1" Grid.Column="0"
+                    Text="Mixed"
+                    Clicked="OnTest3Clicked" />
+            <Button Grid.Row="1" Grid.Column="1"
+                    Text="Built in"
+                    Clicked="OnTest4Clicked" />
+
+            <Button Grid.Row="2" Grid.Column="0"
+                    Text="Reuse"
+                    Clicked="OnTest5Clicked" />
+            <Button Grid.Row="2" Grid.Column="1"
+                    Text="Rotate"
+                    Clicked="OnTest6Clicked" />
+
+            <Button Grid.Row="3" Grid.Column="0"
+                    Text="Scale pulse"
+                    Clicked="OnTest7Clicked" />
+            <Button Grid.Row="3" Grid.Column="1"
+                    Text="Blink"
+                    Clicked="OnTest8Clicked" />
+
+            <Button Grid.Row="4" Grid.Column="0"
+                    Text="Parallel"
+                    Clicked="OnTest9Clicked" />
+            <Button Grid.Row="4" Grid.Column="1"
+                    Text="Sequence"
+                    Clicked="OnTest10Clicked" />
+
+            <Button Grid.Row="5" Grid.Column="0"
+                    Text="Spring"
+                    Clicked="OnTest11Clicked" />
+            <Button Grid.Row="5" Grid.Column="1"
+                    Text="Elastic"
+                    Clicked="OnTest12Clicked" />
+
+            <Button Grid.Row="6" Grid.Column="0"
+                    Text="Chain"
+                    Clicked="OnTest13Clicked" />
         </Grid>
 
     </Grid>

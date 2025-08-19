@@ -12,8 +12,8 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        //return new Window(new AnimeTestPage());
-        return new Window(new AnimePage());
+        return new Window(new AnimeTestPage());
+        //return new Window(new AnimePage());
         //return new Window(new PathPage());
         // -----
         //return new Window(new CollectionPage());
