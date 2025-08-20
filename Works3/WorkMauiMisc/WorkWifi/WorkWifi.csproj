@@ -86,8 +86,8 @@
 		<PackageReference Include="Components.Maui" Version="1.23.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
-		<PackageReference Include="Usa.Smart.Maui" Version="2.9.1" />
-		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.9.1" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.9.3" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.9.3" />
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 		<PackageReference Include="WifiManager.Maui" Version="9.0.3" />
 	</ItemGroup>
