@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:app="clr-namespace:WorkDesign"
+             x:Class="WorkDesign.AnimeSamplePage"
+             x:DataType="{x:Type app:AnimeSamplePageViewModel}"
+             Title="AnimeSamplePage">
+
+    <ContentPage.BindingContext>
+        <app:AnimeSamplePageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,*,Auto"
+          ColumnDefinitions="*,*"
+          ColumnSpacing="6" RowSpacing="6">
+
+        <Button Grid.Row="0" Grid.Column="0"
+                HeightRequest="64"
+                Text="Fade"
+                BackgroundColor="{StaticResource BlueDefault}">
+            <Button.Behaviors>
+                <s:EventActionBehavior EventName="Clicked">
+                    <s:BeginAnimationAction>
+                        <s:SequentialAnimation>
+                            <s:FadeToAnimation Duration="250"
+                                               Opacity="0.5" />
+                            <s:FadeToAnimation Duration="250"
+                                               Opacity="1.0" />
+                        </s:SequentialAnimation>
+                    </s:BeginAnimationAction>
+                </s:EventActionBehavior>
+            </Button.Behaviors>
+        </Button>
+
+
+        <BoxView Grid.Row="1" Grid.Column="0"
+                 WidthRequest="128" HeightRequest="128"
+                 BackgroundColor="{StaticResource OrangeDefault}"
+                 CornerRadius="16">
+            <BoxView.Behaviors>
+                <s:TapActionBehavior>
+                    <s:BeginAnimationAction>
+                        <s:RelRotateToAnimation Rotation="90" />
+                    </s:BeginAnimationAction>
+                </s:TapActionBehavior>
+            </BoxView.Behaviors>
+        </BoxView>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Text="1" />
+            <Button Grid.Column="1"
+                    Text="2" />
+        </Grid>
+    </Grid>
+
+</ContentPage>
