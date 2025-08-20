@@ -7,21 +7,49 @@
              x:DataType="{x:Type app:AnimationEasingPageViewModel}"
              Title="AnimationEasingPage">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="EasingBackgroundGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+            </Style>
+
+            <Style x:Key="EasingLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="EasingBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="WidthRequest" Value="16" />
+                <Setter Property="HeightRequest" Value="16" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.BindingContext>
         <app:AnimationEasingPageViewModel />
     </ContentPage.BindingContext>
 
     <Grid RowDefinitions="*,*,*,*,*,Auto"
-          ColumnDefinitions="*,*,*"
-          ColumnSpacing="6" RowSpacing="6">
+          ColumnDefinitions="*,*,*">
 
         <Grid Grid.Row="0" Grid.Column="0"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="Linear"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="Linear" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -34,12 +62,10 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="SinOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="SinOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -52,12 +78,10 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="SinIn"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="SinIn" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -70,12 +94,10 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="2"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="SinInOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="SinInOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -89,12 +111,10 @@
 
 
         <Grid Grid.Row="2" Grid.Column="0"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="CubicIn"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="CubicIn" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -107,12 +127,10 @@
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="1"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="CubicOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="CubicOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -125,12 +143,10 @@
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="2"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="CubicInOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="CubicInOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -144,12 +160,10 @@
 
 
         <Grid Grid.Row="3" Grid.Column="0"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="BounceOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="BounceOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -162,12 +176,10 @@
         </Grid>
 
         <Grid Grid.Row="3" Grid.Column="1"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="BounceIn"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="BounceIn" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -181,12 +193,10 @@
 
 
         <Grid Grid.Row="4" Grid.Column="0"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="SpringIn"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="SpringIn" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
@@ -199,12 +209,10 @@
         </Grid>
 
         <Grid Grid.Row="4" Grid.Column="1"
-              BackgroundColor="{StaticResource GreenLighten4}">
-            <Label Text="SpringOut"
-                   HorizontalOptions="Center" VerticalOptions="Center" />
-            <BoxView WidthRequest="16" HeightRequest="16"
-                     Color="{StaticResource BlueDefault}"
-                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+              Style="{StaticResource EasingBackgroundGrid}">
+            <Label Style="{StaticResource EasingLabel}"
+                   Text="SpringOut" />
+            <BoxView Style="{StaticResource EasingBoxView}">
                 <BoxView.Behaviors>
                     <s:EventRequestBehavior Request="{Binding AnimationRequest}">
                         <s:BeginAnimationAction>
