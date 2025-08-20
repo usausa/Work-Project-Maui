@@ -14,7 +14,6 @@ public partial class App : Application
     {
         return new Window(new AnimeSamplePage());
         //return new Window(new AnimeTestPage());
-        //return new Window(new AnimePage());
 
         //return new Window(new PathPage());
         // -----
