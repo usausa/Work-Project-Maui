@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:app="clr-namespace:WorkDesign"
+             x:Class="WorkDesign.AnimationEasingPage"
+             x:DataType="{x:Type app:AnimationEasingPageViewModel}"
+             Title="AnimationEasingPage">
+
+    <ContentPage.BindingContext>
+        <app:AnimationEasingPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*,*,*,*,*,Auto"
+          ColumnDefinitions="*,*,*"
+          ColumnSpacing="6" RowSpacing="6">
+
+        <Grid Grid.Row="0" Grid.Column="0"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="Linear"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.Linear}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="SinOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.SinOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="SinIn"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.SinIn}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="2"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="SinInOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.SinInOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+
+        <Grid Grid.Row="2" Grid.Column="0"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="CubicIn"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.CubicIn}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="1"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="CubicOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.CubicOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="2"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="CubicInOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.CubicInOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+
+        <Grid Grid.Row="3" Grid.Column="0"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="BounceOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.BounceOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="1"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="BounceIn"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.BounceIn}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+
+        <Grid Grid.Row="4" Grid.Column="0"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="SpringIn"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.SpringIn}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+        <Grid Grid.Row="4" Grid.Column="1"
+              BackgroundColor="{StaticResource GreenLighten4}">
+            <Label Text="SpringOut"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+            <BoxView WidthRequest="16" HeightRequest="16"
+                     Color="{StaticResource BlueDefault}"
+                     CornerRadius="8" HorizontalOptions="Start" VerticalOptions="Start">
+                <BoxView.Behaviors>
+                    <s:EventRequestBehavior Request="{Binding AnimationRequest}">
+                        <s:BeginAnimationAction>
+                            <app:EasingDemoAnimation Duration="2000"
+                                                     Easing="{x:Static Easing.SpringOut}" />
+                        </s:BeginAnimationAction>
+                    </s:EventRequestBehavior>
+                </BoxView.Behaviors>
+            </BoxView>
+        </Grid>
+
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="3"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding AnimationCommand}"
+                    Text="Start" />
+            <Button Grid.Column="1"
+                    Text="2" />
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

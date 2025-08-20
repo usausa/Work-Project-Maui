@@ -75,22 +75,4 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="AnimeSamplePage.xaml.cs">
-	    <DependentUpon>AnimeSamplePage.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="AnimeSamplePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="AnimeTestPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\DrawingPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 </Project>
