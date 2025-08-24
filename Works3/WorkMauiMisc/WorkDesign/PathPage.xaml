@@ -7,8 +7,10 @@
              x:Class="WorkDesign.PathPage"
              Title="PathPage">
 
-    <Grid RowDefinitions="192,*"
-          BackgroundColor="LightGray">
+
+
+
+    <Grid RowDefinitions="192,*">
 
         <Path Grid.Row="0"
               Aspect="Fill" Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" StrokeThickness="0">
@@ -29,7 +31,7 @@
         </VerticalStackLayout>
 
         <Grid Grid.Row="1"
-              RowDefinitions="*,Auto,8,Auto,32,Auto,2*"
+              RowDefinitions="2*,Auto,8,Auto,40,Auto,16,Auto,40,Auto,40,Auto,40,Auto,3*"
               Margin="20">
 
             <Label Grid.Row="1"
@@ -42,99 +44,88 @@
                    Text="ログインして続けてください"
                    HorizontalOptions="Center" />
 
-
-
-
-
-
-            <Grid Grid.Row="5"
-                  RowDefinitions="Auto,Auto,Auto,8,Auto,16,Auto"
-                  HorizontalOptions="Fill" RowSpacing="16">
-
-                <Border Grid.Row="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        Stroke="{StaticResource LightBlueDarken1}"
-                        StrokeShape="RoundRectangle 30">
-                    <Grid ColumnDefinitions="Auto,*,16">
-                        <Border Grid.Column="0"
-                                WidthRequest="40" HeightRequest="40"
-                                Margin="4"
-                                BackgroundColor="{StaticResource LightBlueDarken1}"
-                                HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
-                            <Image Margin="4">
-                                <Image.Source>
-                                    <FontImageSource Color="White"
-                                                     FontFamily="MaterialIcons"
-                                                     Glyph="{x:Static fonts:MaterialIcons.Account_circle}" />
-                                </Image.Source>
-                            </Image>
-                        </Border>
-                        <Entry Grid.Column="1"
-                               behaviors:EntryOption.NoBorder="True"
-                               FontSize="18" FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="FillAndExpand" Placeholder="ユーザーID"
-                               PlaceholderColor="{StaticResource GrayDefault}"
-                               VerticalOptions="Center" />
-                    </Grid>
-                </Border>
-
-                <Border Grid.Row="1"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        Stroke="{StaticResource LightBlueDarken1}"
-                        StrokeShape="RoundRectangle 30">
-                    <Grid ColumnDefinitions="Auto,*,16">
-                        <Border Grid.Column="0"
-                                WidthRequest="40" HeightRequest="40"
-                                Margin="4"
-                                BackgroundColor="{StaticResource LightBlueDarken1}"
-                                HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
-                            <Image Margin="4">
-                                <Image.Source>
-                                    <FontImageSource Color="White"
-                                                     FontFamily="MaterialIcons"
-                                                     Glyph="{x:Static fonts:MaterialIcons.Key}" />
-                                </Image.Source>
-                            </Image>
-                        </Border>
-                        <Entry Grid.Column="1"
-                               behaviors:EntryOption.NoBorder="True"
-                               FontSize="18" FontAttributes="Bold"
-                               TextColor="Black" BackgroundColor="Transparent"
-                               IsPassword="True" Placeholder="パスワード"
-                               PlaceholderColor="{StaticResource GrayDefault}"
-                               VerticalOptions="Center" />
-                    </Grid>
-                </Border>
-
-                <HorizontalStackLayout Grid.Row="2"
-                                       HorizontalOptions="Center" VerticalOptions="Center">
-                    <CheckBox Color="DodgerBlue" />
-                    <Label FontSize="18"
-                           Text="ログイン状態を保持"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-
-                <Button Grid.Row="4"
-                        WidthRequest="240" HeightRequest="64"
-                        FontSize="24" FontAttributes="Bold"
-                        Text="ログイン"
-                        TextColor="White"
-                        BackgroundColor="{StaticResource BlueDefault}"
-                        CornerRadius="32" />
-
-                <toolkit:SfEffectsView Grid.Row="6"
-                                       HorizontalOptions="Center" TouchDownEffects="Ripple">
-                    <Label VerticalTextAlignment="Center"
+            <Border Grid.Row="5"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Fill"
+                    Stroke="{StaticResource LightBlueDarken1}"
+                    StrokeShape="RoundRectangle 30">
+                <Grid ColumnDefinitions="Auto,*,16">
+                    <Border Grid.Column="0"
+                            WidthRequest="40" HeightRequest="40"
+                            Margin="4"
+                            BackgroundColor="{StaticResource LightBlueDarken1}"
+                            HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                        <Image Margin="4">
+                            <Image.Source>
+                                <FontImageSource Color="White"
+                                                 FontFamily="MaterialIcons"
+                                                 Glyph="{x:Static fonts:MaterialIcons.Account_circle}" />
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                    <Entry Grid.Column="1"
+                           behaviors:EntryOption.NoBorder="True"
                            FontSize="18" FontAttributes="Bold"
-                           Text="パスワードを忘れた場合"
-                           TextColor="{StaticResource LightBlueDarken4}"
-                           HorizontalOptions="End" />
-                </toolkit:SfEffectsView>
+                           TextColor="Black"
+                           HorizontalOptions="FillAndExpand" Placeholder="ユーザーID"
+                           PlaceholderColor="{StaticResource GrayDefault}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
 
-            </Grid>
+            <Border Grid.Row="7"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Fill"
+                    Stroke="{StaticResource LightBlueDarken1}"
+                    StrokeShape="RoundRectangle 30">
+                <Grid ColumnDefinitions="Auto,*,16">
+                    <Border Grid.Column="0"
+                            WidthRequest="40" HeightRequest="40"
+                            Margin="4"
+                            BackgroundColor="{StaticResource LightBlueDarken1}"
+                            HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                        <Image Margin="4">
+                            <Image.Source>
+                                <FontImageSource Color="White"
+                                                 FontFamily="MaterialIcons"
+                                                 Glyph="{x:Static fonts:MaterialIcons.Key}" />
+                            </Image.Source>
+                        </Image>
+                    </Border>
+                    <Entry Grid.Column="1"
+                           behaviors:EntryOption.NoBorder="True"
+                           FontSize="18" FontAttributes="Bold"
+                           TextColor="Black" BackgroundColor="Transparent"
+                           IsPassword="True" Placeholder="パスワード"
+                           PlaceholderColor="{StaticResource GrayDefault}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <HorizontalStackLayout Grid.Row="9"
+                                   HorizontalOptions="Center" VerticalOptions="Center">
+                <CheckBox Color="DodgerBlue" />
+                <Label FontSize="18"
+                       Text="ログイン状態を保持"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Grid.Row="11"
+                    WidthRequest="240" HeightRequest="64"
+                    FontSize="24" FontAttributes="Bold"
+                    Text="ログイン"
+                    TextColor="White"
+                    BackgroundColor="{StaticResource BlueDefault}"
+                    CornerRadius="32" />
+
+            <toolkit:SfEffectsView Grid.Row="13"
+                                   HorizontalOptions="Center" TouchDownEffects="Ripple">
+                <Label VerticalTextAlignment="Center"
+                       FontSize="18" FontAttributes="Bold"
+                       Text="パスワードを忘れた場合"
+                       TextColor="{StaticResource LightBlueDarken4}"
+                       HorizontalOptions="End" />
+            </toolkit:SfEffectsView>
 
         </Grid>
 
