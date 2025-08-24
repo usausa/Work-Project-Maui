@@ -1,151 +1,118 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="WorkDesign.PathPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="PathPage">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="using:Template.MobileApp.Behaviors"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             x:Class="WorkDesign.PathPage"
+             Title="PathPage">
 
-    <Grid BackgroundColor="LightGray" RowDefinitions="192,*">
+    <Grid RowDefinitions="192,*"
+          BackgroundColor="LightGray">
 
-        <Path
-            Aspect="Fill"
-            Data="M0 0 L112 0 L112 48 A16 24 90 0 1 100 60 L12 60 A16 24 90 0 1 0 48 L0 0 Z"
-            StrokeThickness="0">
+        <Path Aspect="Fill" Data="M0 0 L112 0 L112 48 A16 24 90 0 1 100 60 L12 60 A16 24 90 0 1 0 48 L0 0 Z" StrokeThickness="0">
             <Path.Fill>
                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0.0" Color="LightSkyBlue" />
-                    <GradientStop Offset="1.0" Color="DarkBlue" />
+                    <GradientStop Offset="0.0" Color="{StaticResource LightBlueAccent2}" />
+                    <GradientStop Offset="1.0" Color="{StaticResource LightBlueAccent4}" />
                 </LinearGradientBrush>
             </Path.Fill>
         </Path>
 
         <VerticalStackLayout>
-            <Border
-                Margin="0,48,0,0"
-                Padding="0"
-                HeightRequest="96"
-                HorizontalOptions="Center"
-                StrokeShape="RoundRectangle 48"
-                WidthRequest="96">
+            <Border WidthRequest="96" HeightRequest="96"
+                    Margin="0,48,0,0" Padding="0"
+                    HorizontalOptions="Center" StrokeShape="RoundRectangle 48">
                 <Image Aspect="AspectFill" Source="profile.jpg" />
             </Border>
         </VerticalStackLayout>
 
-        <!--  TODO RowDefinitionsみなおし  -->
-        <Grid
-            Grid.Row="1"
-            Margin="20,20,20,0"
-            RowDefinitions="*,50,50,Auto,40,40,*"
-            RowSpacing="5">
+        <!-- TODO RowDefinitionsみなおし -->
+        <Grid Grid.Row="1"
+              RowDefinitions="*,50,50,Auto,40,40,*"
+              Margin="20,20,20,0"
+              RowSpacing="5">
 
-            <Label
-                Grid.Row="1"
-                Margin="0"
-                Padding="0"
-                FontAttributes="Bold"
-                FontSize="18"
-                HorizontalOptions="Center"
-                Text="Welcome" />
-            <Label
-                Grid.Row="2"
-                Margin="0"
-                Padding="0"
-                FontSize="14"
-                HorizontalOptions="Center"
-                Text="Sign in to continue" />
+            <Label Grid.Row="1"
+                   Margin="0" Padding="0"
+                   FontSize="28" FontAttributes="Bold"
+                   Text="ようこそ"
+                   HorizontalOptions="Center" />
+            <Label Grid.Row="2"
+                   Margin="0" Padding="0"
+                   FontSize="18"
+                   Text="ログインして続けてください"
+                   HorizontalOptions="Center" />
 
-            <VerticalStackLayout
-                Grid.Row="3"
-                HorizontalOptions="Fill"
-                Spacing="15">
-                <Frame
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    BorderColor="LightGreen"
-                    CornerRadius="30"
-                    HorizontalOptions="Fill">
-                    <!--  TODO Gridで代替？  -->
+            <VerticalStackLayout Grid.Row="3"
+                                 HorizontalOptions="Fill" Spacing="15">
+                <Border Padding="0"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Fill"
+                        Stroke="{StaticResource LightBlueDarken1}"
+                        StrokeShape="RoundRectangle 30">
+                    <!-- TODO Gridで代替？ -->
                     <HorizontalStackLayout>
-                        <Frame
-                            Margin="5"
-                            Padding="0"
-                            BackgroundColor="SkyBlue"
-                            CornerRadius="30"
-                            HeightRequest="40"
-                            WidthRequest="40">
+                        <Frame WidthRequest="40" HeightRequest="40"
+                               Margin="5" Padding="0"
+                               BackgroundColor="{StaticResource LightBlueDarken1}"
+                               CornerRadius="30">
                             <Image Source="home.png" />
                         </Frame>
-                        <Entry
-                            FontAttributes="Bold"
-                            Placeholder="Username"
-                            TextColor="Black"
-                            VerticalOptions="Center" />
+                        <Entry behaviors:EntryOption.NoBorder="True"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="Black"
+                               Placeholder="Username"
+                               PlaceholderColor="{StaticResource GrayDefault}"
+                               VerticalOptions="Center" />
                     </HorizontalStackLayout>
-                </Frame>
-                <Frame
-                    Padding="0"
-                    BackgroundColor="Transparent"
-                    BorderColor="LightGreen"
-                    CornerRadius="30"
-                    HorizontalOptions="Fill">
-                    <!--  TODO Gridで代替？  -->
+                </Border>
+                <Border Padding="0"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Fill"
+                        Stroke="{StaticResource LightBlueDarken1}"
+                        StrokeShape="RoundRectangle 30">
+                    <!-- TODO Gridで代替？ -->
                     <HorizontalStackLayout>
-                        <Frame
-                            Margin="5"
-                            Padding="0"
-                            BackgroundColor="SkyBlue"
-                            CornerRadius="30"
-                            HeightRequest="40"
-                            WidthRequest="40">
+                        <Frame WidthRequest="40" HeightRequest="40"
+                               Margin="5" Padding="0"
+                               BackgroundColor="{StaticResource LightBlueDarken1}"
+                               CornerRadius="30">
                             <Image Source="home.png" />
                         </Frame>
-                        <Entry
-                            FontAttributes="Bold"
-                            Placeholder="Password"
-                            TextColor="Black"
-                            VerticalOptions="Center" />
+                        <Entry behaviors:EntryOption.NoBorder="True"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="Black"
+                               Placeholder="Password"
+                               PlaceholderColor="{StaticResource GrayDefault}"
+                               VerticalOptions="Center" />
                     </HorizontalStackLayout>
-                </Frame>
+                </Border>
 
                 <HorizontalStackLayout Margin="0,10,0,0" Padding="0">
-                    <!--  TODO Gridで代替？  -->
+                    <!-- TODO Gridで代替？ -->
                     <CheckBox />
-                    <Label
-                        HorizontalTextAlignment="Center"
-                        Text="Remember Me"
-                        TextColor="DarkGray"
-                        VerticalTextAlignment="Center" />
-                    <Label
-                        FontAttributes="Bold"
-                        HorizontalOptions="End"
-                        Text="Forget Password"
-                        TextColor="#1D8348"
-                        VerticalTextAlignment="Center" />
+                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           FontSize="18"
+                           Text="ログイン状態を保持"
+                           TextColor="DarkGray" />
                 </HorizontalStackLayout>
 
-                <Button
-                    Margin="0,15,0,0"
-                    BackgroundColor="#58D68D"
-                    CornerRadius="30"
-                    FontAttributes="Bold"
-                    Text="SIGN IN"
-                    WidthRequest="200" />
+                <Button WidthRequest="240" HeightRequest="64"
+                        Margin="0,15,0,0"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="ログイン"
+                        BackgroundColor="{StaticResource BlueDefault}"
+                        CornerRadius="32" />
 
-                <HorizontalStackLayout
-                    Margin="0,60,0,0"
-                    Padding="0"
-                    HorizontalOptions="Center">
-                    <Label
-                        FontSize="12"
-                        Text="New User?"
-                        TextColor="DarkGray" />
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="12"
-                        Text="Sign up"
-                        TextColor="#1D8348" />
-
-
+                <HorizontalStackLayout Margin="0,40,0,0" Padding="0"
+                                       HorizontalOptions="Center">
+                    <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                        <Label VerticalTextAlignment="Center"
+                               FontSize="18" FontAttributes="Bold"
+                               Text="パスワードを忘れた場合"
+                               TextColor="{StaticResource LightBlueDarken4}"
+                               HorizontalOptions="End" />
+                    </toolkit:SfEffectsView>
                 </HorizontalStackLayout>
 
             </VerticalStackLayout>

@@ -42,6 +42,10 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
+#if ANDROID
+        Template.MobileApp.Behaviors.EntryOption.UseCustomMapper();
+#endif
+
         return builder.Build();
     }
 }
