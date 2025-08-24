@@ -42,15 +42,23 @@
                    Text="ログインして続けてください"
                    HorizontalOptions="Center" />
 
-            <VerticalStackLayout Grid.Row="5"
-                                 HorizontalOptions="Fill" Spacing="16">
-                <Border BackgroundColor="Transparent"
+
+
+
+
+
+            <Grid Grid.Row="5"
+                  RowDefinitions="Auto,Auto,Auto,8,Auto,16,Auto"
+                  HorizontalOptions="Fill" RowSpacing="16">
+
+                <Border Grid.Row="0"
+                        BackgroundColor="Transparent"
                         HorizontalOptions="Fill"
                         Stroke="{StaticResource LightBlueDarken1}"
                         StrokeShape="RoundRectangle 30">
-                    <!-- TODO Gridで代替？ -->
-                    <HorizontalStackLayout>
-                        <Border WidthRequest="40" HeightRequest="40"
+                    <Grid ColumnDefinitions="Auto,*,16">
+                        <Border Grid.Column="0"
+                                WidthRequest="40" HeightRequest="40"
                                 Margin="4"
                                 BackgroundColor="{StaticResource LightBlueDarken1}"
                                 HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
@@ -62,22 +70,24 @@
                                 </Image.Source>
                             </Image>
                         </Border>
-                        <Entry behaviors:EntryOption.NoBorder="True"
+                        <Entry Grid.Column="1"
+                               behaviors:EntryOption.NoBorder="True"
                                FontSize="18" FontAttributes="Bold"
-                               TextColor="Black" BackgroundColor="Transparent"
-                               Placeholder="ユーザーID"
+                               TextColor="Black"
+                               HorizontalOptions="FillAndExpand" Placeholder="ユーザーID"
                                PlaceholderColor="{StaticResource GrayDefault}"
                                VerticalOptions="Center" />
-                    </HorizontalStackLayout>
+                    </Grid>
                 </Border>
 
-                <Border BackgroundColor="Transparent"
+                <Border Grid.Row="1"
+                        BackgroundColor="Transparent"
                         HorizontalOptions="Fill"
                         Stroke="{StaticResource LightBlueDarken1}"
                         StrokeShape="RoundRectangle 30">
-                    <!-- TODO Gridで代替？ -->
-                    <HorizontalStackLayout>
-                        <Border WidthRequest="40" HeightRequest="40"
+                    <Grid ColumnDefinitions="Auto,*,16">
+                        <Border Grid.Column="0"
+                                WidthRequest="40" HeightRequest="40"
                                 Margin="4"
                                 BackgroundColor="{StaticResource LightBlueDarken1}"
                                 HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
@@ -89,16 +99,17 @@
                                 </Image.Source>
                             </Image>
                         </Border>
-                        <Entry behaviors:EntryOption.NoBorder="True"
+                        <Entry Grid.Column="1"
+                               behaviors:EntryOption.NoBorder="True"
                                FontSize="18" FontAttributes="Bold"
                                TextColor="Black" BackgroundColor="Transparent"
                                IsPassword="True" Placeholder="パスワード"
                                PlaceholderColor="{StaticResource GrayDefault}"
                                VerticalOptions="Center" />
-                    </HorizontalStackLayout>
+                    </Grid>
                 </Border>
 
-                <HorizontalStackLayout Margin="0,8,0,0"
+                <HorizontalStackLayout Grid.Row="2"
                                        HorizontalOptions="Center" VerticalOptions="Center">
                     <CheckBox Color="DodgerBlue" />
                     <Label FontSize="18"
@@ -106,28 +117,24 @@
                            VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
-                <HorizontalStackLayout Margin="0,16,0,0"
-                                       HorizontalOptions="Center" VerticalOptions="Center">
-                    <Button WidthRequest="240" HeightRequest="64"
-                            FontSize="24" FontAttributes="Bold"
-                            Text="ログイン"
-                            TextColor="White"
-                            BackgroundColor="{StaticResource BlueDefault}"
-                            CornerRadius="32" />
-                </HorizontalStackLayout>
+                <Button Grid.Row="4"
+                        WidthRequest="240" HeightRequest="64"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="ログイン"
+                        TextColor="White"
+                        BackgroundColor="{StaticResource BlueDefault}"
+                        CornerRadius="32" />
 
-                <HorizontalStackLayout Margin="0,32,0,0" Padding="0"
-                                       HorizontalOptions="Center">
-                    <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                        <Label VerticalTextAlignment="Center"
-                               FontSize="18" FontAttributes="Bold"
-                               Text="パスワードを忘れた場合"
-                               TextColor="{StaticResource LightBlueDarken4}"
-                               HorizontalOptions="End" />
-                    </toolkit:SfEffectsView>
-                </HorizontalStackLayout>
+                <toolkit:SfEffectsView Grid.Row="6"
+                                       HorizontalOptions="Center" TouchDownEffects="Ripple">
+                    <Label VerticalTextAlignment="Center"
+                           FontSize="18" FontAttributes="Bold"
+                           Text="パスワードを忘れた場合"
+                           TextColor="{StaticResource LightBlueDarken4}"
+                           HorizontalOptions="End" />
+                </toolkit:SfEffectsView>
 
-            </VerticalStackLayout>
+            </Grid>
 
         </Grid>
 
