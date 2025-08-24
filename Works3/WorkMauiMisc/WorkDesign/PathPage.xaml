@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="using:Template.MobileApp.Behaviors"
+             xmlns:fonts="using:Fonts"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="WorkDesign.PathPage"
              Title="PathPage">
@@ -9,7 +10,8 @@
     <Grid RowDefinitions="192,*"
           BackgroundColor="LightGray">
 
-        <Path Aspect="Fill" Data="M0 0 L112 0 L112 48 A16 24 90 0 1 100 60 L12 60 A16 24 90 0 1 0 48 L0 0 Z" StrokeThickness="0">
+        <Path Grid.Row="0"
+              Aspect="Fill" Data="M0 0 L120 0 L120 48 A16 24 90 0 1 100 60 L20 60 A16 24 90 0 1 0 48 L0 0 Z" StrokeThickness="0">
             <Path.Fill>
                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                     <GradientStop Offset="0.0" Color="{StaticResource LightBlueAccent2}" />
@@ -18,7 +20,7 @@
             </Path.Fill>
         </Path>
 
-        <VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="0">
             <Border WidthRequest="96" HeightRequest="96"
                     Margin="0,48,0,0" Padding="0"
                     HorizontalOptions="Center" StrokeShape="RoundRectangle 48">
@@ -26,85 +28,95 @@
             </Border>
         </VerticalStackLayout>
 
-        <!-- TODO RowDefinitionsみなおし -->
         <Grid Grid.Row="1"
-              RowDefinitions="*,50,50,Auto,40,40,*"
-              Margin="20,20,20,0"
-              RowSpacing="5">
+              RowDefinitions="*,Auto,8,Auto,32,Auto,2*"
+              Margin="20">
 
             <Label Grid.Row="1"
-                   Margin="0" Padding="0"
                    FontSize="28" FontAttributes="Bold"
                    Text="ようこそ"
                    HorizontalOptions="Center" />
-            <Label Grid.Row="2"
-                   Margin="0" Padding="0"
+
+            <Label Grid.Row="3"
                    FontSize="18"
                    Text="ログインして続けてください"
                    HorizontalOptions="Center" />
 
-            <VerticalStackLayout Grid.Row="3"
-                                 HorizontalOptions="Fill" Spacing="15">
-                <Border Padding="0"
-                        BackgroundColor="Transparent"
+            <VerticalStackLayout Grid.Row="5"
+                                 HorizontalOptions="Fill" Spacing="16">
+                <Border BackgroundColor="Transparent"
                         HorizontalOptions="Fill"
                         Stroke="{StaticResource LightBlueDarken1}"
                         StrokeShape="RoundRectangle 30">
                     <!-- TODO Gridで代替？ -->
                     <HorizontalStackLayout>
-                        <Frame WidthRequest="40" HeightRequest="40"
-                               Margin="5" Padding="0"
-                               BackgroundColor="{StaticResource LightBlueDarken1}"
-                               CornerRadius="30">
-                            <Image Source="home.png" />
-                        </Frame>
+                        <Border WidthRequest="40" HeightRequest="40"
+                                Margin="4"
+                                BackgroundColor="{StaticResource LightBlueDarken1}"
+                                HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                            <Image Margin="4">
+                                <Image.Source>
+                                    <FontImageSource Color="White"
+                                                     FontFamily="MaterialIcons"
+                                                     Glyph="{x:Static fonts:MaterialIcons.Account_circle}" />
+                                </Image.Source>
+                            </Image>
+                        </Border>
                         <Entry behaviors:EntryOption.NoBorder="True"
                                FontSize="18" FontAttributes="Bold"
-                               TextColor="Black"
-                               Placeholder="Username"
-                               PlaceholderColor="{StaticResource GrayDefault}"
-                               VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                </Border>
-                <Border Padding="0"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Fill"
-                        Stroke="{StaticResource LightBlueDarken1}"
-                        StrokeShape="RoundRectangle 30">
-                    <!-- TODO Gridで代替？ -->
-                    <HorizontalStackLayout>
-                        <Frame WidthRequest="40" HeightRequest="40"
-                               Margin="5" Padding="0"
-                               BackgroundColor="{StaticResource LightBlueDarken1}"
-                               CornerRadius="30">
-                            <Image Source="home.png" />
-                        </Frame>
-                        <Entry behaviors:EntryOption.NoBorder="True"
-                               FontSize="18" FontAttributes="Bold"
-                               TextColor="Black"
-                               Placeholder="Password"
+                               TextColor="Black" BackgroundColor="Transparent"
+                               Placeholder="ユーザーID"
                                PlaceholderColor="{StaticResource GrayDefault}"
                                VerticalOptions="Center" />
                     </HorizontalStackLayout>
                 </Border>
 
-                <HorizontalStackLayout Margin="0,10,0,0" Padding="0">
+                <Border BackgroundColor="Transparent"
+                        HorizontalOptions="Fill"
+                        Stroke="{StaticResource LightBlueDarken1}"
+                        StrokeShape="RoundRectangle 30">
                     <!-- TODO Gridで代替？ -->
-                    <CheckBox />
-                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                           FontSize="18"
+                    <HorizontalStackLayout>
+                        <Border WidthRequest="40" HeightRequest="40"
+                                Margin="4"
+                                BackgroundColor="{StaticResource LightBlueDarken1}"
+                                HorizontalOptions="Center" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                            <Image Margin="4">
+                                <Image.Source>
+                                    <FontImageSource Color="White"
+                                                     FontFamily="MaterialIcons"
+                                                     Glyph="{x:Static fonts:MaterialIcons.Key}" />
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                        <Entry behaviors:EntryOption.NoBorder="True"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="Black" BackgroundColor="Transparent"
+                               IsPassword="True" Placeholder="パスワード"
+                               PlaceholderColor="{StaticResource GrayDefault}"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <HorizontalStackLayout Margin="0,8,0,0"
+                                       HorizontalOptions="Center" VerticalOptions="Center">
+                    <CheckBox Color="DodgerBlue" />
+                    <Label FontSize="18"
                            Text="ログイン状態を保持"
-                           TextColor="DarkGray" />
+                           VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
-                <Button WidthRequest="240" HeightRequest="64"
-                        Margin="0,15,0,0"
-                        FontSize="24" FontAttributes="Bold"
-                        Text="ログイン"
-                        BackgroundColor="{StaticResource BlueDefault}"
-                        CornerRadius="32" />
+                <HorizontalStackLayout Margin="0,16,0,0"
+                                       HorizontalOptions="Center" VerticalOptions="Center">
+                    <Button WidthRequest="240" HeightRequest="64"
+                            FontSize="24" FontAttributes="Bold"
+                            Text="ログイン"
+                            TextColor="White"
+                            BackgroundColor="{StaticResource BlueDefault}"
+                            CornerRadius="32" />
+                </HorizontalStackLayout>
 
-                <HorizontalStackLayout Margin="0,40,0,0" Padding="0"
+                <HorizontalStackLayout Margin="0,32,0,0" Padding="0"
                                        HorizontalOptions="Center">
                     <toolkit:SfEffectsView TouchDownEffects="Ripple">
                         <Label VerticalTextAlignment="Center"
