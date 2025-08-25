@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:app="using:WorkDesign"
              x:Class="WorkDesign.StickPage"
              Title="StickPage">
-    <VerticalStackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-               HorizontalOptions="Center" VerticalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid>
+
+        <app:JoystickControl Margin="20"
+                             HorizontalOptions="End" VerticalOptions="End" />
+    </Grid>
+
 </ContentPage>

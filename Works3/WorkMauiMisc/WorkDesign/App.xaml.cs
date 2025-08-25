@@ -12,17 +12,9 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        //return new Window(new AnimationEasingPage());
-        //return new Window(new AnimeSamplePage());
-        //return new Window(new AnimeTestPage());
-
-        //return new Window(new PathPage());
+        return new Window(new StickPage());
+        //return new Window(new ChatPage());
         //return new Window(new CollectionPage());
-        // -----
-        return new Window(new ChatPage());
-        //return new Window(new MailPage());
-        //return new Window(new PosPage());
-        // -----
         //return new Window(new SchedulePage());
         //return new Window(new CalendarPage());
 
@@ -41,5 +33,13 @@ public partial class App : Application
         // -----
         //return new Window(new ButtonPage());
         //return new Window(new HeaderPage());
+        // -----
+        //return new Window(new PathPage());
+        //return new Window(new MailPage());
+        //return new Window(new PosPage());
+        // -----
+        //return new Window(new AnimationEasingPage());
+        //return new Window(new AnimeSamplePage());
+        //return new Window(new AnimeTestPage());
     }
 }
