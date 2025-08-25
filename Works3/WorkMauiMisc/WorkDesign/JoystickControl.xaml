@@ -2,11 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkDesign.JoystickControl"
+             x:Name="JoyStick"
              WidthRequest="100" HeightRequest="100">
     <Grid>
-        <Ellipse Fill="LightGray" />
+        <Ellipse Fill="{Binding BaseColor, Source={x:Reference JoyStick}}" />
         <Ellipse x:Name="Thumb"
                  WidthRequest="40" HeightRequest="40"
-                 Fill="DarkSlateBlue" TranslationX="0" TranslationY="0" />
+                 Fill="{Binding ThumbColor, Source={x:Reference JoyStick}}"
+                 TranslationX="0" TranslationY="0" />
     </Grid>
 </ContentView>

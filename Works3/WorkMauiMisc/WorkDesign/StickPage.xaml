@@ -8,7 +8,7 @@
     <Grid>
 
         <app:JoystickControl Margin="20"
-                             HorizontalOptions="End" VerticalOptions="End" />
+                             HorizontalOptions="End" Opacity="0.5" VerticalOptions="End" />
     </Grid>
 
 </ContentPage>

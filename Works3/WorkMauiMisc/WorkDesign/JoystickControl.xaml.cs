@@ -4,7 +4,32 @@ namespace WorkDesign;
 
 public partial class JoystickControl : ContentView
 {
-    private double _radius = 40;
+    // TODO Gradation?
+    public static readonly BindableProperty ThumbColorProperty = BindableProperty.Create(
+        nameof(ThumbColor),
+        typeof(Color),
+        typeof(JoystickControl),
+        Colors.Red);
+
+    public Color ThumbColor
+    {
+        get => (Color)GetValue(ThumbColorProperty);
+        set => SetValue(ThumbColorProperty, value);
+    }
+
+    public static readonly BindableProperty BaseColorProperty = BindableProperty.Create(
+        nameof(BaseColor),
+        typeof(Color),
+        typeof(JoystickControl),
+        Colors.Gray);
+
+    public Color BaseColor
+    {
+        get => (Color)GetValue(BaseColorProperty);
+        set => SetValue(BaseColorProperty, value);
+    }
+
+    private double radius = 40;
 
     public JoystickControl()
 	{
@@ -15,13 +40,12 @@ public partial class JoystickControl : ContentView
         this.GestureRecognizers.Add(panGesture);
     }
 
-    private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+    private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
         switch (e.StatusType)
         {
             case GestureStatus.Running:
-                double x = Math.Clamp(e.TotalX, -_radius, _radius);
-                double y = Math.Clamp(e.TotalY, -_radius, _radius);
+                var (x, y) = ClampToCircle(e.TotalX, e.TotalY);
                 Thumb.TranslationX = x;
                 Thumb.TranslationY = y;
                 break;
@@ -32,6 +56,26 @@ public partial class JoystickControl : ContentView
                 Thumb.TranslationX = 0;
                 Thumb.TranslationY = 0;
                 break;
+        }
+    }
+
+    public (double X, double Y) ClampToCircle(double x, double y)
+    {
+        // 現在の座標と中心(0,0)の距離を計算
+        double distance = Math.Sqrt(x * x + y * y);
+
+        // 距離が半径より大きい場合にのみ補正を行う
+        if (distance > radius)
+        {
+            // 正規化されたベクトルに半径を乗算して円周上の座標を求める
+            double newX = x * (radius / distance);
+            double newY = y * (radius / distance);
+            return (newX, newY);
+        }
+        else
+        {
+            // 範囲内の場合はそのままの座標を返す
+            return (x, y);
         }
     }
 }
