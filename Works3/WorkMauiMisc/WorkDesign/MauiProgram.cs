@@ -1,6 +1,6 @@
-using CommunityToolkit.Maui;
-
 namespace WorkDesign;
+
+using CommunityToolkit.Maui;
 
 using Fonts;
 

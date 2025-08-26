@@ -1,11 +1,12 @@
 namespace WorkDesign;
-using Microsoft.Maui.Graphics;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.Maui.Graphics;
 
 public class CalendarView : GraphicsView
 {
@@ -71,7 +72,7 @@ public class CalendarDrawable : IDrawable
     private readonly CalendarView _calendarView;
     private float _cellWidth;
     private float _cellHeight;
-    private readonly List<CalendarCell> _cells = new List<CalendarCell>();
+    private readonly List<CalendarCell> _cells = new();
 
     public CalendarDrawable(CalendarView calendarView)
     {

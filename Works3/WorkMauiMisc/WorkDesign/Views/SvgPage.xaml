@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="clr-namespace:WorkDesign"
              x:Class="WorkDesign.SvgPage"
+             x:DataType="{x:Type app:SvgPageViewModel}"
              Title="SvgPage">
 
     <ContentPage.BindingContext>

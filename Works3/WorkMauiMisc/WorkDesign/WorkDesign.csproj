@@ -21,6 +21,8 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>preview</LangVersion>
 
+		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+
 		<!-- Display name -->
 		<ApplicationTitle>WorkDesign</ApplicationTitle>
 
@@ -77,6 +79,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="JoystickControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="JoystickControl2.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

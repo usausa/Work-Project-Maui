@@ -3,12 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:app="using:WorkDesign"
              x:Class="WorkDesign.StickPage"
+             x:DataType="{x:Type app:StickPageViewModel}"
              Title="StickPage">
 
-    <Grid>
+    <ContentPage.BindingContext>
+        <app:StickPageViewModel />
+    </ContentPage.BindingContext>
 
-        <app:JoystickControl Margin="20"
-                             HorizontalOptions="End" Opacity="0.5" VerticalOptions="End" />
+    <ContentPage.Resources>
+        <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Label Grid.Row="0"
+               HeightRequest="40"
+               Text="{Binding XValue}" />
+
+        <Label Grid.Row="1"
+               HeightRequest="40"
+               Text="{Binding YValue}" />
+
+        <!--<app:JoystickControl Grid.Row="2"
+                             WidthRequest="100" HeightRequest="100"
+                             Margin="20"
+                             HorizontalOptions="End" VerticalOptions="End" />-->
+
+        <app:JoystickControl2 Grid.Row="2"
+                              WidthRequest="200" HeightRequest="200"
+                              Margin="20"
+                              BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
+                              TriangleColor="White" VerticalOptions="End"
+                              XValue="{Binding XValue, Mode=OneWayToSource}"
+                              YValue="{Binding YValue, Mode=OneWayToSource}">
+            <app:JoystickControl.ThumbFill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0.0" Color="Red" />
+                    <GradientStop Offset="1.0" Color="DarkRed" />
+                </LinearGradientBrush>
+            </app:JoystickControl.ThumbFill>
+        </app:JoystickControl2>
     </Grid>
 
 </ContentPage>

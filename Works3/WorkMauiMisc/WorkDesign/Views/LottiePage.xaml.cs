@@ -1,9 +1,9 @@
+namespace WorkDesign;
+
 using System.Globalization;
 using Smart.Maui.Input;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-namespace WorkDesign;
 
 public partial class LottiePage : ContentPage
 {
@@ -41,7 +41,7 @@ public sealed class TimeSpanToDoubleConverter : IValueConverter
         value switch
         {
             TimeSpan ts => ts.TotalMilliseconds == 0 && parameter is not null
-                ? double.Parse(parameter.ToString())
+                ? double.Parse(parameter.ToString()!)
                 : ts.TotalMilliseconds,
             _ => throw new ArgumentException("Value was not a TimeSpan.", nameof(value)),
         };

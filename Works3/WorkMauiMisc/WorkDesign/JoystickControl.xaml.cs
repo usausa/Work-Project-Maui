@@ -1,6 +1,6 @@
-using System.Diagnostics;
-
 namespace WorkDesign;
+
+using System.Diagnostics;
 
 public partial class JoystickControl : ContentView
 {
