@@ -47,8 +47,9 @@
 
         <Ellipse x:Name="Thumb"
                  Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
-                 Fill="{Binding Source={x:Reference ThisControl}, Path=ThumbFill}"
+                 Fill="{Binding Source={x:Reference ThisControl}, Path=ThumbColor}"
                  HorizontalOptions="Center" VerticalOptions="Center" />
+        <!-- Fill="{Binding Source={x:Reference ThisControl}, Path=ThumbFill}" -->
         <!-- Fill="{Binding Source={x:Reference ThisControl}, Path=ThumbColor}" -->
     </Grid>
 </ContentView>
