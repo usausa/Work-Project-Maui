@@ -40,6 +40,13 @@ public partial class ChatPageViewModel : ExtendViewModelBase
             Type = MessageType.Send,
             DateTime = DateTime.Now.AddDays(-1),
             Author = "You",
+            TextContent = "This is a sent message sample.\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0"
+        });
+        ChatMessages.Add(new ChatMessage
+        {
+            Type = MessageType.Send,
+            DateTime = DateTime.Now.AddDays(-1),
+            Author = "You",
             TextContent = "This is a sent message sample."
         });
         ChatMessages.Add(new ChatMessage
@@ -47,7 +54,7 @@ public partial class ChatPageViewModel : ExtendViewModelBase
             Type = MessageType.Receive,
             DateTime = DateTime.Now.AddDays(-1).AddMinutes(3),
             Author = "Alice",
-            TextContent = "This is a received message sample."
+            TextContent = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890.\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0"
         });
         ChatMessages.Add(new ChatMessage
         {
@@ -56,10 +63,17 @@ public partial class ChatPageViewModel : ExtendViewModelBase
         });
         ChatMessages.Add(new ChatMessage
         {
+            Type = MessageType.Receive,
+            DateTime = DateTime.Now.AddDays(-1).AddMinutes(3),
+            Author = "Alice",
+            TextContent = "OK"
+        });
+        ChatMessages.Add(new ChatMessage
+        {
             Type = MessageType.Send,
             DateTime = DateTime.Now.AddMinutes(-1),
             Author = "You",
-            TextContent = "This is a resent message."
+            TextContent = "This is a resent message.\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0\r\nあああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0あああああああああ0"
         });
     }
 

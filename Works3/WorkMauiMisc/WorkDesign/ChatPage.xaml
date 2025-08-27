@@ -17,35 +17,92 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="*,Auto,Auto"
-          RowSpacing="6">
+          BackgroundColor="White">
+        <!-- TODO check scroll -->
         <ScrollView Grid.Row="0">
-            <CollectionView ItemsSource="{Binding ChatMessages}">
+            <CollectionView Margin="4,0"
+                            ItemsSource="{Binding ChatMessages}">
                 <CollectionView.ItemTemplate>
                     <app:ChatMessageTemplateSelector>
+
                         <app:ChatMessageTemplateSelector.ReceiveMessage>
                             <DataTemplate x:DataType="{x:Type app:ChatMessage}">
-                                <Grid ColumnDefinitions="3*,*">
-                                    <VerticalStackLayout Grid.Column="0">
-                                        <Label Text="{Binding TextContent}" />
-                                        <!--  -->
-                                    </VerticalStackLayout>
+                                <!-- TODO 5 margin/Padding? -->
+                                <Grid ColumnDefinitions="5*,*">
+                                    <Grid Grid.Column="0"
+                                          RowDefinitions="Auto,Auto"
+                                          ColumnDefinitions="Auto,*"
+                                          Margin="0"
+                                          ColumnSpacing="4">
+                                        <!-- TODO image -->
+                                        <Border Grid.RowSpan="2" Grid.Column="0"
+                                                WidthRequest="48" HeightRequest="48"
+                                                BackgroundColor="Gray"
+                                                VerticalOptions="Start">
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                                            </Border.Clip>
+                                        </Border>
+                                        <!-- TODO color 4 -->
+                                        <!-- TODO * time/state/name 2 -->
+                                        <Border Grid.Row="0" Grid.Column="1"
+                                                Padding="8,4,12,8"
+                                                BackgroundColor="LightBlue"
+                                                HorizontalOptions="Start" VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="0,12,12,12" />
+                                            </Border.StrokeShape>
+                                            <Label FontSize="14"
+                                                   Text="{Binding TextContent}"
+                                                   HorizontalOptions="Start" LineBreakMode="CharacterWrap" VerticalOptions="Start" />
+                                        </Border>
+                                        <!-- TODO * icon 3 -->
+                                    </Grid>
                                 </Grid>
                             </DataTemplate>
                         </app:ChatMessageTemplateSelector.ReceiveMessage>
+
                         <app:ChatMessageTemplateSelector.SendMessage>
                             <DataTemplate x:DataType="{x:Type app:ChatMessage}">
-                                <Grid ColumnDefinitions="*,3*">
-                                    <VerticalStackLayout Grid.Column="1">
-                                        <Label Text="{Binding TextContent}" />
-                                        <!--  -->
-                                    </VerticalStackLayout>
+                                <Grid ColumnDefinitions="*,5*">
+                                    <Grid Grid.Column="1"
+                                          RowDefinitions="Auto,Auto"
+                                          ColumnDefinitions="*,Auto"
+                                          Margin="0"
+                                          ColumnSpacing="4">
+                                        <!-- TODO image -->
+                                        <Border Grid.RowSpan="2" Grid.Column="1"
+                                                WidthRequest="48" HeightRequest="48"
+                                                BackgroundColor="Gray"
+                                                VerticalOptions="Start">
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                                            </Border.Clip>
+                                        </Border>
+                                        <Border Grid.Row="0" Grid.Column="0"
+                                                Padding="12,4,8,8"
+                                                BackgroundColor="LightPink"
+                                                HorizontalOptions="End" VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12,0,12,12" />
+                                            </Border.StrokeShape>
+                                            <Label FontSize="14"
+                                                   Text="{Binding TextContent}"
+                                                   HorizontalOptions="Start" LineBreakMode="CharacterWrap" VerticalOptions="Start" />
+                                        </Border>
+                                        <!-- TODO time/state/icon 2 -->
+                                    </Grid>
                                 </Grid>
                             </DataTemplate>
                         </app:ChatMessageTemplateSelector.SendMessage>
+
                         <app:ChatMessageTemplateSelector.SystemMessage>
                             <DataTemplate x:DataType="{x:Type app:ChatMessage}">
-                                <Grid>
-                                    <Label Text="-" />
+                                <!-- TODO3 -->
+                                <Grid ColumnDefinitions="*">
+                                    <BoxView HeightRequest="1"
+                                             Margin="0,4"
+                                             BackgroundColor="Gray" />
                                     <!--  -->
                                 </Grid>
                             </DataTemplate>
