@@ -30,12 +30,13 @@
                                 <!-- TODO 5 margin/Padding? -->
                                 <Grid ColumnDefinitions="5*,*">
                                     <Grid Grid.Column="0"
-                                          RowDefinitions="Auto,Auto"
+                                          RowDefinitions="Auto,Auto,Auto"
                                           ColumnDefinitions="Auto,*"
                                           Margin="0"
                                           ColumnSpacing="4">
-                                        <!-- TODO image -->
-                                        <Border Grid.RowSpan="2" Grid.Column="0"
+
+                                        <!-- TODO image 1 -->
+                                        <Border Grid.RowSpan="3" Grid.Column="0"
                                                 WidthRequest="48" HeightRequest="48"
                                                 BackgroundColor="Gray"
                                                 VerticalOptions="Start">
@@ -43,9 +44,21 @@
                                                 <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
                                             </Border.Clip>
                                         </Border>
-                                        <!-- TODO color 4 -->
-                                        <!-- TODO * time/state/name 2 -->
-                                        <Border Grid.Row="0" Grid.Column="1"
+
+                                        <!-- TODO メッセージにあわせる、全体をVertか？ -->
+                                        <!-- TODO * time/state/name 2 メッセージにあわせる -->
+                                        <FlexLayout Grid.Row="0" Grid.Column="1">
+                                            <HorizontalStackLayout Spacing="12">
+                                                <Label FontSize="14" FontAttributes="Bold"
+                                                       Text="{Binding Author}" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Spacing="12">
+                                                <Label FontSize="14"
+                                                       Text="12:00" />
+                                            </HorizontalStackLayout>
+                                        </FlexLayout>
+                                        <!-- TODO color 1 -->
+                                        <Border Grid.Row="1" Grid.Column="1"
                                                 Padding="8,4,12,8"
                                                 BackgroundColor="LightBlue"
                                                 HorizontalOptions="Start" VerticalOptions="Start">
@@ -56,7 +69,25 @@
                                                    Text="{Binding TextContent}"
                                                    HorizontalOptions="Start" LineBreakMode="CharacterWrap" VerticalOptions="Start" />
                                         </Border>
-                                        <!-- TODO * icon 3 -->
+                                        <!-- TODO stamp 5 -->
+                                        <!-- TODO * icon border,label、アイコンの方が長いとき -->
+                                        <HorizontalStackLayout Grid.Row="2" Grid.Column="1"
+                                                               HorizontalOptions="End" Spacing="6">
+                                            <Label FontSize="14"
+                                                   Text="👍1" />
+                                            <Label FontSize="14"
+                                                   Text="👎1" />
+                                            <Label FontSize="14"
+                                                   Text="🔥1" />
+                                            <Label FontSize="14"
+                                                   Text="👏1" />
+                                            <Label FontSize="14"
+                                                   Text="😊1" />
+                                            <Label FontSize="14"
+                                                   Text="😡1" />
+                                            <Label FontSize="14"
+                                                   Text="🤔1" />
+                                        </HorizontalStackLayout>
                                     </Grid>
                                 </Grid>
                             </DataTemplate>
