@@ -78,6 +78,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\AsyncLoadPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="JoystickControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

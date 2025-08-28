@@ -12,8 +12,9 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        //return new Window(new StickPage());
-        return new Window(new ChatPage());
+        return new Window(new StickPage());
+        //return new Window(new ChatPage());
+        //return new Window(new AsyncLoadPage());
 
         //return new Window(new CollectionPage());
         //return new Window(new SchedulePage());
