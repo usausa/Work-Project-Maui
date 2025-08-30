@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.JoypadView">
+    <AbsoluteLayout>
+        <!-- Joystick Area -->
+        <Grid x:Name="JoystickBaseGrid"
+              AbsoluteLayout.LayoutBounds="0.15,0.7,120,120" AbsoluteLayout.LayoutFlags="PositionProportional"
+              WidthRequest="120" HeightRequest="120">
+            <GraphicsView x:Name="JoystickBaseGraphics"
+                          WidthRequest="120" HeightRequest="120" />
+            <!-- グラデーション付きノブ -->
+            <GraphicsView x:Name="JoystickKnobView"
+                          WidthRequest="60" HeightRequest="60"
+                          HorizontalOptions="Center" TranslationX="0" TranslationY="0" VerticalOptions="Center" />
+        </Grid>
+
+        <!-- ABXY Buttons (十字配置 & グラデーション & 押下エフェクト) -->
+        <AbsoluteLayout AbsoluteLayout.LayoutBounds="0.85,0.75,160,160" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <!-- Y (上) -->
+            <Button x:Name="ButtonY"
+                    AbsoluteLayout.LayoutBounds="48,0,64,64" AbsoluteLayout.LayoutFlags="None"
+                    WidthRequest="64" HeightRequest="64"
+                    FontSize="24" FontAttributes="Bold"
+                    Text="Y"
+                    TextColor="Black"
+                    CornerRadius="32" Pressed="OnButtonPressedY" Released="OnButtonReleasedY">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Offset="0.0" Color="#F7D700" />
+                        <GradientStop Offset="1.0" Color="#FFEF8F" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+
+            <!-- X (左) -->
+            <Button x:Name="ButtonX"
+                    AbsoluteLayout.LayoutBounds="0,48,64,64" AbsoluteLayout.LayoutFlags="None"
+                    WidthRequest="64" HeightRequest="64"
+                    FontSize="24" FontAttributes="Bold"
+                    Text="X"
+                    TextColor="White"
+                    CornerRadius="32" Pressed="OnButtonPressedX" Released="OnButtonReleasedX">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Offset="0.0" Color="#3A96DD" />
+                        <GradientStop Offset="1.0" Color="#52B6FF" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+
+            <!-- B (右) -->
+            <Button x:Name="ButtonB"
+                    AbsoluteLayout.LayoutBounds="96,48,64,64" AbsoluteLayout.LayoutFlags="None"
+                    WidthRequest="64" HeightRequest="64"
+                    FontSize="24" FontAttributes="Bold"
+                    Text="B"
+                    TextColor="White"
+                    CornerRadius="32" Pressed="OnButtonPressedB" Released="OnButtonReleasedB">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
+                        <GradientStop Offset="0.0" Color="#D83C3E" />
+                        <GradientStop Offset="1.0" Color="#FF878C" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+
+            <!-- A (下) -->
+            <Button x:Name="ButtonA"
+                    AbsoluteLayout.LayoutBounds="48,96,64,64" AbsoluteLayout.LayoutFlags="None"
+                    WidthRequest="64" HeightRequest="64"
+                    FontSize="24" FontAttributes="Bold"
+                    Text="A"
+                    TextColor="White"
+                    CornerRadius="32" Pressed="OnButtonPressedA" Released="OnButtonReleasedA">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                        <GradientStop Offset="0.0" Color="#107C10" />
+                        <GradientStop Offset="1.0" Color="#43C963" />
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+</ContentView>

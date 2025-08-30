@@ -14,7 +14,7 @@
         <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <Label Grid.Row="0"
                HeightRequest="40"
@@ -24,7 +24,10 @@
                HeightRequest="40"
                Text="{Binding YValue}" />
 
-        <app:JoystickControl Grid.Row="2"
+        <app:JoypadView Grid.Row="2"
+                        HorizontalOptions="Fill" VerticalOptions="End" />
+
+        <app:JoystickControl Grid.Row="3"
                              WidthRequest="200" HeightRequest="200"
                              Margin="20"
                              HorizontalOptions="End" VerticalOptions="End" />
