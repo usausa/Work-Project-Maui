@@ -4,19 +4,6 @@ using System.Diagnostics;
 
 public partial class JoystickControl : ContentView
 {
-    // TODO Gradation?
-    public static readonly BindableProperty ThumbColorProperty = BindableProperty.Create(
-        nameof(ThumbColor),
-        typeof(Color),
-        typeof(JoystickControl),
-        Colors.Red);
-
-    public Color ThumbColor
-    {
-        get => (Color)GetValue(ThumbColorProperty);
-        set => SetValue(ThumbColorProperty, value);
-    }
-
     public static readonly BindableProperty BaseColorProperty = BindableProperty.Create(
         nameof(BaseColor),
         typeof(Color),
@@ -27,6 +14,70 @@ public partial class JoystickControl : ContentView
     {
         get => (Color)GetValue(BaseColorProperty);
         set => SetValue(BaseColorProperty, value);
+    }
+
+    // 色のプロパティ
+    public static readonly BindableProperty BaseBackgroundColorProperty =
+        BindableProperty.Create(nameof(BaseBackgroundColor), typeof(Color), typeof(JoystickControl), Color.FromArgb("#E0E0E0"));
+    public static readonly BindableProperty BaseFillColorProperty =
+        BindableProperty.Create(nameof(BaseFillColor), typeof(Color), typeof(JoystickControl), Colors.White);
+    public static readonly BindableProperty BaseStrokeColorProperty =
+        BindableProperty.Create(nameof(BaseStrokeColor), typeof(Color), typeof(JoystickControl), Color.FromArgb("#9E9E9E"));
+    public static readonly BindableProperty TriangleColorProperty =
+        BindableProperty.Create(nameof(TriangleColor), typeof(Color), typeof(JoystickControl), Colors.White);
+    public static readonly BindableProperty ThumbColorProperty =
+        BindableProperty.Create(nameof(ThumbColor), typeof(Color), typeof(JoystickControl), Color.FromArgb("#607D8B"));
+
+    // 座標のプロパティ
+    public static readonly BindableProperty XValueProperty =
+        BindableProperty.Create(nameof(XValue), typeof(double), typeof(JoystickControl), 0.0, defaultBindingMode: BindingMode.OneWayToSource);
+    public static readonly BindableProperty YValueProperty =
+        BindableProperty.Create(nameof(YValue), typeof(double), typeof(JoystickControl), 0.0, defaultBindingMode: BindingMode.OneWayToSource);
+
+    // プロパティ公開
+    public Color BaseBackgroundColor
+    {
+        get => (Color)GetValue(BaseBackgroundColorProperty);
+        set => SetValue(BaseBackgroundColorProperty, value);
+    }
+    public Color BaseFillColor
+    {
+        get => (Color)GetValue(BaseFillColorProperty);
+        set => SetValue(BaseFillColorProperty, value);
+    }
+    public Color BaseStrokeColor
+    {
+        get => (Color)GetValue(BaseStrokeColorProperty);
+        set => SetValue(BaseStrokeColorProperty, value);
+    }
+    public Color TriangleColor
+    {
+        get => (Color)GetValue(TriangleColorProperty);
+        set => SetValue(TriangleColorProperty, value);
+    }
+    public Color ThumbColor
+    {
+        get => (Color)GetValue(ThumbColorProperty);
+        set => SetValue(ThumbColorProperty, value);
+    }
+    public double XValue
+    {
+        get => (double)GetValue(XValueProperty);
+        private set => SetValue(XValueProperty, value);
+    }
+    public double YValue
+    {
+        get => (double)GetValue(YValueProperty);
+        private set => SetValue(YValueProperty, value);
+    }
+
+    public static readonly BindableProperty ThumbFillProperty =
+        BindableProperty.Create(nameof(ThumbFill), typeof(Brush), typeof(JoystickControl), new SolidColorBrush(Color.FromArgb("#607D8B")));
+
+    public Brush ThumbFill
+    {
+        get => (Brush)GetValue(ThumbFillProperty);
+        set => SetValue(ThumbFillProperty, value);
     }
 
     private double radius = 80;

@@ -14,7 +14,7 @@
         <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,160,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,160,Auto,Auto,*">
 
         <Label Grid.Row="0"
                HeightRequest="40"
@@ -118,7 +118,7 @@
                              Margin="20"
                              HorizontalOptions="End" VerticalOptions="End" />
 
-        <!--<app:JoystickControl2 Grid.Row="2"
+        <app:JoystickControl2 Grid.Row="5"
                               WidthRequest="200" HeightRequest="200"
                               Margin="20"
                               BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
@@ -131,7 +131,7 @@
                     <GradientStop Offset="1.0" Color="DarkRed" />
                 </LinearGradientBrush>
             </app:JoystickControl.ThumbFill>
-        </app:JoystickControl2>-->
+        </app:JoystickControl2>
     </Grid>
 
 </ContentPage>
