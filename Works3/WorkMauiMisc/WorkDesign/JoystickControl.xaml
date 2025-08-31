@@ -4,34 +4,18 @@
              xmlns:workDesign="using:WorkDesign"
              x:Class="WorkDesign.JoystickControl"
              x:Name="JoyStick"
-             x:DataType="{x:Type workDesign:JoystickControl}"
-             WidthRequest="160" HeightRequest="160">
+             x:DataType="{x:Type workDesign:JoystickControl}">
+
     <Grid RowDefinitions="*,*"
-          ColumnDefinitions="*,*">
+          ColumnDefinitions="*,*"
+          BackgroundColor="{Binding Source={x:Reference JoyStick}, Path=BaseBackgroundColor}"
+          HorizontalOptions="Center" VerticalOptions="Center">
 
         <Ellipse Grid.RowSpan="2" Grid.ColumnSpan="2"
-                 Fill="{Binding BaseColor, Source={x:Reference JoyStick}}" />
+                 Fill="{Binding Source={x:Reference JoyStick}, Path=BaseFillColor}"
+                 Stroke="{Binding Source={x:Reference JoyStick}, Path=BaseStrokeColor}"
+                 StrokeThickness="2" />
 
-
-        <Path x:Name="TopTriangle"
-              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
-              HorizontalOptions="Center" VerticalOptions="End" />
-
-        <Path x:Name="BottomTriangle"
-              Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
-              HorizontalOptions="Center" VerticalOptions="Start" />
-
-        <Path x:Name="LeftTriangle"
-              Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
-              HorizontalOptions="End" VerticalOptions="Center" />
-
-        <Path x:Name="RightTriangle"
-              Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
-              HorizontalOptions="Start" VerticalOptions="Center" />
 
         <Ellipse x:Name="Thumb"
                  Grid.RowSpan="2" Grid.ColumnSpan="2"
@@ -40,4 +24,5 @@
                  TranslationX="0" TranslationY="0" />
 
     </Grid>
+
 </ContentView>

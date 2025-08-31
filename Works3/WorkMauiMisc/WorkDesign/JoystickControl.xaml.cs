@@ -97,25 +97,6 @@ public partial class JoystickControl : ContentView
 
     private void OnJoystickControlSizeChanged(object? sender, EventArgs e)
     {
-        double containerSize = Math.Min(this.Width, this.Height);
-        if (containerSize <= 0) return;
-
-        double triangleWidth = containerSize * 0.15;
-        double triangleHeight = containerSize * 0.1;
-
-        var converter = new PathGeometryConverter();
-        // PathGeometryの定義（前回の回答と同じロジック）
-        TopTriangle.Data = (Geometry)converter.ConvertFromInvariantString($"M0,{triangleHeight} L{triangleWidth}, {triangleHeight} L{triangleWidth / 2},0 Z")!;
-        BottomTriangle.Data = (Geometry)converter.ConvertFromInvariantString($"M0,0 L{triangleWidth},0 L{triangleWidth / 2},{triangleHeight} Z")!;
-        LeftTriangle.Data = (Geometry)converter.ConvertFromInvariantString($"M{triangleHeight},0 L{triangleHeight},{triangleWidth} L0,{triangleWidth / 2} Z")!;
-        RightTriangle.Data = (Geometry)converter.ConvertFromInvariantString($"M0,0 L0,{triangleWidth} L{triangleHeight},{triangleWidth / 2} Z")!;
-
-        // 三角形を外周に移動させるためのTranslationを設定
-        double outerOffset = (containerSize / 2) - (triangleHeight * 2.5);
-        TopTriangle.TranslationY = -outerOffset;
-        BottomTriangle.TranslationY = outerOffset;
-        LeftTriangle.TranslationX = -outerOffset;
-        RightTriangle.TranslationX = outerOffset;
     }
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)

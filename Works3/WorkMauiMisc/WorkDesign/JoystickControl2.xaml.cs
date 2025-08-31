@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace WorkDesign;
 
 using Microsoft.Maui.Controls.Shapes;
@@ -85,8 +87,8 @@ public partial class JoystickControl2 : ContentView
         if (containerSize <= 0) return;
 
         double thumbSize = containerSize * 0.3;
-        Thumb.WidthRequest = thumbSize;
-        Thumb.HeightRequest = thumbSize;
+        //Thumb.WidthRequest = thumbSize;
+        //Thumb.HeightRequest = thumbSize;
         _thumbRadius = thumbSize / 2;
 
         double triangleWidth = containerSize * 0.15;

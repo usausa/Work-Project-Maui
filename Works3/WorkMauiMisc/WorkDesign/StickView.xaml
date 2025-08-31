@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.StickView">
+    <Grid>
+        <GraphicsView x:Name="BaseGraphics" />
+        <Ellipse x:Name="Knob"
+                 WidthRequest="64" HeightRequest="64"
+                 BackgroundColor="Red"
+                 HorizontalOptions="Center" VerticalOptions="Center">
+            <!--<Ellipse.Fill>
+                <RadialGradientBrush Center="0.5,0.5" Radius="0.5">
+                    <GradientStop Offset="0.0" Color="#FF79C7" />
+                    <GradientStop Offset="1.0" Color="#5F91F6" />
+                </RadialGradientBrush>
+            </Ellipse.Fill>-->
+        </Ellipse>
+        <!--<GraphicsView x:Name="KnobGraphics"
+                      WidthRequest="64" HeightRequest="64"
+                      HorizontalOptions="Center" TranslationX="0" TranslationY="0" VerticalOptions="Center" />-->
+    </Grid>
+</ContentView>
