@@ -9,14 +9,8 @@
           HorizontalOptions="Fill" VerticalOptions="Fill">
         <!-- 背景の円 -->
         <Ellipse x:Name="BgCircle"
-                 HorizontalOptions="Center" VerticalOptions="Center">
-            <Ellipse.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="{Binding StartColor, Source={x:Reference Root}}" />
-                    <GradientStop Offset="1" Color="{Binding EndColor, Source={x:Reference Root}}" />
-                </LinearGradientBrush>
-            </Ellipse.Fill>
-        </Ellipse>
+                 Fill="{Binding BaseBackground, Source={x:Reference Root}}"
+                 HorizontalOptions="Center" VerticalOptions="Center" />
 
         <!-- 上下左右の三角形（白） -->
         <Polygon x:Name="UpTriangle"

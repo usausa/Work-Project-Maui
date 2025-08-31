@@ -10,19 +10,27 @@
         <app:StickPageViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
-    </ContentPage.Resources>
-
     <Grid RowDefinitions="*,Auto,Auto,160,*">
 
-        <Label Grid.Row="1"
-               HeightRequest="40"
-               Text="{Binding XValue}" />
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*">
+            <Label Grid.Column="0"
+                   Text="{Binding StickX}" />
+            <Label Grid.Column="1"
+                   Text="{Binding StickY}" />
+        </Grid>
 
-        <Label Grid.Row="2"
-               HeightRequest="40"
-               Text="{Binding YValue}" />
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*,*,*">
+            <Label Grid.Column="0"
+                   Text="{Binding ButtonA}" />
+            <Label Grid.Column="1"
+                   Text="{Binding ButtonB}" />
+            <Label Grid.Column="2"
+                   Text="{Binding ButtonX}" />
+            <Label Grid.Column="3"
+                   Text="{Binding ButtonY}" />
+        </Grid>
 
         <!-- Pad -->
         <Grid Grid.Row="3"
@@ -30,8 +38,15 @@
 
             <app:DPadCircleView Grid.Column="0"
                                 WidthRequest="160" HeightRequest="160"
-                                XValue="{Binding XValue}"
-                                YValue="{Binding YValue}" />
+                                XValue="{Binding StickX}"
+                                YValue="{Binding StickY}">
+                <app:DPadCircleView.BaseBackground>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#444444" />
+                        <GradientStop Offset="1" Color="#888888" />
+                    </LinearGradientBrush>
+                </app:DPadCircleView.BaseBackground>
+            </app:DPadCircleView>
 
             <AbsoluteLayout Grid.Column="1">
                 <!-- Y (上) -->
@@ -40,16 +55,15 @@
                         FontSize="36" FontAttributes="Bold"
                         Text="Y"
                         TextColor="Orange"
-                        CornerRadius="32">
+                        CornerRadius="32"
+                        app:ButtonOption.IsPressed="{Binding ButtonY}"
+                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                             <GradientStop Offset="0.0" Color="#F7D700" />
                             <GradientStop Offset="1.0" Color="#FFEF8F" />
                         </LinearGradientBrush>
                     </Button.Background>
-                    <Button.Behaviors>
-                        <app:ButtonSunkBehavior />
-                    </Button.Behaviors>
                 </Button>
 
                 <!-- X (左) -->
@@ -58,16 +72,15 @@
                         FontSize="36" FontAttributes="Bold"
                         Text="X"
                         TextColor="Blue"
-                        CornerRadius="32">
+                        CornerRadius="32"
+                        app:ButtonOption.IsPressed="{Binding ButtonX}"
+                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                             <GradientStop Offset="0.0" Color="#3A96DD" />
                             <GradientStop Offset="1.0" Color="#52B6FF" />
                         </LinearGradientBrush>
                     </Button.Background>
-                    <Button.Behaviors>
-                        <app:ButtonSunkBehavior />
-                    </Button.Behaviors>
                 </Button>
 
                 <!-- B (右) -->
@@ -76,16 +89,15 @@
                         FontSize="36" FontAttributes="Bold"
                         Text="B"
                         TextColor="Red"
-                        CornerRadius="32">
+                        CornerRadius="32"
+                        app:ButtonOption.IsPressed="{Binding ButtonB}"
+                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
                             <GradientStop Offset="0.0" Color="#D83C3E" />
                             <GradientStop Offset="1.0" Color="#FF878C" />
                         </LinearGradientBrush>
                     </Button.Background>
-                    <Button.Behaviors>
-                        <app:ButtonSunkBehavior />
-                    </Button.Behaviors>
                 </Button>
 
                 <!-- A (下) -->
@@ -94,16 +106,15 @@
                         FontSize="36" FontAttributes="Bold"
                         Text="A"
                         TextColor="Green"
-                        CornerRadius="32">
+                        CornerRadius="32"
+                        app:ButtonOption.IsPressed="{Binding ButtonA}"
+                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                             <GradientStop Offset="0.0" Color="#107C10" />
                             <GradientStop Offset="1.0" Color="#43C963" />
                         </LinearGradientBrush>
                     </Button.Background>
-                    <Button.Behaviors>
-                        <app:ButtonSunkBehavior />
-                    </Button.Behaviors>
                 </Button>
             </AbsoluteLayout>
         </Grid>

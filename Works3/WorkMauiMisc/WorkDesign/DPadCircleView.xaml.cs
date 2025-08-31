@@ -1,5 +1,7 @@
 namespace WorkDesign;
 
+using Smart.Maui.Interactivity;
+
 // TODO 方向制限、左右、上下、矢印表示も
 
 public partial class DPadCircleView : ContentView
@@ -33,14 +35,9 @@ public partial class DPadCircleView : ContentView
         set => SetValue(ThumbColorProperty, value);
     }
 
-    // グラデーション色
-    public static readonly BindableProperty StartColorProperty =
-        BindableProperty.Create(nameof(StartColor), typeof(Color), typeof(DPadCircleView),
-            Color.FromArgb("#444444"), propertyChanged: OnVisualPropertyChanged);
-
-    public static readonly BindableProperty EndColorProperty =
-        BindableProperty.Create(nameof(EndColor), typeof(Color), typeof(DPadCircleView),
-            Color.FromArgb("#888888"), propertyChanged: OnVisualPropertyChanged);
+    public static readonly BindableProperty BaseBackgroundProperty =
+        BindableProperty.Create(nameof(BaseBackground), typeof(Brush), typeof(DPadCircleView),
+            propertyChanged: OnVisualPropertyChanged);
 
     // 三角形の色
     public static readonly BindableProperty TriangleColorProperty =
@@ -63,17 +60,22 @@ public partial class DPadCircleView : ContentView
         BindableProperty.Create(nameof(TriangleHalfWidthRatio), typeof(double), typeof(DPadCircleView),
             0.2d, propertyChanged: OnGeometryPropertyChanged);
 
-    public Color StartColor
+    public Brush BaseBackground
     {
-        get => (Color)GetValue(StartColorProperty);
-        set => SetValue(StartColorProperty, value);
+        get => (Brush)GetValue(BaseBackgroundProperty);
+        set => SetValue(BaseBackgroundProperty, value);
     }
+    //public Color StartColor
+    //{
+    //    get => (Color)GetValue(StartColorProperty);
+    //    set => SetValue(StartColorProperty, value);
+    //}
 
-    public Color EndColor
-    {
-        get => (Color)GetValue(EndColorProperty);
-        set => SetValue(EndColorProperty, value);
-    }
+    //public Color EndColor
+    //{
+    //    get => (Color)GetValue(EndColorProperty);
+    //    set => SetValue(EndColorProperty, value);
+    //}
 
     public Color TriangleColor
     {
@@ -234,6 +236,171 @@ public partial class DPadCircleView : ContentView
             var top = new Point(baseX, cy - w);
             var bottom = new Point(baseX, cy + w);
             RightTriangle.Points = [apex, bottom, top];
+        }
+    }
+}
+
+public static partial class ButtonOption
+{
+    // ------------------------------------------------------------
+    // Pressed
+    // ------------------------------------------------------------
+
+    public static readonly BindableProperty IsPressedProperty = BindableProperty.CreateAttached(
+        "IsPressed",
+        typeof(bool),
+        typeof(ButtonOption),
+        false,
+        defaultBindingMode: BindingMode.OneWayToSource);
+
+    public static bool GetIsPressed(BindableObject obj) =>
+        (bool)obj.GetValue(IsPressedProperty);
+
+    public static void SetIsPressed(BindableObject obj, bool value) =>
+        obj.SetValue(IsPressedProperty, value);
+
+    public static readonly BindableProperty PressBindProperty = BindableProperty.CreateAttached(
+        "PressBind",
+        typeof(bool),
+        typeof(ButtonOption),
+        defaultValue: false,
+        propertyChanged: OnPressBindChanged);
+
+    public static bool GetPressBind(BindableObject obj) =>
+        (bool)obj.GetValue(PressBindProperty);
+
+    public static void SetPressBind(BindableObject obj, bool value) =>
+        obj.SetValue(PressBindProperty, value);
+
+    private static void OnPressBindChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not Button view)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            var behavior = view.Behaviors.FirstOrDefault(static x => x is PressBindBehavior);
+            if (behavior is not null)
+            {
+                view.Behaviors.Remove(behavior);
+            }
+        }
+
+        if (newValue is not null)
+        {
+            view.Behaviors.Add(new PressBindBehavior());
+        }
+    }
+
+    private sealed class PressBindBehavior : BehaviorBase<Button>
+    {
+        protected override void OnAttachedTo(Button bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            bindable.Pressed += OnPressed;
+            bindable.Released += OnReleased;
+            bindable.Unfocused += OnReleased;
+        }
+
+        protected override void OnDetachingFrom(Button bindable)
+        {
+            bindable.Pressed -= OnPressed;
+            bindable.Released -= OnReleased;
+            bindable.Unfocused -= OnReleased;
+
+            base.OnDetachingFrom(bindable);
+        }
+
+        private void OnPressed(object? sender, EventArgs e)
+        {
+            var button = AssociatedObject;
+            if (button is not null)
+            {
+                SetIsPressed(button, true);
+            }
+        }
+
+        private void OnReleased(object? sender, EventArgs e)
+        {
+            var button = AssociatedObject;
+            if (button is not null)
+            {
+                SetIsPressed(button, false);
+            }
+        }
+    }
+
+    public static readonly BindableProperty PressEffectProperty = BindableProperty.CreateAttached(
+        "PressEffect",
+        typeof(bool),
+        typeof(ButtonOption),
+        defaultValue: false,
+        propertyChanged: OnPressEffectChanged);
+
+    public static bool GetPressEffect(BindableObject obj) =>
+        (bool)obj.GetValue(PressEffectProperty);
+
+    public static void SetPressEffect(BindableObject obj, bool value) =>
+        obj.SetValue(PressEffectProperty, value);
+
+    private static void OnPressEffectChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not Button view)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            var behavior = view.Behaviors.FirstOrDefault(static x => x is PressEffectBehavior);
+            if (behavior is not null)
+            {
+                view.Behaviors.Remove(behavior);
+            }
+        }
+
+        if (newValue is not null)
+        {
+            view.Behaviors.Add(new PressEffectBehavior());
+        }
+    }
+
+    private sealed class PressEffectBehavior : BehaviorBase<Button>
+    {
+        protected override void OnAttachedTo(Button bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            bindable.Pressed += OnButtonPressed;
+            bindable.Released += OnButtonReleased;
+        }
+        protected override void OnDetachingFrom(Button bindable)
+        {
+            base.OnDetachingFrom(bindable);
+
+            bindable.Pressed -= OnButtonPressed;
+            bindable.Released -= OnButtonReleased;
+        }
+
+        private void OnButtonPressed(object? sender, EventArgs e)
+        {
+            if (sender is Button button)
+            {
+                button.ScaleTo(0.9, 50, Easing.CubicOut);
+                button.FadeTo(0.8, 50, Easing.CubicOut);
+            }
+        }
+
+        private void OnButtonReleased(object? sender, EventArgs e)
+        {
+            if (sender is Button button)
+            {
+                button.ScaleTo(1.0, 100, Easing.CubicOut);
+                button.FadeTo(1.0, 100, Easing.CubicOut);
+            }
         }
     }
 }
