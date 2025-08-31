@@ -32,12 +32,11 @@
             <AbsoluteLayout Grid.Column="1"
                             BackgroundColor="Azure">
                 <!-- Y (上) -->
-                <Button x:Name="ButtonY"
-                        AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
+                <Button AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
                         WidthRequest="64" HeightRequest="64"
-                        FontSize="24" FontAttributes="Bold"
+                        FontSize="36" FontAttributes="Bold"
                         Text="Y"
-                        TextColor="Black"
+                        TextColor="Orange"
                         CornerRadius="32">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -51,12 +50,11 @@
                 </Button>
 
                 <!-- X (左) -->
-                <Button x:Name="ButtonX"
-                        AbsoluteLayout.LayoutBounds="0,0,0.5,1" AbsoluteLayout.LayoutFlags="All"
+                <Button AbsoluteLayout.LayoutBounds="0,0,0.5,1" AbsoluteLayout.LayoutFlags="All"
                         WidthRequest="64" HeightRequest="64"
-                        FontSize="24" FontAttributes="Bold"
+                        FontSize="36" FontAttributes="Bold"
                         Text="X"
-                        TextColor="White"
+                        TextColor="Blue"
                         CornerRadius="32">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -70,12 +68,11 @@
                 </Button>
 
                 <!-- B (右) -->
-                <Button x:Name="ButtonB"
-                        AbsoluteLayout.LayoutBounds="0,0,1.5,1" AbsoluteLayout.LayoutFlags="All"
+                <Button AbsoluteLayout.LayoutBounds="0,0,1.5,1" AbsoluteLayout.LayoutFlags="All"
                         WidthRequest="64" HeightRequest="64"
-                        FontSize="24" FontAttributes="Bold"
+                        FontSize="36" FontAttributes="Bold"
                         Text="B"
-                        TextColor="White"
+                        TextColor="Red"
                         CornerRadius="32">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
@@ -89,12 +86,11 @@
                 </Button>
 
                 <!-- A (下) -->
-                <Button x:Name="ButtonA"
-                        AbsoluteLayout.LayoutBounds="0,0,1,1.6" AbsoluteLayout.LayoutFlags="All"
+                <Button AbsoluteLayout.LayoutBounds="0,0,1,1.6" AbsoluteLayout.LayoutFlags="All"
                         WidthRequest="64" HeightRequest="64"
-                        FontSize="24" FontAttributes="Bold"
+                        FontSize="36" FontAttributes="Bold"
                         Text="A"
-                        TextColor="White"
+                        TextColor="Green"
                         CornerRadius="32">
                     <Button.Background>
                         <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
@@ -114,17 +110,18 @@
                         HorizontalOptions="Fill" VerticalOptions="End" />
 
         <app:JoystickControl Grid.Row="4"
-                             WidthRequest="200" HeightRequest="200"
+                             WidthRequest="160" HeightRequest="160"
                              Margin="20"
-                             HorizontalOptions="End" VerticalOptions="End" />
+                             HorizontalOptions="End" VerticalOptions="End"
+                             XValue="{Binding XValue, Mode=OneWayToSource}"
+                             YValue="{Binding YValue, Mode=OneWayToSource}" />
 
         <app:JoystickControl2 Grid.Row="5"
-                              WidthRequest="200" HeightRequest="200"
+                              WidthRequest="160" HeightRequest="160"
                               Margin="20"
                               BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
                               TriangleColor="White" VerticalOptions="End"
-                              XValue="{Binding XValue, Mode=OneWayToSource}"
-                              YValue="{Binding YValue, Mode=OneWayToSource}">
+                              XValue="{Binding XValue, Mode=OneWayToSource}">
             <app:JoystickControl.ThumbFill>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Offset="0.0" Color="Red" />

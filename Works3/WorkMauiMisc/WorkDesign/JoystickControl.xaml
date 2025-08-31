@@ -5,12 +5,39 @@
              x:Class="WorkDesign.JoystickControl"
              x:Name="JoyStick"
              x:DataType="{x:Type workDesign:JoystickControl}"
-             WidthRequest="100" HeightRequest="100">
-    <Grid>
-        <Ellipse Fill="{Binding BaseColor, Source={x:Reference JoyStick}}" />
+             WidthRequest="160" HeightRequest="160">
+    <Grid RowDefinitions="*,*"
+          ColumnDefinitions="*,*">
+
+        <Ellipse Grid.RowSpan="2" Grid.ColumnSpan="2"
+                 Fill="{Binding BaseColor, Source={x:Reference JoyStick}}" />
+
+
+        <Path x:Name="TopTriangle"
+              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
+              HorizontalOptions="Center" VerticalOptions="End" />
+
+        <Path x:Name="BottomTriangle"
+              Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
+              HorizontalOptions="Center" VerticalOptions="Start" />
+
+        <Path x:Name="LeftTriangle"
+              Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
+              HorizontalOptions="End" VerticalOptions="Center" />
+
+        <Path x:Name="RightTriangle"
+              Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+              Fill="{Binding Source={x:Reference ThisControl}, Path=TriangleColor}"
+              HorizontalOptions="Start" VerticalOptions="Center" />
+
         <Ellipse x:Name="Thumb"
-                 WidthRequest="40" HeightRequest="40"
+                 Grid.RowSpan="2" Grid.ColumnSpan="2"
+                 WidthRequest="80" HeightRequest="80"
                  Fill="{Binding ThumbColor, Source={x:Reference JoyStick}}"
                  TranslationX="0" TranslationY="0" />
+
     </Grid>
 </ContentView>

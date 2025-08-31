@@ -7,7 +7,6 @@
              x:DataType="{x:Type workDesign:JoystickControl2}">
 
     <Grid x:Name="JoystickContainer"
-          Margin="20"
           BackgroundColor="{Binding Source={x:Reference ThisControl}, Path=BaseBackgroundColor}"
           HorizontalOptions="Center" VerticalOptions="Center">
         <Grid.RowDefinitions>
