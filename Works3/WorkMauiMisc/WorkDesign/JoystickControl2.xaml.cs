@@ -78,7 +78,7 @@ public partial class JoystickControl2 : ContentView
         this.SizeChanged += OnJoystickControl2SizeChanged;
         var panGesture = new PanGestureRecognizer();
         panGesture.PanUpdated += OnPanUpdated;
-        Thumb.GestureRecognizers.Add(panGesture);
+        GestureRecognizers.Add(panGesture);
     }
 
     private void OnJoystickControl2SizeChanged(object? sender, EventArgs e)

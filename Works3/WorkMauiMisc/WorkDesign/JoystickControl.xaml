@@ -16,6 +16,21 @@
                  Stroke="{Binding Source={x:Reference JoyStick}, Path=BaseStrokeColor}"
                  StrokeThickness="2" />
 
+        <Polygon x:Name="UpTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference JoyStick}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="DownTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference JoyStick}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="LeftTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference JoyStick}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="RightTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference JoyStick}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
 
         <Ellipse x:Name="Thumb"
                  Grid.RowSpan="2" Grid.ColumnSpan="2"

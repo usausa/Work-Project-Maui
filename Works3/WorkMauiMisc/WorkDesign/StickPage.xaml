@@ -28,11 +28,12 @@
         <Grid Grid.Row="2"
               ColumnDefinitions="*,*">
 
-            <app:StickView WidthRequest="160" HeightRequest="160"
-                           HorizontalOptions="Center" VerticalOptions="Center" />
+            <app:DPadCircleView Grid.Column="0"
+                                WidthRequest="160" HeightRequest="160"
+                                XValue="{Binding XValue, Mode=OneWayToSource}"
+                                YValue="{Binding YValue, Mode=OneWayToSource}" />
 
-            <AbsoluteLayout Grid.Column="1"
-                            BackgroundColor="Azure">
+            <AbsoluteLayout Grid.Column="1">
                 <!-- Y (上) -->
                 <Button AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
                         WidthRequest="64" HeightRequest="64"
@@ -107,17 +108,14 @@
             </AbsoluteLayout>
         </Grid>
 
-
-        <app:JoypadView Grid.Row="3"
-                        HorizontalOptions="Fill" VerticalOptions="End" />
+        <!--<app:JoypadView Grid.Row="3"
+                        HorizontalOptions="Fill" VerticalOptions="End" />-->
 
         <app:JoystickControl Grid.Row="4"
                              WidthRequest="160" HeightRequest="160"
                              Margin="20"
                              BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
-                             TriangleColor="White" VerticalOptions="End"
-                             XValue="{Binding XValue, Mode=OneWayToSource}"
-                             YValue="{Binding YValue, Mode=OneWayToSource}" />
+                             TriangleColor="White" VerticalOptions="End" />
 
         <app:JoystickControl2 Grid.Row="5"
                               WidthRequest="160" HeightRequest="160"

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:workDesign="using:WorkDesign"
+             x:Class="WorkDesign.DPadCircleView"
+             x:Name="Root"
+             x:DataType="{x:Type workDesign:DPadCircleView}">
+    <Grid x:Name="LayoutRoot"
+          HorizontalOptions="Fill" VerticalOptions="Fill">
+        <!-- 背景の円 -->
+        <Ellipse x:Name="BgCircle"
+                 HorizontalOptions="Center" VerticalOptions="Center">
+            <Ellipse.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0" Color="{Binding StartColor, Source={x:Reference Root}}" />
+                    <GradientStop Offset="1" Color="{Binding EndColor, Source={x:Reference Root}}" />
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <!-- 上下左右の三角形（白） -->
+        <Polygon x:Name="UpTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference Root}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="DownTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference Root}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="LeftTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference Root}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Polygon x:Name="RightTriangle"
+                 Fill="{Binding TriangleColor, Source={x:Reference Root}}"
+                 HorizontalOptions="Fill" InputTransparent="True" StrokeThickness="0" VerticalOptions="Fill" />
+
+        <Grid x:Name="ThumbGrid"
+              WidthRequest="80" HeightRequest="80"
+              HorizontalOptions="Center" VerticalOptions="Center">
+            <Ellipse x:Name="Thumb">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Offset="0.0" Color="#3A96DD" />
+                        <GradientStop Offset="1.0" Color="#52B6FF" />
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+        </Grid>
+
+    </Grid>
+</ContentView>
