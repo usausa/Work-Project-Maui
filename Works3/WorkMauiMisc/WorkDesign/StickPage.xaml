@@ -14,24 +14,24 @@
         <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,160,Auto,Auto,*">
+    <Grid RowDefinitions="*,Auto,Auto,160,*">
 
-        <Label Grid.Row="0"
+        <Label Grid.Row="1"
                HeightRequest="40"
                Text="{Binding XValue}" />
 
-        <Label Grid.Row="1"
+        <Label Grid.Row="2"
                HeightRequest="40"
                Text="{Binding YValue}" />
 
         <!-- Pad -->
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               ColumnDefinitions="*,*">
 
             <app:DPadCircleView Grid.Column="0"
                                 WidthRequest="160" HeightRequest="160"
-                                XValue="{Binding XValue, Mode=OneWayToSource}"
-                                YValue="{Binding YValue, Mode=OneWayToSource}" />
+                                XValue="{Binding XValue}"
+                                YValue="{Binding YValue}" />
 
             <AbsoluteLayout Grid.Column="1">
                 <!-- Y (上) -->
@@ -108,28 +108,6 @@
             </AbsoluteLayout>
         </Grid>
 
-        <!--<app:JoypadView Grid.Row="3"
-                        HorizontalOptions="Fill" VerticalOptions="End" />-->
-
-        <app:JoystickControl Grid.Row="4"
-                             WidthRequest="160" HeightRequest="160"
-                             Margin="20"
-                             BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
-                             TriangleColor="White" VerticalOptions="End" />
-
-        <app:JoystickControl2 Grid.Row="5"
-                              WidthRequest="160" HeightRequest="160"
-                              Margin="20"
-                              BaseBackgroundColor="Transparent" BaseFillColor="Gray" BaseStrokeColor="Black" HorizontalOptions="End"
-                              TriangleColor="White" VerticalOptions="End"
-                              XValue="{Binding XValue, Mode=OneWayToSource}">
-            <app:JoystickControl.ThumbFill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.0" Color="Red" />
-                    <GradientStop Offset="1.0" Color="DarkRed" />
-                </LinearGradientBrush>
-            </app:JoystickControl.ThumbFill>
-        </app:JoystickControl2>
     </Grid>
 
 </ContentPage>

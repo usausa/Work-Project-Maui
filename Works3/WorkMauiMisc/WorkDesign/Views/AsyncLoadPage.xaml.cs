@@ -1,8 +1,9 @@
+namespace WorkDesign;
+
 using Fonts;
+
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-namespace WorkDesign;
 
 public partial class AsyncLoadPage : ContentPage
 {

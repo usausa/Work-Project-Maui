@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace WorkDesign;
 
 // TODO 方向制限、左右、上下、矢印表示も
@@ -25,7 +23,6 @@ public partial class DPadCircleView : ContentView
         get => (double)GetValue(YValueProperty);
         private set => SetValue(YValueProperty, value);
     }
-
 
     public static readonly BindableProperty ThumbColorProperty =
         BindableProperty.Create(nameof(ThumbColor), typeof(Color), typeof(DPadCircleView), Color.FromArgb("#607D8B"));
@@ -133,7 +130,6 @@ public partial class DPadCircleView : ContentView
     }
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
-        Debug.WriteLine("*");
         switch (e.StatusType)
         {
             case GestureStatus.Started:
@@ -149,9 +145,6 @@ public partial class DPadCircleView : ContentView
 
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                var direction = DirectionHelper.GetDirection(Thumb.TranslationX, Thumb.TranslationY);
-                Debug.WriteLine(direction);
-
                 Thumb.TranslationX = 0;
                 Thumb.TranslationY = 0;
 
@@ -181,7 +174,6 @@ public partial class DPadCircleView : ContentView
             return (x, y);
         }
     }
-
 
     private void UpdateGeometry()
     {
