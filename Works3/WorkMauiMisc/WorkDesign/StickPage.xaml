@@ -14,7 +14,7 @@
         <app:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,160,Auto,*">
 
         <Label Grid.Row="0"
                HeightRequest="40"
@@ -24,10 +24,96 @@
                HeightRequest="40"
                Text="{Binding YValue}" />
 
-        <app:JoypadView Grid.Row="2"
+
+        <!-- Pad -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*">
+
+            <AbsoluteLayout Grid.Column="1"
+                            BackgroundColor="Azure">
+                <!-- Y (上) -->
+                <Button x:Name="ButtonY"
+                        AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
+                        WidthRequest="64" HeightRequest="64"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="Y"
+                        TextColor="Black"
+                        CornerRadius="32">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.0" Color="#F7D700" />
+                            <GradientStop Offset="1.0" Color="#FFEF8F" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Behaviors>
+                        <app:ButtonSunkBehavior />
+                    </Button.Behaviors>
+                </Button>
+
+                <!-- X (左) -->
+                <Button x:Name="ButtonX"
+                        AbsoluteLayout.LayoutBounds="0,0,0.5,1" AbsoluteLayout.LayoutFlags="All"
+                        WidthRequest="64" HeightRequest="64"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="X"
+                        TextColor="White"
+                        CornerRadius="32">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Offset="0.0" Color="#3A96DD" />
+                            <GradientStop Offset="1.0" Color="#52B6FF" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Behaviors>
+                        <app:ButtonSunkBehavior />
+                    </Button.Behaviors>
+                </Button>
+
+                <!-- B (右) -->
+                <Button x:Name="ButtonB"
+                        AbsoluteLayout.LayoutBounds="0,0,1.5,1" AbsoluteLayout.LayoutFlags="All"
+                        WidthRequest="64" HeightRequest="64"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="B"
+                        TextColor="White"
+                        CornerRadius="32">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
+                            <GradientStop Offset="0.0" Color="#D83C3E" />
+                            <GradientStop Offset="1.0" Color="#FF878C" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Behaviors>
+                        <app:ButtonSunkBehavior />
+                    </Button.Behaviors>
+                </Button>
+
+                <!-- A (下) -->
+                <Button x:Name="ButtonA"
+                        AbsoluteLayout.LayoutBounds="0,0,1,1.6" AbsoluteLayout.LayoutFlags="All"
+                        WidthRequest="64" HeightRequest="64"
+                        FontSize="24" FontAttributes="Bold"
+                        Text="A"
+                        TextColor="White"
+                        CornerRadius="32">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                            <GradientStop Offset="0.0" Color="#107C10" />
+                            <GradientStop Offset="1.0" Color="#43C963" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Button.Behaviors>
+                        <app:ButtonSunkBehavior />
+                    </Button.Behaviors>
+                </Button>
+            </AbsoluteLayout>
+        </Grid>
+
+
+        <app:JoypadView Grid.Row="3"
                         HorizontalOptions="Fill" VerticalOptions="End" />
 
-        <app:JoystickControl Grid.Row="3"
+        <app:JoystickControl Grid.Row="4"
                              WidthRequest="200" HeightRequest="200"
                              Margin="20"
                              HorizontalOptions="End" VerticalOptions="End" />
