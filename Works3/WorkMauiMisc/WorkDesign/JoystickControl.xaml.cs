@@ -29,7 +29,7 @@ public partial class JoystickControl : ContentView
         set => SetValue(BaseColorProperty, value);
     }
 
-    private double radius = 40;
+    private double radius = 80;
 
     public JoystickControl()
 	{

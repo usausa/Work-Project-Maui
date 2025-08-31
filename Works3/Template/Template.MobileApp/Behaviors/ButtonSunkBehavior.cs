@@ -2,22 +2,8 @@ namespace Template.MobileApp.Behaviors;
 
 using Smart.Maui.Interactivity;
 
-public sealed class PressStateBehavior : BehaviorBase<Button>
+public sealed class ButtonSunkBehavior : BehaviorBase<Button>
 {
-    public static readonly BindableProperty IsPressedProperty =
-        BindableProperty.Create(
-            nameof(IsPressed),
-            typeof(bool),
-            typeof(PressStateBehavior),
-            false,
-            defaultBindingMode: BindingMode.OneWayToSource);
-
-    public bool IsPressed
-    {
-        get => (bool)GetValue(IsPressedProperty);
-        set => SetValue(IsPressedProperty, value);
-    }
-
     protected override void OnAttachedTo(Button bindable)
     {
         base.OnAttachedTo(bindable);
@@ -28,19 +14,31 @@ public sealed class PressStateBehavior : BehaviorBase<Button>
 
     protected override void OnDetachingFrom(Button bindable)
     {
+        base.OnDetachingFrom(bindable);
+
         bindable.Pressed -= OnButtonPressed;
         bindable.Released -= OnButtonReleased;
-
-        base.OnDetachingFrom(bindable);
     }
 
     private void OnButtonPressed(object? sender, EventArgs e)
     {
-        IsPressed = true;
+        if (AssociatedObject is null)
+        {
+            return;
+        }
+
+        AssociatedObject.ScaleTo(0.9, 50, Easing.CubicOut);
+        AssociatedObject.FadeTo(0.8, 50, Easing.CubicOut);
     }
 
     private void OnButtonReleased(object? sender, EventArgs e)
     {
-        IsPressed = false;
+        if (AssociatedObject is null)
+        {
+            return;
+        }
+
+        AssociatedObject.ScaleTo(1.0, 100, Easing.CubicOut);
+        AssociatedObject.FadeTo(1.0, 100, Easing.CubicOut);
     }
 }
