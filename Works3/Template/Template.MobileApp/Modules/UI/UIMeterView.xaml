@@ -27,39 +27,35 @@
         <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2"
                              VerticalOptions="Center">
             <Label HorizontalTextAlignment="Center"
-                   FontFamily="Gkktt" FontSize="96"
                    Text="{Binding Speed}"
+                   FontFamily="Gkktt" FontSize="96"
                    TextColor="White" />
             <Label HorizontalTextAlignment="Center"
-                   FontFamily="Gkktt" FontSize="24"
                    Text="km/h"
+                   FontFamily="Gkktt" FontSize="24"
                    TextColor="White" />
         </VerticalStackLayout>
 
         <Label Grid.Row="0" Grid.Column="1"
                HorizontalTextAlignment="End" VerticalTextAlignment="Start"
-               FontSize="12"
                Text="{Binding Fps, StringFormat='{0} fps'}"
+               FontSize="12"
                TextColor="White" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 HeightRequest="160"
-                FontSize="72" FontAttributes="Bold"
+                behaviors:ButtonOption.IsPressed="{Binding Accelerator}"
+                behaviors:ButtonOption.PressBind="True"
                 Text="+"
-                BackgroundColor="{StaticResource GreenLighten2}">
-            <Button.Behaviors>
-                <behaviors:ButtonStateBehavior IsPressed="{Binding Accelerator}" />
-            </Button.Behaviors>
-        </Button>
+                FontSize="72" FontAttributes="Bold"
+                BackgroundColor="{StaticResource GreenLighten2}" />
         <Button Grid.Row="1" Grid.Column="1"
                 HeightRequest="160"
-                FontSize="72" FontAttributes="Bold"
+                behaviors:ButtonOption.IsPressed="{Binding Brake}"
+                behaviors:ButtonOption.PressBind="True"
                 Text="-"
-                BackgroundColor="{StaticResource RedLighten2}">
-            <Button.Behaviors>
-                <behaviors:ButtonStateBehavior IsPressed="{Binding Brake}" />
-            </Button.Behaviors>
-        </Button>
+                FontSize="72" FontAttributes="Bold"
+                BackgroundColor="{StaticResource RedLighten2}" />
     </Grid>
 
 </ContentView>
