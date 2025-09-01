@@ -10,6 +10,102 @@
         <app:StickPageViewModel />
     </ContentPage.BindingContext>
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="JoyStick"
+                   TargetType="app:JoyStick">
+                <Setter Property="WidthRequest" Value="160" />
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="ThumbSize" Value="80" />
+                <Setter Property="RangeOfMotion" Value="56" />
+                <Setter Property="Mode" Value="Both" />
+                <Setter Property="ArrowColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="BaseBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource GrayDefault}" />
+                        <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="ThumbBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource LightBlueDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource LightBlueLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+                <Setter Property="ThumbBorderBackground">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource LightBlueLighten2}" />
+                        <GradientStop Offset="1" Color="{StaticResource LightBlueDarken2}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="JoyButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="app:ButtonOption.PressBind" Value="True" />
+                <Setter Property="app:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="AButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="A" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource GreenDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource GreenLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="B" />
+                <Setter Property="TextColor" Value="{StaticResource RedDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource RedDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource RedLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="XButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="X" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource BlueDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource BlueLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+
+            <Style x:Key="YButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource JoyButton}">
+                <Setter Property="Text" Value="Y" />
+                <Setter Property="TextColor" Value="{StaticResource YellowDarken4}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource YellowDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource YellowLighten3}" />
+                    </LinearGradientBrush>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="*,Auto,Auto,160,*">
 
         <Grid Grid.Row="1"
@@ -37,100 +133,25 @@
               ColumnDefinitions="*,*">
 
             <app:JoyStick Grid.Column="0"
-                          WidthRequest="160" HeightRequest="160"
-                          ArrowColor="{StaticResource GrayDarken3}"
-                          Mode="Both" RangeOfMotion="56" ThumbSize="80"
+                          Style="{StaticResource JoyStick}"
                           XValue="{Binding StickX}"
-                          YValue="{Binding StickY}">
-                <app:JoyStick.BaseBackground>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0" Color="{StaticResource GrayDefault}" />
-                        <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
-                    </LinearGradientBrush>
-                </app:JoyStick.BaseBackground>
-                <app:JoyStick.ThumbBackground>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0" Color="{StaticResource BlueDarken1}" />
-                        <GradientStop Offset="1" Color="{StaticResource BlueLighten3}" />
-                    </LinearGradientBrush>
-                </app:JoyStick.ThumbBackground>
-                <app:JoyStick.ThumbBorderBackground>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0" Color="{StaticResource BlueLighten2}" />
-                        <GradientStop Offset="1" Color="{StaticResource BlueDarken2}" />
-                    </LinearGradientBrush>
-                </app:JoyStick.ThumbBorderBackground>
-            </app:JoyStick>
+                          YValue="{Binding StickY}" />
 
             <AbsoluteLayout Grid.Column="1">
-                <!-- Y (上) -->
                 <Button AbsoluteLayout.LayoutBounds="0,0,1,0.4" AbsoluteLayout.LayoutFlags="All"
-                        WidthRequest="64" HeightRequest="64"
-                        FontSize="36" FontAttributes="Bold"
-                        Text="Y"
-                        TextColor="{StaticResource YellowDarken4}"
-                        CornerRadius="32"
-                        app:ButtonOption.IsPressed="{Binding ButtonY}"
-                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
-                    <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0" Color="{StaticResource YellowDarken1}" />
-                            <GradientStop Offset="1" Color="{StaticResource YellowLighten3}" />
-                        </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
-
-                <!-- X (左) -->
+                        Style="{StaticResource YButton}"
+                        app:ButtonOption.IsPressed="{Binding ButtonY}" />
                 <Button AbsoluteLayout.LayoutBounds="0,0,0.5,1" AbsoluteLayout.LayoutFlags="All"
-                        WidthRequest="64" HeightRequest="64"
-                        FontSize="36" FontAttributes="Bold"
-                        Text="X"
-                        TextColor="{StaticResource LightBlueDarken4}"
-                        CornerRadius="32"
-                        app:ButtonOption.IsPressed="{Binding ButtonX}"
-                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
-                    <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0" Color="{StaticResource LightBlueDarken1}" />
-                            <GradientStop Offset="1" Color="{StaticResource LightBlueLighten3}" />
-                        </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
-
-                <!-- B (右) -->
+                        Style="{StaticResource XButton}"
+                        app:ButtonOption.IsPressed="{Binding ButtonX}" />
                 <Button AbsoluteLayout.LayoutBounds="0,0,1.5,1" AbsoluteLayout.LayoutFlags="All"
-                        WidthRequest="64" HeightRequest="64"
-                        FontSize="36" FontAttributes="Bold"
-                        Text="B"
-                        TextColor="{StaticResource RedDarken4}"
-                        CornerRadius="32"
-                        app:ButtonOption.IsPressed="{Binding ButtonB}"
-                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
-                    <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0" Color="{StaticResource RedDarken1}" />
-                            <GradientStop Offset="1" Color="{StaticResource RedLighten3}" />
-                        </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
-
-                <!-- A (下) -->
+                        Style="{StaticResource BButton}"
+                        app:ButtonOption.IsPressed="{Binding ButtonB}" />
                 <Button AbsoluteLayout.LayoutBounds="0,0,1,1.6" AbsoluteLayout.LayoutFlags="All"
-                        WidthRequest="64" HeightRequest="64"
-                        FontSize="36" FontAttributes="Bold"
-                        Text="A"
-                        TextColor="{StaticResource GreenDarken4}"
-                        CornerRadius="32"
-                        app:ButtonOption.IsPressed="{Binding ButtonA}"
-                        app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
-                    <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Offset="0" Color="{StaticResource GreenDarken1}" />
-                            <GradientStop Offset="1" Color="{StaticResource GreenLighten3}" />
-                        </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
+                        Style="{StaticResource AButton}"
+                        app:ButtonOption.IsPressed="{Binding ButtonA}" />
             </AbsoluteLayout>
+
         </Grid>
 
     </Grid>
