@@ -39,7 +39,7 @@
             <app:JoyStick Grid.Column="0"
                           WidthRequest="160" HeightRequest="160"
                           ArrowColor="{StaticResource GrayDarken3}"
-                          RangeOfMotion="56" ThumbSize="80"
+                          Mode="Both" RangeOfMotion="56" ThumbSize="80"
                           XValue="{Binding StickX}"
                           YValue="{Binding StickY}">
                 <app:JoyStick.BaseBackground>

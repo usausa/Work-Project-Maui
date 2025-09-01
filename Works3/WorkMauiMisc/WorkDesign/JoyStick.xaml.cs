@@ -2,6 +2,21 @@ namespace WorkDesign;
 
 public partial class JoyStick
 {
+    // Mode
+
+    public static readonly BindableProperty ModeProperty = BindableProperty.Create(
+        nameof(Mode),
+        typeof(JoyStickMode),
+        typeof(JoyStick),
+        JoyStickMode.Both,
+        propertyChanged: OnPropertyChanged);
+
+    public JoyStickMode Mode
+    {
+        get => (JoyStickMode)GetValue(ModeProperty);
+        set => SetValue(ModeProperty, value);
+    }
+
     // Size
 
     public static readonly BindableProperty ThumbSizeProperty = BindableProperty.Create(
@@ -190,18 +205,25 @@ public partial class JoyStick
         var h = r * ArrowHeightRatio;
         var w = r * ArrowHalfWidthRatio;
 
+        var horizontal = (Mode & JoyStickMode.Horizontal) == JoyStickMode.Horizontal;
+        var vertical = (Mode & JoyStickMode.Vertical) == JoyStickMode.Vertical;
+
         // Up
         var apexUp = new Point(cx, cy - r + margin);
         UpArrow.Points = [apexUp, new Point(cx - w, apexUp.Y + h), new Point(cx + w, apexUp.Y + h)];
+        UpArrow.IsVisible = vertical;
         // Down
         var apexDown = new Point(cx, cy + r - margin);
         DownArrow.Points = [apexDown, new Point(cx + w, apexDown.Y - h), new Point(cx - w, apexDown.Y - h)];
+        DownArrow.IsVisible = vertical;
         // Left
         var apexLeft = new Point(cx - r + margin, cy);
         LeftArrow.Points = [apexLeft, new Point(apexLeft.X + h, cy - w), new Point(apexLeft.X + h, cy + w)];
+        LeftArrow.IsVisible = horizontal;
         // Right
         var apexRight = new Point(cx + r - margin, cy);
         RightArrow.Points = [apexRight, new Point(apexRight.X - h, cy + w), new Point(apexRight.X - h, cy - w)];
+        RightArrow.IsVisible = horizontal;
     }
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
@@ -236,7 +258,17 @@ public partial class JoyStick
 
     public (double X, double Y) ClampToCircle(double radius, double x, double y)
     {
-        var distance = Math.Sqrt(x * x + y * y);
-        return distance > radius ? (x * (radius / distance), y * (radius / distance)) : (x, y);
+        switch (Mode)
+        {
+            case JoyStickMode.Both:
+                var distance = Math.Sqrt(x * x + y * y);
+                return distance > radius ? (x * (radius / distance), y * (radius / distance)) : (x, y);
+            case JoyStickMode.Horizontal:
+                return (Math.Clamp(x, -radius, radius), 0);
+            case JoyStickMode.Vertical:
+                return (0, Math.Clamp(y, -radius, radius));
+        }
+
+        return (0, 0);
     }
 }
