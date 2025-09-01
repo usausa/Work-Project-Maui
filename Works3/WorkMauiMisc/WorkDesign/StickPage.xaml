@@ -36,17 +36,31 @@
         <Grid Grid.Row="3"
               ColumnDefinitions="*,*">
 
-            <app:DPadCircleView Grid.Column="0"
-                                WidthRequest="160" HeightRequest="160"
-                                XValue="{Binding StickX}"
-                                YValue="{Binding StickY}">
-                <app:DPadCircleView.BaseBackground>
+            <app:JoyStick Grid.Column="0"
+                          WidthRequest="160" HeightRequest="160"
+                          ArrowColor="{StaticResource GrayDarken3}"
+                          RangeOfMotion="56" ThumbSize="80"
+                          XValue="{Binding StickX}"
+                          YValue="{Binding StickY}">
+                <app:JoyStick.BaseBackground>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Offset="0" Color="#444444" />
-                        <GradientStop Offset="1" Color="#888888" />
+                        <GradientStop Offset="0" Color="{StaticResource GrayDefault}" />
+                        <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
                     </LinearGradientBrush>
-                </app:DPadCircleView.BaseBackground>
-            </app:DPadCircleView>
+                </app:JoyStick.BaseBackground>
+                <app:JoyStick.ThumbBackground>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource BlueDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource BlueLighten3}" />
+                    </LinearGradientBrush>
+                </app:JoyStick.ThumbBackground>
+                <app:JoyStick.ThumbBorderBackground>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource BlueLighten2}" />
+                        <GradientStop Offset="1" Color="{StaticResource BlueDarken2}" />
+                    </LinearGradientBrush>
+                </app:JoyStick.ThumbBorderBackground>
+            </app:JoyStick>
 
             <AbsoluteLayout Grid.Column="1">
                 <!-- Y (上) -->
@@ -54,14 +68,14 @@
                         WidthRequest="64" HeightRequest="64"
                         FontSize="36" FontAttributes="Bold"
                         Text="Y"
-                        TextColor="Orange"
+                        TextColor="{StaticResource YellowDarken4}"
                         CornerRadius="32"
                         app:ButtonOption.IsPressed="{Binding ButtonY}"
                         app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Offset="0.0" Color="#F7D700" />
-                            <GradientStop Offset="1.0" Color="#FFEF8F" />
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource YellowDarken1}" />
+                            <GradientStop Offset="1" Color="{StaticResource YellowLighten3}" />
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
@@ -71,14 +85,14 @@
                         WidthRequest="64" HeightRequest="64"
                         FontSize="36" FontAttributes="Bold"
                         Text="X"
-                        TextColor="Blue"
+                        TextColor="{StaticResource LightBlueDarken4}"
                         CornerRadius="32"
                         app:ButtonOption.IsPressed="{Binding ButtonX}"
                         app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Offset="0.0" Color="#3A96DD" />
-                            <GradientStop Offset="1.0" Color="#52B6FF" />
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource LightBlueDarken1}" />
+                            <GradientStop Offset="1" Color="{StaticResource LightBlueLighten3}" />
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
@@ -88,14 +102,14 @@
                         WidthRequest="64" HeightRequest="64"
                         FontSize="36" FontAttributes="Bold"
                         Text="B"
-                        TextColor="Red"
+                        TextColor="{StaticResource RedDarken4}"
                         CornerRadius="32"
                         app:ButtonOption.IsPressed="{Binding ButtonB}"
                         app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
-                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-                            <GradientStop Offset="0.0" Color="#D83C3E" />
-                            <GradientStop Offset="1.0" Color="#FF878C" />
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource RedDarken1}" />
+                            <GradientStop Offset="1" Color="{StaticResource RedLighten3}" />
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
@@ -105,14 +119,14 @@
                         WidthRequest="64" HeightRequest="64"
                         FontSize="36" FontAttributes="Bold"
                         Text="A"
-                        TextColor="Green"
+                        TextColor="{StaticResource GreenDarken4}"
                         CornerRadius="32"
                         app:ButtonOption.IsPressed="{Binding ButtonA}"
                         app:ButtonOption.PressBind="True" app:ButtonOption.PressEffect="True">
                     <Button.Background>
-                        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                            <GradientStop Offset="0.0" Color="#107C10" />
-                            <GradientStop Offset="1.0" Color="#43C963" />
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource GreenDarken1}" />
+                            <GradientStop Offset="1" Color="{StaticResource GreenLighten3}" />
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
