@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:app="using:WorkDesign"
+             x:Class="WorkDesign.GuardPage"
+             x:DataType="{x:Type app:GuardPageViewMode}"
+             Title="GuardPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <app:ReverseConverter x:Key="ReverseConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <app:GuardPageViewMode />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <VerticalStackLayout Padding="20"
+                             Spacing="15" VerticalOptions="Center">
+            <Button WidthRequest="200" HeightRequest="50"
+                    Command="{Binding TestCommand}"
+                    Text="テスト" />
+            <Button WidthRequest="200" HeightRequest="50"
+                    Command="{Binding LoadCommand}"
+                    Text="処理中" />
+        </VerticalStackLayout>
+
+        <Rectangle Fill="Transparent"
+                   InputTransparent="{Binding IsLoading, Converter={StaticResource ReverseConverter}}"
+                   ZIndex="100" />
+
+        <ActivityIndicator WidthRequest="100" HeightRequest="100"
+                           Color="Blue"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           IsRunning="{Binding IsLoading}"
+                           VerticalOptions="Center" ZIndex="200" />
+    </Grid>
+
+</ContentPage>

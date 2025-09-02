@@ -1,3 +1,5 @@
+using Smart.Maui.Data;
+
 namespace WorkDesign;
 
 public partial class App : Application
@@ -12,7 +14,10 @@ public partial class App : Application
     // https://editor.method.ac/
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new StickPage());
+        _ = new ReverseConverter();
+
+        return new Window(new GuardPage());
+        //return new Window(new StickPage());
         //return new Window(new ChatPage());
         //return new Window(new AsyncLoadPage());
 
