@@ -31,7 +31,6 @@ public partial class MainPage : ContentPage
         }
 
         navigating = true;
-
         var oldPage = currentPage;
 
         Container.Children.Add(newPage);
@@ -79,7 +78,7 @@ public interface INavigationEffect
 
 public class PushTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -89,27 +88,30 @@ public class PushTransition : INavigationEffect
     public Task AnimateInAsync(ContentView page)
     {
         var w = page.Parent is View parentView ? parentView.Width : 0;
-        page.Opacity = 0;
+        page.Opacity = 0.5;
         page.TranslationX = w;
         return Task.WhenAll(
             page.FadeTo(1, Duration, Easing.CubicOut),
             page.TranslateTo(0, 0, Duration, Easing.CubicOut)
         );
+        //page.TranslationX = w;
+        //return page.TranslateTo(0, 0, Duration, Easing.CubicOut);
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
         var w = page.Parent is View parentView ? parentView.Width : 0;
         return Task.WhenAll(
-            page.FadeTo(0, Duration, Easing.CubicIn),
+            page.FadeTo(0.5, Duration, Easing.CubicOut),
             page.TranslateTo(-w, 0, Duration, Easing.CubicOut)
         );
+        //return page.TranslateTo(-w, 0, Duration, Easing.CubicOut);
     }
 }
 
 public class PopTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -119,27 +121,30 @@ public class PopTransition : INavigationEffect
     public Task AnimateInAsync(ContentView page)
     {
         var w = page.Parent is View parentView ? parentView.Width : 0;
-        page.Opacity = 0;
+        page.Opacity = 0.5;
         page.TranslationX = -w;
         return Task.WhenAll(
             page.FadeTo(1, Duration, Easing.CubicOut),
             page.TranslateTo(0, 0, Duration, Easing.CubicOut)
         );
+        //page.TranslationX = -w;
+        //return page.TranslateTo(0, 0, Duration, Easing.CubicOut);
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
         var w = page.Parent is View parentView ? parentView.Width : 0;
         return Task.WhenAll(
-            page.FadeTo(0, Duration, Easing.CubicOut),
+            page.FadeTo(0.5, Duration, Easing.CubicOut),
             page.TranslateTo(w, 0, Duration, Easing.CubicOut)
         );
+        //return page.TranslateTo(w, 0, Duration, Easing.CubicOut);
     }
 }
 
 public class DialogOpenTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -164,7 +169,7 @@ public class DialogOpenTransition : INavigationEffect
 
 public class DialogCloseTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -179,7 +184,7 @@ public class DialogCloseTransition : INavigationEffect
     public Task AnimateOutAsync(ContentView page)
     {
         return Task.WhenAll(
-            page.FadeTo(0, Duration, Easing.CubicIn),
+            page.FadeTo(0, Duration, Easing.CubicOut),
             page.ScaleTo(0.8, Duration, Easing.CubicOut)
         );
     }
@@ -187,7 +192,7 @@ public class DialogCloseTransition : INavigationEffect
 
 public class BottomUpTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -214,7 +219,7 @@ public class BottomUpTransition : INavigationEffect
 
 public class BottomDownTransition : INavigationEffect
 {
-    private const int Duration = 250;
+    private const uint Duration = 500;
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
@@ -231,7 +236,7 @@ public class BottomDownTransition : INavigationEffect
         var h = page.Parent is View parentView ? parentView.Height : 0;
 
         return Task.WhenAll(
-            page.FadeTo(0, Duration, Easing.CubicIn),
+            page.FadeTo(0, Duration, Easing.CubicOut),
             page.TranslateTo(0, h, Duration, Easing.CubicOut)
         );
     }
