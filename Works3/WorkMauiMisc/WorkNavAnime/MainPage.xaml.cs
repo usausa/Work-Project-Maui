@@ -42,21 +42,22 @@ public partial class MainPage : ContentPage
             effect.ReOrder(newPage, oldPage);
         }
 
-        var animationTasks = new List<Task>
-        {
-            effect.AnimateInAsync(newPage)
-        };
-        if (oldPage != null)
-        {
-            animationTasks.Add(effect.AnimateOutAsync(oldPage));
-        }
-
-        await Task.WhenAll(animationTasks);
+        var inTask = effect.AnimateInAsync(newPage);
+        var outTask = oldPage != null ? effect.AnimateOutAsync(oldPage) : Task.CompletedTask;
+        await Task.WhenAll(inTask, outTask);
 
         if (oldPage != null)
         {
             Container.Children.Remove(oldPage);
         }
+
+        // Reset
+        newPage.ZIndex = 0;
+
+        newPage.TranslationX = 0;
+        newPage.TranslationY = 0;
+        newPage.Scale = 1;
+        newPage.Opacity = 1;
 
         currentPage = newPage;
         navigating = false;
@@ -64,6 +65,8 @@ public partial class MainPage : ContentPage
 }
 
 //----------------------------------------------------------------
+
+// TODO 不要箇所再確認、呼び出し側でのリセット？
 
 public interface INavigationEffect
 {
@@ -80,23 +83,26 @@ public class PushTransition : INavigationEffect
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
-        // Children.Add()のデフォルトの挙動を利用するため、Z-indexの調整は不要
+        // 既定: newPageは追加順で最前面。調整不要。
     }
 
     public Task AnimateInAsync(ContentView page)
     {
-        page.TranslationX = page.Parent is View parentView ? parentView.Width : 0;
+        var w = page.Parent is View parentView ? parentView.Width : 0;
+        page.Opacity = 0;
+        page.TranslationX = w;
         return Task.WhenAll(
-            page.FadeTo(1, Duration, Easing.CubicIn),
+            page.FadeTo(1, Duration, Easing.CubicOut),
             page.TranslateTo(0, 0, Duration, Easing.CubicOut)
         );
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
+        var w = page.Parent is View parentView ? parentView.Width : 0;
         return Task.WhenAll(
             page.FadeTo(0, Duration, Easing.CubicIn),
-            page.TranslateTo(-(page.Width), 0, Duration, Easing.CubicOut)
+            page.TranslateTo(-w, 0, Duration, Easing.CubicOut)
         );
     }
 }
@@ -107,23 +113,26 @@ public class PopTransition : INavigationEffect
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
-        oldPage.ZIndex = newPage.ZIndex + 1;
+        oldPage.ZIndex = (newPage.ZIndex >= 0 ? newPage.ZIndex : 0) + 1;
     }
 
     public Task AnimateInAsync(ContentView page)
     {
-        page.TranslationX = page.Parent is View parentView ? -parentView.Width : 0;
+        var w = page.Parent is View parentView ? parentView.Width : 0;
+        page.Opacity = 0;
+        page.TranslationX = -w;
         return Task.WhenAll(
-            page.FadeTo(1, Duration, Easing.CubicIn),
+            page.FadeTo(1, Duration, Easing.CubicOut),
             page.TranslateTo(0, 0, Duration, Easing.CubicOut)
         );
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
+        var w = page.Parent is View parentView ? parentView.Width : 0;
         return Task.WhenAll(
-            page.FadeTo(0, Duration, Easing.CubicIn),
-            page.TranslateTo(page.Width, 0, Duration, Easing.CubicOut)
+            page.FadeTo(0, Duration, Easing.CubicOut),
+            page.TranslateTo(w, 0, Duration, Easing.CubicOut)
         );
     }
 }
@@ -139,17 +148,16 @@ public class DialogOpenTransition : INavigationEffect
 
     public Task AnimateInAsync(ContentView page)
     {
+        page.Opacity = 0;
         page.Scale = 0.8;
         return Task.WhenAll(
-            page.FadeTo(1, Duration, Easing.CubicIn),
+            page.FadeTo(1, Duration, Easing.CubicOut),
             page.ScaleTo(1.0, Duration, Easing.CubicOut)
         );
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
-        page.Opacity = 1;
-        page.TranslationY = 0;
         return Task.CompletedTask;
     }
 }
@@ -160,13 +168,11 @@ public class DialogCloseTransition : INavigationEffect
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
-        oldPage.ZIndex = newPage.ZIndex + 1;
+        oldPage.ZIndex = (newPage.ZIndex >= 0 ? newPage.ZIndex : 0) + 1;
     }
 
     public Task AnimateInAsync(ContentView page)
     {
-        page.Opacity = 1;
-        page.TranslationY = 0;
         return Task.CompletedTask;
     }
 
@@ -190,16 +196,19 @@ public class BottomUpTransition : INavigationEffect
 
     public Task AnimateInAsync(ContentView page)
     {
-        page.TranslationY = page.Parent is View parentView ? parentView.Height : 0;
+        var h = page.Parent is View parentView ? parentView.Height : 0;
+
+        page.Opacity = 0;
+        page.TranslationY = h;
         return Task.WhenAll(
-            page.FadeTo(1, Duration, Easing.CubicIn),
+            page.FadeTo(1, Duration, Easing.CubicOut),
             page.TranslateTo(0, 0, Duration, Easing.CubicOut)
         );
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
-        return page.FadeTo(0, Duration, Easing.CubicIn);
+        return Task.CompletedTask;
     }
 }
 
@@ -209,21 +218,21 @@ public class BottomDownTransition : INavigationEffect
 
     public void ReOrder(ContentView newPage, ContentView oldPage)
     {
-        oldPage.ZIndex = newPage.ZIndex + 1;
+        oldPage.ZIndex = (newPage.ZIndex >= 0 ? newPage.ZIndex : 0) + 1;
     }
 
     public Task AnimateInAsync(ContentView page)
     {
-        page.Opacity = 1;
-        page.TranslationY = 0;
         return Task.CompletedTask;
     }
 
     public Task AnimateOutAsync(ContentView page)
     {
+        var h = page.Parent is View parentView ? parentView.Height : 0;
+
         return Task.WhenAll(
             page.FadeTo(0, Duration, Easing.CubicIn),
-            page.TranslateTo(0, page.Parent is View parentView ? parentView.Height : 0, Duration, Easing.CubicOut)
+            page.TranslateTo(0, h, Duration, Easing.CubicOut)
         );
     }
 }
