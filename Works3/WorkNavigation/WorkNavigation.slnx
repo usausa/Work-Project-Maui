@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Smart.Navigation.Maui/Smart.Navigation.Maui.csproj" />
+  <Project Path="Smart.Navigation.Resolver/Smart.Navigation.Resolver.csproj" />
+  <Project Path="Smart.Navigation/Smart.Navigation.csproj" />
+  <Project Path="WorkNavigation/WorkNavigation.csproj" />
+</Solution>
