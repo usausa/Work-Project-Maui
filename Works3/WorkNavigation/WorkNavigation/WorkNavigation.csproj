@@ -59,6 +59,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BunnyTail.MemberAccessor" Version="1.7.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
@@ -76,6 +77,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+      <ProjectReference Include="..\Smart.Navigation.Generator\Smart.Navigation.Generator.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
 	  <ProjectReference Include="..\Smart.Navigation.Maui\Smart.Navigation.Maui.csproj" />
 	  <ProjectReference Include="..\Smart.Navigation.Resolver\Smart.Navigation.Resolver.csproj" />
 	  <ProjectReference Include="..\Smart.Navigation\Smart.Navigation.csproj" />

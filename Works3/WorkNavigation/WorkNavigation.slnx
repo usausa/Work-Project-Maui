@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Smart.Navigation.Generator/Smart.Navigation.Generator.csproj" />
   <Project Path="Smart.Navigation.Maui/Smart.Navigation.Maui.csproj" />
   <Project Path="Smart.Navigation.Resolver/Smart.Navigation.Resolver.csproj" />
   <Project Path="Smart.Navigation/Smart.Navigation.csproj" />

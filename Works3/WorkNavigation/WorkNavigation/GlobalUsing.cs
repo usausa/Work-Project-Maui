@@ -24,6 +24,8 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using System.Windows.Input;
 
+global using BunnyTail.MemberAccessor;
+
 global using Microsoft.Extensions.Logging;
 
 global using Smart;
@@ -44,3 +46,6 @@ global using Smart.Navigation.Plugins.Parameter;
 global using Smart.Navigation.Plugins.Scope;
 global using Smart.Reactive;
 global using Smart.Text;
+
+global using WorkNavigation.Modules;
+
