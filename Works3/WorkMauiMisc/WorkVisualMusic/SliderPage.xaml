@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WorkVisualMusic"
+             x:Class="WorkVisualMusic.SliderPage"
+             BackgroundColor="#2D2D30"
+             Title="SliderPage">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          Padding="20">
+        <Label Margin="0,10,0,20"
+               FontSize="24" FontAttributes="Bold"
+               Text="オーディオミキサー"
+               TextColor="White"
+               HorizontalOptions="Center" />
+
+        <Grid Grid.Row="1"
+              RowDefinitions="Auto,*"
+              Padding="20">
+            <Label Margin="0,10,0,20"
+                   FontSize="24" FontAttributes="Bold"
+                   Text="ミキサー風縦型スライダー"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+
+            <HorizontalStackLayout Grid.Row="1"
+                                   HorizontalOptions="Center" Spacing="30">
+
+                <!-- 基本的な縦型スライダー -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="ボリューム"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <local:VerticalMixerSlider x:Name="VolumeSlider"
+                                               WidthRequest="60" HeightRequest="300"
+                                               Value="75"
+                                               HasTickMarks="True" HorizontalOptions="Center" Maximum="100" Minimum="0"
+                                               ProgressColor="#F27935" ThumbBorderColor="#333333" ThumbColor="#DDDDDD" ThumbHeight="12"
+                                               ThumbWidth="32" TickMarkColor="#999999" TickMarkCount="11" TrackColor="#666666"
+                                               TrackWidth="6" />
+
+                    <Label FontSize="16"
+                           Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, StringFormat='値: {0:F0}'}"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <!-- 別のカラーリングの縦型スライダー -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="イコライザ"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <local:VerticalMixerSlider x:Name="EQSlider"
+                                               WidthRequest="60" HeightRequest="300"
+                                               Value="3"
+                                               HasTickMarks="True" HorizontalOptions="Center" Maximum="12" Minimum="-12"
+                                               ProgressColor="#3498DB" ThumbBorderColor="#333333" ThumbColor="#EEEEEE" ThumbHeight="10"
+                                               ThumbWidth="28" TickMarkColor="#999999" TickMarkCount="5" TrackColor="#666666"
+                                               TrackWidth="4" />
+
+                    <Label FontSize="16"
+                           Text="{Binding Source={x:Reference EQSlider}, Path=Value, StringFormat='dB: {0:F1}'}"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="2"
+                             Margin="0,20,0,0"
+                             Spacing="15">
+
+            <!-- トランスポートコントロール -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Button WidthRequest="60" HeightRequest="50"
+                        FontSize="24"
+                        Text="&#x23EE;"
+                        TextColor="White" BackgroundColor="#444444" />
+
+                <Button WidthRequest="60" HeightRequest="50"
+                        FontSize="24"
+                        Text="&#x23F8;"
+                        TextColor="White" BackgroundColor="#444444" />
+
+                <Button WidthRequest="60" HeightRequest="50"
+                        FontSize="24"
+                        Text="&#x25B6;"
+                        TextColor="White" BackgroundColor="#F27935" />
+
+                <Button WidthRequest="60" HeightRequest="50"
+                        FontSize="24"
+                        Text="&#x23ED;"
+                        TextColor="White" BackgroundColor="#444444" />
+
+                <Button WidthRequest="60" HeightRequest="50"
+                        FontSize="24"
+                        Text="&#x1F501;"
+                        TextColor="White" BackgroundColor="#444444" />
+            </HorizontalStackLayout>
+
+            <!-- 時間表示 -->
+            <Border WidthRequest="180"
+                    Padding="10,5"
+                    BackgroundColor="#222222"
+                    HorizontalOptions="Center" Stroke="#666666" StrokeShape="RoundRectangle 4,4,4,4" StrokeThickness="1">
+                <Label FontFamily="Monospace" FontSize="18"
+                       Text="00:03:45 / 00:04:30"
+                       TextColor="#F1C40F"
+                       HorizontalOptions="Center" />
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

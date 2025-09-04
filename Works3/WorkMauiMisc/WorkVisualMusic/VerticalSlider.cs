@@ -243,6 +243,12 @@ internal class VerticalSliderDrawable : IDrawable
 
 public class VerticalMixerSlider : GraphicsView
 {
+    // ドラッグ操作の状態を追跡
+    private bool _isDragging = false;
+
+    // つまみの周囲のタッチ判定用のマージン（ピクセル単位）
+    private const float THUMB_TOUCH_MARGIN = 10.0f;
+
     // バインド可能なプロパティ
     public static readonly BindableProperty MinimumProperty =
         BindableProperty.Create(nameof(Minimum), typeof(double), typeof(VerticalMixerSlider), 0.0,
@@ -425,21 +431,68 @@ public class VerticalMixerSlider : GraphicsView
         Value = Math.Round(newValue, 1); // 小数点1桁に丸める
     }
 
+    // タッチ位置がつまみ領域内かどうかを判定するメソッド
+    // マージンを追加して、タッチしやすくする
+    private bool IsPointInThumb(PointF point)
+    {
+        var centerX = Width / 2;
+        var thumbY = GetThumbYPosition();
+
+        // つまみの領域を定義（マージンを追加）
+        var thumbRect = new RectF(
+            (float)centerX - (ThumbWidth / 2) - THUMB_TOUCH_MARGIN,
+            thumbY - (ThumbHeight / 2) - THUMB_TOUCH_MARGIN,
+            ThumbWidth + (THUMB_TOUCH_MARGIN * 2),
+            ThumbHeight + (THUMB_TOUCH_MARGIN * 2));
+
+        // タッチ位置がつまみ領域内にあるかチェック
+        return thumbRect.Contains(point);
+    }
+
+    // 現在の値に基づいてつまみのY座標を計算
+    private float GetThumbYPosition()
+    {
+        var valuePercentage = (Value - Minimum) / (Maximum - Minimum);
+        var trackTop = ThumbHeight / 2;
+        var trackBottom = Height - (ThumbHeight / 2);
+        var trackHeight = trackBottom - trackTop;
+
+        // サムのY座標（上が最大値、下が最小値）
+        return (float)(trackBottom - (valuePercentage * trackHeight));
+    }
+
     // タッチイベントハンドラー
     private void OnStartInteraction(object? sender, TouchEventArgs e)
     {
-        UpdateValue(e.Touches.First());
+        var touchPoint = e.Touches.First();
+
+        if (IsPointInThumb(touchPoint))
+        {
+            // ノブ周辺がタッチされた場合、ドラッグモードを開始
+            _isDragging = true;
+            UpdateValue(touchPoint);
+        }
+        else
+        {
+            // ノブ以外の場所がタッチされた場合、その位置に値を設定するだけ
+            UpdateValue(touchPoint);
+            _isDragging = false;
+        }
     }
 
     private void OnDragInteraction(object? sender, TouchEventArgs e)
     {
-        UpdateValue(e.Touches.First());
+        // ドラッグモードの場合のみ値を更新
+        if (_isDragging)
+        {
+            UpdateValue(e.Touches.First());
+        }
     }
 
     private void OnEndInteraction(object? sender, TouchEventArgs e)
     {
-        // ドラッグ終了時も値を更新
-        UpdateValue(e.Touches.First());
+        // ドラッグ終了時はドラッグモードをリセット
+        _isDragging = false;
     }
 
     // プロパティ変更時の処理
@@ -538,7 +591,7 @@ internal class VerticalMixerSliderDrawable : IDrawable
         canvas.StrokeColor = _slider.ProgressColor;
         canvas.DrawLine(centerX, thumbY, centerX, trackBottom);
 
-        // サム（つまみ）を描画 - 四角形のスタイル
+        // サム（つまみ）を描画
         DrawRectangularThumb(canvas, centerX, thumbY);
     }
 
