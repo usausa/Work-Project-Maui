@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="WorkVisualMusic.MainPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:workVisualMusic="clr-namespace:WorkVisualMusic">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:app="clr-namespace:WorkVisualMusic"
+             x:Class="WorkVisualMusic.MainPage">
 
-    <Grid RowDefinitions="128,*">
+    <Grid RowDefinitions="160,*,Auto"
+          ColumnDefinitions="*,*,*">
 
-        <workVisualMusic:KnobView Grid.Row="0" />
+        <app:KnobView Grid.Row="0" Grid.Column="1"
+                      Maximum="100" Minimum="0" />
+
+        <!-- 基本スライダー -->
+        <StackLayout Grid.Row="1" Grid.Column="0"
+                     Spacing="10">
+            <Label Text="基本スライダー"
+                   HorizontalOptions="Center" />
+            <app:VerticalSlider x:Name="BasicSlider"
+                                WidthRequest="60" HeightRequest="300"
+                                Value="{Binding SliderValue}"
+                                Maximum="100" Minimum="0" />
+            <Label Text="{Binding Source={x:Reference BasicSlider}, Path=Value, StringFormat='値: {0:F1}'}"
+                   HorizontalOptions="Center" />
+        </StackLayout>
+
+        <!-- カスタマイズしたスライダー -->
+        <StackLayout Grid.Row="1" Grid.Column="1"
+                     Spacing="10">
+            <Label Text="カスタマイズ"
+                   HorizontalOptions="Center" />
+            <app:VerticalSlider x:Name="CustomSlider"
+                                WidthRequest="60" HeightRequest="300"
+                                Value="65"
+                                Maximum="100" Minimum="0" ProgressColor="Green" ThumbBorderColor="DarkGreen"
+                                ThumbColor="White" ThumbRadius="15" TrackColor="LightGray" TrackWidth="8" />
+            <Label Text="{Binding Source={x:Reference CustomSlider}, Path=Value, StringFormat='値: {0:F1}'}"
+                   HorizontalOptions="Center" />
+        </StackLayout>
+
+        <!-- 音量スライダー例 -->
+        <StackLayout Grid.Row="1" Grid.Column="2"
+                     Spacing="10">
+            <Label Text="音量スライダー"
+                   HorizontalOptions="Center" />
+            <app:VerticalSlider x:Name="VolumeSlider"
+                                WidthRequest="60" HeightRequest="300"
+                                Value="80"
+                                Maximum="100" Minimum="0" ProgressColor="#007AFF" ThumbBorderColor="#007AFF"
+                                ThumbColor="#FFFFFF" ThumbRadius="14" TrackColor="#E0E0E0" TrackWidth="8" />
+            <Label Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, StringFormat='音量: {0:F0}%'}"
+                   HorizontalOptions="Center" />
+        </StackLayout>
+
+        <Button Grid.Row="2"
+                Text="Test"
+                Clicked="Button_OnClicked" />
 
     </Grid>
 
