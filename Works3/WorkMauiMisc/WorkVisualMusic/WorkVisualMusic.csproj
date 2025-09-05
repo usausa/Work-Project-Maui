@@ -70,7 +70,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="SliderPage.xaml">
+	  <MauiXaml Update="SamplePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ref\SliderPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

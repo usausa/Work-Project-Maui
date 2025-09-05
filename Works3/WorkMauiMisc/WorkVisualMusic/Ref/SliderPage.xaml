@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:WorkVisualMusic"
              x:Class="WorkVisualMusic.SliderPage"
+             x:DataType="{x:Type local:SliderPage}"
              BackgroundColor="#2D2D30"
              Title="SliderPage">
 
