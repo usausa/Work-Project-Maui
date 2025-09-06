@@ -76,9 +76,12 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     {
         Drawable = this;
 
-        StartInteraction += OnStartInteraction;
-        DragInteraction += OnDragInteraction;
-        EndInteraction += OnEndInteraction;
+        StartInteraction += (sender, args) =>
+        {
+
+        };
+        //DragInteraction += OnDragInteraction;
+        //EndInteraction += OnEndInteraction;
     }
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -113,21 +116,6 @@ public sealed class CustomSlider : GraphicsView, IDrawable
             return slider.Maximum;
 
         return doubleValue;
-    }
-
-    private void OnStartInteraction(object? sender, TouchEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void OnDragInteraction(object? sender, TouchEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void OnEndInteraction(object? sender, TouchEventArgs e)
-    {
-        throw new NotImplementedException();
     }
 
     public void Draw(ICanvas canvas, RectF dirtyRect)

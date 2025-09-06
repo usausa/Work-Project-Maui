@@ -19,6 +19,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
 
 		<!-- Display name -->
 		<ApplicationTitle>WorkVisualMusic</ApplicationTitle>
@@ -60,22 +61,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Ref\**" />
+	  <Compile Remove="Ref\**" />
+	  <EmbeddedResource Remove="Ref\**" />
+	  <MauiCss Remove="Ref\**" />
+	  <MauiXaml Remove="Ref\**" />
+	  <None Remove="Ref\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.9.3" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.9.3" />
+		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == true">
 		<PackageReference Include="Components.Maui" Version="1.23.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="SamplePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Ref\SliderPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

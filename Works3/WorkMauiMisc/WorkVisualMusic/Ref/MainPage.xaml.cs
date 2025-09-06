@@ -105,7 +105,7 @@ public sealed class Service
 
 
             //Debug.WriteLine($"*WaveForm : {min} {max} {avgAmplitude} {ConvertToVolumeLevel(avgAmplitude)}");
-            Debug.WriteLine($"*WaveForm : {AudioLevelCalculator.ConvertToLevel16(waveform)}");
+            //Debug.WriteLine($"*WaveForm : {AudioLevelCalculator.ConvertToLevel16(wa)}");
         }
 
         private const int LevelCount = 16;
