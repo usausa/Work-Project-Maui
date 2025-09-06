@@ -4,7 +4,29 @@
              x:Class="WorkVisualMusic.SamplePage"
              Title="SamplePage">
 
-    <Grid RowDefinitions="Auto,Auto,160,*,Auto,Auto"
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Black" />
+            <Setter Property="BorderWidth" Value="3" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HeightRequest" Value="48" />
+        </Style>
+
+        <Style x:Key="MuteButton"
+               TargetType="Button">
+            <Setter Property="Background" Value="#1a74d2" />
+            <Setter Property="BorderColor" Value="SkyBlue" />
+            <Setter Property="BorderWidth" Value="2" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="TextColor" Value="#FFFFFF" />
+            <Setter Property="Padding" Value="10,5" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,160,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="*,*,*">
 
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="3">
@@ -16,13 +38,83 @@
         </HorizontalStackLayout>
 
 
-        <Button Grid.Row="4" Grid.Column="0" />
-        <Button Grid.Row="4" Grid.Column="1" />
-        <Button Grid.Row="4" Grid.Column="2" />
+        <Button Grid.Row="4" Grid.Column="0"
+                Margin="8"
+                Text="A"
+                BackgroundColor="#00ffb7"
+                BorderColor="#00ffb7" />
+        <Button Grid.Row="4" Grid.Column="1"
+                Margin="8"
+                Text="B"
+                BackgroundColor="#ff004a"
+                BorderColor="#ff004a" />
+        <Button Grid.Row="4" Grid.Column="2"
+                Margin="8"
+                Text="C"
+                TextColor="#ff00b7"
+                BorderColor="#ff00b7" />
 
-        <Button Grid.Row="5" Grid.Column="0" />
-        <Button Grid.Row="5" Grid.Column="1" />
-        <Button Grid.Row="5" Grid.Column="2" />
+        <Button Grid.Row="5" Grid.Column="0"
+                Margin="8"
+                Text="MIC"
+                TextColor="#00ffb7"
+                BorderColor="#00ffb7" />
+        <Button Grid.Row="5" Grid.Column="1"
+                Style="{StaticResource MuteButton}"
+                Margin="8"
+                Text="MUTE"
+                TextColor="White" />
+        <Button Grid.Row="5" Grid.Column="2"
+                Margin="8"
+                Text="VOICE"
+                TextColor="#ff00b7"
+                BorderColor="#ff00b7" />
+
+        <BoxView Grid.Row="6" Grid.Column="0"
+                 HeightRequest="24"
+                 Color="#FF1493" />
+        <BoxView Grid.Row="6" Grid.Column="1"
+                 HeightRequest="24"
+                 Color="#FF00A2" />
+        <BoxView Grid.Row="6" Grid.Column="2"
+                 HeightRequest="24"
+                 Color="#FF69B4" />
+        <BoxView Grid.Row="7" Grid.Column="0"
+                 HeightRequest="24"
+                 Color="#FFFF00" />
+        <BoxView Grid.Row="7" Grid.Column="1"
+                 HeightRequest="24"
+                 Color="#F5FF5E" />
+        <BoxView Grid.Row="7" Grid.Column="2"
+                 HeightRequest="24"
+                 Color="#FFFA5A" />
+        <BoxView Grid.Row="8" Grid.Column="0"
+                 HeightRequest="24"
+                 Color="#00FF00" />
+        <BoxView Grid.Row="8" Grid.Column="1"
+                 HeightRequest="24"
+                 Color="#00FF8C" />
+        <BoxView Grid.Row="8" Grid.Column="2"
+                 HeightRequest="24"
+                 Color="#7CFC00" />
+        <BoxView Grid.Row="9" Grid.Column="0"
+                 HeightRequest="24"
+                 Color="#00FFFF" />
+        <BoxView Grid.Row="9" Grid.Column="1"
+                 HeightRequest="24"
+                 Color="#00FFD1" />
+        <BoxView Grid.Row="9" Grid.Column="2"
+                 HeightRequest="24"
+                 Color="#00E6FF" />
+        <BoxView Grid.Row="10" Grid.Column="0"
+                 HeightRequest="24"
+                 Color="#0000FF" />
+        <BoxView Grid.Row="10" Grid.Column="1"
+                 HeightRequest="24"
+                 Color="#00BFFF" />
+        <BoxView Grid.Row="10" Grid.Column="2"
+                 HeightRequest="24"
+                 Color="#00A2FF" />
 
     </Grid>
 
