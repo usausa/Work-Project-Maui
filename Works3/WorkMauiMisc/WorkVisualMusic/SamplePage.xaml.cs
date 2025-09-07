@@ -14,13 +14,22 @@ public partial class SamplePage : ContentPage
 public partial class SamplePageViewModel : ExtendViewModelBase
 {
 	[ObservableProperty]
-	public partial double KnobValue1 { get; set; }
+	public partial double KnobValue1 { get; set; } = 50;
 
     [ObservableProperty]
-    public partial double KnobValue3 { get; set; }
+    public partial double KnobValue3 { get; set; } = 50;
 
     [ObservableProperty]
-    public partial double KnobValue2 { get; set; }
+    public partial double KnobValue2 { get; set; } = 50;
+
+    [ObservableProperty]
+    public partial double SliderValue1 { get; set; } = 50;
+
+    [ObservableProperty]
+    public partial double SliderValue3 { get; set; } = 50;
+
+    [ObservableProperty]
+    public partial double SliderValue2 { get; set; } = 50;
 
     public SamplePageViewModel()
 	{

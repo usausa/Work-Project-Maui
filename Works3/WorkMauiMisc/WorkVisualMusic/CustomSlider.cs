@@ -15,13 +15,26 @@ public class CustomSliderValueChangedEventArgs : EventArgs
 
 public sealed class CustomSlider : GraphicsView, IDrawable
 {
-    private const double ThumbTouchMargin = 12.0;
+    private const float TickWidth = 1f;
 
     // ------------------------------------------------------------
     // Property
     // ------------------------------------------------------------
 
     // Value
+
+    public static readonly BindableProperty ValueProperty = BindableProperty.Create(
+        nameof(Value),
+        typeof(double),
+        typeof(CustomSlider),
+        0.0,
+        propertyChanged: OnValueChanged, defaultBindingMode: BindingMode.TwoWay);
+
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
 
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
@@ -47,19 +60,6 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     {
         get => (double)GetValue(MaximumProperty);
         set => SetValue(MaximumProperty, value);
-    }
-
-    public static readonly BindableProperty ValueProperty = BindableProperty.Create(
-        nameof(Value),
-        typeof(double),
-        typeof(CustomSlider),
-        0.0,
-        propertyChanged: OnValueChanged, defaultBindingMode: BindingMode.TwoWay);
-
-    public double Value
-    {
-        get => (double)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
     }
 
     // Color
@@ -90,17 +90,30 @@ public sealed class CustomSlider : GraphicsView, IDrawable
         set => SetValue(ProgressColorProperty, value);
     }
 
-    public static readonly BindableProperty ThumbColorProperty = BindableProperty.Create(
-        nameof(ThumbColor),
+    public static readonly BindableProperty ThumbColor1Property = BindableProperty.Create(
+        nameof(ThumbColor1),
         typeof(Color),
         typeof(CustomSlider),
-        Colors.Silver,
+        Colors.LightGray,
         propertyChanged: OnPropertyChanged);
 
-    public Color ThumbColor
+    public Color ThumbColor1
     {
-        get => (Color)GetValue(ThumbColorProperty);
-        set => SetValue(ThumbColorProperty, value);
+        get => (Color)GetValue(ThumbColor1Property);
+        set => SetValue(ThumbColor1Property, value);
+    }
+
+    public static readonly BindableProperty ThumbColor2Property = BindableProperty.Create(
+        nameof(ThumbColor2),
+        typeof(Color),
+        typeof(CustomSlider),
+        Colors.DarkGray,
+        propertyChanged: OnPropertyChanged);
+
+    public Color ThumbColor2
+    {
+        get => (Color)GetValue(ThumbColor2Property);
+        set => SetValue(ThumbColor2Property, value);
     }
 
     // Size
@@ -143,6 +156,44 @@ public sealed class CustomSlider : GraphicsView, IDrawable
         set => SetValue(ThumbHeightProperty, value);
     }
 
+    // Tick
+    public static readonly BindableProperty HasTickMarksProperty =
+        BindableProperty.Create(nameof(HasTickMarks), typeof(bool), typeof(CustomSlider), true,
+            propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty TickMarkColorProperty =
+        BindableProperty.Create(nameof(TickMarkColor), typeof(Color), typeof(CustomSlider), Colors.Gray,
+            propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty TickMarkCountProperty =
+        BindableProperty.Create(nameof(TickMarkCount), typeof(int), typeof(CustomSlider), 11,
+            propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty TickMarkLengthProperty =
+        BindableProperty.Create(nameof(TickMarkLength), typeof(float), typeof(CustomSlider), 24.0f,
+            propertyChanged: OnPropertyChanged);
+
+    public bool HasTickMarks
+    {
+        get => (bool)GetValue(HasTickMarksProperty);
+        set => SetValue(HasTickMarksProperty, value);
+    }
+    public Color TickMarkColor
+    {
+        get => (Color)GetValue(TickMarkColorProperty);
+        set => SetValue(TickMarkColorProperty, value);
+    }
+    public int TickMarkCount
+    {
+        get => (int)GetValue(TickMarkCountProperty);
+        set => SetValue(TickMarkCountProperty, value);
+    }
+    public float TickMarkLength
+    {
+        get => (float)GetValue(TickMarkLengthProperty);
+        set => SetValue(TickMarkLengthProperty, value);
+    }
+
     // Event
 
     public static readonly BindableProperty ValueChangedCommandProperty = BindableProperty.Create(
@@ -162,7 +213,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     public event EventHandler<CustomSliderValueChangedEventArgs>? ValueChanged;
 
-    private bool isDragging = false;
+    private bool isDragging;
 
     // ------------------------------------------------------------
     // Constructor
@@ -174,7 +225,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
         StartInteraction += (_, e) => OnStartInteraction(e.Touches[0]);
         DragInteraction += (_, e) => OnDragInteraction(e.Touches[0]);
-        EndInteraction += (_, e) => OnEndInteraction();
+        EndInteraction += (_, _) => OnEndInteraction();
     }
 
     // ------------------------------------------------------------
@@ -229,7 +280,11 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     private void UpdateValue(PointF point)
     {
+        var trackHeight = Height - ThumbHeight;
+        var thumbPosition = point.Y - (ThumbHeight / 2);
 
+        var percentage = 1 - Math.Clamp(thumbPosition / trackHeight, 0, 1);
+        Value = Minimum + (percentage * (Maximum - Minimum));
     }
 
     // ------------------------------------------------------------
@@ -238,11 +293,24 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     private bool IsPointInThumb(PointF point)
     {
-        // TODO
-        return false;
-    }
+        const double thumbTouchMargin = 12.0;
 
-    // TODO
+        var thumbX = Width / 2;
+
+        var valuePercentage = (Value - Minimum) / (Maximum - Minimum);
+        var trackTop = ThumbHeight / 2;
+        var trackBottom = Height - (ThumbHeight / 2);
+        var trackHeight = trackBottom - trackTop;
+        var thumbY = (float)(trackBottom - (valuePercentage * trackHeight));
+
+        var thumbRect = new RectF(
+            (float)(thumbX - (ThumbWidth / 2) - thumbTouchMargin),
+            (float)(thumbY - (ThumbHeight / 2) - thumbTouchMargin),
+            (float)(ThumbWidth + (thumbTouchMargin * 2)),
+            (float)(ThumbHeight + (thumbTouchMargin * 2)));
+
+        return thumbRect.Contains(point);
+    }
 
     // ------------------------------------------------------------
     // Draw
@@ -250,5 +318,60 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
+        var thumbX = dirtyRect.Width / 2;
+
+        var valuePercentage = (Value - Minimum) / (Maximum - Minimum);
+
+        var trackTop = (float)(ThumbHeight / 2);
+        var trackBottom = dirtyRect.Height - (float)(ThumbHeight / 2);
+        var trackHeight = trackBottom - trackTop;
+
+        var thumbY = (float)(trackBottom - (valuePercentage * trackHeight));
+
+        // Tick
+        if (HasTickMarks && TickMarkCount > 1)
+        {
+            canvas.StrokeColor = TickMarkColor;
+            canvas.StrokeSize = TickWidth;
+
+            for (var i = 0; i < TickMarkCount; i++)
+            {
+                var tickPercentage = (float)i / (TickMarkCount - 1);
+                var tickY = trackBottom - (tickPercentage * trackHeight);
+                canvas.DrawLine(thumbX - TickMarkLength, tickY, thumbX + TickMarkLength, tickY);
+            }
+        }
+
+        // Track
+        canvas.StrokeSize = (float)TrackWidth;
+        canvas.StrokeColor = TrackColor;
+        canvas.DrawLine(thumbX, trackTop - TickWidth, thumbX, trackBottom + TickWidth);
+
+        canvas.StrokeColor = ProgressColor;
+        canvas.DrawLine(thumbX, thumbY - TickWidth, thumbX, trackBottom + TickWidth);
+
+        // Thumb
+        var thumbHalfWidth = (float)(ThumbWidth / 2);
+        var thumbHalfHeight = (float)(ThumbHeight / 2);
+
+        var thumbRect = new RectF(thumbX - thumbHalfWidth, thumbY - thumbHalfHeight, (float)ThumbWidth, (float)ThumbHeight);
+
+        canvas.FillColor = ThumbColor1;
+        canvas.FillRectangle(new RectF(thumbRect.X, thumbRect.Y, thumbRect.Width, thumbRect.Height * 0.25f));
+
+        canvas.FillColor = ThumbColor2;
+        canvas.FillRectangle(new RectF(thumbRect.X, thumbRect.Y + thumbRect.Height * 0.75f, thumbRect.Width, thumbRect.Height * 0.25f));
+
+        var gradientBrush = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(0, 1)
+        };
+        gradientBrush.GradientStops.Add(new GradientStop(ThumbColor2, 0));
+        gradientBrush.GradientStops.Add(new GradientStop(ThumbColor1, 1));
+
+        var thumbMiddleRect = new RectF(thumbRect.X, thumbRect.Y + thumbRect.Height * 0.25f, thumbRect.Width, thumbRect.Height * 0.5f);
+        canvas.SetFillPaint(gradientBrush, thumbMiddleRect);
+        canvas.FillRectangle(thumbMiddleRect);
     }
 }

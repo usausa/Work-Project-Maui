@@ -33,7 +33,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,160,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+    <Grid RowDefinitions="Auto,Auto,160,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="*,*,*"
           ColumnSpacing="8" RowSpacing="8">
 
@@ -45,7 +45,7 @@
             <Label Text="1" />
         </HorizontalStackLayout>
 
-
+        <!-- Knob -->
         <controls:CustomKnob Grid.Row="2" Grid.Column="0"
                              Value="{Binding KnobValue1}"
                              IndicatorBackgroundColor="{StaticResource GrayLighten3}"
@@ -118,6 +118,39 @@
                TextColor="White"
                HorizontalOptions="Center" VerticalOptions="End" />
 
+        <!-- Slider -->
+        <controls:CustomSlider Grid.Row="3" Grid.Column="0"
+                               Value="{Binding SliderValue1}"
+                               ProgressColor="#F5FF5E" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
+                               TrackWidth="12" />
+
+        <controls:CustomSlider Grid.Row="3" Grid.Column="1"
+                               Value="{Binding SliderValue2}"
+                               ProgressColor="#00FFD1" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
+                               TrackWidth="12" />
+
+        <controls:CustomSlider Grid.Row="3" Grid.Column="2"
+                               Value="{Binding SliderValue3}"
+                               ProgressColor="#FF00A2" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
+                               TrackWidth="12" />
+
+        <Label Grid.Row="4" Grid.Column="0"
+               FontSize="18"
+               Text="{Binding SliderValue1, StringFormat='{0:F1}'}"
+               TextColor="White"
+               HorizontalOptions="Center" VerticalOptions="End" />
+
+        <Label Grid.Row="4" Grid.Column="1"
+               FontSize="18"
+               Text="{Binding SliderValue2, StringFormat='{0:F1}'}"
+               TextColor="White"
+               HorizontalOptions="Center" VerticalOptions="End" />
+
+        <Label Grid.Row="4" Grid.Column="2"
+               FontSize="18"
+               Text="{Binding SliderValue3, StringFormat='{0:F1}'}"
+               TextColor="White"
+               HorizontalOptions="Center" VerticalOptions="End" />
 
         <Button Grid.Row="5" Grid.Column="0"
                 Text="A"
