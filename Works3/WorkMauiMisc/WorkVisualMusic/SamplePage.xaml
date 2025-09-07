@@ -35,7 +35,7 @@
 
     <Grid RowDefinitions="Auto,Auto,160,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="*,*,*"
-          ColumnSpacing="8" RowSpacing="8">
+          ColumnSpacing="8">
 
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="3">
             <Label Text="1" />
@@ -49,7 +49,8 @@
         <controls:CustomKnob Grid.Row="2" Grid.Column="0"
                              Value="{Binding KnobValue1}"
                              IndicatorBackgroundColor="{StaticResource GrayLighten3}"
-                             IndicatorColor="#F5FF5E" PointerMargin="3" PointerWidth="16">
+                             IndicatorColor="{StaticResource PinkAccent2}"
+                             PointerMargin="3" PointerWidth="16">
             <controls:CustomKnob.KnobBackground>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Offset="0" Color="White" />
@@ -67,7 +68,8 @@
         <controls:CustomKnob Grid.Row="2" Grid.Column="1"
                              Value="{Binding KnobValue2}"
                              IndicatorBackgroundColor="{StaticResource GrayLighten5}"
-                             IndicatorColor="#00FFD1" PointerMargin="3" PointerWidth="16">
+                             IndicatorColor="{StaticResource GreenAccent2}"
+                             PointerMargin="3" PointerWidth="16">
             <controls:CustomKnob.KnobBackground>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Offset="0" Color="White" />
@@ -85,7 +87,8 @@
         <controls:CustomKnob Grid.Row="2" Grid.Column="2"
                              Value="{Binding KnobValue3}"
                              IndicatorBackgroundColor="{StaticResource GrayLighten5}"
-                             IndicatorColor="#FF00A2" PointerMargin="3" PointerWidth="16">
+                             IndicatorColor="{StaticResource LightBlueAccent2}"
+                             PointerMargin="3" PointerWidth="16">
             <controls:CustomKnob.KnobBackground>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Offset="0" Color="White" />
@@ -121,18 +124,30 @@
         <!-- Slider -->
         <controls:CustomSlider Grid.Row="3" Grid.Column="0"
                                Value="{Binding SliderValue1}"
-                               ProgressColor="#F5FF5E" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
-                               TrackWidth="12" />
+                               ProgressColor="{StaticResource PinkAccent2}"
+                               ThumbColor1="{StaticResource GrayLighten2}"
+                               ThumbColor2="{StaticResource GrayDefault}"
+                               ThumbHeight="24" ThumbWidth="64"
+                               TickMarkColor="{StaticResource GrayLighten3}"
+                               TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
 
         <controls:CustomSlider Grid.Row="3" Grid.Column="1"
                                Value="{Binding SliderValue2}"
-                               ProgressColor="#00FFD1" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
-                               TrackWidth="12" />
+                               ProgressColor="{StaticResource GreenAccent2}"
+                               ThumbColor1="{StaticResource GrayLighten2}"
+                               ThumbColor2="{StaticResource GrayDefault}"
+                               ThumbHeight="24" ThumbWidth="64"
+                               TickMarkColor="{StaticResource GrayLighten3}"
+                               TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
 
         <controls:CustomSlider Grid.Row="3" Grid.Column="2"
                                Value="{Binding SliderValue3}"
-                               ProgressColor="#FF00A2" ThumbHeight="16" ThumbWidth="40" TrackColor="Black"
-                               TrackWidth="12" />
+                               ProgressColor="{StaticResource LightBlueAccent2}"
+                               ThumbColor1="{StaticResource GrayLighten2}"
+                               ThumbColor2="{StaticResource GrayDefault}"
+                               ThumbHeight="24" ThumbWidth="64"
+                               TickMarkColor="{StaticResource GrayLighten3}"
+                               TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
 
         <Label Grid.Row="4" Grid.Column="0"
                FontSize="18"
