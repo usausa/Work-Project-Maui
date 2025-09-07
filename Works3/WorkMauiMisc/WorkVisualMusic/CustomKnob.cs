@@ -1,9 +1,11 @@
-using System.Diagnostics;
-
 namespace WorkVisualMusic;
 
 public sealed class CustomKnob : GraphicsView, IDrawable
 {
+    // ------------------------------------------------------------
+    // Property
+    // ------------------------------------------------------------
+
     // Value
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
@@ -17,7 +19,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public double Value
     {
         get => (double)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, Math.Clamp(value, Minimum, Maximum));
+        set => SetValue(ValueProperty, value);
     }
 
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
@@ -152,6 +154,10 @@ public sealed class CustomKnob : GraphicsView, IDrawable
         set => SetValue(PointerMarginProperty, value);
     }
 
+    // ------------------------------------------------------------
+    // Constructor
+    // ------------------------------------------------------------
+
     public CustomKnob()
     {
         Drawable = this;
@@ -160,10 +166,18 @@ public sealed class CustomKnob : GraphicsView, IDrawable
         DragInteraction += (_, e) => UpdateValue(e.Touches[0]);
     }
 
+    // ------------------------------------------------------------
+    // Handler
+    // ------------------------------------------------------------
+
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ((CustomKnob)bindable).Invalidate();
     }
+
+    // ------------------------------------------------------------
+    // Update
+    // ------------------------------------------------------------
 
     private void UpdateValue(PointF point)
     {
@@ -180,12 +194,15 @@ public sealed class CustomKnob : GraphicsView, IDrawable
         Value = Minimum + percent * (Maximum - Minimum);
     }
 
+    // ------------------------------------------------------------
+    // Draw
+    // ------------------------------------------------------------
+
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var cx = dirtyRect.Center.X;
         var cy = dirtyRect.Center.Y;
         var size = Math.Min(dirtyRect.Width, dirtyRect.Height);
-        var radius = size / 2;
 
         var valuePercent = (Value - Minimum) / (Maximum - Minimum);
         var valueSweepAngle = (float)(270 * valuePercent);
@@ -219,8 +236,6 @@ public sealed class CustomKnob : GraphicsView, IDrawable
         var pointerRadians = (Math.PI * (valueSweepAngle - 225) / 180.0);
         var pointerX = (float)(cx + Math.Cos(pointerRadians) * pointerDistance);
         var pointerY = (float)(cy + Math.Sin(pointerRadians) * pointerDistance);
-
-        Debug.WriteLine($"* {pointerRadians} {pointerX} {pointerY}");
 
         canvas.SetFillPaint(PointerBackground, new RectF(pointerX - pointerRadius, pointerY - pointerRadius, pointerSize, pointerSize));
         canvas.FillCircle(pointerX, pointerY, pointerRadius);

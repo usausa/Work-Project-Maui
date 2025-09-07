@@ -4,6 +4,7 @@
              xmlns:controls="clr-namespace:WorkVisualMusic"
              x:Class="WorkVisualMusic.SamplePage"
              x:DataType="{x:Type controls:SamplePageViewModel}"
+             BackgroundColor="{StaticResource GrayDarken3}"
              Title="SamplePage">
 
     <ContentPage.BindingContext>
@@ -145,49 +146,49 @@
                 BorderColor="#ff00b7" />
 
         <BoxView Grid.Row="7" Grid.Column="0"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#FFFF00" />
         <BoxView Grid.Row="7" Grid.Column="1"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#F5FF5E" />
         <BoxView Grid.Row="7" Grid.Column="2"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#FFFA5A" />
         <BoxView Grid.Row="8" Grid.Column="0"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00FF00" />
         <BoxView Grid.Row="8" Grid.Column="1"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00FF8C" />
         <BoxView Grid.Row="8" Grid.Column="2"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#7CFC00" />
         <BoxView Grid.Row="9" Grid.Column="0"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00FFFF" />
         <BoxView Grid.Row="9" Grid.Column="1"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00FFD1" />
         <BoxView Grid.Row="9" Grid.Column="2"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00E6FF" />
         <BoxView Grid.Row="10" Grid.Column="0"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#0000FF" />
         <BoxView Grid.Row="10" Grid.Column="1"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00BFFF" />
         <BoxView Grid.Row="10" Grid.Column="2"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#00A2FF" />
         <BoxView Grid.Row="11" Grid.Column="0"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#FF1493" />
         <BoxView Grid.Row="11" Grid.Column="1"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#FF00A2" />
         <BoxView Grid.Row="11" Grid.Column="2"
-                 HeightRequest="24"
+                 HeightRequest="12"
                  Color="#FF69B4" />
 
     </Grid>

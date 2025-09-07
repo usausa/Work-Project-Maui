@@ -15,6 +15,12 @@ public class CustomSliderValueChangedEventArgs : EventArgs
 
 public sealed class CustomSlider : GraphicsView, IDrawable
 {
+    private const double ThumbTouchMargin = 12.0;
+
+    // ------------------------------------------------------------
+    // Property
+    // ------------------------------------------------------------
+
     // Value
 
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
@@ -48,13 +54,93 @@ public sealed class CustomSlider : GraphicsView, IDrawable
         typeof(double),
         typeof(CustomSlider),
         0.0,
-        propertyChanged: OnValueChanged, defaultBindingMode: BindingMode.TwoWay,
-        coerceValue: CoerceValue);
+        propertyChanged: OnValueChanged, defaultBindingMode: BindingMode.TwoWay);
 
     public double Value
     {
         get => (double)GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
+    }
+
+    // Color
+
+    public static readonly BindableProperty TrackColorProperty = BindableProperty.Create(
+        nameof(TrackColor),
+        typeof(Color),
+        typeof(CustomSlider),
+        Colors.DimGray,
+        propertyChanged: OnPropertyChanged);
+
+    public Color TrackColor
+    {
+        get => (Color)GetValue(TrackColorProperty);
+        set => SetValue(TrackColorProperty, value);
+    }
+
+    public static readonly BindableProperty ProgressColorProperty = BindableProperty.Create(
+        nameof(ProgressColor),
+        typeof(Color),
+        typeof(CustomSlider),
+        Colors.OrangeRed,
+        propertyChanged: OnPropertyChanged);
+
+    public Color ProgressColor
+    {
+        get => (Color)GetValue(ProgressColorProperty);
+        set => SetValue(ProgressColorProperty, value);
+    }
+
+    public static readonly BindableProperty ThumbColorProperty = BindableProperty.Create(
+        nameof(ThumbColor),
+        typeof(Color),
+        typeof(CustomSlider),
+        Colors.Silver,
+        propertyChanged: OnPropertyChanged);
+
+    public Color ThumbColor
+    {
+        get => (Color)GetValue(ThumbColorProperty);
+        set => SetValue(ThumbColorProperty, value);
+    }
+
+    // Size
+
+    public static readonly BindableProperty TrackWidthProperty = BindableProperty.Create(
+        nameof(TrackWidth),
+        typeof(double),
+        typeof(CustomSlider),
+        16.0,
+        propertyChanged: OnPropertyChanged);
+
+    public double TrackWidth
+    {
+        get => (double)GetValue(TrackWidthProperty);
+        set => SetValue(TrackWidthProperty, value);
+    }
+
+    public static readonly BindableProperty ThumbWidthProperty = BindableProperty.Create(
+        nameof(ThumbWidth),
+        typeof(double),
+        typeof(CustomSlider), 32.0,
+        propertyChanged: OnPropertyChanged);
+
+    public double ThumbWidth
+    {
+        get => (double)GetValue(ThumbWidthProperty);
+        set => SetValue(ThumbWidthProperty, value);
+    }
+
+    public static readonly BindableProperty ThumbHeightProperty = BindableProperty.Create(
+        nameof(ThumbHeight),
+        typeof(double),
+        typeof(CustomSlider),
+        12.0,
+        propertyChanged: OnPropertyChanged);
+
+    public double ThumbHeight
+    {
+        get => (double)GetValue(ThumbHeightProperty);
+        set => SetValue(ThumbHeightProperty, value);
     }
 
     // Event
@@ -70,19 +156,30 @@ public sealed class CustomSlider : GraphicsView, IDrawable
         set => SetValue(ValueChangedCommandProperty, value);
     }
 
+    // ------------------------------------------------------------
+    // Field
+    // ------------------------------------------------------------
+
     public event EventHandler<CustomSliderValueChangedEventArgs>? ValueChanged;
+
+    private bool isDragging = false;
+
+    // ------------------------------------------------------------
+    // Constructor
+    // ------------------------------------------------------------
 
     public CustomSlider()
     {
         Drawable = this;
 
-        StartInteraction += (sender, args) =>
-        {
-
-        };
-        //DragInteraction += OnDragInteraction;
-        //EndInteraction += OnEndInteraction;
+        StartInteraction += (_, e) => OnStartInteraction(e.Touches[0]);
+        DragInteraction += (_, e) => OnDragInteraction(e.Touches[0]);
+        EndInteraction += (_, e) => OnEndInteraction();
     }
+
+    // ------------------------------------------------------------
+    // Handler
+    // ------------------------------------------------------------
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -104,19 +201,52 @@ public sealed class CustomSlider : GraphicsView, IDrawable
         slider.Invalidate();
     }
 
-    private static object CoerceValue(BindableObject bindable, object value)
+    // ------------------------------------------------------------
+    // Update
+    // ------------------------------------------------------------
+
+    private void OnStartInteraction(PointF point)
     {
-        var slider = (CustomSlider)bindable;
-        var doubleValue = (double)value;
-
-        if (doubleValue < slider.Minimum)
-            return slider.Minimum;
-
-        if (doubleValue > slider.Maximum)
-            return slider.Maximum;
-
-        return doubleValue;
+        if (IsPointInThumb(point))
+        {
+            isDragging = true;
+        }
+        UpdateValue(point);
     }
+
+    private void OnDragInteraction(PointF point)
+    {
+        if (isDragging)
+        {
+            UpdateValue(point);
+        }
+    }
+
+    private void OnEndInteraction()
+    {
+        isDragging = false;
+    }
+
+    private void UpdateValue(PointF point)
+    {
+
+    }
+
+    // ------------------------------------------------------------
+    // Helper
+    // ------------------------------------------------------------
+
+    private bool IsPointInThumb(PointF point)
+    {
+        // TODO
+        return false;
+    }
+
+    // TODO
+
+    // ------------------------------------------------------------
+    // Draw
+    // ------------------------------------------------------------
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
