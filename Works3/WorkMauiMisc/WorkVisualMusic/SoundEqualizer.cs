@@ -1,40 +1,40 @@
 namespace WorkVisualMusic;
 
-public sealed class CustomEqualizer : GraphicsView
+public sealed class SoundEqualizer : GraphicsView
 {
     public static readonly BindableProperty LevelProperty =
-        BindableProperty.Create(nameof(Level), typeof(int), typeof(CustomEqualizer), 10, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(Level), typeof(int), typeof(SoundEqualizer), 10, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty RangeProperty =
-        BindableProperty.Create(nameof(Range), typeof(int), typeof(CustomEqualizer), 10, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(Range), typeof(int), typeof(SoundEqualizer), 10, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty ValuesProperty =
-        BindableProperty.Create(nameof(Values), typeof(int[]), typeof(CustomEqualizer), Array.Empty<int>(), propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(Values), typeof(int[]), typeof(SoundEqualizer), Array.Empty<int>(), propertyChanged: RedrawControl);
 
     public static readonly BindableProperty StartColorProperty =
-        BindableProperty.Create(nameof(StartColor), typeof(Color), typeof(CustomEqualizer), Colors.DarkGreen, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(StartColor), typeof(Color), typeof(SoundEqualizer), Colors.DarkGreen, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty EndColorProperty =
-        BindableProperty.Create(nameof(EndColor), typeof(Color), typeof(CustomEqualizer), Colors.LightGreen, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(EndColor), typeof(Color), typeof(SoundEqualizer), Colors.LightGreen, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty InactiveColorProperty =
-        BindableProperty.Create(nameof(InactiveColor), typeof(Color), typeof(CustomEqualizer), Colors.Gray, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(InactiveColor), typeof(Color), typeof(SoundEqualizer), Colors.Gray, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty HorizontalSpacingProperty =
-        BindableProperty.Create(nameof(HorizontalSpacing), typeof(float), typeof(CustomEqualizer), 2f, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(HorizontalSpacing), typeof(float), typeof(SoundEqualizer), 2f, propertyChanged: RedrawControl);
 
     public static readonly BindableProperty VerticalSpacingProperty =
-        BindableProperty.Create(nameof(VerticalSpacing), typeof(float), typeof(CustomEqualizer), 2f, propertyChanged: RedrawControl);
+        BindableProperty.Create(nameof(VerticalSpacing), typeof(float), typeof(SoundEqualizer), 2f, propertyChanged: RedrawControl);
 
     private static void RedrawControl(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is CustomEqualizer control)
+        if (bindable is SoundEqualizer control)
         {
             control.Invalidate();
         }
     }
 
-    public CustomEqualizer()
+    public SoundEqualizer()
     {
         Drawable = new EqualizerDrawable(this);
     }
@@ -89,9 +89,9 @@ public sealed class CustomEqualizer : GraphicsView
 
     private class EqualizerDrawable : IDrawable
     {
-        private readonly CustomEqualizer _control;
+        private readonly SoundEqualizer _control;
 
-        public EqualizerDrawable(CustomEqualizer control)
+        public EqualizerDrawable(SoundEqualizer control)
         {
             _control = control;
         }

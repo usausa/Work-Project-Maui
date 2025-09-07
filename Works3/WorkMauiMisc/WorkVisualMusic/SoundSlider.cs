@@ -3,17 +3,17 @@ namespace WorkVisualMusic;
 using System;
 using System.Windows.Input;
 
-public class CustomSliderValueChangedEventArgs : EventArgs
+public class SoundSliderValueChangedEventArgs : EventArgs
 {
     public double Value { get; }
 
-    public CustomSliderValueChangedEventArgs(double value)
+    public SoundSliderValueChangedEventArgs(double value)
     {
         Value = value;
     }
 }
 
-public sealed class CustomSlider : GraphicsView, IDrawable
+public sealed class SoundSlider : GraphicsView, IDrawable
 {
     private const float TickWidth = 1f;
 
@@ -26,7 +26,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         0.0,
         propertyChanged: OnValueChanged, defaultBindingMode: BindingMode.TwoWay);
 
@@ -39,7 +39,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         0.0,
         propertyChanged: OnPropertyChanged);
 
@@ -52,7 +52,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
         typeof(double),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         100.0,
         propertyChanged: OnPropertyChanged);
 
@@ -67,7 +67,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TrackColorProperty = BindableProperty.Create(
         nameof(TrackColor),
         typeof(Color),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         Colors.DimGray,
         propertyChanged: OnPropertyChanged);
 
@@ -80,7 +80,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ProgressColorProperty = BindableProperty.Create(
         nameof(ProgressColor),
         typeof(Color),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         Colors.OrangeRed,
         propertyChanged: OnPropertyChanged);
 
@@ -93,7 +93,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbColor1Property = BindableProperty.Create(
         nameof(ThumbColor1),
         typeof(Color),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         Colors.LightGray,
         propertyChanged: OnPropertyChanged);
 
@@ -106,7 +106,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbColor2Property = BindableProperty.Create(
         nameof(ThumbColor2),
         typeof(Color),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         Colors.DarkGray,
         propertyChanged: OnPropertyChanged);
 
@@ -121,7 +121,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TrackWidthProperty = BindableProperty.Create(
         nameof(TrackWidth),
         typeof(double),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         16.0,
         propertyChanged: OnPropertyChanged);
 
@@ -134,7 +134,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbWidthProperty = BindableProperty.Create(
         nameof(ThumbWidth),
         typeof(double),
-        typeof(CustomSlider), 32.0,
+        typeof(SoundSlider), 32.0,
         propertyChanged: OnPropertyChanged);
 
     public double ThumbWidth
@@ -146,7 +146,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbHeightProperty = BindableProperty.Create(
         nameof(ThumbHeight),
         typeof(double),
-        typeof(CustomSlider),
+        typeof(SoundSlider),
         12.0,
         propertyChanged: OnPropertyChanged);
 
@@ -158,19 +158,19 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     // Tick
     public static readonly BindableProperty HasTickMarksProperty =
-        BindableProperty.Create(nameof(HasTickMarks), typeof(bool), typeof(CustomSlider), true,
+        BindableProperty.Create(nameof(HasTickMarks), typeof(bool), typeof(SoundSlider), true,
             propertyChanged: OnPropertyChanged);
 
     public static readonly BindableProperty TickMarkColorProperty =
-        BindableProperty.Create(nameof(TickMarkColor), typeof(Color), typeof(CustomSlider), Colors.Gray,
+        BindableProperty.Create(nameof(TickMarkColor), typeof(Color), typeof(SoundSlider), Colors.Gray,
             propertyChanged: OnPropertyChanged);
 
     public static readonly BindableProperty TickMarkCountProperty =
-        BindableProperty.Create(nameof(TickMarkCount), typeof(int), typeof(CustomSlider), 11,
+        BindableProperty.Create(nameof(TickMarkCount), typeof(int), typeof(SoundSlider), 11,
             propertyChanged: OnPropertyChanged);
 
     public static readonly BindableProperty TickMarkLengthProperty =
-        BindableProperty.Create(nameof(TickMarkLength), typeof(float), typeof(CustomSlider), 24.0f,
+        BindableProperty.Create(nameof(TickMarkLength), typeof(float), typeof(SoundSlider), 24.0f,
             propertyChanged: OnPropertyChanged);
 
     public bool HasTickMarks
@@ -199,7 +199,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ValueChangedCommandProperty = BindableProperty.Create(
         nameof(ValueChangedCommand),
         typeof(ICommand),
-        typeof(CustomSlider));
+        typeof(SoundSlider));
 
     public ICommand? ValueChangedCommand
     {
@@ -211,7 +211,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     // Field
     // ------------------------------------------------------------
 
-    public event EventHandler<CustomSliderValueChangedEventArgs>? ValueChanged;
+    public event EventHandler<SoundSliderValueChangedEventArgs>? ValueChanged;
 
     private bool isDragging;
 
@@ -219,7 +219,7 @@ public sealed class CustomSlider : GraphicsView, IDrawable
     // Constructor
     // ------------------------------------------------------------
 
-    public CustomSlider()
+    public SoundSlider()
     {
         Drawable = this;
 
@@ -234,15 +234,15 @@ public sealed class CustomSlider : GraphicsView, IDrawable
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        ((CustomSlider)bindable).Invalidate();
+        ((SoundSlider)bindable).Invalidate();
     }
 
     private static void OnValueChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        var slider = (CustomSlider)bindable;
+        var slider = (SoundSlider)bindable;
         var value = (double)newValue;
 
-        slider.ValueChanged?.Invoke(slider, new CustomSliderValueChangedEventArgs(value));
+        slider.ValueChanged?.Invoke(slider, new SoundSliderValueChangedEventArgs(value));
 
         if (slider.ValueChangedCommand?.CanExecute(value) == true)
         {

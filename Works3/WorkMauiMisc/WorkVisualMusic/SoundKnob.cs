@@ -1,6 +1,6 @@
 namespace WorkVisualMusic;
 
-public sealed class CustomKnob : GraphicsView, IDrawable
+public sealed class SoundKnob : GraphicsView, IDrawable
 {
     // ------------------------------------------------------------
     // Property
@@ -11,10 +11,10 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         0.0,
         defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: (b, _, _) => ((CustomKnob)b).Invalidate());
+        propertyChanged: (b, _, _) => ((SoundKnob)b).Invalidate());
 
     public double Value
     {
@@ -25,7 +25,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         0.0);
 
     public double Minimum
@@ -37,7 +37,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         100.0);
 
     public double Maximum
@@ -51,7 +51,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty KnobBackgroundProperty = BindableProperty.Create(
         nameof(KnobBackground),
         typeof(Brush),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         Brush.LightGray,
         propertyChanged: OnPropertyChanged);
 
@@ -64,7 +64,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerBackgroundProperty = BindableProperty.Create(
         nameof(PointerBackground),
         typeof(Brush),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         Brush.Black,
         propertyChanged: OnPropertyChanged);
 
@@ -77,7 +77,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorColorProperty = BindableProperty.Create(
         nameof(IndicatorColor),
         typeof(Color),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         Colors.Orange,
         propertyChanged: OnPropertyChanged);
 
@@ -90,7 +90,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorBackgroundColorProperty = BindableProperty.Create(
         nameof(IndicatorBackgroundColor),
         typeof(Color),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         Colors.Snow,
         propertyChanged: OnPropertyChanged);
 
@@ -105,7 +105,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorWidthProperty = BindableProperty.Create(
         nameof(IndicatorWidth),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         8.0,
         propertyChanged: OnPropertyChanged);
 
@@ -118,7 +118,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorMarginProperty = BindableProperty.Create(
         nameof(IndicatorMargin),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         2.0,
         propertyChanged: OnPropertyChanged);
 
@@ -131,7 +131,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerWidthProperty = BindableProperty.Create(
         nameof(PointerWidth),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         12.0,
         propertyChanged: OnPropertyChanged);
 
@@ -144,7 +144,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerMarginProperty = BindableProperty.Create(
         nameof(PointerMargin),
         typeof(double),
-        typeof(CustomKnob),
+        typeof(SoundKnob),
         4.0,
         propertyChanged: OnPropertyChanged);
 
@@ -158,7 +158,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
     // Constructor
     // ------------------------------------------------------------
 
-    public CustomKnob()
+    public SoundKnob()
     {
         Drawable = this;
 
@@ -172,7 +172,7 @@ public sealed class CustomKnob : GraphicsView, IDrawable
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        ((CustomKnob)bindable).Invalidate();
+        ((SoundKnob)bindable).Invalidate();
     }
 
     // ------------------------------------------------------------
