@@ -33,17 +33,17 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,160,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+    <Grid RowDefinitions="Auto,Auto,160,*,Auto,240,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="*,*,*"
           ColumnSpacing="8">
 
-        <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="3">
+        <!--<HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="3">
             <Label Text="1" />
         </HorizontalStackLayout>
 
         <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
             <Label Text="1" />
-        </HorizontalStackLayout>
+        </HorizontalStackLayout>-->
 
         <!-- Knob -->
         <controls:CustomKnob Grid.Row="2" Grid.Column="0"
@@ -167,7 +167,16 @@
                TextColor="White"
                HorizontalOptions="Center" VerticalOptions="End" />
 
-        <Button Grid.Row="5" Grid.Column="0"
+        <controls:CustomEqualizer Grid.Row="5" Grid.ColumnSpan="3"
+                                  EndColor="{StaticResource GreenAccent1}"
+                                  HorizontalSpacing="4"
+                                  InactiveColor="{StaticResource GrayDarken1}"
+                                  Level="16" Range="16"
+                                  StartColor="{StaticResource GreenAccent4}"
+                                  Values="{Binding Values}"
+                                  VerticalSpacing="4" />
+
+        <!--<Button Grid.Row="5" Grid.Column="0"
                 Text="A"
                 BackgroundColor="#00ffb7"
                 BorderColor="#00ffb7" />
@@ -237,7 +246,7 @@
                  Color="#FF00A2" />
         <BoxView Grid.Row="11" Grid.Column="2"
                  HeightRequest="12"
-                 Color="#FF69B4" />
+                 Color="#FF69B4" />-->
 
     </Grid>
 
