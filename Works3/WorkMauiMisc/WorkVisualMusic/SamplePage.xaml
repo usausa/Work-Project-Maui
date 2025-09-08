@@ -12,6 +12,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
+        <!--
         <Style TargetType="Button">
             <Setter Property="BackgroundColor" Value="Black" />
             <Setter Property="BorderWidth" Value="3" />
@@ -31,6 +32,58 @@
             <Setter Property="TextColor" Value="#FFFFFF" />
             <Setter Property="Padding" Value="10,5" />
         </Style>
+        -->
+
+        <Style x:Key="MixierKnob"
+               TargetType="controls:SoundKnob">
+            <Setter Property="PointerMargin" Value="3" />
+            <Setter Property="PointerWidth" Value="16" />
+            <Setter Property="IndicatorBackgroundColor" Value="{StaticResource GrayLighten3}" />
+            <Setter Property="KnobBackground">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0" Color="White" />
+                    <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="PointerBackground">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0" Color="{StaticResource GrayDarken2}" />
+                    <GradientStop Offset="1" Color="{StaticResource GrayLighten2}" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MixierSlider"
+               TargetType="controls:SoundSlider">
+            <Setter Property="TrackColor" Value="Black" />
+            <Setter Property="ThumbColor1" Value="{StaticResource GrayLighten2}" />
+            <Setter Property="ThumbColor2" Value="{StaticResource GrayDefault}" />
+            <Setter Property="TickMarkColor" Value="{StaticResource GrayLighten3}" />
+            <Setter Property="TrackWidth" Value="12" />
+            <Setter Property="ThumbWidth" Value="64" />
+            <Setter Property="ThumbHeight" Value="24" />
+            <Setter Property="TickMarkLength" Value="40" />
+        </Style>
+
+        <Style x:Key="MixierEqualizer"
+               TargetType="controls:SoundEqualizer">
+            <Setter Property="HorizontalSpacing" Value="4" />
+            <Setter Property="VerticalSpacing" Value="4" />
+            <Setter Property="Range" Value="16" />
+            <Setter Property="Level" Value="16" />
+            <Setter Property="StartColor" Value="{StaticResource GreenAccent4}" />
+            <Setter Property="EndColor" Value="{StaticResource GreenAccent1}" />
+            <Setter Property="InactiveColor" Value="{StaticResource GrayDarken1}" />
+        </Style>
+
+        <Style x:Key="MixierValueLabel"
+               TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="End" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,Auto,160,*,Auto,240,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
@@ -47,134 +100,64 @@
 
         <!-- Knob -->
         <controls:SoundKnob Grid.Row="2" Grid.Column="0"
+                            Style="{StaticResource MixierKnob}"
                             Value="{Binding KnobValue1}"
-                            IndicatorBackgroundColor="{StaticResource GrayLighten3}"
-                            IndicatorColor="{StaticResource PinkAccent2}"
-                            PointerMargin="3" PointerWidth="16">
-            <controls:SoundKnob.KnobBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="White" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.KnobBackground>
-            <controls:SoundKnob.PointerBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="{StaticResource GrayDarken2}" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayLighten2}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.PointerBackground>
-        </controls:SoundKnob>
+                            IndicatorColor="{StaticResource PinkAccent2}" />
 
         <controls:SoundKnob Grid.Row="2" Grid.Column="1"
+                            Style="{StaticResource MixierKnob}"
                             Value="{Binding KnobValue2}"
-                            IndicatorBackgroundColor="{StaticResource GrayLighten5}"
-                            IndicatorColor="{StaticResource GreenAccent2}"
-                            PointerMargin="3" PointerWidth="16">
-            <controls:SoundKnob.KnobBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="White" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.KnobBackground>
-            <controls:SoundKnob.PointerBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="{StaticResource GrayDarken2}" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayLighten2}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.PointerBackground>
-        </controls:SoundKnob>
+                            IndicatorColor="{StaticResource GreenAccent2}" />
 
         <controls:SoundKnob Grid.Row="2" Grid.Column="2"
+                            Style="{StaticResource MixierKnob}"
                             Value="{Binding KnobValue3}"
-                            IndicatorBackgroundColor="{StaticResource GrayLighten5}"
-                            IndicatorColor="{StaticResource LightBlueAccent2}"
-                            PointerMargin="3" PointerWidth="16">
-            <controls:SoundKnob.KnobBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="White" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayDarken1}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.KnobBackground>
-            <controls:SoundKnob.PointerBackground>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0" Color="{StaticResource GrayDarken2}" />
-                    <GradientStop Offset="1" Color="{StaticResource GrayLighten2}" />
-                </LinearGradientBrush>
-            </controls:SoundKnob.PointerBackground>
-        </controls:SoundKnob>
+                            IndicatorColor="{StaticResource LightBlueAccent2}" />
 
         <Label Grid.Row="2" Grid.Column="0"
-               FontSize="18"
-               Text="{Binding KnobValue1, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding KnobValue1, StringFormat='{0:F1}'}" />
 
         <Label Grid.Row="2" Grid.Column="1"
-               FontSize="18"
-               Text="{Binding KnobValue2, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding KnobValue2, StringFormat='{0:F1}'}" />
 
         <Label Grid.Row="2" Grid.Column="2"
-               FontSize="18"
-               Text="{Binding KnobValue3, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding KnobValue3, StringFormat='{0:F1}'}" />
 
         <!-- Slider -->
         <controls:SoundSlider Grid.Row="3" Grid.Column="0"
+                              Style="{StaticResource MixierSlider}"
                               Value="{Binding SliderValue1}"
-                              ProgressColor="{StaticResource PinkAccent2}"
-                              ThumbColor1="{StaticResource GrayLighten2}"
-                              ThumbColor2="{StaticResource GrayDefault}"
-                              ThumbHeight="24" ThumbWidth="64"
-                              TickMarkColor="{StaticResource GrayLighten3}"
-                              TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
+                              ProgressColor="{StaticResource PinkAccent2}" />
 
         <controls:SoundSlider Grid.Row="3" Grid.Column="1"
+                              Style="{StaticResource MixierSlider}"
                               Value="{Binding SliderValue2}"
-                              ProgressColor="{StaticResource GreenAccent2}"
-                              ThumbColor1="{StaticResource GrayLighten2}"
-                              ThumbColor2="{StaticResource GrayDefault}"
-                              ThumbHeight="24" ThumbWidth="64"
-                              TickMarkColor="{StaticResource GrayLighten3}"
-                              TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
+                              ProgressColor="{StaticResource GreenAccent2}" />
 
         <controls:SoundSlider Grid.Row="3" Grid.Column="2"
+                              Style="{StaticResource MixierSlider}"
                               Value="{Binding SliderValue3}"
-                              ProgressColor="{StaticResource LightBlueAccent2}"
-                              ThumbColor1="{StaticResource GrayLighten2}"
-                              ThumbColor2="{StaticResource GrayDefault}"
-                              ThumbHeight="24" ThumbWidth="64"
-                              TickMarkColor="{StaticResource GrayLighten3}"
-                              TickMarkLength="40" TrackColor="Black" TrackWidth="12" />
+                              ProgressColor="{StaticResource LightBlueAccent2}" />
 
         <Label Grid.Row="4" Grid.Column="0"
-               FontSize="18"
-               Text="{Binding SliderValue1, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding SliderValue1, StringFormat='{0:F1}'}" />
 
         <Label Grid.Row="4" Grid.Column="1"
-               FontSize="18"
-               Text="{Binding SliderValue2, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding SliderValue2, StringFormat='{0:F1}'}" />
 
         <Label Grid.Row="4" Grid.Column="2"
-               FontSize="18"
-               Text="{Binding SliderValue3, StringFormat='{0:F1}'}"
-               TextColor="White"
-               HorizontalOptions="Center" VerticalOptions="End" />
+               Style="{StaticResource MixierValueLabel}"
+               Text="{Binding SliderValue3, StringFormat='{0:F1}'}" />
 
+        <!-- Equalizer -->
         <controls:SoundEqualizer Grid.Row="5" Grid.ColumnSpan="3"
-                                 EndColor="{StaticResource GreenAccent1}"
-                                 HorizontalSpacing="4"
-                                 InactiveColor="{StaticResource GrayDarken1}"
-                                 Level="16" Range="16"
-                                 StartColor="{StaticResource GreenAccent4}"
-                                 Values="{Binding Values}"
-                                 VerticalSpacing="4" />
+                                 Style="{StaticResource MixierEqualizer}"
+                                 Values="{Binding Values}" />
 
         <!--<Button Grid.Row="5" Grid.Column="0"
                 Text="A"
