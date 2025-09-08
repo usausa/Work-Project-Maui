@@ -89,7 +89,7 @@
 		<PackageReference Include="Usa.Smart.Maui" Version="2.9.3" />
 		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.9.3" />
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
-		<PackageReference Include="WifiManager.Maui" Version="9.0.3" />
+		<PackageReference Include="WifiManager.Maui" Version="9.0.4" />
 	</ItemGroup>
 
 </Project>
