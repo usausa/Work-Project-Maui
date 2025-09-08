@@ -73,9 +73,6 @@
     <Project Path="WorkSizeMap/WorkSizeMap.csproj" Id="03860309-8a78-404d-8820-6b6164613342">
       <Deploy Solution="Debug|*" />
     </Project>
-    <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
-      <Deploy />
-    </Project>
     <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -102,6 +99,9 @@
   <Folder Name="/__/">
     <Project Path="WorkSample/WorkSample.csproj" Id="b1b4b3b3-3870-4d39-88fc-fd6d8fb8914a">
       <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
+      <Deploy />
     </Project>
     <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
       <Deploy />
