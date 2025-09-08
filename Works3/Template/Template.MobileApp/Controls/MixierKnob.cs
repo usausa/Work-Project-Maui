@@ -191,7 +191,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
 
         var percent = angle / 270.0;
 
-        Value = Minimum + percent * (Maximum - Minimum);
+        Value = Minimum + (percent * (Maximum - Minimum));
     }
 
     // ------------------------------------------------------------
@@ -233,9 +233,9 @@ public sealed class MixierKnob : GraphicsView, IDrawable
         var pointerRadius = pointerSize / 2;
 
         var pointerDistance = indicatorRadius - pointerSize - PointerMargin;
-        var pointerRadians = (Math.PI * (valueSweepAngle - 225) / 180.0);
-        var pointerX = (float)(cx + Math.Cos(pointerRadians) * pointerDistance);
-        var pointerY = (float)(cy + Math.Sin(pointerRadians) * pointerDistance);
+        var pointerRadians = Math.PI * (valueSweepAngle - 225) / 180.0;
+        var pointerX = (float)(cx + (Math.Cos(pointerRadians) * pointerDistance));
+        var pointerY = (float)(cy + (Math.Sin(pointerRadians) * pointerDistance));
 
         canvas.SetFillPaint(PointerBackground, new RectF(pointerX - pointerRadius, pointerY - pointerRadius, pointerSize, pointerSize));
         canvas.FillCircle(pointerX, pointerY, pointerRadius);

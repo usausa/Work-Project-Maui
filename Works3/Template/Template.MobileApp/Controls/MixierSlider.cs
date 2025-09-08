@@ -188,7 +188,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
         nameof(TickMarkLength),
         typeof(double),
         typeof(MixierSlider),
-        24.0f,
+        24.0,
         propertyChanged: OnPropertyChanged);
 
     public double TickMarkLength
@@ -308,7 +308,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
             canvas.StrokeSize = TickWidth;
 
             var tickStart = thumbX - (float)TickMarkLength;
-            var tickEnd = thumbX * (float)TickMarkLength;
+            var tickEnd = thumbX + (float)TickMarkLength;
             for (var i = 0; i < TickMarkCount; i++)
             {
                 var tickPercentage = (float)i / (TickMarkCount - 1);
@@ -335,7 +335,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
         canvas.FillRectangle(new RectF(thumbRect.X, thumbRect.Y, thumbRect.Width, thumbRect.Height * 0.25f));
 
         canvas.FillColor = ThumbColor2;
-        canvas.FillRectangle(new RectF(thumbRect.X, thumbRect.Y + thumbRect.Height * 0.75f, thumbRect.Width, thumbRect.Height * 0.25f));
+        canvas.FillRectangle(new RectF(thumbRect.X, thumbRect.Y + (thumbRect.Height * 0.75f), thumbRect.Width, thumbRect.Height * 0.25f));
 
         var gradientBrush = new LinearGradientBrush
         {
@@ -345,7 +345,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
         gradientBrush.GradientStops.Add(new GradientStop(ThumbColor2, 0));
         gradientBrush.GradientStops.Add(new GradientStop(ThumbColor1, 1));
 
-        var thumbMiddleRect = new RectF(thumbRect.X, thumbRect.Y + thumbRect.Height * 0.25f, thumbRect.Width, thumbRect.Height * 0.5f);
+        var thumbMiddleRect = new RectF(thumbRect.X, thumbRect.Y + (thumbRect.Height * 0.25f), thumbRect.Width, thumbRect.Height * 0.5f);
         canvas.SetFillPaint(gradientBrush, thumbMiddleRect);
         canvas.FillRectangle(thumbMiddleRect);
     }
