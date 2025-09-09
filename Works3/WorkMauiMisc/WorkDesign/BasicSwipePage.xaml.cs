@@ -1,11 +1,10 @@
-using System.Diagnostics;
-
 namespace WorkDesign;
+
+using System.Diagnostics;
+using System.Windows.Input;
 
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-using System.Windows.Input;
 
 public partial class BasicSwipePage : ContentPage
 {

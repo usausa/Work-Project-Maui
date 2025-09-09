@@ -1,5 +1,3 @@
-using Smart.Maui.Data;
-
 namespace WorkDesign;
 
 public partial class App : Application

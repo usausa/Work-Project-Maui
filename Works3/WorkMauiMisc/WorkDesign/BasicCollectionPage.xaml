@@ -6,6 +6,12 @@
              x:DataType="{x:Type app:BasicCollectionPageViewModel}"
              Title="BasicCollectionPage">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <app:BoolToExpandCollapseConverter x:Key="ExpandCollapseConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.BindingContext>
         <app:BasicCollectionPageViewModel />
     </ContentPage.BindingContext>
@@ -13,10 +19,29 @@
     <CollectionView ItemsSource="{Binding Results}"
                     IsGrouped="True">
         <CollectionView.GroupHeaderTemplate>
-            <DataTemplate x:DataType="app:GroupEntity">
-                <Label FontSize="18" FontAttributes="Bold"
-                       Text="{Binding Group}"
-                       BackgroundColor="LightGray" />
+            <DataTemplate x:DataType="app:BasicGroup">
+                <Grid Padding="10"
+                      BackgroundColor="#e0e0e0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!-- グループ名 -->
+                    <Label Grid.Column="0"
+                           FontSize="Medium" FontAttributes="Bold"
+                           Text="{Binding Key}"
+                           VerticalOptions="Center" />
+                    <!-- 展開/折りたたみボタン -->
+                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                    <Button Grid.Column="1"
+                            WidthRequest="40" HeightRequest="40"
+                            Padding="0"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicCollectionPageViewModel}}, Path=ToggleCommand, x:DataType=app:BasicCollectionPageViewModel}"
+                            CommandParameter="{Binding .}"
+                            Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseConverter}}"
+                            TextColor="White" BackgroundColor="#3498db"
+                            CornerRadius="20" />
+                </Grid>
             </DataTemplate>
         </CollectionView.GroupHeaderTemplate>
         <CollectionView.ItemTemplate>

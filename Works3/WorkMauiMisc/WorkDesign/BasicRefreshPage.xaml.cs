@@ -1,10 +1,10 @@
+namespace WorkDesign;
+
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Smart.Collections.Generic;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-namespace WorkDesign;
 
 public partial class BasicRefreshPage : ContentPage
 {

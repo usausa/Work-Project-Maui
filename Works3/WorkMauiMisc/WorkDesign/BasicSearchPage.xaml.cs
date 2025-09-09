@@ -1,9 +1,9 @@
+namespace WorkDesign;
+
 using System.Diagnostics;
 using System.Windows.Input;
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
-
-namespace WorkDesign;
 
 public partial class BasicSearchPage : ContentPage
 {
