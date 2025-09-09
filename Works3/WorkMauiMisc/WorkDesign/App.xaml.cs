@@ -16,7 +16,11 @@ public partial class App : Application
     {
         _ = new ReverseConverter();
 
-        return new Window(new GuardPage());
+        //return new Window(new GuardPage());
+        //return new Window(new BasicSearchPage());
+        //return new Window(new BasicRefreshPage());
+        return new Window(new BasicCarouselPage());
+
         //return new Window(new StickPage());
         //return new Window(new ChatPage());
         //return new Window(new AsyncLoadPage());

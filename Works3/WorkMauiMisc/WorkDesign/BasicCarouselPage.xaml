@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.BasicCarouselPage"
+             Title="BasicCarouselPage">
+
+    <Grid RowDefinitions="*, Auto">
+        <!-- TODO mvvm -->
+        <!-- CarouselView -->
+        <CarouselView x:Name="carouselView"
+                      Grid.Row="0"
+                      ItemsSource="{Binding Items}"
+                      HorizontalScrollBarVisibility="Never" Loop="True" PeekAreaInsets="50" PositionChanged="OnPositionChanged">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="20">
+                        <Frame Padding="0"
+                               BorderColor="LightGray" CornerRadius="10" HasShadow="True" HorizontalOptions="Center"
+                               VerticalOptions="Center">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Image Grid.Row="0"
+                                       WidthRequest="300" HeightRequest="300"
+                                       Aspect="AspectFill"
+                                       Source="{Binding ImageUrl}" />
+                                <StackLayout Grid.Row="1"
+                                             Padding="10">
+                                    <Label FontSize="18" FontAttributes="Bold"
+                                           Text="{Binding Title}"
+                                           HorizontalOptions="Center" />
+                                    <Label FontSize="14"
+                                           Text="{Binding Description}"
+                                           HorizontalOptions="Center" />
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- IndicatorView -->
+        <IndicatorView x:Name="indicatorView"
+                       Grid.Row="1"
+                       Margin="0,0,0,20"
+                       HorizontalOptions="Center" IndicatorColor="LightGray" IndicatorsShape="Circle" SelectedIndicatorColor="DarkBlue" />
+
+    </Grid>
+
+</ContentPage>
