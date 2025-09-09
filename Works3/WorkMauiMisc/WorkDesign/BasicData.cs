@@ -1,5 +1,16 @@
 namespace WorkDesign;
 
+public class GroupEntity : List<BasicEntity>
+{
+    public string Group { get; set; }
+
+    public GroupEntity(string group, IEnumerable<BasicEntity> entities)
+        : base(entities)
+    {
+        Group = group;
+    }
+}
+
 public class BasicEntity
 {
     public int Id { get; set; }
