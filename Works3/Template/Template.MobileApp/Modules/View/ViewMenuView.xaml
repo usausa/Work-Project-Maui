@@ -23,8 +23,9 @@
                 Text="Collection" />
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewCarousel}"
+                Text="Carousel" />
 
         <Button Grid.Row="1" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
