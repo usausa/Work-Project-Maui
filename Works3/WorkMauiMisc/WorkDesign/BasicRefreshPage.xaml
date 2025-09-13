@@ -11,7 +11,7 @@
     </ContentPage.BindingContext>
 
     <RefreshView Command="{Binding RefreshCommand}"
-                 IsRefreshing="{Binding IsRefreshing}">
+                 IsRefreshing="{Binding IsRefreshing}" >
         <CollectionView ItemsSource="{Binding Results}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="app:BasicEntity">
