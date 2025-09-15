@@ -12,7 +12,9 @@ using System.Windows.Input;
 
 public partial class BasicMiscPage : ContentPage
 {
-	public BasicMiscPage()
+    public BasicMiscPageViewModel ViewModel => (BasicMiscPageViewModel)BindingContext;
+
+    public BasicMiscPage()
 	{
 		InitializeComponent();
 	}

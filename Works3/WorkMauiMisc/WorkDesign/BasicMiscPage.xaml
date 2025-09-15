@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="clr-namespace:Smart.Maui.Data;assembly=Smart.Maui"
              xmlns:app="clr-namespace:WorkDesign"
-             xmlns:fonts="clr-namespace:Fonts"
              x:Class="WorkDesign.BasicMiscPage"
              x:Name="ThisPage"
              x:DataType="{x:Type app:BasicMiscPageViewModel}"
@@ -29,7 +28,7 @@
     <CollectionView ItemsSource="{Binding List}"
                     IsGrouped="True">
         <CollectionView.GroupHeaderTemplate>
-            <DataTemplate x:DataType="app:AddressGroup">
+            <DataTemplate x:DataType="{x:Type app:AddressGroup}">
 
                 <Grid ColumnDefinitions="*,Auto"
                       Margin="0" Padding="4"
@@ -42,10 +41,11 @@
                            VerticalOptions="Center" />
 
                     <!-- 展開/折りたたみボタン -->
+                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                     <Button Grid.Column="1"
                             WidthRequest="32" HeightRequest="32"
                             Padding="0"
-                            Command="{Binding Path=BindingContext.ToggleCommand, Source={x:Reference ThisPage}}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicMiscPageViewModel}}, Path=ToggleCommand, x:DataType=app:BasicMiscPageViewModel}"
                             CommandParameter="{Binding .}"
                             Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandImageConverter}}"
                             TextColor="White" BackgroundColor="#3498db"
