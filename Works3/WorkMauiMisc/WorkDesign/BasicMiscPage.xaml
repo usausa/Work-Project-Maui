@@ -1,12 +1,89 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="clr-namespace:Smart.Maui.Data;assembly=Smart.Maui"
+             xmlns:app="clr-namespace:WorkDesign"
+             xmlns:fonts="clr-namespace:Fonts"
              x:Class="WorkDesign.BasicMiscPage"
+             x:Name="ThisPage"
+             x:DataType="{x:Type app:BasicMiscPageViewModel}"
              Title="BasicMiscPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <s:BoolToTextConverter x:Key="BoolToExpandImageConverter"
+                                   TrueValue="▼"
+                                   FalseValue="▲" />
+            <s:BoolToColorConverter x:Key="BoolToBackgroundColorConverter"
+                                    TrueValue="White"
+                                    FalseValue="LightYellow" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <app:BasicMiscPageViewModel />
+    </ContentPage.BindingContext>
+
+    <CollectionView ItemsSource="{Binding List}"
+                    IsGrouped="True">
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate x:DataType="app:AddressGroup">
+
+                <Grid ColumnDefinitions="*,Auto"
+                      Margin="0" Padding="4"
+                      BackgroundColor="#e0e0e0">
+
+                    <!-- グループ名 -->
+                    <Label Grid.Column="0"
+                           FontSize="Medium" FontAttributes="Bold"
+                           Text="{Binding Key}"
+                           VerticalOptions="Center" />
+
+                    <!-- 展開/折りたたみボタン -->
+                    <Button Grid.Column="1"
+                            WidthRequest="32" HeightRequest="32"
+                            Padding="0"
+                            Command="{Binding Path=BindingContext.ToggleCommand, Source={x:Reference ThisPage}}"
+                            CommandParameter="{Binding .}"
+                            Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandImageConverter}}"
+                            TextColor="White" BackgroundColor="#3498db"
+                            CornerRadius="20" />
+
+                </Grid>
+
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="{x:Type app:AddressRow}">
+
+                <Grid RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="40,*,*"
+                      Padding="4"
+                      BackgroundColor="{Binding IsEven, Converter={StaticResource BoolToBackgroundColorConverter}}">
+
+                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                           WidthRequest="32" HeightRequest="32"
+                           HorizontalOptions="Start"
+                           Source="{Binding Value.Image}"
+                           VerticalOptions="Center" />
+
+                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                           FontSize="24"
+                           Text="{Binding Value.Name}" />
+
+                    <Label Grid.Row="1" Grid.Column="1"
+                           FontSize="16"
+                           Text="{Binding Value.PhoneNumber}" />
+
+                    <Label Grid.Row="1" Grid.Column="2"
+                           FontSize="16"
+                           Text="{Binding Value.MailAddress}" />
+                </Grid>
+
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
 </ContentPage>
