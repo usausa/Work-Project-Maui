@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="clr-namespace:Smart.Maui.Data;assembly=Smart.Maui"
              xmlns:app="clr-namespace:WorkDesign"
+             xmlns:font="clr-namespace:Fonts"
              x:Class="WorkDesign.BasicMiscPage"
              x:Name="ThisPage"
              x:DataType="{x:Type app:BasicMiscPageViewModel}"
@@ -16,7 +17,7 @@
                                    FalseValue="▲" />
             <s:BoolToColorConverter x:Key="BoolToBackgroundColorConverter"
                                     TrueValue="White"
-                                    FalseValue="LightYellow" />
+                                    FalseValue="{StaticResource YellowLighten5}" />
 
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -31,24 +32,27 @@
             <DataTemplate x:DataType="{x:Type app:AddressGroup}">
 
                 <Grid ColumnDefinitions="*,Auto"
-                      Margin="0" Padding="4"
-                      BackgroundColor="#e0e0e0">
+                      Margin="0" Padding="8"
+                      BackgroundColor="{StaticResource GrayLighten1}">
 
                     <!-- グループ名 -->
                     <Label Grid.Column="0"
-                           FontSize="Medium" FontAttributes="Bold"
+                           FontSize="28" FontAttributes="Bold"
                            Text="{Binding Key}"
+                           TextColor="{StaticResource GrayDarken3}"
                            VerticalOptions="Center" />
 
                     <!-- 展開/折りたたみボタン -->
                     <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                     <Button Grid.Column="1"
-                            WidthRequest="32" HeightRequest="32"
+                            WidthRequest="40" HeightRequest="40"
                             Padding="0"
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicMiscPageViewModel}}, Path=ToggleCommand, x:DataType=app:BasicMiscPageViewModel}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicMiscPageViewModel}}, Path=ToggleCommand, x:DataType={x:Type app:BasicMiscPageViewModel}}"
                             CommandParameter="{Binding .}"
+                            FontSize="18"
                             Text="{Binding IsExpanded, Converter={StaticResource BoolToExpandImageConverter}}"
-                            TextColor="White" BackgroundColor="#3498db"
+                            TextColor="White"
+                            BackgroundColor="{StaticResource BlueGrayDefault}"
                             CornerRadius="20" />
 
                 </Grid>
@@ -59,27 +63,44 @@
             <DataTemplate x:DataType="{x:Type app:AddressRow}">
 
                 <Grid RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="40,*,*"
+                      ColumnDefinitions="56,Auto,4,*,Auto,4,*"
                       Padding="4"
                       BackgroundColor="{Binding IsEven, Converter={StaticResource BoolToBackgroundColorConverter}}">
 
                     <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                           WidthRequest="32" HeightRequest="32"
+                           WidthRequest="48" HeightRequest="48"
                            HorizontalOptions="Start"
                            Source="{Binding Value.Image}"
                            VerticalOptions="Center" />
 
-                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6"
                            FontSize="24"
-                           Text="{Binding Value.Name}" />
+                           Text="{Binding Value.Name}"
+                           TextColor="{StaticResource GrayDarken2}" />
 
                     <Label Grid.Row="1" Grid.Column="1"
-                           FontSize="16"
-                           Text="{Binding Value.PhoneNumber}" />
+                           FontFamily="MaterialIcons" FontSize="16"
+                           Text="{x:Static font:MaterialIcons.Phone}"
+                           TextColor="{StaticResource GrayDarken1}"
+                           VerticalOptions="End" />
 
-                    <Label Grid.Row="1" Grid.Column="2"
+                    <Label Grid.Row="1" Grid.Column="3"
                            FontSize="16"
-                           Text="{Binding Value.MailAddress}" />
+                           Text="{Binding Value.PhoneNumber}"
+                           TextColor="{StaticResource GrayDarken1}"
+                           VerticalOptions="End" />
+
+                    <Label Grid.Row="1" Grid.Column="4"
+                           FontFamily="MaterialIcons" FontSize="16"
+                           Text="{x:Static font:MaterialIcons.Email}"
+                           TextColor="{StaticResource GrayDarken1}"
+                           VerticalOptions="End" />
+
+                    <Label Grid.Row="1" Grid.Column="6"
+                           FontSize="16"
+                           Text="{Binding Value.MailAddress}"
+                           TextColor="{StaticResource GrayDarken1}"
+                           VerticalOptions="End" />
                 </Grid>
 
             </DataTemplate>
