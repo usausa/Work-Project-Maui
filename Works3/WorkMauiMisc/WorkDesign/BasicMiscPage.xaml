@@ -62,46 +62,87 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="{x:Type app:AddressRow}">
 
-                <Grid RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="56,Auto,4,*,Auto,4,*"
-                      Padding="4"
-                      BackgroundColor="{Binding IsEven, Converter={StaticResource BoolToBackgroundColorConverter}}">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <!--
+                            <SwipeItem Command="{Binding BindingContext.DeleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                       CommandParameter="{Binding .}"
+                                       Text="削除"
+                                       BackgroundColor="Red">
+                                <SwipeItem.IconImageSource>
+                                    <FontImageSource Color="White"
+                                                     FontFamily="MaterialIcons"
+                                                     Glyph="{x:Static fonts:MaterialIcons.Recycling}"
+                                                     Size="24" />
+                                </SwipeItem.IconImageSource>
+                            </SwipeItem>
+                            -->
+                            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                            <SwipeItemView WidthRequest="64"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicMiscPageViewModel}}, Path=MailCommand, x:DataType={x:Type app:BasicMiscPageViewModel}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="{StaticResource BlueDarken1}">
+                                <Label FontSize="18"
+                                       Text="メール"
+                                       TextColor="White"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </SwipeItemView>
+                            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                            <SwipeItemView WidthRequest="64"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type app:BasicMiscPageViewModel}}, Path=PhoneCommand, x:DataType={x:Type app:BasicMiscPageViewModel}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="{StaticResource RedDarken1}">
+                                <Label FontSize="18"
+                                       Text="通話"
+                                       TextColor="White"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </SwipeItemView>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
 
-                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                           WidthRequest="48" HeightRequest="48"
-                           HorizontalOptions="Start"
-                           Source="{Binding Value.Image}"
-                           VerticalOptions="Center" />
+                    <Grid RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="56,Auto,4,*,Auto,4,*"
+                          Padding="4"
+                          BackgroundColor="{Binding IsEven, Converter={StaticResource BoolToBackgroundColorConverter}}">
 
-                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6"
-                           FontSize="24"
-                           Text="{Binding Value.Name}"
-                           TextColor="{StaticResource GrayDarken2}" />
+                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                               WidthRequest="48" HeightRequest="48"
+                               HorizontalOptions="Start"
+                               Source="{Binding Value.Image}"
+                               VerticalOptions="Center" />
 
-                    <Label Grid.Row="1" Grid.Column="1"
-                           FontFamily="MaterialIcons" FontSize="16"
-                           Text="{x:Static font:MaterialIcons.Phone}"
-                           TextColor="{StaticResource GrayDarken1}"
-                           VerticalOptions="End" />
+                        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6"
+                               FontSize="24"
+                               Text="{Binding Value.Name}"
+                               TextColor="{StaticResource GrayDarken2}" />
 
-                    <Label Grid.Row="1" Grid.Column="3"
-                           FontSize="16"
-                           Text="{Binding Value.PhoneNumber}"
-                           TextColor="{StaticResource GrayDarken1}"
-                           VerticalOptions="End" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               FontFamily="MaterialIcons" FontSize="16"
+                               Text="{x:Static font:MaterialIcons.Phone}"
+                               TextColor="{StaticResource GrayDarken1}"
+                               VerticalOptions="End" />
 
-                    <Label Grid.Row="1" Grid.Column="4"
-                           FontFamily="MaterialIcons" FontSize="16"
-                           Text="{x:Static font:MaterialIcons.Email}"
-                           TextColor="{StaticResource GrayDarken1}"
-                           VerticalOptions="End" />
+                        <Label Grid.Row="1" Grid.Column="3"
+                               FontSize="16"
+                               Text="{Binding Value.PhoneNumber}"
+                               TextColor="{StaticResource GrayDarken1}"
+                               VerticalOptions="End" />
 
-                    <Label Grid.Row="1" Grid.Column="6"
-                           FontSize="16"
-                           Text="{Binding Value.MailAddress}"
-                           TextColor="{StaticResource GrayDarken1}"
-                           VerticalOptions="End" />
-                </Grid>
+                        <Label Grid.Row="1" Grid.Column="4"
+                               FontFamily="MaterialIcons" FontSize="16"
+                               Text="{x:Static font:MaterialIcons.Email}"
+                               TextColor="{StaticResource GrayDarken1}"
+                               VerticalOptions="End" />
+
+                        <Label Grid.Row="1" Grid.Column="6"
+                               FontSize="16"
+                               Text="{Binding Value.MailAddress}"
+                               TextColor="{StaticResource GrayDarken1}"
+                               VerticalOptions="End" />
+                    </Grid>
+
+                </SwipeView>
 
             </DataTemplate>
         </CollectionView.ItemTemplate>
