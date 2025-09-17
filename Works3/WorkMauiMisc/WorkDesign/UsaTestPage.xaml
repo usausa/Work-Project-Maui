@@ -3,10 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkDesign.UsaTestPage"
              Title="UsaTestPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <CollectionView x:Name="CollectionView">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical"
+                             Span="2" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Border WidthRequest="164" HeightRequest="244"
+                        Stroke="Pink" StrokeThickness="3">
+                    <Border.StrokeShape>
+                        <Polygon Points="2,34 2,242 162,210 162,2" />
+                    </Border.StrokeShape>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
 </ContentPage>
