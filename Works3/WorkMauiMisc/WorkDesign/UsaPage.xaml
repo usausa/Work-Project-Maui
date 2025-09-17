@@ -106,10 +106,10 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border WidthRequest="256" HeightRequest="192"
+                        <Border WidthRequest="164" HeightRequest="244"
                                 Stroke="Pink" StrokeThickness="3">
                             <Border.StrokeShape>
-                                <Polygon Points="0,0 0,200 120,180 120,-20" />
+                                <Polygon Points="2,34 2,242 162,210 162,2" />
                             </Border.StrokeShape>
                             <Border.Shadow>
                                 <Shadow Offset="10,10"

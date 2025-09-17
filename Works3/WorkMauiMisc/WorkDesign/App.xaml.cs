@@ -14,8 +14,8 @@ public partial class App : Application
     {
         _ = new ReverseConverter();
 
-        //return new Window(new UsaPage());
-        return new Window(new UsaTestPage());
+        return new Window(new UsaPage());
+        //return new Window(new UsaTestPage());
 
         //return new Window(new BasicMiscPage());
         //return new Window(new GuardPage());
