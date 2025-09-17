@@ -19,75 +19,59 @@ public class UsaPageViewModel : ExtendViewModelBase
     {
         Characters.Add(new Character
         {
-            Name = "Avatar1",
-            EnglishName = "Avatar1",
+            Name = "Form 1",
             Color = "#808080",
-            Avatar = "face1.jpg",
-            Face = "face1.jpg",
-            Full = "usamusume1.jpg"
+            Face = "usa1_face.jpg",
+            Full = "usa1_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar2",
-            EnglishName = "Avatar2",
+            Name = "Form 2",
             Color = "#808080",
-            Avatar = "face2.jpg",
-            Face = "face2.jpg",
-            Full = "usamusume2.jpg"
+            Face = "usa2_face.jpg",
+            Full = "usa2_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar3",
-            EnglishName = "Avatar3",
+            Name = "Form 3",
             Color = "#808080",
-            Avatar = "face3.jpg",
-            Face = "face3.jpg",
-            Full = "usamusume3.jpg"
+            Face = "usa3_face.jpg",
+            Full = "usa3_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar4",
-            EnglishName = "Avatar4",
+            Name = "Form 4",
             Color = "#808080",
-            Avatar = "face4.jpg",
-            Face = "face4.jpg",
-            Full = "usamusume4.jpg"
+            Face = "usa4_face.jpg",
+            Full = "usa4_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar5",
-            EnglishName = "Avatar5",
+            Name = "Form 5",
             Color = "#808080",
-            Avatar = "face5.jpg",
-            Face = "face5.jpg",
-            Full = "usamusume5.jpg"
+            Face = "usa5_face.jpg",
+            Full = "usa5_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar6",
-            EnglishName = "Avatar6",
+            Name = "Form 6",
             Color = "#808080",
-            Avatar = "face6.jpg",
-            Face = "face6.jpg",
-            Full = "usamusume6.jpg"
+            Face = "usa6_face.jpg",
+            Full = "usa6_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar7",
-            EnglishName = "Avatar7",
+            Name = "Form 7",
             Color = "#808080",
-            Avatar = "face7.jpg",
-            Face = "face7.jpg",
-            Full = "usamusume7.jpg"
+            Face = "usa7_face.jpg",
+            Full = "usa7_full.jpg"
         });
         Characters.Add(new Character
         {
-            Name = "Avatar8",
-            EnglishName = "Avatar8",
+            Name = "Form 8",
             Color = "#808080",
-            Avatar = "face8.jpg",
-            Face = "face8.jpg",
-            Full = "usamusume8.jpg"
+            Face = "usa8_face.jpg",
+            Full = "usa8_full.jpg"
         });
     }
 }
@@ -96,11 +80,7 @@ public class Character
 {
     public string Name { get; set; } = default!;
 
-    public string EnglishName { get; set; } = default!;
-
     public string Color { get; set; } = default!;
-
-    public string Avatar { get; set; } = default!;
 
     public string Face { get; set; } = default!;
 

@@ -49,7 +49,7 @@
                             <Border.StrokeShape>
                                 <Ellipse />
                             </Border.StrokeShape>
-                            <Image Source="{Binding Avatar}" />
+                            <Image Source="{Binding Face}" />
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
