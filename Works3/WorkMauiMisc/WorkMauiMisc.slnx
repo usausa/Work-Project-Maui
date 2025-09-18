@@ -73,6 +73,9 @@
     <Project Path="WorkSizeMap/WorkSizeMap.csproj" Id="03860309-8a78-404d-8820-6b6164613342">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
+      <Deploy />
+    </Project>
     <Project Path="WorkTimer/WorkTimer.csproj" Id="88408ed4-c8c6-4dc6-a539-6b15132b8612">
       <Deploy Solution="Debug|*" />
     </Project>
@@ -103,9 +106,6 @@
     <Project Path="WorkSocial/WorkSocial.csproj" Id="1b4c182d-f650-42b6-8dce-ccddf890b306">
       <Deploy />
     </Project>
-    <Project Path="WorkSplash/WorkSplash.csproj" Id="64cd11fa-af29-424a-929f-cebe852012b4">
-      <Deploy />
-    </Project>
   </Folder>
   <Project Path="WorkBottom/WorkBottom.csproj" Id="2f1a4c9a-69f9-4c61-b7b4-5c45a054314f">
     <Deploy />
@@ -113,7 +113,9 @@
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy />
   </Project>
-  <Project Path="WorkNavAnime/WorkNavAnime.csproj" Id="d627394b-1cc5-4eba-95fd-5f7f437b4271" />
+  <Project Path="WorkNavAnime/WorkNavAnime.csproj" Id="d627394b-1cc5-4eba-95fd-5f7f437b4271">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
     <Deploy />
   </Project>
