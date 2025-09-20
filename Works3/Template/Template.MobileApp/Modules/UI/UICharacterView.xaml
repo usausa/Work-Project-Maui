@@ -11,6 +11,121 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TitleName"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+        </ResourceDictionary>
+        <ResourceDictionary>
+            <Style x:Key="SubName"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="FontAttributes" Value="Italic" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="3" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout>
+
+            <!-- Avatar -->
+            <HorizontalStackLayout>
+                <Label Style="{StaticResource TitleName}"
+                       Text="User" />
+                <Label Style="{StaticResource SubName}"
+                       Text="Avatar List" />
+            </HorizontalStackLayout>
+            <CollectionView ItemsSource="{Binding Characters}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border WidthRequest="64" HeightRequest="64"
+                                Stroke="Pink" StrokeThickness="3">
+                            <Border.StrokeShape>
+                                <Ellipse />
+                            </Border.StrokeShape>
+                            <Image Source="{Binding Face}" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Header -->
+            <HorizontalStackLayout>
+                <Label Style="{StaticResource TitleName}"
+                       Text="Character" />
+                <Label Style="{StaticResource SubName}"
+                       Text="Header List" />
+            </HorizontalStackLayout>
+            <CollectionView ItemsSource="{Binding Characters}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Horizontal"
+                                     Span="2" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border WidthRequest="192" HeightRequest="128"
+                                Stroke="Pink" StrokeThickness="3">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="64,16,16,32" />
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Offset="2,2"
+                                        Opacity="0.5" />
+                            </Border.Shadow>
+                            <Grid>
+                                <Image Source="{Binding Full}"
+                                       Aspect="AspectFill" />
+                                <Label Margin="4,0,0,4"
+                                       Text="{Binding Name}"
+                                       FontSize="16" FontAttributes="Bold"
+                                       TextColor="White"
+                                       VerticalOptions="End" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Detail -->
+            <HorizontalStackLayout>
+                <Label Style="{StaticResource TitleName}"
+                       Text="Detail" />
+                <Label Style="{StaticResource SubName}"
+                       Text="Detail List" />
+            </HorizontalStackLayout>
+            <CollectionView ItemsSource="{Binding Characters}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border WidthRequest="164" HeightRequest="244"
+                                Stroke="Pink" StrokeThickness="3">
+                            <Border.StrokeShape>
+                                <Polygon Points="2,34 2,242 162,210 162,2" />
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Offset="10,10"
+                                        Opacity="0.8" />
+                            </Border.Shadow>
+                            <Grid>
+                                <Image Source="{Binding Full}"
+                                       Aspect="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>
