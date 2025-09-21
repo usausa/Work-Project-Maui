@@ -132,7 +132,7 @@
                                 <Button WidthRequest="32" HeightRequest="32"
                                         Padding="0"
                                         FontSize="24"
-                                        Text="❤"
+                                        Text="🍺"
                                         BackgroundColor="Transparent"
                                         HorizontalOptions="End" TranslationX="-4" TranslationY="-32" VerticalOptions="End" />
                             </Grid>
