@@ -10,7 +10,7 @@
             <Style x:Key="TitleName"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="32" />
-                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontAttributes" Value="Bold,Italic" />
             </Style>
         </ResourceDictionary>
         <ResourceDictionary>
@@ -28,24 +28,22 @@
         <app:UsaPageViewModel />
     </ContentPage.BindingContext>
 
-    <ScrollView>
+    <ScrollView app:ScrollViewOption.DisableOverScroll="True">
         <VerticalStackLayout>
 
             <!-- Avatar -->
-            <HorizontalStackLayout>
-                <Label Style="{StaticResource TitleName}"
-                       Text="User" />
-                <Label Style="{StaticResource SubName}"
-                       Text="Avatar List" />
-            </HorizontalStackLayout>
-            <CollectionView ItemsSource="{Binding Characters}">
+            <Label Style="{StaticResource TitleName}"
+                   Text="Character" />
+            <CollectionView ItemsSource="{Binding Characters}"
+                            app:ScrollViewOption.DisableOverScroll="True">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border WidthRequest="64" HeightRequest="64"
-                                Stroke="Pink" StrokeThickness="3">
+                                Stroke="{Binding Color}"
+                                StrokeThickness="3">
                             <Border.StrokeShape>
                                 <Ellipse />
                             </Border.StrokeShape>
@@ -56,68 +54,87 @@
             </CollectionView>
 
             <!-- Header -->
-            <HorizontalStackLayout>
-                <Label Style="{StaticResource TitleName}"
-                       Text="Character" />
-                <Label Style="{StaticResource SubName}"
-                       Text="Header Illust" />
-            </HorizontalStackLayout>
-            <CollectionView ItemsSource="{Binding Characters}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Horizontal"
-                                     Span="2" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border WidthRequest="192" HeightRequest="128"
-                                Stroke="Pink" StrokeThickness="3">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="64,16,16,32" />
-                            </Border.StrokeShape>
-                            <Border.Shadow>
-                                <Shadow Offset="2,2"
-                                        Opacity="0.5" />
-                            </Border.Shadow>
-                            <Grid>
-                                <Image Aspect="AspectFill"
-                                       Source="{Binding Full}" />
-                                <Label Margin="4,0,0,4"
-                                       FontSize="16" FontAttributes="Bold"
-                                       Text="{Binding Name}"
-                                       TextColor="White"
-                                       VerticalOptions="End" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <Label Style="{StaticResource TitleName}"
+                   Text="Class" />
+            <Grid ColumnDefinitions="Auto,*">
+                <Grid x:Name="Grid"
+                      Grid.Column="0"
+                      IsVisible="False">
+                    <Image x:Name="Image"
+                           WidthRequest="160" HeightRequest="240"
+                           Aspect="AspectFill" />
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <CollectionView ItemsSource="{Binding Characters}"
+                                    SelectionChanged="SelectableItemsView_OnSelectionChanged" SelectionMode="Single" app:ScrollViewOption.DisableOverScroll="True">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Horizontal"
+                                             Span="2" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border WidthRequest="160" HeightRequest="120"
+                                        Stroke="{StaticResource PinkLighten3}"
+                                        StrokeThickness="3">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="64,16,16,32" />
+                                    </Border.StrokeShape>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid>
+                                        <Image Aspect="AspectFill"
+                                               Source="{Binding Full}" />
+                                        <Label Margin="9,0,0,4"
+                                               FontSize="16" FontAttributes="Bold,Italic"
+                                               Text="{Binding Name}"
+                                               TextColor="Black"
+                                               VerticalOptions="End" />
+                                        <Label Margin="8,0,0,5"
+                                               FontSize="16" FontAttributes="Bold,Italic"
+                                               Text="{Binding Name}"
+                                               TextColor="White"
+                                               VerticalOptions="End" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Grid>
 
             <!-- Detail -->
-            <HorizontalStackLayout>
-                <Label Style="{StaticResource TitleName}"
-                       Text="Detail" />
-                <Label Style="{StaticResource SubName}"
-                       Text="Detail List" />
-            </HorizontalStackLayout>
-            <CollectionView ItemsSource="{Binding Characters}">
+            <Label Style="{StaticResource TitleName}"
+                   Text="Detail" />
+            <CollectionView ItemsSource="{Binding Characters}"
+                            app:ScrollViewOption.DisableOverScroll="True">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
                                      Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border WidthRequest="164" HeightRequest="244"
-                                Stroke="Pink" StrokeThickness="3">
+                        <Border WidthRequest="160" HeightRequest="240"
+                                StrokeThickness="0">
                             <Border.StrokeShape>
-                                <Polygon Points="2,34 2,242 162,210 162,2" />
+                                <Polygon Points="0,32 0,240 160,208 160,0" />
                             </Border.StrokeShape>
-                            <Border.Shadow>
-                                <Shadow Offset="10,10"
-                                        Opacity="0.8" />
-                            </Border.Shadow>
                             <Grid>
                                 <Image Aspect="Center"
                                        Source="{Binding Full}" />
+                                <Button WidthRequest="32" HeightRequest="32"
+                                        Padding="0"
+                                        FontSize="24"
+                                        Text="❤"
+                                        BackgroundColor="Transparent"
+                                        HorizontalOptions="End" TranslationX="-4" TranslationY="-32" VerticalOptions="End" />
                             </Grid>
                         </Border>
                     </DataTemplate>
