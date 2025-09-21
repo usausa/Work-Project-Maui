@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Smart.Maui.ViewModels;
+using Smart.Mvvm;
 
 namespace WorkDesign;
 
@@ -9,41 +11,21 @@ public partial class UsaPage : ContentPage
 	{
 		InitializeComponent();
 	}
-
-    private object? lastSelected;
-
-    private void SelectableItemsView_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (sender is not CollectionView collectionView)
-        {
-            return;
-        }
-
-        var currentSelectedItem = collectionView.SelectedItem;
-
-        // 以前選択した項目と同じなら選択解除
-        if (lastSelected != null && Equals(lastSelected, currentSelectedItem))
-        {
-            collectionView.SelectedItem = null;
-            lastSelected = null;
-        }
-        else
-        {
-            lastSelected = currentSelectedItem;
-        }
-
-        var character = lastSelected as Character;
-        Image.Source = character?.Full;
-        Grid.IsVisible = character is not null;
-    }
 }
 
-public class UsaPageViewModel : ExtendViewModelBase
+public partial class UsaPageViewModel : ExtendViewModelBase
 {
     public ObservableCollection<Character> Characters { get; } = new();
 
+    [ObservableProperty]
+    public partial string? SelectedImage { get; set; }
+
+    public ICommand SelectCommand { get; }
+
     public UsaPageViewModel()
     {
+        SelectCommand = MakeDelegateCommand<Character>(x => SelectedImage = x.Full);
+
         Characters.Add(new Character
         {
             Name = "Ruler",
