@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WorkDesign"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="WorkDesign.ShadowPage"
+             Title="ShadowPage">
+
+    <ContentPage.BindingContext>
+        <local:ShadowPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <toolkit:ColorToHexRgbStringConverter x:Key="ColorToHexConverter" />
+        <local:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Padding="8">
+
+        <Border WidthRequest="256" HeightRequest="64"
+                Margin="24"
+                BackgroundColor="{Binding BorderColor.Color}"
+                HorizontalOptions="Center" StrokeShape="RoundRectangle 16">
+            <Border.Shadow>
+                <Shadow Offset="{Binding ShadowOffset}"
+                        Brush="{Binding ShadowColor.Color, Converter={StaticResource ColorToBrushConverter}}"
+                        Opacity="{Binding ShadowOpacity}"
+                        Radius="{Binding ShadowRadius}" />
+            </Border.Shadow>
+        </Border>
+
+        <BoxView HeightRequest="1"
+                 Margin="0,8"
+                 Color="{StaticResource GrayDarken1}" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Border" />
+
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+        <Picker ItemsSource="{Binding BorderColors}"
+                ItemDisplayBinding="{Binding Path=Key, x:DataType=local:ColorItem}"
+                SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
+
+        <BoxView HeightRequest="1"
+                 Margin="0,8"
+                 Color="{StaticResource GrayDarken1}" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="Color" />
+
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+        <Picker ItemsSource="{Binding ShadowColors}"
+                ItemDisplayBinding="{Binding Path=Key, x:DataType=local:ColorItem}"
+                SelectedItem="{Binding ShadowColor, Mode=TwoWay}" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
+        <Slider Value="{Binding ShadowOffsetX, Mode=TwoWay}"
+                Maximum="16" Minimum="-16" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding ShadowOffsetY, StringFormat='OffsetY: {0:F2}'}" />
+        <Slider Value="{Binding ShadowOffsetY, Mode=TwoWay}"
+                Maximum="16" Minimum="-16" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding ShadowRadius, StringFormat='Radius: {0:F2}'}" />
+        <Slider Value="{Binding ShadowRadius, Mode=TwoWay}"
+                Maximum="32" Minimum="0" />
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding ShadowOpacity, StringFormat='Opacity: {0:F2}'}" />
+        <Slider Value="{Binding ShadowOpacity, Mode=TwoWay}"
+                Maximum="1.0" Minimum="0" />
+
+
+    </VerticalStackLayout>
+
+</ContentPage>
