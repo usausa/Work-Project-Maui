@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 public static class ReactiveSignalR
 {
-    public static IObservable<T> CreateObservable<T>(string uri, string methodName, TimeSpan retryInterval)
+    public static IObservable<T> CreateObservable<T>(string endPoint, string methodName, TimeSpan retryInterval)
     {
         return Observable.Create<T>(observer =>
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl(uri)
+                .WithUrl(endPoint)
                 .WithAutomaticReconnect(new FixedIntervalRetryPolicy(retryInterval))
                 .Build();
 
@@ -39,6 +39,7 @@ public static class ReactiveSignalR
     {
         while (!cancellationToken.IsCancellationRequested)
         {
+#pragma warning disable CA1031
             try
             {
                 await connection.StartAsync(cancellationToken);
@@ -64,6 +65,7 @@ public static class ReactiveSignalR
                     return false;
                 }
             }
+#pragma warning restore CA1031
         }
 
         return false;

@@ -28,8 +28,8 @@ public sealed partial class ViewShadowViewModel : AppViewModelBase
 
     public ViewShadowViewModel(ResourceDictionary resources)
     {
-        BorderColors = new(resources.EnumValues<Color>().Where(x => x.Key.EndsWith("Default")).Select(x => new ColorItem(x.Key, x.Value)));
-        ShadowColors = new(resources.EnumValues<Color>().Where(x => x.Key.StartsWith("Gray")).Select(x => new ColorItem(x.Key, x.Value)));
+        BorderColors = new(resources.EnumValues<Color>().Where(x => x.Key.EndsWith("Default", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
+        ShadowColors = new(resources.EnumValues<Color>().Where(x => x.Key.StartsWith("Gray", StringComparison.Ordinal)).Select(x => new ColorItem(x.Key, x.Value)));
 
         BorderColor = BorderColors[0];
         ShadowColor = ShadowColors[0];
