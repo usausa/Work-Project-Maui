@@ -24,17 +24,17 @@
 
             <Style x:Key="ShadowTargetBorder"
                    TargetType="Border">
+                <Setter Property="Margin" Value="20" />
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="WidthRequest" Value="256" />
-                <Setter Property="HeightRequest" Value="64" />
-                <Setter Property="Margin" Value="24" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="WidthRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="80" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
             <Style x:Key="SeparateBoxView"
                    TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Margin" Value="0,8" />
+                <Setter Property="HeightRequest" Value="2" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
@@ -76,17 +76,17 @@
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOffsetX, StringFormat='OffsetX: {0:F2}'}" />
         <Slider Value="{Binding ShadowOffsetX, Mode=TwoWay}"
-                Minimum="-16" Maximum="16" />
+                Minimum="-20" Maximum="20" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOffsetY, StringFormat='OffsetY: {0:F2}'}" />
         <Slider Value="{Binding ShadowOffsetY, Mode=TwoWay}"
-                Minimum="-16" Maximum="16" />
+                Minimum="-20" Maximum="20" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowRadius, StringFormat='Radius: {0:F2}'}" />
         <Slider Value="{Binding ShadowRadius, Mode=TwoWay}"
-                Minimum="0" Maximum="32" />
+                Minimum="0" Maximum="40" />
 
         <Label Style="{StaticResource NameLabel}"
                Text="{Binding ShadowOpacity, StringFormat='Opacity: {0:F2}'}" />
