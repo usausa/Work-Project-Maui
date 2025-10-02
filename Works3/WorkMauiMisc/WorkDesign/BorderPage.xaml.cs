@@ -65,16 +65,16 @@ public sealed partial class BorderPageViewModel : ExtendViewModelBase
     public partial LineCap StrokeLineCap { get; set; } = LineCap.Butt;
 
     [ObservableProperty(NotifyAlso = [nameof(CornerRadius)])]
-    public partial double CornerRadiusTopLeft { get; set; } = 16;
+    public partial double CornerRadiusTopLeft { get; set; } = 20;
 
     [ObservableProperty(NotifyAlso = [nameof(CornerRadius)])]
-    public partial double CornerRadiusTopRight { get; set; } = 16;
+    public partial double CornerRadiusTopRight { get; set; } = 20;
 
     [ObservableProperty(NotifyAlso = [nameof(CornerRadius)])]
-    public partial double CornerRadiusBottomLeft { get; set; } = 16;
+    public partial double CornerRadiusBottomLeft { get; set; } = 20;
 
     [ObservableProperty(NotifyAlso = [nameof(CornerRadius)])]
-    public partial double CornerRadiusBottomRight { get; set; } = 16;
+    public partial double CornerRadiusBottomRight { get; set; } = 20;
 
     public CornerRadius CornerRadius => new(CornerRadiusTopLeft, CornerRadiusTopRight, CornerRadiusBottomLeft, CornerRadiusBottomRight);
 

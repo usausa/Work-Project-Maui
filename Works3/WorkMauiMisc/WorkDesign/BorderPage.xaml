@@ -11,40 +11,63 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
-        <toolkit:ColorToHexRgbStringConverter x:Key="ColorToHexConverter" />
+
         <local:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+
         <local:EqualsConverter x:Key="EqualsConverter" />
+
+        <Style x:Key="BaseBorderStyle"
+               TargetType="Border">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="Margin" Value="20" />
+            <Setter Property="WidthRequest" Value="240" />
+            <Setter Property="HeightRequest" Value="80" />
+            <Setter Property="BackgroundColor" Value="{Binding BorderColor.Color}" />
+            <Setter Property="Stroke" Value="{Binding StrokeColor.Color, Converter={StaticResource ColorToBrushConverter}}" />
+            <Setter Property="StrokeThickness" Value="{Binding StrokeThickness}" />
+            <Setter Property="StrokeDashArray" Value="{Binding StrokeDashArray}" />
+            <Setter Property="StrokeDashOffset" Value="{Binding StrokeDashOffset}" />
+            <Setter Property="StrokeLineJoin" Value="{Binding StrokeLineJoin}" />
+            <Setter Property="StrokeLineCap" Value="{Binding StrokeLineCap}" />
+        </Style>
+
     </ContentPage.Resources>
 
     <VerticalStackLayout Padding="8">
 
-        <Border WidthRequest="256" HeightRequest="64"
-                Margin="24"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.RoundRectangle}}"
-                BackgroundColor="{Binding BorderColor.Color}"
-                HorizontalOptions="Center">
+        <Border Style="{StaticResource BaseBorderStyle}"
+                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.RoundRectangle}}">
             <Border.StrokeShape>
                 <shapes:RoundRectangle CornerRadius="{Binding CornerRadius}" />
             </Border.StrokeShape>
         </Border>
 
-        <Border WidthRequest="256" HeightRequest="64"
-                Margin="24"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.Ellipse}}"
-                BackgroundColor="{Binding BorderColor.Color}"
-                HorizontalOptions="Center">
+        <Border Style="{StaticResource BaseBorderStyle}"
+                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.Ellipse}}">
             <Border.StrokeShape>
                 <shapes:Ellipse />
             </Border.StrokeShape>
         </Border>
 
-        <!-- TODO -->
+        <Border Style="{StaticResource BaseBorderStyle}"
+                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.Rectangle}}">
+            <Border.StrokeShape>
+                <shapes:Rectangle />
+            </Border.StrokeShape>
+        </Border>
 
-        <!-- TODO -->
+        <Border Style="{StaticResource BaseBorderStyle}"
+                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.Polygon}}">
+            <Border.StrokeShape>
+                <shapes:Path Data="M 120 0 L 0 80 L 240 80 Z" />
+            </Border.StrokeShape>
+        </Border>
+
 
         <BoxView HeightRequest="1"
                  Margin="0,8"
                  Color="{StaticResource GrayDarken1}" />
+
 
         <Label FontSize="18" FontAttributes="Bold"
                Text="Shape" />
@@ -52,6 +75,7 @@
         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
         <Picker ItemsSource="{Binding BorderShapes}"
                 SelectedItem="{Binding BorderShape, Mode=TwoWay}" />
+
 
         <Label FontSize="18" FontAttributes="Bold"
                Text="Color" />
@@ -61,7 +85,91 @@
                 ItemDisplayBinding="{Binding Path=Key, x:DataType=local:ColorItem}"
                 SelectedItem="{Binding BorderColor, Mode=TwoWay}" />
 
-        <!-- TODO -->
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="StrokeColor" />
+
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+        <Picker ItemsSource="{Binding StrokeColors}"
+                ItemDisplayBinding="{Binding Path=Key, x:DataType=local:ColorItem}"
+                SelectedItem="{Binding StrokeColor, Mode=TwoWay}" />
+
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding StrokeThickness, StringFormat='StrokeThickness: {0:F2}'}" />
+        <Slider Value="{Binding StrokeThickness}"
+                Maximum="20" Minimum="0" />
+
+
+        <Label FontSize="18">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span FontAttributes="Bold"
+                          Text="StrokeDashArray: " />
+                    <Span FontAttributes="Bold"
+                          Text="{Binding StrokeDashLength1, StringFormat='{0:F2}'}" />
+                    <Span FontAttributes="Bold"
+                          Text=", " />
+                    <Span FontAttributes="Bold"
+                          Text="{Binding StrokeDashLength2, StringFormat='{0:F2}'}" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+        <Slider Value="{Binding StrokeDashLength1}"
+                Maximum="10" Minimum="0" />
+        <Slider Value="{Binding StrokeDashLength2}"
+                Maximum="10" Minimum="0" />
+
+
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="{Binding StrokeDashOffset, StringFormat='StrokeDashOffset: {0:F2}'}" />
+        <Slider Value="{Binding StrokeDashOffset}"
+                Maximum="20" Minimum="0" />
+
+        <!--
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="StrokeLineJoin" />
+        -->
+
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+        <!--
+        <Picker ItemsSource="{Binding LineJoins}"
+                SelectedItem="{Binding StrokeLineJoin, Mode=TwoWay}" />
+        -->
+
+        <!--
+        <Label FontSize="18" FontAttributes="Bold"
+               Text="StrokeLineCap" />
+        -->
+
+        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+        <!--
+        <Picker ItemsSource="{Binding LineCaps}"
+                SelectedItem="{Binding StrokeLineCap, Mode=TwoWay}" />
+        -->
+
+        <VerticalStackLayout IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static local:BorderShape.RoundRectangle}}">
+            <Label FontSize="18" FontAttributes="Bold"
+                   Text="{Binding CornerRadiusTopLeft, StringFormat='CornerRadius TopLeft: {0:F2}'}" />
+            <Slider Value="{Binding CornerRadiusTopLeft}"
+                    Maximum="40" Minimum="0" />
+
+            <Label FontSize="18" FontAttributes="Bold"
+                   Text="{Binding CornerRadiusTopRight, StringFormat='CornerRadius TopRight: {0:F2}'}" />
+            <Slider Value="{Binding CornerRadiusTopRight}"
+                    Maximum="40" Minimum="0" />
+
+            <Label FontSize="18" FontAttributes="Bold"
+                   Text="{Binding CornerRadiusBottomLeft, StringFormat='CornerRadius BottomLeft: {0:F2}'}" />
+            <Slider Value="{Binding CornerRadiusBottomLeft}"
+                    Maximum="40" Minimum="0" />
+
+            <Label FontSize="18" FontAttributes="Bold"
+                   Text="{Binding CornerRadiusBottomRight, StringFormat='CornerRadius BottomRight: {0:F2}'}" />
+            <Slider Value="{Binding CornerRadiusBottomRight}"
+                    Maximum="40" Minimum="0" />
+        </VerticalStackLayout>
 
     </VerticalStackLayout>
 
