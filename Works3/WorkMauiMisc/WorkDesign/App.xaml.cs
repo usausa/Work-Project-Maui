@@ -14,8 +14,8 @@ public partial class App : Application
     {
         _ = new ReverseConverter();
 
-        return new Window(new BorderPage());
-        //return new Window(new ShadowPage());
+        return new Window(new ChatPage());
+
         //return new Window(new UsaPage());
         //return new Window(new UsaTestPage());
 
@@ -28,7 +28,6 @@ public partial class App : Application
         //return new Window(new BasicCollectionPage());
 
         //return new Window(new StickPage());
-        //return new Window(new ChatPage());
         //return new Window(new AsyncLoadPage());
 
         //return new Window(new CollectionPage());
@@ -58,5 +57,8 @@ public partial class App : Application
         //return new Window(new AnimationEasingPage());
         //return new Window(new AnimeSamplePage());
         //return new Window(new AnimeTestPage());
+
+        //return new Window(new BorderPage());
+        //return new Window(new ShadowPage());
     }
 }
