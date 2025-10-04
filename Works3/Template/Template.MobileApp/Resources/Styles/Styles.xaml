@@ -32,6 +32,9 @@
                            NullValue="False"
                            NonNullValue="True" />
 
+    <s:CompareToBoolConverter x:Key="EqualsConverter"
+                              Expression="{x:Static s:CompareExpressions.Equal}" />
+
     <s:CompareToBoolConverter x:Key="GreaterThanToBoolConverter"
                               Expression="{x:Static s:CompareExpressions.GreaterThan}" />
 
@@ -771,8 +774,22 @@
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+    <Style x:Key="GroupSpan"
+           TargetType="Span">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
     <Style x:Key="NameLabel"
            TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="NameSpan"
+           TargetType="Span">
         <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontAttributes" Value="Bold" />
