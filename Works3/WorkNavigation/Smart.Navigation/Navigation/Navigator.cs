@@ -156,6 +156,7 @@ public sealed class Navigator : DisposableObject, INavigator, INavigatorComponen
             var fromView = CurrentView;
             var fromTarget = CurrentTarget;
 
+            // TODO
             var toView = strategy.ResolveToView(controller);
             var toTarget = provider.ResolveTarget(toView);
 
@@ -184,6 +185,7 @@ public sealed class Navigator : DisposableObject, INavigator, INavigatorComponen
             Navigating?.Invoke(this, args);
 
             // Update stack
+            // TODO
             strategy.UpdateStack(controller, toView);
 
             // Update view mapper
@@ -253,6 +255,7 @@ public sealed class Navigator : DisposableObject, INavigator, INavigatorComponen
             var fromView = CurrentView;
             var fromTarget = CurrentTarget;
 
+            // TODO
             var toView = strategy.ResolveToView(controller);
             var toTarget = provider.ResolveTarget(toView);
 
@@ -289,6 +292,7 @@ public sealed class Navigator : DisposableObject, INavigator, INavigatorComponen
             // End pre-process
             Navigating?.Invoke(this, args);
 
+            // TODO
             // Update stack
             strategy.UpdateStack(controller, toView);
 
