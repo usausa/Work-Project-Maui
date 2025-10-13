@@ -14,7 +14,8 @@ public partial class App : Application
     {
         _ = new ReverseConverter();
 
-        return new Window(new ChatPage());
+        //return new Window(new ChatPage());
+        return new Window(new StatPage());
 
         //return new Window(new UsaPage());
         //return new Window(new UsaTestPage());
