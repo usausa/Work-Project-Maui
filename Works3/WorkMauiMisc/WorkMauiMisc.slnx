@@ -116,6 +116,7 @@
   <Project Path="WorkNavAnime/WorkNavAnime.csproj" Id="d627394b-1cc5-4eba-95fd-5f7f437b4271">
     <Deploy Solution="Debug|*" />
   </Project>
+  <Project Path="WorkPerfDebug/WorkPerfDebug.csproj" Id="e35dd6e0-3b7e-40c2-9cdb-29a494989310" />
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
     <Deploy />
   </Project>
