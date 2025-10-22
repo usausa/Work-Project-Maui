@@ -12,6 +12,15 @@ public sealed class StatDataSet
 
     public int Capacity => capacity;
 
+    public float LastValue
+    {
+        get
+        {
+            var actualIndex = head == 0 ? capacity - 1 : head - 1;
+            return buffer[actualIndex];
+        }
+    }
+
     public StatDataSet(int capacity)
     {
         this.capacity = capacity;
@@ -30,12 +39,6 @@ public sealed class StatDataSet
     public float GetValue(int index)
     {
         var actualIndex = (head + index) % capacity;
-        return buffer[actualIndex];
-    }
-
-    public float GetLastValue()
-    {
-        var actualIndex = head == 0 ? capacity - 1 : head - 1;
         return buffer[actualIndex];
     }
 }
