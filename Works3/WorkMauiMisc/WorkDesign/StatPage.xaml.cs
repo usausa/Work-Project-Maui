@@ -218,7 +218,7 @@ public sealed class StatControl : GraphicsView, IDrawable
         var headerRect = new RectF(headerPadding, 0, width - headerPadding * 2, HeaderHeight);
 
         var values = DataSet;
-        var pointWidth = (float)width / (values.Capacity - 1);
+        var pointWidth = width / (values.Capacity - 1);
         var maxValueForScale = MaxValue > 0 ? MaxValue : 100f;
         var color = GraphColor;
 
@@ -236,7 +236,6 @@ public sealed class StatControl : GraphicsView, IDrawable
         canvas.FillRectangle(dirtyRect);
 
         // Path
-        // TODO re check
         var wavePath = new PathF();
         wavePath.MoveTo(0, height);
 
@@ -260,34 +259,21 @@ public sealed class StatControl : GraphicsView, IDrawable
         };
         canvas.SetFillPaint(waveGradient, dirtyRect);
         canvas.FillPath(wavePath);
-        // TODO
-        //        using var wavePaint = new SKPaint();
-        //        wavePaint.Style = SKPaintStyle.Fill;
-        //        wavePaint.Shader = SKShader.CreateLinearGradient(
-        //            new SKPoint(0, 0),
-        //            new SKPoint(0, height),
-        //            [SKColors.White.WithAlpha(192), SKColors.White.WithAlpha(64)],
-        //            SKShaderTileMode.Clamp);
-        //        canvas.DrawPath(wavePath, wavePaint);
 
         // Line
-        // TODO
-        //        using var linePath = new SKPath();
-        //        linePath.MoveTo(0, height - (values.GetValue(0) / maxValueForScale * statHeight));
-        //
-        //        for (var i = 1; i < values.Capacity; i++)
-        //        {
-        //            var x = i * pointWidth;
-        //            var y = height - (values.GetValue(i) / maxValueForScale * statHeight);
-        //            linePath.LineTo(x, y);
-        //        }
-        //
-        //        using var linePaint = new SKPaint();
-        //        linePaint.Style = SKPaintStyle.Stroke;
-        //        linePaint.Color = SKColors.White;
-        //        linePaint.StrokeWidth = 1.5f;
-        //        linePaint.IsAntialias = true;
-        //        canvas.DrawPath(linePath, linePaint);
+        var linePath = new PathF();
+        linePath.MoveTo(0, height - (values.GetValue(0) / maxValueForScale * statHeight));
+
+        for (var i = 1; i < values.Capacity; i++)
+        {
+            var x = i * pointWidth;
+            var y = height - (values.GetValue(i) / maxValueForScale * statHeight);
+            linePath.LineTo(x, y);
+        }
+
+        canvas.StrokeColor = Colors.White;
+        canvas.StrokeSize = 1.5f;
+        canvas.DrawPath(linePath);
 
         // Label
         canvas.FontColor = Colors.White;
