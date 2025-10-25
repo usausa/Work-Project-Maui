@@ -1,10 +1,8 @@
 namespace WorkDesign;
 
-using SkiaSharp.Views.Maui;
-
 using Smart.Maui.ViewModels;
 
-public partial class StatPage : ContentPage
+public partial class StatPage
 {
 	public StatPage()
 	{
@@ -16,17 +14,23 @@ public sealed class StatPageViewModel : ExtendViewModelBase
 {
     private readonly IDispatcherTimer timer;
 
-    private int counter = 0;
+    private int counter;
 
     public StatDataSet CpuLoadSet { get; }
 
     public StatPageViewModel()
     {
-        CpuLoadSet = new StatDataSet(100);
+        CpuLoadSet = new StatDataSet(101);
+
+        //for (var i = 0; i <= 100; i++)
+        //{
+        //    CpuLoadSet.Add(i);
+        //}
 
         timer = Application.Current?.Dispatcher.CreateTimer()!;
         timer.Interval = TimeSpan.FromSeconds(1);
         timer.Tick += OnTimerTick;
+        timer.Start();
     }
 
     private void OnTimerTick(object? sender, EventArgs e)
@@ -58,6 +62,58 @@ public sealed class StatControl : GraphicsView, IDrawable
     {
         get => (Color)GetValue(GraphColorProperty);
         set => SetValue(GraphColorProperty, value);
+    }
+
+    public static readonly BindableProperty HeaderHeightProperty = BindableProperty.Create(
+        nameof(HeaderHeight),
+        typeof(int),
+        typeof(StatControl),
+        32,
+        propertyChanged: OnPropertyChanged);
+
+    public int HeaderHeight
+    {
+        get => (int)GetValue(HeaderHeightProperty);
+        set => SetValue(HeaderHeightProperty, value);
+    }
+
+    public static readonly BindableProperty HeaderPaddingProperty = BindableProperty.Create(
+        nameof(HeaderPadding),
+        typeof(float),
+        typeof(StatControl),
+        4f,
+        propertyChanged: OnPropertyChanged);
+
+    public float HeaderPadding
+    {
+        get => (float)GetValue(HeaderPaddingProperty);
+        set => SetValue(HeaderPaddingProperty, value);
+    }
+
+    public static readonly BindableProperty LabelFontSizeProperty = BindableProperty.Create(
+        nameof(LabelFontSize),
+        typeof(float),
+        typeof(StatControl),
+        16f,
+        propertyChanged: OnPropertyChanged);
+
+    public float LabelFontSize
+    {
+        get => (float)GetValue(LabelFontSizeProperty);
+        set => SetValue(LabelFontSizeProperty, value);
+    }
+
+    public static readonly BindableProperty ValueFontSizeProperty = BindableProperty.Create(
+        nameof(ValueFontSize),
+        typeof(float),
+        typeof(StatControl),
+        24f,
+        propertyChanged: OnPropertyChanged);
+
+    public float ValueFontSize
+    {
+        get => (float)GetValue(ValueFontSizeProperty);
+        set => SetValue(ValueFontSizeProperty, value);
     }
 
     public static readonly BindableProperty LabelProperty = BindableProperty.Create(
@@ -105,11 +161,19 @@ public sealed class StatControl : GraphicsView, IDrawable
         typeof(StatControl),
         propertyChanged: OnDataSetChanged);
 
-
     public StatDataSet DataSet
     {
         get => (StatDataSet)GetValue(DataSetProperty);
         set => SetValue(DataSetProperty, value);
+    }
+
+    // ------------------------------------------------------------
+    // Constructor
+    // ------------------------------------------------------------
+
+    public StatControl()
+    {
+        Drawable = this;
     }
 
     // ------------------------------------------------------------
@@ -149,6 +213,9 @@ public sealed class StatControl : GraphicsView, IDrawable
     {
         var width = dirtyRect.Width;
         var height = dirtyRect.Height;
+        var statHeight = height - HeaderHeight;
+        var headerPadding = HeaderPadding;
+        var headerRect = new RectF(headerPadding, 0, width - headerPadding * 2, HeaderHeight);
 
         var values = DataSet;
         var pointWidth = (float)width / (values.Capacity - 1);
@@ -158,8 +225,83 @@ public sealed class StatControl : GraphicsView, IDrawable
         canvas.SaveState();
         canvas.Antialias = true;
 
-        // TODO ctrl
+        // Background
+        var backgroundPaint = new LinearGradientPaint
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 0),
+            GradientStops =[new PaintGradientStop(0.0f, color.WithAlpha(1.0f)), new PaintGradientStop(1.0f, color.WithAlpha(192f / 255f))]
+        };
+        canvas.SetFillPaint(backgroundPaint, dirtyRect);
+        canvas.FillRectangle(dirtyRect);
+
+        // Path
+        // TODO re check
+        var wavePath = new PathF();
+        wavePath.MoveTo(0, height);
+
+        for (var i = 0; i < values.Capacity; i++)
+        {
+            var x = i * pointWidth;
+            var normalizedValue = values.GetValue(i) / maxValueForScale;
+            var y = height - (normalizedValue * statHeight);
+            wavePath.LineTo(x, y);
+        }
+
+        wavePath.LineTo(width, height);
+        wavePath.Close();
+
+        // Gradation
+        var waveGradient = new LinearGradientPaint
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(0, 1),
+            GradientStops = [new PaintGradientStop(0.0f, Colors.White.WithAlpha(192f / 255f)), new PaintGradientStop(1.0f, Colors.White.WithAlpha(64f / 255f))]
+        };
+        canvas.SetFillPaint(waveGradient, dirtyRect);
+        canvas.FillPath(wavePath);
         // TODO
+        //        using var wavePaint = new SKPaint();
+        //        wavePaint.Style = SKPaintStyle.Fill;
+        //        wavePaint.Shader = SKShader.CreateLinearGradient(
+        //            new SKPoint(0, 0),
+        //            new SKPoint(0, height),
+        //            [SKColors.White.WithAlpha(192), SKColors.White.WithAlpha(64)],
+        //            SKShaderTileMode.Clamp);
+        //        canvas.DrawPath(wavePath, wavePaint);
+
+        // Line
+        // TODO
+        //        using var linePath = new SKPath();
+        //        linePath.MoveTo(0, height - (values.GetValue(0) / maxValueForScale * statHeight));
+        //
+        //        for (var i = 1; i < values.Capacity; i++)
+        //        {
+        //            var x = i * pointWidth;
+        //            var y = height - (values.GetValue(i) / maxValueForScale * statHeight);
+        //            linePath.LineTo(x, y);
+        //        }
+        //
+        //        using var linePaint = new SKPaint();
+        //        linePaint.Style = SKPaintStyle.Stroke;
+        //        linePaint.Color = SKColors.White;
+        //        linePaint.StrokeWidth = 1.5f;
+        //        linePaint.IsAntialias = true;
+        //        canvas.DrawPath(linePath, linePaint);
+
+        // Label
+        canvas.FontColor = Colors.White;
+        canvas.FontSize = LabelFontSize;
+        canvas.DrawString(Label, headerRect, HorizontalAlignment.Left, VerticalAlignment.Top);
+
+        // Value
+        var currentValue = values.LastValue;
+        var unit = Unit;
+        var valueText = String.IsNullOrEmpty(unit) ? $"{currentValue:F1}" : $"{currentValue:F1} {unit}";
+
+        canvas.FontColor = Colors.White;
+        canvas.FontSize = ValueFontSize;
+        canvas.DrawString(valueText, headerRect, HorizontalAlignment.Right, VerticalAlignment.Top);
 
         canvas.RestoreState();
     }
@@ -174,6 +316,14 @@ public sealed class StatDataSet
     private readonly float[] buffer;
 
     private int head;
+    public float LastValue
+    {
+        get
+        {
+            var actualIndex = head == 0 ? capacity - 1 : head - 1;
+            return buffer[actualIndex];
+        }
+    }
 
     public int Capacity => capacity;
 
@@ -195,12 +345,6 @@ public sealed class StatDataSet
     public float GetValue(int index)
     {
         var actualIndex = (head + index) % capacity;
-        return buffer[actualIndex];
-    }
-
-    public float GetLastValue()
-    {
-        var actualIndex = head == 0 ? capacity - 1 : head - 1;
         return buffer[actualIndex];
     }
 }
