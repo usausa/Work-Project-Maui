@@ -11,26 +11,10 @@ public sealed class GetImageStreamEventArgs : ValueTaskEventArgs<Stream?>
     public Stream? Stream { get; set; }
 }
 
-public interface IDrawingController
+public sealed partial class DrawingController : ObservableObject
 {
-    event EventHandler<GetImageStreamEventArgs>? GetImageStreamRequest;
-
-    Color LineColor { get; set; }
-
-    float LineWidth { get; set; }
-
-    ObservableCollection<IDrawingLine> Lines { get; }
-}
-
-public sealed partial class DrawingController : ObservableObject, IDrawingController
-{
-    private EventHandler<GetImageStreamEventArgs>? getImageStreamRequest;
-
-    event EventHandler<GetImageStreamEventArgs>? IDrawingController.GetImageStreamRequest
-    {
-        add => getImageStreamRequest += value;
-        remove => getImageStreamRequest -= value;
-    }
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public event EventHandler<GetImageStreamEventArgs>? GetImageStreamRequest;
 
     // Property
 
@@ -40,7 +24,7 @@ public sealed partial class DrawingController : ObservableObject, IDrawingContro
     [ObservableProperty]
     public partial float LineWidth { get; set; } = 5;
 
-    public ObservableCollection<IDrawingLine> Lines { get; set; } = new();
+    public ObservableCollection<IDrawingLine> Lines { get; } = new();
 
     // Message
 
@@ -50,7 +34,7 @@ public sealed partial class DrawingController : ObservableObject, IDrawingContro
         {
             Token = token
         };
-        getImageStreamRequest?.Invoke(this, args);
+        GetImageStreamRequest?.Invoke(this, args);
         return args.Task;
     }
 }

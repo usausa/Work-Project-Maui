@@ -8,15 +8,15 @@ public static class DrawingBind
 {
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
-        typeof(IDrawingController),
+        typeof(DrawingController),
         typeof(DrawingBind),
         null,
         propertyChanged: BindChanged);
 
-    public static IDrawingController? GetController(BindableObject bindable) =>
-        (IDrawingController)bindable.GetValue(ControllerProperty);
+    public static DrawingController? GetController(BindableObject bindable) =>
+        (DrawingController)bindable.GetValue(ControllerProperty);
 
-    public static void SetController(BindableObject bindable, IDrawingController? value) =>
+    public static void SetController(BindableObject bindable, DrawingController? value) =>
         bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
@@ -43,7 +43,7 @@ public static class DrawingBind
 
     private sealed class DrawingBindBehavior : BehaviorBase<DrawingView>
     {
-        private IDrawingController? controller;
+        private DrawingController? controller;
 
         protected override void OnAttachedTo(DrawingView bindable)
         {
@@ -56,15 +56,15 @@ public static class DrawingBind
 
                 bindable.SetBinding(
                     DrawingView.LineColorProperty,
-                    static (IDrawingController controller) => controller.LineColor,
+                    static (DrawingController controller) => controller.LineColor,
                     source: controller);
                 bindable.SetBinding(
                     DrawingView.LineWidthProperty,
-                    static (IDrawingController controller) => controller.LineWidth,
+                    static (DrawingController controller) => controller.LineWidth,
                     source: controller);
                 bindable.SetBinding(
                     DrawingView.LinesProperty,
-                    static (IDrawingController controller) => controller.Lines,
+                    static (DrawingController controller) => controller.Lines,
                     source: controller);
             }
         }
