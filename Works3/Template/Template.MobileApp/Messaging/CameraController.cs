@@ -21,16 +21,54 @@ public sealed class CameraGetAvailableListEventArgs : ValueTaskEventArgs<IReadOn
     public IReadOnlyList<CameraInfo> CameraList { get; set; } = [];
 }
 
-public sealed partial class CameraController : ObservableObject
+public interface ICameraController
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraGetAvailableListEventArgs>? GetAvailableListRequest;
+    event EventHandler<CameraGetAvailableListEventArgs>? GetAvailableListRequest;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraPreviewEventArgs>? PreviewRequest;
+    event EventHandler<CameraPreviewEventArgs>? PreviewRequest;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public event EventHandler<CameraCaptureEventArgs>? CaptureRequest;
+    event EventHandler<CameraCaptureEventArgs>? CaptureRequest;
+
+    bool IsAvailable { get; }
+
+    bool IsCameraBusy { get; }
+
+    CameraInfo? Selected { get; set; }
+
+    CameraFlashMode CameraFlashMode { get; set; }
+
+    Size CaptureResolution { get; set; }
+
+    float ZoomFactor { get; set; }
+
+    bool IsTorchOn { get; set; }
+}
+
+public sealed partial class CameraController : ObservableObject, ICameraController
+{
+    private EventHandler<CameraGetAvailableListEventArgs>? getAvailableListRequest;
+
+    private EventHandler<CameraPreviewEventArgs>? previewRequest;
+
+    private EventHandler<CameraCaptureEventArgs>? captureRequest;
+
+    event EventHandler<CameraGetAvailableListEventArgs>? ICameraController.GetAvailableListRequest
+    {
+        add => getAvailableListRequest += value;
+        remove => getAvailableListRequest -= value;
+    }
+
+    event EventHandler<CameraPreviewEventArgs>? ICameraController.PreviewRequest
+    {
+        add => previewRequest += value;
+        remove => previewRequest -= value;
+    }
+
+    event EventHandler<CameraCaptureEventArgs>? ICameraController.CaptureRequest
+    {
+        add => captureRequest += value;
+        remove => captureRequest -= value;
+    }
 
     // Property
 
@@ -64,21 +102,21 @@ public sealed partial class CameraController : ObservableObject
             Token = token,
             CameraList = []
         };
-        GetAvailableListRequest?.Invoke(this, args);
+        getAvailableListRequest?.Invoke(this, args);
         return args.Task;
     }
 
     public ValueTask StartPreviewAsync()
     {
         var args = new CameraPreviewEventArgs { Enable = true };
-        PreviewRequest?.Invoke(this, args);
+        previewRequest?.Invoke(this, args);
         return args.Task;
     }
 
     public ValueTask StopPreviewAsync()
     {
         var args = new CameraPreviewEventArgs();
-        PreviewRequest?.Invoke(this, args);
+        previewRequest?.Invoke(this, args);
         return args.Task;
     }
 
@@ -88,7 +126,7 @@ public sealed partial class CameraController : ObservableObject
         {
             Token = token
         };
-        CaptureRequest?.Invoke(this, args);
+        captureRequest?.Invoke(this, args);
         return args.Task;
     }
 }

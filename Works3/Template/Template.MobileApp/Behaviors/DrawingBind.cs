@@ -52,7 +52,7 @@ public static class DrawingBind
             controller = GetController(bindable);
             if ((controller is not null) && (AssociatedObject is not null))
             {
-                controller.Attach(bindable);
+                controller.GetImageStreamRequest += OnGetImageStreamRequest;
 
                 bindable.SetBinding(
                     DrawingView.LineColorProperty,
@@ -75,10 +75,26 @@ public static class DrawingBind
             bindable.RemoveBinding(DrawingView.LineWidthProperty);
             bindable.RemoveBinding(DrawingView.LinesProperty);
 
-            controller?.Detach();
+            if (controller is not null)
+            {
+                controller.GetImageStreamRequest -= OnGetImageStreamRequest;
+            }
+
             controller = null;
 
             base.OnDetachingFrom(bindable);
+        }
+
+        private void OnGetImageStreamRequest(object? sender, GetImageStreamEventArgs e)
+        {
+            if (AssociatedObject is null)
+            {
+                return;
+            }
+
+#pragma warning disable CA2012
+            e.Task = AssociatedObject.GetImageStream(AssociatedObject.Width, AssociatedObject.Height, e.Token)!;
+#pragma warning restore CA2012
         }
     }
 }

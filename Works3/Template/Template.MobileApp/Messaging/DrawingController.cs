@@ -1,28 +1,36 @@
 namespace Template.MobileApp.Messaging;
 
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
 
-public interface IDrawingController : INotifyPropertyChanged
+using Template.MobileApp.Helpers;
+
+public sealed class GetImageStreamEventArgs : ValueTaskEventArgs<Stream?>
 {
+    public CancellationToken Token { get; set; } = CancellationToken.None;
+
+    public Stream? Stream { get; set; }
+}
+
+public interface IDrawingController
+{
+    event EventHandler<GetImageStreamEventArgs>? GetImageStreamRequest;
+
     Color LineColor { get; set; }
 
     float LineWidth { get; set; }
 
-#pragma warning disable CA2227
-    ObservableCollection<IDrawingLine> Lines { get; set; }
-#pragma warning restore CA2227
-
-    // Attach
-
-    void Attach(DrawingView view);
-
-    void Detach();
+    ObservableCollection<IDrawingLine> Lines { get; }
 }
 
 public sealed partial class DrawingController : ObservableObject, IDrawingController
 {
-    private DrawingView? drawing;
+    private EventHandler<GetImageStreamEventArgs>? getImageStreamRequest;
+
+    event EventHandler<GetImageStreamEventArgs>? IDrawingController.GetImageStreamRequest
+    {
+        add => getImageStreamRequest += value;
+        remove => getImageStreamRequest -= value;
+    }
 
     // Property
 
@@ -34,27 +42,15 @@ public sealed partial class DrawingController : ObservableObject, IDrawingContro
 
     public ObservableCollection<IDrawingLine> Lines { get; set; } = new();
 
-    // Attach
-
-    void IDrawingController.Attach(DrawingView view)
-    {
-        drawing = view;
-    }
-
-    void IDrawingController.Detach()
-    {
-        drawing = null;
-    }
-
     // Message
 
-    public async ValueTask<Stream?> GetImageStream(CancellationToken cancel = default)
+    public ValueTask<Stream?> GetImageStream(CancellationToken token = default)
     {
-        if (drawing is null)
+        var args = new GetImageStreamEventArgs
         {
-            return null;
-        }
-
-        return await drawing.GetImageStream(drawing.Width, drawing.Height, cancel);
+            Token = token
+        };
+        getImageStreamRequest?.Invoke(this, args);
+        return args.Task;
     }
 }

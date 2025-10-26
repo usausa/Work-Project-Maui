@@ -9,15 +9,15 @@ public static class CameraBind
 {
     public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
         "Controller",
-        typeof(CameraController),
+        typeof(ICameraController),
         typeof(CameraBind),
         null,
         propertyChanged: BindChanged);
 
-    public static CameraController? GetController(BindableObject bindable) =>
-        (CameraController)bindable.GetValue(ControllerProperty);
+    public static ICameraController? GetController(BindableObject bindable) =>
+        (ICameraController)bindable.GetValue(ControllerProperty);
 
-    public static void SetController(BindableObject bindable, CameraController? value) =>
+    public static void SetController(BindableObject bindable, ICameraController? value) =>
         bindable.SetValue(ControllerProperty, value);
 
     private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
@@ -44,7 +44,7 @@ public static class CameraBind
 
     private sealed class CameraBindBehavior : BehaviorBase<CameraView>
     {
-        private CameraController? controller;
+        private ICameraController? controller;
 
         protected override void OnAttachedTo(CameraView bindable)
         {
@@ -59,31 +59,31 @@ public static class CameraBind
 
                 AssociatedObject.SetBinding(
                     CameraView.IsAvailableProperty,
-                    static (CameraController controller) => controller.IsAvailable,
+                    static (ICameraController controller) => controller.IsAvailable,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.IsCameraBusyProperty,
-                    static (CameraController controller) => controller.IsCameraBusy,
+                    static (ICameraController controller) => controller.IsCameraBusy,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.SelectedCameraProperty!,
-                    static (CameraController controller) => controller.Selected,
+                    static (ICameraController controller) => controller.Selected,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.CameraFlashModeProperty,
-                    static (CameraController controller) => controller.CameraFlashMode,
+                    static (ICameraController controller) => controller.CameraFlashMode,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ImageCaptureResolutionProperty,
-                    static (CameraController controller) => controller.CaptureResolution,
+                    static (ICameraController controller) => controller.CaptureResolution,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.ZoomFactorProperty,
-                    static (CameraController controller) => controller.ZoomFactor,
+                    static (ICameraController controller) => controller.ZoomFactor,
                     source: controller);
                 AssociatedObject.SetBinding(
                     CameraView.IsTorchOnProperty,
-                    static (CameraController controller) => controller.IsTorchOn,
+                    static (ICameraController controller) => controller.IsTorchOn,
                     source: controller);
             }
         }
