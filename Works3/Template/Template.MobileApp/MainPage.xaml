@@ -32,9 +32,10 @@
                    Style="{StaticResource HeaderTitleLabel}"
                    Text="{Binding Title}" />
             <Button Grid.Column="2"
-                    WidthRequest="48" HeightRequest="48"
-                    Text="!"
-                    BackgroundColor="Red" />
+                    Style="{StaticResource HeaderIconButton}"
+                    Command="{Binding DebugCommand}"
+                    IsVisible="{Binding DebugEnabled}"
+                    Text="📈" />
         </Grid>
 
         <!-- view container -->
