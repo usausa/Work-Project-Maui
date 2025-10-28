@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WorkDesign"
+             x:Class="WorkDesign.DebugPage"
+             Title="DebugPage">
+
+    <ContentPage.BindingContext>
+        <local:DebugPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="48,*">
+
+        <Grid Grid.Row="0"
+              ColumnDefinitions="48,*,48"
+              BackgroundColor="{StaticResource BlueDarken4}">
+            <Button Grid.Column="2"
+                    Padding="0"
+                    Command="{Binding DebugCommand}"
+                    IsVisible="{Binding DebugEnabled}"
+                    FontSize="28"
+                    Text="📈"
+                    BackgroundColor="Transparent" />
+        </Grid>
+
+        <AbsoluteLayout Grid.Row="1"
+                        BackgroundColor="White">
+            <local:DebugOverlay AbsoluteLayout.LayoutBounds="1,0,AutoSize,AutoSize" AbsoluteLayout.LayoutFlags="PositionProportional"
+                                IsVisible="{Binding DebugWindowVisible}"
+                                TranslationX="-3" TranslationY="3" ZIndex="1000" />
+
+            <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <Grid RowDefinitions="*,*,*,*,*,*,*,*">
+                    <Button Grid.Row="0"
+                            Command="{Binding TestCommand}"
+                            Text="Test"
+                            BackgroundColor="{StaticResource CyanDefault}" />
+                    <Button Grid.Row="1"
+                            Command="{Binding TestCommand}"
+                            Text="Test"
+                            BackgroundColor="{StaticResource CyanDefault}" />
+                </Grid>
+            </ContentView>
+        </AbsoluteLayout>
+
+    </Grid>
+
+</ContentPage>

@@ -78,7 +78,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="StatPage.xaml">
+	  <MauiXaml Update="DebugOverlay.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="DebugPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\StatPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

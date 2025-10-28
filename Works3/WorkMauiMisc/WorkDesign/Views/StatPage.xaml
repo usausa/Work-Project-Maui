@@ -14,7 +14,6 @@
         <workDesign:StatControl Grid.Row="0"
                                 DataSet="{Binding CpuLoadSet}"
                                 GraphColor="#2196F3" Label="CPU used" />
-
     </Grid>
 
 </ContentPage>
