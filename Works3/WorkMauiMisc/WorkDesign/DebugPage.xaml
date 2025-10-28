@@ -27,7 +27,7 @@
                         BackgroundColor="White">
             <local:DebugOverlay AbsoluteLayout.LayoutBounds="1,0,AutoSize,AutoSize" AbsoluteLayout.LayoutFlags="PositionProportional"
                                 IsVisible="{Binding DebugWindowVisible}"
-                                TranslationX="-3" TranslationY="3" ZIndex="1000" />
+                                TranslationX="0" TranslationY="0" ZIndex="1000" />
 
             <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
                 <Grid RowDefinitions="*,*,*,*,*,*,*,*">
