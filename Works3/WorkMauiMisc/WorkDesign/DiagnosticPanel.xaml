@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WorkDesign.DebugOverlay"
+             x:Class="WorkDesign.DiagnosticOverlay"
              Margin="4,0"
              InputTransparent="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="DebugBorder"
+            <Style x:Key="DiagnosticBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="4" />
-                <Setter Property="BackgroundColor" Value="LightGray" />
-                <Setter Property="Opacity" Value="0.75" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Opacity" Value="0.65" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeThickness" Value="0.5" />
+                <Setter Property="Stroke" Value="LightGray" />
                 <Setter Property="Shadow">
                     <Shadow Offset="4,4"
                             Brush="Black" Opacity="0.25" Radius="4" />
                 </Setter>
             </Style>
 
-
-            <Style x:Key="DebugValueLabel"
+            <Style x:Key="DiagnosticValueLabel"
                    TargetType="Label">
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="Black" />
             </Style>
 
-            <Style x:Key="DebugSeparatorBoxView"
+            <Style x:Key="DiagnosticSeparatorBoxView"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Margin" Value="0,3" />
@@ -39,88 +39,91 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Border Style="{StaticResource DebugBorder}">
+    <Border Style="{StaticResource DiagnosticBorder}">
 
         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,3,Auto">
 
             <Label Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="FPS:" />
             <Label Grid.Row="0" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
-                   Text="60.0" />
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="60.0"
+                   TextColor="{StaticResource GreenDarken3}" />
 
             <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="FrameTime:" />
             <Label Grid.Row="1" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
-                   Text="16.0ms" />
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="16.0ms"
+                   TextColor="{StaticResource OrangeDarken3}" />
 
             <BoxView Grid.Row="2" Grid.ColumnSpan="3"
-                     Style="{StaticResource DebugSeparatorBoxView}" />
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
 
             <Label Grid.Row="3" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="CPU:" />
             <Label Grid.Row="3" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
-                   Text="100%" />
+                   Style="{StaticResource DiagnosticValueLabel}"
+                   Text="100%"
+                   TextColor="{StaticResource RedDarken3}" />
 
             <Label Grid.Row="4" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="Threads:" />
             <Label Grid.Row="4" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="256" />
 
             <BoxView Grid.Row="5" Grid.ColumnSpan="3"
-                     Style="{StaticResource DebugSeparatorBoxView}" />
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
 
             <Label Grid.Row="6" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="Memory:" />
             <Label Grid.Row="6" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="256.0MB" />
 
             <Label Grid.Row="7" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC0:" />
             <Label Grid.Row="7" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="1000" />
 
             <Label Grid.Row="8" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC1:" />
             <Label Grid.Row="8" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="10" />
 
             <Label Grid.Row="9" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC2:" />
             <Label Grid.Row="9" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="1" />
 
             <Label Grid.Row="10" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="Alloc/sec:" />
             <Label Grid.Row="10" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="10.0MB" />
 
             <BoxView Grid.Row="11" Grid.ColumnSpan="3"
-                     Style="{StaticResource DebugSeparatorBoxView}" />
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
 
             <Label Grid.Row="12" Grid.Column="0"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="Battery:" />
             <Label Grid.Row="12" Grid.Column="2"
-                   Style="{StaticResource DebugValueLabel}"
+                   Style="{StaticResource DiagnosticValueLabel}"
                    Text="1000mW" />
 
         </Grid>

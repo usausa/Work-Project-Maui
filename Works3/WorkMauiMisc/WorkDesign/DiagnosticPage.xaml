@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:WorkDesign"
-             x:Class="WorkDesign.DebugPage"
-             Title="DebugPage">
+             x:Class="WorkDesign.DiagnosticPage"
+             Title="DiagnosticPage">
 
     <ContentPage.BindingContext>
-        <local:DebugPageViewModel />
+        <local:DiagnosticPageViewModel />
     </ContentPage.BindingContext>
 
     <Grid RowDefinitions="48,*">
@@ -16,17 +16,17 @@
               BackgroundColor="{StaticResource BlueDarken4}">
             <Button Grid.Column="2"
                     Padding="0"
-                    Command="{Binding DebugCommand}"
-                    IsVisible="{Binding DebugEnabled}"
+                    Command="{Binding DiagnosticCommand}"
+                    IsVisible="{Binding DiagnosticEnabled}"
                     FontSize="28"
                     Text="📈"
                     BackgroundColor="Transparent" />
         </Grid>
 
-        <local:DebugOverlay Grid.Row="1"
-                            IsVisible="{Binding DebugWindowVisible}"
-                            HorizontalOptions="End" TranslationX="0" TranslationY="0" VerticalOptions="Start"
-                            ZIndex="1000" />
+        <local:DiagnosticOverlay Grid.Row="1"
+                                 IsVisible="{Binding DiagnosticWindowVisible}"
+                                 HorizontalOptions="End" TranslationX="0" TranslationY="0" VerticalOptions="Start"
+                                 ZIndex="1000" />
 
         <AbsoluteLayout Grid.Row="1"
                         BackgroundColor="White">

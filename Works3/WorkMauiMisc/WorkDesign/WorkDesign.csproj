@@ -78,10 +78,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="DebugOverlay.xaml">
+	  <Compile Update="DiagnosticPage.xaml.cs">
+	    <DependentUpon>DiagnosticPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="DiagnosticPanel.xaml.cs">
+	    <DependentUpon>DiagnosticPanel.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="DiagnosticPanel.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="DebugPage.xaml">
+	  <MauiXaml Update="DiagnosticPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\StatPage.xaml">
