@@ -77,25 +77,4 @@
 		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="DiagnosticPage.xaml.cs">
-	    <DependentUpon>DiagnosticPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="DiagnosticPanel.xaml.cs">
-	    <DependentUpon>DiagnosticPanel.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="DiagnosticPanel.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="DiagnosticPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\StatPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 </Project>

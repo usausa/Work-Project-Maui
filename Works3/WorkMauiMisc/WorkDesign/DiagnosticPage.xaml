@@ -23,10 +23,12 @@
                     BackgroundColor="Transparent" />
         </Grid>
 
-        <local:DiagnosticOverlay Grid.Row="1"
-                                 IsVisible="{Binding DiagnosticWindowVisible}"
-                                 HorizontalOptions="End" TranslationX="0" TranslationY="0" VerticalOptions="Start"
-                                 ZIndex="1000" />
+        <local:DiagnosticPanel Grid.Row="1"
+                               IsVisible="{Binding DiagnosticPanelVisible}"
+                               HorizontalOptions="End" TranslationX="0" TranslationY="0" VerticalOptions="Start"
+                               ZIndex="1000" />
+
+        <Label Text="{Binding DiagnosticPanelVisible}" />
 
         <AbsoluteLayout Grid.Row="1"
                         BackgroundColor="White">

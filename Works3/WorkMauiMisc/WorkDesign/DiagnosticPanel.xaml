@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WorkDesign.DiagnosticOverlay"
+             xmlns:workDesign="clr-namespace:WorkDesign"
+             x:Class="WorkDesign.DiagnosticPanel"
              Margin="4,0"
              InputTransparent="True">
 
@@ -36,8 +37,17 @@
                 <Setter Property="Color" Value="Gray" />
             </Style>
 
+            <workDesign:AlertLevelToColorConverter x:Key="AlertLevelToColorConverter"
+                                                   CriticalColor="{StaticResource RedDarken3}"
+                                                   SafeColor="{StaticResource GreenDarken3}"
+                                                   WarningColor="{StaticResource OrangeDarken3}" />
+
         </ResourceDictionary>
     </ContentView.Resources>
+
+    <ContentView.BindingContext>
+        <workDesign:DiagnosticPanelViewModel />
+    </ContentView.BindingContext>
 
     <Border Style="{StaticResource DiagnosticBorder}">
 
@@ -49,16 +59,16 @@
                    Text="FPS:" />
             <Label Grid.Row="0" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="60.0"
-                   TextColor="{StaticResource GreenDarken3}" />
+                   Text="{Binding FpsValue, StringFormat='{0:F1}'}"
+                   TextColor="{Binding FpsAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="1" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="FrameTime:" />
             <Label Grid.Row="1" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="16.0ms"
-                   TextColor="{StaticResource OrangeDarken3}" />
+                   Text="{Binding FrameValue, StringFormat='{0:F1}ms'}"
+                   TextColor="{Binding FrameAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <BoxView Grid.Row="2" Grid.ColumnSpan="3"
                      Style="{StaticResource DiagnosticSeparatorBoxView}" />
@@ -68,15 +78,16 @@
                    Text="CPU:" />
             <Label Grid.Row="3" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="100%"
-                   TextColor="{StaticResource RedDarken3}" />
+                   Text="{Binding CpuValue, StringFormat='{0:F1}%'}"
+                   TextColor="{Binding CpuAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="4" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="Threads:" />
             <Label Grid.Row="4" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="256" />
+                   Text="{Binding ThreadsValue}"
+                   TextColor="{Binding ThreadsAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <BoxView Grid.Row="5" Grid.ColumnSpan="3"
                      Style="{StaticResource DiagnosticSeparatorBoxView}" />
@@ -86,35 +97,40 @@
                    Text="Memory:" />
             <Label Grid.Row="6" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="256.0MB" />
+                   Text="{Binding MemoryValue, StringFormat='{0:F1}MB'}"
+                   TextColor="{Binding MemoryAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="7" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC0:" />
             <Label Grid.Row="7" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="1000" />
+                   Text="{Binding Gc0Value}"
+                   TextColor="{Binding GcAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="8" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC1:" />
             <Label Grid.Row="8" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="10" />
+                   Text="{Binding Gc1Value}"
+                   TextColor="{Binding GcAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="9" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="GC2:" />
             <Label Grid.Row="9" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="1" />
+                   Text="{Binding Gc2Value}"
+                   TextColor="{Binding GcAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <Label Grid.Row="10" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="Alloc/sec:" />
             <Label Grid.Row="10" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="10.0MB" />
+                   Text="{Binding AllocValue, StringFormat='{0:F1}MB'}"
+                   TextColor="{Binding AllocAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
             <BoxView Grid.Row="11" Grid.ColumnSpan="3"
                      Style="{StaticResource DiagnosticSeparatorBoxView}" />
@@ -124,7 +140,8 @@
                    Text="Battery:" />
             <Label Grid.Row="12" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}"
-                   Text="1000mW" />
+                   Text="{Binding BatteryValue, StringFormat='{0}mW'}"
+                   TextColor="{Binding BatteryAlert, Converter={StaticResource AlertLevelToColorConverter}}" />
 
         </Grid>
 

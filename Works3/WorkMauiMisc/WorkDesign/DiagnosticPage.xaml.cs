@@ -13,21 +13,30 @@ public partial class DiagnosticPage : ContentPage
 	}
 }
 
+[ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public partial class DiagnosticPageViewModel : ExtendViewModelBase
 {
     public IObserveCommand TestCommand { get; }
 
     [ObservableProperty]
     public partial bool DiagnosticEnabled { get; set; }
+
     [ObservableProperty]
-    public partial bool DiagnosticWindowVisible { get; set; }
+    public partial bool DiagnosticPanelVisible { get; set; }
 
     public IObserveCommand DiagnosticCommand { get; }
 
     public DiagnosticPageViewModel()
     {
         DiagnosticEnabled = true;
-        DiagnosticCommand = MakeDelegateCommand(() => DiagnosticWindowVisible = !DiagnosticWindowVisible);
+        DiagnosticCommand = MakeDelegateCommand(() => DiagnosticPanelVisible = !DiagnosticPanelVisible);
+        Disposables.Add(ObserveDiagnosticPanelVisible().Subscribe(x =>
+        {
+            if (x)
+            {
+                // TODO
+            }
+        }));
 
         TestCommand = MakeDelegateCommand(() => Debug.WriteLine("* Clicked"));
     }
