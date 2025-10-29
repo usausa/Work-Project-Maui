@@ -1,15 +1,16 @@
 namespace WorkDesign;
 
 using System.Globalization;
+
 using Smart.Maui.ViewModels;
 using Smart.Mvvm;
 
-public partial class DiagnosticPanel : ContentView
+public partial class DiagnosticPanel
 {
-	public DiagnosticPanel()
-	{
-		InitializeComponent();
-	}
+    public DiagnosticPanel()
+    {
+        InitializeComponent();
+    }
 }
 
 public sealed partial class DiagnosticPanelViewModel : ExtendViewModelBase
