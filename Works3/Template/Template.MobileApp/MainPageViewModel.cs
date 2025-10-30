@@ -44,7 +44,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     [ObservableProperty]
     public partial bool DiagnosticEnabled { get; set; }
     [ObservableProperty]
-    public partial bool DiagnosticWindowVisible { get; set; }
+    public partial bool DiagnosticVisible { get; set; }
 
     public IObserveCommand DiagnosticCommand { get; }
 
@@ -69,7 +69,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 #if DEBUG
         DiagnosticEnabled = true;
 #endif
-        DiagnosticCommand = MakeDelegateCommand(() => DiagnosticWindowVisible = !DiagnosticWindowVisible);
+        DiagnosticCommand = MakeDelegateCommand(() => DiagnosticVisible = !DiagnosticVisible);
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
