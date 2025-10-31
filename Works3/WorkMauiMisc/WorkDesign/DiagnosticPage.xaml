@@ -25,7 +25,11 @@
 
         <local:DiagnosticPanel Grid.Row="1"
                                IsVisible="{Binding DiagnosticPanelVisible}"
-                               HorizontalOptions="End" TranslationX="0" TranslationY="0" VerticalOptions="Start"
+                               CriticalColor="{StaticResource RedDarken3}"
+                               HorizontalOptions="End"
+                               SafeColor="{StaticResource GreenDarken3}"
+                               TranslationX="0" TranslationY="0" VerticalOptions="Start"
+                               WarningColor="{StaticResource OrangeDarken3}"
                                ZIndex="1000" />
 
         <Label Text="{Binding DiagnosticPanelVisible}" />

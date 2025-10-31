@@ -1,222 +1,222 @@
 namespace WorkDesign;
 
-using System.Globalization;
-
-using Smart.Maui.ViewModels;
-using Smart.Mvvm;
-
 public partial class DiagnosticPanel
 {
+    private bool isMonitoring;
+
+    private float fps;
+    private float frameTime;
+
+    private float cpuUsage;
+
+    private int threads;
+
+    private float memoryUsed;
+
+    private int gc0Delta;
+    private int gc1Delta;
+    private int gc2Delta;
+
+    private float allocPerSec;
+
+    private int battery;
+
+    public static readonly BindableProperty SafeColorProperty = BindableProperty.Create(
+        nameof(SafeColor),
+        typeof(Color),
+        typeof(DiagnosticPanel),
+        Colors.Green,
+        propertyChanged: OnPropertyChanged);
+
+    public Color SafeColor
+    {
+        get => (Color)GetValue(SafeColorProperty);
+        set => SetValue(SafeColorProperty, value);
+    }
+
+    public static readonly BindableProperty WarningColorProperty = BindableProperty.Create(
+        nameof(WarningColor),
+        typeof(Color),
+        typeof(DiagnosticPanel),
+        Colors.Orange,
+        propertyChanged: OnPropertyChanged);
+
+    public Color WarningColor
+    {
+        get => (Color)GetValue(WarningColorProperty);
+        set => SetValue(WarningColorProperty, value);
+    }
+
+    public static readonly BindableProperty CriticalColorProperty = BindableProperty.Create(
+        nameof(CriticalColor),
+        typeof(Color),
+        typeof(DiagnosticPanel),
+        Colors.Red,
+        propertyChanged: OnPropertyChanged);
+
+    public Color CriticalColor
+    {
+        get => (Color)GetValue(CriticalColorProperty);
+        set => SetValue(CriticalColorProperty, value);
+    }
+
+    public static readonly BindableProperty DisableColorProperty = BindableProperty.Create(
+        nameof(DisableColor),
+        typeof(Color),
+        typeof(DiagnosticPanel),
+        Colors.Gray,
+        propertyChanged: OnPropertyChanged);
+
+    public Color DisableColor
+    {
+        get => (Color)GetValue(DisableColorProperty);
+        set => SetValue(DisableColorProperty, value);
+    }
+
     public DiagnosticPanel()
     {
         InitializeComponent();
-    }
-}
 
-public sealed partial class DiagnosticPanelViewModel : ExtendViewModelBase
-{
-    // FPS
-
-    [ObservableProperty]
-    public partial float FpsValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel FpsAlert { get; set; }
-
-    [ObservableProperty]
-    public partial float FrameValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel FrameAlert { get; set; }
-
-    // System
-
-    [ObservableProperty]
-    public partial float CpuValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel CpuAlert { get; set; }
-
-    [ObservableProperty]
-    public partial int ThreadsValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel ThreadsAlert { get; set; }
-
-    // Memory
-
-    [ObservableProperty]
-    public partial float MemoryValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel MemoryAlert { get; set; }
-
-    [ObservableProperty]
-    public partial int Gc0Value { get; set; }
-    [ObservableProperty]
-    public partial int Gc1Value { get; set; }
-    [ObservableProperty]
-    public partial int Gc2Value { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel GcAlert { get; set; }
-
-    [ObservableProperty]
-    public partial float AllocValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel AllocAlert { get; set; }
-
-    // Battery
-
-
-    [ObservableProperty]
-    public partial int BatteryValue { get; set; }
-
-    [ObservableProperty]
-    public partial AlertLevel BatteryAlert { get; set; }
-
-    public DiagnosticPanelViewModel()
-    {
-        FpsValue = 60.0f;
-        FrameValue = 16.6f;
-
-        CpuValue = 100.0f;
-        ThreadsValue = 256;
-
-        MemoryValue = 256.0f;
-        Gc0Value = 0;
-        Gc1Value = 0;
-        Gc2Value = 0;
-        AllocValue = 10.0f;
-
-        BatteryValue = 1000;
-
-        UpdateAlertFps();
-        UpdateAlertFrame();
-        UpdateAlertCpu();
-        UpdateAlertThreads();
-        UpdateAlertMemory();
-        UpdateAlertGc();
-        UpdateAlertAlloc();
-        UpdateAlertBattery();
+        HandlerChanged += OnHandlerChanged;
     }
 
-    // Update
-
-    private void UpdateAlertFps()
+    private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        FpsAlert = FpsValue switch
+        ((DiagnosticPanel)bindable).UpdateValues();
+    }
+
+    private void OnHandlerChanged(object? sender, EventArgs e)
+    {
+        if (Handler is null)
         {
-            >= 50 => AlertLevel.Safe,
-            >= 30 => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
+            StopMonitor();
+        }
     }
 
-    private void UpdateAlertFrame()
+    protected override void OnPropertyChanged(string? propertyName = null)
     {
-        FrameAlert = FrameValue switch
+        base.OnPropertyChanged(propertyName);
+
+        if (propertyName == nameof(IsVisible))
         {
-            <= 16.6f => AlertLevel.Safe,
-            <= 33.3f => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
+            StartMonitor();
+        }
     }
 
-    private void UpdateAlertCpu()
+    private void StartMonitor()
     {
-        CpuAlert = CpuValue switch
+        if (isMonitoring)
         {
-            <= 30.0f => AlertLevel.Safe,
-            <= 60.0f => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
-    }
-
-    private void UpdateAlertThreads()
-    {
-        ThreadsAlert = ThreadsValue switch
-        {
-            <= 64 => AlertLevel.Safe,
-            <= 128 => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
-    }
-
-    private void UpdateAlertMemory()
-    {
-        MemoryAlert = MemoryValue switch
-        {
-            <= 256.0f => AlertLevel.Safe,
-            <= 512.0f => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
-    }
-
-    private void UpdateAlertGc()
-    {
-        GcAlert = (Gc0Value + Gc1Value + Gc2Value) switch
-        {
-            0 => AlertLevel.Safe,
-            _ => AlertLevel.Critical
-        };
-    }
-
-    private void UpdateAlertAlloc()
-    {
-        AllocAlert = AllocValue switch
-        {
-            <= 4.0f => AlertLevel.Safe,
-            <= 8.0f => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
-    }
-
-    private void UpdateAlertBattery()
-    {
-        BatteryAlert = BatteryValue switch
-        {
-            >= 500 => AlertLevel.Safe,
-            >= 100 => AlertLevel.Warning,
-            _ => AlertLevel.Critical
-        };
-    }
-}
-
-public enum AlertLevel
-{
-    Safe,
-    Warning,
-    Critical
-}
-
-public sealed class AlertLevelToColorConverter : IValueConverter
-{
-    public Color SafeColor { get; set; } = Colors.Green;
-
-    public Color WarningColor { get; set; } = Colors.Orange;
-
-    public Color CriticalColor { get; set; } = Colors.Red;
-
-    public Color UnknownColor { get; set; } = Colors.Gray;
-
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        if (value is AlertLevel level)
-        {
-            return level switch
-            {
-                AlertLevel.Safe => SafeColor,
-                AlertLevel.Warning => WarningColor,
-                AlertLevel.Critical => CriticalColor,
-                _ => UnknownColor
-            };
+            return;
         }
 
-        return UnknownColor;
+        // TODO
+        fps = 60.0f;
+        frameTime = 16.6f;
+
+        cpuUsage = 100.0f;
+        threads = 256;
+
+        memoryUsed = 256.0f;
+        gc0Delta = 0;
+        gc1Delta = 0;
+        gc2Delta = 0;
+        allocPerSec = 10.0f;
+
+        battery = 1000;
+
+        UpdateValues();
+
+        isMonitoring = true;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        throw new NotSupportedException();
+    private void StopMonitor()
+    {
+        if (!isMonitoring)
+        {
+            return;
+        }
+
+        // TODO
+
+        isMonitoring = false;
+    }
+
+    private void UpdateValues()
+    {
+        var safeColor = SafeColor;
+        var warningColor = WarningColor;
+        var criticalColor = CriticalColor;
+        // TODO
+        var disableColor = DisableColor;
+
+        FpsLabel.Text = $"{fps:F1}";
+        FpsLabel.TextColor = fps switch
+        {
+            >= 50 => safeColor,
+            >= 30 => warningColor,
+            _ => criticalColor
+        };
+
+        FrameTimeLabel.Text = $"{frameTime:F1}ms";
+        FrameTimeLabel.TextColor = frameTime switch
+        {
+            <= 16.6f => safeColor,
+            <= 33.3f => warningColor,
+            _ => criticalColor
+        };
+
+        CpuLabel.Text = $"{cpuUsage:F1}%";
+        CpuLabel.TextColor = cpuUsage switch
+        {
+            <= 30.0f => safeColor,
+            <= 60.0f => warningColor,
+            _ => criticalColor
+        };
+
+        ThreadsLabel.Text = $"{threads}";
+        ThreadsLabel.TextColor = threads switch
+        {
+            <= 64 => safeColor,
+            <= 128 => warningColor,
+            _ => criticalColor
+        };
+
+        MemoryLabel.Text = $"{memoryUsed:F1}MB";
+        MemoryLabel.TextColor = memoryUsed switch
+        {
+            <= 256.0f => safeColor,
+            <= 512.0f => warningColor,
+            _ => criticalColor
+        };
+
+        Gc0Label.Text = $"{gc0Delta}";
+        Gc1Label.Text = $"{gc1Delta}";
+        Gc2Label.Text = $"{gc2Delta}";
+        var gcColor = (gc0Delta + gc1Delta + gc2Delta) switch
+        {
+            0 => safeColor,
+            _ => criticalColor
+        };
+        Gc0Label.TextColor = gcColor;
+        Gc1Label.TextColor = gcColor;
+        Gc2Label.TextColor = gcColor;
+
+        AllocLabel.Text = $"{allocPerSec:F1}MB";
+        AllocLabel.TextColor = allocPerSec switch
+        {
+            <= 4.0f => safeColor,
+            <= 8.0f => warningColor,
+            _ => criticalColor
+        };
+
+        BatteryLabel.Text = $"{battery}";
+        BatteryLabel.TextColor = battery switch
+        {
+            >= 500 => safeColor,
+            >= 100 => warningColor,
+            _ => criticalColor
+        };
+    }
 }
+
