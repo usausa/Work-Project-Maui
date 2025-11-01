@@ -43,11 +43,6 @@
 
     <!-- Application -->
 
-    <converters:AlertLevelToColorConverter x:Key="AlertLevelToColorConverter"
-                                           CriticalColor="{StaticResource RedDarken3}"
-                                           SafeColor="{StaticResource GreenDarken3}"
-                                           WarningColor="{StaticResource OrangeDarken3}" />
-
     <converters:MaskTextConverter x:Key="MaskTextConverter" />
 
     <converters:QrImageSourceConverter x:Key="QrImageSourceConverter" />
@@ -186,7 +181,7 @@
            TargetType="Border">
         <Setter Property="Padding" Value="8,4" />
         <Setter Property="BackgroundColor" Value="White" />
-        <Setter Property="Opacity" Value="0.65" />
+        <Setter Property="Opacity" Value="0.75" />
         <Setter Property="StrokeShape" Value="RoundRectangle 8" />
         <Setter Property="StrokeThickness" Value="0.5" />
         <Setter Property="Stroke" Value="LightGray" />
