@@ -40,7 +40,7 @@
     </ContentView.Resources>
 
     <Border Style="{StaticResource DiagnosticBorder}">
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,4,Auto">
 
             <Label Grid.Row="0" Grid.Column="0"
@@ -50,22 +50,18 @@
                    Grid.Row="0" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
 
-            <Label Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource DiagnosticValueLabel}"
-                   Text="FrameTime:" />
-            <Label x:Name="FrameTimeLabel"
-                   Grid.Row="1" Grid.Column="2"
-                   Style="{StaticResource DiagnosticValueLabel}" />
-
-            <BoxView Grid.Row="2" Grid.ColumnSpan="3"
+            <BoxView Grid.Row="1" Grid.ColumnSpan="3"
                      Style="{StaticResource DiagnosticSeparatorBoxView}" />
 
-            <Label Grid.Row="3" Grid.Column="0"
+            <Label Grid.Row="2" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
                    Text="CPU:" />
             <Label x:Name="CpuLabel"
-                   Grid.Row="3" Grid.Column="2"
+                   Grid.Row="2" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
+
+            <BoxView Grid.Row="3" Grid.ColumnSpan="3"
+                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
 
             <Label Grid.Row="4" Grid.Column="0"
                    Style="{StaticResource DiagnosticValueLabel}"
@@ -110,16 +106,6 @@
                    Text="Alloc/sec:" />
             <Label x:Name="AllocLabel"
                    Grid.Row="10" Grid.Column="2"
-                   Style="{StaticResource DiagnosticValueLabel}" />
-
-            <BoxView Grid.Row="11" Grid.ColumnSpan="3"
-                     Style="{StaticResource DiagnosticSeparatorBoxView}" />
-
-            <Label Grid.Row="12" Grid.Column="0"
-                   Style="{StaticResource DiagnosticValueLabel}"
-                   Text="Battery:" />
-            <Label x:Name="BatteryLabel"
-                   Grid.Row="12" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
 
         </Grid>

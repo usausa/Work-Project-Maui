@@ -1,15 +1,11 @@
 namespace WorkPerfDebug;
 
-using Android.Hardware.Display;
-
 #if ANDROID
 using Android.Views;
 #else
 #endif
 
 using System.Diagnostics;
-
-using static Microsoft.Maui.ApplicationModel.Permissions;
 
 public partial class MainPage : ContentPage
 {

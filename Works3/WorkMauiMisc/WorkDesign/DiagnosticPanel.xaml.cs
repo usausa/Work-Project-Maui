@@ -1,25 +1,36 @@
 namespace WorkDesign;
 
+using System.Diagnostics;
+
+#if ANDROID
+using Android.Views;
+#endif
+
 public partial class DiagnosticPanel
 {
+    private const double MinFrameTime = 0.1;
+
+    private const double EmaAlpha = 0.9;
+
+    private readonly Stopwatch stopwatch = new();
+
+    private readonly int processorCount = Environment.ProcessorCount;
+
+    private readonly Process currentProcess = Process.GetCurrentProcess();
+
+    private readonly IDisplay display;
+
     private bool isMonitoring;
 
-    private float fps;
-    private float frameTime;
+    private double emaFps;
 
-    private float cpuUsage;
+    private TimeSpan cpuTimePrev;
 
-    private int threads;
+    private long allocatedBytesPrev;
 
-    private float memoryUsed;
-
-    private int gc0Delta;
-    private int gc1Delta;
-    private int gc2Delta;
-
-    private float allocPerSec;
-
-    private int battery;
+    private int gc0Prev;
+    private int gc1Prev;
+    private int gc2Prev;
 
     public static readonly BindableProperty SafeColorProperty = BindableProperty.Create(
         nameof(SafeColor),
@@ -60,22 +71,12 @@ public partial class DiagnosticPanel
         set => SetValue(CriticalColorProperty, value);
     }
 
-    public static readonly BindableProperty DisableColorProperty = BindableProperty.Create(
-        nameof(DisableColor),
-        typeof(Color),
-        typeof(DiagnosticPanel),
-        Colors.Gray,
-        propertyChanged: OnPropertyChanged);
-
-    public Color DisableColor
-    {
-        get => (Color)GetValue(DisableColorProperty);
-        set => SetValue(DisableColorProperty, value);
-    }
-
     public DiagnosticPanel()
     {
         InitializeComponent();
+
+        display = new DisplayImplementation();
+        display.FrameUpdated += OnDisplayFrameUpdated;
 
         HandlerChanged += OnHandlerChanged;
     }
@@ -110,22 +111,17 @@ public partial class DiagnosticPanel
             return;
         }
 
-        // TODO
-        fps = 60.0f;
-        frameTime = 16.6f;
+        cpuTimePrev = currentProcess.TotalProcessorTime;
+        allocatedBytesPrev = GC.GetTotalAllocatedBytes();
 
-        cpuUsage = 100.0f;
-        threads = 256;
+        display.StartMonitor();
+        stopwatch.Start();
 
-        memoryUsed = 256.0f;
-        gc0Delta = 0;
-        gc1Delta = 0;
-        gc2Delta = 0;
-        allocPerSec = 10.0f;
-
-        battery = 1000;
-
-        UpdateValues();
+        Application.Current!.Dispatcher.StartTimer(TimeSpan.FromSeconds(1), () =>
+        {
+            UpdateValues();
+            return isMonitoring;
+        });
 
         isMonitoring = true;
     }
@@ -137,36 +133,70 @@ public partial class DiagnosticPanel
             return;
         }
 
-        // TODO
+        display.StartMonitor();
+        stopwatch.Stop();
 
         isMonitoring = false;
     }
 
+    private void OnDisplayFrameUpdated(double frameTimeMs)
+    {
+        frameTimeMs = Math.Max(frameTimeMs, MinFrameTime);
+        var fps = 1000.0 / frameTimeMs;
+
+        emaFps = emaFps == 0 ? fps : (EmaAlpha * emaFps) + ((1 - EmaAlpha) * fps);
+    }
+
     private void UpdateValues()
     {
+        // CPU
+        var cpuTimeCurrent = currentProcess.TotalProcessorTime;
+        var cpuUsage = ((cpuTimeCurrent - cpuTimePrev).TotalMilliseconds / stopwatch.Elapsed.TotalMilliseconds) * 100 / processorCount;
+        cpuTimePrev = cpuTimeCurrent;
+
+        // Thread
+        var threads = currentProcess.Threads.Count;
+
+        // Memory
+        var memoryUsed = (float)currentProcess.WorkingSet64 / (1024 * 1024);
+
+        // Allocation
+        var elapsedSec = stopwatch.Elapsed.TotalSeconds;
+        if (elapsedSec <= 0)
+        {
+            elapsedSec = 1; // fallback
+        }
+
+        var currentAllocated = GC.GetTotalAllocatedBytes();
+        var allocatedPerSec = ((currentAllocated - allocatedBytesPrev) / (1024.0 * 1024.0)) / elapsedSec; // MB/sec
+        allocatedBytesPrev = currentAllocated;
+
+        var gen0 = GC.CollectionCount(0);
+        var gen1 = GC.CollectionCount(1);
+        var gen2 = GC.CollectionCount(2);
+        var gc0Delta = gen0 - gc0Prev;
+        var gc1Delta = gen1 - gc1Prev;
+        var gc2Delta = gen2 - gc2Prev;
+        gc0Prev = gen0;
+        gc1Prev = gen1;
+        gc2Prev = gen2;
+
+        // Update
         var safeColor = SafeColor;
         var warningColor = WarningColor;
         var criticalColor = CriticalColor;
-        // TODO
-        var disableColor = DisableColor;
 
-        FpsLabel.Text = $"{fps:F1}";
-        FpsLabel.TextColor = fps switch
+        // FPS
+        FpsLabel.Text = $"{emaFps:F1}";
+        FpsLabel.TextColor = emaFps switch
         {
             >= 50 => safeColor,
             >= 30 => warningColor,
             _ => criticalColor
         };
 
-        FrameTimeLabel.Text = $"{frameTime:F1}ms";
-        FrameTimeLabel.TextColor = frameTime switch
-        {
-            <= 16.6f => safeColor,
-            <= 33.3f => warningColor,
-            _ => criticalColor
-        };
-
-        CpuLabel.Text = $"{cpuUsage:F1}%";
+        // CPU
+        CpuLabel.Text = $"{cpuUsage:F1} %";
         CpuLabel.TextColor = cpuUsage switch
         {
             <= 30.0f => safeColor,
@@ -174,6 +204,7 @@ public partial class DiagnosticPanel
             _ => criticalColor
         };
 
+        // Thread
         ThreadsLabel.Text = $"{threads}";
         ThreadsLabel.TextColor = threads switch
         {
@@ -182,7 +213,8 @@ public partial class DiagnosticPanel
             _ => criticalColor
         };
 
-        MemoryLabel.Text = $"{memoryUsed:F1}MB";
+        // Memory
+        MemoryLabel.Text = $"{memoryUsed:F1} MB";
         MemoryLabel.TextColor = memoryUsed switch
         {
             <= 256.0f => safeColor,
@@ -202,21 +234,73 @@ public partial class DiagnosticPanel
         Gc1Label.TextColor = gcColor;
         Gc2Label.TextColor = gcColor;
 
-        AllocLabel.Text = $"{allocPerSec:F1}MB";
-        AllocLabel.TextColor = allocPerSec switch
+        AllocLabel.Text = $"{allocatedPerSec:F1} MB";
+        AllocLabel.TextColor = allocatedPerSec switch
         {
             <= 4.0f => safeColor,
             <= 8.0f => warningColor,
             _ => criticalColor
         };
-
-        BatteryLabel.Text = $"{battery}";
-        BatteryLabel.TextColor = battery switch
-        {
-            >= 500 => safeColor,
-            >= 100 => warningColor,
-            _ => criticalColor
-        };
     }
 }
 
+public interface IDisplay
+{
+#pragma warning disable CA1003
+    public event Action<double> FrameUpdated;
+#pragma warning restore CA1003
+
+    void StartMonitor();
+
+    void StopMonitor();
+}
+
+public sealed partial class DisplayImplementation : IDisplay
+{
+    public event Action<double>? FrameUpdated;
+
+    public partial void StartMonitor();
+
+    public partial void StopMonitor();
+}
+
+#if ANDROID
+public sealed partial class DisplayImplementation : Java.Lang.Object, Choreographer.IFrameCallback
+{
+    private long lastFrameTimeNanosecond;
+
+    public partial void StartMonitor()
+    {
+        lastFrameTimeNanosecond = 0;
+        Choreographer.Instance?.PostFrameCallback(this);
+    }
+
+    public partial void StopMonitor()
+    {
+        Choreographer.Instance?.RemoveFrameCallback(this);
+    }
+
+    public void DoFrame(long frameTimeNanos)
+    {
+        if (lastFrameTimeNanosecond > 0)
+        {
+            var frameTimeMs = (frameTimeNanos - lastFrameTimeNanosecond) / 1_000_000.0;
+            FrameUpdated?.Invoke(frameTimeMs);
+        }
+        lastFrameTimeNanosecond = frameTimeNanos;
+
+        Choreographer.Instance!.PostFrameCallback(this);
+    }
+}
+#else
+public sealed partial class DisplayImplementation
+{
+    public partial void StartMonitor()
+    {
+    }
+
+    public partial void StopMonitor()
+    {
+    }
+}
+#endif
