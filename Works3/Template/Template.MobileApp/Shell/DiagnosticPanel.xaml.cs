@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Shell;
 
+using Smart.Mvvm.Resolver;
+
 using System.Diagnostics;
 
 public partial class DiagnosticPanel
@@ -71,7 +73,7 @@ public partial class DiagnosticPanel
     {
         InitializeComponent();
 
-        display = new DisplayImplementation();
+        display = ResolveProvider.Default.GetRequiredService<IDisplay>();
         display.FrameUpdated += OnDisplayFrameUpdated;
 
         HandlerChanged += OnHandlerChanged;
@@ -142,7 +144,6 @@ public partial class DiagnosticPanel
 
         emaFps = emaFps == 0 ? fps : (EmaAlpha * emaFps) + ((1 - EmaAlpha) * fps);
     }
-
 
     private void UpdateValues()
     {
