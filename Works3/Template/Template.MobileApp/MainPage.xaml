@@ -39,11 +39,9 @@
         </Grid>
 
         <!-- diagnostic -->
-        <!--
         <shell:DiagnosticPanel Grid.Row="1"
                                Style="{StaticResource DiagnosticPanel}"
                                IsVisible="{Binding DiagnosticVisible}" />
-        -->
 
         <!-- view container -->
         <AbsoluteLayout Grid.Row="1"
