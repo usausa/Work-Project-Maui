@@ -19,7 +19,7 @@
     <File Path="Settings.XamlStyler" />
     <File Path="Template.MobileApp.sln.DotSettings" />
   </Folder>
-  <Project Path="Template.MobileApp/Template.MobileApp.csproj">
+  <Project Path="Template.MobileApp/Template.MobileApp.csproj" DefaultStartup="true">
     <Deploy />
   </Project>
 </Solution>
