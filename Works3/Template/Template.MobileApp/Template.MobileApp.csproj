@@ -129,6 +129,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
     <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.10" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.23.2" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
