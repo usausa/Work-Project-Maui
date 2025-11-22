@@ -1,180 +1,106 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="WorkDesign.SchedulePage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="SchedulePage">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkDesign.SchedulePage"
+             Title="SchedulePage">
 
-    <Grid
-        BackgroundColor="LightGray"
-        ColumnDefinitions="*,*,*,*,*,*,*"
-        ColumnSpacing="1"
-        RowDefinitions="Auto,*,Auto,*,Auto,*,Auto,*,Auto,*"
-        RowSpacing="1">
+    <Grid RowDefinitions="Auto,*,Auto,*,Auto,*,Auto,*,Auto,*"
+          ColumnDefinitions="*,*,*,*,*,*,*"
+          BackgroundColor="LightGray"
+          ColumnSpacing="1" RowSpacing="1">
 
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="0"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="1"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="0"
+                     BackgroundColor="White">
+            <Label Text="1"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="1"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="2"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="1"
+                     BackgroundColor="White">
+            <Label Text="2"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="2"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="3"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="2"
+                     BackgroundColor="White">
+            <Label Text="3"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="3"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="4"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="3"
+                     BackgroundColor="White">
+            <Label Text="4"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="4"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="5"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="4"
+                     BackgroundColor="White">
+            <Label Text="5"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="5"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="6"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="5"
+                     BackgroundColor="White">
+            <Label Text="6"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="0"
-            Grid.Column="6"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text="7"
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="0" Grid.Column="6"
+                     BackgroundColor="White">
+            <Label Text="7"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
 
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="0"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="0"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="1"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="1"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="2"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="2"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="3"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="3"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="4"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="4"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="5"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="5"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
-        <ContentView
-            Grid.Row="1"
-            Grid.Column="6"
-            BackgroundColor="White">
-            <Label
-                HorizontalOptions="Center"
-                Text=""
-                VerticalOptions="Center" />
+        <ContentView Grid.Row="1" Grid.Column="6"
+                     BackgroundColor="White">
+            <Label Text=""
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </ContentView>
 
-        <BoxView
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            BackgroundColor="DeepSkyBlue"
-            HeightRequest="16"
-            VerticalOptions="Start" />
-        <BoxView
-            Grid.Row="1"
-            Grid.Column="2"
-            Grid.ColumnSpan="3"
-            BackgroundColor="OrangeRed"
-            HeightRequest="16"
-            TranslationY="16"
-            VerticalOptions="Start" />
-        <BoxView
-            Grid.Row="1"
-            Grid.Column="3"
-            Grid.ColumnSpan="2"
-            BackgroundColor="GreenYellow"
-            HeightRequest="16"
-            VerticalOptions="Start" />
-        <BoxView
-            Grid.Row="1"
-            Grid.Column="6"
-            BackgroundColor="DeepSkyBlue"
-            HeightRequest="16"
-            VerticalOptions="Start" />
-        <BoxView
-            Grid.Row="1"
-            Grid.Column="6"
-            BackgroundColor="OrangeRed"
-            HeightRequest="16"
-            TranslationY="16"
-            VerticalOptions="Start" />
+        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                 HeightRequest="16"
+                 BackgroundColor="DeepSkyBlue"
+                 VerticalOptions="Start" />
+        <BoxView Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3"
+                 HeightRequest="16"
+                 BackgroundColor="OrangeRed"
+                 TranslationY="16" VerticalOptions="Start" />
+        <BoxView Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2"
+                 HeightRequest="16"
+                 BackgroundColor="GreenYellow"
+                 VerticalOptions="Start" />
+        <BoxView Grid.Row="1" Grid.Column="6"
+                 HeightRequest="16"
+                 BackgroundColor="DeepSkyBlue"
+                 VerticalOptions="Start" />
+        <BoxView Grid.Row="1" Grid.Column="6"
+                 HeightRequest="16"
+                 BackgroundColor="OrangeRed"
+                 TranslationY="16" VerticalOptions="Start" />
 
     </Grid>
 

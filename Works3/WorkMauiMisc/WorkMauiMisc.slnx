@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/10/">
+    <Project Path="WorkSafeArea/WorkSafeArea.csproj" Id="b9dbcc01-b6c5-4dde-9105-00d7fc120377">
+      <Deploy Solution="Debug|*" />
+    </Project>
+  </Folder>
   <Folder Name="/_/">
     <Project Path="WorkAutoLabel/WorkAutoLabel.csproj" Id="c52ae0e5-71a4-4a81-8a17-acd9863f62ac">
       <Deploy Solution="Debug|*" />
@@ -116,10 +121,10 @@
   <Project Path="WorkDesign/WorkDesign.csproj" Id="f7169be4-a0e2-4350-a4ce-0b133a33f9cd">
     <Deploy />
   </Project>
+  <Project Path="WorkNamespace/WorkNamespace.csproj" Id="53c39235-abf9-4045-aa86-67c0dc27f456" />
   <Project Path="WorkNavAnime/WorkNavAnime.csproj" Id="d627394b-1cc5-4eba-95fd-5f7f437b4271">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="WorkSafeArea/WorkSafeArea.csproj" Id="b9dbcc01-b6c5-4dde-9105-00d7fc120377" />
   <Project Path="WorkVisualCalendar/WorkVisualCalendar.csproj" Id="2d673af5-a934-4b5e-aa44-dabce6654c7c">
     <Deploy />
   </Project>
