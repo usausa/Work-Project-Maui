@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-android</TargetFrameworks>
+		<TargetFrameworks>net10.0-android</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
@@ -58,23 +58,23 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == true">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android')) == true">
 		<Compile Update="**\*.android.cs">
 			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == false">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android')) == false">
 		<Compile Remove="**\*.android.cs" />
 		<None Include="**\*.android.cs">
 			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
 		</None>
 	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == true">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-ios')) == true">
 		<Compile Update="**\*.ios.cs">
 			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == false">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-ios')) == false">
 		<Compile Remove="**\*.ios.cs" />
 		<None Include="**\*.ios.cs">
 			<DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
@@ -82,13 +82,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
-		<PackageReference Include="Components.Maui" Version="1.23.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
-		<PackageReference Include="Usa.Smart.Maui" Version="2.9.6" />
-		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.9.6" />
-		<PackageReference Include="Usa.Smart.Mvvm" Version="1.8.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+		<PackageReference Include="Components.Maui" Version="1.25.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.10.0" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.10.0" />
+		<PackageReference Include="Usa.Smart.Mvvm" Version="1.9.0" />
 		<PackageReference Include="WifiManager.Maui" Version="9.0.5" />
 	</ItemGroup>
 
