@@ -34,8 +34,8 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         // Setting
         if (String.IsNullOrEmpty(settings.UniqueId))
         {
-            var UniqueId = Guid.NewGuid();
-            settings.UniqueId = UniqueId.ToString();
+            var uniqueId = Guid.NewGuid();
+            settings.UniqueId = uniqueId.ToString();
         }
 
         // Service
