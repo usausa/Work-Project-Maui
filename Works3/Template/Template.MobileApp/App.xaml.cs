@@ -13,6 +13,9 @@ public sealed partial class App
     {
         this.serviceProvider = serviceProvider;
 
+        // TODO delete
+        Current!.UserAppTheme = AppTheme.Light;
+
         InitializeComponent();
 
         // Start
