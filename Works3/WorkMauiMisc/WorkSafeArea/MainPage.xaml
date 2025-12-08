@@ -3,14 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="WorkSafeArea.MainPage"
-             BackgroundColor="DarkGray"
-             SafeAreaEdges="None" Shell.NavBarIsVisible="False">
+             BackgroundColor="Transparent"
+             SafeAreaEdges="All">
 
-    <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior ApplyOn="OnBehaviorAttachedTo" StatusBarColor="Green" StatusBarStyle="Default" />
-    </ContentPage.Behaviors>
+    <!--
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior ApplyOn="OnBehaviorAttachedTo" StatusBarColor="Green" StatusBarStyle="LightContent" />
+    </Shell.Behaviors>
+    -->
 
-    <Grid>
+    <Grid BackgroundColor="White">
         <BoxView WidthRequest="100" HeightRequest="100"
                  BackgroundColor="Red"
                  HorizontalOptions="Start" VerticalOptions="Start" />
