@@ -7,7 +7,9 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              x:Class="Template.MobileApp.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
-             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
+             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             BackgroundColor="Transparent"
+             SafeAreaEdges="All">
 
     <ContentPage.Behaviors>
         <s:AppLifecycleBehavior />
@@ -15,7 +17,8 @@
     </ContentPage.Behaviors>
 
     <Grid Style="{StaticResource MainGrid}"
-          RowDefinitions="Auto,*,Auto">
+          RowDefinitions="Auto,*,Auto"
+          BackgroundColor="White">
         <!-- overlay -->
         <Rectangle Grid.RowSpan="3"
                    shell:ShellProperty.BusyOverlay="True"
