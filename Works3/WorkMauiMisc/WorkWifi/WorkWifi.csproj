@@ -83,13 +83,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
-		<PackageReference Include="Components.Maui" Version="1.25.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="Usa.Smart.Maui" Version="2.10.1" />
-		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.10.1" />
-		<PackageReference Include="Usa.Smart.Mvvm" Version="1.9.1" />
-		<PackageReference Include="WifiManager.Maui" Version="9.0.6" />
+		<PackageReference Include="Components.Maui" Version="1.26.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.30" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
+		<PackageReference Include="Usa.Smart.Maui" Version="2.11.0" />
+		<PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.11.0" />
+		<PackageReference Include="Usa.Smart.Mvvm" Version="1.9.2" />
+		<PackageReference Include="WifiManager.Maui" Version="10.0.0" />
 	</ItemGroup>
 
 </Project>
