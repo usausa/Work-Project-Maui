@@ -130,11 +130,11 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.40" />
-    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.40" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.40" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
+    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.41" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.41" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.24.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.24.2" />
     <PackageReference Include="OllamaSharp" Version="5.4.16" />
     <PackageReference Include="SkiaSharp" Version="3.119.2" />
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
@@ -167,7 +167,7 @@
     <PackageReference Include="Usa.Smart.Reactive" Version="2.6.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.7.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.7.1" />
-    <PackageReference Include="Vitvov.Maui.PDFView" Version="1.7.2" />
+    <PackageReference Include="Vitvov.Maui.PDFView" Version="1.7.3" />
     <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.5" />
   </ItemGroup>
 
