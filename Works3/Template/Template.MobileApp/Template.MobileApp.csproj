@@ -168,7 +168,7 @@
     <PackageReference Include="Usa.Smart.Resolver" Version="2.7.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.7.1" />
     <PackageReference Include="Vitvov.Maui.PDFView" Version="1.7.3" />
-    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.5" />
+    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.7" />
   </ItemGroup>
 
   <ItemGroup>
