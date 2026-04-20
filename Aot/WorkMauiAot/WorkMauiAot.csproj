@@ -21,10 +21,10 @@
 		<MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
 
 		<!-- Display name -->
-		<ApplicationTitle>WorkMauiAot</ApplicationTitle>
+		<ApplicationTitle>AOT Test</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.workmauiaot</ApplicationId>
+		<ApplicationId>com.example.workmauiaot</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
