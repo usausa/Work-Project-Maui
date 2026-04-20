@@ -1,24 +1,20 @@
-﻿namespace WorkMauiAot
+﻿using System.Runtime.InteropServices;
+
+namespace WorkMauiAot
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
-        }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            FrameworkDescription.Text = RuntimeInformation.FrameworkDescription;
+            RuntimeIdentifier.Text = RuntimeInformation.RuntimeIdentifier;
+#if DEBUG
+            Build.Text = "Debug";
+#else
+            Build.Text = "Release";
+#endif
         }
     }
 }
