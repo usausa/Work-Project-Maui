@@ -12,18 +12,10 @@
                 SemanticProperties.Description="dot net bot in a submarine number ten"
                 Source="dotnet_bot.png" />
 
-            <Label
-                x:Name="FrameworkDescription"
-                SemanticProperties.HeadingLevel="Level1"
-                Style="{StaticResource Headline}" />
-            <Label
-                x:Name="RuntimeIdentifier"
-                SemanticProperties.HeadingLevel="Level1"
-                Style="{StaticResource Headline}" />
-            <Label
-                x:Name="Build"
-                SemanticProperties.HeadingLevel="Level1"
-                Style="{StaticResource Headline}" />
+            <Label x:Name="FrameworkDescription" Style="{StaticResource Headline}" />
+            <Label x:Name="RuntimeIdentifier" Style="{StaticResource Headline}" />
+            <Label x:Name="Dynamic" Style="{StaticResource Headline}" />
+            <Label x:Name="Build" Style="{StaticResource Headline}" />
         </VerticalStackLayout>
     </ScrollView>
 

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace WorkMauiAot
 {
@@ -10,6 +11,7 @@ namespace WorkMauiAot
 
             FrameworkDescription.Text = RuntimeInformation.FrameworkDescription;
             RuntimeIdentifier.Text = RuntimeInformation.RuntimeIdentifier;
+            Dynamic.Text = $"{RuntimeFeature.IsDynamicCodeCompiled}";
 #if DEBUG
             Build.Text = "Debug";
 #else
