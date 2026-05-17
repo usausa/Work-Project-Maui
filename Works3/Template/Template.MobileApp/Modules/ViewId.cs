@@ -140,5 +140,7 @@ public enum ViewId
     UIRadar,
     UICockpit,
     UISocial,
-    UICharacter
+    UICharacter,
+    UIChat,
+    UICalendar
 }

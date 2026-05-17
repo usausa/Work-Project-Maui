@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              x:Class="Template.MobileApp.Modules.UI.UIDockView"
              x:DataType="{x:Type module:UIDockViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIDockViewModel}"
@@ -90,7 +91,7 @@
                 </VerticalStackLayout>
             </DataTemplate>
 
-            <models:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
+            <controls:DeckButtonTemplateSelector x:Key="DeckButtonTemplateSelector"
                                                ImageTemplate="{StaticResource ImageTemplate}"
                                                TextTemplate="{StaticResource TextTemplate}" />
 

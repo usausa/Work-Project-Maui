@@ -13,7 +13,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*">
 
         <Button Grid.Row="0" Grid.Column="0"
@@ -64,7 +64,8 @@
                 Text="Meter" />
         <Button Grid.Row="4" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIGauge}"
                 Text="Gauge" />
 
         <Button Grid.Row="5" Grid.Column="0"
@@ -109,6 +110,17 @@
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UICharacter}"
                 Text="Character" />
+
+        <Button Grid.Row="9" Grid.Column="0"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIChat}"
+                Text="Chat" />
+        <Button Grid.Row="9" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UICalendar}"
+                Text="Calendar" />
 
     </Grid>
 
