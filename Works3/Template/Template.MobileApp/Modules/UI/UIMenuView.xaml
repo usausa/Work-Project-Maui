@@ -82,8 +82,8 @@
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITimeline}"
-                Text="Timeline" />
+                CommandParameter="{markup:ViewId UIGraph}"
+                Text="Graph" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 Command="{Binding ForwardCommand}"

@@ -4,7 +4,7 @@ using System.Text.Json;
 
 using Template.MobileApp.Models.Sample.Graph;
 
-public sealed partial class UITimelineViewModel : AppViewModelBase
+public sealed partial class UIGraphViewModel : AppViewModelBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
     [ObservableProperty]

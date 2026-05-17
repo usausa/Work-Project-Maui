@@ -143,21 +143,6 @@
     "Speed",
     "OnText, OffText",
 
-    "MinValue, MaxValue",
-    "StartAngle, SweepAngle",
-    "GaugeBackgroundColor, GaugeBackgroundColor2",
-    "BezelOuterThickness, BezelOuterStartColor, BezelOuterEndColor",
-    "BezelInnerThickness, BezelInnerStartColor, BezelInnerEndColor",
-    "ArcInnerExtent, ArcOuterExtent, ArcTrackColor, ArcStartColor, ArcEndColor",
-    "MajorTickInterval, MajorTickInnerExtent, MajorTickOuterExtent, MajorTickThickness, MajorTickColor",
-    "MinorTickInterval, MinorTickInnerExtent, MinorTickOuterExtent, MinorTickThickness, MinorTickColor",
-    "LabelInterval, LabelExtent, LabelFormat, LabelFontSize, LabelColor",
-    "ShowValue, ValueFormat, ValueFontSize, ValueColor, ValueOffsetY",
-    "Unit, UnitFontSize, UnitColor, UnitPosition",
-    "NeedleEndExtent, NeedleStartWidth, NeedleEndWidth, NeedleLeftColor, NeedleRightColor",
-    "PivotRadius, PivotColor",
-    "AnimationDuration, AnimationEasing",
-
     "*",
     "*:*",
 

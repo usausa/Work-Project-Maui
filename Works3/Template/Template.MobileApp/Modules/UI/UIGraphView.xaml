@@ -7,10 +7,10 @@
              xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             x:Class="Template.MobileApp.Modules.UI.UITimelineView"
-             x:DataType="{x:Type module:UITimelineViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:UITimelineViewModel}"
-             shell:ShellProperty.Title="Timeline"
+             x:Class="Template.MobileApp.Modules.UI.UIGraphView"
+             x:DataType="{x:Type module:UIGraphViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
+             shell:ShellProperty.Title="Graph"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
