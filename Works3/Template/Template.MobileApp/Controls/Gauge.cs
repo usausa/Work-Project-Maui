@@ -748,8 +748,9 @@ public sealed class Gauge : SKCanvasView
         paint.IsAntialias = true;
         paint.StrokeCap = SKStrokeCap.Butt;
         paint.Color = ArcTrackColor.ToSKColor();
-        using var path = new SKPath();
-        path.AddArc(arcRect, ToSkiaAngle(StartAngle), SweepAngle);
+        using var builder = new SKPathBuilder();
+        builder.AddArc(arcRect, ToSkiaAngle(StartAngle), SweepAngle);
+        using var path = builder.Detach();
         canvas.DrawPath(path, paint);
     }
 
@@ -779,8 +780,9 @@ public sealed class Gauge : SKCanvasView
         paint.IsAntialias = true;
         paint.StrokeCap = SKStrokeCap.Butt;
         paint.Shader = shader;
-        using var path = new SKPath();
-        path.AddArc(arcRect, ToSkiaAngle(StartAngle), SweepAngle);
+        using var builder = new SKPathBuilder();
+        builder.AddArc(arcRect, ToSkiaAngle(StartAngle), SweepAngle);
+        using var path = builder.Detach();
         canvas.DrawPath(path, paint);
     }
 
@@ -824,8 +826,9 @@ public sealed class Gauge : SKCanvasView
             paint.IsAntialias = true;
             paint.StrokeCap = SKStrokeCap.Butt;
             paint.Shader = shader;
-            using var path = new SKPath();
-            path.AddArc(arcRect, ToSkiaAngle(startUserAngle), sweepDeg);
+            using var builder = new SKPathBuilder();
+            builder.AddArc(arcRect, ToSkiaAngle(startUserAngle), sweepDeg);
+            using var path = builder.Detach();
             canvas.DrawPath(path, paint);
         }
     }
@@ -933,7 +936,7 @@ public sealed class Gauge : SKCanvasView
 
             // テキスト幅を測定して水平方向に中央揃えで描画する
             var textWidth = font.MeasureText(text);
-            canvas.DrawText(text, x - (textWidth / 2f), y - midMetrics, font, paint);
+            canvas.DrawText(text, x - (textWidth / 2f), y - midMetrics, SKTextAlign.Left, font, paint);
         }
     }
 
@@ -963,7 +966,7 @@ public sealed class Gauge : SKCanvasView
             canvas.DrawText(valueText,
                 center.X - (vw / 2f),
                 baseCy - ((vm.Ascent + vm.Descent) / 2f),
-                valueFont, valuePaint);
+                SKTextAlign.Left, valueFont, valuePaint);
             return;
         }
 
@@ -985,10 +988,10 @@ public sealed class Gauge : SKCanvasView
             var unitBaseline = y1 + valueH + 2f - um.Ascent;
 
             var vw = valueFont.MeasureText(valueText);
-            canvas.DrawText(valueText, center.X - (vw / 2f), valueBaseline, valueFont, valuePaint);
+            canvas.DrawText(valueText, center.X - (vw / 2f), valueBaseline, SKTextAlign.Left, valueFont, valuePaint);
 
             var uw = unitFont.MeasureText(Unit!);
-            canvas.DrawText(Unit!, center.X - (uw / 2f), unitBaseline, unitFont, unitPaint);
+            canvas.DrawText(Unit!, center.X - (uw / 2f), unitBaseline, SKTextAlign.Left, unitFont, unitPaint);
         }
         else
         {
@@ -998,14 +1001,8 @@ public sealed class Gauge : SKCanvasView
             var totalW = vw + 4f + uw;
             var startX = center.X - (totalW / 2f);
 
-            canvas.DrawText(valueText,
-                startX,
-                baseCy - ((vm.Ascent + vm.Descent) / 2f),
-                valueFont, valuePaint);
-            canvas.DrawText(Unit!,
-                startX + vw + 4f,
-                baseCy - ((um.Ascent + um.Descent) / 2f),
-                unitFont, unitPaint);
+            canvas.DrawText(valueText, startX, baseCy - ((vm.Ascent + vm.Descent) / 2f), SKTextAlign.Left, valueFont, valuePaint);
+            canvas.DrawText(Unit!, startX + vw + 4f, baseCy - ((um.Ascent + um.Descent) / 2f), SKTextAlign.Left, unitFont, unitPaint);
         }
     }
 
@@ -1028,12 +1025,13 @@ public sealed class Gauge : SKCanvasView
         canvas.RotateDegrees(userAngle);
 
         // 左半面(影側)を台形パスで描画する
-        using var leftPath = new SKPath();
-        leftPath.MoveTo(-startHalfW, -startR);
-        leftPath.LineTo(-endHalfW, -endR);
-        leftPath.LineTo(0f, -endR);
-        leftPath.LineTo(0f, -startR);
-        leftPath.Close();
+        using var leftBuilder = new SKPathBuilder();
+        leftBuilder.MoveTo(-startHalfW, -startR);
+        leftBuilder.LineTo(-endHalfW, -endR);
+        leftBuilder.LineTo(0f, -endR);
+        leftBuilder.LineTo(0f, -startR);
+        leftBuilder.Close();
+        using var leftPath = leftBuilder.Detach();
 
         using var leftPaint = new SKPaint();
         leftPaint.Style = SKPaintStyle.Fill;
@@ -1042,12 +1040,13 @@ public sealed class Gauge : SKCanvasView
         canvas.DrawPath(leftPath, leftPaint);
 
         // 右半面(ハイライト側)を台形パスで描画する
-        using var rightPath = new SKPath();
-        rightPath.MoveTo(0f, -startR);
-        rightPath.LineTo(0f, -endR);
-        rightPath.LineTo(endHalfW, -endR);
-        rightPath.LineTo(startHalfW, -startR);
-        rightPath.Close();
+        using var rightBuilder = new SKPathBuilder();
+        rightBuilder.MoveTo(0f, -startR);
+        rightBuilder.LineTo(0f, -endR);
+        rightBuilder.LineTo(endHalfW, -endR);
+        rightBuilder.LineTo(startHalfW, -startR);
+        rightBuilder.Close();
+        using var rightPath = rightBuilder.Detach();
 
         using var rightPaint = new SKPaint();
         rightPaint.Style = SKPaintStyle.Fill;
