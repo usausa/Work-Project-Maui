@@ -113,69 +113,69 @@
   <ItemGroup>
     <PackageReference Include="Azure.AI.Vision.Face" Version="1.0.0-beta.2" />
     <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
-    <PackageReference Include="BarcodeScanning.Native.Maui" Version="3.0.3" />
-    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.9.0">
+    <PackageReference Include="BarcodeScanning.Native.Maui" Version="3.0.4" />
+    <PackageReference Include="BunnyTail.EmbeddedBuildProperty" Version="1.11.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.9.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
-    <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.0.1" />
-    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.34.1" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="14.2.0" />
+    <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.1.0" />
+    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.35.1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.80.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.80.0">
+    <PackageReference Include="Grpc.Tools" Version="2.81.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Indiko.Maui.Controls.Markdown" Version="1.5.0" />
-    <PackageReference Include="Mapsui.Maui" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8">
+    <PackageReference Include="Indiko.Maui.Controls.Markdown" Version="1.10.0" />
+    <PackageReference Include="Mapsui.Maui" Version="5.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">none</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
-    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.60" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.60" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.80" />
+    <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="10.0.80" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.80" />
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.26.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.27.0" />
     <PackageReference Include="OllamaSharp" Version="5.4.25" />
-    <PackageReference Include="SkiaSharp" Version="3.119.2" />
+    <PackageReference Include="SkiaSharp" Version="4.148.0" />
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
     <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0" />
-    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.2" />
-    <PackageReference Include="Svg.Skia" Version="4.9.0" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="4.148.0" />
+    <PackageReference Include="Svg.Skia" Version="5.1.1" />
     <PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
     <PackageReference Include="Plugin.Maui.DebugRainbows" Version="1.2.2">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">none</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="QRCoder" Version="1.8.0" />
-    <PackageReference Include="Rester" Version="2.8.0" />
-    <PackageReference Include="Shiny.BluetoothLE" version="4.0.1" />
-    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="4.0.1" />
-    <PackageReference Include="Shiny.Hosting.Maui" Version="4.0.1" />
-    <PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.9" />
+    <PackageReference Include="Rester" Version="2.10.0" />
+    <PackageReference Include="Shiny.BluetoothLE" version="5.1.1" />
+    <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="5.1.1" />
+    <PackageReference Include="Shiny.Hosting.Maui" Version="5.1.1" />
+    <PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.10" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
-    <PackageReference Include="Usa.Smart.Converter" Version="2.9.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.9.0" />
-    <PackageReference Include="Usa.Smart.Data" Version="2.7.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.11.0" />
-    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Converter" Version="2.12.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.12.0" />
+    <PackageReference Include="Usa.Smart.Data" Version="2.9.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.13.0" />
+    <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.13.0" />
     <PackageReference Include="Usa.Smart.Mapper" Version="0.9.0" />
-    <PackageReference Include="Usa.Smart.Mvvm" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Navigation" Version="2.20.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="2.20.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="2.20.0" />
-    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="2.20.0" />
-    <PackageReference Include="Usa.Smart.Reactive" Version="2.9.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.10.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.10.0" />
-    <PackageReference Include="Vitvov.Maui.PDFView" Version="1.7.3" />
-    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.7" />
+    <PackageReference Include="Usa.Smart.Mvvm" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Navigation" Version="3.1.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Maui" Version="3.1.0" />
+    <PackageReference Include="Usa.Smart.Navigation.Resolver" Version="3.1.0" />
+    <PackageReference Include="Usa.Smart.Reactive" Version="2.11.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.13.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.13.0" />
+    <PackageReference Include="Vitvov.Maui.PDFView" Version="1.8.0" />
+    <PackageReference Include="Xamarin.Google.MLKit.TextRecognition.Japanese" Version="116.0.1.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -184,6 +184,10 @@
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Usa.Smart.Analyzers.JapaneseComment" Version="1.8.0" />
   </ItemGroup>
 
 </Project>

@@ -235,8 +235,8 @@ public static partial class MauiProgram
     {
         // Components
         builder.Services.AddBluetoothLE();
-        builder.Services.AddBleHostedCharacteristic<UserCharacteristic>();
         builder.Services.AddBluetoothLeHosting();
+        builder.Services.AddSingleton<UserCharacteristic>();
 
         return builder;
     }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMenuView"
@@ -17,110 +18,250 @@
           ColumnDefinitions="*,*">
 
         <Button Grid.Row="0" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UILogin}"
-                Text="Login" />
+                Text="Login">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Login}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="Profile" />
+                Text="Profile">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
+                                 FontFamily="MaterialIcons"
+                                 Color="#80FFFFFF"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="1" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIMoney}"
-                Text="Money" />
+                Text="Money">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_balance_wallet}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="1" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIDock}"
-                Text="Dock" />
+                Text="Dock">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Apps}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="2" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIPos}"
-                Text="POS" />
+                Text="POS">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Point_of_sale}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="Super" />
+                Text="Super">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Widgets}"
+                                 FontFamily="MaterialIcons"
+                                 Color="#80FFFFFF"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="Schedule" />
+                Text="Schedule">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Schedule}"
+                                 FontFamily="MaterialIcons"
+                                 Color="#80FFFFFF"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIMail}"
-                Text="Mail" />
+                Text="Mail">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Mail}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIMeter}"
-                Text="Meter" />
+                Text="Meter">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Speed}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIGauge}"
-                Text="Gauge" />
+                Text="Gauge">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Av_timer}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UILoad}"
-                Text="Load" />
+                Text="Load">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Hearing}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIMixer}"
-                Text="Mixer" />
+                Text="Mixer">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Tune}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="6" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIGraph}"
-                Text="Graph" />
+                Text="Graph">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_tree}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="6" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UITreeMap}"
-                Text="TreeMap" />
+                Text="TreeMap">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Dashboard}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIRadar}"
-                Text="Radar" />
+                Text="Radar">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Radar}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="Cockpit" />
+                Text="Cockpit">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Flight}"
+                                 FontFamily="MaterialIcons"
+                                 Color="#80FFFFFF"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="8" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UISocial}"
-                Text="Social" />
+                Text="Social">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Sports_esports}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="8" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UICharacter}"
-                Text="Character" />
+                Text="Character">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Face}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
         <Button Grid.Row="9" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UIChat}"
-                Text="Chat" />
+                Text="Chat">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Chat}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
         <Button Grid.Row="9" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId UICalendar}"
-                Text="Calendar" />
+                Text="Calendar">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Calendar_month}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
 
     </Grid>
 

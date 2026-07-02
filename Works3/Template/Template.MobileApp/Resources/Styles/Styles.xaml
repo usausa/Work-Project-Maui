@@ -467,6 +467,13 @@
         </Setter>
     </Style>
 
+    <Style x:Key="MenuIconButton"
+           TargetType="Button"
+           BasedOn="{StaticResource MenuButton}">
+        <Setter Property="ContentLayout" Value="Top, -4" />
+        <Setter Property="Padding" Value="0, 8" />
+    </Style>
+
     <!-- Action -->
 
     <Style x:Key="ActionButtonBase"
