@@ -11,8 +11,14 @@
              s:BindingContextResolver.Type="{x:Type module:UIDockViewModel}"
              shell:ShellProperty.Title="Dock"
              shell:ShellProperty.HeaderVisible="False"
-             shell:ShellProperty.FunctionVisible="False"
-             BackgroundColor="{StaticResource GrayDarken4}">
+             shell:ShellProperty.FunctionVisible="False">
+
+    <ContentView.Background>
+        <RadialGradientBrush Center="0.5,0.4" Radius="0.75">
+            <GradientStop Offset="0.0" Color="{StaticResource GrayDarken3}" />
+            <GradientStop Offset="1.0" Color="{StaticResource GrayDarken4}" />
+        </RadialGradientBrush>
+    </ContentView.Background>
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>

@@ -211,6 +211,7 @@ public static partial class MauiProgram
         fonts.AddFont("Oxanium-Regular.ttf", "OxaniumRegular");
         fonts.AddFont("851Gkktt_005.ttf", "Gkktt");
         fonts.AddFont("DSEG7Classic-Regular.ttf", "DSEG7");
+        fonts.AddFont("JetBrainsMono-Regular.ttf", "JetBrainsMono");
     }
 
     private static void ConfigureDialogDesign(DialogConfig config)

@@ -20,6 +20,9 @@
         <ResourceDictionary>
             <conv:RefKindBrushConverter x:Key="RefBackgroundConverter" Foreground="False" />
             <conv:RefKindBrushConverter x:Key="RefForegroundConverter" Foreground="True" />
+            <conv:AlternateRowBackgroundConverter x:Key="RowBackgroundConverter"
+                                                  EvenColor="Transparent"
+                                                  OddColor="{StaticResource GrayLighten4}" />
 
             <Style x:Key="HeaderLabel"
                    TargetType="Label">
@@ -31,6 +34,15 @@
                    TargetType="Label">
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,12,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
             <Style x:Key="MetaLabel"
@@ -92,15 +104,29 @@
                         ItemsSource="{Binding Rows}"
                         HorizontalScrollBarVisibility="Always"
                         VerticalScrollBarVisibility="Always"
-                        SelectionMode="None">
+                        SelectionMode="Single">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type graph:GraphRow}">
                     <Grid HeightRequest="26"
-                          ColumnDefinitions="Auto,Auto,Auto,Auto"
-                          ColumnSpacing="0">
+                          ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                          ColumnSpacing="0"
+                          BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+
                         <controls:GraphRowSurface Grid.Column="0"
                                                   RowData="{Binding .}"
                                                   VerticalOptions="Fill" />
@@ -112,6 +138,14 @@
                                 <DataTemplate x:DataType="{x:Type graph:GraphRef}">
                                     <Border Style="{StaticResource RefBadgeBorder}"
                                             BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding Kind}"
+                                                         Value="{x:Static graph:GraphRefKind.Head}">
+                                                <Setter Property="StrokeThickness" Value="2" />
+                                                <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
                                         <Label Text="{Binding Name}"
                                                Style="{StaticResource RefBadgeLabel}"
                                                TextColor="{Binding Kind, Converter={StaticResource RefForegroundConverter}}" />
@@ -121,12 +155,16 @@
                         </HorizontalStackLayout>
 
                         <Label Grid.Column="2"
+                               Style="{StaticResource SummaryLabel}"
+                               Text="{Binding Summary}" />
+
+                        <Label Grid.Column="3"
                                Style="{StaticResource ShaLabel}"
                                Text="{Binding ShortSha}" />
 
-                        <Label Grid.Column="3"
+                        <Label Grid.Column="4"
                                Style="{StaticResource MetaLabel}"
-                               Text="{Binding When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                               Text="{Binding When, StringFormat='{0:yyyy-MM-dd}'}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -7,6 +7,19 @@ public sealed class SampleMap2ViewModel : AppViewModelBase
 
     public MapsuiController Controller { get; } = new(InitialLatitude, InitialLongitude, 9);
 
+    public ICommand ZoomInCommand { get; }
+
+    public ICommand ZoomOutCommand { get; }
+
+    public ICommand HomeCommand { get; }
+
+    public SampleMap2ViewModel()
+    {
+        ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
+        ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
+        HomeCommand = MakeDelegateCommand(() => Controller.MoveTo(InitialLatitude, InitialLongitude));
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
