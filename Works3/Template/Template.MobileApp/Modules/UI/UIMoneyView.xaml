@@ -285,11 +285,12 @@
             </Style>
 
             <Style x:Key="DetailButton"
-                   TargetType="Label">
+                   TargetType="Button">
                 <Setter Property="Padding" Value="8,2" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="FontSize" Value="14" />
+                <Setter Property="CornerRadius" Value="4" />
             </Style>
 
             <!-- Bottom select -->
@@ -614,12 +615,7 @@
                                            Text="💳 うさうさカード" />
                                     <Button Grid.Column="1"
                                             Style="{StaticResource DetailButton}"
-                                            Margin="0" Padding="8,2"
-                                            Text="クレジット設定"
-                                            FontSize="14"
-                                            TextColor="White"
-                                            BackgroundColor="{StaticResource BlueDefault}"
-                                            CornerRadius="4" />
+                                            Text="クレジット設定" />
                                 </Grid>
                             </toolkit:SfEffectsView>
                         </VerticalStackLayout>
@@ -700,7 +696,7 @@
                            TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
                     <Border Grid.Row="0" Grid.RowSpan="2"
                             Style="{StaticResource BottomSelectBadgeBorder}"
-                            IsVisible="{Binding HasAccountAlert}">
+                            IsVisible="{Binding HasNotification}">
                         <Label Style="{StaticResource BottomSelectBadgeLabel}"
                                Text="{Binding NotificationCount}" />
                     </Border>

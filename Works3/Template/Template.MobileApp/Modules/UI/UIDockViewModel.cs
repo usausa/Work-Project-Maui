@@ -120,7 +120,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Label = "Volume up",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849"),
-                ImageBytes = await LoadImageAsync("volume_off.png"),
+                ImageBytes = await LoadImageAsync("volume_up.png"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "VolumeUp"
             });
@@ -132,7 +132,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Label = "Mute",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849"),
-                ImageBytes = await LoadImageAsync("volume_up.png"),
+                ImageBytes = await LoadImageAsync("volume_off.png"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Mute"
             });

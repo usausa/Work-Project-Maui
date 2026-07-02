@@ -9,7 +9,7 @@
              x:Class="Template.MobileApp.Modules.Sample.SampleMap2View"
              x:DataType="{x:Type module:SampleMap2ViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMap2ViewModel}"
-             shell:ShellProperty.Title="List"
+             shell:ShellProperty.Title="Map2"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="ZoomIn"
              shell:ShellProperty.Function3Text="ZoomOut"

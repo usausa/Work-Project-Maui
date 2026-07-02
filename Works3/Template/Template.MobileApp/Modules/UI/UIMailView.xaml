@@ -52,7 +52,7 @@
             </Style>
 
             <Style x:Key="HeaderLabel"
-                   TargetType="Button">
+                   TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Start" />
                 <Setter Property="TextColor" Value="White" />
@@ -282,7 +282,6 @@
                                  Color="White"
                                  Size="36" />
             </Button.ImageSource>
-            <Button.Shadow />
         </Button>
 
         <!-- Tab -->

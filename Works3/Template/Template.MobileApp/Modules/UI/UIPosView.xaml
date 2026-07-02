@@ -75,13 +75,13 @@
             </Style>
 
             <Style x:Key="NameWithSubNameSpan"
-                   TargetType="Label">
+                   TargetType="Span">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
             <Style x:Key="NameWithSubOptionSpan"
-                   TargetType="Label">
+                   TargetType="Span">
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -285,9 +285,8 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*"
               BackgroundColor="{StaticResource GrayLighten3}">
-            <Label Grid.Column="1"
-                   Style="{StaticResource NameLabel}"
-                   Text="預金り" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="預かり" />
         </Grid>
 
         <BoxView Grid.Row="14"
@@ -383,7 +382,7 @@
                     Text="閉店セール" />
             <Button Grid.Column="2"
                     Style="{StaticResource CyanOptionButton}"
-                    Text="会員得点" />
+                    Text="会員特典" />
             <Button Grid.Column="3"
                     Style="{StaticResource GreenOptionButton}"
                     Text="メルマガ割引" />

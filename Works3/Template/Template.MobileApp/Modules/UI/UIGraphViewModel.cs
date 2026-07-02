@@ -23,8 +23,11 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         try
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var (commits, refs) = await LoadRepositoryAsync().ConfigureAwait(false);
-            var data = GraphBuilder.Build(commits, refs);
+            var data = await Task.Run(async () =>
+            {
+                var (commits, refs) = await LoadRepositoryAsync().ConfigureAwait(false);
+                return GraphBuilder.Build(commits, refs);
+            }).ConfigureAwait(true);
             sw.Stop();
 
             Rows = data.Rows;
