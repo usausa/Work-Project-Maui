@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIPosView"
@@ -161,6 +162,19 @@
                              Color="White"
                              Size="24" />
 
+            <Style x:Key="QuantityButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
             <Style x:Key="ExecuteButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
@@ -170,6 +184,14 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="ContentLayout" Value="Left" />
                 <Setter Property="FontSize" Value="24" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Offset="0,-2"
+                                Radius="8"
+                                Opacity="0.25" />
+                    </Setter.Value>
+                </Setter>
             </Style>
 
         </ResourceDictionary>
@@ -181,13 +203,24 @@
 
         <Grid Grid.Row="0"
               Style="{StaticResource ValueRowGrid}"
-              ColumnDefinitions="*,Auto,24">
+              ColumnDefinitions="*,Auto,Auto,Auto,24">
             <Label Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="数量" />
-            <Label Grid.Column="1"
+            <Button Grid.Column="1"
+                    Style="{StaticResource QuantityButton}"
+                    Command="{Binding QuantityDownCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Remove}" />
+            <Label Grid.Column="2"
                    Style="{StaticResource ValueLabel}"
-                   Text="3点" />
+                   WidthRequest="56"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center"
+                   Text="{Binding Quantity, StringFormat='{0}点'}" />
+            <Button Grid.Column="3"
+                    Style="{StaticResource QuantityButton}"
+                    Command="{Binding QuantityUpCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Add}" />
         </Grid>
 
         <BoxView Grid.Row="1"
@@ -201,7 +234,7 @@
                    Text="小計" />
             <Label Grid.Column="1"
                    Style="{StaticResource ValueLabel}"
-                   Text="￥ 888" />
+                   Text="{Binding Subtotal, StringFormat='￥ {0:N0}'}" />
         </Grid>
 
         <BoxView Grid.Row="3"
@@ -250,13 +283,15 @@
 
         <Grid Grid.Row="8"
               Style="{StaticResource ValueRowGrid}"
-              ColumnDefinitions="*,Auto,24">
+              ColumnDefinitions="*,Auto,24"
+              behaviors:AnimationOption.HighlightTrigger="{Binding Total}"
+              behaviors:AnimationOption.HighlightColor="{StaticResource YellowLighten2}">
             <Label Grid.Column="0"
                    Style="{StaticResource NameLabel}"
                    Text="合計" />
             <Label Grid.Column="1"
                    Style="{StaticResource HugeValueLabel}"
-                   Text="￥ 888" />
+                   Text="{Binding Total, StringFormat='￥ {0:N0}'}" />
         </Grid>
 
         <BoxView Grid.Row="9"
@@ -271,7 +306,7 @@
                        Text="内消費税" />
                 <Label Grid.Column="1"
                        Style="{StaticResource SubValueLabel}"
-                       Text="(￥ 65)" />
+                       Text="{Binding InnerTax, StringFormat='(￥ {0:N0})'}" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
                        Text="›" />
@@ -304,7 +339,7 @@
                        Text="現金預り" />
                 <Label Grid.Column="2"
                        Style="{StaticResource ValueLabel}"
-                       Text="￥ 888" />
+                       Text="{Binding Deposit, StringFormat='￥ {0:N0}'}" />
                 <Label Grid.Column="3"
                        Style="{StaticResource LinkLabel}"
                        Text="›" />
@@ -344,7 +379,16 @@
                    Text="お釣り" />
             <Label Grid.Column="1"
                    Style="{StaticResource LargeValueLabel}"
-                   Text="￥ 0" />
+                   Text="{Binding Change, StringFormat='￥ {0:N0}'}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding HasChange}"
+                                 Value="True">
+                        <Setter Property="TextColor" Value="{StaticResource GreenDarken1}" />
+                        <Setter Property="FontAttributes" Value="Bold" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
         </Grid>
 
         <BoxView Grid.Row="20"

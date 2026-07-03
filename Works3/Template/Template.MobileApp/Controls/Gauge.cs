@@ -9,7 +9,7 @@ using SkiaSharp.Views.Maui.Controls;
 public enum GaugeUnitPosition
 {
     Right,
-    Bottom,
+    Bottom
 }
 
 public sealed class GaugeRange
@@ -312,6 +312,15 @@ public sealed class Gauge : SKCanvasView
         set => SetValue(LabelFormatProperty, value);
     }
 
+    public static readonly BindableProperty LabelConverterProperty =
+        BindableProperty.Create(nameof(LabelConverter), typeof(IValueConverter), typeof(Gauge),
+            propertyChanged: OnVisualPropertyChanged);
+    public IValueConverter? LabelConverter
+    {
+        get => (IValueConverter?)GetValue(LabelConverterProperty);
+        set => SetValue(LabelConverterProperty, value);
+    }
+
     public static readonly BindableProperty LabelFontSizeProperty =
         BindableProperty.Create(nameof(LabelFontSize), typeof(float), typeof(Gauge), 12f,
             propertyChanged: OnVisualPropertyChanged);
@@ -368,7 +377,7 @@ public sealed class Gauge : SKCanvasView
     }
 
     public static readonly BindableProperty UnitProperty =
-        BindableProperty.Create(nameof(Unit), typeof(string), typeof(Gauge), null,
+        BindableProperty.Create(nameof(Unit), typeof(string), typeof(Gauge),
             propertyChanged: OnVisualPropertyChanged);
     public string? Unit
     {
@@ -500,7 +509,7 @@ public sealed class Gauge : SKCanvasView
 
     // ------------------------------------------------------------------ Ranges
     public static readonly BindableProperty RangesProperty =
-        BindableProperty.Create(nameof(Ranges), typeof(IList<GaugeRange>), typeof(Gauge), null,
+        BindableProperty.Create(nameof(Ranges), typeof(IList<GaugeRange>), typeof(Gauge),
             defaultValueCreator: _ => new ObservableCollection<GaugeRange>(),
             propertyChanged: OnRangesChanged);
 
@@ -917,10 +926,12 @@ public sealed class Gauge : SKCanvasView
 
             value = Math.Min(value, MaxValue);
 
-            // LabelFormatter が設定されていればカスタム変換を使い、なければ書式文字列を適用する
+            // LabelFormatter → LabelConverter → 書式文字列の優先順でラベル文字列を決定する
             var text = LabelFormatter is not null
                 ? LabelFormatter(value)
-                : string.Format(LabelFormat, value);
+                : LabelConverter is not null
+                    ? LabelConverter.Convert(value, typeof(string), null, CultureInfo.CurrentCulture) as string ?? string.Empty
+                    : string.Format(LabelFormat, value);
 
             if (string.IsNullOrEmpty(text))
             {

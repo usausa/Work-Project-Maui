@@ -45,25 +45,53 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     public bool ButtonA
     {
         get => buttonA.Value;
-        set => buttonA.Value = value;
+        set
+        {
+            if (value && !buttonA.Value)
+            {
+                PerformClickFeedback();
+            }
+            buttonA.Value = value;
+        }
     }
 
     public bool ButtonB
     {
         get => buttonB.Value;
-        set => buttonB.Value = value;
+        set
+        {
+            if (value && !buttonB.Value)
+            {
+                PerformClickFeedback();
+            }
+            buttonB.Value = value;
+        }
     }
 
     public bool ButtonX
     {
         get => buttonX.Value;
-        set => buttonX.Value = value;
+        set
+        {
+            if (value && !buttonX.Value)
+            {
+                PerformClickFeedback();
+            }
+            buttonX.Value = value;
+        }
     }
 
     public bool ButtonY
     {
         get => buttonY.Value;
-        set => buttonY.Value = value;
+        set
+        {
+            if (value && !buttonY.Value)
+            {
+                PerformClickFeedback();
+            }
+            buttonY.Value = value;
+        }
     }
 
     public UIMeterViewModel()
@@ -72,6 +100,18 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
         cancellationTokenSource = new CancellationTokenSource();
 
         _ = StartTimerAsync();
+    }
+
+    private static void PerformClickFeedback()
+    {
+        try
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        }
+        catch (FeatureNotSupportedException)
+        {
+            // Ignore
+        }
     }
 
     protected override void Dispose(bool disposing)

@@ -17,14 +17,4 @@ public sealed class ChatMessage
     public bool IsRead { get; set; }
 
     public IReadOnlyList<MessageReaction> Reactions { get; set; } = [];
-
-    public bool IsStamp => !string.IsNullOrEmpty(StampSource);
-
-    public bool HasText => !IsStamp && !string.IsNullOrEmpty(TextContent);
-
-    public bool HasReactions => Reactions.Count > 0;
-
-    public bool ShowReadIndicator => Type == MessageType.Send && IsRead;
-
-    public string TimeText => DateTime.ToString("HH:mm");
 }
