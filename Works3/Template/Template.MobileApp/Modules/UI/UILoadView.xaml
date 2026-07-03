@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
@@ -19,11 +20,14 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <conv:DecibelToColorConverter x:Key="DecibelToColorConverter" />
+
             <Style x:Key="NoiseGauge"
                    TargetType="controls:NoiseGauge">
                 <Setter Property="WarningGaugeColor" Value="{StaticResource RedDefault}" />
                 <Setter Property="NeedleColor" Value="{StaticResource DeepOrangeDarken1}" />
                 <Setter Property="NeedleCenterColor" Value="{StaticResource DeepOrangeDefault}" />
+                <Setter Property="PeakNeedleColor" Value="#B3FFD700" />
             </Style>
 
             <Style x:Key="ValueLabel"
@@ -77,13 +81,15 @@
 
         <controls:NoiseGauge Grid.Row="0"
                              Style="{StaticResource NoiseGauge}"
-                             Value="{Binding Current}" />
+                             Value="{Binding Current}"
+                             PeakValue="{Binding Peak}" />
 
         <Label Grid.Row="0"
                Style="{StaticResource ValueLabel}">
             <Label.FormattedText>
                 <FormattedString>
                     <Span Style="{StaticResource ValueSpan}"
+                          TextColor="{Binding Current, Converter={StaticResource DecibelToColorConverter}}"
                           Text="{Binding Current, StringFormat='{0:F1}'}" />
                     <Span Style="{StaticResource UnitSpan}"
                           Text=" dB" />

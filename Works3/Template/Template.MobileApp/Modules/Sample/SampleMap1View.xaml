@@ -54,9 +54,10 @@
             </maps:Map.ItemTemplate>
         </maps:Map>
 
-        <VerticalStackLayout Margin="0,0,16,16"
+        <!-- Google Map 標準のズームボタン(右下)と重ならないよう右上に配置する -->
+        <VerticalStackLayout Margin="0,16,16,0"
                              HorizontalOptions="End"
-                             VerticalOptions="End"
+                             VerticalOptions="Start"
                              Spacing="12">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Command="{Binding ToggleMapTypeCommand}">

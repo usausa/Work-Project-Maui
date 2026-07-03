@@ -696,7 +696,7 @@ public sealed class SocialStatus : SocialControl
         nameof(Value1),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value1
     {
@@ -708,7 +708,7 @@ public sealed class SocialStatus : SocialControl
         nameof(Value2),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value2
     {
@@ -720,7 +720,7 @@ public sealed class SocialStatus : SocialControl
         nameof(Value3),
         typeof(int),
         typeof(SocialStatus),
-        propertyChanged: Invalidate);
+        propertyChanged: OnValueChanged);
 
     public int Value3
     {
@@ -790,9 +790,61 @@ public sealed class SocialStatus : SocialControl
         set => SetValue(Text3Property, value);
     }
 
+    private const string ValueAnimationName = "SocialStatusValue";
+
+    private float displayProgress = 1f;
+
     public SocialStatus()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までアニメーションする
+        displayProgress = 0f;
+        AnimateValues();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ValueAnimationName);
+    }
+
+    private static void OnValueChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialStatus)bindable;
+        if (control.IsLoaded)
+        {
+            control.displayProgress = 0f;
+            control.AnimateValues();
+        }
+        else
+        {
+            control.InvalidateSurface();
+        }
+    }
+
+    private void AnimateValues()
+    {
+        this.AbortAnimation(ValueAnimationName);
+        this.Animate(
+            ValueAnimationName,
+            v =>
+            {
+                displayProgress = (float)v;
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayProgress = 1f;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -862,7 +914,7 @@ public sealed class SocialStatus : SocialControl
         canvas.DrawText(text1, x, y, SKTextAlign.Left, font3, paint);
 
         // Value1
-        var value1 = Value1;
+        var value1 = (int)(Value1 * displayProgress);
         var value1Text = $"{value1:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;
@@ -888,7 +940,7 @@ public sealed class SocialStatus : SocialControl
         canvas.DrawText(text2, x, y, SKTextAlign.Left, font3, paint);
 
         // Value2
-        var value2 = Value2;
+        var value2 = (int)(Value2 * displayProgress);
         var value2Text = $"{value2:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;
@@ -914,7 +966,7 @@ public sealed class SocialStatus : SocialControl
         canvas.DrawText(text3, x, y, SKTextAlign.Left, font3, paint);
 
         // Value3
-        var value3 = Value3;
+        var value3 = (int)(Value3 * displayProgress);
         var value3Text = $"{value3:N0}";
         x = (int)((levelWidth - font2.MeasureText(value1Text)) / 2) + levelStart;
         y = centerY + (font2Height / 2) - levelHeight;

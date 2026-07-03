@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Controls;
 
-public sealed class MixierKnob : GraphicsView, IDrawable
+public sealed class MixerKnob : GraphicsView, IDrawable
 {
     // ------------------------------------------------------------
     // Property
@@ -11,10 +11,10 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         0.0,
         defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: (b, _, _) => ((MixierKnob)b).Invalidate());
+        propertyChanged: (b, _, _) => ((MixerKnob)b).Invalidate());
 
     public double Value
     {
@@ -25,7 +25,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         0.0);
 
     public double Minimum
@@ -37,7 +37,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         100.0);
 
     public double Maximum
@@ -51,7 +51,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty KnobBackgroundProperty = BindableProperty.Create(
         nameof(KnobBackground),
         typeof(Brush),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         Brush.LightGray,
         propertyChanged: OnPropertyChanged);
 
@@ -64,7 +64,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerBackgroundProperty = BindableProperty.Create(
         nameof(PointerBackground),
         typeof(Brush),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         Brush.Black,
         propertyChanged: OnPropertyChanged);
 
@@ -77,7 +77,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorColorProperty = BindableProperty.Create(
         nameof(IndicatorColor),
         typeof(Color),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         Colors.Orange,
         propertyChanged: OnPropertyChanged);
 
@@ -90,7 +90,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorBackgroundColorProperty = BindableProperty.Create(
         nameof(IndicatorBackgroundColor),
         typeof(Color),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         Colors.Snow,
         propertyChanged: OnPropertyChanged);
 
@@ -105,7 +105,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorWidthProperty = BindableProperty.Create(
         nameof(IndicatorWidth),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         8.0,
         propertyChanged: OnPropertyChanged);
 
@@ -118,7 +118,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty IndicatorMarginProperty = BindableProperty.Create(
         nameof(IndicatorMargin),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         2.0,
         propertyChanged: OnPropertyChanged);
 
@@ -131,7 +131,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerWidthProperty = BindableProperty.Create(
         nameof(PointerWidth),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         12.0,
         propertyChanged: OnPropertyChanged);
 
@@ -144,7 +144,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     public static readonly BindableProperty PointerMarginProperty = BindableProperty.Create(
         nameof(PointerMargin),
         typeof(double),
-        typeof(MixierKnob),
+        typeof(MixerKnob),
         4.0,
         propertyChanged: OnPropertyChanged);
 
@@ -158,7 +158,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
     // Constructor
     // ------------------------------------------------------------
 
-    public MixierKnob()
+    public MixerKnob()
     {
         Drawable = this;
 
@@ -172,7 +172,7 @@ public sealed class MixierKnob : GraphicsView, IDrawable
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        ((MixierKnob)bindable).Invalidate();
+        ((MixerKnob)bindable).Invalidate();
     }
 
     // ------------------------------------------------------------

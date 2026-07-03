@@ -6,6 +6,7 @@ public static class AnimationOption
     private const string BounceAnimationName = "AnimationOptionBounce";
     private const string FadeInAnimationName = "AnimationOptionFadeIn";
     private const string HighlightAnimationName = "AnimationOptionHighlight";
+    private const string FlashAnimationName = "AnimationOptionFlash";
 
     // ------------------------------------------------------------------ Pulse
 
@@ -158,6 +159,39 @@ public static class AnimationOption
             250,
             Easing.CubicOut,
             (_, _) => element.Opacity = 1.0);
+    }
+
+    // ------------------------------------------------------------------ Flash
+
+    public static readonly BindableProperty FlashTriggerProperty = BindableProperty.CreateAttached(
+        "FlashTrigger",
+        typeof(object),
+        typeof(AnimationOption),
+        null,
+        propertyChanged: OnFlashTriggerChanged);
+
+    public static object? GetFlashTrigger(BindableObject bindable) => bindable.GetValue(FlashTriggerProperty);
+
+    public static void SetFlashTrigger(BindableObject bindable, object? value) => bindable.SetValue(FlashTriggerProperty, value);
+
+    private static void OnFlashTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        // 初回バインドでは光らせない
+        if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
+        {
+            return;
+        }
+
+        element.AbortAnimation(FlashAnimationName);
+        element.Opacity = 1;
+
+        element.Animate(
+            FlashAnimationName,
+            v => element.Opacity = 1 - v,
+            16,
+            300,
+            Easing.CubicOut,
+            (_, _) => element.Opacity = 0);
     }
 
     // ------------------------------------------------------------------ Highlight

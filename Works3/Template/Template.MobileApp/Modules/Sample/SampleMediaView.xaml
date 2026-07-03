@@ -75,6 +75,16 @@
             </BoxView.GestureRecognizers>
         </BoxView>
 
+        <!-- 再生開始・バッファリング中のローディング表示 -->
+        <ActivityIndicator IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           Color="White"
+                           WidthRequest="48"
+                           HeightRequest="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           InputTransparent="True" />
+
         <Border Style="{StaticResource ControlBarBorder}"
                 IsVisible="{Binding IsControlBarVisible}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}">

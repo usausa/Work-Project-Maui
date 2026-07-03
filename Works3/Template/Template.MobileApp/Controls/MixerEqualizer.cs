@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Controls;
 
-public sealed class MixierEqualizer : GraphicsView, IDrawable
+public sealed class MixerEqualizer : GraphicsView, IDrawable
 {
     // ------------------------------------------------------------
     // Property
@@ -9,7 +9,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     // Setting
 
     public static readonly BindableProperty RangeProperty =
-        BindableProperty.Create(nameof(Range), typeof(int), typeof(MixierEqualizer), 10, propertyChanged: OnPropertyChanged);
+        BindableProperty.Create(nameof(Range), typeof(int), typeof(MixerEqualizer), 10, propertyChanged: OnPropertyChanged);
 
     public int Range
     {
@@ -20,7 +20,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty LevelProperty = BindableProperty.Create(
         nameof(Level),
         typeof(int),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         10,
         propertyChanged: OnPropertyChanged);
 
@@ -35,9 +35,9 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty ValuesProperty = BindableProperty.Create(
         nameof(Values),
         typeof(int[]),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         Array.Empty<int>(),
-        propertyChanged: OnPropertyChanged);
+        propertyChanged: OnValuesChanged);
 
 #pragma warning disable CA1819
     public int[] Values
@@ -47,12 +47,31 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     }
 #pragma warning restore CA1819
 
+    // Peak hold
+
+    public static readonly BindableProperty PeakHoldDurationProperty = BindableProperty.Create(
+        nameof(PeakHoldDuration),
+        typeof(int),
+        typeof(MixerEqualizer),
+        1000,
+        propertyChanged: OnPropertyChanged);
+
+    public int PeakHoldDuration
+    {
+        get => (int)GetValue(PeakHoldDurationProperty);
+        set => SetValue(PeakHoldDurationProperty, value);
+    }
+
+    private int[] peakValues = [];
+
+    private long[] peakTimes = [];
+
     // Color
 
     public static readonly BindableProperty InactiveColorProperty = BindableProperty.Create(
         nameof(InactiveColor),
         typeof(Color),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         Colors.Gray,
         propertyChanged: OnPropertyChanged);
 
@@ -65,7 +84,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty StartColorProperty = BindableProperty.Create(
         nameof(StartColor),
         typeof(Color),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         Colors.DarkGreen,
         propertyChanged: OnPropertyChanged);
 
@@ -78,7 +97,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty EndColorProperty = BindableProperty.Create(
         nameof(EndColor),
         typeof(Color),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         Colors.LightGreen,
         propertyChanged: OnPropertyChanged);
 
@@ -93,7 +112,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty HorizontalSpacingProperty = BindableProperty.Create(
         nameof(HorizontalSpacing),
         typeof(double),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         2d,
         propertyChanged: OnPropertyChanged);
 
@@ -106,7 +125,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     public static readonly BindableProperty VerticalSpacingProperty = BindableProperty.Create(
         nameof(VerticalSpacing),
         typeof(double),
-        typeof(MixierEqualizer),
+        typeof(MixerEqualizer),
         2d,
         propertyChanged: OnPropertyChanged);
 
@@ -120,7 +139,7 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
     // Constructor
     // ------------------------------------------------------------
 
-    public MixierEqualizer()
+    public MixerEqualizer()
     {
         Drawable = this;
     }
@@ -131,7 +150,40 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        ((MixierEqualizer)bindable).Invalidate();
+        ((MixerEqualizer)bindable).Invalidate();
+    }
+
+    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (MixerEqualizer)bindable;
+        control.UpdatePeaks();
+        control.Invalidate();
+    }
+
+    // 各列のピーク値を一定時間ホールドする
+    private void UpdatePeaks()
+    {
+        var range = Range;
+        if (peakValues.Length != range)
+        {
+            peakValues = new int[range];
+            peakTimes = new long[range];
+        }
+
+        var values = Values;
+        var level = Level;
+        var now = Environment.TickCount64;
+        var holdDuration = PeakHoldDuration;
+
+        for (var i = 0; i < range; i++)
+        {
+            var value = (i < values.Length) ? Math.Clamp(values[i], 0, level) : 0;
+            if ((value >= peakValues[i]) || (now - peakTimes[i] > holdDuration))
+            {
+                peakValues[i] = value;
+                peakTimes[i] = now;
+            }
+        }
     }
 
     // ------------------------------------------------------------
@@ -165,6 +217,17 @@ public sealed class MixierEqualizer : GraphicsView, IDrawable
                 var y = dirtyRect.Height - ((j + 1) * cellHeight) - (j * verticalSpacing);
 
                 canvas.FillColor = j < value ? InterpolateColor(StartColor, EndColor, (float)j / (Level - 1)) : InactiveColor;
+                canvas.FillRectangle(x, y, cellWidth, cellHeight);
+            }
+
+            // Peak hold cell
+            var peak = (i < peakValues.Length) ? peakValues[i] : 0;
+            if ((peak > value) && (peak > 0))
+            {
+                var j = peak - 1;
+                var y = dirtyRect.Height - ((j + 1) * cellHeight) - (j * verticalSpacing);
+
+                canvas.FillColor = InterpolateColor(StartColor, EndColor, (float)j / (Level - 1));
                 canvas.FillRectangle(x, y, cellWidth, cellHeight);
             }
         }

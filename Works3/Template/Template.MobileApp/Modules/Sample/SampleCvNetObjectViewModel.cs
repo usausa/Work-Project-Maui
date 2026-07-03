@@ -10,6 +10,9 @@ public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
+    [ObservableProperty]
+    public partial int CaptureCount { get; set; }
+
     public SKBitmapImageSource Image { get; } = new();
 
     public CameraController Controller { get; } = new();
@@ -70,6 +73,9 @@ public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
             // Bitmap
             using var bitmap = ImageHelper.ToNormalizeBitmap(input);
             Image.Bitmap = bitmap;
+
+            // シャッターフラッシュのトリガー
+            CaptureCount++;
 
             // TODO
         }

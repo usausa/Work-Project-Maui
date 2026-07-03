@@ -10,6 +10,9 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
+    [ObservableProperty]
+    public partial int CaptureCount { get; set; }
+
     public CameraController Controller { get; } = new();
 
     public ColorTreeMapGraphics Graphics { get; } = new();
@@ -20,6 +23,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
+        Disposables.Add(Graphics);
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
@@ -84,6 +88,9 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             // Update
             Image.Bitmap = bitmap;
             Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
+
+            // シャッターフラッシュのトリガー
+            CaptureCount++;
         }
         else
         {

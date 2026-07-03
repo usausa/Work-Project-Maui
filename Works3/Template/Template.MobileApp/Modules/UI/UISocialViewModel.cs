@@ -128,7 +128,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
         [
             new SocialUnit { Name = "辺境伯直属戦術機甲大隊", Code = "WOLF GRP", Force = "MF-4000 x36" },
             new SocialUnit { Name = "第二騎士団聖女計画特務中隊", Code = "HOUND SQD", Force = "TYPE-19E x10 + JXD-20" },
-            new SocialUnit { Name = "第三騎士団突撃前衛部隊", Code = "VIPPERS", Force = "TYPE-19 BLOOD x8" }
+            new SocialUnit { Name = "第三騎士団強襲突撃部隊", Code = "VIPPERS", Force = "TYPE-19 BLOOD x8" }
         ];
 
         HasMenuNotificationOperation = true;

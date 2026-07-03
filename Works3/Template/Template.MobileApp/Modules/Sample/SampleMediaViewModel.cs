@@ -10,6 +10,9 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
     public partial bool IsPlaying { get; set; }
 
     [ObservableProperty]
+    public partial bool IsLoading { get; set; }
+
+    [ObservableProperty]
     public partial bool IsControlBarVisible { get; set; }
 
     public ICommand TogglePlayCommand { get; }
@@ -20,7 +23,11 @@ public sealed partial class SampleMediaViewModel : AppViewModelBase
 
     public SampleMediaViewModel(IDispatcher dispatcher)
     {
+        // 再生が始まるまではローディング表示にする
+        IsLoading = true;
+
         Controller.PlayingChanged = x => IsPlaying = x;
+        Controller.LoadingChanged = x => IsLoading = x;
 
         TogglePlayCommand = MakeDelegateCommand(() =>
         {

@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Controls;
 
-public sealed class MixierSlider : GraphicsView, IDrawable
+public sealed class MixerSlider : GraphicsView, IDrawable
 {
     private const float TickWidth = 1f;
 
@@ -13,7 +13,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         0.0,
         propertyChanged: OnPropertyChanged, defaultBindingMode: BindingMode.TwoWay);
 
@@ -26,7 +26,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         0.0,
         propertyChanged: OnPropertyChanged);
 
@@ -39,7 +39,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         100.0,
         propertyChanged: OnPropertyChanged);
 
@@ -54,7 +54,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TrackColorProperty = BindableProperty.Create(
         nameof(TrackColor),
         typeof(Color),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         Colors.DimGray,
         propertyChanged: OnPropertyChanged);
 
@@ -67,7 +67,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ProgressColorProperty = BindableProperty.Create(
         nameof(ProgressColor),
         typeof(Color),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         Colors.OrangeRed,
         propertyChanged: OnPropertyChanged);
 
@@ -80,7 +80,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbColor1Property = BindableProperty.Create(
         nameof(ThumbColor1),
         typeof(Color),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         Colors.LightGray,
         propertyChanged: OnPropertyChanged);
 
@@ -93,7 +93,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbColor2Property = BindableProperty.Create(
         nameof(ThumbColor2),
         typeof(Color),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         Colors.DarkGray,
         propertyChanged: OnPropertyChanged);
 
@@ -108,7 +108,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TrackWidthProperty = BindableProperty.Create(
         nameof(TrackWidth),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         16.0,
         propertyChanged: OnPropertyChanged);
 
@@ -121,7 +121,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbWidthProperty = BindableProperty.Create(
         nameof(ThumbWidth),
         typeof(double),
-        typeof(MixierSlider), 32.0,
+        typeof(MixerSlider), 32.0,
         propertyChanged: OnPropertyChanged);
 
     public double ThumbWidth
@@ -133,7 +133,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty ThumbHeightProperty = BindableProperty.Create(
         nameof(ThumbHeight),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         12.0,
         propertyChanged: OnPropertyChanged);
 
@@ -148,7 +148,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty HasTickMarksProperty = BindableProperty.Create(
         nameof(HasTickMarks),
         typeof(bool),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         true,
         propertyChanged: OnPropertyChanged);
 
@@ -161,7 +161,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TickMarkColorProperty = BindableProperty.Create(
         nameof(TickMarkColor),
         typeof(Color),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         Colors.Gray,
         propertyChanged: OnPropertyChanged);
 
@@ -174,7 +174,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TickMarkCountProperty = BindableProperty.Create(
         nameof(TickMarkCount),
         typeof(int),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         11,
         propertyChanged: OnPropertyChanged);
 
@@ -187,7 +187,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     public static readonly BindableProperty TickMarkLengthProperty = BindableProperty.Create(
         nameof(TickMarkLength),
         typeof(double),
-        typeof(MixierSlider),
+        typeof(MixerSlider),
         24.0,
         propertyChanged: OnPropertyChanged);
 
@@ -207,7 +207,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
     // Constructor
     // ------------------------------------------------------------
 
-    public MixierSlider()
+    public MixerSlider()
     {
         Drawable = this;
 
@@ -222,7 +222,7 @@ public sealed class MixierSlider : GraphicsView, IDrawable
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        ((MixierSlider)bindable).Invalidate();
+        ((MixerSlider)bindable).Invalidate();
     }
 
     // ------------------------------------------------------------
