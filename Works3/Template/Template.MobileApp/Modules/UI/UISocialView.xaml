@@ -214,6 +214,8 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type model:SocialNotificationInfo}">
                         <controls:SocialNotification Style="{StaticResource Notification}"
+                                                     behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                                     behaviors:AnimationOption.EnterDelay="{Binding Delay}"
                                                      Percent="{Binding Percent}"
                                                      Text1="{Binding Category}"
                                                      Text2="{Binding Name}"

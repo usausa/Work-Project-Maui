@@ -439,7 +439,12 @@
                     <Editor Grid.Column="0"
                             Style="{StaticResource MessageInputEditor}"
                             Text="{Binding InputText}"
-                            Placeholder="メッセージを入力" />
+                            Placeholder="メッセージを入力">
+                        <Editor.Behaviors>
+                            <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource BubbleSend}"
+                                                           FocusedThickness="2" />
+                        </Editor.Behaviors>
+                    </Editor>
                     <ImageButton Grid.Column="1"
                                  Style="{StaticResource StickerActionButton}"
                                  Source="ic_sticker.png"
@@ -448,6 +453,7 @@
             </Border>
             <ImageButton Grid.Column="2"
                          Style="{StaticResource ToolbarActionButton}"
+                         behaviors:ButtonOption.PressEffect="True"
                          Source="ic_send.png"
                          Command="{Binding SendCommand}">
                 <ImageButton.Triggers>

@@ -353,7 +353,7 @@ public sealed class SocialCounter : SocialControl
         nameof(Counter),
         typeof(int),
         typeof(SocialCounter),
-        propertyChanged: Invalidate);
+        propertyChanged: OnCounterChanged);
 
     public int Counter
     {
@@ -361,9 +361,61 @@ public sealed class SocialCounter : SocialControl
         set => SetValue(CounterProperty, value);
     }
 
+    private const string ValueAnimationName = "SocialCounterValue";
+
+    private float displayProgress = 1f;
+
     public SocialCounter()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までカウントアップする
+        displayProgress = 0f;
+        AnimateValues();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ValueAnimationName);
+    }
+
+    private static void OnCounterChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialCounter)bindable;
+        if (control.IsLoaded)
+        {
+            control.displayProgress = 0f;
+            control.AnimateValues();
+        }
+        else
+        {
+            control.InvalidateSurface();
+        }
+    }
+
+    private void AnimateValues()
+    {
+        this.AbortAnimation(ValueAnimationName);
+        this.Animate(
+            ValueAnimationName,
+            v =>
+            {
+                displayProgress = (float)v;
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayProgress = 1f;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -407,7 +459,7 @@ public sealed class SocialCounter : SocialControl
 
         // Counter
         paint.Color = new SKColor(224, 224, 224);
-        text = $"{Counter:N0}";
+        text = $"{(int)(Counter * displayProgress):N0}";
         x = info.Rect.Right - info.Height - font.MeasureText(text);
         y = ((info.Height - fontHeight) / 2) + fontHeight;
         canvas.DrawText(text, x, y, SKTextAlign.Left, font, paint);

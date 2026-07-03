@@ -5,7 +5,17 @@ public static class CountUpOption
 {
     private const string CountUpAnimationName = "CountUpOptionAnimation";
 
-    private const uint Duration = 500;
+    private const uint DefaultDuration = 800;
+
+    public static readonly BindableProperty DurationProperty = BindableProperty.CreateAttached(
+        "Duration",
+        typeof(int),
+        typeof(CountUpOption),
+        (int)DefaultDuration);
+
+    public static int GetDuration(BindableObject bindable) => (int)bindable.GetValue(DurationProperty);
+
+    public static void SetDuration(BindableObject bindable, int value) => bindable.SetValue(DurationProperty, value);
 
     public static readonly BindableProperty ValueProperty = BindableProperty.CreateAttached(
         "Value",
@@ -42,18 +52,31 @@ public static class CountUpOption
             return;
         }
 
-        var to = (double)newValue;
-        var format = GetFormat(label);
-
-        if (!label.IsLoaded)
+        if (label.IsLoaded)
         {
-            // 未表示時は即時反映する
-            label.SetValue(DisplayValueProperty, to);
-            label.Text = string.Format(CultureInfo.CurrentCulture, format, to);
-            return;
+            StartCountUp(label, (double)newValue);
         }
+        else
+        {
+            // 表示前に値が確定した場合は Loaded 時に 0 から数え上げる
+            label.Loaded -= OnLabelLoaded;
+            label.Loaded += OnLabelLoaded;
+        }
+    }
 
+    private static void OnLabelLoaded(object? sender, EventArgs e)
+    {
+        if (sender is Label label)
+        {
+            label.Loaded -= OnLabelLoaded;
+            StartCountUp(label, GetValue(label));
+        }
+    }
+
+    private static void StartCountUp(Label label, double to)
+    {
         var from = (double)label.GetValue(DisplayValueProperty);
+        var format = GetFormat(label);
 
         label.AbortAnimation(CountUpAnimationName);
         label.Animate(
@@ -65,7 +88,7 @@ public static class CountUpOption
                 label.Text = string.Format(CultureInfo.CurrentCulture, format, current);
             },
             16,
-            Duration,
+            (uint)GetDuration(label),
             Easing.CubicOut,
             (_, _) =>
             {

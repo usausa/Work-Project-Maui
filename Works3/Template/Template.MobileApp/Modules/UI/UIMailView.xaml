@@ -212,6 +212,7 @@
                 <Setter Property="CornerRadius" Value="28" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="28" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
                 <Setter Property="Shadow">
                     <Shadow Offset="4,4"
                             Brush="Black" Opacity="0.5" Radius="8" />
@@ -230,6 +231,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="ContentLayout" Value="Top, 0" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
         </ResourceDictionary>

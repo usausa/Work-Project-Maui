@@ -152,24 +152,52 @@ public static partial class ButtonOption
 
     private static void OnPressEffectChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        if (bindable is not Button view)
+        // Button と ImageButton のどちらにも適用できるようにする
+        switch (bindable)
         {
-            return;
-        }
+            case Button button:
+                {
+                    var behavior = button.Behaviors.FirstOrDefault(static x => x is PressEffectBehavior);
+                    if (behavior is not null)
+                    {
+                        button.Behaviors.Remove(behavior);
+                    }
+                    if (newValue is true)
+                    {
+                        button.Behaviors.Add(new PressEffectBehavior());
+                    }
+                    break;
+                }
 
-        if (oldValue is not null)
-        {
-            var behavior = view.Behaviors.FirstOrDefault(static x => x is PressEffectBehavior);
-            if (behavior is not null)
-            {
-                view.Behaviors.Remove(behavior);
-            }
-        }
+            case ImageButton imageButton:
+                {
+                    var behavior = imageButton.Behaviors.FirstOrDefault(static x => x is ImagePressEffectBehavior);
+                    if (behavior is not null)
+                    {
+                        imageButton.Behaviors.Remove(behavior);
+                    }
+                    if (newValue is true)
+                    {
+                        imageButton.Behaviors.Add(new ImagePressEffectBehavior());
+                    }
+                    break;
+                }
 
-        if (newValue is not null)
-        {
-            view.Behaviors.Add(new PressEffectBehavior());
+            default:
+                break;
         }
+    }
+
+    private static void ApplyPressed(VisualElement element)
+    {
+        element.ScaleToAsync(0.9, 50, Easing.CubicOut);
+        element.FadeToAsync(0.8, 50, Easing.CubicOut);
+    }
+
+    private static void ApplyReleased(VisualElement element)
+    {
+        element.ScaleToAsync(1.0, 100, Easing.CubicOut);
+        element.FadeToAsync(1.0, 100, Easing.CubicOut);
     }
 
     private sealed class PressEffectBehavior : BehaviorBase<Button>
@@ -194,8 +222,7 @@ public static partial class ButtonOption
         {
             if (sender is Button button)
             {
-                button.ScaleToAsync(0.9, 50, Easing.CubicOut);
-                button.FadeToAsync(0.8, 50, Easing.CubicOut);
+                ApplyPressed(button);
             }
         }
 
@@ -203,8 +230,42 @@ public static partial class ButtonOption
         {
             if (sender is Button button)
             {
-                button.ScaleToAsync(1.0, 100, Easing.CubicOut);
-                button.FadeToAsync(1.0, 100, Easing.CubicOut);
+                ApplyReleased(button);
+            }
+        }
+    }
+
+    private sealed class ImagePressEffectBehavior : BehaviorBase<ImageButton>
+    {
+        protected override void OnAttachedTo(ImageButton bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            bindable.Pressed += OnButtonPressed;
+            bindable.Released += OnButtonReleased;
+        }
+
+        protected override void OnDetachingFrom(ImageButton bindable)
+        {
+            base.OnDetachingFrom(bindable);
+
+            bindable.Pressed -= OnButtonPressed;
+            bindable.Released -= OnButtonReleased;
+        }
+
+        private static void OnButtonPressed(object? sender, EventArgs e)
+        {
+            if (sender is ImageButton button)
+            {
+                ApplyPressed(button);
+            }
+        }
+
+        private static void OnButtonReleased(object? sender, EventArgs e)
+        {
+            if (sender is ImageButton button)
+            {
+                ApplyReleased(button);
             }
         }
     }

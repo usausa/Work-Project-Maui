@@ -113,9 +113,9 @@ public sealed partial class UISocialViewModel : AppViewModelBase
         AlertTitle = "BEAST ALERT";
         AlertMessage = "牛鬼級旅団出現";
 
-        Notifications.Add(new SocialNotificationInfo { Category = "MELEE WEAPON", Name = "04式単分子長刀", Code = "SWOARD OF SLASSING", Percent = 87 });
-        Notifications.Add(new SocialNotificationInfo { Category = "GOLEM", Name = "大型機動兵器戦鎚IV型", Code = "WARHAMMER TYPE=4R", Percent = 65 });
-        Notifications.Add(new SocialNotificationInfo { Category = "VEHICLE", Name = "08式騎士輸送用装甲車両", Code = "SLEIPNIR", Percent = 23 });
+        Notifications.Add(new SocialNotificationInfo { Category = "MELEE WEAPON", Name = "04式単分子長刀", Code = "SWOARD OF SLASSING", Percent = 87, Delay = 0 });
+        Notifications.Add(new SocialNotificationInfo { Category = "GOLEM", Name = "大型機動兵器戦鎚IV型", Code = "WARHAMMER TYPE=4R", Percent = 65, Delay = 120 });
+        Notifications.Add(new SocialNotificationInfo { Category = "VEHICLE", Name = "08式騎士輸送用装甲車両", Code = "SLEIPNIR", Percent = 23, Delay = 240 });
 
         StatusName = "甲種聖装 瑠璃";
         StatusForm = "A FORM";
