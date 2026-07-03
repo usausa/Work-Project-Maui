@@ -109,6 +109,44 @@
                    TargetType="Grid">
                 <Setter Property="Padding" Value="6,3" />
                 <Setter Property="ColumnSpacing" Value="3" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MessageFromLayout"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="UnreadDot"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="8" />
+                <Setter Property="HeightRequest" Value="8" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="EmptyStateLayout"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="EmptyStateIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="96" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="EmptyStateTextLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
             <Style x:Key="MessageImage"
@@ -126,9 +164,8 @@
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Start" />
-                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
             <Style x:Key="MessageTitleLabel"
@@ -242,31 +279,100 @@
         <!-- Messages -->
         <CollectionView Grid.Row="2"
                         Style="{StaticResource MessageCollection}"
-                        ItemsSource="{Binding Messages}">
+                        ItemsSource="{Binding Messages}"
+                        IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
+                        behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
+                        behaviors:ScrollOption.HideOnScrollTarget="{x:Reference MailFab}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:MailMessage}">
-                    <Grid Style="{StaticResource MessageGrid}"
-                          RowDefinitions="24,20,32"
-                          ColumnDefinitions="48,*,56">
-                        <Image Grid.RowSpan="3"
-                               Style="{StaticResource MessageImage}"
-                               Source="{Binding Image}" />
-                        <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource MessageFromLabel}"
-                               Text="{Binding From}" />
-                        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                               Style="{StaticResource MessageTitleLabel}"
-                               Text="{Binding Title}" />
-                        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
-                               Style="{StaticResource MessageBodyLabel}"
-                               Text="{Binding Body}" />
-                        <Label Grid.Row="0" Grid.Column="2"
-                               Style="{StaticResource MessageDateTimeLabel}"
-                               Text="{Binding DateTime, Converter={StaticResource MailDateTimeStringConverter}}" />
-                    </Grid>
+                    <SwipeView>
+                        <SwipeView.LeftItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="削除"
+                                           BackgroundColor="{StaticResource RedDefault}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand}"
+                                           CommandParameter="{Binding .}">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Delete}"
+                                                         FontFamily="MaterialIcons"
+                                                         Color="White"
+                                                         Size="24" />
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="アーカイブ"
+                                           BackgroundColor="{StaticResource GreenDefault}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand}"
+                                           CommandParameter="{Binding .}">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Archive}"
+                                                         FontFamily="MaterialIcons"
+                                                         Color="White"
+                                                         Size="24" />
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid Style="{StaticResource MessageGrid}"
+                              RowDefinitions="24,20,32"
+                              ColumnDefinitions="48,*,56">
+                            <Image Grid.RowSpan="3"
+                                   Style="{StaticResource MessageImage}"
+                                   Source="{Binding Image}" />
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
+                                                   Style="{StaticResource MessageFromLayout}">
+                                <Ellipse Style="{StaticResource UnreadDot}"
+                                         IsVisible="{Binding IsUnread}" />
+                                <Label Style="{StaticResource MessageFromLabel}"
+                                       Text="{Binding From}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsUnread}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="Black" />
+                                            <Setter Property="FontAttributes" Value="Bold" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                   Style="{StaticResource MessageTitleLabel}"
+                                   Text="{Binding Title}" />
+                            <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                   Style="{StaticResource MessageBodyLabel}"
+                                   Text="{Binding Body}" />
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   Style="{StaticResource MessageDateTimeLabel}"
+                                   Text="{Binding DateTime, Converter={StaticResource MailDateTimeStringConverter}}" />
+                        </Grid>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <!-- Empty state (Schedule / Application) -->
+        <VerticalStackLayout Grid.Row="2"
+                             Style="{StaticResource EmptyStateLayout}"
+                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}"
+                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}">
+            <Label Style="{StaticResource EmptyStateIconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Event_busy}" />
+            <Label Style="{StaticResource EmptyStateTextLabel}"
+                   Text="今日の予定はありません" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="2"
+                             Style="{StaticResource EmptyStateLayout}"
+                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Application}}"
+                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}">
+            <Label Style="{StaticResource EmptyStateIconLabel}"
+                   Text="{x:Static fonts:MaterialIcons.Apps}" />
+            <Label Style="{StaticResource EmptyStateTextLabel}"
+                   Text="アプリはまだありません" />
+        </VerticalStackLayout>
 
         <!-- Indicator -->
         <ActivityIndicator Grid.Row="2"
@@ -274,8 +380,10 @@
                            IsRunning="{Binding IsLoading}" />
 
         <!-- Floating Button -->
-        <Button Grid.Row="2"
-                Style="{StaticResource FloatingButton}">
+        <Button x:Name="MailFab"
+                Grid.Row="2"
+                Style="{StaticResource FloatingButton}"
+                IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add}"
                                  FontFamily="MaterialIcons"

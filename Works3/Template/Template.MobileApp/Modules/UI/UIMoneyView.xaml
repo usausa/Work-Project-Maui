@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
@@ -156,9 +157,15 @@
             <Style x:Key="RankBadgeBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="2" />
-                <Setter Property="BackgroundColor" Value="Silver" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0.0" Color="#F2F2F2" />
+                        <GradientStop Offset="0.5" Color="#C4C4CC" />
+                        <GradientStop Offset="1.0" Color="#9E9EA6" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
             <Style x:Key="RankBadgeLabel"
@@ -640,7 +647,9 @@
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}">
+                           Style="{StaticResource BottomSelectImage}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Home}">
                         <Image.Source>
                             <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
                                              FontFamily="MaterialIcons"
@@ -661,7 +670,9 @@
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}">
+                           Style="{StaticResource BottomSelectImage}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Search}">
                         <Image.Source>
                             <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Search}"
                                              FontFamily="MaterialIcons"
@@ -682,7 +693,9 @@
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}">
+                           Style="{StaticResource BottomSelectImage}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Notifications}">
                         <Image.Source>
                             <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Notifications_none}"
                                              FontFamily="MaterialIcons"
@@ -709,7 +722,9 @@
                                    TouchDownEffects="None">
                 <Grid RowDefinitions="*,Auto">
                     <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}">
+                           Style="{StaticResource BottomSelectImage}"
+                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Account}">
                         <Image.Source>
                             <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
                                              FontFamily="MaterialIcons"
@@ -734,7 +749,8 @@
 
         <!-- Center button -->
         <Border Grid.RowSpan="3"
-                Style="{StaticResource CenterButtonBorder}">
+                Style="{StaticResource CenterButtonBorder}"
+                behaviors:AnimationOption.Pulse="True">
             <toolkit:SfEffectsView Style="{StaticResource CenterButtonEffect}">
                 <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
                     <Image Style="{StaticResource CenterButtonImage}">

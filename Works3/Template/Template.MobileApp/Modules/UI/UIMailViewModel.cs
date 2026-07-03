@@ -21,11 +21,17 @@ public sealed partial class UIMailViewModel : AppViewModelBase
 
     public IObserveCommand SelectCommand { get; }
 
+    public ICommand ArchiveCommand { get; }
+
+    public ICommand DeleteCommand { get; }
+
     public UIMailViewModel(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
 
         SelectCommand = MakeDelegateCommand<MailPage>(x => Selected = x);
+        ArchiveCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
+        DeleteCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
     }
 
     // ReSharper disable once ArrangeModifiersOrder
@@ -52,7 +58,8 @@ public sealed partial class UIMailViewModel : AppViewModelBase
             Image = await LoadImage("mofusand.jpg"),
             From = "山奥通信",
             Title = "タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん",
-            Body = "こんにちは。\nうさうさです、どうぞよろしくお願いしますだよもん。\n文章はまだ続きます。"
+            Body = "こんにちは。\nうさうさです、どうぞよろしくお願いしますだよもん。\n文章はまだ続きます。",
+            IsUnread = true
         });
         Messages.Add(new MailMessage
         {
@@ -60,7 +67,8 @@ public sealed partial class UIMailViewModel : AppViewModelBase
             Image = await LoadImage("genbaneko.png"),
             From = "現場猫bot",
             Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
+            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!",
+            IsUnread = true
         });
         Messages.Add(new MailMessage
         {

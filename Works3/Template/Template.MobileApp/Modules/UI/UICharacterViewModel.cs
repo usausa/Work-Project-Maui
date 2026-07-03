@@ -9,9 +9,12 @@ public sealed partial class UICharacterViewModel : AppViewModelBase
 
     public ICommand SelectCommand { get; }
 
+    public ICommand FavoriteCommand { get; }
+
     public UICharacterViewModel()
     {
         SelectCommand = MakeDelegateCommand<CharacterItem>(x => SelectedImage = x.Full);
+        FavoriteCommand = MakeDelegateCommand<CharacterItem>(x => x.IsFavorite = !x.IsFavorite);
 
         Characters.Add(new CharacterItem { Name = "Ruler", Color = Color.FromArgb("#81D4FA"), Face = "usa1_face.jpg", Full = "usa1_full.jpg" });
         Characters.Add(new CharacterItem { Name = "Caster", Color = Color.FromArgb("#F48FB1"), Face = "usa2_face.jpg", Full = "usa2_full.jpg" });

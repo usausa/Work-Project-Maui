@@ -4,6 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIGaugeView"
              x:DataType="{x:Type module:UIGaugeViewModel}"
@@ -13,15 +15,85 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <ContentView.Resources>
+        <conv:CompassDirectionConverter x:Key="CompassLabelConverter" />
+
+        <Style x:Key="GaugeScroll"
+               TargetType="ScrollView">
+            <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+        </Style>
         <Style x:Key="GaugeGrid"
                TargetType="Grid">
-            <Setter Property="Padding" Value="4" />
-            <Setter Property="ColumnSpacing" Value="4" />
-            <Setter Property="RowSpacing" Value="4" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="ColumnSpacing" Value="8" />
+            <Setter Property="RowSpacing" Value="8" />
+        </Style>
+        <Style x:Key="GaugePanel"
+               TargetType="Border">
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Setter Property="Padding" Value="4,8,4,0" />
+            <Setter Property="Shadow">
+                <Shadow Brush="Black"
+                        Opacity="0.15"
+                        Radius="6"
+                        Offset="0,2" />
+            </Setter>
+        </Style>
+        <Style x:Key="GaugePanelTitle"
+               TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            <Setter Property="CharacterSpacing" Value="2" />
         </Style>
         <Style x:Key="GaugeItemLayout"
                TargetType="VerticalStackLayout">
             <Setter Property="Spacing" Value="0" />
+        </Style>
+
+        <Style x:Key="GaugeSliderBase"
+               TargetType="Slider">
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MaximumTrackColor" Value="{StaticResource GrayLighten2}" />
+        </Style>
+        <Style x:Key="SliderPressure"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC0000" />
+            <Setter Property="MinimumTrackColor" Value="#CC0000" />
+        </Style>
+        <Style x:Key="SliderHumidity"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#2880FF" />
+            <Setter Property="MinimumTrackColor" Value="#2880FF" />
+        </Style>
+        <Style x:Key="SliderTemperature"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#DD6010" />
+            <Setter Property="MinimumTrackColor" Value="#DD6010" />
+        </Style>
+        <Style x:Key="SliderWindDirection"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC2020" />
+            <Setter Property="MinimumTrackColor" Value="#606060" />
+        </Style>
+        <Style x:Key="SliderSpeed"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC1818" />
+            <Setter Property="MinimumTrackColor" Value="#CC1818" />
+        </Style>
+        <Style x:Key="SliderTachometer"
+               TargetType="Slider"
+               BasedOn="{StaticResource GaugeSliderBase}">
+            <Setter Property="ThumbColor" Value="#CC4400" />
+            <Setter Property="MinimumTrackColor" Value="#CC4400" />
         </Style>
 
         <!-- Sample 1: Pressure -->
@@ -197,6 +269,7 @@
             <Setter Property="LabelExtent" Value="0.90" />
             <Setter Property="LabelFontSize" Value="18" />
             <Setter Property="LabelColor" Value="White" />
+            <Setter Property="LabelConverter" Value="{StaticResource CompassLabelConverter}" />
             <Setter Property="ShowValue" Value="False" />
             <Setter Property="NeedleEndExtent" Value="0.54" />
             <Setter Property="NeedleStartWidth" Value="12" />
@@ -312,64 +385,96 @@
         </Style>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource GaugeGrid}"
-          RowDefinitions="*,*,*"
-          ColumnDefinitions="*,*">
+    <ScrollView Style="{StaticResource GaugeScroll}">
+        <Grid Style="{StaticResource GaugeGrid}"
+              RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="*,*">
 
-        <!-- Sample 1: Pressure -->
-        <VerticalStackLayout Grid.Row="0" Grid.Column="0"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugePressure}"
-                            Value="{Binding Pressure}" />
-            <Slider Value="{Binding Pressure, Mode=TwoWay}"
-                    Minimum="950" Maximum="1050" />
-        </VerticalStackLayout>
+            <!-- Sample 1: Pressure -->
+            <Border Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="PRESSURE" />
+                    <controls:Gauge Style="{StaticResource GaugePressure}"
+                                    Value="{Binding Pressure}" />
+                    <Slider Style="{StaticResource SliderPressure}"
+                            Value="{Binding Pressure, Mode=TwoWay}"
+                            Minimum="950" Maximum="1050" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Sample 2: Humidity -->
-        <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugeHumidity}"
-                            Value="{Binding Humidity}" />
-            <Slider Value="{Binding Humidity, Mode=TwoWay}"
-                    Minimum="0" Maximum="100" />
-        </VerticalStackLayout>
+            <!-- Sample 2: Humidity -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="HUMIDITY" />
+                    <controls:Gauge Style="{StaticResource GaugeHumidity}"
+                                    Value="{Binding Humidity}" />
+                    <Slider Style="{StaticResource SliderHumidity}"
+                            Value="{Binding Humidity, Mode=TwoWay}"
+                            Minimum="0" Maximum="100" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Sample 3: Temperature -->
-        <VerticalStackLayout Grid.Row="1" Grid.Column="0"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugeTemperature}"
-                            Value="{Binding Temperature}" />
-            <Slider Value="{Binding Temperature, Mode=TwoWay}"
-                    Minimum="-10" Maximum="40" />
-        </VerticalStackLayout>
+            <!-- Sample 3: Temperature -->
+            <Border Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="TEMPERATURE" />
+                    <controls:Gauge Style="{StaticResource GaugeTemperature}"
+                                    Value="{Binding Temperature}" />
+                    <Slider Style="{StaticResource SliderTemperature}"
+                            Value="{Binding Temperature, Mode=TwoWay}"
+                            Minimum="-10" Maximum="40" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Sample 4: Wind Direction -->
-        <VerticalStackLayout Grid.Row="1" Grid.Column="1"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugeWindDirection}"
-                            Value="{Binding WindDirection}" />
-            <Slider Value="{Binding WindDirection, Mode=TwoWay}"
-                    Minimum="0" Maximum="360" />
-        </VerticalStackLayout>
+            <!-- Sample 4: Wind Direction -->
+            <Border Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="WIND" />
+                    <controls:Gauge Style="{StaticResource GaugeWindDirection}"
+                                    Value="{Binding WindDirection}" />
+                    <Slider Style="{StaticResource SliderWindDirection}"
+                            Value="{Binding WindDirection, Mode=TwoWay}"
+                            Minimum="0" Maximum="360" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Sample 5: Speed -->
-        <VerticalStackLayout Grid.Row="2" Grid.Column="0"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugeSpeed}"
-                            Value="{Binding SpeedKmh}" />
-            <Slider Value="{Binding SpeedKmh, Mode=TwoWay}"
-                    Minimum="0" Maximum="200" />
-        </VerticalStackLayout>
+            <!-- Sample 5: Speed -->
+            <Border Grid.Row="2" Grid.Column="0"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="SPEED" />
+                    <controls:Gauge Style="{StaticResource GaugeSpeed}"
+                                    Value="{Binding SpeedKmh}" />
+                    <Slider Style="{StaticResource SliderSpeed}"
+                            Value="{Binding SpeedKmh, Mode=TwoWay}"
+                            Minimum="0" Maximum="200" />
+                </VerticalStackLayout>
+            </Border>
 
-        <!-- Sample 6: Tachometer -->
-        <VerticalStackLayout Grid.Row="2" Grid.Column="1"
-                             Style="{StaticResource GaugeItemLayout}">
-            <controls:Gauge Style="{StaticResource GaugeTachometer}"
-                            Value="{Binding Rpm}" />
-            <Slider Value="{Binding Rpm, Mode=TwoWay}"
-                    Minimum="0" Maximum="8" />
-        </VerticalStackLayout>
+            <!-- Sample 6: Tachometer -->
+            <Border Grid.Row="2" Grid.Column="1"
+                    Style="{StaticResource GaugePanel}">
+                <VerticalStackLayout Style="{StaticResource GaugeItemLayout}">
+                    <Label Style="{StaticResource GaugePanelTitle}"
+                           Text="TACHO" />
+                    <controls:Gauge Style="{StaticResource GaugeTachometer}"
+                                    Value="{Binding Rpm}" />
+                    <Slider Style="{StaticResource SliderTachometer}"
+                            Value="{Binding Rpm, Mode=TwoWay}"
+                            Minimum="0" Maximum="8" />
+                </VerticalStackLayout>
+            </Border>
 
-    </Grid>
+        </Grid>
+    </ScrollView>
 
 </ContentView>
