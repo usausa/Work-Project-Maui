@@ -69,12 +69,13 @@
 
         <Button Grid.Row="2" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleChart}"
                 Text="Chart">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Bar_chart}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>
@@ -143,12 +144,13 @@
 
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleChat}"
                 Text="Chat">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Smart_toy}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>

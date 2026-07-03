@@ -14,7 +14,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*">
 
         <Button Grid.Row="0" Grid.Column="0"
@@ -31,12 +31,13 @@
         </Button>
         <Button Grid.Row="0" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIProfile}"
                 Text="Profile">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>
@@ -80,24 +81,26 @@
         </Button>
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISuper}"
                 Text="Super">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Widgets}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>
 
         <Button Grid.Row="3" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UISchedule}"
                 Text="Schedule">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Schedule}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>
@@ -203,12 +206,13 @@
         </Button>
         <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UICockpit}"
                 Text="Cockpit">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Flight}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>
@@ -262,6 +266,24 @@
                                  Size="24" />
             </Button.ImageSource>
         </Button>
+
+        <Button Grid.Row="10" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITimeline}"
+                Text="Timeline">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Timeline}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
+        <Button Grid.Row="10" Grid.Column="1"
+                Style="{StaticResource MenuButton}"
+                IsEnabled="False"
+                IsVisible="False"
+                Text="" />
 
     </Grid>
 

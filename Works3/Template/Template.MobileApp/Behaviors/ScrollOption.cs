@@ -58,6 +58,53 @@ public static class ScrollOption
         }
     }
 
+    // ------------------------------------------------------------------ ParallaxTarget
+
+    public static readonly BindableProperty ParallaxTargetProperty = BindableProperty.CreateAttached(
+        "ParallaxTarget",
+        typeof(VisualElement),
+        typeof(ScrollOption),
+        null,
+        propertyChanged: OnParallaxTargetChanged);
+
+    public static VisualElement? GetParallaxTarget(BindableObject bindable) => (VisualElement?)bindable.GetValue(ParallaxTargetProperty);
+
+    public static void SetParallaxTarget(BindableObject bindable, VisualElement? value) => bindable.SetValue(ParallaxTargetProperty, value);
+
+    private static void OnParallaxTargetChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            scrollView.Scrolled -= OnParallaxScrolled;
+        }
+        if (newValue is not null)
+        {
+            scrollView.Scrolled += OnParallaxScrolled;
+        }
+    }
+
+    private static void OnParallaxScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if (sender is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        var target = GetParallaxTarget(scrollView);
+        if (target is null)
+        {
+            return;
+        }
+
+        // スクロールの半分の速度で追従させて奥行きを出す
+        target.TranslationY = Math.Max(0, e.ScrollY) * 0.5;
+    }
+
     // ------------------------------------------------------------------ ShowOnAwayFromLastTarget
 
     public static readonly BindableProperty ShowOnAwayFromLastTargetProperty = BindableProperty.CreateAttached(

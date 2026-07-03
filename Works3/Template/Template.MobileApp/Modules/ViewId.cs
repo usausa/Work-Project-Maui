@@ -121,6 +121,8 @@ public enum ViewId
 
     ViewDrawing,
 
+    ViewEffect,
+
     // UI
     UIMenu,
     UILogin,
@@ -136,6 +138,7 @@ public enum ViewId
     UILoad,
     UIMixer,
     UIGraph,
+    UITimeline,
     UITreeMap,
     UIRadar,
     UICockpit,

@@ -45,8 +45,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DateOnly? SelectedDate { get; set; }
 
-    [ObservableProperty]
-    public partial ObservableCollection<DateOnly> SelectedDates { get; set; } = [];
+    public ObservableCollection<DateOnly> SelectedDates { get; } = [];
 
     [ObservableProperty]
     public partial DateOnly? SelectedStartDate { get; set; }
@@ -68,6 +67,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     public IObserveCommand GoToTodayCommand { get; }
     public IObserveCommand DayTappedCommand { get; }
     public IObserveCommand EventTappedCommand { get; }
+    public IObserveCommand SelectModeCommand { get; }
 
     public UICalendarViewModel()
     {
@@ -76,6 +76,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         GoToTodayCommand = MakeDelegateCommand(OnGoToToday);
         DayTappedCommand = MakeDelegateCommand<DayView>(OnDayTapped);
         EventTappedCommand = MakeDelegateCommand<ScheduleEvent>(OnEventTapped);
+        SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
 
         currentYear = Today.Year;
         currentMonth = Today.Month;
@@ -111,6 +112,17 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         currentYear = Today.Year;
         currentMonth = Today.Month;
         LoadMonth(currentYear, currentMonth);
+    }
+
+    private void OnSelectMode(CalendarSelectionMode mode)
+    {
+        SelectionMode = mode;
+
+        // モード切替時は選択状態をリセットする
+        SelectedDate = null;
+        SelectedDates.Clear();
+        SelectedStartDate = null;
+        SelectedEndDate = null;
     }
 
     private void LoadMonth(int year, int month)

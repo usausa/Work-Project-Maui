@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIProfileView"
              x:DataType="{x:Type module:UIProfileViewModel}"
@@ -11,6 +12,234 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="AvatarBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="4" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+                <Setter Property="TranslationY" Value="-48" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Opacity="0.3"
+                                Radius="8"
+                                Offset="0,2" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="NameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="IdLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="StatValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+            </Style>
+
+            <Style x:Key="StatNameLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="BioLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="24,16,24,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+            </Style>
+
+            <Style x:Key="SectionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="24,24,24,8" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="ChipFlex"
+                   TargetType="FlexLayout">
+                <Setter Property="Margin" Value="20,0,20,0" />
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="Start" />
+                <Setter Property="AlignItems" Value="Center" />
+            </Style>
+
+            <Style x:Key="SkillChipBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="14,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="SkillChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="HobbyChipBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource SkillChipBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+                <Setter Property="Stroke" Value="{StaticResource GreenLighten3}" />
+            </Style>
+
+            <Style x:Key="HobbyChipLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SkillChipLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="PhotoBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="120" />
+                <Setter Property="HeightRequest" Value="160" />
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView behaviors:ScrollOption.ParallaxTarget="{x:Reference CoverImage}">
+        <VerticalStackLayout>
+
+            <!-- カバー画像(スクロールでパララックス) -->
+            <Grid HeightRequest="200">
+                <Image x:Name="CoverImage"
+                       Source="profile.jpg"
+                       Aspect="AspectFill" />
+            </Grid>
+
+            <!-- カバーより下は白背景ブロック(パララックスしたカバーが透けないように) -->
+            <VerticalStackLayout Padding="0,0,0,24"
+                                 BackgroundColor="White">
+
+                <!-- アバター -->
+                <Border Style="{StaticResource AvatarBorder}">
+                    <Image Source="usa1_face.jpg"
+                           Aspect="AspectFill" />
+                </Border>
+
+                <!-- 名前 / ID -->
+                <VerticalStackLayout Margin="0,-40,0,0"
+                                     Spacing="2">
+                    <Label Style="{StaticResource NameLabel}"
+                           Text="{Binding Name}" />
+                    <Label Style="{StaticResource IdLabel}"
+                           Text="{Binding Id}" />
+                </VerticalStackLayout>
+
+                <!-- 統計 -->
+                <Grid Margin="32,20,32,0"
+                      ColumnDefinitions="*,*,*">
+                    <VerticalStackLayout Grid.Column="0"
+                                         Spacing="2">
+                        <Label Style="{StaticResource StatValueLabel}"
+                               Text="{Binding Posts}" />
+                        <Label Style="{StaticResource StatNameLabel}"
+                               Text="投稿" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="2">
+                        <Label Style="{StaticResource StatValueLabel}"
+                               Text="{Binding Following}" />
+                        <Label Style="{StaticResource StatNameLabel}"
+                               Text="フォロー" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2"
+                                         Spacing="2">
+                        <Label Style="{StaticResource StatValueLabel}"
+                               Text="{Binding Followers, StringFormat='{0:N0}'}" />
+                        <Label Style="{StaticResource StatNameLabel}"
+                               Text="フォロワー" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- 自己紹介 -->
+                <Label Style="{StaticResource BioLabel}"
+                       Text="{Binding Bio}" />
+
+                <!-- スキル -->
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="スキル" />
+                <FlexLayout Style="{StaticResource ChipFlex}"
+                            BindableLayout.ItemsSource="{Binding Skills}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Border Style="{StaticResource SkillChipBorder}">
+                                <Label Style="{StaticResource SkillChipLabel}"
+                                       Text="{Binding .}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <!-- 趣味 -->
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="趣味" />
+                <FlexLayout Style="{StaticResource ChipFlex}"
+                            BindableLayout.ItemsSource="{Binding Hobbies}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Border Style="{StaticResource HobbyChipBorder}">
+                                <Label Style="{StaticResource HobbyChipLabel}"
+                                       Text="{Binding .}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <!-- 投稿写真 -->
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="投稿" />
+                <ScrollView Orientation="Horizontal"
+                            HorizontalScrollBarVisibility="Never"
+                            Padding="24,0">
+                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Photos}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type x:String}">
+                                <Border Style="{StaticResource PhotoBorder}">
+                                    <Image Source="{Binding .}"
+                                           Aspect="AspectFill" />
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

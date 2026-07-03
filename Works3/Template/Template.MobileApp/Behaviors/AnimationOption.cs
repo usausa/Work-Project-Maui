@@ -1,5 +1,12 @@
 namespace Template.MobileApp.Behaviors;
 
+public enum EnterAnimationType
+{
+    None,
+    FadeUp,
+    Pop
+}
+
 public static class AnimationOption
 {
     private const string PulseAnimationName = "AnimationOptionPulse";
@@ -7,6 +14,8 @@ public static class AnimationOption
     private const string FadeInAnimationName = "AnimationOptionFadeIn";
     private const string HighlightAnimationName = "AnimationOptionHighlight";
     private const string FlashAnimationName = "AnimationOptionFlash";
+    private const string WaveAnimationName = "AnimationOptionWave";
+    private const string EnterAnimationName = "AnimationOptionEnter";
 
     // ------------------------------------------------------------------ Pulse
 
@@ -161,6 +170,100 @@ public static class AnimationOption
             (_, _) => element.Opacity = 1.0);
     }
 
+    // ------------------------------------------------------------------ Wave
+
+    public static readonly BindableProperty WaveProperty = BindableProperty.CreateAttached(
+        "Wave",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnWaveChanged);
+
+    public static bool GetWave(BindableObject bindable) => (bool)bindable.GetValue(WaveProperty);
+
+    public static void SetWave(BindableObject bindable, bool value) => bindable.SetValue(WaveProperty, value);
+
+    public static readonly BindableProperty WaveDelayProperty = BindableProperty.CreateAttached(
+        "WaveDelay",
+        typeof(int),
+        typeof(AnimationOption),
+        0);
+
+    public static int GetWaveDelay(BindableObject bindable) => (int)bindable.GetValue(WaveDelayProperty);
+
+    public static void SetWaveDelay(BindableObject bindable, int value) => bindable.SetValue(WaveDelayProperty, value);
+
+    private static void OnWaveChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnWaveLoaded;
+            element.Unloaded += OnWaveUnloaded;
+            if (element.IsLoaded)
+            {
+                StartWave(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnWaveLoaded;
+            element.Unloaded -= OnWaveUnloaded;
+            element.AbortAnimation(WaveAnimationName);
+            element.TranslationY = 0;
+        }
+    }
+
+    private static void OnWaveLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            var delay = GetWaveDelay(element);
+            if (delay > 0)
+            {
+                // 要素毎に位相をずらして波を作る
+                element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
+                {
+                    if (element.IsLoaded && GetWave(element))
+                    {
+                        StartWave(element);
+                    }
+                });
+            }
+            else
+            {
+                StartWave(element);
+            }
+        }
+    }
+
+    private static void OnWaveUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(WaveAnimationName);
+            element.TranslationY = 0;
+        }
+    }
+
+    private static void StartWave(VisualElement element)
+    {
+        element.AbortAnimation(WaveAnimationName);
+
+        // 正弦カーブで上下に揺れ続ける
+        element.Animate(
+            WaveAnimationName,
+            v => element.TranslationY = -5.0 * Math.Sin(v * Math.PI),
+            16,
+            700,
+            Easing.Linear,
+            repeat: () => GetWave(element));
+    }
+
     // ------------------------------------------------------------------ Flash
 
     public static readonly BindableProperty FlashTriggerProperty = BindableProperty.CreateAttached(
@@ -241,6 +344,181 @@ public static class AnimationOption
             600,
             Easing.CubicOut,
             (_, _) => element.BackgroundColor = original);
+    }
+
+    // ------------------------------------------------------------------ Enter
+
+    public static readonly BindableProperty EnterAnimationProperty = BindableProperty.CreateAttached(
+        "EnterAnimation",
+        typeof(EnterAnimationType),
+        typeof(AnimationOption),
+        EnterAnimationType.None,
+        propertyChanged: OnEnterAnimationChanged);
+
+    public static EnterAnimationType GetEnterAnimation(BindableObject bindable) => (EnterAnimationType)bindable.GetValue(EnterAnimationProperty);
+
+    public static void SetEnterAnimation(BindableObject bindable, EnterAnimationType value) => bindable.SetValue(EnterAnimationProperty, value);
+
+    public static readonly BindableProperty EnterDelayProperty = BindableProperty.CreateAttached(
+        "EnterDelay",
+        typeof(int),
+        typeof(AnimationOption),
+        0);
+
+    public static int GetEnterDelay(BindableObject bindable) => (int)bindable.GetValue(EnterDelayProperty);
+
+    public static void SetEnterDelay(BindableObject bindable, int value) => bindable.SetValue(EnterDelayProperty, value);
+
+    public static readonly BindableProperty EnterTriggerProperty = BindableProperty.CreateAttached(
+        "EnterTrigger",
+        typeof(object),
+        typeof(AnimationOption),
+        null,
+        propertyChanged: OnEnterTriggerChanged);
+
+    public static object? GetEnterTrigger(BindableObject bindable) => bindable.GetValue(EnterTriggerProperty);
+
+    public static void SetEnterTrigger(BindableObject bindable, object? value) => bindable.SetValue(EnterTriggerProperty, value);
+
+    private static void OnEnterAnimationChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((EnterAnimationType)newValue != EnterAnimationType.None)
+        {
+            element.Loaded += OnEnterLoaded;
+            element.Unloaded += OnEnterUnloaded;
+            if (element.IsLoaded)
+            {
+                PrepareEnter(element);
+                StartEnterDelayed(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnEnterLoaded;
+            element.Unloaded -= OnEnterUnloaded;
+            element.AbortAnimation(EnterAnimationName);
+            ResetEnter(element);
+        }
+    }
+
+    private static void OnEnterTriggerChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        // 初回バインドでは再生しない(表示時の再生は Loaded 側が担う)
+        if ((bindable is not VisualElement element) || (oldValue is null) || (newValue is null))
+        {
+            return;
+        }
+
+        if ((GetEnterAnimation(element) == EnterAnimationType.None) || !element.IsLoaded)
+        {
+            return;
+        }
+
+        PrepareEnter(element);
+        StartEnterDelayed(element);
+    }
+
+    private static void OnEnterLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            // 遅延中に見えてしまわないよう先に初期状態へ
+            PrepareEnter(element);
+            StartEnterDelayed(element);
+        }
+    }
+
+    private static void OnEnterUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            element.AbortAnimation(EnterAnimationName);
+            ResetEnter(element);
+        }
+    }
+
+    private static void PrepareEnter(VisualElement element)
+    {
+        element.AbortAnimation(EnterAnimationName);
+
+        if (GetEnterAnimation(element) == EnterAnimationType.FadeUp)
+        {
+            element.Opacity = 0;
+            element.TranslationY = 16;
+        }
+        else
+        {
+            element.Opacity = 0;
+            element.Scale = 0;
+        }
+    }
+
+    private static void StartEnterDelayed(VisualElement element)
+    {
+        var delay = GetEnterDelay(element);
+        if (delay > 0)
+        {
+            // 要素毎に開始をずらして時間差表示を作る
+            element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
+            {
+                if (element.IsLoaded && (GetEnterAnimation(element) != EnterAnimationType.None))
+                {
+                    StartEnter(element);
+                }
+            });
+        }
+        else
+        {
+            StartEnter(element);
+        }
+    }
+
+    private static void StartEnter(VisualElement element)
+    {
+        element.AbortAnimation(EnterAnimationName);
+
+        if (GetEnterAnimation(element) == EnterAnimationType.FadeUp)
+        {
+            // 下から浮き上がりながらフェードイン
+            element.Animate(
+                EnterAnimationName,
+                v =>
+                {
+                    element.Opacity = v;
+                    element.TranslationY = 16 * (1 - v);
+                },
+                16,
+                250,
+                Easing.CubicOut,
+                (_, _) => ResetEnter(element));
+        }
+        else
+        {
+            // 0 → 1.15 → 1.0 と弾んで出現
+            element.Animate(
+                EnterAnimationName,
+                v =>
+                {
+                    element.Opacity = Math.Min(1.0, v * 2.0);
+                    element.Scale = v < 0.7 ? 1.15 * (v / 0.7) : 1.15 - (0.15 * ((v - 0.7) / 0.3));
+                },
+                16,
+                300,
+                Easing.CubicOut,
+                (_, _) => ResetEnter(element));
+        }
+    }
+
+    private static void ResetEnter(VisualElement element)
+    {
+        element.Opacity = 1;
+        element.TranslationY = 0;
+        element.Scale = 1;
     }
 
     private static Color LerpColor(Color from, Color to, double t) =>
