@@ -208,7 +208,7 @@ public sealed class SocialPlayer : SocialControl
         nameof(Percent),
         typeof(double),
         typeof(SocialPlayer),
-        propertyChanged: Invalidate);
+        propertyChanged: OnPercentChanged);
 
     public double Percent
     {
@@ -228,9 +228,58 @@ public sealed class SocialPlayer : SocialControl
         set => SetValue(ProgressColorProperty, value);
     }
 
+    private const string ExpAnimationName = "SocialPlayerExp";
+
+    private double displayPercent;
+
     public SocialPlayer()
     {
         PaintSurface += OnPaintSurface;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        // 表示のたびに 0 から現在値までアニメーションする
+        displayPercent = 0;
+        AnimateExp(Percent);
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        this.AbortAnimation(ExpAnimationName);
+    }
+
+    private static void OnPercentChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SocialPlayer)bindable;
+        if (control.IsLoaded)
+        {
+            control.AnimateExp((double)newValue);
+        }
+    }
+
+    private void AnimateExp(double percent)
+    {
+        var from = displayPercent;
+
+        this.AbortAnimation(ExpAnimationName);
+        this.Animate(
+            ExpAnimationName,
+            v =>
+            {
+                displayPercent = from + ((percent - from) * v);
+                InvalidateSurface();
+            },
+            16,
+            800,
+            Easing.CubicOut,
+            (_, _) =>
+            {
+                displayPercent = percent;
+                InvalidateSurface();
+            });
     }
 
     // TODO
@@ -279,7 +328,7 @@ public sealed class SocialPlayer : SocialControl
         paint.Color = new SKColor(33, 33, 33);
         canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + expWidth, info.Height - imageBorder - expHeight), paint);
         paint.Color = ProgressColor.ToSKColor();
-        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + (int)(expWidth * Percent / 100), info.Height - imageBorder - expHeight), paint);
+        canvas.DrawRect(new SKRect(imageRight + space, info.Height - imageBorder, imageRight + space + (int)(expWidth * displayPercent / 100), info.Height - imageBorder - expHeight), paint);
     }
 }
 
@@ -382,10 +431,24 @@ public sealed class SocialAlert : SocialControl
         set => SetValue(ColorProperty, value);
     }
 
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(
+        nameof(Title),
+        typeof(string),
+        typeof(SocialAlert),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
         nameof(Text),
         typeof(string),
         typeof(SocialAlert),
+        string.Empty,
         propertyChanged: Invalidate);
 
     public string Text
@@ -431,9 +494,11 @@ public sealed class SocialAlert : SocialControl
         canvas.DrawRect(new SKRect(0, 0, sideBorder, titleHeight), paint);
         canvas.DrawRect(new SKRect(info.Rect.Right - sideBorder, 0, info.Rect.Right, titleHeight), paint);
 
-        canvas.DrawText("BEAST ALERT", (info.Width - font1.MeasureText("BEAST ALERT")) / 2, border + space + font1Height, SKTextAlign.Left, font1, paint);
+        var title = Title;
+        var text = Text;
+        canvas.DrawText(title, (info.Width - font1.MeasureText(title)) / 2, border + space + font1Height, SKTextAlign.Left, font1, paint);
 
-        canvas.DrawText("牛鬼級旅団出現", (info.Width - font2.MeasureText("牛鬼級旅団出現")) / 2, titleHeight + font2Height, SKTextAlign.Left, font2, paint);
+        canvas.DrawText(text, (info.Width - font2.MeasureText(text)) / 2, titleHeight + font2Height, SKTextAlign.Left, font2, paint);
     }
 }
 
@@ -663,6 +728,32 @@ public sealed class SocialStatus : SocialControl
         set => SetValue(Value3Property, value);
     }
 
+    public static readonly BindableProperty Title1Property = BindableProperty.Create(
+        nameof(Title1),
+        typeof(string),
+        typeof(SocialStatus),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title1
+    {
+        get => (string)GetValue(Title1Property);
+        set => SetValue(Title1Property, value);
+    }
+
+    public static readonly BindableProperty Title2Property = BindableProperty.Create(
+        nameof(Title2),
+        typeof(string),
+        typeof(SocialStatus),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title2
+    {
+        get => (string)GetValue(Title2Property);
+        set => SetValue(Title2Property, value);
+    }
+
     public static readonly BindableProperty Text1Property = BindableProperty.Create(
         nameof(Text1),
         typeof(string),
@@ -747,9 +838,11 @@ public sealed class SocialStatus : SocialControl
 
         paint.Color = SocialResources.TextColor;
 
+        var title1 = Title1;
+        var title2 = Title2;
         y += font1Height;
-        canvas.DrawText("甲種聖装 瑠璃", x, y, SKTextAlign.Left, font1, paint);
-        canvas.DrawText("A FORM", info.Rect.Right - margin - font2.MeasureText("A FORM"), y, SKTextAlign.Left, font2, paint);
+        canvas.DrawText(title1, x, y, SKTextAlign.Left, font1, paint);
+        canvas.DrawText(title2, info.Rect.Right - margin - font2.MeasureText(title2), y, SKTextAlign.Left, font2, paint);
 
         y += margin * 2;
 
@@ -853,6 +946,31 @@ public sealed class SocialInformation : SocialControl
         set => SetValue(ColorProperty, value);
     }
 
+    public static readonly BindableProperty TitleProperty = BindableProperty.Create(
+        nameof(Title),
+        typeof(string),
+        typeof(SocialInformation),
+        string.Empty,
+        propertyChanged: Invalidate);
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    public static readonly BindableProperty UnitsProperty = BindableProperty.Create(
+        nameof(Units),
+        typeof(IReadOnlyList<SocialUnit>),
+        typeof(SocialInformation),
+        propertyChanged: Invalidate);
+
+    public IReadOnlyList<SocialUnit>? Units
+    {
+        get => (IReadOnlyList<SocialUnit>?)GetValue(UnitsProperty);
+        set => SetValue(UnitsProperty, value);
+    }
+
     public SocialInformation()
     {
         PaintSurface += OnPaintSurface;
@@ -896,31 +1014,24 @@ public sealed class SocialInformation : SocialControl
         paint.Color = SocialResources.TextColor;
 
         y += font1Height;
-        canvas.DrawText("投入戦力 支援部隊", x, y, SKTextAlign.Left, font1, paint);
-
-        y += margin * 2;
-
-        y += font2Height;
-        canvas.DrawText("辺境伯直属戦術機甲大隊", x, y, SKTextAlign.Left, font2, paint);
-        y += font3Height;
-        canvas.DrawText("WOLF GRP", x, y, SKTextAlign.Left, font3, paint);
-        canvas.DrawText("MF-4000 x36", info.Rect.Right - margin - font3.MeasureText("MF-4000 x36"), y, SKTextAlign.Left, font3, paint);
+        canvas.DrawText(Title, x, y, SKTextAlign.Left, font1, paint);
 
         y += margin;
 
-        y += font2Height;
-        canvas.DrawText("第二騎士団聖女計画特務中隊", x, y, SKTextAlign.Left, font2, paint);
-        y += font3Height;
-        canvas.DrawText("HOUND SQD", x, y, SKTextAlign.Left, font3, paint);
-        canvas.DrawText("TYPE-19E x10 + JXD-20", info.Rect.Right - margin - font3.MeasureText("TYPE-19E x10 + JXD-20"), y, SKTextAlign.Left, font3, paint);
+        var units = Units;
+        if (units is not null)
+        {
+            foreach (var unit in units)
+            {
+                y += margin;
 
-        y += margin;
-
-        y += font2Height;
-        canvas.DrawText("第三騎士団突撃前衛部隊", x, y, SKTextAlign.Left, font2, paint);
-        y += font3Height;
-        canvas.DrawText("VIPPERS", x, y, SKTextAlign.Left, font3, paint);
-        canvas.DrawText("TYPE-19 BLOOD x8", info.Rect.Right - margin - font3.MeasureText("TYPE-19 BLOOD x8"), y, SKTextAlign.Left, font3, paint);
+                y += font2Height;
+                canvas.DrawText(unit.Name, x, y, SKTextAlign.Left, font2, paint);
+                y += font3Height;
+                canvas.DrawText(unit.Code, x, y, SKTextAlign.Left, font3, paint);
+                canvas.DrawText(unit.Force, info.Rect.Right - margin - font3.MeasureText(unit.Force), y, SKTextAlign.Left, font3, paint);
+            }
+        }
     }
 }
 
