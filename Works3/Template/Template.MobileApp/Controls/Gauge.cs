@@ -513,11 +513,13 @@ public sealed class Gauge : SKCanvasView
             defaultValueCreator: _ => new ObservableCollection<GaugeRange>(),
             propertyChanged: OnRangesChanged);
 
+#pragma warning disable CA2227
     public IList<GaugeRange> Ranges
     {
         get => (IList<GaugeRange>)GetValue(RangesProperty);
         set => SetValue(RangesProperty, value);
     }
+#pragma warning restore CA2227
 
     private static void OnRangesChanged(BindableObject b, object oldValue, object newValue)
     {

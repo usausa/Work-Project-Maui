@@ -21,6 +21,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     [ObservableProperty]
     public partial MonthView? MonthView { get; private set; }
 
+#pragma warning disable IDE0032
     private DayOfWeek firstDayOfWeek = DayOfWeek.Monday;
 
     public DayOfWeek FirstDayOfWeek
@@ -38,6 +39,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
             LoadMonth(currentYear, currentMonth);
         }
     }
+#pragma warning restore IDE0032
 
     [ObservableProperty]
     public partial CalendarSelectionMode SelectionMode { get; set; } = CalendarSelectionMode.None;

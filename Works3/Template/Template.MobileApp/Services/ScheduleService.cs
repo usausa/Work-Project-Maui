@@ -4,6 +4,7 @@ using Template.MobileApp.Models.Sample.Calendar;
 
 public sealed class ScheduleService
 {
+#pragma warning disable IDE0052
 #pragma warning disable CA1823
     private static readonly Color DarkRed = Color.FromArgb("#8B1538");
     private static readonly Color HotPink = Color.FromArgb("#D81B60");
@@ -19,6 +20,7 @@ public sealed class ScheduleService
     private static readonly Color CyanText = Color.FromArgb("#00ACC1");
     private static readonly Color YellowText = Color.FromArgb("#F9A825");
 #pragma warning restore CA1823
+#pragma warning restore IDE0052
 
     private static readonly (DayOfWeek Dow, string Title, ScheduleStyle Style, Color Color, bool IsText)[] WeeklyTemplates =
     [

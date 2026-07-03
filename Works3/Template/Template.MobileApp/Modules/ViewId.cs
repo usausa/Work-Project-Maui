@@ -145,5 +145,26 @@ public enum ViewId
     UISocial,
     UICharacter,
     UIChat,
-    UICalendar
+    UICalendar,
+
+    UIProfile2,
+    UITimelineSample,
+    UIFeel,
+    UIPet,
+    UIStream,
+    UIStreamDetail,
+    UIShop,
+    UIItem,
+    UICart,
+    UIKitDash,
+    UIKitNotify,
+    UIKitSetting,
+    UIKitOnboard,
+    UIKitTracking,
+
+    // UI (SkiaSharp)
+    UIFlightHud,
+    UIMechHud,
+    UIEnergy,
+    UITelemetry
 }

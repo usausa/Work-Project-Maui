@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIItemView"
+             x:DataType="{x:Type module:UIItemViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIItemViewModel}"
+             shell:ShellProperty.Title="Item"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function1Enabled="True">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Backdrop -->
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <Style x:Key="PlateEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="260" />
+                <Setter Property="HeightRequest" Value="260" />
+                <Setter Property="Fill" Value="{StaticResource PinkLighten5}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ProductImageBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="200" />
+                <Setter Property="HeightRequest" Value="200" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 100" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,4"
+                            Brush="Black" Opacity="0.15" Radius="12" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="ProductImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <!-- Floating back button -->
+            <Style x:Key="BackButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="16,18" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.15" Radius="6" />
+                </Setter>
+            </Style>
+
+            <!-- Floating cart button with badge -->
+            <Style x:Key="CartButtonArea"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="CartButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.15" Radius="6" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="CartBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+            </Style>
+
+            <Style x:Key="CartBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="9" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Bottom sheet -->
+            <Style x:Key="SheetBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 40,40,0,0" />
+            </Style>
+
+            <Style x:Key="CategoryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CharacterSpacing" Value="1.2" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+            </Style>
+
+            <Style x:Key="TitleRowGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="TitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+            </Style>
+
+            <Style x:Key="PriceLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Size tags -->
+            <Style x:Key="SizeRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SizeTagBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="14,6" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="SizeTagActiveBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource SizeTagBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+            </Style>
+
+            <Style x:Key="SizeTagLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+            </Style>
+
+            <Style x:Key="SizeTagActiveLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="DescriptionLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+            </Style>
+
+            <!-- Quantity stepper -->
+            <Style x:Key="QuantityRow"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="QuantityCaption"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="StepperRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="StepperButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkLighten5}" />
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="QuantityLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="AddToCartButton"
+                   TargetType="Button">
+                <Setter Property="Margin" Value="0,16,0,0" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black" Opacity="0.2" Radius="6" />
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <!-- Rows 0-1: product backdrop / rows 1-2: bottom sheet. The shared 40px row makes the sheet overlap the backdrop -->
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,40,Auto">
+
+        <Grid Grid.Row="0" Grid.RowSpan="2">
+            <Ellipse Style="{StaticResource PlateEllipse}" />
+            <Border Style="{StaticResource ProductImageBorder}">
+                <Image Style="{StaticResource ProductImage}"
+                       Source="usa1_face.jpg" />
+            </Border>
+            <Button Style="{StaticResource BackButton}"
+                    Command="{Binding BackCommand}"
+                    Text="{x:Static fonts:MaterialIcons.Arrow_back}" />
+            <Grid Style="{StaticResource CartButtonArea}">
+                <Button Style="{StaticResource CartButton}"
+                        Command="{Binding CartCommand}"
+                        Text="{x:Static fonts:MaterialIcons.Shopping_cart}" />
+                <Border Style="{StaticResource CartBadgeBorder}">
+                    <Label Style="{StaticResource CartBadgeLabel}" Text="3" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="1" Grid.RowSpan="2"
+                Style="{StaticResource SheetBorder}">
+            <VerticalStackLayout>
+
+                <Label Style="{StaticResource CategoryLabel}"
+                       Text="{Binding Category}" />
+
+                <Grid Style="{StaticResource TitleRowGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource TitleLabel}"
+                           Text="{Binding Title}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource PriceLabel}"
+                           Text="{Binding Price}" />
+                </Grid>
+
+                <!-- Size variations -->
+                <HorizontalStackLayout Style="{StaticResource SizeRow}">
+                    <Border Style="{StaticResource SizeTagBorder}">
+                        <Label Style="{StaticResource SizeTagLabel}" Text="30ml" />
+                    </Border>
+                    <Border Style="{StaticResource SizeTagActiveBorder}">
+                        <Label Style="{StaticResource SizeTagActiveLabel}" Text="50ml" />
+                    </Border>
+                    <Border Style="{StaticResource SizeTagBorder}">
+                        <Label Style="{StaticResource SizeTagLabel}" Text="100ml" />
+                    </Border>
+                </HorizontalStackLayout>
+
+                <Label Style="{StaticResource DescriptionLabel}"
+                       Text="{Binding Description}" />
+
+                <!-- Quantity -->
+                <Grid Style="{StaticResource QuantityRow}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource QuantityCaption}"
+                           Text="Quantity" />
+                    <HorizontalStackLayout Grid.Column="1"
+                                           Style="{StaticResource StepperRow}">
+                        <Button Style="{StaticResource StepperButton}" Text="−" />
+                        <Label Style="{StaticResource QuantityLabel}" Text="1" />
+                        <Button Style="{StaticResource StepperButton}" Text="+" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <Button Style="{StaticResource AddToCartButton}"
+                        Command="{Binding CartCommand}"
+                        Text="Add to Cart" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+
+</ContentView>

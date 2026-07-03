@@ -269,11 +269,13 @@ public partial class CalendarView : ContentView
         set => SetValue(SelectedDateProperty, value);
     }
 
+#pragma warning disable CA2227
     public ObservableCollection<DateOnly>? SelectedDates
     {
         get => (ObservableCollection<DateOnly>?)GetValue(SelectedDatesProperty);
         set => SetValue(SelectedDatesProperty, value);
     }
+#pragma warning restore CA2227
 
     public DateOnly? SelectedStartDate
     {
@@ -584,9 +586,12 @@ public partial class CalendarView : ContentView
         // スタンプ表示用の再利用可能な Label プール
         public List<Label> StampLabelPool { get; } = [];
 
+#pragma warning disable IDE0032
         // [DIFF-UPDATE: DateBubble] RoundRectangle を毎回 new せず同一インスタンスを再利用
         private readonly RoundRectangle dateBubbleShape = new() { CornerRadius = new CornerRadius(2) };
+
         internal RoundRectangle DateBubbleShape => dateBubbleShape;
+#pragma warning restore IDE0032
 
         public DayCellVisual()
         {
