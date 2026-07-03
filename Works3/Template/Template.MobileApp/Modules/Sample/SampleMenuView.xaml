@@ -80,12 +80,13 @@
         </Button>
         <Button Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleMedia}"
                 Text="Media">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Movie}"
                                  FontFamily="MaterialIcons"
-                                 Color="#80FFFFFF"
+                                 Color="White"
                                  Size="24" />
             </Button.ImageSource>
         </Button>

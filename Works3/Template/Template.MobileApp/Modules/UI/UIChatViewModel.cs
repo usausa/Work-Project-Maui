@@ -20,22 +20,37 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
     private static string GetStamp(int index) => Stamps[index % Stamps.Length];
 
+    private readonly IDispatcher dispatcher;
+
+    public CollectionController Controller { get; } = new();
+
     public ObservableCollection<ChatMessage> Messages { get; } = [];
+
+    public IReadOnlyList<string> StampList { get; } = Stamps;
 
     public string CurrentUser { get; } = "Me";
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    public partial bool IsStampTrayVisible { get; set; }
+
     public IObserveCommand SendCommand { get; }
+    public IObserveCommand SendStampCommand { get; }
     public IObserveCommand PickImageCommand { get; }
     public IObserveCommand PickStickerCommand { get; }
+    public IObserveCommand ScrollToLatestCommand { get; }
 
-    public UIChatViewModel()
+    public UIChatViewModel(IDispatcher dispatcher)
     {
+        this.dispatcher = dispatcher;
+
         SendCommand = MakeDelegateCommand(ExecuteSend, () => !string.IsNullOrWhiteSpace(InputText));
+        SendStampCommand = MakeDelegateCommand<string>(ExecuteSendStamp);
         PickImageCommand = MakeDelegateCommand(static () => { });
-        PickStickerCommand = MakeDelegateCommand(static () => { });
+        PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);
+        ScrollToLatestCommand = MakeDelegateCommand(() => ScrollToLast());
         PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(InputText))
@@ -45,12 +60,24 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         };
     }
 
+    private void ScrollToLast(bool animate = true)
+    {
+        if (Messages.Count == 0)
+        {
+            return;
+        }
+
+        // 追加直後はレイアウト前のため次のループでスクロールする
+        dispatcher.Dispatch(() => Controller.ScrollRequest(Messages.Count - 1, position: ScrollToPosition.End, animate: animate));
+    }
+
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
         if (Messages.Count == 0)
         {
             LoadSampleMessages();
         }
+        ScrollToLast(animate: false);
         return Task.CompletedTask;
     }
 
@@ -59,11 +86,29 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         Messages.Add(new ChatMessage
         {
             Type = MessageType.Send,
+            DateTime = DateTime.Now,
             Author = CurrentUser,
             AvatarSource = AvatarMe,
             TextContent = InputText.Trim()
         });
         InputText = string.Empty;
+        IsStampTrayVisible = false;
+        ScrollToLast();
+    }
+
+    private void ExecuteSendStamp(string stamp)
+    {
+        Messages.Add(new ChatMessage
+        {
+            Type = MessageType.Send,
+            DateTime = DateTime.Now,
+            Author = CurrentUser,
+            AvatarSource = AvatarMe,
+            StampSource = stamp,
+            TextContent = string.Empty
+        });
+        IsStampTrayVisible = false;
+        ScrollToLast();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);

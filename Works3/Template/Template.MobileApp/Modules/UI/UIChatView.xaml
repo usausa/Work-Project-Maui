@@ -6,6 +6,8 @@
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIChatView"
              x:DataType="{x:Type module:UIChatViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIChatViewModel}"
@@ -16,6 +18,16 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <converters:ChatTimeConverter x:Key="ChatTimeConverter" />
+            <converters:CollectionNotEmptyConverter x:Key="CollectionNotEmptyConverter" />
+            <s:NullToBoolConverter x:Key="NullToBoolConverter"
+                                   HandleEmptyString="True" />
+            <s:ChainConverter x:Key="NullToReverseBoolConverter">
+                <s:NullToBoolConverter HandleEmptyString="True" />
+                <s:ReverseConverter />
+            </s:ChainConverter>
+            <s:AllConverter x:Key="AllConverter" />
 
             <Color x:Key="BubbleSend">#4CAF50</Color>
             <Color x:Key="BubbleSendText">#FFFFFF</Color>
@@ -221,12 +233,49 @@
                 <Setter Property="ColumnSpacing" Value="4" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
-            <Style x:Key="MessageInputEntry"
-                   TargetType="Entry">
+            <Style x:Key="MessageInputEditor"
+                   TargetType="Editor">
                 <Setter Property="Margin" Value="14,0,0,0" />
-                <Setter Property="ReturnType" Value="Send" />
+                <Setter Property="AutoSize" Value="TextChanges" />
+                <Setter Property="MaximumHeightRequest" Value="100" />
                 <Setter Property="PlaceholderColor" Value="{StaticResource MetaText}" />
                 <Setter Property="TextColor" Value="{StaticResource BubbleReceiveText}" />
+            </Style>
+
+            <Style x:Key="JumpToLatestButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#CC424242" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="Scale" Value="0" />
+            </Style>
+
+            <Style x:Key="StampTray"
+                   TargetType="FlexLayout">
+                <Setter Property="Wrap" Value="Wrap" />
+                <Setter Property="JustifyContent" Value="SpaceEvenly" />
+                <Setter Property="AlignItems" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+
+            <Style x:Key="StampTrayButton"
+                   TargetType="ImageButton">
+                <Setter Property="WidthRequest" Value="72" />
+                <Setter Property="HeightRequest" Value="72" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Aspect" Value="AspectFit" />
+                <!-- 4 列 x 2 行で折り返す -->
+                <Setter Property="FlexLayout.Shrink" Value="0" />
+                <Setter Property="FlexLayout.Basis" Value="25%" />
             </Style>
 
             <!-- Reaction pill -->
@@ -252,24 +301,29 @@
                             <VerticalStackLayout Grid.Column="0"
                                                  Style="{StaticResource SendMetaStack}">
                                 <Label Style="{StaticResource SendMetaLabel}"
-                                       IsVisible="{Binding ShowReadIndicator}"
+                                       IsVisible="{Binding IsRead}"
                                        Text="既読" />
                                 <Label Style="{StaticResource SendMetaLabel}"
-                                       Text="{Binding TimeText}" />
+                                       Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
                             </VerticalStackLayout>
                             <Border Grid.Column="1"
-                                    Style="{StaticResource SendBubbleBorder}"
-                                    IsVisible="{Binding HasText}">
+                                    Style="{StaticResource SendBubbleBorder}">
+                                <Border.IsVisible>
+                                    <MultiBinding Converter="{StaticResource AllConverter}">
+                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
+                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                    </MultiBinding>
+                                </Border.IsVisible>
                                 <Label Style="{StaticResource SendBubbleLabel}"
                                        Text="{Binding TextContent}" />
                             </Border>
                             <Image Grid.Column="1"
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
-                                   IsVisible="{Binding IsStamp}" />
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource SendReactionList}"
-                                               IsVisible="{Binding HasReactions}"
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
                                                BindableLayout.ItemsSource="{Binding Reactions}" />
                     </VerticalStackLayout>
@@ -293,21 +347,26 @@
                         <Grid Style="{StaticResource ReceiveBubbleGrid}"
                               ColumnDefinitions="Auto,Auto">
                             <Border Grid.Column="0"
-                                    Style="{StaticResource ReceiveBubbleBorder}"
-                                    IsVisible="{Binding HasText}">
+                                    Style="{StaticResource ReceiveBubbleBorder}">
+                                <Border.IsVisible>
+                                    <MultiBinding Converter="{StaticResource AllConverter}">
+                                        <Binding Path="StampSource" Converter="{StaticResource NullToReverseBoolConverter}" />
+                                        <Binding Path="TextContent" Converter="{StaticResource NullToBoolConverter}" />
+                                    </MultiBinding>
+                                </Border.IsVisible>
                                 <Label Style="{StaticResource ReceiveBubbleLabel}"
                                        Text="{Binding TextContent}" />
                             </Border>
                             <Image Grid.Column="0"
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
-                                   IsVisible="{Binding IsStamp}" />
+                                   IsVisible="{Binding StampSource, Converter={StaticResource NullToBoolConverter}}" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource ReceiveTimeLabel}"
-                                   Text="{Binding TimeText}" />
+                                   Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource ReceiveReactionList}"
-                                               IsVisible="{Binding HasReactions}"
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
                                                BindableLayout.ItemsSource="{Binding Reactions}" />
                     </VerticalStackLayout>
@@ -335,16 +394,34 @@
                                                   ReceiveTemplate="{StaticResource ReceiveTemplate}"
                                                   SendTemplate="{StaticResource SendTemplate}"
                                                   SystemTemplate="{StaticResource SystemTemplate}" />
+
+            <Style x:Key="ChatCollectionView"
+                   TargetType="CollectionView">
+                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
+            </Style>
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="*,1,Auto"
+    <Grid RowDefinitions="*,1,Auto,Auto"
           BackgroundColor="White">
 
         <CollectionView Grid.Row="0"
+                        Style="{StaticResource ChatCollectionView}"
+                        behaviors:ScrollOption.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default" />
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default">
+            <CollectionView.Behaviors>
+                <s:CollectionControlBehavior Controller="{Binding Controller}" />
+            </CollectionView.Behaviors>
+        </CollectionView>
+
+        <Button x:Name="JumpToLatest"
+                Grid.Row="0"
+                Style="{StaticResource JumpToLatestButton}"
+                Command="{Binding ScrollToLatestCommand}"
+                Text="↓ 最新へ" />
 
         <BoxView Grid.Row="1"
                  Color="{StaticResource InputBorder}" />
@@ -359,11 +436,10 @@
             <Border Grid.Column="1"
                     Style="{StaticResource InputFieldBorder}">
                 <Grid ColumnDefinitions="*,Auto">
-                    <Entry Grid.Column="0"
-                           Style="{StaticResource MessageInputEntry}"
-                           Text="{Binding InputText}"
-                           Placeholder="メッセージを入力"
-                           ReturnCommand="{Binding SendCommand}" />
+                    <Editor Grid.Column="0"
+                            Style="{StaticResource MessageInputEditor}"
+                            Text="{Binding InputText}"
+                            Placeholder="メッセージを入力" />
                     <ImageButton Grid.Column="1"
                                  Style="{StaticResource StickerActionButton}"
                                  Source="ic_sticker.png"
@@ -373,7 +449,35 @@
             <ImageButton Grid.Column="2"
                          Style="{StaticResource ToolbarActionButton}"
                          Source="ic_send.png"
-                         Command="{Binding SendCommand}" />
+                         Command="{Binding SendCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding InputText, Converter={StaticResource NullToBoolConverter}}"
+                                 Value="False">
+                        <Setter Property="Opacity" Value="0.3" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
+        </Grid>
+
+        <Grid Grid.Row="3"
+              RowDefinitions="1,Auto"
+              IsVisible="{Binding IsStampTrayVisible}"
+              behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}">
+            <BoxView Grid.Row="0"
+                     Color="{StaticResource InputBorder}" />
+            <FlexLayout Grid.Row="1"
+                        Style="{StaticResource StampTray}"
+                        BindableLayout.ItemsSource="{Binding StampList}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
+                        <ImageButton Style="{StaticResource StampTrayButton}"
+                                     Source="{Binding .}"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand}"
+                                     CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
         </Grid>
     </Grid>
 
