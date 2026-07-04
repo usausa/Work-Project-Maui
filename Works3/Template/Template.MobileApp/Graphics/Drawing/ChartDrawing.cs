@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
 using System.Timers;
 
@@ -12,7 +12,7 @@ public enum ChartKind
 
 public readonly record struct CandlePoint(double Open, double High, double Low, double Close);
 
-public sealed class ChartGraphics : GraphicsObject, IDisposable
+public sealed class ChartDrawing : DrawingObject, IDisposable
 {
     private const float AnimationDuration = 600f;
     private const float Padding = 24f;
@@ -46,7 +46,7 @@ public sealed class ChartGraphics : GraphicsObject, IDisposable
 
     private long animationStart;
 
-    public ChartGraphics()
+    public ChartDrawing()
     {
         animationTimer.Elapsed += TimerElapsed;
     }

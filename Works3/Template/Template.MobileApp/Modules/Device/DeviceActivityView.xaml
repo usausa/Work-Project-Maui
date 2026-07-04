@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceActivityView"
              x:DataType="{x:Type module:DeviceActivityViewModel}"
@@ -104,8 +104,8 @@
     <Grid RowDefinitions="18,*,*"
           BackgroundColor="White">
 
-        <graphics:GraphicsControl Grid.Row="1"
-                                  Graphics="{Binding Graphics}" />
+        <drawing:DrawingControl Grid.Row="1"
+                                  Drawing="{Binding Drawing}" />
 
         <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource ActivityVerticalStack}">

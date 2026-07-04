@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleChartView"
              x:DataType="{x:Type module:SampleChartViewModel}"
@@ -44,12 +44,12 @@
             <Button Grid.Column="0"
                     Style="{StaticResource SegmentButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static graphics:ChartKind.Line}"
+                    CommandParameter="{x:Static drawing:ChartKind.Line}"
                     Text="Line">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static graphics:ChartKind.Line}">
+                                 Value="{x:Static drawing:ChartKind.Line}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -58,12 +58,12 @@
             <Button Grid.Column="1"
                     Style="{StaticResource SegmentButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static graphics:ChartKind.Bar}"
+                    CommandParameter="{x:Static drawing:ChartKind.Bar}"
                     Text="Bar">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static graphics:ChartKind.Bar}">
+                                 Value="{x:Static drawing:ChartKind.Bar}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -72,12 +72,12 @@
             <Button Grid.Column="2"
                     Style="{StaticResource SegmentButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static graphics:ChartKind.Donut}"
+                    CommandParameter="{x:Static drawing:ChartKind.Donut}"
                     Text="Donut">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static graphics:ChartKind.Donut}">
+                                 Value="{x:Static drawing:ChartKind.Donut}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -86,12 +86,12 @@
             <Button Grid.Column="3"
                     Style="{StaticResource SegmentButton}"
                     Command="{Binding SelectCommand}"
-                    CommandParameter="{x:Static graphics:ChartKind.Candle}"
+                    CommandParameter="{x:Static drawing:ChartKind.Candle}"
                     Text="Candle">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
-                                 Value="{x:Static graphics:ChartKind.Candle}">
+                                 Value="{x:Static drawing:ChartKind.Candle}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>
@@ -100,9 +100,9 @@
         </Grid>
 
         <!-- チャート -->
-        <graphics:GraphicsControl Grid.Row="1"
+        <drawing:DrawingControl Grid.Row="1"
                                   Margin="8,0,8,16"
-                                  Graphics="{Binding Graphics}" />
+                                  Drawing="{Binding Drawing}" />
 
     </Grid>
 

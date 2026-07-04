@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
 
 public sealed partial class UITreeMapViewModel : AppViewModelBase
@@ -15,7 +15,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
     public CameraController Controller { get; } = new();
 
-    public ColorTreeMapGraphics Graphics { get; } = new();
+    public ColorTreeMapDrawing Drawing { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
 
@@ -23,7 +23,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
-        Disposables.Add(Graphics);
+        Disposables.Add(Drawing);
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
@@ -87,7 +87,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
 
             // Update
             Image.Bitmap = bitmap;
-            Graphics.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
+            Drawing.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
             // シャッターフラッシュのトリガー
             CaptureCount++;

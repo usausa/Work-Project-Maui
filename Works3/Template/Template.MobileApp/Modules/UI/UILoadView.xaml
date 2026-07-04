@@ -5,7 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:conv="clr-namespace:Template.MobileApp.Converters"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UILoadView"
              x:DataType="{x:Type module:UILoadViewModel}"
@@ -145,8 +145,8 @@
             </Label>
         </Grid>
 
-        <graphics:GraphicsControl Grid.Row="2"
-                                  Graphics="{Binding Graphics}" />
+        <drawing:DrawingControl Grid.Row="2"
+                                  Drawing="{Binding Drawing}" />
 
     </Grid>
 

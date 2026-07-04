@@ -1,6 +1,6 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
-public sealed class LoadGraphics : GraphicsObject
+public sealed class LoadDrawing : DrawingObject
 {
     private const int MaxBars = 60;
 
@@ -43,7 +43,7 @@ public sealed class LoadGraphics : GraphicsObject
         }
     }
 
-    public LoadGraphics()
+    public LoadDrawing()
     {
         Min = 0;
         Max = 100;

@@ -5,7 +5,7 @@
              xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceQrScanView"
              x:DataType="{x:Type module:DeviceQrScanViewModel}"
@@ -27,8 +27,8 @@
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
                             OnDetectionFinishedCommand="{Binding DetectCommand}" />
 
-        <graphics:GraphicsControl Grid.Row="0"
-                                  Graphics="{Binding Graphics}" />
+        <drawing:DrawingControl Grid.Row="0"
+                                  Drawing="{Binding Drawing}" />
 
         <Label Grid.Row="1"
                Style="{StaticResource ResultLabel}"

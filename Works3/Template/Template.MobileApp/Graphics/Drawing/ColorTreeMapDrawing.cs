@@ -1,8 +1,8 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
 using System.Timers;
 
-public sealed class ColorTreeMapGraphics : GraphicsObject, IDisposable
+public sealed class ColorTreeMapDrawing : DrawingObject, IDisposable
 {
     private const float AnimationDuration = 500f;
 
@@ -16,7 +16,7 @@ public sealed class ColorTreeMapGraphics : GraphicsObject, IDisposable
 
     private long animationStart;
 
-    public ColorTreeMapGraphics()
+    public ColorTreeMapDrawing()
     {
         animationTimer.Elapsed += TimerElapsed;
     }

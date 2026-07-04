@@ -1,8 +1,8 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
 using Template.MobileApp.Usecase;
 
-public sealed class DetectGraphics : GraphicsObject
+public sealed class DetectDrawing : DrawingObject
 {
     private float width;
 

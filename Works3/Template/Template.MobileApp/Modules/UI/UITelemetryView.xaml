@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
+             xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITelemetryView"
              x:DataType="{x:Type module:UITelemetryViewModel}"
@@ -14,7 +14,7 @@
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
-        <graphics:SkiaSceneView Grid.Row="0" Scene="{Binding Scene}" />
+        <scene:SceneControl Grid.Row="0" Scene="{Binding Scene}" />
     </Grid>
 
 </ContentView>

@@ -15,7 +15,7 @@ public sealed partial class SampleCvNetOcrViewModel : AppViewModelBase
     public CameraController Controller { get; } = new();
 
     // TODO
-    //public DetectGraphics Graphics { get; } = new();
+    //public DetectDrawing Drawing { get; } = new();
 
     public SampleCvNetOcrViewModel()
     {

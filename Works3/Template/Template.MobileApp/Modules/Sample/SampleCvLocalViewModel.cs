@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Usecase;
 
@@ -13,7 +13,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     public CameraController Controller { get; } = new();
 
-    public DetectGraphics Graphics { get; } = new();
+    public DetectDrawing Drawing { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
 
@@ -77,7 +77,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
             var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
 
             // Update
-            Graphics.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
         }
         else
         {

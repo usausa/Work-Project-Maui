@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 internal sealed class EnergySim
 {
@@ -37,7 +37,7 @@ internal sealed class EnergySim
     public static float Flow(float value, float nominalValue) => Math.Clamp(value / nominalValue, 0f, 1.3f);
 }
 
-public sealed class EnergyFlowScene : SkiaScene
+public sealed class EnergyFlowScene : SceneObject
 {
     private const float BaseWidth = 400f;
 

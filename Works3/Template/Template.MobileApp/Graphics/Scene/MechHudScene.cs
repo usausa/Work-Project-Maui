@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 internal sealed class MechSquadUnit
 {
@@ -128,7 +128,7 @@ internal sealed class MechHudSim
     public string WorstPartName => PartNames[WorstPart];
 }
 
-public sealed class MechHudScene : SkiaScene
+public sealed class MechHudScene : SceneObject
 {
     private const float BaseWidth = 400f;
 

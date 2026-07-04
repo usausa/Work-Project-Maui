@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 internal sealed class CarSim
 {
@@ -140,7 +140,7 @@ internal sealed class CarSim
     }
 }
 
-public sealed class TelemetryScene : SkiaScene
+public sealed class TelemetryScene : SceneObject
 {
     private const float BaseWidth = 400f;
 

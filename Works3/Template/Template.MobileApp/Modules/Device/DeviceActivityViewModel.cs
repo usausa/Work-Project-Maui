@@ -1,13 +1,13 @@
 namespace Template.MobileApp.Modules.Device;
 
 using Template.MobileApp.Components;
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 
 public sealed class DeviceActivityViewModel : AppViewModelBase
 {
     private readonly IActivityRecognizer activityRecognizer;
 
-    public ActivityGraphics Graphics { get; } = new();
+    public ActivityDrawing Drawing { get; } = new();
 
     public ActivityCalculator Calculator { get; }
 
@@ -22,7 +22,7 @@ public sealed class DeviceActivityViewModel : AppViewModelBase
             .Subscribe(x =>
             {
                 Calculator.Update(x.Counter, x.Timestamp);
-                Graphics.Step = Calculator.Step;
+                Drawing.Step = Calculator.Step;
             }));
     }
 

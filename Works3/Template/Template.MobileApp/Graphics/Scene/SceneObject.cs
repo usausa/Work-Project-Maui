@@ -1,21 +1,21 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 using System.Diagnostics;
 
-public interface ISkiaScene
+public interface ISceneObject
 {
-    void Attach(SkiaSceneView view);
+    void Attach(SceneControl view);
 
     void Detach();
 
     void Render(SKCanvas canvas, int width, int height);
 }
 
-// GraphicsObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
+// DrawingObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
 // アニメーション用のランループ(Start/Stop)を自身に内包する。
 // 画面の VM がこの派生クラスをメンバとして保持し、ナビゲーションで Start/Stop を制御する。
 #pragma warning disable CA1033
-public abstract class SkiaScene : ISkiaScene, IDisposable
+public abstract class SceneObject : ISceneObject, IDisposable
 {
     private static readonly TimeSpan Interval = TimeSpan.FromMilliseconds(1000d / 60);
 
@@ -30,7 +30,7 @@ public abstract class SkiaScene : ISkiaScene, IDisposable
 
     private readonly Stopwatch clock = new();
 
-    private SkiaSceneView? control;
+    private SceneControl? control;
 
     private CancellationTokenSource? cts;
 
@@ -43,11 +43,11 @@ public abstract class SkiaScene : ISkiaScene, IDisposable
     // 直近の Update で確定した経過時間。OnRender はこの値を参照する。
     protected float Time { get; private set; }
 
-    void ISkiaScene.Attach(SkiaSceneView view) => control = view;
+    void ISceneObject.Attach(SceneControl view) => control = view;
 
-    void ISkiaScene.Detach() => control = null;
+    void ISceneObject.Detach() => control = null;
 
-    void ISkiaScene.Render(SKCanvas canvas, int width, int height) => OnRender(canvas, width, height);
+    void ISceneObject.Render(SKCanvas canvas, int width, int height) => OnRender(canvas, width, height);
 
     public void Invalidate() => control?.InvalidateSurface();
 

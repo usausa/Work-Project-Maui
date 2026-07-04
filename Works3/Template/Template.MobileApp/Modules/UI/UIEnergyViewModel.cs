@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Scene;
 
 public sealed class UIEnergyViewModel : AppViewModelBase
 {

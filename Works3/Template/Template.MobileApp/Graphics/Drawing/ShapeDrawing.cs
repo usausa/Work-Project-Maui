@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
 public interface IShape
 {
@@ -36,7 +36,7 @@ public sealed class Rectangle : IShape
     }
 }
 
-public sealed class ShapeGraphics : GraphicsObject
+public sealed class ShapeDrawing : DrawingObject
 {
     public SizeF Size { get; set; }
 

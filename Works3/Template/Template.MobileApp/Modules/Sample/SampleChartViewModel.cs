@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 
 #pragma warning disable CA5394
 public sealed partial class SampleChartViewModel : AppViewModelBase
@@ -10,13 +10,13 @@ public sealed partial class SampleChartViewModel : AppViewModelBase
     [ObservableProperty]
     public partial ChartKind Kind { get; set; }
 
-    public ChartGraphics Graphics { get; } = new();
+    public ChartDrawing Drawing { get; } = new();
 
     public ICommand SelectCommand { get; }
 
     public SampleChartViewModel()
     {
-        Disposables.Add(Graphics);
+        Disposables.Add(Drawing);
 
         SelectCommand = MakeDelegateCommand<ChartKind>(Show);
     }
@@ -33,16 +33,16 @@ public sealed partial class SampleChartViewModel : AppViewModelBase
         switch (kind)
         {
             case ChartKind.Line:
-                Graphics.ShowLine(CreateWalk(12, 50, 12));
+                Drawing.ShowLine(CreateWalk(12, 50, 12));
                 break;
             case ChartKind.Bar:
-                Graphics.ShowBar(CreateWalk(12, 50, 15));
+                Drawing.ShowBar(CreateWalk(12, 50, 15));
                 break;
             case ChartKind.Donut:
-                Graphics.ShowDonut(Enumerable.Range(0, 5).Select(_ => (double)random.Next(10, 40)).ToList());
+                Drawing.ShowDonut(Enumerable.Range(0, 5).Select(_ => (double)random.Next(10, 40)).ToList());
                 break;
             default:
-                Graphics.ShowCandle(CreateCandles(12));
+                Drawing.ShowCandle(CreateCandles(12));
                 break;
         }
     }

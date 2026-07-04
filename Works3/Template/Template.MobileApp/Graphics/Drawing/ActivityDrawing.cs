@@ -1,6 +1,6 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
-public sealed class ActivityGraphics : GraphicsObject
+public sealed class ActivityDrawing : DrawingObject
 {
     private const int Max = 10000;
 

@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Components;
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class UILoadViewModel : AppViewModelBase
 {
@@ -26,7 +26,7 @@ public sealed partial class UILoadViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double Peak { get; set; }
 
-    public LoadGraphics Graphics { get; } = new();
+    public LoadDrawing Drawing { get; } = new();
 
     public UILoadViewModel(INoiseMonitor noiseMonitor)
     {
@@ -35,8 +35,8 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         Disposables.Add(noiseMonitor.MeasuredAsObservable().ObserveOnCurrentContext().Subscribe(x =>
         {
             Current = x.Decibel;
-            Graphics.AddValue((float)x.Decibel);
-            var (avg, min, max) = Graphics.CalcStatics();
+            Drawing.AddValue((float)x.Decibel);
+            var (avg, min, max) = Drawing.CalcStatics();
             Average = avg;
             Min = min;
             Max = max;
@@ -85,7 +85,7 @@ public sealed partial class UILoadViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction4()
     {
-        Graphics.Clear();
+        Drawing.Clear();
         peakHistory.Clear();
         Current = 0;
         Average = 0;

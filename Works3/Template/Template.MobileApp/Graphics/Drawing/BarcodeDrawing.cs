@@ -1,8 +1,8 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
 using BarcodeScanning;
 
-public sealed class BarcodeGraphics : GraphicsObject
+public sealed class BarcodeDrawing : DrawingObject
 {
     private IReadOnlySet<BarcodeResult>? results;
 

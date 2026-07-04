@@ -1,24 +1,24 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 using SkiaSharp.Views.Maui;
 
-// GraphicsControl の Skia 版。ISkiaScene をバインドし、Attach/Detach で結線、
+// DrawingControl の Skia 版。ISceneObject をバインドし、Attach/Detach で結線、
 // PaintSurface で Scene.Render を呼ぶだけの共通ビュー。
-public sealed class SkiaSceneView : SKCanvasView
+public sealed class SceneControl : SKCanvasView
 {
     public static readonly BindableProperty SceneProperty = BindableProperty.Create(
         nameof(Scene),
-        typeof(ISkiaScene),
-        typeof(SkiaSceneView),
+        typeof(ISceneObject),
+        typeof(SceneControl),
         propertyChanged: HandlePropertyChanged);
 
-    public ISkiaScene? Scene
+    public ISceneObject? Scene
     {
-        get => (ISkiaScene?)GetValue(SceneProperty);
+        get => (ISceneObject?)GetValue(SceneProperty);
         set => SetValue(SceneProperty, value);
     }
 
-    public SkiaSceneView()
+    public SceneControl()
     {
         BackgroundColor = Colors.Transparent;
         PaintSurface += OnPaintSurface;
@@ -31,10 +31,10 @@ public sealed class SkiaSceneView : SKCanvasView
             return;
         }
 
-        ((SkiaSceneView)bindable).HandlePropertyChanged(oldValue as ISkiaScene, newValue as ISkiaScene);
+        ((SceneControl)bindable).HandlePropertyChanged(oldValue as ISceneObject, newValue as ISceneObject);
     }
 
-    private void HandlePropertyChanged(ISkiaScene? oldValue, ISkiaScene? newValue)
+    private void HandlePropertyChanged(ISceneObject? oldValue, ISceneObject? newValue)
     {
         oldValue?.Detach();
         newValue?.Attach(this);

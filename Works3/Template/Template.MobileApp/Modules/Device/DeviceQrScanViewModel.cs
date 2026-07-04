@@ -2,13 +2,13 @@ namespace Template.MobileApp.Modules.Device;
 
 using BarcodeScanning;
 
-using Template.MobileApp.Graphics;
+using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 {
     public BarcodeController Controller { get; } = new();
 
-    public BarcodeGraphics Graphics { get; } = new();
+    public BarcodeDrawing Drawing { get; } = new();
 
     [ObservableProperty]
     public partial string Barcode { get; set; } = string.Empty;
@@ -31,7 +31,7 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
 
         DetectCommand = new DelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
         {
-            Graphics.Update(x);
+            Drawing.Update(x);
 
             if (x.Count > 0)
             {

@@ -1,23 +1,23 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Drawing;
 
-public interface IGraphicsObject : IDrawable
+public interface IDrawingObject : IDrawable
 {
-    void Attach(GraphicsControl view);
+    void Attach(DrawingControl view);
 
     void Detach();
 }
 
 #pragma warning disable CA1033
-public abstract class GraphicsObject : IGraphicsObject
+public abstract class DrawingObject : IDrawingObject
 {
-    private GraphicsControl? control;
+    private DrawingControl? control;
 
-    void IGraphicsObject.Attach(GraphicsControl view)
+    void IDrawingObject.Attach(DrawingControl view)
     {
         control = view;
     }
 
-    void IGraphicsObject.Detach()
+    void IDrawingObject.Detach()
     {
         control = null;
     }

@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Graphics;
+namespace Template.MobileApp.Graphics.Scene;
 
 internal enum FlightIff
 {
@@ -118,7 +118,7 @@ internal sealed class FlightHudSim
     public static float Wrap360(float value) => ((value % 360f) + 360f) % 360f;
 }
 
-public sealed class FlightHudScene : SkiaScene
+public sealed class FlightHudScene : SceneObject
 {
     private const float BaseWidth = 400f;
 
