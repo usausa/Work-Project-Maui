@@ -7,6 +7,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
              x:DataType="{x:Type module:UIMoneyViewModel}"
@@ -441,15 +442,14 @@
                                 Style="{StaticResource HeaderInformationButton}"
                                 Text="詳細" />
                         <HorizontalStackLayout Grid.Row="1" Grid.Column="0"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center">
-                            <Label VerticalOptions="Center"
-                                   FontSize="36"
+                                               HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label behaviors:LabelOption.CountUpFormat="{}{0:N0}"
                                    behaviors:LabelOption.CountUpValue="{Binding Balance}"
-                                   behaviors:LabelOption.CountUpFormat="{}{0:N0}" />
+                                   VerticalOptions="Center"
+                                   FontSize="36" />
                             <Label VerticalOptions="Center"
-                                   FontSize="18"
-                                   Text=" 円" />
+                                   Text=" 円"
+                                   FontSize="18" />
                         </HorizontalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1"
                                              Style="{StaticResource HeaderPointLayout}">
@@ -472,8 +472,7 @@
                 <!-- Rank -->
                 <Border Grid.Row="1"
                         Style="{StaticResource RankBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="100">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100">
                     <toolkit:SfEffectsView Style="{StaticResource RankEffect}">
                         <Grid ColumnDefinitions="36,*,36">
                             <Border Grid.Column="0"
@@ -494,98 +493,57 @@
                 <!-- Menu -->
                 <Border Grid.Row="2"
                         Style="{StaticResource MenuBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="200">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200">
                     <Grid Style="{StaticResource MenuGrid}"
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*,*,*">
 
                         <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Stars}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Stars}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="クーポン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.View_comfy}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.View_comfy}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スタンプ" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Paid}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Paid}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="ポイント" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add_circle}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Add_circle}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="チャージ" />
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Document_scanner}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Document_scanner}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="スキャン" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Send}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Send}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="送る" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="2">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Receipt_long}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Receipt_long}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="履歴" />
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="3">
-                            <ImageButton Style="{StaticResource MenuImageButton}">
-                                <ImageButton.Source>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Shopping_cart}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White" />
-                                </ImageButton.Source>
-                            </ImageButton>
+                            <ImageButton Style="{StaticResource MenuImageButton}"
+                                         Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Shopping_cart}}" />
                             <Label Style="{StaticResource MenuLabel}"
                                    Text="カート" />
                         </VerticalStackLayout>
@@ -731,8 +689,8 @@
                             behaviors:AnimationOption.EnterTrigger="{Binding NotificationCount}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Binding="{Binding NotificationCount}"
-                                         Value="0">
+                                         Value="0"
+                                         Binding="{Binding NotificationCount}">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Border.Triggers>
@@ -779,14 +737,9 @@
                 behaviors:AnimationOption.Pulse="True">
             <toolkit:SfEffectsView Style="{StaticResource CenterButtonEffect}">
                 <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
-                    <Image Style="{StaticResource CenterButtonImage}">
-                        <Image.Source>
-                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Qr_code}"
-                                             FontFamily="MaterialIcons"
-                                             Color="White"
-                                             Size="36" />
-                        </Image.Source>
-                    </Image>
+                    <Image Style="{StaticResource CenterButtonImage}"
+                           Source="{markup:MoneyIcon {x:Static fonts:MaterialIcons.Qr_code},
+                                                     Size=36}" />
                     <Label Style="{StaticResource CenterButtonLabel}"
                            Text="支払い" />
                 </VerticalStackLayout>

@@ -5,9 +5,10 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.Sample.SampleMediaView"
              x:DataType="{x:Type module:SampleMediaViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleMediaViewModel}"
@@ -64,9 +65,7 @@
         <toolkit:MediaElement x:Name="Player"
                               behaviors:MediaBind.Controller="{Binding Controller}"
                               Source="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4"
-                              Aspect="AspectFit"
-                              ShouldAutoPlay="True"
-                              ShouldShowPlaybackControls="False" />
+                              Aspect="AspectFit" ShouldAutoPlay="True" ShouldShowPlaybackControls="False" />
 
         <!-- タップでコントロールバーの表示を切り替える -->
         <BoxView Color="#01000000">
@@ -76,41 +75,29 @@
         </BoxView>
 
         <!-- 再生開始・バッファリング中のローディング表示 -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}"
+        <ActivityIndicator WidthRequest="48" HeightRequest="48"
+                           HorizontalOptions="Center" VerticalOptions="Center"
                            IsVisible="{Binding IsLoading}"
                            Color="White"
-                           WidthRequest="48"
-                           HeightRequest="48"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           InputTransparent="True" />
+                           InputTransparent="True"
+                           IsRunning="{Binding IsLoading}" />
 
         <Border Style="{StaticResource ControlBarBorder}"
-                IsVisible="{Binding IsControlBarVisible}"
-                behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}">
+                behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
+                IsVisible="{Binding IsControlBarVisible}">
             <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                   ColumnSpacing="8">
                 <ImageButton Grid.Column="0"
                              Style="{StaticResource PlayPauseButton}"
+                             Source="{markup:Material {x:Static fonts:MaterialIcons.Play_arrow},
+                                                      Color=White,
+                                                      Size=28}"
                              Command="{Binding TogglePlayCommand}">
-                    <ImageButton.Source>
-                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Play_arrow}"
-                                         FontFamily="MaterialIcons"
-                                         Color="White"
-                                         Size="28" />
-                    </ImageButton.Source>
                     <ImageButton.Triggers>
                         <DataTrigger TargetType="ImageButton"
-                                     Binding="{Binding IsPlaying}"
-                                     Value="True">
-                            <Setter Property="Source">
-                                <Setter.Value>
-                                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Pause}"
-                                                     FontFamily="MaterialIcons"
-                                                     Color="White"
-                                                     Size="28" />
-                                </Setter.Value>
-                            </Setter>
+                                     Value="True"
+                                     Binding="{Binding IsPlaying}">
+                            <Setter Property="Source" Value="{markup:Material {x:Static fonts:MaterialIcons.Pause}, Color=White, Size=28}" />
                         </DataTrigger>
                     </ImageButton.Triggers>
                 </ImageButton>
@@ -122,8 +109,8 @@
                 <Slider Grid.Column="2"
                         Style="{StaticResource SeekSlider}"
                         behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
-                        Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}"
-                        Value="{Binding Source={x:Reference Player}, Path=Position.TotalSeconds, Mode=OneWay, x:DataType={x:Type toolkit:MediaElement}}" />
+                        Value="{Binding Source={x:Reference Player}, Path=Position.TotalSeconds, Mode=OneWay, x:DataType={x:Type toolkit:MediaElement}}"
+                        Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}" />
 
                 <Label Grid.Column="3"
                        Style="{StaticResource TimeLabel}"

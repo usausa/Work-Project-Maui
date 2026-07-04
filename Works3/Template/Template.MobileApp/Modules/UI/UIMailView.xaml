@@ -7,6 +7,7 @@
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMailView"
@@ -266,55 +267,43 @@
 
             <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
                 <Button Style="{StaticResource HeaderFilterButton}"
-                        Text="フィルター">
-                    <Button.ImageSource>
-                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Filter_list}"
-                                         FontFamily="MaterialIcons"
-                                         Color="White"
-                                         Size="24" />
-                    </Button.ImageSource>
-                </Button>
+                        Text="フィルター"
+                        ImageSource="{markup:Material {x:Static fonts:MaterialIcons.Filter_list},
+                                                      Color=White,
+                                                      Size=24}" />
             </HorizontalStackLayout>
         </FlexLayout>
 
         <!-- Messages -->
         <CollectionView Grid.Row="2"
                         Style="{StaticResource MessageCollection}"
-                        ItemsSource="{Binding Messages}"
-                        IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
                         behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
-                        behaviors:Scroll.HideOnScrollTarget="{x:Reference MailFab}">
+                        behaviors:Scroll.HideOnScrollTarget="{x:Reference MailFab}"
+                        ItemsSource="{Binding Messages}"
+                        IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:MailMessage}">
                     <SwipeView>
                         <SwipeView.LeftItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Text="削除"
+                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand}"
+                                           CommandParameter="{Binding .}"
+                                           Text="削除"
                                            BackgroundColor="{StaticResource RedDefault}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand}"
-                                           CommandParameter="{Binding .}">
-                                    <SwipeItem.IconImageSource>
-                                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Delete}"
-                                                         FontFamily="MaterialIcons"
-                                                         Color="White"
-                                                         Size="24" />
-                                    </SwipeItem.IconImageSource>
-                                </SwipeItem>
+                                           IconImageSource="{markup:Material {x:Static fonts:MaterialIcons.Delete},
+                                                                             Color=White,
+                                                                             Size=24}" />
                             </SwipeItems>
                         </SwipeView.LeftItems>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Text="アーカイブ"
+                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand}"
+                                           CommandParameter="{Binding .}"
+                                           Text="アーカイブ"
                                            BackgroundColor="{StaticResource GreenDefault}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand}"
-                                           CommandParameter="{Binding .}">
-                                    <SwipeItem.IconImageSource>
-                                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Archive}"
-                                                         FontFamily="MaterialIcons"
-                                                         Color="White"
-                                                         Size="24" />
-                                    </SwipeItem.IconImageSource>
-                                </SwipeItem>
+                                           IconImageSource="{markup:Material {x:Static fonts:MaterialIcons.Archive},
+                                                                             Color=White,
+                                                                             Size=24}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Grid Style="{StaticResource MessageGrid}"
@@ -331,8 +320,8 @@
                                        Text="{Binding From}">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IsUnread}"
-                                                     Value="True">
+                                                     Value="True"
+                                                     Binding="{Binding IsUnread}">
                                             <Setter Property="TextColor" Value="Black" />
                                             <Setter Property="FontAttributes" Value="Bold" />
                                         </DataTrigger>
@@ -357,8 +346,8 @@
         <!-- Empty state (Schedule / Application) -->
         <VerticalStackLayout Grid.Row="2"
                              Style="{StaticResource EmptyStateLayout}"
-                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}"
-                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}">
+                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
+                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}">
             <Label Style="{StaticResource EmptyStateIconLabel}"
                    Text="{x:Static fonts:MaterialIcons.Event_busy}" />
             <Label Style="{StaticResource EmptyStateTextLabel}"
@@ -367,8 +356,8 @@
 
         <VerticalStackLayout Grid.Row="2"
                              Style="{StaticResource EmptyStateLayout}"
-                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Application}}"
-                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}">
+                             behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
+                             IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Application}}">
             <Label Style="{StaticResource EmptyStateIconLabel}"
                    Text="{x:Static fonts:MaterialIcons.Apps}" />
             <Label Style="{StaticResource EmptyStateTextLabel}"
@@ -384,14 +373,10 @@
         <Button x:Name="MailFab"
                 Grid.Row="2"
                 Style="{StaticResource FloatingButton}"
-                IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="36" />
-            </Button.ImageSource>
-        </Button>
+                IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
+                ImageSource="{markup:Material {x:Static fonts:MaterialIcons.Add},
+                                              Color=White,
+                                              Size=36}" />
 
         <!-- Tab -->
         <Grid Grid.Row="3"

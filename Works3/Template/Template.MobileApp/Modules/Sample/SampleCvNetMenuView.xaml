@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvNetMenuView"
              x:DataType="{x:Type module:SampleCvNetMenuViewModel}"
@@ -19,62 +19,32 @@
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetObject}"
-                Text="Object">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Category}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
+                Text="Object"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Category}}" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetTag}"
-                Text="Tag">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Sell}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
+                Text="Tag"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Sell}}" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetPeople}"
-                Text="People">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.People}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
+                Text="People"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.People}}" />
         <Button Grid.Row="3"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetOcr}"
-                Text="Ocr">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Document_scanner}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
+                Text="Ocr"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Document_scanner}}" />
         <Button Grid.Row="4"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleCvNetFace}"
-                Text="Face">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Face}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
+                Text="Face"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Face}}" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

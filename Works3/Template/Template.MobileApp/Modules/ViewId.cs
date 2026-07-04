@@ -138,7 +138,7 @@ public enum ViewId
     UILoad,
     UIMixer,
     UIGraph,
-    UITimeline,
+    UIGraph2,
     UITreeMap,
     UIRadar,
     UICockpit,

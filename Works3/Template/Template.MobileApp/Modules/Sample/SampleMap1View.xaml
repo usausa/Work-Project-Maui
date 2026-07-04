@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
@@ -28,10 +29,8 @@
                 <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
-                                Opacity="0.3"
-                                Radius="6"
-                                Offset="0,2" />
+                        <Shadow Offset="0,2"
+                                Brush="Black" Opacity="0.3" Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -43,40 +42,31 @@
     <Grid Style="{StaticResource FillGrid}">
 
         <maps:Map behaviors:MapBind.Controller="{Binding Controller}"
-                  MapType="{Binding CurrentMapType}"
-                  ItemsSource="{Binding Spots}">
+                  ItemsSource="{Binding Spots}"
+                  MapType="{Binding CurrentMapType}">
             <maps:Map.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:MapSpot}">
-                    <maps:Pin Location="{Binding Location}"
+                    <maps:Pin Address="{Binding Description}"
                               Label="{Binding Name}"
-                              Address="{Binding Description}" />
+                              Location="{Binding Location}" />
                 </DataTemplate>
             </maps:Map.ItemTemplate>
         </maps:Map>
 
         <!-- Google Map 標準のズームボタン(右下)と重ならないよう右上に配置する -->
         <VerticalStackLayout Margin="0,16,16,0"
-                             HorizontalOptions="End"
-                             VerticalOptions="Start"
+                             HorizontalOptions="End" VerticalOptions="Start"
                              Spacing="12">
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Command="{Binding ToggleMapTypeCommand}">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Layers}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource GrayDarken3}"
-                                     Size="24" />
-                </ImageButton.Source>
-            </ImageButton>
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Layers},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding ToggleMapTypeCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Command="{Binding HomeCommand}">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource GrayDarken3}"
-                                     Size="24" />
-                </ImageButton.Source>
-            </ImageButton>
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Home},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 
     </Grid>

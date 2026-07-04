@@ -8,10 +8,10 @@
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
-             x:Class="Template.MobileApp.Modules.UI.UITimelineView"
-             x:DataType="{x:Type module:UITimelineViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:UITimelineViewModel}"
-             shell:ShellProperty.Title="Timeline"
+             x:Class="Template.MobileApp.Modules.UI.UIGraph2View"
+             x:DataType="{x:Type module:UIGraph2ViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGraph2ViewModel}"
+             shell:ShellProperty.Title="Graph2"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -104,7 +104,7 @@
                     <Grid RowDefinitions="56,Auto"
                           ColumnDefinitions="Auto,*">
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UITimelineViewModel}}, Path=ToggleCommand}"
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGraph2ViewModel}}, Path=ToggleCommand}"
                                                   CommandParameter="{Binding .}" />
                         </Grid.GestureRecognizers>
 
@@ -115,7 +115,8 @@
                         <Grid Grid.Row="0" Grid.Column="1"
                               RowDefinitions="Auto,Auto"
                               ColumnDefinitions="Auto,Auto,*,Auto"
-                              RowSpacing="2" VerticalOptions="Center">
+                              VerticalOptions="Center"
+                              RowSpacing="2">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ShaLabel}"
                                    Text="{Binding Row.ShortSha}" />

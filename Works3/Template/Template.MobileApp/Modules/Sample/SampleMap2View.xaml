@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="Template.MobileApp.Modules.Sample.SampleMap2View"
@@ -33,10 +34,8 @@
                 <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
-                                Opacity="0.3"
-                                Radius="6"
-                                Offset="0,2" />
+                        <Shadow Offset="0,2"
+                                Brush="Black" Opacity="0.3" Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -50,36 +49,23 @@
         <mapsui:MapControl behaviors:MapsuiBind.Controller="{Binding Controller}" />
 
         <VerticalStackLayout Margin="0,0,16,16"
-                             HorizontalOptions="End"
-                             VerticalOptions="End"
+                             HorizontalOptions="End" VerticalOptions="End"
                              Spacing="12">
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Command="{Binding ZoomInCommand}">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Add}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource GrayDarken3}"
-                                     Size="24" />
-                </ImageButton.Source>
-            </ImageButton>
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Add},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding ZoomInCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Command="{Binding ZoomOutCommand}">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Remove}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource GrayDarken3}"
-                                     Size="24" />
-                </ImageButton.Source>
-            </ImageButton>
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Remove},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding ZoomOutCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
-                         Command="{Binding HomeCommand}">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
-                                     FontFamily="MaterialIcons"
-                                     Color="{StaticResource GrayDarken3}"
-                                     Size="24" />
-                </ImageButton.Source>
-            </ImageButton>
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Home},
+                                                  Color={StaticResource GrayDarken3},
+                                                  Size=24}"
+                         Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
 
     </Grid>

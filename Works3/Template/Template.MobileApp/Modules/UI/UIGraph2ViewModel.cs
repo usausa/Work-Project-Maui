@@ -4,7 +4,7 @@ using System.Text.Json;
 
 using Template.MobileApp.Models.Sample.Graph;
 
-public sealed partial class UITimelineViewModel : AppViewModelBase
+public sealed partial class UIGraph2ViewModel : AppViewModelBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -13,7 +13,7 @@ public sealed partial class UITimelineViewModel : AppViewModelBase
 
     public ICommand ToggleCommand { get; }
 
-    public UITimelineViewModel()
+    public UIGraph2ViewModel()
     {
         ToggleCommand = MakeDelegateCommand<TimelineRow>(static x => x.IsExpanded = !x.IsExpanded);
     }
