@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:graphics="clr-namespace:Template.MobileApp.Graphics"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMechHudView"
              x:DataType="{x:Type module:UIMechHudViewModel}"
@@ -14,7 +14,7 @@
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
-        <controls:MechHudScreen Grid.Row="0" />
+        <graphics:SkiaSceneView Grid.Row="0" Scene="{Binding Scene}" />
     </Grid>
 
 </ContentView>

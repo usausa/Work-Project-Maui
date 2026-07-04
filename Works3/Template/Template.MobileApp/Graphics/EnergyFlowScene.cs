@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Controls;
+namespace Template.MobileApp.Graphics;
 
 internal sealed class EnergySim
 {
@@ -37,8 +37,7 @@ internal sealed class EnergySim
     public static float Flow(float value, float nominalValue) => Math.Clamp(value / nominalValue, 0f, 1.3f);
 }
 
-#pragma warning disable CA1001
-public sealed class EnergyFlowScreen : AnimatedSkiaView
+public sealed class EnergyFlowScene : SkiaScene
 {
     private const float BaseWidth = 400f;
 
@@ -63,7 +62,7 @@ public sealed class EnergyFlowScreen : AnimatedSkiaView
 
     protected override void Update(float t, float dt) => sim.Update(t, dt);
 
-    protected override void Render(SKCanvas canvas, int width, int height, float t)
+    protected override void OnRender(SKCanvas canvas, int width, int height)
     {
         canvas.Clear(BgColor);
 
@@ -76,9 +75,9 @@ public sealed class EnergyFlowScreen : AnimatedSkiaView
         DrawDotGrid(canvas, vh);
         DrawHeader(canvas);
         DrawKpiCards(canvas);
-        DrawElectricSection(canvas, t);
-        DrawSteamSection(canvas, t);
-        DrawDynamics(canvas, t, vh);
+        DrawElectricSection(canvas, Time);
+        DrawSteamSection(canvas, Time);
+        DrawDynamics(canvas, Time, vh);
         DrawLegend(canvas, vh);
 
         canvas.Restore();
@@ -367,4 +366,3 @@ public sealed class EnergyFlowScreen : AnimatedSkiaView
         DrawText(canvas, label, x + 24f, y, 8f, TextDim);
     }
 }
-#pragma warning restore CA1001

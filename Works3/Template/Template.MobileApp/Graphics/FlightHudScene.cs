@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Controls;
+namespace Template.MobileApp.Graphics;
 
 internal enum FlightIff
 {
@@ -118,8 +118,7 @@ internal sealed class FlightHudSim
     public static float Wrap360(float value) => ((value % 360f) + 360f) % 360f;
 }
 
-#pragma warning disable CA1001
-public sealed class FlightHudScreen : AnimatedSkiaView
+public sealed class FlightHudScene : SkiaScene
 {
     private const float BaseWidth = 400f;
 
@@ -139,7 +138,7 @@ public sealed class FlightHudScreen : AnimatedSkiaView
 
     protected override void Update(float t, float dt) => sim.Update(t, dt);
 
-    protected override void Render(SKCanvas canvas, int width, int height, float t)
+    protected override void OnRender(SKCanvas canvas, int width, int height)
     {
         canvas.Clear(BgColor);
 
@@ -149,13 +148,13 @@ public sealed class FlightHudScreen : AnimatedSkiaView
         canvas.Save();
         canvas.Scale(s);
 
-        DrawHeadingTape(canvas, t);
+        DrawHeadingTape(canvas, Time);
         DrawStatusRows(canvas, vh);
-        DrawAttitude(canvas, t, vh);
+        DrawAttitude(canvas, Time, vh);
         DrawSpeedTape(canvas, vh);
         DrawAltitudeTape(canvas, vh);
         DrawRadar(canvas, vh);
-        DrawWeapons(canvas, t, vh);
+        DrawWeapons(canvas, Time, vh);
         DrawText(canvas, "TWS AUTO   CHAFF 24   FLARE 24   AP OFF", 200f, vh - 10f, 8.5f, Main.WithAlpha(110), align: SKTextAlign.Center);
 
         canvas.Restore();
@@ -698,5 +697,15 @@ public sealed class FlightHudScreen : AnimatedSkiaView
         paint.Shader = vignette;
         canvas.DrawRect(0f, 0f, width, height, paint);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            vignette?.Dispose();
+            vignette = null;
+        }
+
+        base.Dispose(disposing);
+    }
 }
-#pragma warning restore CA1001

@@ -1,11 +1,21 @@
-namespace Template.MobileApp.Controls;
+namespace Template.MobileApp.Graphics;
 
 using System.Diagnostics;
 
-using SkiaSharp.Views.Maui;
+public interface ISkiaScene
+{
+    void Attach(SkiaSceneView view);
 
-#pragma warning disable CA1001
-public abstract class AnimatedSkiaView : SKCanvasView
+    void Detach();
+
+    void Render(SKCanvas canvas, int width, int height);
+}
+
+// GraphicsObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
+// アニメーション用のランループ(Start/Stop)を自身に内包する。
+// 画面の VM がこの派生クラスをメンバとして保持し、ナビゲーションで Start/Stop を制御する。
+#pragma warning disable CA1033
+public abstract class SkiaScene : ISkiaScene, IDisposable
 {
     private static readonly TimeSpan Interval = TimeSpan.FromMilliseconds(1000d / 60);
 
@@ -20,6 +30,8 @@ public abstract class AnimatedSkiaView : SKCanvasView
 
     private readonly Stopwatch clock = new();
 
+    private SkiaSceneView? control;
+
     private CancellationTokenSource? cts;
 
     private float lastTime;
@@ -28,27 +40,22 @@ public abstract class AnimatedSkiaView : SKCanvasView
 
     protected SKPaint Fill { get; } = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
 
-    protected AnimatedSkiaView()
-    {
-        BackgroundColor = Colors.Transparent;
-        PaintSurface += OnPaintSurface;
-    }
+    // 直近の Update で確定した経過時間。OnRender はこの値を参照する。
+    protected float Time { get; private set; }
 
-    protected override void OnHandlerChanged()
-    {
-        base.OnHandlerChanged();
+    void ISkiaScene.Attach(SkiaSceneView view) => control = view;
 
-        if (Handler is not null)
-        {
-            StartTimer();
-        }
-        else
-        {
-            StopTimer();
-        }
-    }
+    void ISkiaScene.Detach() => control = null;
 
-    private void StartTimer()
+    void ISkiaScene.Render(SKCanvas canvas, int width, int height) => OnRender(canvas, width, height);
+
+    public void Invalidate() => control?.InvalidateSurface();
+
+    //--------------------------------------------------------------------------------
+    // Run loop
+    //--------------------------------------------------------------------------------
+
+    public void Start()
     {
         if ((cts is not null) && !cts.IsCancellationRequested)
         {
@@ -60,7 +67,7 @@ public abstract class AnimatedSkiaView : SKCanvasView
         _ = Loop(cts.Token);
     }
 
-    private void StopTimer()
+    public void Stop()
     {
         if (cts is null)
         {
@@ -91,8 +98,9 @@ public abstract class AnimatedSkiaView : SKCanvasView
                     var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
                     lastTime = t;
 
+                    Time = t;
                     Update(t, dt);
-                    InvalidateSurface();
+                    Invalidate();
                 });
             }
         }
@@ -102,14 +110,32 @@ public abstract class AnimatedSkiaView : SKCanvasView
         }
     }
 
-    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
-    {
-        Render(e.Surface.Canvas, e.Info.Width, e.Info.Height, (float)clock.Elapsed.TotalSeconds);
-    }
-
     protected abstract void Update(float t, float dt);
 
-    protected abstract void Render(SKCanvas canvas, int width, int height, float t);
+    protected abstract void OnRender(SKCanvas canvas, int width, int height);
+
+    //--------------------------------------------------------------------------------
+    // Dispose
+    //--------------------------------------------------------------------------------
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Stop();
+            Stroke.Dispose();
+            Fill.Dispose();
+            textFont.Dispose();
+            textFontBold.Dispose();
+            textPaint.Dispose();
+        }
+    }
 
     //--------------------------------------------------------------------------------
     // Helpers
@@ -221,4 +247,4 @@ public abstract class AnimatedSkiaView : SKCanvasView
         canvas.DrawPath(path, Stroke);
     }
 }
-#pragma warning restore CA1001
+#pragma warning restore CA1033

@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Controls;
+namespace Template.MobileApp.Graphics;
 
 internal sealed class CarSim
 {
@@ -140,8 +140,7 @@ internal sealed class CarSim
     }
 }
 
-#pragma warning disable CA1001
-public sealed class TelemetryScreen : AnimatedSkiaView
+public sealed class TelemetryScene : SkiaScene
 {
     private const float BaseWidth = 400f;
 
@@ -179,7 +178,7 @@ public sealed class TelemetryScreen : AnimatedSkiaView
 
     protected override void Update(float t, float dt) => sim.Update(t, dt);
 
-    protected override void Render(SKCanvas canvas, int width, int height, float t)
+    protected override void OnRender(SKCanvas canvas, int width, int height)
     {
         canvas.Clear(BgColor);
 
@@ -194,11 +193,11 @@ public sealed class TelemetryScreen : AnimatedSkiaView
         DrawTopRow(canvas);
         DrawSpeedCluster(canvas, vh);
         DrawTachometer(canvas, vh);
-        DrawBoost(canvas, t, vh);
+        DrawBoost(canvas, Time, vh);
         DrawErs(canvas, vh);
-        DrawGear(canvas, t, vh);
+        DrawGear(canvas, Time, vh);
         DrawGForce(canvas, vh);
-        DrawMiniGauges(canvas, t, vh);
+        DrawMiniGauges(canvas, Time, vh);
 
         canvas.Restore();
     }
@@ -720,5 +719,15 @@ public sealed class TelemetryScreen : AnimatedSkiaView
             canvas.DrawLine(x + pad, mid, x + w - pad, mid, paint);
         }
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            glow?.Dispose();
+            glow = null;
+        }
+
+        base.Dispose(disposing);
+    }
 }
-#pragma warning restore CA1001

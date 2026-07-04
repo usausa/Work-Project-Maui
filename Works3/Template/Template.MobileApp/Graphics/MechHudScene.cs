@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Controls;
+namespace Template.MobileApp.Graphics;
 
 internal sealed class MechSquadUnit
 {
@@ -128,8 +128,7 @@ internal sealed class MechHudSim
     public string WorstPartName => PartNames[WorstPart];
 }
 
-#pragma warning disable CA1001
-public sealed class MechHudScreen : AnimatedSkiaView
+public sealed class MechHudScene : SkiaScene
 {
     private const float BaseWidth = 400f;
 
@@ -155,7 +154,7 @@ public sealed class MechHudScreen : AnimatedSkiaView
 
     protected override void Update(float t, float dt) => sim.Update(t, dt);
 
-    protected override void Render(SKCanvas canvas, int width, int height, float t)
+    protected override void OnRender(SKCanvas canvas, int width, int height)
     {
         canvas.Clear(BgColor);
 
@@ -165,9 +164,9 @@ public sealed class MechHudScreen : AnimatedSkiaView
         canvas.Save();
         canvas.Scale(s);
 
-        DrawStatus(canvas, t);
-        DrawComm(canvas, t);
-        DrawMap(canvas, t, vh);
+        DrawStatus(canvas, Time);
+        DrawComm(canvas, Time);
+        DrawMap(canvas, Time, vh);
         DrawText(canvas, "GND-NAV OK   IFF ON   FCS LINKED   AP OFF", 200f, vh - 10f, 8.5f, Main.WithAlpha(110), align: SKTextAlign.Center);
 
         canvas.Restore();
@@ -526,5 +525,17 @@ public sealed class MechHudScreen : AnimatedSkiaView
         paint.Shader = vignette;
         canvas.DrawRect(0f, 0f, width, height, paint);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            terrainPath?.Dispose();
+            terrainPath = null;
+            vignette?.Dispose();
+            vignette = null;
+        }
+
+        base.Dispose(disposing);
+    }
 }
-#pragma warning restore CA1001
