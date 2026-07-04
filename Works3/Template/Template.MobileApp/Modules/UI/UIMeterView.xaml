@@ -53,6 +53,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="behaviors:ButtonOption.PressBind" Value="True" />
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+                <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
             </Style>
 
             <Style x:Key="AButton"

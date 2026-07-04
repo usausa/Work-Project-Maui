@@ -269,4 +269,109 @@ public static partial class ButtonOption
             }
         }
     }
+
+    // ------------------------------------------------------------
+    // HapticFeedback (押下時にクリックのハプティクスを発生)
+    // ------------------------------------------------------------
+
+    public static readonly BindableProperty HapticFeedbackProperty = BindableProperty.CreateAttached(
+        "HapticFeedback",
+        typeof(bool),
+        typeof(ButtonOption),
+        defaultValue: false,
+        propertyChanged: OnHapticFeedbackChanged);
+
+    public static bool GetHapticFeedback(BindableObject obj) =>
+        (bool)obj.GetValue(HapticFeedbackProperty);
+
+    public static void SetHapticFeedback(BindableObject obj, bool value) =>
+        obj.SetValue(HapticFeedbackProperty, value);
+
+    private static void OnHapticFeedbackChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        // Button と ImageButton のどちらにも適用できるようにする
+        switch (bindable)
+        {
+            case Button button:
+                {
+                    var behavior = button.Behaviors.FirstOrDefault(static x => x is HapticFeedbackBehavior);
+                    if (behavior is not null)
+                    {
+                        button.Behaviors.Remove(behavior);
+                    }
+                    if (newValue is true)
+                    {
+                        button.Behaviors.Add(new HapticFeedbackBehavior());
+                    }
+                    break;
+                }
+
+            case ImageButton imageButton:
+                {
+                    var behavior = imageButton.Behaviors.FirstOrDefault(static x => x is ImageHapticFeedbackBehavior);
+                    if (behavior is not null)
+                    {
+                        imageButton.Behaviors.Remove(behavior);
+                    }
+                    if (newValue is true)
+                    {
+                        imageButton.Behaviors.Add(new ImageHapticFeedbackBehavior());
+                    }
+                    break;
+                }
+
+            default:
+                break;
+        }
+    }
+
+    private static void PerformClickFeedback()
+    {
+        try
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        }
+        catch (FeatureNotSupportedException)
+        {
+            // Ignore
+        }
+    }
+
+    private sealed class HapticFeedbackBehavior : BehaviorBase<Button>
+    {
+        protected override void OnAttachedTo(Button bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            bindable.Pressed += OnButtonPressed;
+        }
+
+        protected override void OnDetachingFrom(Button bindable)
+        {
+            base.OnDetachingFrom(bindable);
+
+            bindable.Pressed -= OnButtonPressed;
+        }
+
+        private static void OnButtonPressed(object? sender, EventArgs e) => PerformClickFeedback();
+    }
+
+    private sealed class ImageHapticFeedbackBehavior : BehaviorBase<ImageButton>
+    {
+        protected override void OnAttachedTo(ImageButton bindable)
+        {
+            base.OnAttachedTo(bindable);
+
+            bindable.Pressed += OnButtonPressed;
+        }
+
+        protected override void OnDetachingFrom(ImageButton bindable)
+        {
+            base.OnDetachingFrom(bindable);
+
+            bindable.Pressed -= OnButtonPressed;
+        }
+
+        private static void OnButtonPressed(object? sender, EventArgs e) => PerformClickFeedback();
+    }
 }
