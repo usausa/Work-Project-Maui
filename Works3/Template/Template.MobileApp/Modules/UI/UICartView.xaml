@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UICartView"
@@ -20,11 +19,6 @@
             <Style x:Key="RootGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-            </Style>
-
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
             <Style x:Key="RootStack"
@@ -291,8 +285,7 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto">
 
-        <ScrollView Grid.Row="0"
-                    Style="{StaticResource RootScroll}">
+        <ScrollView Grid.Row="0">
             <VerticalStackLayout Style="{StaticResource RootStack}">
 
             <!-- Header banner -->

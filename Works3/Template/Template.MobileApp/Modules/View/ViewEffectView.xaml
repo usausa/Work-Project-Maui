@@ -240,8 +240,8 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource AmountLabel}"
-                           behaviors:CountUpOption.Value="{Binding Amount}"
-                           behaviors:CountUpOption.Format="{}¥{0:N0}" />
+                           behaviors:LabelOption.CountUpValue="{Binding Amount}"
+                           behaviors:LabelOption.CountUpFormat="{}¥{0:N0}" />
                     <Button Grid.Column="1"
                             Style="{StaticResource SmallActionButton}"
                             Command="{Binding AmountCommand}"
@@ -251,22 +251,16 @@
 
             <!-- フォーカス枠 -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="フォーカス枠(FocusBorderBehavior)" />
+                   Text="フォーカス枠(Focus)" />
             <Border Style="{StaticResource FocusEntryBorder}">
-                <Entry Placeholder="ユーザー名(フォーカスで青枠)">
-                    <Entry.Behaviors>
-                        <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource BlueDefault}"
-                                                       FocusedThickness="2.5" />
-                    </Entry.Behaviors>
-                </Entry>
+                <Entry Placeholder="ユーザー名(フォーカスで青枠)"
+                       behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                       behaviors:Focus.FocusedThickness="2.5" />
             </Border>
             <Border Style="{StaticResource FocusEntryBorder}">
-                <Entry Placeholder="メールアドレス(フォーカスで緑枠)">
-                    <Entry.Behaviors>
-                        <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource GreenDefault}"
-                                                       FocusedThickness="2.5" />
-                    </Entry.Behaviors>
-                </Entry>
+                <Entry Placeholder="メールアドレス(フォーカスで緑枠)"
+                       behaviors:Focus.FocusedStroke="{StaticResource GreenDefault}"
+                       behaviors:Focus.FocusedThickness="2.5" />
             </Border>
 
             <!-- 押下フィードバック比較 -->

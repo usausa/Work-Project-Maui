@@ -6,8 +6,8 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
              x:Class="Template.MobileApp.Modules.UI.UITimelineView"
              x:DataType="{x:Type module:UITimelineViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UITimelineViewModel}"
@@ -88,21 +88,16 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
-            <Style x:Key="TimelineCollectionView"
-                   TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}">
-        <CollectionView Style="{StaticResource TimelineCollectionView}"
-                        ItemsSource="{Binding Rows}"
+        <CollectionView ItemsSource="{Binding Rows}"
                         VerticalScrollBarVisibility="Default">
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type graph:TimelineRow}">
@@ -120,8 +115,7 @@
                         <Grid Grid.Row="0" Grid.Column="1"
                               RowDefinitions="Auto,Auto"
                               ColumnDefinitions="Auto,Auto,*,Auto"
-                              RowSpacing="2"
-                              VerticalOptions="Center">
+                              RowSpacing="2" VerticalOptions="Center">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource ShaLabel}"
                                    Text="{Binding Row.ShortSha}" />
@@ -139,8 +133,8 @@
                         <!-- タップで展開する詳細 -->
                         <Border Grid.Row="1" Grid.Column="1"
                                 Style="{StaticResource DetailBorder}"
-                                IsVisible="{Binding IsExpanded}"
-                                behaviors:AnimationOption.FadeInTrigger="{Binding IsExpanded}">
+                                behaviors:AnimationOption.FadeInTrigger="{Binding IsExpanded}"
+                                IsVisible="{Binding IsExpanded}">
                             <HorizontalStackLayout>
                                 <Label Style="{StaticResource DetailIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Person}" />

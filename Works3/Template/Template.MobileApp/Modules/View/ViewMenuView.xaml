@@ -87,14 +87,14 @@
                 Text="Drawing" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId ViewEffect}"
-                Text="Effect" />
+                IsEnabled="False"
+                Text="" />
 
         <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId ViewEffect}"
+                Text="Effect" />
         <Button Grid.Row="7" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

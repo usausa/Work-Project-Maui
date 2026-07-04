@@ -4,7 +4,6 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITimelineSampleView"
              x:DataType="{x:Type module:UITimelineSampleViewModel}"
@@ -201,7 +200,6 @@
         <!-- Timeline list -->
         <CollectionView Grid.Row="1"
                         Style="{StaticResource TimelineCollection}"
-                        behaviors:Scroll.DisableOverScroll="True"
                         ItemsSource="{Binding Events}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="module:UITimelineSampleEvent">

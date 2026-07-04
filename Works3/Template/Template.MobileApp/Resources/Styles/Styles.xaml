@@ -924,11 +924,6 @@
     <!-- CollectionView -->
     <!-- ================================================================================ -->
 
-    <Style x:Key="ItemCollectionView"
-           TargetType="CollectionView">
-        <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-    </Style>
-
     <Style x:Key="ItemCollectionGrid"
            TargetType="Grid">
         <Setter Property="Margin" Value="0" />

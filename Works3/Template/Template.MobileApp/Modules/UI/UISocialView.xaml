@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:model="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:model="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Modules.UI.UISocialView"
              x:DataType="{x:Type module:UISocialViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UISocialViewModel}"
@@ -200,8 +200,8 @@
             <VerticalStackLayout Grid.Column="0"
                                  Style="{StaticResource LayoutVerticalStack}">
                 <controls:SocialAlert Style="{StaticResource Alert}"
-                                      Title="{Binding AlertTitle}"
-                                      Text="{Binding AlertMessage}" />
+                                      Text="{Binding AlertMessage}"
+                                      Title="{Binding AlertTitle}" />
             </VerticalStackLayout>
         </Grid>
 
@@ -230,11 +230,11 @@
               ColumnDefinitions="*,*">
             <controls:SocialStatus Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource Status}"
-                                   Title1="{Binding StatusName}"
-                                   Title2="{Binding StatusForm}"
                                    Text1="{x:Static fonts:MaterialIcons.Favorite}"
                                    Text2="{x:Static fonts:MaterialIcons.Star}"
                                    Text3="{x:Static fonts:MaterialIcons.Shield}"
+                                   Title1="{Binding StatusName}"
+                                   Title2="{Binding StatusForm}"
                                    Value1="{Binding StatusHeal}"
                                    Value2="{Binding StatusBuff}"
                                    Value3="{Binding StatusDebuff}" />

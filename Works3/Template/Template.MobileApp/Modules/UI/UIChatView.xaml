@@ -394,11 +394,6 @@
                                                   ReceiveTemplate="{StaticResource ReceiveTemplate}"
                                                   SendTemplate="{StaticResource SendTemplate}"
                                                   SystemTemplate="{StaticResource SystemTemplate}" />
-
-            <Style x:Key="ChatCollectionView"
-                   TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-            </Style>
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -406,8 +401,7 @@
           BackgroundColor="White">
 
         <CollectionView Grid.Row="0"
-                        Style="{StaticResource ChatCollectionView}"
-                        behaviors:ScrollOption.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
+                        behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
                         ItemTemplate="{StaticResource MessageTemplateSelector}"
                         ItemsUpdatingScrollMode="KeepLastItemInView"
@@ -439,12 +433,9 @@
                     <Editor Grid.Column="0"
                             Style="{StaticResource MessageInputEditor}"
                             Text="{Binding InputText}"
-                            Placeholder="メッセージを入力">
-                        <Editor.Behaviors>
-                            <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource BubbleSend}"
-                                                           FocusedThickness="2" />
-                        </Editor.Behaviors>
-                    </Editor>
+                            Placeholder="メッセージを入力"
+                            behaviors:Focus.FocusedStroke="{StaticResource BubbleSend}"
+                            behaviors:Focus.FocusedThickness="2" />
                     <ImageButton Grid.Column="1"
                                  Style="{StaticResource StickerActionButton}"
                                  Source="ic_sticker.png"

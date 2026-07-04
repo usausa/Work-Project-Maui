@@ -17,8 +17,7 @@
 
     <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
 
-        <CollectionView Style="{StaticResource ItemCollectionView}"
-                        ItemsSource="{Binding Items}"
+        <CollectionView ItemsSource="{Binding Items}"
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type entity:WorkEntity}">

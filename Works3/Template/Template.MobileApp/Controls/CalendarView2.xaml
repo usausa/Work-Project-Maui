@@ -17,15 +17,14 @@
                   Padding="16,12,16,8">
                 <Button x:Name="PrevButton"
                         Grid.Column="0"
+                        VerticalOptions="Center"
                         Command="{Binding PrevMonthCommand, Source={x:Reference _self}}"
                         Text="◀"
                         BackgroundColor="Transparent"
-                        BorderWidth="0"
-                        VerticalOptions="Center" />
+                        BorderWidth="0" />
                 <VerticalStackLayout Grid.Column="1"
-                                     HorizontalOptions="Center"
-                                     Spacing="-2"
-                                     VerticalOptions="Center">
+                                     HorizontalOptions="Center" VerticalOptions="Center"
+                                     Spacing="-2">
                     <Label x:Name="YearLabel"
                            HorizontalTextAlignment="Center"
                            Text="" />
@@ -36,11 +35,11 @@
                 </VerticalStackLayout>
                 <Button x:Name="NextButton"
                         Grid.Column="2"
+                        VerticalOptions="Center"
                         Command="{Binding NextMonthCommand, Source={x:Reference _self}}"
                         Text="▶"
                         BackgroundColor="Transparent"
-                        BorderWidth="0"
-                        VerticalOptions="Center" />
+                        BorderWidth="0" />
             </Grid>
         </ContentView>
 

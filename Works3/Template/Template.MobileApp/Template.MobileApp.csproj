@@ -11,7 +11,8 @@
     <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
     <MauiXamlInflator>SourceGen</MauiXamlInflator>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>$(NoWarn);NU1608</NoWarn>
+    <!-- TODO -->
+    <NoWarn>$(NoWarn);NU1608;NU1903</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Template</ApplicationTitle>

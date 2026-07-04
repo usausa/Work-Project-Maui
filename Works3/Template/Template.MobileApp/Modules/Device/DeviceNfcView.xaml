@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
@@ -163,7 +162,6 @@
 
             <Style x:Key="LogCollectionView"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 

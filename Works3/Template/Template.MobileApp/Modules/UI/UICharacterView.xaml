@@ -16,11 +16,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="CharacterScroll"
-                   TargetType="ScrollView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-            </Style>
-
             <Style x:Key="CharacterTitleLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="32" />
@@ -29,7 +24,6 @@
 
             <Style x:Key="CharacterCollectionView"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="ItemsLayout">
                     <LinearItemsLayout Orientation="Horizontal" />
@@ -73,7 +67,6 @@
 
             <Style x:Key="ClassCollectionView"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="ItemsLayout">
                     <GridItemsLayout Orientation="Horizontal"
@@ -136,7 +129,6 @@
 
             <Style x:Key="DetailCollectionView"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="ItemsLayout">
                     <GridItemsLayout Orientation="Vertical"
                                      Span="2" />
@@ -174,7 +166,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource CharacterScroll}">
+    <ScrollView>
         <VerticalStackLayout>
 
             <!-- Character -->

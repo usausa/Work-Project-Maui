@@ -291,9 +291,9 @@
                    Text="合計" />
             <Label Grid.Column="1"
                    Style="{StaticResource HugeValueLabel}"
-                   behaviors:CountUpOption.Value="{Binding Total}"
-                   behaviors:CountUpOption.Format="{}￥ {0:N0}"
-                   behaviors:CountUpOption.Duration="450" />
+                   behaviors:LabelOption.CountUpValue="{Binding Total}"
+                   behaviors:LabelOption.CountUpFormat="{}￥ {0:N0}"
+                   behaviors:LabelOption.CountUpDuration="450" />
         </Grid>
 
         <BoxView Grid.Row="9"

@@ -445,8 +445,8 @@
                                                VerticalOptions="Center">
                             <Label VerticalOptions="Center"
                                    FontSize="36"
-                                   behaviors:CountUpOption.Value="{Binding Balance}"
-                                   behaviors:CountUpOption.Format="{}{0:N0}" />
+                                   behaviors:LabelOption.CountUpValue="{Binding Balance}"
+                                   behaviors:LabelOption.CountUpFormat="{}{0:N0}" />
                             <Label VerticalOptions="Center"
                                    FontSize="18"
                                    Text=" 円" />

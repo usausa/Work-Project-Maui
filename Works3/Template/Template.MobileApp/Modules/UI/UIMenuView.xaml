@@ -14,7 +14,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*,*">
 
         <!-- Row 0 -->
@@ -259,6 +259,19 @@
             </Button.ImageSource>
         </Button>
 
+        <Button Grid.Row="6" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UITelemetry}"
+                Text="Telemetry">
+            <Button.ImageSource>
+                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Sensors}"
+                                 FontFamily="MaterialIcons"
+                                 Color="White"
+                                 Size="24" />
+            </Button.ImageSource>
+        </Button>
+
         <!-- Row 7 : Profile comparison -->
         <Button Grid.Row="7" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
@@ -405,19 +418,6 @@
                 Text="Energy">
             <Button.ImageSource>
                 <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Bolt}"
-                                 FontFamily="MaterialIcons"
-                                 Color="White"
-                                 Size="24" />
-            </Button.ImageSource>
-        </Button>
-
-        <Button Grid.Row="11" Grid.Column="0"
-                Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId UITelemetry}"
-                Text="Telemetry">
-            <Button.ImageSource>
-                <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Sensors}"
                                  FontFamily="MaterialIcons"
                                  Color="White"
                                  Size="24" />

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIProfile2View"
@@ -20,7 +19,6 @@
             <Style x:Key="RootScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
             </Style>
 
             <!-- Cover -->
@@ -362,7 +360,6 @@
                                Text="フォト" />
                     </HorizontalStackLayout>
                     <CollectionView HeightRequest="190"
-                                    behaviors:Scroll.DisableOverScroll="True"
                                     ItemsSource="{Binding Photos}">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical"

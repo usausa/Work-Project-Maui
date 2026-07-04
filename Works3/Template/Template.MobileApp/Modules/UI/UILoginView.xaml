@@ -222,12 +222,9 @@
                     </Border>
                     <Entry Grid.Column="1"
                            Style="{StaticResource InputEntry}"
-                           Placeholder="ユーザーID">
-                        <Entry.Behaviors>
-                            <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource BlueDefault}"
-                                                           FocusedThickness="2.5" />
-                        </Entry.Behaviors>
-                    </Entry>
+                           Placeholder="ユーザーID"
+                           behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                           behaviors:Focus.FocusedThickness="2.5" />
                 </Grid>
             </Border>
 
@@ -249,12 +246,9 @@
                     <Entry Grid.Column="1"
                            Style="{StaticResource InputEntry}"
                            IsPassword="{Binding PasswordVisible, Converter={StaticResource ReverseConverter}}"
-                           Placeholder="パスワード">
-                        <Entry.Behaviors>
-                            <behaviors:FocusBorderBehavior FocusedStroke="{StaticResource BlueDefault}"
-                                                           FocusedThickness="2.5" />
-                        </Entry.Behaviors>
-                    </Entry>
+                           Placeholder="パスワード"
+                           behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                           behaviors:Focus.FocusedThickness="2.5" />
                     <ImageButton Grid.Column="2"
                                  Style="{StaticResource PasswordToggleButton}"
                                  Command="{Binding TogglePasswordCommand}">

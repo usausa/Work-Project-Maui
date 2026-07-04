@@ -130,7 +130,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView behaviors:ScrollOption.ParallaxTarget="{x:Reference CoverImage}">
+    <ScrollView behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
         <VerticalStackLayout>
 
             <!-- カバー画像(スクロールでパララックス) -->

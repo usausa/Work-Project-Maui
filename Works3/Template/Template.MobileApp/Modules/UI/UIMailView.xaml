@@ -101,7 +101,6 @@
 
             <Style x:Key="MessageCollection"
                    TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
@@ -284,7 +283,7 @@
                         ItemsSource="{Binding Messages}"
                         IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Mail}}"
                         behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
-                        behaviors:ScrollOption.HideOnScrollTarget="{x:Reference MailFab}">
+                        behaviors:Scroll.HideOnScrollTarget="{x:Reference MailFab}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:MailMessage}">
                     <SwipeView>

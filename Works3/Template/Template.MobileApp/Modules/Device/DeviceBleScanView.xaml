@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBleScanView"
@@ -16,11 +15,6 @@
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
-
-            <Style x:Key="SensorCollectionView"
-                   TargetType="CollectionView">
-                <Setter Property="behaviors:Scroll.DisableOverScroll" Value="True" />
-            </Style>
 
             <Style x:Key="SensorBorder"
                    TargetType="Border">
@@ -90,8 +84,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <CollectionView Style="{StaticResource SensorCollectionView}"
-                    ItemsSource="{Binding Devices}">
+    <CollectionView ItemsSource="{Binding Devices}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="{x:Type models:SwitchBotTemperature}">
 
