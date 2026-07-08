@@ -16,62 +16,128 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <Grid BackgroundColor="{StaticResource GrayLighten5}">
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Border Margin="16"
-                Padding="24"
-                VerticalOptions="Center"
-                BackgroundColor="White"
-                Stroke="{StaticResource GrayLighten1}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 16"
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="CenterCardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16" />
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="CardStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="NumberCircleBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource IndigoDefault}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="NumberCircleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SharedInputChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="ChipColor" Value="{StaticResource IndigoLighten4}" />
+                <Setter Property="IconColor" Value="{StaticResource IndigoDarken2}" />
+                <Setter Property="TextColor" Value="{StaticResource IndigoDarken2}" />
+            </Style>
+
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="NoStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="NoCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="NoValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource IndigoDarken2}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="CenterHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+
+        <Border Style="{StaticResource CenterCardBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
-            <VerticalStackLayout Spacing="16">
+            <VerticalStackLayout Style="{StaticResource CardStack}">
 
-                <Border Padding="0"
-                        WidthRequest="96"
-                        HeightRequest="96"
-                        HorizontalOptions="Center"
-                        BackgroundColor="{StaticResource IndigoDefault}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 48">
-                    <Label FontSize="48"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
+                <Border Style="{StaticResource NumberCircleBorder}">
+                    <Label Style="{StaticResource NumberCircleLabel}"
                            Text="1" />
                 </Border>
 
-                <Label Style="{StaticResource NameLabel}"
-                       HorizontalOptions="Center"
+                <Label Style="{StaticResource CenterTitleLabel}"
                        Text="Shared Main 1" />
 
-                <controls:StatusChip HorizontalOptions="Center"
+                <controls:StatusChip Style="{StaticResource SharedInputChip}"
                                      Icon="{x:Static fonts:MaterialIcons.Input}"
-                                     Text="Uses the shared input screen"
-                                     ChipColor="{StaticResource IndigoLighten4}"
-                                     IconColor="{StaticResource IndigoDarken2}"
-                                     TextColor="{StaticResource IndigoDarken2}" />
+                                     Text="Uses the shared input screen" />
 
-                <BoxView HeightRequest="1"
-                         Color="{StaticResource GrayLighten2}" />
+                <BoxView Style="{StaticResource CardDivider}" />
 
-                <VerticalStackLayout Spacing="2">
-                    <Label FontSize="14"
-                           TextColor="{StaticResource SecondaryTextColor}"
-                           HorizontalOptions="Center"
+                <VerticalStackLayout Style="{StaticResource NoStack}">
+                    <Label Style="{StaticResource NoCaptionLabel}"
                            Text="No" />
-                    <Label FontSize="28"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource IndigoDarken2}"
-                           HorizontalOptions="Center"
+                    <Label Style="{StaticResource NoValueLabel}"
                            Text="{Binding No}" />
                 </VerticalStackLayout>
 
-                <Label Style="{StaticResource ValueLabel}"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"
+                <Label Style="{StaticResource CenterHintLabel}"
                        Text="◀️ → Shared input&#x0a;✔ → Menu" />
 
             </VerticalStackLayout>

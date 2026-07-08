@@ -162,7 +162,7 @@
     <PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.10" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
     <PackageReference Include="Usa.Smart.Converter" Version="2.12.0" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.12.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.13.0" />
     <PackageReference Include="Usa.Smart.Data" Version="2.9.0" />
     <PackageReference Include="Usa.Smart.Data.Mapper" Version="2.13.0" />
     <PackageReference Include="Usa.Smart.Data.Mapper.Builders" Version="2.13.0" />
