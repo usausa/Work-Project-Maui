@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
+             xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewGraphicsView"
              x:DataType="{x:Type module:ViewGraphicsViewModel}"
@@ -12,10 +16,80 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*">
-        <drawing:DrawingControl Grid.Row="0"
-                                  Drawing="{Binding Drawing}" />
-    </Grid>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
+
+            <controls:InfoCard Title="Shape drawing"
+                               Icon="{x:Static fonts:MaterialIcons.Format_paint}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="10">
+
+                    <Border Padding="0"
+                            HeightRequest="280"
+                            BackgroundColor="White"
+                            Stroke="{StaticResource GrayLighten2}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+                        <drawing:DrawingControl Drawing="{Binding Drawing}" />
+                    </Border>
+
+                    <controls:StatusChip HorizontalOptions="Start"
+                                         Icon="{x:Static fonts:MaterialIcons.Palette}"
+                                         Text="{Binding ShapeCount, StringFormat='{0} shapes'}" />
+
+                    <Grid ColumnDefinitions="*,*"
+                          ColumnSpacing="8"
+                          RowDefinitions="Auto,Auto"
+                          RowSpacing="8">
+                        <Button Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddLineCommand}"
+                                Text="Add line" />
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddCircleCommand}"
+                                Text="Add circle" />
+                        <Button Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                Command="{Binding AddRectCommand}"
+                                Text="Add rect" />
+                        <Button Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Do_not_disturb}, Color={StaticResource BlueGrayDarken1}, Size=18}"
+                                Command="{Binding ClearCommand}"
+                                Text="Clear" />
+                    </Grid>
+
+                    <Label FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           Text="Shapes are added to a DrawingControl and redrawn with Invalidate()" />
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

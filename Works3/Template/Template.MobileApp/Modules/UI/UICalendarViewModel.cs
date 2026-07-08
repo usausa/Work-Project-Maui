@@ -11,6 +11,8 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 {
     private static readonly DateOnly Today = DateOnly.FromDateTime(DateTime.Today);
 
+    private readonly IDialog dialog;
+
     private readonly ScheduleService scheduleService = new();
     private readonly HolidayService holidayService = new();
 
@@ -71,13 +73,15 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     public IObserveCommand EventTappedCommand { get; }
     public IObserveCommand SelectModeCommand { get; }
 
-    public UICalendarViewModel()
+    public UICalendarViewModel(IDialog dialog)
     {
+        this.dialog = dialog;
+
         PrevMonthCommand = MakeDelegateCommand(OnPrevMonth);
         NextMonthCommand = MakeDelegateCommand(OnNextMonth);
         GoToTodayCommand = MakeDelegateCommand(OnGoToToday);
-        DayTappedCommand = MakeDelegateCommand<DayView>(OnDayTapped);
-        EventTappedCommand = MakeDelegateCommand<ScheduleEvent>(OnEventTapped);
+        DayTappedCommand = MakeAsyncCommand<DayView>(OnDayTappedAsync);
+        EventTappedCommand = MakeAsyncCommand<ScheduleEvent>(OnEventTappedAsync);
         SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
 
         currentYear = Today.Year;
@@ -139,19 +143,19 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         Debug.WriteLine($"[LoadMonth] {year}/{month:D2} | Total: {sw.Elapsed.TotalMilliseconds:F2}ms");
     }
 
-    private static void OnDayTapped(DayView? day)
+    private async Task OnDayTappedAsync(DayView? day)
     {
         if (day is not null)
         {
-            Debug.WriteLine($"Day tapped: {day.Date:yyyy-MM-dd}");
+            await dialog.Toast($"{day.Date:yyyy/MM/dd}");
         }
     }
 
-    private static void OnEventTapped(ScheduleEvent? evt)
+    private async Task OnEventTappedAsync(ScheduleEvent? evt)
     {
         if (evt is not null)
         {
-            Debug.WriteLine($"Event tapped: {evt.Id} {evt.Title}");
+            await dialog.Toast(evt.Title);
         }
     }
 

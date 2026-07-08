@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Shared"
              x:Class="Template.MobileApp.Modules.Navigation.Shared.SharedMain1View"
              x:DataType="{x:Type module:SharedMain1ViewModel}"
@@ -13,9 +16,67 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding No}" />
-    </VerticalStackLayout>
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
+
+        <Border Margin="16"
+                Padding="24"
+                VerticalOptions="Center"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten1}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout Spacing="16">
+
+                <Border Padding="0"
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{StaticResource IndigoDefault}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48">
+                    <Label FontSize="48"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Text="1" />
+                </Border>
+
+                <Label Style="{StaticResource NameLabel}"
+                       HorizontalOptions="Center"
+                       Text="Shared Main 1" />
+
+                <controls:StatusChip HorizontalOptions="Center"
+                                     Icon="{x:Static fonts:MaterialIcons.Input}"
+                                     Text="Uses the shared input screen"
+                                     ChipColor="{StaticResource IndigoLighten4}"
+                                     IconColor="{StaticResource IndigoDarken2}"
+                                     TextColor="{StaticResource IndigoDarken2}" />
+
+                <BoxView HeightRequest="1"
+                         Color="{StaticResource GrayLighten2}" />
+
+                <VerticalStackLayout Spacing="2">
+                    <Label FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           HorizontalOptions="Center"
+                           Text="No" />
+                    <Label FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource IndigoDarken2}"
+                           HorizontalOptions="Center"
+                           Text="{Binding No}" />
+                </VerticalStackLayout>
+
+                <Label Style="{StaticResource ValueLabel}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Text="◀️ → Shared input&#x0a;✔ → Menu" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

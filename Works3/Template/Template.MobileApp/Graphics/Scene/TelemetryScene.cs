@@ -239,10 +239,10 @@ public sealed class TelemetryScene : SceneObject
         DrawGlowText(canvas, $"{sim.Lap:00}/12", 16f, 46f, 14f, White, 3f, bold: true);
 
         DrawText(canvas, "TIME", 112f, 28f, 8f, Dim);
-        DrawGlowText(canvas, $"{time.Minutes}:{time.Seconds:00}.{time.Milliseconds:000}", 112f, 46f, 13f, Cyan, 3f, bold: true);
+        DrawGlowText(canvas, $"{time.Minutes}:{time.Seconds:00}.{time.Milliseconds:000}", 112f, 46f, 14f, Cyan, 3f, bold: true);
 
         DrawText(canvas, "BEST", 236f, 28f, 8f, Dim);
-        DrawGlowText(canvas, $"{best.Minutes}:{best.Seconds:00}.{best.Milliseconds:000}", 236f, 46f, 13f, Amber, 3f, bold: true);
+        DrawGlowText(canvas, $"{best.Minutes}:{best.Seconds:00}.{best.Milliseconds:000}", 236f, 46f, 14f, Amber, 3f, bold: true);
 
         DrawText(canvas, "POS", 352f, 28f, 8f, Dim);
         DrawGlowText(canvas, "P04", 352f, 46f, 14f, White, 3f, bold: true);
@@ -340,7 +340,7 @@ public sealed class TelemetryScene : SceneObject
             if (major)
             {
                 var tp = new SKPoint(cx + ((r - 16f) * MathF.Cos(angle)), cy + ((r - 16f) * MathF.Sin(angle)));
-                DrawText(canvas, $"{rpm / 1000}", tp.X, tp.Y + 3f, 7.5f, rpm >= 18000 ? Red : Dim, align: SKTextAlign.Center);
+                DrawText(canvas, $"{rpm / 1000}", tp.X, tp.Y + 3f, 8f, rpm >= 18000 ? Red : Dim, align: SKTextAlign.Center);
             }
         }
 
@@ -365,7 +365,7 @@ public sealed class TelemetryScene : SceneObject
         canvas.DrawCircle(cx, cy, 3f, Fill);
 
         // Readout
-        DrawText(canvas, "×1000 r/min", cx, cy + 26f, 7.5f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, "×1000 r/min", cx, cy + 26f, 8f, Dim, align: SKTextAlign.Center);
         DrawGlowText(canvas, $"{(int)sim.Rpm}", cx, cy + 44f, 14f, inRed ? Red : White, 3f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "ENGINE RPM", cx, cy + 58f, 8f, Dim, align: SKTextAlign.Center);
     }
@@ -409,7 +409,7 @@ public sealed class TelemetryScene : SceneObject
         for (var p = 0; p <= 100; p += 50)
         {
             var rad = DegToRad(start + (sweep * p / 100f));
-            DrawText(canvas, $"{p}", cx + ((r + 15f) * MathF.Cos(rad)), cy + ((r + 15f) * MathF.Sin(rad)) + 3f, 7f, Dim, align: SKTextAlign.Center);
+            DrawText(canvas, $"{p}", cx + ((r + 15f) * MathF.Cos(rad)), cy + ((r + 15f) * MathF.Sin(rad)) + 3f, 8f, Dim, align: SKTextAlign.Center);
         }
 
         // Pulse rings when active
@@ -476,7 +476,7 @@ public sealed class TelemetryScene : SceneObject
         Fill.Color = White;
         canvas.DrawCircle(px, py, 3f, Fill);
 
-        DrawGlowText(canvas, $"{(int)sim.ErsKw:+0;-0}", cx, cy + 5f, 15f, color, 4f, bold: true, align: SKTextAlign.Center);
+        DrawGlowText(canvas, $"{(int)sim.ErsKw:+0;-0}", cx, cy + 5f, 16f, color, 4f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "kW", cx, cy + 18f, 8f, Dim, align: SKTextAlign.Center);
         DrawText(canvas, "ERS OUTPUT", cx, cy + r + 16f, 8f, Dim, align: SKTextAlign.Center);
     }
@@ -495,7 +495,7 @@ public sealed class TelemetryScene : SceneObject
         canvas.DrawRect(cx + (w / 2f) - 7f, y0 + h - 21f, 2f, 16f, Fill);
 
         var gearColor = sim.Rpm > 17000f ? (Blink(t, 12f) ? Red : Amber) : sim.Rpm > 15200f ? Amber : White;
-        DrawGlowText(canvas, sim.Gear.ToString(), cx, cy + 20f, 56f, gearColor, 6f, bold: true, align: SKTextAlign.Center);
+        DrawGlowText(canvas, sim.Gear.ToString(), cx, cy + 20f, 72f, gearColor, 6f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "GEAR", cx, cy + 40f, 9f, Dim, align: SKTextAlign.Center);
 
         // Side indicators
@@ -623,7 +623,7 @@ public sealed class TelemetryScene : SceneObject
 
         // アークの中に値と単位
         var text = max <= 20f ? $"{value:0.0}" : $"{(int)value}";
-        DrawGlowText(canvas, text, cx, gy + 4f, 17f, flash ? Red : White, 4f, bold: true, align: SKTextAlign.Center);
+        DrawGlowText(canvas, text, cx, gy + 4f, 18f, flash ? Red : White, 4f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, unit, cx, gy + 18f, 8f, Dim, align: SKTextAlign.Center);
     }
 

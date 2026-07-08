@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Stack"
              x:Class="Template.MobileApp.Modules.Navigation.Stack.Stack2View"
              x:DataType="{x:Type module:Stack2ViewModel}"
@@ -11,4 +14,54 @@
              shell:ShellProperty.Function1Text="Pop-1"
              shell:ShellProperty.Function4Text="Push+1"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function4Enabled="True" />
+             shell:ShellProperty.Function4Enabled="True">
+
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
+
+        <Border Margin="16"
+                Padding="24"
+                VerticalOptions="Center"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten1}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                behaviors:AnimationOption.EnterAnimation="Pop">
+            <VerticalStackLayout Spacing="16">
+
+                <Border Padding="0"
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{StaticResource TealLighten5}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48">
+                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="48"
+                           TextColor="{StaticResource TealDefault}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Looks_two}" />
+                </Border>
+
+                <Label Style="{StaticResource NameLabel}"
+                       HorizontalOptions="Center"
+                       Text="Stack Level 2" />
+
+                <controls:StepIndicator CurrentStep="2"
+                                        TotalSteps="3"
+                                        AccentColor="{StaticResource TealDefault}" />
+
+                <BoxView HeightRequest="1"
+                         Color="{StaticResource GrayLighten2}" />
+
+                <Label Style="{StaticResource ValueLabel}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Text="Push+1 → Level 3&#x0a;Pop-1 → Level 1" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+
+</ContentView>

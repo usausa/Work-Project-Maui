@@ -21,7 +21,7 @@
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="HeightRequest" Value="36" />
                 <Setter Property="CornerRadius" Value="18" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="BorderColor" Value="{StaticResource BlueLighten3}" />

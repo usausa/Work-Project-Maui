@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UICartView"
@@ -157,7 +158,7 @@
 
             <Style x:Key="CouponLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -219,13 +220,13 @@
 
             <Style x:Key="TotalsCaption"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
             <Style x:Key="TotalsValue"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -239,7 +240,7 @@
 
             <Style x:Key="TotalCaption"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -271,7 +272,7 @@
                 <Setter Property="CornerRadius" Value="26" />
                 <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
@@ -294,7 +295,7 @@
                     <Label Style="{StaticResource BannerTitleLabel}"
                            Text="Shopping Cart" />
                     <Label Style="{StaticResource BannerCountLabel}"
-                           Text="{Binding ItemCount}" />
+                           Text="{Binding ItemCount, StringFormat='{0} items in cart'}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -303,7 +304,9 @@
                                  BindableLayout.ItemsSource="{Binding Items}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UICartItem">
-                        <Border Style="{StaticResource ItemBorder}">
+                        <Border Style="{StaticResource ItemBorder}"
+                                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                behaviors:AnimationOption.EnterDelay="{Binding Delay}">
                             <Grid Style="{StaticResource ItemGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
                                 <Border Grid.Column="0"
@@ -316,14 +319,22 @@
                                     <Label Style="{StaticResource ItemTitleLabel}"
                                            Text="{Binding Title}" />
                                     <Label Style="{StaticResource ItemPriceLabel}"
-                                           Text="{Binding Price}" />
+                                           Text="{Binding PriceText}" />
                                 </VerticalStackLayout>
                                 <HorizontalStackLayout Grid.Column="2"
                                                        Style="{StaticResource StepperRow}">
-                                    <Button Style="{StaticResource StepperButton}" Text="−" />
+                                    <Button Style="{StaticResource StepperButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=DecrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="−" />
                                     <Label Style="{StaticResource QuantityLabel}"
                                            Text="{Binding Quantity}" />
-                                    <Button Style="{StaticResource StepperButton}" Text="+" />
+                                    <Button Style="{StaticResource StepperButton}"
+                                            behaviors:ButtonOption.PressEffect="True"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UICartViewModel}}, Path=IncrementCommand, x:DataType={x:Type module:UICartViewModel}}"
+                                            CommandParameter="{Binding .}"
+                                            Text="+" />
                                 </HorizontalStackLayout>
                             </Grid>
                         </Border>
@@ -370,7 +381,7 @@
                                Text="Subtotal" />
                         <Label Grid.Column="1"
                                Style="{StaticResource TotalsValue}"
-                               Text="{Binding Subtotal}" />
+                               Text="{Binding Subtotal, StringFormat='$ {0:N2}'}" />
                     </Grid>
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
@@ -378,7 +389,7 @@
                                Text="Discount" />
                         <Label Grid.Column="1"
                                Style="{StaticResource DiscountValue}"
-                               Text="{Binding Discount}" />
+                               Text="{Binding Discount, StringFormat='− $ {0:N2}'}" />
                     </Grid>
                     <BoxView Style="{StaticResource CouponDivider}" />
                     <Grid ColumnDefinitions="*,Auto">
@@ -387,7 +398,10 @@
                                Text="Total" />
                         <Label Grid.Column="1"
                                Style="{StaticResource TotalValue}"
-                               Text="{Binding Total}" />
+                               behaviors:LabelOption.CountUpValue="{Binding TotalValue}"
+                               behaviors:LabelOption.CountUpFormat="$ {0:N2}"
+                               behaviors:LabelOption.CountUpDuration="450"
+                               behaviors:AnimationOption.BounceTrigger="{Binding TotalValue}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
@@ -399,6 +413,8 @@
         <Border Grid.Row="1"
                 Style="{StaticResource FooterBorder}">
             <Button Style="{StaticResource CheckoutButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CheckoutCommand}"
                     Text="Checkout" />
         </Border>
 

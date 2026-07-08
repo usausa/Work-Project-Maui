@@ -1,10 +1,26 @@
 namespace Template.MobileApp.Modules.View;
 
-public sealed class ViewDrawingViewModel : AppViewModelBase
+public sealed partial class ViewDrawingViewModel : AppViewModelBase
 {
     public DrawingController Controller { get; } = new();
 
     public SKBitmapImageSource Image { get; } = new();
+
+    [ObservableProperty]
+    public partial Color LineColor { get; set; } = Colors.Black;
+
+    [ObservableProperty]
+    public partial double LineWidth { get; set; } = 5d;
+
+    [ObservableProperty]
+    public partial bool HasImage { get; set; }
+
+    public IObserveCommand SelectColorCommand { get; }
+
+    public ViewDrawingViewModel()
+    {
+        SelectColorCommand = MakeDelegateCommand<Color>(x => LineColor = x);
+    }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
@@ -24,11 +40,13 @@ public sealed class ViewDrawingViewModel : AppViewModelBase
             if (stream is not null)
             {
                 Image.Bitmap = SKBitmap.Decode(stream);
+                HasImage = true;
             }
         }
         else
         {
             Image.Bitmap = null;
+            HasImage = false;
         }
     }
 }

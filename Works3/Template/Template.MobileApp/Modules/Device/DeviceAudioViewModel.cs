@@ -4,7 +4,7 @@ using Plugin.Maui.Audio;
 
 using Smart.Maui.Input;
 
-public sealed class DeviceAudioViewModel : AppViewModelBase
+public sealed partial class DeviceAudioViewModel : AppViewModelBase
 {
     private readonly IFileSystem fileSystem;
 
@@ -12,9 +12,25 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
 
     public IAudioPlayer? AudioPlayer { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsPlaying { get; set; }
+
+    [ObservableProperty(NotifyAlso = [nameof(PositionRatio), nameof(PositionText)])]
+    public partial double Position { get; set; }
+
+    [ObservableProperty(NotifyAlso = [nameof(PositionRatio), nameof(DurationText)])]
+    public partial double Duration { get; set; }
+
+    public double PositionRatio => Duration > 0 ? Math.Clamp(Position / Duration, 0d, 1d) : 0d;
+
+    public string PositionText => TimeSpan.FromSeconds(Position).ToString(@"m\:ss", CultureInfo.InvariantCulture);
+
+    public string DurationText => TimeSpan.FromSeconds(Duration).ToString(@"m\:ss", CultureInfo.InvariantCulture);
+
     public IObserveCommand PlayCommand { get; }
     public IObserveCommand PauseCommand { get; }
     public IObserveCommand StopCommand { get; }
+    public IObserveCommand SeekCommand { get; }
 
     public DeviceAudioViewModel(
         IFileSystem fileSystem,
@@ -26,6 +42,12 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
         PlayCommand = MakeDelegateCommand(Play);
         PauseCommand = new DelegateCommand(Pause);
         StopCommand = new DelegateCommand(Stop);
+        SeekCommand = MakeDelegateCommand<double>(Seek);
+
+        // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する
+        Disposables.Add(Observable.Interval(TimeSpan.FromMilliseconds(250))
+            .ObserveOnCurrentContext()
+            .Subscribe(_ => UpdateState()));
     }
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
@@ -41,6 +63,18 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
+    private void UpdateState()
+    {
+        if (AudioPlayer is null)
+        {
+            return;
+        }
+
+        IsPlaying = AudioPlayer.IsPlaying;
+        Duration = AudioPlayer.Duration;
+        Position = AudioPlayer.CurrentPosition;
+    }
+
     private void Play()
     {
         if (AudioPlayer is null)
@@ -50,6 +84,7 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
 
         AudioPlayer.Stop();
         AudioPlayer.Play();
+        UpdateState();
     }
 
     private void Pause()
@@ -67,10 +102,24 @@ public sealed class DeviceAudioViewModel : AppViewModelBase
         {
             AudioPlayer.Play();
         }
+
+        UpdateState();
     }
 
     private void Stop()
     {
         AudioPlayer?.Stop();
+        UpdateState();
+    }
+
+    private void Seek(double ratio)
+    {
+        if (AudioPlayer is null)
+        {
+            return;
+        }
+
+        AudioPlayer.Seek(ratio * Duration);
+        UpdateState();
     }
 }

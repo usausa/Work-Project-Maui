@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewSvgView"
              x:DataType="{x:Type module:ViewSvgViewModel}"
@@ -12,9 +14,113 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SelectChipButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*">
-        <controls:SvgView Svg="{Binding Svg}" />
+          RowDefinitions="*,Auto"
+          BackgroundColor="{StaticResource GrayLighten5}">
+
+        <Border Grid.Row="0"
+                Margin="12"
+                Padding="12"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten1}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <Grid RowDefinitions="*,Auto"
+                  RowSpacing="8">
+                <controls:SvgView Grid.Row="0"
+                                  Svg="{Binding Svg}" />
+                <HorizontalStackLayout Grid.Row="1"
+                                       HorizontalOptions="Center"
+                                       Spacing="6">
+                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="16"
+                           TextColor="{StaticResource BlueGrayDarken1}"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Palette}" />
+                    <Label FontFamily="JetBrainsMono"
+                           FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           VerticalOptions="Center"
+                           Text="{Binding Selected, StringFormat='{0}.svg'}" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- SVG 切替 -->
+        <Border Grid.Row="1"
+                Padding="16,12"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 16,16,0,0">
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="12">
+                <Button Style="{StaticResource SelectChipButton}"
+                        Command="{Binding SelectCommand}"
+                        CommandParameter="dotnet_bot"
+                        Text=".NET Bot">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Selected}"
+                                     Value="dotnet_bot">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="TextColor" Value="White" />
+                            <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource SelectChipButton}"
+                        Command="{Binding SelectCommand}"
+                        CommandParameter="vite"
+                        Text="Vite">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Selected}"
+                                     Value="vite">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="TextColor" Value="White" />
+                            <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource SelectChipButton}"
+                        Command="{Binding SelectCommand}"
+                        CommandParameter="react"
+                        Text="React">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Selected}"
+                                     Value="react">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                            <Setter Property="TextColor" Value="White" />
+                            <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </HorizontalStackLayout>
+        </Border>
+
     </Grid>
 
 </ContentView>

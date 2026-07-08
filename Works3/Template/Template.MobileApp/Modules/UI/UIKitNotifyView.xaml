@@ -68,16 +68,53 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="module:UIKitNotifyItem">
                 <Border Style="{StaticResource ItemBorder}">
-                    <Grid ColumnDefinitions="Auto,*,Auto"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
+                                              CommandParameter="{Binding .}" />
+                    </Border.GestureRecognizers>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding IsUnread}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                            <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                           ColumnSpacing="12">
-                        <Border Grid.Column="0" Style="{StaticResource IconBorder}">
+                        <!-- 未読アクセントバー -->
+                        <BoxView Grid.Column="0"
+                                 WidthRequest="4"
+                                 CornerRadius="2"
+                                 Color="{StaticResource BlueDefault}"
+                                 IsVisible="{Binding IsUnread}" />
+                        <Border Grid.Column="1" Style="{StaticResource IconBorder}">
                             <Label Style="{StaticResource IconLabel}" Text="{Binding Icon}" />
                         </Border>
-                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                            <Label Style="{StaticResource TitleLabel}" Text="{Binding Title}" />
+                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
+                            <Label Style="{StaticResource TitleLabel}" Text="{Binding Title}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding IsUnread}"
+                                                 Value="False">
+                                        <Setter Property="FontAttributes" Value="None" />
+                                        <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                             <Label Style="{StaticResource DescLabel}" Text="{Binding Description}" />
                         </VerticalStackLayout>
-                        <Label Grid.Column="2" Style="{StaticResource TimeLabel}" Text="{Binding Time}" />
+                        <VerticalStackLayout Grid.Column="3"
+                                             Spacing="6">
+                            <Label Style="{StaticResource TimeLabel}" Text="{Binding Time}" />
+                            <!-- 未読ドット -->
+                            <BoxView WidthRequest="8"
+                                     HeightRequest="8"
+                                     CornerRadius="4"
+                                     HorizontalOptions="End"
+                                     Color="{StaticResource BlueDefault}"
+                                     IsVisible="{Binding IsUnread}" />
+                        </VerticalStackLayout>
                     </Grid>
                 </Border>
             </DataTemplate>

@@ -13,9 +13,14 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial int? Value3 { get; set; }
 
+    [ObservableProperty]
+    public partial string LastAction { get; set; } = string.Empty;
+
     public IObserveCommand Select1Command { get; }
     public IObserveCommand Select2Command { get; }
     public IObserveCommand Select3Command { get; }
+
+    public IObserveCommand ActionCommand { get; }
 
     public BasicStyleViewModel(
         IDialog dialog)
@@ -25,6 +30,8 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
         Select1Command = MakeAsyncCommand(async () => Value1 = await SelectItem(Value1));
         Select2Command = MakeAsyncCommand(async () => Value2 = await SelectItem(Value2));
         Select3Command = MakeAsyncCommand(async () => Value3 = await SelectItem(Value3));
+
+        ActionCommand = MakeDelegateCommand<string>(x => LastAction = x);
 
         Items = Enumerable.Range(1, 3).Select(x => new SelectItem(x, $"Data-{x}")).Prepend(null).ToList();
 

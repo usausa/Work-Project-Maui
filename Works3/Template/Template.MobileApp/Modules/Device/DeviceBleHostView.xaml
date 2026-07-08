@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBleHostView"
              x:DataType="{x:Type module:DeviceBleHostViewModel}"
@@ -13,18 +16,75 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,Auto,*">
-        <Label Grid.Row="0"
-               Style="{StaticResource NameLabel}"
-               Text="UserId" />
-        <Label Grid.Row="1"
-               Style="{StaticResource ValueLabel}"
-               Text="{Binding UserId}" />
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
 
-        <ActivityIndicator Grid.Row="2"
-                           Color="{StaticResource PinkDefault}"
-                           IsRunning="{Binding Running}" />
+        <Border Margin="16"
+                Padding="24"
+                VerticalOptions="Center"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten1}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <VerticalStackLayout Spacing="16">
+
+                <Border Padding="0"
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{StaticResource BlueLighten5}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48"
+                        behaviors:AnimationOption.Pulse="{Binding Running}">
+                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="48"
+                           TextColor="{StaticResource BlueDefault}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Podcasts}" />
+                </Border>
+
+                <Label Style="{StaticResource NameLabel}"
+                       HorizontalOptions="Center"
+                       Text="BLE Peripheral" />
+
+                <controls:StatusChip HorizontalOptions="Center"
+                                     Icon="{x:Static fonts:MaterialIcons.Podcasts}"
+                                     Text="Stopped">
+                    <controls:StatusChip.Triggers>
+                        <DataTrigger TargetType="controls:StatusChip"
+                                     Binding="{Binding Running}"
+                                     Value="True">
+                            <Setter Property="Text" Value="Advertising" />
+                            <Setter Property="ChipColor" Value="{StaticResource GreenLighten4}" />
+                            <Setter Property="IconColor" Value="{StaticResource GreenDarken2}" />
+                            <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                        </DataTrigger>
+                    </controls:StatusChip.Triggers>
+                </controls:StatusChip>
+
+                <BoxView HeightRequest="1"
+                         Color="{StaticResource GrayLighten2}" />
+
+                <VerticalStackLayout Spacing="2">
+                    <Label FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           HorizontalOptions="Center"
+                           Text="UserId" />
+                    <Label FontFamily="JetBrainsMono"
+                           FontSize="18"
+                           TextColor="{StaticResource BlueGrayDarken3}"
+                           HorizontalOptions="Center"
+                           Text="{Binding UserId}" />
+                </VerticalStackLayout>
+
+                <Label Style="{StaticResource ValueLabel}"
+                       HorizontalOptions="Center"
+                       Text="Toggle advertising with the ON/OFF key" />
+
+            </VerticalStackLayout>
+        </Border>
+
     </Grid>
 
 </ContentView>

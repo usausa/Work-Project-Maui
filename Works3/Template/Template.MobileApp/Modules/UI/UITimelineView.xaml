@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             x:Class="Template.MobileApp.Modules.UI.UITimelineSampleView"
-             x:DataType="{x:Type module:UITimelineSampleViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:UITimelineSampleViewModel}"
-             shell:ShellProperty.Title="Timeline Sample"
+             x:Class="Template.MobileApp.Modules.UI.UITimelineView"
+             x:DataType="{x:Type module:UITimelineViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UITimelineViewModel}"
+             shell:ShellProperty.Title="Timeline"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
@@ -70,7 +71,7 @@
                 <Setter Property="WidthRequest" Value="50" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
@@ -123,7 +124,7 @@
             </Style>
 
             <Style x:Key="EventTitleLabel" TargetType="Label">
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
@@ -143,7 +144,7 @@
             </Style>
 
             <Style x:Key="EventDescLabel" TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
                 <Setter Property="Margin" Value="0,2,0,0" />
             </Style>
@@ -186,7 +187,8 @@
         <!-- Header -->
         <Grid Grid.Row="0"
               Style="{StaticResource HeaderGrid}"
-              ColumnDefinitions="Auto,*">
+              ColumnDefinitions="Auto,*"
+              behaviors:AnimationOption.EnterAnimation="FadeUp">
             <Border Grid.Column="0" Style="{StaticResource CalendarIconBorder}">
                 <Label Style="{StaticResource CalendarIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Calendar_today}" />
@@ -200,9 +202,11 @@
         <!-- Timeline list -->
         <CollectionView Grid.Row="1"
                         Style="{StaticResource TimelineCollection}"
-                        ItemsSource="{Binding Events}">
+                        ItemsSource="{Binding Events}"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="80">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="module:UITimelineSampleEvent">
+                <DataTemplate x:DataType="module:UITimelineEvent">
                     <Grid Style="{StaticResource EventRowGrid}"
                           Opacity="{Binding RowOpacity}"
                           ColumnDefinitions="Auto,Auto,*">
@@ -219,7 +223,8 @@
                             <BoxView Style="{StaticResource TimelineLine}" />
                             <Ellipse Style="{StaticResource TimelineDotHalo}"
                                      IsVisible="{Binding Current}"
-                                     Fill="{Binding DotColor}" />
+                                     Fill="{Binding DotColor}"
+                                     behaviors:AnimationOption.Pulse="{Binding Current}" />
                             <Ellipse Style="{StaticResource TimelineDot}"
                                      Fill="{Binding DotFill}"
                                      Stroke="{Binding DotStroke}" />

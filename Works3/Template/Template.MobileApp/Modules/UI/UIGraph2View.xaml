@@ -84,7 +84,7 @@
                    TargetType="Label">
                 <Setter Property="Margin" Value="6,0,16,0" />
                 <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
@@ -94,7 +94,8 @@
 
     <Grid Style="{StaticResource FillGrid}">
         <CollectionView ItemsSource="{Binding Rows}"
-                        VerticalScrollBarVisibility="Default">
+                        VerticalScrollBarVisibility="Default"
+                        behaviors:AnimationOption.EnterAnimation="FadeUp">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
                                    ItemSpacing="0" />

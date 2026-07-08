@@ -16,6 +16,14 @@ public sealed class UIKitOnboardViewModel : AppViewModelBase
         new() { Image = "social_background.png", Title = "Get Started", Description = "Sign in to enjoy the full personalized experience." }
     ];
 
+    // Skip / Get Started はどちらもダッシュボードへ
+    public IObserveCommand CompleteCommand { get; }
+
+    public UIKitOnboardViewModel()
+    {
+        CompleteCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIKitDash));
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIKitDash);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

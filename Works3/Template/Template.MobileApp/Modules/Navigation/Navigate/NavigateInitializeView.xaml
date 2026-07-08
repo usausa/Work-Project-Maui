@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Navigate"
              x:Class="Template.MobileApp.Modules.Navigation.Navigate.NavigateInitializeView"
              x:DataType="{x:Type module:NavigateInitializeViewModel}"
@@ -11,6 +13,95 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout />
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SkeletonBar"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="7" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
+
+        <!-- 初期化中のスケルトン -->
+        <VerticalStackLayout Padding="32"
+                             VerticalOptions="Center"
+                             Spacing="16"
+                             IsVisible="{Binding Initialized, Converter={StaticResource ReverseConverter}}">
+            <Border Padding="0"
+                    WidthRequest="96"
+                    HeightRequest="96"
+                    HorizontalOptions="Center"
+                    BackgroundColor="{StaticResource BlueLighten5}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 48"
+                    behaviors:AnimationOption.Pulse="True">
+                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                       FontSize="48"
+                       TextColor="{StaticResource BlueDefault}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="{x:Static fonts:MaterialIcons.Hourglass_top}" />
+            </Border>
+            <Label Style="{StaticResource NameLabel}"
+                   HorizontalOptions="Center"
+                   Text="Initializing..." />
+            <BoxView Style="{StaticResource SkeletonBar}" />
+            <BoxView Style="{StaticResource SkeletonBar}"
+                     Margin="24,0" />
+            <BoxView Style="{StaticResource SkeletonBar}"
+                     Margin="48,0" />
+        </VerticalStackLayout>
+
+        <!-- 初期化完了 -->
+        <Border Margin="16"
+                Padding="24"
+                VerticalOptions="Center"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten1}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                IsVisible="{Binding Initialized}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}">
+            <VerticalStackLayout Spacing="16">
+
+                <Border Padding="0"
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{StaticResource GreenLighten4}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48">
+                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="48"
+                           TextColor="{StaticResource GreenDarken2}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Task_alt}" />
+                </Border>
+
+                <Label Style="{StaticResource NameLabel}"
+                       HorizontalOptions="Center"
+                       Text="Initialization completed" />
+
+                <BoxView HeightRequest="1"
+                         Color="{StaticResource GrayLighten2}" />
+
+                <Label Style="{StaticResource ValueLabel}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Text="A 3-second setup ran right after navigating here&#x0a;(loading dialog pattern)" />
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

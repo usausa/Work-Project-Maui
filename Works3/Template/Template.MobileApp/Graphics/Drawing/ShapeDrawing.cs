@@ -36,6 +36,21 @@ public sealed class Rectangle : IShape
     }
 }
 
+public sealed class Circle : IShape
+{
+    public PointF Center { get; set; }
+
+    public float Radius { get; set; }
+
+    public Color Color { get; set; } = Colors.Black;
+
+    void IShape.Draw(ICanvas canvas)
+    {
+        canvas.FillColor = Color;
+        canvas.FillCircle(Center, Radius);
+    }
+}
+
 public sealed class ShapeDrawing : DrawingObject
 {
     public SizeF Size { get; set; }

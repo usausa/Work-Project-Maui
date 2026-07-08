@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceActivityView"
@@ -110,7 +111,9 @@
         <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource ActivityVerticalStack}">
             <Label Style="{StaticResource ActivityValueLabel}"
-                   Text="{Binding Calculator.Step, StringFormat='{0:N0}'}" />
+                   behaviors:LabelOption.CountUpValue="{Binding Calculator.Step}"
+                   behaviors:LabelOption.CountUpFormat="{}{0:N0}"
+                   behaviors:LabelOption.CountUpDuration="600" />
             <Label Style="{StaticResource ActivityUnitLabel}"
                    Text="歩" />
         </VerticalStackLayout>

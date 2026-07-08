@@ -2,7 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamView"
@@ -224,22 +226,29 @@
         <VerticalStackLayout>
 
             <Grid Style="{StaticResource TopBar}"
-                  ColumnDefinitions="*,Auto,Auto">
+                  ColumnDefinitions="*,Auto,Auto"
+                  behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <Label Grid.Column="0" Style="{StaticResource LogoLabel}" Text="STREAM" />
-                <Button Grid.Column="1" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Search}" />
-                <Button Grid.Column="2" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Notifications}" />
+                <Button Grid.Column="1" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Search}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Grid.Column="2" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Notifications}"
+                        behaviors:ButtonOption.PressEffect="True" />
             </Grid>
 
             <Grid Style="{StaticResource HeroGrid}">
                 <Image Style="{StaticResource HeroImage}" Source="social_background.png" />
                 <BoxView Style="{StaticResource HeroOverlay}" />
-                <Border Style="{StaticResource HeroRatingBorder}">
+                <Border Style="{StaticResource HeroRatingBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="200">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource HeroRatingLabel}" Text="{Binding HeroRating}" />
                         <Label Style="{StaticResource HeroRatingSubLabel}" Text="{Binding HeroRatingSub}" />
                     </VerticalStackLayout>
                 </Border>
-                <VerticalStackLayout Style="{StaticResource HeroInfo}">
+                <VerticalStackLayout Style="{StaticResource HeroInfo}"
+                                     behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                     behaviors:AnimationOption.EnterDelay="80">
                     <Border Style="{StaticResource HeroBadgeBorder}">
                         <Label Style="{StaticResource HeroBadgeLabel}" Text="{Binding HeroBadge}" />
                     </Border>
@@ -247,8 +256,21 @@
                     <Label Style="{StaticResource HeroMetaLabel}" Text="{Binding HeroMeta}" />
                     <HorizontalStackLayout Style="{StaticResource HeroButtonsRow}">
                         <Button Style="{StaticResource HeroPlayButton}"
+                                behaviors:ButtonOption.PressEffect="True"
                                 Command="{Binding DetailCommand}" />
-                        <Button Style="{StaticResource HeroListButton}" />
+                        <Button Style="{StaticResource HeroListButton}"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding MyListCommand}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding InMyList}"
+                                             Value="True">
+                                    <Setter Property="Text" Value="✓ In My List" />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Grid>
@@ -256,7 +278,8 @@
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UIStreamSection">
-                        <VerticalStackLayout>
+                        <VerticalStackLayout behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                             behaviors:AnimationOption.EnterDelay="{Binding Delay}">
                             <Grid Style="{StaticResource SectionHeaderGrid}"
                                   ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0" Style="{StaticResource SectionLabel}" Text="{Binding Title}" />
@@ -268,20 +291,22 @@
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="module:UIStreamPoster">
                                         <Border Style="{StaticResource PosterBorder}">
-                                            <Border.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}}" />
-                                            </Border.GestureRecognizers>
-                                            <Grid>
-                                                <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />
-                                                <Border Style="{StaticResource PosterBadgeBorder}"
-                                                        IsVisible="{Binding HasBadge}">
-                                                    <Label Style="{StaticResource PosterBadgeLabel}" Text="{Binding Badge}" />
-                                                </Border>
-                                                <Border Style="{StaticResource PosterDurationBorder}"
-                                                        IsVisible="{Binding HasDuration}">
-                                                    <Label Style="{StaticResource PosterDurationLabel}" Text="{Binding Duration}" />
-                                                </Border>
-                                            </Grid>
+                                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                                                <toolkit:SfEffectsView.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}}" />
+                                                </toolkit:SfEffectsView.GestureRecognizers>
+                                                <Grid>
+                                                    <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />
+                                                    <Border Style="{StaticResource PosterBadgeBorder}"
+                                                            IsVisible="{Binding HasBadge}">
+                                                        <Label Style="{StaticResource PosterBadgeLabel}" Text="{Binding Badge}" />
+                                                    </Border>
+                                                    <Border Style="{StaticResource PosterDurationBorder}"
+                                                            IsVisible="{Binding HasDuration}">
+                                                        <Label Style="{StaticResource PosterDurationLabel}" Text="{Binding Duration}" />
+                                                    </Border>
+                                                </Grid>
+                                            </toolkit:SfEffectsView>
                                         </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              xmlns:strings="clr-namespace:Template.MobileApp.Resources.Strings"
              x:Class="Template.MobileApp.Modules.Basic.BasicLocaleView"
@@ -12,13 +15,77 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{x:Static strings:Names.Label}" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{x:Static strings:Messages.Hello_World}" />
+            <Style x:Key="KeyLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
 
-    </VerticalStackLayout>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
+
+            <controls:InfoCard Title="Current culture"
+                               Icon="{x:Static fonts:MaterialIcons.Language}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <Grid RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="2*,3*"
+                      RowSpacing="8"
+                      Padding="0,4">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Culture" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding CultureName}" />
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="UICulture" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding UICultureName}" />
+                </Grid>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Localized resources"
+                               Icon="{x:Static fonts:MaterialIcons.Translate}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <VerticalStackLayout Spacing="10"
+                                     Padding="0,4">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource KeyLabel}"
+                               Text="Names.Label" />
+                        <Label Style="{StaticResource ValueLabel}"
+                               TextColor="{StaticResource PrimaryTextColor}"
+                               Text="{x:Static strings:Names.Label}" />
+                    </VerticalStackLayout>
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource GrayLighten2}" />
+                    <VerticalStackLayout Spacing="2">
+                        <Label Style="{StaticResource KeyLabel}"
+                               Text="Messages.Hello_World" />
+                        <Label Style="{StaticResource ValueLabel}"
+                               TextColor="{StaticResource PrimaryTextColor}"
+                               Text="{x:Static strings:Messages.Hello_World}" />
+                    </VerticalStackLayout>
+                    <Label FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           Text="Values switch with the system language (en / ja resx)" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

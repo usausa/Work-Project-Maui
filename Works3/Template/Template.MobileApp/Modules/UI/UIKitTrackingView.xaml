@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitTrackingView"
              x:DataType="{x:Type module:UIKitTrackingViewModel}"
@@ -39,7 +41,7 @@
 
             <Style x:Key="EtaLabel" TargetType="Label">
                 <Setter Property="Margin" Value="0,4,0,0" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
@@ -62,6 +64,24 @@
                 <Setter Property="Fill" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="DotCurrent" TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="18" />
+                <Setter Property="HeightRequest" Value="18" />
+                <Setter Property="Fill" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="DotCheckLabel" TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="0,2,0,0" />
+                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
             </Style>
 
             <Style x:Key="TimelineLine" TargetType="BoxView">
@@ -99,16 +119,39 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UIKitTrackingStep">
                         <Grid Style="{StaticResource StepRow}"
-                              ColumnDefinitions="40,*">
+                              ColumnDefinitions="40,*"
+                              behaviors:AnimationOption.EnterAnimation="FadeUp"
+                              behaviors:AnimationOption.EnterDelay="{Binding Delay}">
                             <Grid Grid.Column="0">
-                                <BoxView Style="{StaticResource TimelineLine}" />
+                                <BoxView Style="{StaticResource TimelineLine}">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView"
+                                                     Binding="{Binding IsComplete}"
+                                                     Value="True">
+                                            <Setter Property="Color" Value="{StaticResource GreenDefault}" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
                                 <Ellipse Style="{StaticResource DotComplete}"
                                          IsVisible="{Binding IsComplete}" />
+                                <Label Style="{StaticResource DotCheckLabel}"
+                                       IsVisible="{Binding IsComplete}" />
+                                <Ellipse Style="{StaticResource DotCurrent}"
+                                         IsVisible="{Binding IsCurrent}"
+                                         behaviors:AnimationOption.Pulse="True" />
                                 <Ellipse Style="{StaticResource DotPending}"
                                          IsVisible="{Binding IsPending}" />
                             </Grid>
                             <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                <Label Style="{StaticResource StepTitle}" Text="{Binding Title}" />
+                                <Label Style="{StaticResource StepTitle}" Text="{Binding Title}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsCurrent}"
+                                                     Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                                 <Label Style="{StaticResource StepTime}" Text="{Binding Time}" />
                             </VerticalStackLayout>
                         </Grid>

@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicBehaviorView"
              x:DataType="{x:Type module:BasicBehaviorViewModel}"
@@ -11,47 +14,107 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-        <!-- Entry -->
-        <Label Style="{StaticResource GroupLabel}"
-               Text="Entry" />
+            <Style x:Key="FieldCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Focus" />
-        <Entry>
-            <Entry.Behaviors>
-                <s:DefaultFocusBehavior />
-                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                          CommandParameter="Entry1"
-                                          EventName="Focused" />
-                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                          CommandParameter="Entry1"
-                                          EventName="Unfocused" />
-            </Entry.Behaviors>
-        </Entry>
+            <Style x:Key="FieldBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
 
-        <Entry>
-            <Entry.Behaviors>
-                <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
-                                          CommandParameter="Entry2"
-                                          EventName="Focused" />
-                <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
-                                          CommandParameter="Entry2"
-                                          EventName="Unfocused" />
-            </Entry.Behaviors>
-        </Entry>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Focused" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Focused}" />
+    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout Padding="12"
+                             Spacing="12">
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Unfocused" />
-        <Label Style="{StaticResource ValueLabel}"
-               Text="{Binding Unfocused}" />
+            <controls:InfoCard Title="Entry Focus"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                <VerticalStackLayout Spacing="10">
 
-    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="Entry1 (default focus / blue)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5">
+                                <Entry.Behaviors>
+                                    <s:DefaultFocusBehavior />
+                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry1"
+                                                              EventName="Focused" />
+                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry1"
+                                                              EventName="Unfocused" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Style="{StaticResource FieldCaptionLabel}"
+                               Text="Entry2 (green)" />
+                        <Border Style="{StaticResource FieldBorder}">
+                            <Entry behaviors:Focus.FocusedStroke="{StaticResource GreenDefault}"
+                                   behaviors:Focus.FocusedThickness="2.5">
+                                <Entry.Behaviors>
+                                    <s:EventToCommandBehavior Command="{Binding FocusedCommand}"
+                                                              CommandParameter="Entry2"
+                                                              EventName="Focused" />
+                                    <s:EventToCommandBehavior Command="{Binding UnfocusedCommand}"
+                                                              CommandParameter="Entry2"
+                                                              EventName="Unfocused" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Border>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
+            <controls:InfoCard Title="Focus Events"
+                               Icon="{x:Static fonts:MaterialIcons.Bolt}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100">
+                <Grid RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="2*,3*"
+                      RowSpacing="8"
+                      Padding="0,4">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Focused" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Focused}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding Focused}"
+                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource NameLabel}"
+                           Text="Unfocused" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource ValueLabel}"
+                           Text="{Binding Unfocused}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding Unfocused}"
+                           behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                </Grid>
+            </controls:InfoCard>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

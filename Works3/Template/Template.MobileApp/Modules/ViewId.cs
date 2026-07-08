@@ -141,14 +141,12 @@ public enum ViewId
     UIGraph2,
     UITreeMap,
     UIRadar,
-    UICockpit,
     UISocial,
     UICharacter,
     UIChat,
     UICalendar,
 
-    UIProfile2,
-    UITimelineSample,
+    UITimeline,
     UIFeel,
     UIPet,
     UIStream,
@@ -163,8 +161,8 @@ public enum ViewId
     UIKitTracking,
 
     // UI (SkiaSharp)
-    UIFlightHud,
-    UIMechHud,
+    UIFlight,
+    UITactical,
     UIEnergy,
     UITelemetry
 }

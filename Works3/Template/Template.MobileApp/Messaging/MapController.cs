@@ -39,4 +39,9 @@ public sealed class MapController : IMapController
     {
         map?.MoveToRegion(MapSpan.FromCenterAndRadius(homeLocation, homeRadius));
     }
+
+    public void MoveTo(double latitude, double longitude, double radiusKilometers = 1d)
+    {
+        map?.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(latitude, longitude), Distance.FromKilometers(radiusKilometers)));
+    }
 }

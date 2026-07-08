@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceNfcView"
@@ -186,13 +188,44 @@
                        Text="￥" />
                 <Label Grid.Column="1"
                        Style="{StaticResource BalanceLabel}"
-                       Text="{Binding Access.Balance, StringFormat='{0:#,0}', FallbackValue='0'}" />
+                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}"
+                       behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
+                       behaviors:LabelOption.CountUpDuration="600" />
             </Grid>
         </Grid>
 
         <CollectionView Grid.Row="1"
                         Style="{StaticResource LogCollectionView}"
                         ItemsSource="{Binding Logs}">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center"
+                                     Spacing="16">
+                    <Border Padding="0"
+                            WidthRequest="96"
+                            HeightRequest="96"
+                            HorizontalOptions="Center"
+                            BackgroundColor="{StaticResource MetroGrayDark}"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 48"
+                            behaviors:AnimationOption.Pulse="True">
+                        <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                               FontSize="48"
+                               TextColor="{StaticResource MetroGreen}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{x:Static fonts:MaterialIcons.Contactless}" />
+                    </Border>
+                    <Label FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           Text="Suica をかざしてください" />
+                    <Label FontSize="14"
+                           TextColor="{StaticResource GrayLighten1}"
+                           HorizontalOptions="Center"
+                           Text="読み取ると残高と利用履歴を表示します" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:SuicaLogData}">
                     <Border Style="{StaticResource LogBorder}">

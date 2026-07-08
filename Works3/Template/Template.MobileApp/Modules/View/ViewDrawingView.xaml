@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewDrawingView"
@@ -17,15 +18,190 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ColorChipBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="36" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Stroke" Value="Transparent" />
+                <Setter Property="StrokeThickness" Value="3" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="2*,*">
+          RowDefinitions="2*,Auto,*"
+          BackgroundColor="{StaticResource GrayLighten5}">
+
         <toolkit:DrawingView Grid.Row="0"
                              behaviors:DrawingBind.Controller="{Binding Controller}"
-                             BackgroundColor="{StaticResource LightGreenLighten5}"
+                             BackgroundColor="White"
+                             LineColor="{Binding LineColor}"
+                             LineWidth="{Binding LineWidth}"
                              IsMultiLineModeEnabled="True" />
 
-        <Image Grid.Row="1"
-               Source="{Binding Image}" />
+        <!-- パレット -->
+        <Border Grid.Row="1"
+                Padding="12,8"
+                BackgroundColor="White"
+                Stroke="{StaticResource GrayLighten2}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 0">
+            <VerticalStackLayout Spacing="8">
+
+                <HorizontalStackLayout Spacing="10">
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="Black">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{x:Static Colors.Black}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{x:Static Colors.Black}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="{StaticResource RedDefault}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{StaticResource RedDefault}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{StaticResource RedDefault}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="{StaticResource BlueDefault}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{StaticResource BlueDefault}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{StaticResource BlueDefault}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="{StaticResource GreenDefault}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{StaticResource GreenDefault}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{StaticResource GreenDefault}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="{StaticResource OrangeDefault}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{StaticResource OrangeDefault}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{StaticResource OrangeDefault}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                    <Border Style="{StaticResource ColorChipBorder}"
+                            BackgroundColor="{StaticResource PurpleDefault}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectColorCommand}"
+                                                  CommandParameter="{StaticResource PurpleDefault}" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding LineColor}"
+                                         Value="{StaticResource PurpleDefault}">
+                                <Setter Property="Stroke" Value="{StaticResource BlueGrayDarken3}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <Grid ColumnDefinitions="Auto,*,40"
+                      ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="20"
+                           TextColor="{StaticResource BlueGrayDarken1}"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Edit}" />
+                    <Slider Grid.Column="1"
+                            Minimum="1"
+                            Maximum="24"
+                            Value="{Binding LineWidth}" />
+                    <Label Grid.Column="2"
+                           FontFamily="JetBrainsMono"
+                           FontSize="14"
+                           TextColor="{StaticResource SecondaryTextColor}"
+                           HorizontalTextAlignment="End"
+                           VerticalOptions="Center"
+                           Text="{Binding LineWidth, StringFormat='{0:F0}'}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- 保存プレビュー -->
+        <Grid Grid.Row="2"
+              Padding="12"
+              RowDefinitions="Auto,*">
+            <Label Grid.Row="0"
+                   Style="{StaticResource NameLabel}"
+                   Text="Preview" />
+            <Border Grid.Row="1"
+                    Margin="0,6,0,0"
+                    Padding="4"
+                    BackgroundColor="White"
+                    Stroke="{StaticResource GrayLighten1}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8">
+                <Grid>
+                    <Image Source="{Binding Image}"
+                           Aspect="AspectFit"
+                           IsVisible="{Binding HasImage}" />
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         Spacing="6"
+                                         IsVisible="{Binding HasImage, Converter={StaticResource ReverseConverter}}">
+                        <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                               FontSize="36"
+                               TextColor="{StaticResource GrayLighten1}"
+                               HorizontalOptions="Center"
+                               Text="{x:Static fonts:MaterialIcons.Format_paint}" />
+                        <Label FontSize="14"
+                               TextColor="{StaticResource GrayLighten1}"
+                               HorizontalOptions="Center"
+                               Text="Draw and press Save to preview" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+
     </Grid>
 
 </ContentView>

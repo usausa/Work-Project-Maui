@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIFeelView"
@@ -69,7 +70,7 @@
 
             <Style x:Key="QuestionLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
             </Style>
@@ -127,13 +128,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="Data" Value="M50,0 L100,28 L100,82 L50,110 L0,82 L0,28 Z" />
-            </Style>
-
-            <Style x:Key="HexPathSelected"
-                   TargetType="Path"
-                   BasedOn="{StaticResource HexPath}">
-                <Setter Property="Stroke" Value="{StaticResource PinkDarken2}" />
-                <Setter Property="StrokeThickness" Value="3" />
             </Style>
 
             <!-- Icon/label colors are set per-mood inline -->
@@ -209,14 +203,29 @@
                    Text="Pick your mood" />
         </HorizontalStackLayout>
 
-        <!-- Honeycomb flower: selected mood in the center, six moods around it -->
+        <!-- Honeycomb flower: tap a cell to move the selection (stroke + check badge) -->
         <Grid Grid.Row="3"
               Style="{StaticResource HoneycombGrid}">
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="106,0,0,0">
+                  Margin="106,0,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="80">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Calm" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource TealLighten3}" />
+                      Fill="{StaticResource TealLighten3}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Calm">
+                            <Setter Property="Stroke" Value="{StaticResource TealDarken3}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Self_improvement}"
@@ -225,12 +234,41 @@
                            Text="Calm"
                            TextColor="{StaticResource TealDarken3}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource TealDarken3}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Calm">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="0,58,0,0">
+                  Margin="0,58,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="140">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Tired" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource BlueLighten3}" />
+                      Fill="{StaticResource BlueLighten3}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Tired">
+                            <Setter Property="Stroke" Value="{StaticResource BlueDarken3}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Sentiment_neutral}"
@@ -239,12 +277,41 @@
                            Text="Tired"
                            TextColor="{StaticResource BlueDarken3}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource BlueDarken3}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Tired">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="212,58,0,0">
+                  Margin="212,58,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="140">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Excited" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource OrangeLighten4}" />
+                      Fill="{StaticResource OrangeLighten4}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Excited">
+                            <Setter Property="Stroke" Value="{StaticResource OrangeDarken2}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Bolt}"
@@ -253,12 +320,40 @@
                            Text="Excited"
                            TextColor="{StaticResource OrangeDarken2}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource OrangeDarken2}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Excited">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="106,116,0,0">
-                <Path Style="{StaticResource HexPathSelected}"
-                      Fill="{StaticResource PinkLighten4}" />
+                  Margin="106,116,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Happy" />
+                </Grid.GestureRecognizers>
+                <Path Style="{StaticResource HexPath}"
+                      Fill="{StaticResource PinkLighten4}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Happy">
+                            <Setter Property="Stroke" Value="{StaticResource PinkDarken2}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Sentiment_very_satisfied}"
@@ -267,16 +362,40 @@
                            Text="Happy"
                            TextColor="{StaticResource PinkDarken2}" />
                 </VerticalStackLayout>
-                <Border Style="{StaticResource SelectedBadgeBorder}">
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Happy">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
                     <Label Style="{StaticResource SelectedBadgeLabel}"
                            Text="{x:Static fonts:MaterialIcons.Check}" />
                 </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="0,174,0,0">
+                  Margin="0,174,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="200">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Focus" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource YellowLighten3}" />
+                      Fill="{StaticResource YellowLighten3}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Focus">
+                            <Setter Property="Stroke" Value="{StaticResource YellowDarken4}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Center_focus_strong}"
@@ -285,12 +404,41 @@
                            Text="Focus"
                            TextColor="{StaticResource YellowDarken4}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource YellowDarken4}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Focus">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="212,174,0,0">
+                  Margin="212,174,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="200">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Angry" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource RedLighten4}" />
+                      Fill="{StaticResource RedLighten4}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Angry">
+                            <Setter Property="Stroke" Value="{StaticResource RedDarken2}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Sentiment_very_dissatisfied}"
@@ -299,12 +447,41 @@
                            Text="Angry"
                            TextColor="{StaticResource RedDarken2}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource RedDarken2}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Angry">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
             <Grid Style="{StaticResource HexCell}"
-                  Margin="106,232,0,0">
+                  Margin="106,232,0,0"
+                  behaviors:AnimationOption.EnterAnimation="Pop"
+                  behaviors:AnimationOption.EnterDelay="260">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectCommand}"
+                                          CommandParameter="Sad" />
+                </Grid.GestureRecognizers>
                 <Path Style="{StaticResource HexPath}"
-                      Fill="{StaticResource GrayLighten3}" />
+                      Fill="{StaticResource GrayLighten3}">
+                    <Path.Triggers>
+                        <DataTrigger TargetType="Path"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Sad">
+                            <Setter Property="Stroke" Value="{StaticResource GrayDarken2}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Path.Triggers>
+                </Path>
                 <VerticalStackLayout Style="{StaticResource HexContent}">
                     <Label Style="{StaticResource HexIcon}"
                            Text="{x:Static fonts:MaterialIcons.Sentiment_dissatisfied}"
@@ -313,6 +490,20 @@
                            Text="Sad"
                            TextColor="{StaticResource GrayDarken2}" />
                 </VerticalStackLayout>
+                <Border Style="{StaticResource SelectedBadgeBorder}"
+                        BackgroundColor="{StaticResource GrayDarken2}"
+                        IsVisible="False"
+                        behaviors:AnimationOption.EnterAnimation="Pop">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding SelectedMood}"
+                                     Value="Sad">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource SelectedBadgeLabel}"
+                           Text="{x:Static fonts:MaterialIcons.Check}" />
+                </Border>
             </Grid>
 
         </Grid>

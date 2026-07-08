@@ -5,10 +5,10 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:scene="clr-namespace:Template.MobileApp.Graphics.Scene"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             x:Class="Template.MobileApp.Modules.UI.UIFlightHudView"
-             x:DataType="{x:Type module:UIFlightHudViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:UIFlightHudViewModel}"
-             shell:ShellProperty.Title="Flight HUD"
+             x:Class="Template.MobileApp.Modules.UI.UIFlightView"
+             x:DataType="{x:Type module:UIFlightViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIFlightViewModel}"
+             shell:ShellProperty.Title="Flight"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

@@ -35,6 +35,9 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string RecognizeText { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    public partial bool IsListening { get; set; }
+
     public DeviceMiscViewModel(
         IScreen screen,
         IStorageManager storage,
@@ -81,7 +84,15 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         RecognizeCommand = MakeAsyncCommand(async () =>
         {
             RecognizeText = string.Empty;
-            await speech.RecognizeAsync(CultureInfo.CurrentCulture);
+            IsListening = true;
+            try
+            {
+                await speech.RecognizeAsync(CultureInfo.CurrentCulture);
+            }
+            finally
+            {
+                IsListening = false;
+            }
         });
     }
 

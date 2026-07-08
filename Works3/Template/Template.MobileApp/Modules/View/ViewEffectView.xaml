@@ -24,7 +24,7 @@
             <Style x:Key="SectionLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,20,0,8" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
@@ -72,7 +72,7 @@
                 <Setter Property="Padding" Value="16,0" />
                 <Setter Property="HeightRequest" Value="36" />
                 <Setter Property="CornerRadius" Value="18" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
@@ -219,7 +219,7 @@
                     </Grid>
                     <Label Grid.Column="1"
                            VerticalOptions="Center"
-                           FontSize="13"
+                           FontSize="14"
                            TextColor="{StaticResource GrayDarken2}"
                            Text="{Binding BadgeCount, StringFormat='Count = {0}'}" />
                     <Button Grid.Column="2"
@@ -285,7 +285,7 @@
                         <toolkit:SfEffectsView Style="{StaticResource RippleEffect}">
                             <Label HorizontalOptions="Center"
                                    VerticalOptions="Center"
-                                   FontSize="13"
+                                   FontSize="14"
                                    TextColor="White"
                                    Text="Ripple" />
                         </toolkit:SfEffectsView>
@@ -294,6 +294,92 @@
                            Text="SfEffectsView(Ripple)" />
                 </VerticalStackLayout>
             </Grid>
+
+            <!-- 常時アニメ(Wave / Pulse) -->
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="常時アニメ(Wave / Pulse)" />
+            <Border Style="{StaticResource EffectCard}">
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="12">
+                    <HorizontalStackLayout Grid.Column="0"
+                                           Spacing="16"
+                                           VerticalOptions="Center">
+                        <BoxView WidthRequest="14"
+                                 HeightRequest="14"
+                                 CornerRadius="7"
+                                 Color="{StaticResource BlueDefault}"
+                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}" />
+                        <BoxView WidthRequest="14"
+                                 HeightRequest="14"
+                                 CornerRadius="7"
+                                 Color="{StaticResource BlueDefault}"
+                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
+                                 behaviors:AnimationOption.WaveDelay="120" />
+                        <BoxView WidthRequest="14"
+                                 HeightRequest="14"
+                                 CornerRadius="7"
+                                 Color="{StaticResource BlueDefault}"
+                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
+                                 behaviors:AnimationOption.WaveDelay="240" />
+                        <BoxView Margin="16,0,0,0"
+                                 WidthRequest="16"
+                                 HeightRequest="16"
+                                 CornerRadius="8"
+                                 Color="{StaticResource RedDefault}"
+                                 behaviors:AnimationOption.Pulse="{Binding WavePulseEnabled}" />
+                    </HorizontalStackLayout>
+                    <Switch Grid.Column="1"
+                            VerticalOptions="Center"
+                            IsToggled="{Binding WavePulseEnabled}" />
+                </Grid>
+            </Border>
+
+            <!-- 変化フィードバック(Bounce / Flash / Highlight) -->
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="変化フィードバック(Bounce / Flash / Highlight)" />
+            <Border Style="{StaticResource EffectCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*,Auto"
+                          ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialIcons"
+                               FontSize="28"
+                               TextColor="{StaticResource RedDefault}"
+                               VerticalOptions="Center"
+                               Text="{x:Static fonts:MaterialIcons.Favorite}"
+                               behaviors:AnimationOption.BounceTrigger="{Binding FeedbackCount}" />
+                        <Label Grid.Column="1"
+                               Padding="8,4"
+                               FontSize="14"
+                               TextColor="{StaticResource GrayDarken2}"
+                               VerticalOptions="Center"
+                               Text="Bounce / Highlight / Flash を同時に発火"
+                               behaviors:AnimationOption.HighlightTrigger="{Binding FeedbackCount}"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                        <Button Grid.Column="2"
+                                Style="{StaticResource SmallActionButton}"
+                                Command="{Binding FeedbackCommand}"
+                                Text="Fire" />
+                    </Grid>
+                    <Grid HeightRequest="60">
+                        <Border Padding="0"
+                                BackgroundColor="{StaticResource BlueGrayDarken4}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 8">
+                            <Label HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontSize="12"
+                                   TextColor="White"
+                                   Text="撮影プレビュー(FlashTrigger でシャッター発光)" />
+                        </Border>
+                        <BoxView Color="White"
+                                 Opacity="0"
+                                 CornerRadius="8"
+                                 InputTransparent="True"
+                                 behaviors:AnimationOption.FlashTrigger="{Binding FeedbackCount}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Navigation.Edit"
              xmlns:entity="clr-namespace:Template.MobileApp.Models.Entity"
@@ -15,37 +16,113 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="WorkRowBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            </Style>
+
+            <Style x:Key="WorkIdBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="MinimumWidthRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkIdLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="WorkNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
 
         <CollectionView ItemsSource="{Binding Items}"
                         SelectionMode="Single">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center"
+                                     Spacing="16">
+                    <Border Padding="0"
+                            WidthRequest="96"
+                            HeightRequest="96"
+                            HorizontalOptions="Center"
+                            BackgroundColor="{StaticResource GrayLighten3}"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 48">
+                        <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                               FontSize="48"
+                               TextColor="{StaticResource GrayDefault}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                    </Border>
+                    <Label Style="{StaticResource NameLabel}"
+                           HorizontalOptions="Center"
+                           Text="No items" />
+                    <Label Style="{StaticResource ValueLabel}"
+                           HorizontalOptions="Center"
+                           Text="Press New to add a work item" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type entity:WorkEntity}">
-                    <Grid Style="{StaticResource ItemCollectionGrid}"
-                          ColumnDefinitions="*,6*,*,*">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource ItemCollectionLabel}"
-                               Text="{Binding Id}" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource ItemCollectionLabel}"
-                               Text="{Binding Name}" />
-                        <Button Grid.Column="2"
-                                x:DataType="{x:Type module:EditListViewModel}"
-                                Style="{StaticResource ItemCollectionButtonPrimary}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
-                                CommandParameter="{Binding}"
-                                Text="{x:Static fonts:MaterialIcons.Edit}" />
-                        <Button Grid.Column="3"
-                                x:DataType="{x:Type module:EditListViewModel}"
-                                Style="{StaticResource ItemCollectionButtonDanger}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
-                                CommandParameter="{Binding}"
-                                Text="{x:Static fonts:MaterialIcons.Delete}" />
-                    </Grid>
+                    <Border Style="{StaticResource WorkRowBorder}">
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                              ColumnSpacing="10">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource WorkIdBorder}">
+                                <Label Style="{StaticResource WorkIdLabel}"
+                                       Text="{Binding Id, StringFormat='#{0}'}" />
+                            </Border>
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource WorkNameLabel}"
+                                   Text="{Binding Name}" />
+                            <Button Grid.Column="2"
+                                    x:DataType="{x:Type module:EditListViewModel}"
+                                    Style="{StaticResource ItemCollectionButtonPrimary}"
+                                    behaviors:ButtonOption.PressEffect="True"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Edit}" />
+                            <Button Grid.Column="3"
+                                    x:DataType="{x:Type module:EditListViewModel}"
+                                    Style="{StaticResource ItemCollectionButtonDanger}"
+                                    behaviors:ButtonOption.PressEffect="True"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="{x:Static fonts:MaterialIcons.Delete}" />
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-    </VerticalStackLayout>
+    </Grid>
 
 </ContentView>

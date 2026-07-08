@@ -44,7 +44,7 @@
             <Style x:Key="DayChipDayLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>

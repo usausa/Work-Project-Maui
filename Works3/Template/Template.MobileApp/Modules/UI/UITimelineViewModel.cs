@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
-public sealed class UITimelineSampleEvent
+public sealed class UITimelineEvent
 {
     public string Time { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
@@ -16,11 +16,11 @@ public sealed class UITimelineSampleEvent
     public double RowOpacity => Done ? 0.7 : 1.0;
 }
 
-public sealed class UITimelineSampleViewModel : AppViewModelBase
+public sealed class UITimelineViewModel : AppViewModelBase
 {
     public string DateLabel { get; } = "AWS Summit Japan 2025 · Day 1 (2025/06/25)";
 
-    public IReadOnlyList<UITimelineSampleEvent> Events { get; } =
+    public IReadOnlyList<UITimelineEvent> Events { get; } =
     [
         new()
         {

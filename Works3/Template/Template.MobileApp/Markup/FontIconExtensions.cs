@@ -68,6 +68,6 @@ public sealed class MoneyIconExtension : MaterialExtension
     public MoneyIconExtension()
     {
         Color = Colors.White;
-        Size = 30d;
+        Size = 28d;
     }
 }

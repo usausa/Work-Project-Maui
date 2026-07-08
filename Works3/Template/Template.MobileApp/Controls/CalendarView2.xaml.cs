@@ -106,7 +106,7 @@ public partial class CalendarView2
         BindableProperty.Create(nameof(DateNumberMargin), typeof(Thickness), typeof(CalendarView2), new Thickness(4, 2, 0, 0), propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty DateNumberFontSizeProperty =
-        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView2), 13d, propertyChanged: OnInvalidateAll);
+        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView2), 14d, propertyChanged: OnInvalidateAll);
 
     public static readonly BindableProperty EventFontSizeProperty =
         BindableProperty.Create(nameof(EventFontSize), typeof(double), typeof(CalendarView2), 11d, propertyChanged: OnInvalidateAll);
@@ -137,13 +137,13 @@ public partial class CalendarView2
         BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(CalendarView2), new Thickness(16, 12, 16, 8), propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty WeekdayHeaderFontSizeProperty =
-        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView2), 13d, propertyChanged: OnInvalidateWeekdayHeader);
+        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView2), 14d, propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty WeekdayHeaderPaddingProperty =
         BindableProperty.Create(nameof(WeekdayHeaderPadding), typeof(Thickness), typeof(CalendarView2), new Thickness(0, 6, 0, 6), propertyChanged: OnInvalidateWeekdayHeader);
 
     public static readonly BindableProperty YearFontSizeProperty =
-        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView2), 13d, propertyChanged: OnInvalidateHeader);
+        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView2), 14d, propertyChanged: OnInvalidateHeader);
 
     public static readonly BindableProperty MonthFontSizeProperty =
         BindableProperty.Create(nameof(MonthFontSize), typeof(double), typeof(CalendarView2), 28d, propertyChanged: OnInvalidateHeader);

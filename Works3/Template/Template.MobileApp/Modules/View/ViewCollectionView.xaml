@@ -17,8 +17,8 @@
         <ResourceDictionary>
 
             <s:BoolToTextConverter x:Key="BoolToExpandImageConverter"
-                                   TrueValue="▼"
-                                   FalseValue="▲" />
+                                   TrueValue="{x:Static font:MaterialIcons.Expand_less}"
+                                   FalseValue="{x:Static font:MaterialIcons.Expand_more}" />
             <s:BoolToColorConverter x:Key="BoolToBackgroundColorConverter"
                                     TrueValue="White"
                                     FalseValue="{StaticResource YellowLighten5}" />
@@ -46,7 +46,8 @@
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
             </Style>
 
             <Style x:Key="AddressCollectionGrid"
@@ -99,12 +100,26 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource RedDarken1}" />
             </Style>
 
+            <Style x:Key="AddressSwipeStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="AddressSwipeIcon"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+
             <Style x:Key="AddressSwipeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="12" />
             </Style>
 
         </ResourceDictionary>
@@ -136,14 +151,22 @@
                             <SwipeItemView Style="{StaticResource AddressMailSwipe}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=MailCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource AddressSwipeLabel}"
-                                       Text="メール" />
+                                <VerticalStackLayout Style="{StaticResource AddressSwipeStack}">
+                                    <Label Style="{StaticResource AddressSwipeIcon}"
+                                           Text="{x:Static font:MaterialIcons.Email}" />
+                                    <Label Style="{StaticResource AddressSwipeLabel}"
+                                           Text="メール" />
+                                </VerticalStackLayout>
                             </SwipeItemView>
                             <SwipeItemView Style="{StaticResource AddressPhoneSwipe}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewCollectionViewModel}}, Path=PhoneCommand, x:DataType={x:Type module:ViewCollectionViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource AddressSwipeLabel}"
-                                       Text="通話" />
+                                <VerticalStackLayout Style="{StaticResource AddressSwipeStack}">
+                                    <Label Style="{StaticResource AddressSwipeIcon}"
+                                           Text="{x:Static font:MaterialIcons.Phone}" />
+                                    <Label Style="{StaticResource AddressSwipeLabel}"
+                                           Text="通話" />
+                                </VerticalStackLayout>
                             </SwipeItemView>
                         </SwipeItems>
                     </SwipeView.RightItems>

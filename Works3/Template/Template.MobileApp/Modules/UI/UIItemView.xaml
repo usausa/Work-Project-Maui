@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIItemView"
@@ -171,29 +172,16 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
 
-            <Style x:Key="SizeTagActiveBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource SizeTagBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
-            </Style>
-
             <Style x:Key="SizeTagLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="SizeTagActiveLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
-
             <Style x:Key="DescriptionLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,12,0,0" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
             </Style>
 
@@ -206,7 +194,7 @@
 
             <Style x:Key="QuantityCaption"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -231,7 +219,7 @@
 
             <Style x:Key="QuantityLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -244,7 +232,7 @@
                 <Setter Property="CornerRadius" Value="26" />
                 <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
@@ -260,8 +248,11 @@
           RowDefinitions="*,40,Auto">
 
         <Grid Grid.Row="0" Grid.RowSpan="2">
-            <Ellipse Style="{StaticResource PlateEllipse}" />
-            <Border Style="{StaticResource ProductImageBorder}">
+            <Ellipse Style="{StaticResource PlateEllipse}"
+                     behaviors:AnimationOption.EnterAnimation="Pop" />
+            <Border Style="{StaticResource ProductImageBorder}"
+                    behaviors:AnimationOption.EnterAnimation="Pop"
+                    behaviors:AnimationOption.EnterDelay="80">
                 <Image Style="{StaticResource ProductImage}"
                        Source="usa1_face.jpg" />
             </Border>
@@ -295,16 +286,76 @@
                            Text="{Binding Price}" />
                 </Grid>
 
-                <!-- Size variations -->
+                <!-- Size variations (tap to select) -->
                 <HorizontalStackLayout Style="{StaticResource SizeRow}">
                     <Border Style="{StaticResource SizeTagBorder}">
-                        <Label Style="{StaticResource SizeTagLabel}" Text="30ml" />
-                    </Border>
-                    <Border Style="{StaticResource SizeTagActiveBorder}">
-                        <Label Style="{StaticResource SizeTagActiveLabel}" Text="50ml" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SizeCommand}"
+                                                  CommandParameter="30ml" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding SelectedSize}"
+                                         Value="30ml">
+                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Style="{StaticResource SizeTagLabel}" Text="30ml">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding SelectedSize}"
+                                             Value="30ml">
+                                    <Setter Property="TextColor" Value="White" />
+                                    <Setter Property="FontAttributes" Value="Bold" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                     </Border>
                     <Border Style="{StaticResource SizeTagBorder}">
-                        <Label Style="{StaticResource SizeTagLabel}" Text="100ml" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SizeCommand}"
+                                                  CommandParameter="50ml" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding SelectedSize}"
+                                         Value="50ml">
+                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Style="{StaticResource SizeTagLabel}" Text="50ml">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding SelectedSize}"
+                                             Value="50ml">
+                                    <Setter Property="TextColor" Value="White" />
+                                    <Setter Property="FontAttributes" Value="Bold" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+                    <Border Style="{StaticResource SizeTagBorder}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SizeCommand}"
+                                                  CommandParameter="100ml" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding SelectedSize}"
+                                         Value="100ml">
+                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Style="{StaticResource SizeTagLabel}" Text="100ml">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding SelectedSize}"
+                                             Value="100ml">
+                                    <Setter Property="TextColor" Value="White" />
+                                    <Setter Property="FontAttributes" Value="Bold" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                     </Border>
                 </HorizontalStackLayout>
 
@@ -319,13 +370,21 @@
                            Text="Quantity" />
                     <HorizontalStackLayout Grid.Column="1"
                                            Style="{StaticResource StepperRow}">
-                        <Button Style="{StaticResource StepperButton}" Text="−" />
-                        <Label Style="{StaticResource QuantityLabel}" Text="1" />
-                        <Button Style="{StaticResource StepperButton}" Text="+" />
+                        <Button Style="{StaticResource StepperButton}"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding DecrementCommand}"
+                                Text="−" />
+                        <Label Style="{StaticResource QuantityLabel}"
+                               Text="{Binding Quantity}" />
+                        <Button Style="{StaticResource StepperButton}"
+                                behaviors:ButtonOption.PressEffect="True"
+                                Command="{Binding IncrementCommand}"
+                                Text="+" />
                     </HorizontalStackLayout>
                 </Grid>
 
                 <Button Style="{StaticResource AddToCartButton}"
+                        behaviors:ButtonOption.PressEffect="True"
                         Command="{Binding CartCommand}"
                         Text="Add to Cart" />
 

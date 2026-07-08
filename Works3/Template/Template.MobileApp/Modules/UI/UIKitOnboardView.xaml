@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitOnboardView"
              x:DataType="{x:Type module:UIKitOnboardViewModel}"
@@ -65,7 +66,8 @@
     <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="*,Auto,Auto">
 
-        <CarouselView Grid.Row="0"
+        <CarouselView x:Name="OnboardCarousel"
+                      Grid.Row="0"
                       ItemsSource="{Binding Pages}"
                       IndicatorView="{x:Reference indicators}"
                       Loop="False">
@@ -73,8 +75,11 @@
                 <DataTemplate x:DataType="module:UIKitOnboardPage">
                     <VerticalStackLayout VerticalOptions="Center">
                         <Image Style="{StaticResource PageImage}" Source="{Binding Image}" />
-                        <Label Style="{StaticResource PageTitle}" Text="{Binding Title}" />
-                        <Label Style="{StaticResource PageDescription}" Text="{Binding Description}" />
+                        <!-- ページ切替でテキストをフェードイン -->
+                        <VerticalStackLayout behaviors:AnimationOption.FadeInTrigger="{Binding Source={x:Reference OnboardCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
+                            <Label Style="{StaticResource PageTitle}" Text="{Binding Title}" />
+                            <Label Style="{StaticResource PageDescription}" Text="{Binding Description}" />
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
@@ -90,8 +95,12 @@
         <Grid Grid.Row="2"
               Style="{StaticResource BottomBar}"
               ColumnDefinitions="*,Auto">
-            <Button Grid.Column="0" Style="{StaticResource SkipButton}" HorizontalOptions="Start" />
-            <Button Grid.Column="1" Style="{StaticResource StartButton}" />
+            <Button Grid.Column="0" Style="{StaticResource SkipButton}" HorizontalOptions="Start"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CompleteCommand}" />
+            <Button Grid.Column="1" Style="{StaticResource StartButton}"
+                    behaviors:ButtonOption.PressEffect="True"
+                    Command="{Binding CompleteCommand}" />
         </Grid>
 
     </Grid>

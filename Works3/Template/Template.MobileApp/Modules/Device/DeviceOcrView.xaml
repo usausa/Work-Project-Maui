@@ -5,6 +5,8 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceOcrView"
              x:DataType="{x:Type module:DeviceOcrViewModel}"
@@ -15,8 +17,81 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}">
-        <mct:CameraView behaviors:CameraBind.Controller="{Binding Controller}" />
-    </VerticalStackLayout>
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid RowDefinitions="*,Auto"
+          BackgroundColor="Black">
+
+        <mct:CameraView Grid.Row="0"
+                        behaviors:CameraBind.Controller="{Binding Controller}" />
+
+        <!-- 読取ガイドオーバーレイ -->
+        <controls:CameraOverlayView Grid.Row="0" />
+
+        <!-- OCR 実行中の表示 -->
+        <Grid Grid.Row="0"
+              BackgroundColor="#80000000"
+              IsVisible="{Binding IsProcessing}">
+            <VerticalStackLayout VerticalOptions="Center"
+                                 Spacing="12">
+                <ActivityIndicator IsRunning="{Binding IsProcessing}"
+                                   Color="White" />
+                <Label TextColor="White"
+                       FontSize="16"
+                       HorizontalOptions="Center"
+                       Text="Recognizing..." />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 認識結果パネル -->
+        <Border Grid.Row="1"
+                Padding="16,12"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 16,16,0,0">
+            <VerticalStackLayout Spacing="8">
+
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                           FontSize="20"
+                           TextColor="{StaticResource BlueGrayDarken2}"
+                           VerticalOptions="Center"
+                           Text="{x:Static fonts:MaterialIcons.Text_fields}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource NameLabel}"
+                           VerticalOptions="Center"
+                           Text="Result" />
+                </Grid>
+
+                <ScrollView HeightRequest="140">
+                    <Grid>
+                        <Label FontSize="16"
+                               TextColor="{StaticResource PrimaryTextColor}"
+                               Text="{Binding RecognizedText}"
+                               behaviors:AnimationOption.FadeInTrigger="{Binding RecognizedText}" />
+                        <Label FontSize="16"
+                               TextColor="{StaticResource GrayLighten1}"
+                               IsVisible="{Binding RecognizedText, Converter={StaticResource EmptyConverter}}"
+                               Text="Point the camera at text and press Scan" />
+                    </Grid>
+                </ScrollView>
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
 
 </ContentView>

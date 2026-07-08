@@ -16,6 +16,12 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double Amount { get; set; }
 
+    [ObservableProperty]
+    public partial int FeedbackCount { get; set; }
+
+    [ObservableProperty]
+    public partial bool WavePulseEnabled { get; set; } = true;
+
     public IObserveCommand ReplayCommand { get; }
 
     public IObserveCommand BadgePrevCommand { get; }
@@ -24,12 +30,15 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
 
     public IObserveCommand AmountCommand { get; }
 
+    public IObserveCommand FeedbackCommand { get; }
+
     public ViewEffectViewModel()
     {
         ReplayCommand = MakeDelegateCommand(() => ReplayCount++);
         BadgePrevCommand = MakeDelegateCommand(() => UpdateBadge(-1));
         BadgeNextCommand = MakeDelegateCommand(() => UpdateBadge(1));
         AmountCommand = MakeDelegateCommand(UpdateAmount);
+        FeedbackCommand = MakeDelegateCommand(() => FeedbackCount++);
     }
 
     public override Task OnNavigatedToAsync(INavigationContext context)

@@ -155,7 +155,7 @@ public sealed class FlightHudScene : SceneObject
         DrawAltitudeTape(canvas, vh);
         DrawRadar(canvas, vh);
         DrawWeapons(canvas, Time, vh);
-        DrawText(canvas, "TWS AUTO   CHAFF 24   FLARE 24   AP OFF", 200f, vh - 10f, 8.5f, Main.WithAlpha(110), align: SKTextAlign.Center);
+        DrawText(canvas, "TWS AUTO   CHAFF 24   FLARE 24   AP OFF", 200f, vh - 10f, 9f, Main.WithAlpha(110), align: SKTextAlign.Center);
 
         canvas.Restore();
 
@@ -360,15 +360,15 @@ public sealed class FlightHudScene : SceneObject
             canvas.DrawLine(x, y, x + (major ? 9f : 5f), y, Stroke);
             if (major && (MathF.Abs(y - cy) > 14f))
             {
-                DrawText(canvas, $"{(int)v}", x + 13f, y + 3f, 8.5f, Main.WithAlpha(170));
+                DrawText(canvas, $"{(int)v}", x + 13f, y + 3f, 9f, Main.WithAlpha(170));
             }
         }
 
         DrawCutPanel(canvas, 14f, cy - 11f, 62f, 22f, 5f, Panel, Main.WithAlpha(170), 1.2f);
-        DrawText(canvas, $"{(int)sim.SpeedKt:000}", 45f, cy + 5f, 13f, Bright, bold: true, align: SKTextAlign.Center);
+        DrawText(canvas, $"{(int)sim.SpeedKt:000}", 45f, cy + 5f, 14f, Bright, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "SPD", 45f, cy - 116f, 9f, Main.WithAlpha(160), align: SKTextAlign.Center);
         DrawText(canvas, $"M {sim.Mach:0.00}", 45f, cy + 126f, 10f, Bright, bold: true, align: SKTextAlign.Center);
-        DrawText(canvas, "AOA 4.2", 45f, cy + 140f, 8.5f, Main.WithAlpha(170), align: SKTextAlign.Center);
+        DrawText(canvas, "AOA 4.2", 45f, cy + 140f, 9f, Main.WithAlpha(170), align: SKTextAlign.Center);
     }
 
     private void DrawAltitudeTape(SKCanvas canvas, float vh)
@@ -397,7 +397,7 @@ public sealed class FlightHudScene : SceneObject
             canvas.DrawLine(x - (major ? 9f : 5f), y, x, y, Stroke);
             if (major && (MathF.Abs(y - cy) > 14f))
             {
-                DrawText(canvas, $"{(int)(v / 100f)}", x - 13f, y + 3f, 8.5f, Main.WithAlpha(170), align: SKTextAlign.Right);
+                DrawText(canvas, $"{(int)(v / 100f)}", x - 13f, y + 3f, 9f, Main.WithAlpha(170), align: SKTextAlign.Right);
             }
         }
 
@@ -406,7 +406,7 @@ public sealed class FlightHudScene : SceneObject
         DrawText(canvas, "ALT", 355f, cy - 116f, 9f, Main.WithAlpha(160), align: SKTextAlign.Center);
         var vs = (int)sim.ClimbFpm;
         DrawText(canvas, $"VS {vs:+0;-0}", 355f, cy + 126f, 10f, vs < -800 ? Amber : Bright, bold: true, align: SKTextAlign.Center);
-        DrawText(canvas, "BARO 29.92", 355f, cy + 140f, 8.5f, Main.WithAlpha(170), align: SKTextAlign.Center);
+        DrawText(canvas, "BARO 29.92", 355f, cy + 140f, 9f, Main.WithAlpha(170), align: SKTextAlign.Center);
     }
 
     //--------------------------------------------------------------------------------
@@ -586,7 +586,7 @@ public sealed class FlightHudScene : SceneObject
         // Gun
         var gunColor = sim.GunFiring ? (Blink(t, 8f) ? Bright : Amber) : Main;
         DrawText(canvas, "GUN", x0 + 10f, y0 + 48f, 11f, gunColor, bold: true);
-        DrawText(canvas, $"{sim.GunAmmo:000}", x0 + w - 10f, y0 + 48f, 13f, Bright, bold: true, align: SKTextAlign.Right);
+        DrawText(canvas, $"{sim.GunAmmo:000}", x0 + w - 10f, y0 + 48f, 14f, Bright, bold: true, align: SKTextAlign.Right);
         if (sim.GunFiring)
         {
             DrawText(canvas, "FIRING", x0 + w - 54f, y0 + 48f, 9f, Red, bold: true, align: SKTextAlign.Right);

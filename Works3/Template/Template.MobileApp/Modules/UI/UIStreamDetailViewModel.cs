@@ -28,7 +28,17 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool RelatedSelected { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsFavorite { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsDownloaded { get; set; }
+
     public IObserveCommand SelectTabCommand { get; }
+
+    public IObserveCommand FavoriteCommand { get; }
+
+    public IObserveCommand DownloadCommand { get; }
 
     public IReadOnlyList<UIStreamDetailTrailer> Trailers { get; } =
     [
@@ -52,6 +62,8 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
             TrailersSelected = x == "Trailers";
             RelatedSelected = !TrailersSelected;
         });
+        FavoriteCommand = MakeDelegateCommand(() => IsFavorite = !IsFavorite);
+        DownloadCommand = MakeDelegateCommand(() => IsDownloaded = !IsDownloaded);
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIStream);

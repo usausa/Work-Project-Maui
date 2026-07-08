@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIProfileView"
              x:DataType="{x:Type module:UIProfileViewModel}"
@@ -12,230 +13,413 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <!-- Root -->
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
+            <!-- Cover -->
+            <Style x:Key="CoverImage"
+                   TargetType="Image">
+                <Setter Property="HeightRequest" Value="140" />
+                <Setter Property="Aspect" Value="AspectFill" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken3}" />
+            </Style>
+
+            <!-- Avatar -->
             <Style x:Key="AvatarBorder"
                    TargetType="Border">
-                <Setter Property="WidthRequest" Value="96" />
-                <Setter Property="HeightRequest" Value="96" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="WidthRequest" Value="110" />
+                <Setter Property="HeightRequest" Value="110" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 55" />
                 <Setter Property="Stroke" Value="White" />
                 <Setter Property="StrokeThickness" Value="4" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
-                <Setter Property="TranslationY" Value="-48" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="TranslationY" Value="-55" />
                 <Setter Property="Shadow">
-                    <Setter.Value>
-                        <Shadow Brush="Black"
-                                Opacity="0.3"
-                                Radius="8"
-                                Offset="0,2" />
-                    </Setter.Value>
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.15" Radius="8" />
                 </Setter>
             </Style>
 
+            <Style x:Key="AvatarImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <!-- Name / meta -->
             <Style x:Key="NameLabel"
                    TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="0,-40,0,2" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 
-            <Style x:Key="IdLabel"
+            <Style x:Key="OccupationLabel"
                    TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="StatValueLabel"
-                   TargetType="Label">
+            <Style x:Key="LocationRow"
+                   TargetType="HorizontalStackLayout">
                 <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+
+            <Style x:Key="LocationIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="LocationLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Stats row -->
+            <Style x:Key="StatRow"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="16,8" />
+            </Style>
+
+            <Style x:Key="StatValue"
+                   TargetType="Label">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="StatNameLabel"
+            <Style x:Key="StatCaption"
                    TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="11" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="StatDivider"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="1" />
+                <Setter Property="HeightRequest" Value="28" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- SNS action buttons (all toggle: OFF=白地+色アイコン / ON=色地+白アイコン) -->
+            <Style x:Key="ActionRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="20" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+
+            <Style x:Key="ActionButtonBase"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="52" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="CornerRadius" Value="26" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,3"
+                            Brush="Black" Opacity="0.2" Radius="6" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="FollowButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource ActionButtonBase}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="LikeButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource ActionButtonBase}">
+                <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="CornerRadius" Value="32" />
+                <Setter Property="FontSize" Value="26" />
+            </Style>
+
+            <Style x:Key="StarButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource ActionButtonBase}">
+                <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
+            </Style>
+
+            <!-- Card -->
+            <Style x:Key="CardBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,6" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Shadow">
+                    <Shadow Offset="0,2"
+                            Brush="Black" Opacity="0.1" Radius="10" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="SectionTitleRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+
+            <Style x:Key="SectionAccent"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="3" />
+                <Setter Property="HeightRequest" Value="14" />
+                <Setter Property="CornerRadius" Value="2" />
+                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SectionTitle"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken4}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="BioLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="24,16,24,0" />
                 <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <Style x:Key="SectionLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="24,24,24,8" />
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
-            </Style>
-
-            <Style x:Key="ChipFlex"
+            <!-- Interests -->
+            <Style x:Key="InterestsLayout"
                    TargetType="FlexLayout">
-                <Setter Property="Margin" Value="20,0,20,0" />
                 <Setter Property="Wrap" Value="Wrap" />
                 <Setter Property="JustifyContent" Value="Start" />
-                <Setter Property="AlignItems" Value="Center" />
             </Style>
 
-            <Style x:Key="SkillChipBorder"
+            <Style x:Key="InterestBorder"
                    TargetType="Border">
-                <Setter Property="Margin" Value="4" />
-                <Setter Property="Padding" Value="14,6" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
-                <Setter Property="Stroke" Value="{StaticResource BlueLighten3}" />
-                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Margin" Value="0,4,8,0" />
+                <Setter Property="Padding" Value="12,5" />
+                <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
             </Style>
 
-            <Style x:Key="SkillChipLabel"
+            <Style x:Key="InterestLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="HobbyChipBorder"
-                   TargetType="Border"
-                   BasedOn="{StaticResource SkillChipBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
-                <Setter Property="Stroke" Value="{StaticResource GreenLighten3}" />
-            </Style>
-
-            <Style x:Key="HobbyChipLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource SkillChipLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
-            </Style>
-
+            <!-- Photos -->
             <Style x:Key="PhotoBorder"
                    TargetType="Border">
-                <Setter Property="WidthRequest" Value="120" />
-                <Setter Property="HeightRequest" Value="160" />
-                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="HeightRequest" Value="90" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PhotoImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
+
+            <!-- Root layout -->
+            <Style x:Key="RootStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,0,0,12" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
-        <VerticalStackLayout>
+    <!-- カバーはスクロールでパララックス(旧 Profile から移植) -->
+    <ScrollView Style="{StaticResource RootScroll}"
+                behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
+        <VerticalStackLayout Style="{StaticResource RootStack}">
 
-            <!-- カバー画像(スクロールでパララックス) -->
-            <Grid HeightRequest="200">
+            <!-- Cover -->
+            <Grid HeightRequest="140">
                 <Image x:Name="CoverImage"
-                       Source="profile.jpg"
-                       Aspect="AspectFill" />
+                       Style="{StaticResource CoverImage}"
+                       Source="social_background.png" />
             </Grid>
 
-            <!-- カバーより下は白背景ブロック(パララックスしたカバーが透けないように) -->
-            <VerticalStackLayout Padding="0,0,0,24"
-                                 BackgroundColor="White">
+            <!-- カバーより下は不透明ブロック(パララックスしたカバーが透けないように) -->
+            <VerticalStackLayout BackgroundColor="{StaticResource GrayLighten4}">
 
-                <!-- アバター -->
+                <!-- Avatar (overlaps cover) -->
                 <Border Style="{StaticResource AvatarBorder}">
-                    <Image Source="usa1_face.jpg"
-                           Aspect="AspectFill" />
+                    <Image Style="{StaticResource AvatarImage}"
+                           Source="profile.jpg" />
                 </Border>
 
-                <!-- 名前 / ID -->
-                <VerticalStackLayout Margin="0,-40,0,0"
-                                     Spacing="2">
-                    <Label Style="{StaticResource NameLabel}"
-                           Text="{Binding Name}" />
-                    <Label Style="{StaticResource IdLabel}"
-                           Text="{Binding Id}" />
-                </VerticalStackLayout>
+                <!-- Name / meta -->
+                <Label Style="{StaticResource NameLabel}"
+                       Text="{Binding UserName}" />
+                <Label Style="{StaticResource OccupationLabel}"
+                       Text="{Binding Occupation}" />
+                <HorizontalStackLayout Style="{StaticResource LocationRow}">
+                    <Label Style="{StaticResource LocationIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Location_on}" />
+                    <Label Style="{StaticResource LocationLabel}"
+                           Text="{Binding Location}" />
+                </HorizontalStackLayout>
 
-                <!-- 統計 -->
-                <Grid Margin="32,20,32,0"
-                      ColumnDefinitions="*,*,*">
-                    <VerticalStackLayout Grid.Column="0"
-                                         Spacing="2">
-                        <Label Style="{StaticResource StatValueLabel}"
-                               Text="{Binding Posts}" />
-                        <Label Style="{StaticResource StatNameLabel}"
-                               Text="投稿" />
+                <!-- Stats: Posts / Followers / Following -->
+                <Grid Style="{StaticResource StatRow}"
+                      ColumnDefinitions="*,Auto,*,Auto,*">
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Style="{StaticResource StatValue}"
+                               Text="{Binding Stats[0].Value}" />
+                        <Label Style="{StaticResource StatCaption}"
+                               Text="{Binding Stats[0].Caption}" />
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1"
-                                         Spacing="2">
-                        <Label Style="{StaticResource StatValueLabel}"
-                               Text="{Binding Following}" />
-                        <Label Style="{StaticResource StatNameLabel}"
-                               Text="フォロー" />
+                    <BoxView Grid.Column="1"
+                             Style="{StaticResource StatDivider}" />
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Style="{StaticResource StatValue}"
+                               Text="{Binding Stats[1].Value}" />
+                        <Label Style="{StaticResource StatCaption}"
+                               Text="{Binding Stats[1].Caption}" />
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="2"
-                                         Spacing="2">
-                        <Label Style="{StaticResource StatValueLabel}"
-                               Text="{Binding Followers, StringFormat='{0:N0}'}" />
-                        <Label Style="{StaticResource StatNameLabel}"
-                               Text="フォロワー" />
+                    <BoxView Grid.Column="3"
+                             Style="{StaticResource StatDivider}" />
+                    <VerticalStackLayout Grid.Column="4">
+                        <Label Style="{StaticResource StatValue}"
+                               Text="{Binding Stats[2].Value}" />
+                        <Label Style="{StaticResource StatCaption}"
+                               Text="{Binding Stats[2].Caption}" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- 自己紹介 -->
-                <Label Style="{StaticResource BioLabel}"
-                       Text="{Binding Bio}" />
+                <!-- SNS action buttons: follow, like, favorite -->
+                <HorizontalStackLayout Style="{StaticResource ActionRow}">
+                    <Button Style="{StaticResource FollowButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Command="{Binding FollowCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Person_add}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsFollowed}"
+                                         Value="True">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.How_to_reg}" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource LikeButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            behaviors:AnimationOption.BounceTrigger="{Binding IsLiked}"
+                            Command="{Binding LikeCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Favorite_outline}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsLiked}"
+                                         Value="True">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Favorite}" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource PinkAccent2}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Style="{StaticResource StarButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            Command="{Binding StarCommand}"
+                            Text="{x:Static fonts:MaterialIcons.Star_outline}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsStarred}"
+                                         Value="True">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Star}" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
+                                <Setter Property="TextColor" Value="White" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </HorizontalStackLayout>
 
-                <!-- スキル -->
-                <Label Style="{StaticResource SectionLabel}"
-                       Text="スキル" />
-                <FlexLayout Style="{StaticResource ChipFlex}"
-                            BindableLayout.ItemsSource="{Binding Skills}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type x:String}">
-                            <Border Style="{StaticResource SkillChipBorder}">
-                                <Label Style="{StaticResource SkillChipLabel}"
-                                       Text="{Binding .}" />
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </FlexLayout>
+                <!-- Bio card -->
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource SectionTitleRow}">
+                            <BoxView Style="{StaticResource SectionAccent}" />
+                            <Label Style="{StaticResource SectionTitle}"
+                                   Text="自己紹介" />
+                        </HorizontalStackLayout>
+                        <Label Style="{StaticResource BioLabel}"
+                               Text="{Binding Bio}" />
+                    </VerticalStackLayout>
+                </Border>
 
-                <!-- 趣味 -->
-                <Label Style="{StaticResource SectionLabel}"
-                       Text="趣味" />
-                <FlexLayout Style="{StaticResource ChipFlex}"
-                            BindableLayout.ItemsSource="{Binding Hobbies}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type x:String}">
-                            <Border Style="{StaticResource HobbyChipBorder}">
-                                <Label Style="{StaticResource HobbyChipLabel}"
-                                       Text="{Binding .}" />
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </FlexLayout>
+                <!-- Interests with colored tags -->
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource SectionTitleRow}">
+                            <BoxView Style="{StaticResource SectionAccent}" />
+                            <Label Style="{StaticResource SectionTitle}"
+                                   Text="趣味・関心事" />
+                        </HorizontalStackLayout>
+                        <FlexLayout Style="{StaticResource InterestsLayout}"
+                                    BindableLayout.ItemsSource="{Binding Interests}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="module:UIProfileInterest">
+                                    <Border Style="{StaticResource InterestBorder}"
+                                            BackgroundColor="{Binding BackgroundColor}">
+                                        <Label Style="{StaticResource InterestLabel}"
+                                               Text="{Binding Label}"
+                                               TextColor="{Binding TextColor}" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Border>
 
-                <!-- 投稿写真 -->
-                <Label Style="{StaticResource SectionLabel}"
-                       Text="投稿" />
-                <ScrollView Orientation="Horizontal"
-                            HorizontalScrollBarVisibility="Never"
-                            Padding="24,0">
-                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Photos}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type x:String}">
-                                <Border Style="{StaticResource PhotoBorder}">
-                                    <Image Source="{Binding .}"
-                                           Aspect="AspectFill" />
-                                </Border>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </HorizontalStackLayout>
-                </ScrollView>
+                <!-- Photos grid -->
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource SectionTitleRow}">
+                            <BoxView Style="{StaticResource SectionAccent}" />
+                            <Label Style="{StaticResource SectionTitle}"
+                                   Text="フォト" />
+                        </HorizontalStackLayout>
+                        <CollectionView HeightRequest="190"
+                                        ItemsSource="{Binding Photos}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical"
+                                                 Span="3" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="module:UIProfilePhoto">
+                                    <Border Style="{StaticResource PhotoBorder}">
+                                        <Image Style="{StaticResource PhotoImage}"
+                                               Source="{Binding Image}" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
 
             </VerticalStackLayout>
 

@@ -103,7 +103,7 @@ public partial class CalendarView : ContentView
         BindableProperty.Create(nameof(DateNumberMargin), typeof(Thickness), typeof(CalendarView), new Thickness(4, 2, 0, 0), propertyChanged: OnRenderPropertyChanged);
 
     public static readonly BindableProperty DateNumberFontSizeProperty =
-        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView), 13d, propertyChanged: OnRenderPropertyChanged);
+        BindableProperty.Create(nameof(DateNumberFontSize), typeof(double), typeof(CalendarView), 14d, propertyChanged: OnRenderPropertyChanged);
 
     public static readonly BindableProperty EventFontSizeProperty =
         BindableProperty.Create(nameof(EventFontSize), typeof(double), typeof(CalendarView), 11d, propertyChanged: OnRenderPropertyChanged);
@@ -134,13 +134,13 @@ public partial class CalendarView : ContentView
         BindableProperty.Create(nameof(HeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(16, 12, 16, 8));
 
     public static readonly BindableProperty WeekdayHeaderFontSizeProperty =
-        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView), 13d);
+        BindableProperty.Create(nameof(WeekdayHeaderFontSize), typeof(double), typeof(CalendarView), 14d);
 
     public static readonly BindableProperty WeekdayHeaderPaddingProperty =
         BindableProperty.Create(nameof(WeekdayHeaderPadding), typeof(Thickness), typeof(CalendarView), new Thickness(0, 6, 0, 6));
 
     public static readonly BindableProperty YearFontSizeProperty =
-        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView), 13d);
+        BindableProperty.Create(nameof(YearFontSize), typeof(double), typeof(CalendarView), 14d);
 
     public static readonly BindableProperty MonthFontSizeProperty =
         BindableProperty.Create(nameof(MonthFontSize), typeof(double), typeof(CalendarView), 28d);

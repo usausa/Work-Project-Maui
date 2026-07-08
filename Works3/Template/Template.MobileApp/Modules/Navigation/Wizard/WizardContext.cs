@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Modules.Navigation.Wizard;
 
-public sealed class WizardContext : IInitializable, IDisposable
+public sealed partial class WizardContext : ObservableObject, IInitializable, IDisposable
 {
     private readonly ILogger<WizardContext> log;
 
@@ -9,9 +9,11 @@ public sealed class WizardContext : IInitializable, IDisposable
         this.log = log;
     }
 
-    public string? Data1 { get; set; }
+    [ObservableProperty]
+    public partial string? Data1 { get; set; }
 
-    public string? Data2 { get; set; }
+    [ObservableProperty]
+    public partial string? Data2 { get; set; }
 
     public void Initialize()
     {

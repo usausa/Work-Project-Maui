@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceWiFiView"
              x:DataType="{x:Type module:DeviceWiFiViewModel}"
@@ -11,6 +12,30 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <VerticalStackLayout Style="{StaticResource FillVerticalStack}" />
+    <Grid BackgroundColor="{StaticResource GrayLighten5}">
+        <VerticalStackLayout VerticalOptions="Center"
+                             Spacing="16">
+            <Border Padding="0"
+                    WidthRequest="96"
+                    HeightRequest="96"
+                    HorizontalOptions="Center"
+                    BackgroundColor="{StaticResource GrayLighten3}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 48">
+                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
+                       FontSize="48"
+                       TextColor="{StaticResource GrayDefault}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="{x:Static fonts:MaterialIcons.Wifi_off}" />
+            </Border>
+            <Label Style="{StaticResource NameLabel}"
+                   HorizontalOptions="Center"
+                   Text="Not implemented" />
+            <Label Style="{StaticResource ValueLabel}"
+                   HorizontalOptions="Center"
+                   Text="WiFi sample is not available yet" />
+        </VerticalStackLayout>
+    </Grid>
 
 </ContentView>

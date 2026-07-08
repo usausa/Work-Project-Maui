@@ -2,11 +2,11 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics.Scene;
 
-public sealed class UIMechHudViewModel : AppViewModelBase
+public sealed class UITacticalViewModel : AppViewModelBase
 {
     public MechHudScene Scene { get; } = new();
 
-    public UIMechHudViewModel()
+    public UITacticalViewModel()
     {
         Disposables.Add(Scene);
     }

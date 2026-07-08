@@ -2,11 +2,11 @@ namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Graphics.Scene;
 
-public sealed class UIFlightHudViewModel : AppViewModelBase
+public sealed class UIFlightViewModel : AppViewModelBase
 {
     public FlightHudScene Scene { get; } = new();
 
-    public UIFlightHudViewModel()
+    public UIFlightViewModel()
     {
         Disposables.Add(Scene);
     }

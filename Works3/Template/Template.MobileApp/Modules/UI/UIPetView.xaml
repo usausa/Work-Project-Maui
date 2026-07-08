@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIPetView"
@@ -107,41 +108,9 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="StatBarGrid"
-                   TargetType="Grid">
+            <Style x:Key="StatBar"
+                   TargetType="ProgressBar">
                 <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="StatTrack"
-                   TargetType="Border">
-                <Setter Property="HeightRequest" Value="6" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 3" />
-            </Style>
-
-            <Style x:Key="StatFillHp"
-                   TargetType="Border"
-                   BasedOn="{StaticResource StatTrack}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
-            </Style>
-
-            <Style x:Key="StatFillAttack"
-                   TargetType="Border"
-                   BasedOn="{StaticResource StatTrack}">
-                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
-            </Style>
-
-            <Style x:Key="StatFillDefense"
-                   TargetType="Border"
-                   BasedOn="{StaticResource StatTrack}">
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="StatFillSpeed"
-                   TargetType="Border"
-                   BasedOn="{StaticResource StatTrack}">
-                <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
             </Style>
 
             <Style x:Key="StatValueLabel"
@@ -212,7 +181,7 @@
                 <Setter Property="CornerRadius" Value="28" />
                 <Setter Property="BackgroundColor" Value="{StaticResource AmberDefault}" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,3"
@@ -230,7 +199,8 @@
                Source="usa1_full.jpg" />
 
         <Border Grid.Row="1" Grid.RowSpan="2"
-                Style="{StaticResource DetailCardBorder}">
+                Style="{StaticResource DetailCardBorder}"
+                behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout>
 
                 <Grid Style="{StaticResource NameRowGrid}"
@@ -263,75 +233,63 @@
                     </BindableLayout.ItemTemplate>
                 </HorizontalStackLayout>
 
-                <!-- Base stats -->
+                <!-- Base stats (bars animate 0 → value on load) -->
                 <VerticalStackLayout Style="{StaticResource StatStack}">
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
                         <Label Grid.Column="0"
                                Style="{StaticResource StatNameLabel}"
                                Text="HP" />
-                        <Grid Grid.Column="1"
-                              Style="{StaticResource StatBarGrid}"
-                              ColumnDefinitions="80*,20*">
-                            <Border Grid.ColumnSpan="2"
-                                    Style="{StaticResource StatTrack}" />
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource StatFillHp}" />
-                        </Grid>
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource GreenDefault}"
+                                     behaviors:AnimationOption.ProgressTo="{Binding HpProgress}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               Text="320" />
+                               behaviors:LabelOption.CountUpValue="{Binding Hp}"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
                         <Label Grid.Column="0"
                                Style="{StaticResource StatNameLabel}"
                                Text="Attack" />
-                        <Grid Grid.Column="1"
-                              Style="{StaticResource StatBarGrid}"
-                              ColumnDefinitions="78*,22*">
-                            <Border Grid.ColumnSpan="2"
-                                    Style="{StaticResource StatTrack}" />
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource StatFillAttack}" />
-                        </Grid>
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource OrangeDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.78" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               Text="78" />
+                               behaviors:LabelOption.CountUpValue="78"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
                         <Label Grid.Column="0"
                                Style="{StaticResource StatNameLabel}"
                                Text="Defense" />
-                        <Grid Grid.Column="1"
-                              Style="{StaticResource StatBarGrid}"
-                              ColumnDefinitions="64*,36*">
-                            <Border Grid.ColumnSpan="2"
-                                    Style="{StaticResource StatTrack}" />
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource StatFillDefense}" />
-                        </Grid>
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource BlueDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.64" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               Text="64" />
+                               behaviors:LabelOption.CountUpValue="64"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
                     </Grid>
                     <Grid Style="{StaticResource StatRowGrid}"
                           ColumnDefinitions="56,*,34">
                         <Label Grid.Column="0"
                                Style="{StaticResource StatNameLabel}"
                                Text="Speed" />
-                        <Grid Grid.Column="1"
-                              Style="{StaticResource StatBarGrid}"
-                              ColumnDefinitions="92*,8*">
-                            <Border Grid.ColumnSpan="2"
-                                    Style="{StaticResource StatTrack}" />
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource StatFillSpeed}" />
-                        </Grid>
+                        <ProgressBar Grid.Column="1"
+                                     Style="{StaticResource StatBar}"
+                                     ProgressColor="{StaticResource AmberDefault}"
+                                     behaviors:AnimationOption.ProgressTo="0.92" />
                         <Label Grid.Column="2"
                                Style="{StaticResource StatValueLabel}"
-                               Text="92" />
+                               behaviors:LabelOption.CountUpValue="92"
+                               behaviors:LabelOption.CountUpFormat="{}{0:0}" />
                     </Grid>
                 </VerticalStackLayout>
 
@@ -353,10 +311,24 @@
                       ColumnDefinitions="Auto,*">
                     <Button Grid.Column="0"
                             Style="{StaticResource HeartButton}"
+                            behaviors:ButtonOption.PressEffect="True"
+                            behaviors:AnimationOption.BounceTrigger="{Binding Hp}"
+                            Command="{Binding HeartCommand}"
                             Text="{x:Static fonts:MaterialIcons.Favorite}" />
                     <Button Grid.Column="1"
                             Style="{StaticResource PartyButton}"
-                            Text="Add to Party" />
+                            behaviors:ButtonOption.PressEffect="True"
+                            Command="{Binding PartyCommand}"
+                            Text="Add to Party">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding InParty}"
+                                         Value="True">
+                                <Setter Property="Text" Value="✓ In Party" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
                 </Grid>
 
             </VerticalStackLayout>

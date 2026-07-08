@@ -2,7 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIStreamDetailView"
@@ -120,7 +122,7 @@
             <Style x:Key="SynopsisLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="16,4,16,6" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
@@ -264,7 +266,7 @@
 
             <Style x:Key="TrailerTitleLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
@@ -321,7 +323,8 @@
 
             <Grid Style="{StaticResource PlayerGrid}">
                 <Image Style="{StaticResource PlayerImage}" Source="social_background.png" />
-                <Button Style="{StaticResource PlayButtonOverlay}" />
+                <Button Style="{StaticResource PlayButtonOverlay}"
+                        behaviors:ButtonOption.PressEffect="True" />
                 <Grid Style="{StaticResource ProgressGrid}"
                       ColumnDefinitions="40*,60*">
                     <BoxView Grid.ColumnSpan="2" Style="{StaticResource ProgressTrack}" />
@@ -336,10 +339,35 @@
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Style="{StaticResource ActionRow}">
-                <Button Style="{StaticResource PrimaryPlayButton}" />
-                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Download}" />
-                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Share}" />
-                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Favorite_outline}" />
+                <Button Style="{StaticResource PrimaryPlayButton}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Download}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        Command="{Binding DownloadCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding IsDownloaded}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Check}" />
+                            <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Share}"
+                        behaviors:ButtonOption.PressEffect="True" />
+                <Button Style="{StaticResource IconActionButton}" Text="{x:Static fonts:MaterialIcons.Favorite_outline}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        behaviors:AnimationOption.BounceTrigger="{Binding IsFavorite}"
+                        Command="{Binding FavoriteCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding IsFavorite}"
+                                     Value="True">
+                            <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Favorite}" />
+                            <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
             </HorizontalStackLayout>
 
             <Label Style="{StaticResource SynopsisLabel}" Text="{Binding Synopsis}" />
@@ -399,23 +427,29 @@
             <!-- Trailers tab -->
             <VerticalStackLayout Style="{StaticResource TrailerStack}"
                                  IsVisible="{Binding TrailersSelected}"
+                                 behaviors:AnimationOption.FadeInTrigger="{Binding TrailersSelected}"
                                  BindableLayout.ItemsSource="{Binding Trailers}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="module:UIStreamDetailTrailer">
                         <Grid Style="{StaticResource TrailerRowGrid}"
                               ColumnDefinitions="Auto,*">
-                            <Border Grid.Column="0" Style="{StaticResource TrailerThumbBorder}">
-                                <Grid>
-                                    <Image Style="{StaticResource TrailerImage}" Source="{Binding Image}" />
-                                    <Border Style="{StaticResource TrailerPlayBorder}">
-                                        <Label Style="{StaticResource TrailerPlayLabel}" Text="▶" />
+                            <toolkit:SfEffectsView Grid.ColumnSpan="2"
+                                                   TouchDownEffects="Ripple">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <Border Grid.Column="0" Style="{StaticResource TrailerThumbBorder}">
+                                        <Grid>
+                                            <Image Style="{StaticResource TrailerImage}" Source="{Binding Image}" />
+                                            <Border Style="{StaticResource TrailerPlayBorder}">
+                                                <Label Style="{StaticResource TrailerPlayLabel}" Text="▶" />
+                                            </Border>
+                                        </Grid>
                                     </Border>
+                                    <VerticalStackLayout Grid.Column="1" Style="{StaticResource TrailerTextStack}">
+                                        <Label Style="{StaticResource TrailerTitleLabel}" Text="{Binding Title}" />
+                                        <Label Style="{StaticResource TrailerMetaLabel}" Text="{Binding Duration}" />
+                                    </VerticalStackLayout>
                                 </Grid>
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1" Style="{StaticResource TrailerTextStack}">
-                                <Label Style="{StaticResource TrailerTitleLabel}" Text="{Binding Title}" />
-                                <Label Style="{StaticResource TrailerMetaLabel}" Text="{Binding Duration}" />
-                            </VerticalStackLayout>
+                            </toolkit:SfEffectsView>
                         </Grid>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
@@ -424,6 +458,7 @@
             <!-- More Like This tab -->
             <CollectionView ItemsSource="{Binding Related}"
                             IsVisible="{Binding RelatedSelected}"
+                            behaviors:AnimationOption.FadeInTrigger="{Binding RelatedSelected}"
                             Margin="12,0,12,16"
                             HeightRequest="260">
                 <CollectionView.ItemsLayout>
@@ -432,15 +467,17 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="module:UIStreamDetailRelated">
                         <Border Style="{StaticResource RelatedBorder}">
-                            <Grid>
-                                <Image Style="{StaticResource RelatedImage}" Source="{Binding Image}" />
-                                <Border Style="{StaticResource RelatedOverlay}">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <Label Grid.Column="0" Style="{StaticResource RelatedTitleLabel}" Text="{Binding Title}" />
-                                        <Label Grid.Column="1" Style="{StaticResource RelatedDurationLabel}" Text="{Binding Duration}" />
-                                    </Grid>
-                                </Border>
-                            </Grid>
+                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                                <Grid>
+                                    <Image Style="{StaticResource RelatedImage}" Source="{Binding Image}" />
+                                    <Border Style="{StaticResource RelatedOverlay}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0" Style="{StaticResource RelatedTitleLabel}" Text="{Binding Title}" />
+                                            <Label Grid.Column="1" Style="{StaticResource RelatedDurationLabel}" Text="{Binding Duration}" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </toolkit:SfEffectsView>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

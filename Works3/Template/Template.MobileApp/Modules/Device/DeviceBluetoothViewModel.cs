@@ -3,34 +3,54 @@ namespace Template.MobileApp.Modules.Device;
 using Template.MobileApp.Components;
 using Template.MobileApp.Helpers;
 
-public sealed class DeviceBluetoothViewModel : AppViewModelBase
+public enum BluetoothPrintState
 {
-    private readonly IDialog dialog;
+    Idle,
+    Connecting,
+    Printing,
+    Completed,
+    Failed
+}
 
+public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
+{
     private readonly IBluetoothSerialFactory bluetoothSerialFactory;
+
+    [ObservableProperty(NotifyAlso = [nameof(IsBusy)])]
+    public partial BluetoothPrintState State { get; set; }
+
+    [ObservableProperty]
+    public partial string Detail { get; set; }
+
+    public bool IsBusy => State is BluetoothPrintState.Connecting or BluetoothPrintState.Printing;
 
     public IObserveCommand PrintCommand { get; }
 
     public DeviceBluetoothViewModel(
-        IDialog dialog,
         IBluetoothSerialFactory bluetoothSerialFactory)
     {
-        this.dialog = dialog;
         this.bluetoothSerialFactory = bluetoothSerialFactory;
 
-        PrintCommand = MakeAsyncCommand(ExecutePrint);
+        Detail = "Sends a test line to \"DummyPrinter\"";
+
+        PrintCommand = MakeAsyncCommand(ExecutePrint, () => !IsBusy);
     }
 
     private async Task ExecutePrint()
     {
-        using var loading = dialog.Indicator();
+        State = BluetoothPrintState.Connecting;
+        Detail = "Connecting to \"DummyPrinter\"...";
 
         using var port = await bluetoothSerialFactory.ConnectAsync("DummyPrinter");
         if (port is null)
         {
-            await dialog.InformationAsync("Failed to connect.");
+            State = BluetoothPrintState.Failed;
+            Detail = "Failed to connect.";
             return;
         }
+
+        State = BluetoothPrintState.Printing;
+        Detail = "Sending test data...";
 
         // Printing
         await using var lwr = new LineReaderWriter(port.Input, port.Output);
@@ -40,8 +60,13 @@ public sealed class DeviceBluetoothViewModel : AppViewModelBase
         var response = await lwr.ReadLineAsync();
         if (response is not "OK")
         {
-            await dialog.InformationAsync("Failed to read response.");
+            State = BluetoothPrintState.Failed;
+            Detail = "Failed to read response.";
+            return;
         }
+
+        State = BluetoothPrintState.Completed;
+        Detail = "Printed successfully.";
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

@@ -129,7 +129,7 @@ public sealed class EnergyFlowScene : SceneObject
         canvas.DrawRect(x, y + 6f, 3f, h - 12f, Fill);
 
         DrawText(canvas, label, x + 12f, y + 17f, 8f, TextDim);
-        DrawText(canvas, value, x + 12f, y + 36f, 13f, accent, bold: true);
+        DrawText(canvas, value, x + 12f, y + 36f, 14f, accent, bold: true);
     }
 
     //--------------------------------------------------------------------------------

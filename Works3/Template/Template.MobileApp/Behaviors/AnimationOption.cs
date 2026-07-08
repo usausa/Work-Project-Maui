@@ -346,6 +346,47 @@ public static class AnimationOption
             (_, _) => element.BackgroundColor = original);
     }
 
+    // ------------------------------------------------------------------ ProgressTo (ProgressBar の伸長アニメーション)
+
+    public static readonly BindableProperty ProgressToProperty = BindableProperty.CreateAttached(
+        "ProgressTo",
+        typeof(double),
+        typeof(AnimationOption),
+        0d,
+        propertyChanged: OnProgressToChanged);
+
+    public static double GetProgressTo(BindableObject bindable) => (double)bindable.GetValue(ProgressToProperty);
+
+    public static void SetProgressTo(BindableObject bindable, double value) => bindable.SetValue(ProgressToProperty, value);
+
+    private static void OnProgressToChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not ProgressBar bar)
+        {
+            return;
+        }
+
+        if (bar.IsLoaded)
+        {
+            _ = bar.ProgressTo((double)newValue, 800, Easing.CubicOut);
+        }
+        else
+        {
+            // 表示前に値が確定した場合は Loaded 時に 0 から伸ばす
+            bar.Loaded -= OnProgressBarLoaded;
+            bar.Loaded += OnProgressBarLoaded;
+        }
+    }
+
+    private static void OnProgressBarLoaded(object? sender, EventArgs e)
+    {
+        if (sender is ProgressBar bar)
+        {
+            bar.Loaded -= OnProgressBarLoaded;
+            _ = bar.ProgressTo(GetProgressTo(bar), 800, Easing.CubicOut);
+        }
+    }
+
     // ------------------------------------------------------------------ Enter
 
     public static readonly BindableProperty EnterAnimationProperty = BindableProperty.CreateAttached(

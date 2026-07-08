@@ -2,7 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIKitDashView"
@@ -82,7 +84,7 @@
             </Style>
 
             <Style x:Key="CardCaption" TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
@@ -193,9 +195,11 @@
                 </VerticalStackLayout>
                 <Grid Grid.Column="1" Style="{StaticResource BellArea}">
                     <Button Style="{StaticResource BellButton}"
+                            behaviors:ButtonOption.PressEffect="True"
                             Command="{Binding NotifyCommand}"
                             Text="{x:Static fonts:MaterialIcons.Notifications}" />
-                    <Border Style="{StaticResource UnreadDot}" />
+                    <Border Style="{StaticResource UnreadDot}"
+                            behaviors:AnimationOption.Pulse="True" />
                 </Grid>
                 <Button Grid.Column="2"
                         Style="{StaticResource KitIconButton}"
@@ -203,7 +207,8 @@
                         Text="{x:Static fonts:MaterialIcons.Settings}" />
             </Grid>
 
-            <Border Style="{StaticResource HeartCardBorder}">
+            <Border Style="{StaticResource HeartCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout>
                     <Label Style="{StaticResource CardCaption}" Text="Average Heart Rate" />
                     <Label Style="{StaticResource CardValue}" Text="72 bpm" />
@@ -213,7 +218,9 @@
             <Grid Style="{StaticResource MetricGrid}"
                   ColumnDefinitions="*,*"
                   RowDefinitions="*,*">
-                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource MetricBorder}">
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="80">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[0].Icon}" />
                         <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[0].Title}" />
@@ -221,7 +228,9 @@
                         <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[0].Unit}" />
                     </VerticalStackLayout>
                 </Border>
-                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricBorder}">
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="140">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[1].Icon}" />
                         <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[1].Title}" />
@@ -229,7 +238,9 @@
                         <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[1].Unit}" />
                     </VerticalStackLayout>
                 </Border>
-                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource MetricBorder}">
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="200">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[2].Icon}" />
                         <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[2].Title}" />
@@ -237,7 +248,9 @@
                         <Label Style="{StaticResource MetricUnit}" Text="{Binding Metrics[2].Unit}" />
                     </VerticalStackLayout>
                 </Border>
-                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricBorder}">
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterDelay="260">
                     <VerticalStackLayout>
                         <Label Style="{StaticResource MetricIcon}" Text="{Binding Metrics[3].Icon}" />
                         <Label Style="{StaticResource MetricTitle}" Text="{Binding Metrics[3].Title}" />
@@ -248,38 +261,46 @@
             </Grid>
 
             <!-- Quick links to other kit screens -->
-            <Border Style="{StaticResource LinkCardBorder}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding TrackingCommand}" />
-                </Border.GestureRecognizers>
-                <Grid Style="{StaticResource LinkCardGrid}"
-                      ColumnDefinitions="Auto,*,Auto">
-                    <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
-                        <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
-                    </Border>
-                    <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
-                        <Label Style="{StaticResource LinkTitle}" Text="Order #2412" />
-                        <Label Style="{StaticResource LinkCaption}" Text="Out for delivery · ETA 12:30" />
-                    </VerticalStackLayout>
-                    <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                </Grid>
+            <Border Style="{StaticResource LinkCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="320">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding TrackingCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource LinkCardGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
+                            <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
+                            <Label Style="{StaticResource LinkTitle}" Text="Order #2412" />
+                            <Label Style="{StaticResource LinkCaption}" Text="Out for delivery · ETA 12:30" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
             </Border>
 
-            <Border Style="{StaticResource LinkCardBorder}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OnboardCommand}" />
-                </Border.GestureRecognizers>
-                <Grid Style="{StaticResource LinkCardGrid}"
-                      ColumnDefinitions="Auto,*,Auto">
-                    <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
-                        <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
-                    </Border>
-                    <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
-                        <Label Style="{StaticResource LinkTitle}" Text="Getting started" />
-                        <Label Style="{StaticResource LinkCaption}" Text="3 quick steps to set up your goals" />
-                    </VerticalStackLayout>
-                    <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                </Grid>
+            <Border Style="{StaticResource LinkCardBorder}"
+                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                    behaviors:AnimationOption.EnterDelay="380">
+                <toolkit:SfEffectsView TouchDownEffects="Ripple">
+                    <toolkit:SfEffectsView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OnboardCommand}" />
+                    </toolkit:SfEffectsView.GestureRecognizers>
+                    <Grid Style="{StaticResource LinkCardGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Border Grid.Column="0" Style="{StaticResource LinkIconBorder}">
+                            <Label Style="{StaticResource LinkIcon}" Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Style="{StaticResource LinkTextStack}">
+                            <Label Style="{StaticResource LinkTitle}" Text="Getting started" />
+                            <Label Style="{StaticResource LinkCaption}" Text="3 quick steps to set up your goals" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Style="{StaticResource LinkChevron}" Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                    </Grid>
+                </toolkit:SfEffectsView>
             </Border>
         </VerticalStackLayout>
     </ScrollView>

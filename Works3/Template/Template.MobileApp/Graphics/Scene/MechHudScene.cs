@@ -167,7 +167,7 @@ public sealed class MechHudScene : SceneObject
         DrawStatus(canvas, Time);
         DrawComm(canvas, Time);
         DrawMap(canvas, Time, vh);
-        DrawText(canvas, "GND-NAV OK   IFF ON   FCS LINKED   AP OFF", 200f, vh - 10f, 8.5f, Main.WithAlpha(110), align: SKTextAlign.Center);
+        DrawText(canvas, "GND-NAV OK   IFF ON   FCS LINKED   AP OFF", 200f, vh - 10f, 9f, Main.WithAlpha(110), align: SKTextAlign.Center);
 
         canvas.Restore();
 
@@ -229,10 +229,10 @@ public sealed class MechHudScene : SceneObject
             var active = i == sim.ActiveChannel;
             if (active)
             {
-                DrawText(canvas, ">", x0 + 12f, y, 9.5f, Amber, bold: true);
+                DrawText(canvas, ">", x0 + 12f, y, 10f, Amber, bold: true);
             }
 
-            DrawText(canvas, channels[i], x0 + 26f, y, 9.5f, active ? Amber : Main.WithAlpha(150), bold: active);
+            DrawText(canvas, channels[i], x0 + 26f, y, 10f, active ? Amber : Main.WithAlpha(150), bold: active);
         }
 
         // Waveform
@@ -360,7 +360,7 @@ public sealed class MechHudScene : SceneObject
                 using var tri = triBuilder.Detach();
                 Fill.Color = Cyan.WithAlpha(220);
                 canvas.DrawPath(tri, Fill);
-                DrawText(canvas, unit.Label, ux + 7f, uy + 3f, 7.5f, Cyan.WithAlpha(220));
+                DrawText(canvas, unit.Label, ux + 7f, uy + 3f, 8f, Cyan.WithAlpha(220));
             }
             else
             {
@@ -369,8 +369,8 @@ public sealed class MechHudScene : SceneObject
             }
         }
 
-        DrawText(canvas, "D2", MapX(-390f), MapY(460f) - 8f, 7.5f, Cyan.WithAlpha(160));
-        DrawText(canvas, "D3", MapX(465f), MapY(-395f) - 8f, 7.5f, Cyan.WithAlpha(160));
+        DrawText(canvas, "D2", MapX(-390f), MapY(460f) - 8f, 8f, Cyan.WithAlpha(160));
+        DrawText(canvas, "D3", MapX(465f), MapY(-395f) - 8f, 8f, Cyan.WithAlpha(160));
 
         // Hostiles
         foreach (var contact in sim.Contacts)
@@ -385,7 +385,7 @@ public sealed class MechHudScene : SceneObject
             using var tri = triBuilder.Detach();
             Fill.Color = Red.WithAlpha(220);
             canvas.DrawPath(tri, Fill);
-            DrawText(canvas, contact.Label, hx + 7f, hy + 3f, 7.5f, Red.WithAlpha(200));
+            DrawText(canvas, contact.Label, hx + 7f, hy + 3f, 8f, Red.WithAlpha(200));
         }
 
         // Own unit + ping ring
@@ -409,12 +409,12 @@ public sealed class MechHudScene : SceneObject
         }
 
         canvas.Restore();
-        DrawText(canvas, "D1-1", cx + 9f, cy + 3f, 7.5f, Bright.WithAlpha(200));
+        DrawText(canvas, "D1-1", cx + 9f, cy + 3f, 8f, Bright.WithAlpha(200));
 
         canvas.Restore();
 
         DrawText(canvas, "TAC MAP", x0, y0 - 8f, 9f, Main, bold: true);
-        DrawText(canvas, "GRID 200M  N-UP", x0 + w, y0 - 8f, 8.5f, Main.WithAlpha(150), align: SKTextAlign.Right);
+        DrawText(canvas, "GRID 200M  N-UP", x0 + w, y0 - 8f, 9f, Main.WithAlpha(150), align: SKTextAlign.Right);
     }
 
     private static SKPath BuildTerrain(float x0, float y0, float w, float h)

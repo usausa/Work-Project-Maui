@@ -15,9 +15,10 @@ public sealed class UIStreamSection
 {
     public string Title { get; init; } = string.Empty;
     public IReadOnlyList<UIStreamPoster> Items { get; init; } = [];
+    public int Delay { get; init; }
 }
 
-public sealed class UIStreamViewModel : AppViewModelBase
+public sealed partial class UIStreamViewModel : AppViewModelBase
 {
     public string HeroBadge { get; } = "NEW SEASON";
     public string HeroTitle { get; } = "Galactic Riders";
@@ -25,13 +26,19 @@ public sealed class UIStreamViewModel : AppViewModelBase
     public string HeroRating { get; } = "★ 8.4";
     public string HeroRatingSub { get; } = "Top rated today";
 
+    [ObservableProperty]
+    public partial bool InMyList { get; set; }
+
     public IReadOnlyList<UIStreamSection> Sections { get; }
 
     public IObserveCommand DetailCommand { get; }
 
+    public IObserveCommand MyListCommand { get; }
+
     public UIStreamViewModel()
     {
         DetailCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIStreamDetail));
+        MyListCommand = MakeDelegateCommand(() => InMyList = !InMyList);
 
         var posters = new[]
         {
@@ -44,10 +51,10 @@ public sealed class UIStreamViewModel : AppViewModelBase
 
         Sections =
         [
-            new() { Title = "Top Rated", Items = posters },
-            new() { Title = "Originals", Items = posters },
-            new() { Title = "Trending Now", Items = posters },
-            new() { Title = "Action & Adventure", Items = posters }
+            new() { Title = "Top Rated", Items = posters, Delay = 0 },
+            new() { Title = "Originals", Items = posters, Delay = 80 },
+            new() { Title = "Trending Now", Items = posters, Delay = 160 },
+            new() { Title = "Action & Adventure", Items = posters, Delay = 240 }
         ];
     }
 
