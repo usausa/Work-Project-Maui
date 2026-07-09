@@ -18,6 +18,24 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="*,*" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="ActionButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="8,0" />
@@ -31,20 +49,38 @@
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="RowSpacing" Value="8" />
+            <Style x:Key="BulkStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CountRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CountValueLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="32" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
+            </Style>
+
+            <Style x:Key="CountUnitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="CRUD"
                                Icon="{x:Static fonts:MaterialIcons.Storage}"
@@ -74,19 +110,13 @@
                                Icon="{x:Static fonts:MaterialIcons.Dns}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100">
-                <VerticalStackLayout Spacing="10">
+                <VerticalStackLayout Style="{StaticResource BulkStack}">
 
-                    <HorizontalStackLayout Spacing="8"
-                                           Padding="0,4">
-                        <Label FontFamily="JetBrainsMono"
-                               FontSize="32"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource BlueGrayDarken3}"
+                    <HorizontalStackLayout Style="{StaticResource CountRow}">
+                        <Label Style="{StaticResource CountValueLabel}"
                                behaviors:LabelOption.CountUpValue="{Binding BulkDataCount}"
                                behaviors:LabelOption.CountUpDuration="500" />
-                        <Label Style="{StaticResource NameLabel}"
-                               VerticalOptions="End"
-                               Margin="0,0,0,6"
+                        <Label Style="{StaticResource CountUnitLabel}"
                                Text="rows" />
                     </HorizontalStackLayout>
 
