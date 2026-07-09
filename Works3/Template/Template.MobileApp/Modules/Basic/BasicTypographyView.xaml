@@ -14,14 +14,35 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SampleStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Semantic"
                                Icon="{x:Static fonts:MaterialIcons.Format_size}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="4">
+                <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label Style="{StaticResource TitleLabel}"
                            Text="Title" />
                     <Label Style="{StaticResource HeaderLabel}"
@@ -37,7 +58,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Text_format}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="4">
+                <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelLeft, LabelMicro, LabelPrimary"
                            Text="Micro Primary" />
                     <Label StyleClass="LabelLeft, LabelSmall, LabelSecondary"
@@ -57,7 +78,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Text_format}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160">
-                <VerticalStackLayout Spacing="4">
+                <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelCenter, LabelMicro, LabelError"
                            Text="Micro Error" />
                     <Label StyleClass="LabelCenter, LabelSmall, LabelPrimary"
@@ -77,7 +98,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Text_format}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="4">
+                <VerticalStackLayout Style="{StaticResource SampleStack}">
                     <Label StyleClass="LabelRight, LabelMicro, LabelWarning"
                            Text="Micro Warning" />
                     <Label StyleClass="LabelRight, LabelSmall, LabelError"

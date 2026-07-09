@@ -23,6 +23,22 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="FieldGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
             <Style x:Key="FieldCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -36,6 +52,16 @@
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="ActionGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
             <Style x:Key="ActionButton"
@@ -55,14 +81,13 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Validate on Unfocused"
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="6">
+                <VerticalStackLayout Style="{StaticResource FieldGroupStack}">
                     <Label Style="{StaticResource FieldCaptionLabel}"
                            Text="Text1 (clears error on focus, validates on unfocused)" />
                     <Border Style="{StaticResource FieldBorder}"
@@ -85,7 +110,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Rule}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
                     <Label Style="{StaticResource FieldCaptionLabel}"
                            Text="Text2" />
                     <Border Style="{StaticResource FieldBorder}"
@@ -100,8 +125,8 @@
                            IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding Errors[Text2]}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text2]}" />
-                    <Grid ColumnDefinitions="*,*"
-                          ColumnSpacing="8">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 ImageSource="{markup:Material Glyph={x:Static fonts:MaterialIcons.Error}, Color={StaticResource RedDefault}, Size=18}"
@@ -120,7 +145,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Input}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Style="{StaticResource ActionGroupStack}">
                     <Label Style="{StaticResource FieldCaptionLabel}"
                            Text="Moves focus to the first field with an error" />
                     <Button Style="{StaticResource ActionButton}"
