@@ -24,22 +24,25 @@
                 <Setter Property="JustifyContent" Value="SpaceBetween" />
             </Style>
 
+            <Style x:Key="HeaderRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="HeaderIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="HeaderLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="36" />
                 <Setter Property="FontAttributes" Value="Bold" />
-            </Style>
-
-            <Style x:Key="NewsBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="8,4" />
-                <Setter Property="Padding" Value="8" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
             <Style x:Key="HeaderCountBorder"
@@ -51,6 +54,18 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 14" />
             </Style>
 
+            <Style x:Key="HeaderCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="RootRefresh"
+                   TargetType="RefreshView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
             <Style x:Key="SkeletonCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="8,4" />
@@ -59,6 +74,12 @@
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SkeletonGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
             <Style x:Key="SkeletonCircle"
@@ -79,6 +100,22 @@
                 <Setter Property="HorizontalOptions" Value="Fill" />
             </Style>
 
+            <Style x:Key="SkeletonBarThin"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource SkeletonBar}">
+                <Setter Property="HeightRequest" Value="12" />
+            </Style>
+
+            <Style x:Key="NewsBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
             <Style x:Key="NewsImage"
                    TargetType="Image">
                 <Setter Property="WidthRequest" Value="36" />
@@ -96,20 +133,20 @@
                 <Setter Property="MaxLines" Value="1" />
             </Style>
 
-            <Style x:Key="NewsSummaryLabel"
-                   TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
-                <Setter Property="MaxLines" Value="2" />
-            </Style>
-
             <Style x:Key="NewsTimestampLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style x:Key="NewsSummaryLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+                <Setter Property="MaxLines" Value="2" />
             </Style>
 
         </ResourceDictionary>
@@ -120,25 +157,20 @@
 
         <FlexLayout Grid.Row="0"
                     Style="{StaticResource HeaderLayout}">
-            <HorizontalStackLayout Spacing="8">
-                <Label VerticalOptions="Center"
-                       FontFamily="MaterialIcons"
-                       FontSize="28"
-                       TextColor="White"
+            <HorizontalStackLayout Style="{StaticResource HeaderRow}">
+                <Label Style="{StaticResource HeaderIcon}"
                        Text="{x:Static fonts:MaterialIcons.Newspaper}" />
                 <Label Style="{StaticResource HeaderLabel}"
                        Text="News" />
             </HorizontalStackLayout>
             <Border Style="{StaticResource HeaderCountBorder}">
-                <Label FontSize="14"
-                       FontAttributes="Bold"
-                       TextColor="White"
+                <Label Style="{StaticResource HeaderCountLabel}"
                        Text="{Binding Items.Count, StringFormat='{0} items'}" />
             </Border>
         </FlexLayout>
 
         <RefreshView Grid.Row="1"
-                     BackgroundColor="{StaticResource GrayLighten5}"
+                     Style="{StaticResource RootRefresh}"
                      Command="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Items}">
@@ -149,59 +181,51 @@
                     <!-- 初回ロード中のスケルトン -->
                     <VerticalStackLayout>
                         <Border Style="{StaticResource SkeletonCardBorder}">
-                            <Grid RowDefinitions="Auto,Auto"
-                                  ColumnDefinitions="44,*,60"
-                                  RowSpacing="8"
-                                  ColumnSpacing="8">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
                                 <BoxView Grid.RowSpan="2" Grid.Column="0"
                                          Style="{StaticResource SkeletonCircle}" />
                                 <BoxView Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource SkeletonBar}" />
                                 <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                         Style="{StaticResource SkeletonBar}"
-                                         HeightRequest="12" />
+                                         Style="{StaticResource SkeletonBarThin}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SkeletonCardBorder}">
-                            <Grid RowDefinitions="Auto,Auto"
-                                  ColumnDefinitions="44,*,60"
-                                  RowSpacing="8"
-                                  ColumnSpacing="8">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
                                 <BoxView Grid.RowSpan="2" Grid.Column="0"
                                          Style="{StaticResource SkeletonCircle}" />
                                 <BoxView Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource SkeletonBar}" />
                                 <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                         Style="{StaticResource SkeletonBar}"
-                                         HeightRequest="12" />
+                                         Style="{StaticResource SkeletonBarThin}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SkeletonCardBorder}">
-                            <Grid RowDefinitions="Auto,Auto"
-                                  ColumnDefinitions="44,*,60"
-                                  RowSpacing="8"
-                                  ColumnSpacing="8">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
                                 <BoxView Grid.RowSpan="2" Grid.Column="0"
                                          Style="{StaticResource SkeletonCircle}" />
                                 <BoxView Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource SkeletonBar}" />
                                 <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                         Style="{StaticResource SkeletonBar}"
-                                         HeightRequest="12" />
+                                         Style="{StaticResource SkeletonBarThin}" />
                             </Grid>
                         </Border>
                         <Border Style="{StaticResource SkeletonCardBorder}">
-                            <Grid RowDefinitions="Auto,Auto"
-                                  ColumnDefinitions="44,*,60"
-                                  RowSpacing="8"
-                                  ColumnSpacing="8">
+                            <Grid Style="{StaticResource SkeletonGrid}"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="44,*,60">
                                 <BoxView Grid.RowSpan="2" Grid.Column="0"
                                          Style="{StaticResource SkeletonCircle}" />
                                 <BoxView Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource SkeletonBar}" />
                                 <BoxView Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                         Style="{StaticResource SkeletonBar}"
-                                         HeightRequest="12" />
+                                         Style="{StaticResource SkeletonBarThin}" />
                             </Grid>
                         </Border>
                     </VerticalStackLayout>

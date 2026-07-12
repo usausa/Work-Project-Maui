@@ -22,11 +22,51 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource FillGrid}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="FrameBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="PlayerPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="PlayerStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SeekStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="TimeLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TransportRow"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="24" />
             </Style>
 
             <Style x:Key="TransportButton"
@@ -57,17 +97,11 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto"
-          BackgroundColor="{StaticResource GrayLighten5}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
         <Border Grid.Row="0"
-                Margin="12"
-                Padding="8"
-                BackgroundColor="White"
-                Stroke="{StaticResource GrayLighten1}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 16"
+                Style="{StaticResource FrameBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <extended:SKLottieView Source="Lottie/popping.json"
                                    Progress="{Binding Progress}"
@@ -77,13 +111,10 @@
 
         <!-- プレイヤーコントロール -->
         <Border Grid.Row="1"
-                Padding="16,12"
-                BackgroundColor="White"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 16,16,0,0">
-            <VerticalStackLayout Spacing="8">
+                Style="{StaticResource PlayerPanelBorder}">
+            <VerticalStackLayout Style="{StaticResource PlayerStack}">
 
-                <VerticalStackLayout Spacing="2">
+                <VerticalStackLayout Style="{StaticResource SeekStack}">
                     <Slider Minimum="0"
                             Maximum="{Binding DurationSeconds}"
                             Value="{Binding ProgressSeconds, Mode=OneWay}"
@@ -98,8 +129,7 @@
                     </Grid>
                 </VerticalStackLayout>
 
-                <HorizontalStackLayout HorizontalOptions="Center"
-                                       Spacing="24">
+                <HorizontalStackLayout Style="{StaticResource TransportRow}">
                     <Button Style="{StaticResource TransportButton}"
                             VerticalOptions="Center"
                             Command="{Binding ResetCommand}"

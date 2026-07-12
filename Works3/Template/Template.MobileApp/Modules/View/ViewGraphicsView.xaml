@@ -20,6 +20,43 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CardContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CanvasBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HeightRequest" Value="280" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="CountChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="ActionButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="8,0" />
@@ -33,36 +70,35 @@
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
+            <Style x:Key="NoteLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Shape drawing"
                                Icon="{x:Static fonts:MaterialIcons.Format_paint}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="10">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
 
-                    <Border Padding="0"
-                            HeightRequest="280"
-                            BackgroundColor="White"
-                            Stroke="{StaticResource GrayLighten2}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 8">
+                    <Border Style="{StaticResource CanvasBorder}">
                         <drawing:DrawingControl Drawing="{Binding Drawing}" />
                     </Border>
 
-                    <controls:StatusChip HorizontalOptions="Start"
+                    <controls:StatusChip Style="{StaticResource CountChip}"
                                          Icon="{x:Static fonts:MaterialIcons.Palette}"
                                          Text="{Binding ShapeCount, StringFormat='{0} shapes'}" />
 
-                    <Grid ColumnDefinitions="*,*"
-                          ColumnSpacing="8"
-                          RowDefinitions="Auto,Auto"
-                          RowSpacing="8">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*"
+                          RowDefinitions="Auto,Auto">
                         <Button Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
                                 Command="{Binding AddLineCommand}"
@@ -82,8 +118,7 @@
                                 Text="Clear" />
                     </Grid>
 
-                    <Label FontSize="14"
-                           TextColor="{StaticResource SecondaryTextColor}"
+                    <Label Style="{StaticResource NoteLabel}"
                            Text="Shapes are added to a DrawingControl and redrawn with Invalidate()" />
 
                 </VerticalStackLayout>

@@ -18,6 +18,23 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ClickGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="AnimationButton"
                    TargetType="Button">
                 <Setter Property="HeightRequest" Value="48" />
@@ -25,6 +42,27 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="TapStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="HintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="TileRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SequenceAreaGrid"
+                   TargetType="Grid">
+                <Setter Property="HeightRequest" Value="140" />
             </Style>
 
             <Style x:Key="AnimationBorder"
@@ -45,26 +83,36 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="HintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            <Style x:Key="OrangeTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+            </Style>
+
+            <Style x:Key="PurpleTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="PinkTile"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AnimationBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Click animation (Button)"
                                Icon="{x:Static fonts:MaterialIcons.Touch_app}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="*,*"
-                      RowSpacing="8"
-                      ColumnSpacing="8">
+                <Grid Style="{StaticResource ClickGrid}"
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
 
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource AnimationButton}"
@@ -135,16 +183,15 @@
                                Icon="{x:Static fonts:MaterialIcons.Play_arrow}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100">
-                <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Style="{StaticResource TapStack}">
 
                     <Label Style="{StaticResource HintLabel}"
                            Text="Tap each tile to play its animation" />
 
-                    <Grid ColumnDefinitions="*,*"
-                          ColumnSpacing="8">
+                    <Grid Style="{StaticResource TileRowGrid}"
+                          ColumnDefinitions="*,*">
                         <Border Grid.Column="0"
-                                Style="{StaticResource AnimationBorder}"
-                                BackgroundColor="{StaticResource OrangeDefault}">
+                                Style="{StaticResource OrangeTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>
@@ -162,8 +209,7 @@
                         </Border>
 
                         <Border Grid.Column="1"
-                                Style="{StaticResource AnimationBorder}"
-                                BackgroundColor="{StaticResource OrangeDefault}">
+                                Style="{StaticResource OrangeTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>
@@ -176,11 +222,10 @@
                         </Border>
                     </Grid>
 
-                    <Grid HeightRequest="140">
-                        <Border Style="{StaticResource AnimationBorder}"
+                    <Grid Style="{StaticResource SequenceAreaGrid}">
+                        <Border Style="{StaticResource PurpleTile}"
                                 HorizontalOptions="Start"
-                                VerticalOptions="End"
-                                BackgroundColor="{StaticResource PurpleDefault}">
+                                VerticalOptions="End">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>
@@ -211,8 +256,7 @@
                         </Border>
                     </Grid>
 
-                    <Border Style="{StaticResource AnimationBorder}"
-                            BackgroundColor="{StaticResource PinkDefault}">
+                    <Border Style="{StaticResource PinkTile}">
                         <Border.Behaviors>
                             <s:TapActionBehavior>
                                 <s:BeginAnimationAction>
