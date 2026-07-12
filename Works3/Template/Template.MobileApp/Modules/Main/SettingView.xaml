@@ -19,16 +19,90 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <s:NullToBoolConverter x:Key="EmptyConverter"
+                                   HandleEmptyString="True"
+                                   NullValue="True"
+                                   NonNullValue="False" />
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource FillGrid}">
+                <Setter Property="BackgroundColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="GuideBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="BackgroundColor" Value="#99000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            </Style>
+
+            <Style x:Key="GuideStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="GuideIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="GuideLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SettingPanelBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="SettingPanelStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="SectionHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="SectionHeaderIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SectionHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SettingGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="SettingCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
-
-            <s:NullToBoolConverter x:Key="EmptyConverter"
-                                   HandleEmptyString="True"
-                                   NullValue="True"
-                                   NonNullValue="False" />
 
             <Style x:Key="SettingValueLabel"
                    TargetType="Label">
@@ -46,13 +120,18 @@
                 <Setter Property="Text" Value="(not set)" />
             </Style>
 
+            <Style x:Key="PanelDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="*,Auto"
-          BackgroundColor="Black">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
         <scanner:CameraView Grid.Row="0"
                             behaviors:BarcodeBind.Controller="{Binding Controller}"
@@ -60,49 +139,31 @@
 
         <!-- スキャンガイド -->
         <Border Grid.Row="0"
-                Margin="0,12,0,0"
-                Padding="12,6"
-                HorizontalOptions="Center"
-                VerticalOptions="Start"
-                BackgroundColor="#99000000"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 16">
-            <HorizontalStackLayout Spacing="6">
-                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                       FontSize="16"
-                       TextColor="White"
-                       VerticalOptions="Center"
+                Style="{StaticResource GuideBorder}">
+            <HorizontalStackLayout Style="{StaticResource GuideStack}">
+                <Label Style="{StaticResource GuideIcon}"
                        Text="{x:Static fonts:MaterialIcons.Qr_code}" />
-                <Label FontSize="14"
-                       TextColor="White"
-                       VerticalOptions="Center"
+                <Label Style="{StaticResource GuideLabel}"
                        Text="Scan configuration QR" />
             </HorizontalStackLayout>
         </Border>
 
         <!-- 設定値パネル -->
         <Border Grid.Row="1"
-                Padding="16,12"
-                BackgroundColor="White"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 16,16,0,0">
-            <VerticalStackLayout Spacing="10">
+                Style="{StaticResource SettingPanelBorder}">
+            <VerticalStackLayout Style="{StaticResource SettingPanelStack}">
 
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="8">
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
                     <Label Grid.Column="0"
-                           FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                           FontSize="20"
-                           TextColor="{StaticResource BlueGrayDarken2}"
-                           VerticalOptions="Center"
+                           Style="{StaticResource SectionHeaderIcon}"
                            Text="{x:Static fonts:MaterialIcons.Public}" />
                     <Label Grid.Column="1"
-                           Style="{StaticResource NameLabel}"
-                           VerticalOptions="Center"
+                           Style="{StaticResource SectionHeaderLabel}"
                            Text="Network" />
                 </Grid>
 
-                <VerticalStackLayout Spacing="2">
+                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
                     <Label Style="{StaticResource SettingCaptionLabel}"
                            Text="EndPoint" />
                     <Label Style="{StaticResource SettingValueLabel}"
@@ -113,24 +174,19 @@
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource EmptyConverter}}" />
                 </VerticalStackLayout>
 
-                <BoxView HeightRequest="1"
-                         Color="{StaticResource GrayLighten2}" />
+                <BoxView Style="{StaticResource PanelDivider}" />
 
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="8">
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
                     <Label Grid.Column="0"
-                           FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                           FontSize="20"
-                           TextColor="{StaticResource BlueGrayDarken2}"
-                           VerticalOptions="Center"
+                           Style="{StaticResource SectionHeaderIcon}"
                            Text="{x:Static fonts:MaterialIcons.Memory}" />
                     <Label Grid.Column="1"
-                           Style="{StaticResource NameLabel}"
-                           VerticalOptions="Center"
+                           Style="{StaticResource SectionHeaderLabel}"
                            Text="AI Service" />
                 </Grid>
 
-                <VerticalStackLayout Spacing="2">
+                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
                     <Label Style="{StaticResource SettingCaptionLabel}"
                            Text="EndPoint" />
                     <Label Style="{StaticResource SettingValueLabel}"
@@ -141,7 +197,7 @@
                            IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource EmptyConverter}}" />
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="2">
+                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
                     <Label Style="{StaticResource SettingCaptionLabel}"
                            Text="ServiceKey" />
                     <Label Style="{StaticResource SettingValueLabel}"

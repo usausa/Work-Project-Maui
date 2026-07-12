@@ -17,6 +17,17 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
             <Style x:Key="StatBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="8" />
@@ -26,17 +37,21 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
+            <Style x:Key="StatGraph"
+                   TargetType="controls:StatControl">
+                <Setter Property="HeightRequest" Value="110" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <Border Style="{StaticResource StatBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <controls:StatControl HeightRequest="110"
+                <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding CpuLoadSet}"
                                       GraphColor="{StaticResource BlueDefault}"
                                       Label="CPU used" />
@@ -45,7 +60,7 @@
             <Border Style="{StaticResource StatBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="80">
-                <controls:StatControl HeightRequest="110"
+                <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding MemoryLoadSet}"
                                       GraphColor="{StaticResource GreenDefault}"
                                       Label="Memory used" />
@@ -54,7 +69,7 @@
             <Border Style="{StaticResource StatBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="160">
-                <controls:StatControl HeightRequest="110"
+                <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding NetworkLoadSet}"
                                       GraphColor="{StaticResource OrangeDefault}"
                                       Label="Network I/O" />
