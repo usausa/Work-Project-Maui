@@ -210,7 +210,7 @@
                 <Grid ColumnDefinitions="Auto,*,16">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Account_circle}, Color=White, Size=30}" />
+                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Account_circle}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
                            Style="{StaticResource InputEntry}"
@@ -226,7 +226,7 @@
                 <Grid ColumnDefinitions="Auto,*,Auto,8">
                     <Border Grid.Column="0"
                             Style="{StaticResource InputImageBorder}">
-                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Key}, Color=White, Size=30}" />
+                        <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Key}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
                            Style="{StaticResource InputEntry}"
