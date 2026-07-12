@@ -12,28 +12,64 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <Grid BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout VerticalOptions="Center"
-                             Spacing="16">
-            <Border Padding="0"
-                    WidthRequest="96"
-                    HeightRequest="96"
-                    HorizontalOptions="Center"
-                    BackgroundColor="{StaticResource GrayLighten3}"
-                    StrokeThickness="0"
-                    StrokeShape="RoundRectangle 48">
-                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                       FontSize="48"
-                       TextColor="{StaticResource GrayDefault}"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource RootGrid}">
+        <VerticalStackLayout Style="{StaticResource EmptyStack}">
+            <Border Style="{StaticResource EmptyIconBorder}">
+                <Label Style="{StaticResource EmptyIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Wifi_off}" />
             </Border>
-            <Label Style="{StaticResource NameLabel}"
-                   HorizontalOptions="Center"
+            <Label Style="{StaticResource EmptyTitleLabel}"
                    Text="Not implemented" />
-            <Label Style="{StaticResource ValueLabel}"
-                   HorizontalOptions="Center"
+            <Label Style="{StaticResource EmptyHintLabel}"
                    Text="WiFi sample is not available yet" />
         </VerticalStackLayout>
     </Grid>

@@ -23,6 +23,66 @@
                                    NullValue="True"
                                    NonNullValue="False" />
 
+            <Style x:Key="RootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="CardContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="10" />
+            </Style>
+
+            <Style x:Key="CoordGroupStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="CoordCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -37,12 +97,45 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
             </Style>
 
+            <Style x:Key="CardDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+            </Style>
+
+            <Style x:Key="TimestampGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="TimestampIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="TimestampLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="MotionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="240,*"
-          BackgroundColor="{StaticResource GrayLighten5}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="240,*">
 
         <!-- 現在地マップ(タイル表示には Google Maps API キーの設定が必要) -->
         <maps:Map Grid.Row="0"
@@ -51,70 +144,48 @@
 
         <!-- 測位待ちの空状態 -->
         <VerticalStackLayout Grid.Row="1"
-                             VerticalOptions="Center"
-                             Spacing="16"
+                             Style="{StaticResource EmptyStack}"
                              IsVisible="{Binding Location, Converter={StaticResource NullConverter}}">
-            <Border Padding="0"
-                    WidthRequest="96"
-                    HeightRequest="96"
-                    HorizontalOptions="Center"
-                    BackgroundColor="{StaticResource BlueLighten5}"
-                    StrokeThickness="0"
-                    StrokeShape="RoundRectangle 48"
+            <Border Style="{StaticResource EmptyIconBorder}"
                     behaviors:AnimationOption.Pulse="True">
-                <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                       FontSize="48"
-                       TextColor="{StaticResource BlueDefault}"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
+                <Label Style="{StaticResource EmptyIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.My_location}" />
             </Border>
-            <Label Style="{StaticResource NameLabel}"
-                   HorizontalOptions="Center"
+            <Label Style="{StaticResource EmptyTitleLabel}"
                    Text="Acquiring location..." />
-            <Label Style="{StaticResource ValueLabel}"
-                   HorizontalOptions="Center"
+            <Label Style="{StaticResource EmptyHintLabel}"
                    Text="Waiting for GPS fix" />
         </VerticalStackLayout>
 
         <!-- 測位結果 -->
         <ScrollView Grid.Row="1"
                     IsVisible="{Binding Location, Converter={StaticResource NotEmptyConverter}}">
-            <VerticalStackLayout Padding="12"
-                                 Spacing="12">
+            <VerticalStackLayout Style="{StaticResource PageStack}">
 
                 <controls:InfoCard Title="Position"
                                    Icon="{x:Static fonts:MaterialIcons.My_location}"
                                    behaviors:AnimationOption.EnterAnimation="FadeUp">
-                    <VerticalStackLayout Spacing="10"
-                                         Padding="0,4">
-                        <VerticalStackLayout Spacing="2">
+                    <VerticalStackLayout Style="{StaticResource CardContentStack}">
+                        <VerticalStackLayout Style="{StaticResource CoordGroupStack}">
                             <Label Style="{StaticResource CoordCaptionLabel}"
                                    Text="Latitude" />
                             <Label Style="{StaticResource CoordValueLabel}"
                                    Text="{Binding Location.Latitude, StringFormat='{0:F6}'}" />
                         </VerticalStackLayout>
-                        <VerticalStackLayout Spacing="2">
+                        <VerticalStackLayout Style="{StaticResource CoordGroupStack}">
                             <Label Style="{StaticResource CoordCaptionLabel}"
                                    Text="Longitude" />
                             <Label Style="{StaticResource CoordValueLabel}"
                                    Text="{Binding Location.Longitude, StringFormat='{0:F6}'}" />
                         </VerticalStackLayout>
-                        <BoxView HeightRequest="1"
-                                 Color="{StaticResource GrayLighten2}" />
-                        <Grid ColumnDefinitions="Auto,*"
-                              ColumnSpacing="8">
+                        <BoxView Style="{StaticResource CardDivider}" />
+                        <Grid Style="{StaticResource TimestampGrid}"
+                              ColumnDefinitions="Auto,*">
                             <Label Grid.Column="0"
-                                   FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                                   FontSize="16"
-                                   TextColor="{StaticResource BlueGrayDarken1}"
-                                   VerticalOptions="Center"
+                                   Style="{StaticResource TimestampIcon}"
                                    Text="{x:Static fonts:MaterialIcons.Schedule}" />
                             <Label Grid.Column="1"
-                                   FontFamily="JetBrainsMono"
-                                   FontSize="14"
-                                   TextColor="{StaticResource SecondaryTextColor}"
-                                   VerticalOptions="Center"
+                                   Style="{StaticResource TimestampLabel}"
                                    Text="{Binding Location.Timestamp.LocalDateTime, StringFormat='{0:yyyy-MM-dd HH:mm:ss}'}"
                                    behaviors:AnimationOption.HighlightTrigger="{Binding Location.Timestamp}"
                                    behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
@@ -126,10 +197,9 @@
                                    Icon="{x:Static fonts:MaterialIcons.Directions_run}"
                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                                    behaviors:AnimationOption.EnterDelay="100">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                          ColumnDefinitions="2*,3*"
-                          RowSpacing="8"
-                          Padding="0,4">
+                    <Grid Style="{StaticResource MotionGrid}"
+                          RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Altitude" />

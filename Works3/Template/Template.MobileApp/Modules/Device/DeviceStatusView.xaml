@@ -18,6 +18,36 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="BatteryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="BatteryIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="BatteryStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
             <Style x:Key="BigValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
@@ -31,26 +61,32 @@
                 <Setter Property="Margin" Value="0,0,8,8" />
             </Style>
 
+            <Style x:Key="NetworkStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="NetworkGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Battery"
                                Icon="{x:Static fonts:MaterialIcons.Bolt}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="16"
-                      Padding="0,4">
+                <Grid Style="{StaticResource BatteryGrid}"
+                      ColumnDefinitions="Auto,*">
 
                     <Label Grid.Column="0"
-                           FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                           FontSize="48"
-                           TextColor="{StaticResource BlueGrayDarken2}"
-                           VerticalOptions="Center">
+                           Style="{StaticResource BatteryIconLabel}">
                         <Label.Text>
                             <MultiBinding Converter="{StaticResource BatteryIconConverter}">
                                 <Binding Path="DeviceState.BatteryChargeLevel" />
@@ -68,7 +104,7 @@
                     </Label>
 
                     <VerticalStackLayout Grid.Column="1"
-                                         Spacing="8">
+                                         Style="{StaticResource BatteryStack}">
                         <Label Style="{StaticResource BigValueLabel}"
                                Text="{Binding DeviceState.BatteryChargeLevel, StringFormat='{0:P0}'}" />
                         <ProgressBar Progress="{Binding DeviceState.BatteryChargeLevel}"
@@ -98,8 +134,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Network_wifi}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100">
-                <VerticalStackLayout Spacing="4"
-                                     Padding="0,4">
+                <VerticalStackLayout Style="{StaticResource NetworkStack}">
 
                     <FlexLayout Wrap="Wrap">
                         <controls:StatusChip Style="{StaticResource StateChip}"
@@ -138,9 +173,9 @@
                                              Text="{Binding DeviceState.NetworkAccess}" />
                     </FlexLayout>
 
-                    <Grid RowDefinitions="Auto,Auto,Auto"
-                          ColumnDefinitions="2*,3*"
-                          RowSpacing="8">
+                    <Grid Style="{StaticResource NetworkGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource NameLabel}"
                                Text="Profile" />

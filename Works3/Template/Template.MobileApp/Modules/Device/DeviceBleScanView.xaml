@@ -18,6 +18,45 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="SensorBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="6,3" />
@@ -88,29 +127,15 @@
 
     <CollectionView ItemsSource="{Binding Devices}">
         <CollectionView.EmptyView>
-            <VerticalStackLayout VerticalOptions="Center"
-                                 Spacing="16">
-                <Border Padding="0"
-                        WidthRequest="96"
-                        HeightRequest="96"
-                        HorizontalOptions="Center"
-                        BackgroundColor="{StaticResource BlueLighten5}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 48"
+            <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                <Border Style="{StaticResource EmptyIconBorder}"
                         behaviors:AnimationOption.Pulse="True">
-                    <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                           FontSize="48"
-                           TextColor="{StaticResource BlueDefault}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
+                    <Label Style="{StaticResource EmptyIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Bluetooth_searching}" />
                 </Border>
-                <Label Style="{StaticResource NameLabel}"
-                       HorizontalOptions="Center"
+                <Label Style="{StaticResource EmptyTitleLabel}"
                        Text="Scanning..." />
-                <Label FontSize="18"
-                       TextColor="{StaticResource SecondaryTextColor}"
-                       HorizontalOptions="Center"
+                <Label Style="{StaticResource EmptyHintLabel}"
                        Text="Waiting for SwitchBot sensors" />
             </VerticalStackLayout>
         </CollectionView.EmptyView>

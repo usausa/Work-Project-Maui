@@ -167,6 +167,47 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
             </Style>
 
+            <Style x:Key="EmptyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="16" />
+            </Style>
+
+            <Style x:Key="EmptyIconBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 48" />
+            </Style>
+
+            <Style x:Key="EmptyIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="48" />
+                <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyTitleLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="EmptyHintLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -198,31 +239,15 @@
                         Style="{StaticResource LogCollectionView}"
                         ItemsSource="{Binding Logs}">
             <CollectionView.EmptyView>
-                <VerticalStackLayout VerticalOptions="Center"
-                                     Spacing="16">
-                    <Border Padding="0"
-                            WidthRequest="96"
-                            HeightRequest="96"
-                            HorizontalOptions="Center"
-                            BackgroundColor="{StaticResource MetroGrayDark}"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 48"
+                <VerticalStackLayout Style="{StaticResource EmptyStack}">
+                    <Border Style="{StaticResource EmptyIconBorder}"
                             behaviors:AnimationOption.Pulse="True">
-                        <Label FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                               FontSize="48"
-                               TextColor="{StaticResource MetroGreen}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"
+                        <Label Style="{StaticResource EmptyIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Contactless}" />
                     </Border>
-                    <Label FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           HorizontalOptions="Center"
+                    <Label Style="{StaticResource EmptyTitleLabel}"
                            Text="Suica をかざしてください" />
-                    <Label FontSize="14"
-                           TextColor="{StaticResource GrayLighten1}"
-                           HorizontalOptions="Center"
+                    <Label Style="{StaticResource EmptyHintLabel}"
                            Text="読み取ると残高と利用履歴を表示します" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

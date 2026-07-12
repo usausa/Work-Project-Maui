@@ -18,6 +18,17 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
             <Style x:Key="ActionRowBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="0" />
@@ -52,6 +63,12 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="ActionTextStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="ActionDetailLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
@@ -67,13 +84,48 @@
                 <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Chevron_right}" />
             </Style>
 
+            <Style x:Key="DialIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
+            </Style>
+
+            <Style x:Key="DialIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+            </Style>
+
+            <Style x:Key="SmsIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="SmsIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
+            </Style>
+
+            <Style x:Key="EmailIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource ActionIconBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten5}" />
+            </Style>
+
+            <Style x:Key="EmailIconLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ActionIconLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <Border Style="{StaticResource ActionRowBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp">
@@ -83,15 +135,12 @@
                     </toolkit:SfEffectsView.GestureRecognizers>
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Border Grid.Column="0"
-                                Style="{StaticResource ActionIconBorder}"
-                                BackgroundColor="{StaticResource GreenLighten5}">
-                            <Label Style="{StaticResource ActionIconLabel}"
-                                   TextColor="{StaticResource GreenDarken2}"
+                                Style="{StaticResource DialIconBorder}">
+                            <Label Style="{StaticResource DialIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Call}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1"
-                                             VerticalOptions="Center"
-                                             Spacing="2">
+                                             Style="{StaticResource ActionTextStack}">
                             <Label Style="{StaticResource NameLabel}"
                                    Text="Dial" />
                             <Label Style="{StaticResource ActionDetailLabel}"
@@ -112,15 +161,12 @@
                     </toolkit:SfEffectsView.GestureRecognizers>
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Border Grid.Column="0"
-                                Style="{StaticResource ActionIconBorder}"
-                                BackgroundColor="{StaticResource BlueLighten5}">
-                            <Label Style="{StaticResource ActionIconLabel}"
-                                   TextColor="{StaticResource BlueDarken2}"
+                                Style="{StaticResource SmsIconBorder}">
+                            <Label Style="{StaticResource SmsIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Sms}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1"
-                                             VerticalOptions="Center"
-                                             Spacing="2">
+                                             Style="{StaticResource ActionTextStack}">
                             <Label Style="{StaticResource NameLabel}"
                                    Text="SMS" />
                             <Label Style="{StaticResource ActionDetailLabel}"
@@ -141,15 +187,12 @@
                     </toolkit:SfEffectsView.GestureRecognizers>
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Border Grid.Column="0"
-                                Style="{StaticResource ActionIconBorder}"
-                                BackgroundColor="{StaticResource RedLighten5}">
-                            <Label Style="{StaticResource ActionIconLabel}"
-                                   TextColor="{StaticResource RedDarken2}"
+                                Style="{StaticResource EmailIconBorder}">
+                            <Label Style="{StaticResource EmailIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Mail}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1"
-                                             VerticalOptions="Center"
-                                             Spacing="2">
+                                             Style="{StaticResource ActionTextStack}">
                             <Label Style="{StaticResource NameLabel}"
                                    Text="Email" />
                             <Label Style="{StaticResource ActionDetailLabel}"

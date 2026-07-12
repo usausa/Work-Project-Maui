@@ -19,6 +19,28 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RootScroll"
+                   TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="PageStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ActionStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnDefinitions" Value="*,*" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="ActionButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="8,0" />
@@ -33,24 +55,42 @@
                 <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
-            <Style x:Key="ActionRowGrid"
+            <Style x:Key="ListeningGrid"
                    TargetType="Grid">
-                <Setter Property="ColumnDefinitions" Value="*,*" />
                 <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ListeningIcon"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ListeningLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RecognizeTextLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Screen"
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
@@ -100,7 +140,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Vibration}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
@@ -150,7 +190,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Record_voice_over}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="8">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
                     <Grid Style="{StaticResource ActionRowGrid}">
                         <Button Grid.Column="0"
                                 Style="{StaticResource ActionButton}"
@@ -168,24 +208,19 @@
                             Command="{Binding RecognizeCommand}"
                             Text="Recognize" />
 
-                    <Grid ColumnDefinitions="Auto,*"
-                          ColumnSpacing="8"
+                    <Grid Style="{StaticResource ListeningGrid}"
+                          ColumnDefinitions="Auto,*"
                           IsVisible="{Binding IsListening}">
                         <Label Grid.Column="0"
-                               FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
-                               FontSize="20"
-                               TextColor="{StaticResource RedDefault}"
-                               VerticalOptions="Center"
+                               Style="{StaticResource ListeningIcon}"
                                Text="{x:Static fonts:MaterialIcons.Mic}"
                                behaviors:AnimationOption.Pulse="True" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               VerticalOptions="Center"
+                               Style="{StaticResource ListeningLabel}"
                                Text="Listening..." />
                     </Grid>
 
-                    <Label Style="{StaticResource ValueLabel}"
-                           TextColor="{StaticResource PrimaryTextColor}"
+                    <Label Style="{StaticResource RecognizeTextLabel}"
                            IsVisible="{Binding RecognizeText, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding RecognizeText}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding RecognizeText}" />
