@@ -421,6 +421,26 @@ public static class AnimationOption
 
     public static void SetEnterTrigger(BindableObject bindable, object? value) => bindable.SetValue(EnterTriggerProperty, value);
 
+    // 演出で TranslationY を動かすため、要素が元々持っていた値(Style 等の静的オフセット)を退避しておく
+    private static readonly BindableProperty EnterBaseTranslationYProperty = BindableProperty.CreateAttached(
+        "EnterBaseTranslationY",
+        typeof(double?),
+        typeof(AnimationOption),
+        null);
+
+    // 初回呼び出し時のみ現在値を基準として記憶する(2回目以降は演出中の値を拾わないようにする)
+    private static double GetEnterBaseTranslationY(VisualElement element)
+    {
+        if (element.GetValue(EnterBaseTranslationYProperty) is double baseTranslationY)
+        {
+            return baseTranslationY;
+        }
+
+        baseTranslationY = element.TranslationY;
+        element.SetValue(EnterBaseTranslationYProperty, baseTranslationY);
+        return baseTranslationY;
+    }
+
     private static void OnEnterAnimationChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if (bindable is not VisualElement element)
@@ -490,10 +510,12 @@ public static class AnimationOption
         if (GetEnterAnimation(element) == EnterAnimationType.FadeUp)
         {
             element.Opacity = 0;
-            element.TranslationY = 16;
+            element.TranslationY = GetEnterBaseTranslationY(element) + 16;
         }
         else
         {
+            // Pop は TranslationY を使わないが、基準値の取得漏れを防ぐためここで確定させる
+            GetEnterBaseTranslationY(element);
             element.Opacity = 0;
             element.Scale = 0;
         }
@@ -526,12 +548,13 @@ public static class AnimationOption
         if (GetEnterAnimation(element) == EnterAnimationType.FadeUp)
         {
             // 下から浮き上がりながらフェードイン
+            var baseTranslationY = GetEnterBaseTranslationY(element);
             element.Animate(
                 EnterAnimationName,
                 v =>
                 {
                     element.Opacity = v;
-                    element.TranslationY = 16 * (1 - v);
+                    element.TranslationY = baseTranslationY + (16 * (1 - v));
                 },
                 16,
                 250,
@@ -558,7 +581,8 @@ public static class AnimationOption
     private static void ResetEnter(VisualElement element)
     {
         element.Opacity = 1;
-        element.TranslationY = 0;
+        // 0 固定にすると Style 等で指定された静的な TranslationY を壊すため、退避した基準値へ戻す
+        element.TranslationY = GetEnterBaseTranslationY(element);
         element.Scale = 1;
     }
 

@@ -140,17 +140,16 @@
             <Style x:Key="RankBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="320" />
-                <Setter Property="TranslationY" Value="-20" />
+                <!-- Lift with a negative margin instead of TranslationY, which is not applied to Shadow on Android -->
+                <Setter Property="Margin" Value="0,-20,0,20" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 18" />
                 <Setter Property="StrokeThickness" Value="2" />
                 <Setter Property="Stroke" Value="{StaticResource RedLighten3}" />
-                <!-- TranslationY is not applied to Shadow on Android
                 <Setter Property="Shadow">
                     <Shadow Brush="{StaticResource RedLighten1}"
                             Opacity="0.5" Radius="12" />
                 </Setter>
-                -->
             </Style>
             <Style x:Key="RankEffect"
                    TargetType="toolkit:SfEffectsView">
