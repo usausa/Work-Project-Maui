@@ -20,6 +20,9 @@ public partial class DiagnosticPanel
 
     private bool isMonitoring;
 
+    // StartTimerは次のtickまで停止できないため、世代番号で古いタイマーを打ち切る
+    private int monitorGeneration;
+
     private double emaFps;
 
     private TimeSpan cpuTimePrev;
@@ -134,10 +137,16 @@ public partial class DiagnosticPanel
         display.StartMonitor();
         stopwatch.Restart();
 
+        var generation = ++monitorGeneration;
         Application.Current!.Dispatcher.StartTimer(TimeSpan.FromSeconds(1), () =>
         {
+            if (!isMonitoring || (generation != monitorGeneration))
+            {
+                return false;
+            }
+
             UpdateValues();
-            return isMonitoring;
+            return true;
         });
 
         isMonitoring = true;

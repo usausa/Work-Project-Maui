@@ -157,7 +157,15 @@ public sealed class RadarScreen : GraphicsView, IDrawable
     {
         Drawable = this;
         BackgroundColor = Colors.Black;
+
+        // Handlerがnullにならない経路でもループを止められるようLoaded/Unloadedを併用する
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
+
+    private void OnLoaded(object? sender, EventArgs e) => StartTimer();
+
+    private void OnUnloaded(object? sender, EventArgs e) => StopTimer();
 
     protected override void OnHandlerChanged()
     {

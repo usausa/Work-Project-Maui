@@ -70,6 +70,12 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
+        // 二重呼び出しで前回のループを停止できなくなるのを防ぐ
+        if (loopTask is not null)
+        {
+            return Task.CompletedTask;
+        }
+
         timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000d / 60));
         cancellationTokenSource = new CancellationTokenSource();
         loopTask = StartTimerAsync(timer, cancellationTokenSource.Token);
@@ -84,12 +90,19 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
         }
 
         await cancellationTokenSource!.CancelAsync();
-        await loopTask;
-        cancellationTokenSource.Dispose();
-        cancellationTokenSource = null;
-        timer!.Dispose();
-        timer = null;
-        loopTask = null;
+        try
+        {
+            await loopTask;
+        }
+        finally
+        {
+            // ループが想定外の例外で落ちても解放を確実に行う
+            cancellationTokenSource.Dispose();
+            cancellationTokenSource = null;
+            timer!.Dispose();
+            timer = null;
+            loopTask = null;
+        }
     }
 
     protected override void Dispose(bool disposing)

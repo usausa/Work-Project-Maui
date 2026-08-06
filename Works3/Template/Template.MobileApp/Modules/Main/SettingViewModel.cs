@@ -70,7 +70,10 @@ public sealed partial class SettingViewModel : AppViewModelBase
     {
         AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
 
-        Controller.Enable = true;
+        if (await Permissions.RequestCameraAsync())
+        {
+            Controller.Enable = true;
+        }
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)

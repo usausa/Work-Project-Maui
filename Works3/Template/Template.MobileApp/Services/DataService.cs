@@ -23,15 +23,20 @@ public sealed class DataService
     {
         this.options = options;
 
-        var connectionString = $"Data Source={options.Path}";
+        // busy_timeoutはPRAGMAだと接続単位になり他接続へ効かないため、接続文字列で全接続に適用する
+        var connectionString = $"Data Source={options.Path};Default Timeout=3";
         provider = new DelegateDbProvider(() => new SqliteConnection(connectionString));
     }
 
     public async ValueTask RebuildAsync()
     {
-        if (File.Exists(options.Path))
+        // WAL有効時は-wal/-shmも消さないと、異常終了後に旧WALが新しいDBへ適用される
+        foreach (var path in new[] { options.Path, $"{options.Path}-wal", $"{options.Path}-shm" })
         {
-            File.Delete(options.Path);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
 
         await provider.UsingAsync(static async con =>

@@ -88,6 +88,15 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
             State = BluetoothPrintState.Failed;
             Detail = "Failed to communicate.";
         }
+        finally
+        {
+            // 上記以外の例外が抜けてもコマンドが永久に無効化されないよう状態を戻す
+            if (State is BluetoothPrintState.Connecting or BluetoothPrintState.Printing)
+            {
+                State = BluetoothPrintState.Failed;
+                Detail = "Failed to communicate.";
+            }
+        }
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

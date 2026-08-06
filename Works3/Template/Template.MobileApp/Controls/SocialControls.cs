@@ -6,7 +6,6 @@ using SkiaSharp.Views.Maui;
 // Resources
 //--------------------------------------------------------------------------------
 #pragma warning disable IDE0032
-#pragma warning disable CA1822 // Mark members as static
 public static class SocialFonts
 {
     private static SKTypeface? notoSerifJP;

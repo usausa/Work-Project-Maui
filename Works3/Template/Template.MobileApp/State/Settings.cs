@@ -61,6 +61,13 @@ public sealed class Settings
 
     public async ValueTask SetAIServiceKeyAsync(string value)
     {
+        // SetAsyncは空文字を受け付けないため、クリアは削除として扱う
+        if (String.IsNullOrEmpty(value))
+        {
+            secureStorage.Remove(AIServiceKeyName);
+            return;
+        }
+
         await secureStorage.SetAsync(AIServiceKeyName, value);
     }
 }

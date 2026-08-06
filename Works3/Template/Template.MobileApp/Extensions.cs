@@ -129,7 +129,12 @@ public static class Extensions
     {
         var old = source.Bitmap;
         source.Bitmap = bitmap;
-        old?.Dispose();
+
+        // 同一インスタンスの再設定で使用中のビットマップを解放しないようにする
+        if (!ReferenceEquals(old, bitmap))
+        {
+            old?.Dispose();
+        }
     }
 
     //--------------------------------------------------------------------------------

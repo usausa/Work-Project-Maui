@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Controls;
 
-#pragma warning disable CA1001
 public sealed class SpeedGauge : GraphicsView, IDrawable
 {
     public static readonly BindableProperty GaugeColorProperty = BindableProperty.Create(
@@ -170,5 +169,3 @@ public sealed class SpeedGauge : GraphicsView, IDrawable
     private static Color LerpColor(Color from, Color to, float t) =>
         new(from.Red + ((to.Red - from.Red) * t), from.Green + ((to.Green - from.Green) * t), from.Blue + ((to.Blue - from.Blue) * t), from.Alpha + ((to.Alpha - from.Alpha) * t));
 }
-
-#pragma warning restore CA1001

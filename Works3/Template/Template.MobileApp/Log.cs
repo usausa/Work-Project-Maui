@@ -34,4 +34,7 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "BLE scan error.")]
     public static partial void WarnBleScanError(this ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Nfc tag read error.")]
+    public static partial void WarnNfcReadError(this ILogger logger, Exception exception);
 }

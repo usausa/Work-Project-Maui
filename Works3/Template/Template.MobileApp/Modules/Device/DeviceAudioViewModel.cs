@@ -70,6 +70,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する (スタック退避中は停止)
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
+        // 二重呼び出しで前回の購読が解除できなくなるのを防ぐ
+        polling?.Dispose();
         polling = Observable.Interval(TimeSpan.FromMilliseconds(250))
             .ObserveOnCurrentContext()
             .Subscribe(_ => UpdateState());

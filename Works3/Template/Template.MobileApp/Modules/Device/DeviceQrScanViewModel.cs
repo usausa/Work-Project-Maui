@@ -44,10 +44,12 @@ public sealed partial class DeviceQrScanViewModel : AppViewModelBase
         });
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        Controller.Enable = true;
-        return Task.CompletedTask;
+        if (await Permissions.RequestCameraAsync())
+        {
+            Controller.Enable = true;
+        }
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)

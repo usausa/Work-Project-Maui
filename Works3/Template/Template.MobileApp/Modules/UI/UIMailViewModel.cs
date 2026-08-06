@@ -124,11 +124,10 @@ public sealed partial class UIMailViewModel : AppViewModelBase
         async ValueTask<SKBitmapImageSource> LoadImage(string fileName)
         {
             await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", fileName));
-            var source = new SKBitmapImageSource
-            {
-                Bitmap = SKBitmap.Decode(stream)
-            };
-            return source;
+            var bitmap = SKBitmap.Decode(stream);
+            // SKBitmapはアンマネージドメモリを持つため画面破棄時に解放する
+            Disposables.Add(bitmap);
+            return new SKBitmapImageSource { Bitmap = bitmap };
         }
     }
     // ReSharper restore StringLiteralTypo

@@ -48,8 +48,8 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
     private static async Task<(IReadOnlyList<GraphCommit> Commits, IReadOnlyList<GraphRefData> Refs)> LoadRepositoryAsync()
     {
         await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Graph", "repository.json")).ConfigureAwait(false);
-        var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false);
-        return (data!.Commits, data.Refs);
+        var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false) ?? RepositoryData.Empty;
+        return (data.Commits, data.Refs);
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);

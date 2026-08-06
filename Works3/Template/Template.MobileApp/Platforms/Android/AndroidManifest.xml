@@ -12,6 +12,8 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.NFC" />
 	<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+	<!-- 付与はされないが、IBattery が Permissions.EnsureDeclared で宣言の有無を見るため必須 -->
+	<uses-permission android:name="android.permission.BATTERY_STATS" />
 	<!-- Android 11 (minSdk 30) 向けレガシーBluetooth -->
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />

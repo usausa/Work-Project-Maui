@@ -11,7 +11,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public NotificationValue<string> Title { get; } = new(string.Empty);
 
-    public NotificationValue<bool> HeaderVisible { get; } = new(true);
+    // 初回ナビゲーションでShellPropertyから反映されるまでは空ヘッダーを出さない
+    public NotificationValue<bool> HeaderVisible { get; } = new();
 
     public NotificationValue<bool> FunctionVisible { get; } = new();
 

@@ -411,23 +411,6 @@
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
-    <Style x:Key="FillHorizontalStack"
-           TargetType="HorizontalStackLayout">
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="Spacing" Value="0" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
-    </Style>
-
-    <Style x:Key="SideFlexLayout"
-           TargetType="FlexLayout">
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="JustifyContent" Value="SpaceBetween" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
-        <Setter Property="VerticalOptions" Value="Center" />
-    </Style>
-
     <!-- ================================================================================ -->
     <!-- Button -->
     <!-- ================================================================================ -->
@@ -877,50 +860,8 @@
     </Style>
 
     <!-- ================================================================================ -->
-    <!-- Entry -->
-    <!-- ================================================================================ -->
-
-    <Style x:Key="InputEntry"
-           TargetType="Entry">
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="behaviors:Border.Color" Value="{StaticResource BorderColor}" />
-        <Setter Property="behaviors:Border.Width" Value="1" />
-        <Setter Property="behaviors:EntryOption.HandleEnterKey" Value="True" />
-        <Setter Property="behaviors:EntryOption.DisableShowSoftInputOnFocus" Value="True" />
-        <Setter Property="behaviors:EntryOption.SelectAllOnFocus" Value="True" />
-        <Setter Property="VisualStateManager.VisualStateGroups">
-            <VisualStateGroupList>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="White" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState x:Name="Focused">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource SelectFocusColor}" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState x:Name="Disabled">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateGroupList>
-        </Setter>
-    </Style>
-
-    <!-- ================================================================================ -->
     <!-- CollectionView -->
     <!-- ================================================================================ -->
-
-    <Style x:Key="ItemCollectionLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
-    </Style>
 
     <Style x:Key="ItemCollectionButtonBase"
            TargetType="Button">

@@ -17,12 +17,13 @@ public static class AppHostBuilderExtensions
             .ConfigurePrimaryHttpMessageHandler(CreatePrimaryHandler)
             .AddHttpMessageHandler<ApiDelegatingHandler>();
 
-        // 転送用: サイズ依存の処理時間に一律タイムアウトを適用しない。中断は呼び出し側のCancellationTokenで行う
+        // 転送用: 大きいファイルを通常APIの30秒で切らないよう長めにする。
+        // 無限にすると無応答時に中断手段が無くなるため上限は設ける (呼び出し側がCancellationTokenを渡す場合はそちらが優先)
         builder.Services
             .AddHttpClient(ApiNames.Transfer, (p, client) =>
             {
                 client.BaseAddress = p.GetRequiredService<ApiContext>().BaseAddress;
-                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.Timeout = TimeSpan.FromMinutes(10);
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             })
