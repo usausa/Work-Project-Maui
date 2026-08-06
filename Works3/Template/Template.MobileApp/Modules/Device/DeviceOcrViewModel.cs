@@ -22,6 +22,12 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
         RecognizedText = string.Empty;
     }
 
+    public override async Task OnNavigatedToAsync(INavigationContext context)
+    {
+        // CameraViewがプレビューを自動開始するため事前に権限を要求しておく
+        await Permissions.RequestCameraAsync();
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

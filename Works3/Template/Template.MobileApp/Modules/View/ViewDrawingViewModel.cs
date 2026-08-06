@@ -22,6 +22,16 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
         SelectColorCommand = MakeDelegateCommand<Color>(x => LineColor = x);
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Image.ReplaceBitmap(null);
+        }
+
+        base.Dispose(disposing);
+    }
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -39,13 +49,13 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
             var stream = await Controller.GetImageStream();
             if (stream is not null)
             {
-                Image.Bitmap = SKBitmap.Decode(stream);
+                Image.ReplaceBitmap(SKBitmap.Decode(stream));
                 HasImage = true;
             }
         }
         else
         {
-            Image.Bitmap = null;
+            Image.ReplaceBitmap(null);
             HasImage = false;
         }
     }

@@ -293,7 +293,7 @@
                                         <Border Style="{StaticResource PosterBorder}">
                                             <toolkit:SfEffectsView TouchDownEffects="Ripple">
                                                 <toolkit:SfEffectsView.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}}" />
+                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}" />
                                                 </toolkit:SfEffectsView.GestureRecognizers>
                                                 <Grid>
                                                     <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />

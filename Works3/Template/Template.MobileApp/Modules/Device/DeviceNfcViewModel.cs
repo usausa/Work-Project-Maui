@@ -4,6 +4,8 @@ using Template.MobileApp.Components;
 
 public sealed partial class DeviceNfcViewModel : AppViewModelBase
 {
+    private readonly IDialog dialog;
+
     private readonly INfcReader nfcReader;
 
     [ObservableProperty]
@@ -14,8 +16,11 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
 
     public ObservableCollection<SuicaLogData> Logs { get; } = [];
 
-    public DeviceNfcViewModel(INfcReader nfcReader)
+    public DeviceNfcViewModel(
+        IDialog dialog,
+        INfcReader nfcReader)
     {
+        this.dialog = dialog;
         this.nfcReader = nfcReader;
 
         Disposables.Add(nfcReader.DetectedAsObservable().Select(ConvertResult).WhereNotNull().ObserveOnCurrentContext().Subscribe(x =>
@@ -27,10 +32,16 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
         }));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        nfcReader.Enabled = true;
-        return Task.CompletedTask;
+        if (nfcReader.IsSupported)
+        {
+            nfcReader.Enabled = true;
+        }
+        else
+        {
+            await dialog.InformationAsync("NFC is not supported on this device.");
+        }
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)

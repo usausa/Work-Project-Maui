@@ -14,18 +14,19 @@ public static class AppHostBuilderExtensions
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             })
-            .ConfigurePrimaryHttpMessageHandler(() =>
+            .ConfigurePrimaryHttpMessageHandler(CreatePrimaryHandler)
+            .AddHttpMessageHandler<ApiDelegatingHandler>();
+
+        // 転送用: サイズ依存の処理時間に一律タイムアウトを適用しない。中断は呼び出し側のCancellationTokenで行う
+        builder.Services
+            .AddHttpClient(ApiNames.Transfer, (p, client) =>
             {
-                var handler = new SocketsHttpHandler
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                    PooledConnectionLifetime = TimeSpan.FromMinutes(1)
-                };
-//#pragma warning disable CA5359
-//                handler.SslOptions.RemoteCertificateValidationCallback = static (_, _, _, _) => true;
-//#pragma warning restore CA5359
-                return handler;
+                client.BaseAddress = p.GetRequiredService<ApiContext>().BaseAddress;
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+                client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             })
+            .ConfigurePrimaryHttpMessageHandler(CreatePrimaryHandler)
             .AddHttpMessageHandler<ApiDelegatingHandler>();
 
         builder.Services.AddTransient<ApiDelegatingHandler>();
@@ -34,4 +35,11 @@ public static class AppHostBuilderExtensions
 
         return builder;
     }
+
+    private static SocketsHttpHandler CreatePrimaryHandler() =>
+        new()
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            PooledConnectionLifetime = TimeSpan.FromMinutes(1)
+        };
 }

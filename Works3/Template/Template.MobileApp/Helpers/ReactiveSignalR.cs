@@ -20,19 +20,27 @@ public static class ReactiveSignalR
 
             disposable.Add(Disposable.Create(cts.Cancel));
             disposable.Add(Observable.FromAsync(() => TryConnectWithRetryAsync(connection, retryInterval, cts.Token)).Subscribe());
-            // ReSharper disable once AsyncVoidLambda
-            disposable.Add(Disposable.Create(async () =>
-            {
-                if (connection.State == HubConnectionState.Connected)
-                {
-                    // ReSharper disable once MethodSupportsCancellation
-                    await connection.StopAsync();
-                }
-                await connection.DisposeAsync();
-            }));
+            // Rxの購読解除は同期契約のため、切断処理はasync voidではなくTaskとして投げっぱなしにする
+            disposable.Add(Disposable.Create(() => _ = ShutdownAsync(connection)));
 
             return disposable;
         });
+    }
+
+    private static async Task ShutdownAsync(HubConnection connection)
+    {
+        try
+        {
+            if (connection.State == HubConnectionState.Connected)
+            {
+                // ReSharper disable once MethodSupportsCancellation
+                await connection.StopAsync().ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            await connection.DisposeAsync().ConfigureAwait(false);
+        }
     }
 
     private static async Task<bool> TryConnectWithRetryAsync(HubConnection connection, TimeSpan retryInterval, CancellationToken cancellationToken)

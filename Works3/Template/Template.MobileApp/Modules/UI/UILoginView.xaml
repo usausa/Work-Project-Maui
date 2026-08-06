@@ -85,7 +85,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 20" />
             </Style>
 
-            <Style x:Key="InputEntry"
+            <Style x:Key="LoginInputEntry"
                    TargetType="Entry">
                 <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
                 <Setter Property="HorizontalOptions" Value="Fill" />
@@ -213,7 +213,7 @@
                         <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Account_circle}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
-                           Style="{StaticResource InputEntry}"
+                           Style="{StaticResource LoginInputEntry}"
                            behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
                            behaviors:Focus.FocusedThickness="2.5"
                            Placeholder="ユーザーID" />
@@ -229,7 +229,7 @@
                         <Image Source="{markup:Material {x:Static fonts:MaterialIcons.Key}, Color=White, Size=28}" />
                     </Border>
                     <Entry Grid.Column="1"
-                           Style="{StaticResource InputEntry}"
+                           Style="{StaticResource LoginInputEntry}"
                            behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
                            behaviors:Focus.FocusedThickness="2.5"
                            IsPassword="{Binding PasswordVisible, Converter={StaticResource ReverseConverter}}"

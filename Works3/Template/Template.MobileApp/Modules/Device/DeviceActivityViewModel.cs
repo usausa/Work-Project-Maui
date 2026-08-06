@@ -5,6 +5,8 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed class DeviceActivityViewModel : AppViewModelBase
 {
+    private readonly IDialog dialog;
+
     private readonly IActivityRecognizer activityRecognizer;
 
     public ActivityDrawing Drawing { get; } = new();
@@ -12,9 +14,11 @@ public sealed class DeviceActivityViewModel : AppViewModelBase
     public ActivityCalculator Calculator { get; }
 
     public DeviceActivityViewModel(
+        IDialog dialog,
         IActivityRecognizer activityRecognizer,
         ActivityCalculator activityCalculator)
     {
+        this.dialog = dialog;
         this.activityRecognizer = activityRecognizer;
         Calculator = activityCalculator;
 
@@ -26,10 +30,16 @@ public sealed class DeviceActivityViewModel : AppViewModelBase
             }));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        activityRecognizer.Enabled = true;
-        return Task.CompletedTask;
+        if (await Permissions.RequestActivityRecognitionAsync())
+        {
+            activityRecognizer.Enabled = true;
+        }
+        else
+        {
+            await dialog.InformationAsync("Activity recognition permission is not granted.");
+        }
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)

@@ -10,6 +10,8 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
     private readonly IAudioManager audioManager;
 
+    private IDisposable? polling;
+
     public IAudioPlayer? AudioPlayer { get; set; }
 
     [ObservableProperty]
@@ -43,11 +45,17 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
         PauseCommand = new DelegateCommand(Pause);
         StopCommand = new DelegateCommand(Stop);
         SeekCommand = MakeDelegateCommand<double>(Seek);
+    }
 
-        // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する
-        Disposables.Add(Observable.Interval(TimeSpan.FromMilliseconds(250))
-            .ObserveOnCurrentContext()
-            .Subscribe(_ => UpdateState()));
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            polling?.Dispose();
+            polling = null;
+        }
+
+        base.Dispose(disposing);
     }
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
@@ -57,6 +65,22 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
             AudioPlayer = audioManager.CreatePlayer(await fileSystem.OpenAppPackageFileAsync(Path.Combine("Sounds", "Sample.mp3")));
             Disposables.Add(AudioPlayer);
         }
+    }
+
+    // IAudioPlayer は変更通知を持たないため再生位置・状態をポーリングで反映する (スタック退避中は停止)
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        polling = Observable.Interval(TimeSpan.FromMilliseconds(250))
+            .ObserveOnCurrentContext()
+            .Subscribe(_ => UpdateState());
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        polling?.Dispose();
+        polling = null;
+        return Task.CompletedTask;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

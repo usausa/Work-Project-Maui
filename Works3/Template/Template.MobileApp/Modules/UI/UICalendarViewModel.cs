@@ -13,8 +13,8 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
     private readonly IDialog dialog;
 
-    private readonly ScheduleService scheduleService = new();
-    private readonly HolidayService holidayService = new();
+    private readonly ScheduleService scheduleService;
+    private readonly HolidayService holidayService;
 
     private MonthViewBuilder builder = new(DayOfWeek.Monday);
     private int currentYear;
@@ -73,9 +73,14 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     public IObserveCommand EventTappedCommand { get; }
     public IObserveCommand SelectModeCommand { get; }
 
-    public UICalendarViewModel(IDialog dialog)
+    public UICalendarViewModel(
+        IDialog dialog,
+        ScheduleService scheduleService,
+        HolidayService holidayService)
     {
         this.dialog = dialog;
+        this.scheduleService = scheduleService;
+        this.holidayService = holidayService;
 
         PrevMonthCommand = MakeDelegateCommand(OnPrevMonth);
         NextMonthCommand = MakeDelegateCommand(OnNextMonth);

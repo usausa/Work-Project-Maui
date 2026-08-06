@@ -28,15 +28,16 @@ public sealed partial class App
     }
 
     // ReSharper disable once AsyncVoidMethod
+    // 例外時はグローバルハンドラ経由でCrashReportに記録されfail-fastとなる (次回起動時に表示)
     protected override async void OnStart()
     {
         // Report previous exception
         await CrashReport.ShowReport();
 
-        // Permissions
-        await Permissions.RequestCameraAsync();
-        await Permissions.RequestMicrophoneAsync();
-        await Permissions.RequestLocationAsync();
+        // 権限要求は起動時に一括では行わず、各機能の利用画面側でCheck→Requestする
+
+        // 非同期初期化(DB再構築)の完了を待ってから画面遷移する
+        await serviceProvider.GetRequiredService<ApplicationInitializer>().StartupTask;
 
         // Navigate
         var navigator = serviceProvider.GetRequiredService<INavigator>();

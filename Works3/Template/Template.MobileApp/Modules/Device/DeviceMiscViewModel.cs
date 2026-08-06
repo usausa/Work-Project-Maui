@@ -75,6 +75,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
         SpeakCommand = MakeDelegateCommand(() =>
         {
+// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             _ = speech.SpeakAsync("テストです");
 #pragma warning restore CA2012
@@ -96,13 +97,11 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         });
     }
 
-    public override Task OnNavigatingFromAsync(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
         screen.SetOrientation(DisplayOrientation.Portrait);
 
-        speech.RecognizeCancel();
-
-        return Task.CompletedTask;
+        await speech.RecognizeCancelAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

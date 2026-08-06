@@ -26,7 +26,7 @@
             </Style>
 
             <!-- Header -->
-            <Style x:Key="HeaderGrid"
+            <Style x:Key="ShopHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
@@ -225,7 +225,7 @@
 
         <!-- Header -->
         <Grid Grid.Row="0"
-              Style="{StaticResource HeaderGrid}"
+              Style="{StaticResource ShopHeaderGrid}"
               ColumnDefinitions="Auto,*"
               behaviors:AnimationOption.EnterAnimation="FadeUp">
             <Border Grid.Column="0"
@@ -289,7 +289,7 @@
                     <Border Style="{StaticResource PopularCardBorder}">
                         <toolkit:SfEffectsView TouchDownEffects="Ripple">
                             <toolkit:SfEffectsView.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}}" />
+                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
                             </toolkit:SfEffectsView.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto">
                                 <Image Grid.Row="0"
@@ -331,7 +331,7 @@
                     <Border Style="{StaticResource ItemCardBorder}">
                         <toolkit:SfEffectsView TouchDownEffects="Ripple">
                             <toolkit:SfEffectsView.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}}" />
+                                <TapGestureRecognizer Command="{Binding ItemCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}" />
                             </toolkit:SfEffectsView.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto,Auto">
                                 <Image Grid.Row="0"

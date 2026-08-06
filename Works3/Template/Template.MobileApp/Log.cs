@@ -1,5 +1,7 @@
 namespace Template.MobileApp;
 
+using Rester;
+
 internal static partial class Log
 {
     // Startup
@@ -17,4 +19,19 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Connectivity changed. profile=[{profile}], access=[{access}]")]
     public static partial void DebugConnectivityState(this ILogger logger, NetworkProfile profile, NetworkAccess access);
+
+    // Network
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Network operation failed. result=[{restResult}], statusCode=[{statusCode}]")]
+    public static partial void WarnNetworkOperationFailed(this ILogger logger, RestResult restResult, int statusCode, Exception? exception);
+
+    // Navigation
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Unhandled navigation error.")]
+    public static partial void WarnUnhandledNavigationError(this ILogger logger, Exception exception);
+
+    // Device
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "BLE scan error.")]
+    public static partial void WarnBleScanError(this ILogger logger, Exception exception);
 }

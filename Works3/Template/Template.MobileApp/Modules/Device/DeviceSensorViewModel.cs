@@ -102,23 +102,60 @@ public sealed partial class DeviceSensorViewModel : AppViewModelBase
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        accelerometer.Start(SensorSpeed.Default);
-        barometer.Start(SensorSpeed.Default);
-        compass.Start(SensorSpeed.Default);
-        gyroscope.Start(SensorSpeed.Default);
-        magnetometer.Start(SensorSpeed.Default);
-        orientation.Start(SensorSpeed.Default);
+        // 非搭載センサーはFeatureNotSupportedExceptionになるため開始しない (表示は初期値のまま)
+        if (accelerometer.IsSupported)
+        {
+            accelerometer.Start(SensorSpeed.Default);
+        }
+        if (barometer.IsSupported)
+        {
+            barometer.Start(SensorSpeed.Default);
+        }
+        if (compass.IsSupported)
+        {
+            compass.Start(SensorSpeed.Default);
+        }
+        if (gyroscope.IsSupported)
+        {
+            gyroscope.Start(SensorSpeed.Default);
+        }
+        if (magnetometer.IsSupported)
+        {
+            magnetometer.Start(SensorSpeed.Default);
+        }
+        if (orientation.IsSupported)
+        {
+            orientation.Start(SensorSpeed.Default);
+        }
         return Task.CompletedTask;
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
-        accelerometer.Stop();
-        barometer.Stop();
-        compass.Stop();
-        gyroscope.Stop();
-        magnetometer.Stop();
-        orientation.Stop();
+        if (accelerometer.IsMonitoring)
+        {
+            accelerometer.Stop();
+        }
+        if (barometer.IsMonitoring)
+        {
+            barometer.Stop();
+        }
+        if (compass.IsMonitoring)
+        {
+            compass.Stop();
+        }
+        if (gyroscope.IsMonitoring)
+        {
+            gyroscope.Stop();
+        }
+        if (magnetometer.IsMonitoring)
+        {
+            magnetometer.Stop();
+        }
+        if (orientation.IsMonitoring)
+        {
+            orientation.Stop();
+        }
         return Task.CompletedTask;
     }
 

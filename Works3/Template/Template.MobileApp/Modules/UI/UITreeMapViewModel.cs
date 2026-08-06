@@ -27,9 +27,19 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Image.ReplaceBitmap(null);
+        }
+
+        base.Dispose(disposing);
+    }
+
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (IsPreview)
+        if (IsPreview && await Permissions.RequestCameraAsync())
         {
             await Controller.StartPreviewAsync();
         }
@@ -86,7 +96,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             }).ConfigureAwait(true);
 
             // Update
-            Image.Bitmap = bitmap;
+            Image.ReplaceBitmap(bitmap);
             Drawing.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
             // シャッターフラッシュのトリガー

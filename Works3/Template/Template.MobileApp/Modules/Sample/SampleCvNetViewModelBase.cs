@@ -1,26 +1,19 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Graphics.Drawing;
 using Template.MobileApp.Helpers;
-using Template.MobileApp.Usecase;
 
-public sealed partial class SampleCvLocalViewModel : AppViewModelBase
+// CvNet系サンプル画面の共通骨格 (プレビュー・ズーム・キャプチャ)。派生側は推論呼び出しと結果反映のみ実装する
+public abstract partial class SampleCvNetViewModelBase : AppViewModelBase
 {
-    private readonly CognitiveUsecase cognitiveUsecase;
-
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
-    public CameraController Controller { get; } = new();
-
-    public DetectDrawing Drawing { get; } = new();
-
     public SKBitmapImageSource Image { get; } = new();
 
-    public SampleCvLocalViewModel(
-        CognitiveUsecase cognitiveUsecase)
+    public CameraController Controller { get; } = new();
+
+    protected SampleCvNetViewModelBase()
     {
-        this.cognitiveUsecase = cognitiveUsecase;
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
     }
 
@@ -50,7 +43,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleCvNetMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -83,11 +76,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
             var bitmap = ImageHelper.ToNormalizeBitmap(input);
             Image.ReplaceBitmap(bitmap);
 
-            // Detect
-            var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
-
-            // Update
-            Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            await OnCapturedAsync(bitmap).ConfigureAwait(true);
         }
         else
         {
@@ -96,4 +85,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
         IsPreview = !IsPreview;
     }
+
+    // キャプチャ後の推論処理。bitmapの所有権はImage側にあるため派生側で解放しないこと
+    protected virtual ValueTask OnCapturedAsync(SKBitmap bitmap) => ValueTask.CompletedTask;
 }

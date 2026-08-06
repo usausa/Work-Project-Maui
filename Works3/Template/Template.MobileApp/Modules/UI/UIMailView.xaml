@@ -39,7 +39,7 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <Style x:Key="HeaderIconButton"
+            <Style x:Key="MailHeaderIconButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="48" />
@@ -52,7 +52,7 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
-            <Style x:Key="HeaderLabel"
+            <Style x:Key="MailHeaderLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Start" />
@@ -219,12 +219,12 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="MenuGrid"
+            <Style x:Key="MailMenuGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-            <Style x:Key="MenuButton"
+            <Style x:Key="MailMenuButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="BorderWidth" Value="0" />
@@ -243,9 +243,9 @@
         <FlexLayout Grid.Row="0"
                     Style="{StaticResource HeaderRowLayout}">
             <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
-                <Button Style="{StaticResource HeaderIconButton}"
+                <Button Style="{StaticResource MailHeaderIconButton}"
                         Text="{x:Static fonts:MaterialIcons.Inbox}" />
-                <Label Style="{StaticResource HeaderLabel}"
+                <Label Style="{StaticResource MailHeaderLabel}"
                        Text="受信トレイ" />
             </HorizontalStackLayout>
 
@@ -286,7 +286,7 @@
                     <SwipeView>
                         <SwipeView.LeftItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand}"
+                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:UIMailViewModel}}"
                                            CommandParameter="{Binding .}"
                                            Text="削除"
                                            BackgroundColor="{StaticResource RedDefault}"
@@ -297,7 +297,7 @@
                         </SwipeView.LeftItems>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
-                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand}"
+                                <SwipeItem Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMailViewModel}}, Path=ArchiveCommand, x:DataType={x:Type module:UIMailViewModel}}"
                                            CommandParameter="{Binding .}"
                                            Text="アーカイブ"
                                            BackgroundColor="{StaticResource GreenDefault}"
@@ -380,10 +380,10 @@
 
         <!-- Tab -->
         <Grid Grid.Row="3"
-              Style="{StaticResource MenuGrid}"
+              Style="{StaticResource MailMenuGrid}"
               ColumnDefinitions="*,*,*">
             <Button Grid.Column="0"
-                    Style="{StaticResource MenuButton}"
+                    Style="{StaticResource MailMenuButton}"
                     Command="{Binding SelectCommand}"
                     CommandParameter="{x:Static module:MailPage.Mail}"
                     Text="メール"
@@ -396,7 +396,7 @@
                 </Button.ImageSource>
             </Button>
             <Button Grid.Column="1"
-                    Style="{StaticResource MenuButton}"
+                    Style="{StaticResource MailMenuButton}"
                     Command="{Binding SelectCommand}"
                     CommandParameter="{x:Static module:MailPage.Schedule}"
                     Text="予定表"
@@ -409,7 +409,7 @@
                 </Button.ImageSource>
             </Button>
             <Button Grid.Column="2"
-                    Style="{StaticResource MenuButton}"
+                    Style="{StaticResource MailMenuButton}"
                     Command="{Binding SelectCommand}"
                     CommandParameter="{x:Static module:MailPage.Application}"
                     Text="アプリ"

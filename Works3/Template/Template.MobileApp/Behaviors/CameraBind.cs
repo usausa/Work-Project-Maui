@@ -117,6 +117,7 @@ public static class CameraBind
                 return;
             }
 
+// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             e.Task = GetAvailableCameras(AssociatedObject);
 #pragma warning restore CA2012
@@ -129,6 +130,7 @@ public static class CameraBind
                 return;
             }
 
+// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             e.Task = e.Enable ? StartCameraPreview(AssociatedObject) : StopCameraPreview(AssociatedObject);
 #pragma warning restore CA2012
@@ -143,6 +145,7 @@ public static class CameraBind
             }
 
             var capture = new CaptureObject(cameraView);
+// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             e.Task = capture.CaptureAsync(e.Token);
 #pragma warning restore CA2012
@@ -179,8 +182,16 @@ public static class CameraBind
             {
                 view.MediaCaptured += OnMediaCaptured;
                 view.MediaCaptureFailed += OnMediaCaptureFailed;
-                await view.CaptureImage(token);
-                return await result.Task;
+                try
+                {
+                    await view.CaptureImage(token);
+                    return await result.Task.WaitAsync(token);
+                }
+                finally
+                {
+                    view.MediaCaptured -= OnMediaCaptured;
+                    view.MediaCaptureFailed -= OnMediaCaptureFailed;
+                }
             }
 
             private void OnMediaCaptured(object? sender, MediaCapturedEventArgs e) => OnMediaCaptured(e.Media);
@@ -189,8 +200,6 @@ public static class CameraBind
 
             private void OnMediaCaptured(Stream? stream)
             {
-                view.MediaCaptured -= OnMediaCaptured;
-                view.MediaCaptureFailed -= OnMediaCaptureFailed;
                 result.TrySetResult(stream);
             }
         }

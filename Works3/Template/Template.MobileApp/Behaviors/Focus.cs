@@ -101,6 +101,11 @@ public static class Focus
 
         protected override void OnDetachingFrom(VisualElement bindable)
         {
+            if (FindParentBorder(bindable) is { } border)
+            {
+                border.AbortAnimation(AnimationName);
+            }
+
             bindable.Focused -= OnFocused;
             bindable.Unfocused -= OnUnfocused;
 
@@ -134,11 +139,15 @@ public static class Focus
             var toThickness = focused ? focusedThickness : normalThickness;
 
             border.AbortAnimation(AnimationName);
+
+            // フレームごとのBrush生成を避け、単一インスタンスのColorのみ更新する
+            var brush = new SolidColorBrush(fromColor);
+            border.Stroke = brush;
             border.Animate(
                 AnimationName,
                 v =>
                 {
-                    border.Stroke = new SolidColorBrush(LerpColor(fromColor, toColor, v));
+                    brush.Color = LerpColor(fromColor, toColor, v);
                     border.StrokeThickness = fromThickness + ((toThickness - fromThickness) * v);
                 },
                 16,
@@ -146,7 +155,7 @@ public static class Focus
                 Easing.CubicOut,
                 (_, _) =>
                 {
-                    border.Stroke = new SolidColorBrush(toColor);
+                    brush.Color = toColor;
                     border.StrokeThickness = toThickness;
                 });
         }

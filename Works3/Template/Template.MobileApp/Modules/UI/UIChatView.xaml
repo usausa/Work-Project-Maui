@@ -470,7 +470,7 @@
                     <DataTemplate x:DataType="{x:Type x:String}">
                         <ImageButton Style="{StaticResource StampTrayButton}"
                                      Source="{Binding .}"
-                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand}"
+                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand, x:DataType={x:Type module:UIChatViewModel}}"
                                      CommandParameter="{Binding .}" />
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>

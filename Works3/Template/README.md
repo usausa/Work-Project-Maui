@@ -2,6 +2,8 @@
 
 Template project for MAUI.
 
+Currently this template targets Android only (`net10.0-android`). The iOS side has empty behavior stubs and no Components implementation.
+
 - [日本語](README-ja.md)
 
 # Image
@@ -28,8 +30,6 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
 </p>
-
-# TODO
 
 # TODO
 

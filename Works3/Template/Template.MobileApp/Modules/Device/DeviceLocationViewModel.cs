@@ -28,6 +28,11 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
+        if (!await Permissions.RequestLocationAsync())
+        {
+            return;
+        }
+
         Location = await locationService.GetLastLocationAsync();
         if (Location is not null)
         {

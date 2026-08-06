@@ -23,7 +23,7 @@
             </Style>
 
             <!-- Header -->
-            <Style x:Key="HeaderGrid" TargetType="Grid">
+            <Style x:Key="TimelineHeaderGrid" TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
@@ -186,7 +186,7 @@
 
         <!-- Header -->
         <Grid Grid.Row="0"
-              Style="{StaticResource HeaderGrid}"
+              Style="{StaticResource TimelineHeaderGrid}"
               ColumnDefinitions="Auto,*"
               behaviors:AnimationOption.EnterAnimation="FadeUp">
             <Border Grid.Column="0" Style="{StaticResource CalendarIconBorder}">

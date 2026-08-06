@@ -142,7 +142,7 @@
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
-            <Style x:Key="TitleLabel"
+            <Style x:Key="ItemTitleLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -279,7 +279,7 @@
                 <Grid Style="{StaticResource TitleRowGrid}"
                       ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
-                           Style="{StaticResource TitleLabel}"
+                           Style="{StaticResource ItemTitleLabel}"
                            Text="{Binding Title}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource PriceLabel}"

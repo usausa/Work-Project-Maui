@@ -92,6 +92,7 @@ public static class DrawingBind
                 return;
             }
 
+// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             e.Task = AssociatedObject.GetImageStream(AssociatedObject.Width, AssociatedObject.Height, e.Token)!;
 #pragma warning restore CA2012

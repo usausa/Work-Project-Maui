@@ -55,7 +55,7 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
-            <Style x:Key="NameLabel"
+            <Style x:Key="PosNameLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="FontSize" Value="18" />
@@ -88,7 +88,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="PosValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
@@ -205,14 +205,14 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,Auto,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="数量" />
             <Button Grid.Column="1"
                     Style="{StaticResource QuantityButton}"
                     Command="{Binding QuantityDownCommand}"
                     Text="{x:Static fonts:MaterialIcons.Remove}" />
             <Label Grid.Column="2"
-                   Style="{StaticResource ValueLabel}"
+                   Style="{StaticResource PosValueLabel}"
                    WidthRequest="56"
                    HorizontalTextAlignment="Center"
                    VerticalOptions="Center"
@@ -230,10 +230,10 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="小計" />
             <Label Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
+                   Style="{StaticResource PosValueLabel}"
                    Text="{Binding Subtotal, StringFormat='￥ {0:N0}'}" />
         </Grid>
 
@@ -245,10 +245,10 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="値引・割引" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="￥ 0" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
@@ -274,7 +274,7 @@
                 </Label.FormattedText>
             </Label>
             <Label Grid.Column="1"
-                   Style="{StaticResource ValueLabel}"
+                   Style="{StaticResource PosValueLabel}"
                    Text="￥ 0" />
         </Grid>
 
@@ -287,7 +287,7 @@
               behaviors:AnimationOption.HighlightTrigger="{Binding Total}"
               behaviors:AnimationOption.HighlightColor="{StaticResource YellowLighten2}">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="合計" />
             <Label Grid.Column="1"
                    Style="{StaticResource HugeValueLabel}"
@@ -322,7 +322,7 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*"
               BackgroundColor="{StaticResource GrayLighten3}">
-            <Label Style="{StaticResource NameLabel}"
+            <Label Style="{StaticResource PosNameLabel}"
                    Text="預かり" />
         </Grid>
 
@@ -337,10 +337,10 @@
                        Style="{StaticResource IconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Money}" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="現金預り" />
                 <Label Grid.Column="2"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="{Binding Deposit, StringFormat='￥ {0:N0}'}" />
                 <Label Grid.Column="3"
                        Style="{StaticResource LinkLabel}"
@@ -359,10 +359,10 @@
                        Style="{StaticResource IconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Credit_card}" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="クレジット" />
                 <Label Grid.Column="2"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="￥ 0" />
                 <Label Grid.Column="3"
                        Style="{StaticResource LinkLabel}"
@@ -377,7 +377,7 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameLabel}"
+                   Style="{StaticResource PosNameLabel}"
                    Text="お釣り" />
             <Label Grid.Column="1"
                    Style="{StaticResource LargeValueLabel}"
@@ -404,10 +404,10 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource NameLabel}"
+                       Style="{StaticResource PosNameLabel}"
                        Text="担当者" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ValueLabel}"
+                       Style="{StaticResource PosValueLabel}"
                        Text="うさうさ" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"

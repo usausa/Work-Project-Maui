@@ -1,89 +1,22 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Helpers;
-
-public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
+public sealed partial class SampleCvNetObjectViewModel : SampleCvNetViewModelBase
 {
     // TODO
     //private readonly CognitiveUsecase cognitiveUsecase;
 
     [ObservableProperty]
-    public partial bool IsPreview { get; set; } = true;
-
-    [ObservableProperty]
     public partial int CaptureCount { get; set; }
-
-    public SKBitmapImageSource Image { get; } = new();
-
-    public CameraController Controller { get; } = new();
 
     // TODO
     //public DetectDrawing Drawing { get; } = new();
 
-    public SampleCvNetObjectViewModel()
+    protected override ValueTask OnCapturedAsync(SKBitmap bitmap)
     {
-        Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
-    }
+        // シャッターフラッシュのトリガー
+        CaptureCount++;
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
-    {
-        if (IsPreview)
-        {
-            await Controller.StartPreviewAsync();
-        }
-    }
-
-    public override async Task OnNavigatingFromAsync(INavigationContext context)
-    {
-        if (IsPreview)
-        {
-            await Controller.StopPreviewAsync();
-        }
-    }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleCvNetMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    protected override Task OnNotifyFunction2()
-    {
-        Controller.ZoomOut();
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnNotifyFunction3()
-    {
-        Controller.ZoomIn();
-        return Task.CompletedTask;
-    }
-
-    protected override async Task OnNotifyFunction4()
-    {
-        if (IsPreview)
-        {
-            // Capture
-            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-            if (input is null)
-            {
-                return;
-            }
-
-            await Controller.StopPreviewAsync();
-
-            // Bitmap
-            using var bitmap = ImageHelper.ToNormalizeBitmap(input);
-            Image.Bitmap = bitmap;
-
-            // シャッターフラッシュのトリガー
-            CaptureCount++;
-
-            // TODO
-        }
-        else
-        {
-            await Controller.StartPreviewAsync();
-        }
-
-        IsPreview = !IsPreview;
+        // TODO
+        return ValueTask.CompletedTask;
     }
 }

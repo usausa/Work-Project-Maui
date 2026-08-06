@@ -2,11 +2,16 @@ namespace Template.MobileApp.State;
 
 public sealed class Settings
 {
+    private const string AIServiceKeyName = "AIServiceKey";
+
     private readonly IPreferences preferences;
 
-    public Settings(IPreferences preferences)
+    private readonly ISecureStorage secureStorage;
+
+    public Settings(IPreferences preferences, ISecureStorage secureStorage)
     {
         this.preferences = preferences;
+        this.secureStorage = secureStorage;
     }
 
     // Id
@@ -39,9 +44,23 @@ public sealed class Settings
         set => preferences.Set(nameof(AIServiceEndPoint), value);
     }
 
-    public string AIServiceKey
+    // キー類は平文のPreferencesではなくSecureStorageに保存する
+    public async ValueTask<string?> GetAIServiceKeyAsync()
     {
-        get => preferences.Get<string>(nameof(AIServiceKey), default!);
-        set => preferences.Set(nameof(AIServiceKey), value);
+        // 旧バージョンがPreferencesに保存した値はSecureStorageへ移行する
+        var legacy = preferences.Get<string?>(AIServiceKeyName, null);
+        if (!String.IsNullOrEmpty(legacy))
+        {
+            await secureStorage.SetAsync(AIServiceKeyName, legacy);
+            preferences.Remove(AIServiceKeyName);
+            return legacy;
+        }
+
+        return await secureStorage.GetAsync(AIServiceKeyName);
+    }
+
+    public async ValueTask SetAIServiceKeyAsync(string value)
+    {
+        await secureStorage.SetAsync(AIServiceKeyName, value);
     }
 }

@@ -7,6 +7,7 @@ public sealed class DataListResponseEntry
     public string Name { get; set; } = default!;
 }
 
+// バインディング/プロトコル上の都合で配列プロパティを許容するため抑止
 #pragma warning disable CA1819
 public sealed class DataListResponse
 {

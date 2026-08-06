@@ -1,8 +1,55 @@
 # Template project for MAUI
 
-(TODO Update)
+MAUI用テンプレートプロジェクトの使用方法について記述する。  
+現状の対応プラットフォームはAndroidのみ (`net10.0-android`)。iOS側はBehaviorsの空スタブのみでComponentsの実装は存在しない。
 
-MAUI用テンプレートプロジェクトの使用方法について記述する。
+----
+
+# ⚠️実案件適用時の注意
+
+テンプレートはサンプルとしての簡略化を含む。実案件へ流用する際は以下を必ず見直すこと。
+
+## データベース初期化
+
+`ApplicationInitializer` は毎起動時に `DataService.RebuildAsync` でDBを物理削除・再作成する (サンプル仕様)。  
+実案件では必ず `PRAGMA user_version` 等を使用したマイグレーション方式に置き換えること。
+
+## シークレットの扱い
+
+- `.EmbeddedProperty.props` によるビルド時注入 (EmbeddedBuildProperty) は値がアセンブリに平文で埋め込まれる。真のシークレットには使用しないこと
+- 実行時に受け取るキー類 (APIキーや、認証トークンを永続化する場合等) は `SecureStorage` を使用する (`Settings.GetAIServiceKeyAsync` が見本)
+- Google Maps APIキーはAPKのManifestに平文で含まれるため、キー側でパッケージ名+署名フィンガープリントの制限をかける運用を必須とする
+
+## Release署名
+
+署名情報はリポジトリにコミットせず、gitignore対象の `.Signing.props` (ソリューションルート直下) から注入する。未配置時はdebug署名でビルドされる。
+
+```xml
+<Project>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>release.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>release</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>********</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>********</AndroidSigningStorePass>
+  </PropertyGroup>
+</Project>
+```
+
+キーストアの生成例:
+
+```
+keytool -genkeypair -v -keystore release.keystore -alias release -keyalg RSA -keysize 2048 -validity 10000
+```
+
+## 開発用HTTPS証明書
+
+開発時に自己署名証明書の許可 (`RemoteCertificateValidationCallback` による検証バイパス) が必要な場合は `#if DEBUG` で限定し、コミットしないこと。
+
+## コンポーネントイベントのスレッド契約
+
+`Components` のイベント (`INfcReader.Detected` / `INoiseMonitor.Measured` / `IActivityRecognizer.Changed` 等) はUIスレッド以外から発火する。  
+UI更新時は `ObserveOnCurrentContext()` 等でマーシャリングすること (発火側ではマーシャリングしない)。
 
 ----
 

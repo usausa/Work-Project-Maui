@@ -63,11 +63,11 @@ public sealed class ScheduleService
         (26, "海外出張",   4, ScheduleStyle.Filled, Blue,         null,         false),
     ];
 
+// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<ScheduleEvent> GetEvents(DateOnly start, DateOnly end)
     {
-        var twoMonthsAgo = DateOnly.FromDateTime(DateTime.Today).AddMonths(-2);
-        if (start < new DateOnly(twoMonthsAgo.Year, twoMonthsAgo.Month, 1))
+        if (SampleDataBoundary.IsBeforeLimit(start))
         {
             return Array.Empty<ScheduleEvent>();
         }
@@ -136,11 +136,11 @@ public sealed class ScheduleService
     }
 #pragma warning restore CA1822
 
+// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<Stamp> GetStamps(DateOnly start, DateOnly end)
     {
-        var twoMonthsAgo = DateOnly.FromDateTime(DateTime.Today).AddMonths(-2);
-        if (start < new DateOnly(twoMonthsAgo.Year, twoMonthsAgo.Month, 1))
+        if (SampleDataBoundary.IsBeforeLimit(start))
         {
             return Array.Empty<Stamp>();
         }

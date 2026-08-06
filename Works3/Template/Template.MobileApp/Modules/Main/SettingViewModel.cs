@@ -7,6 +7,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class SettingViewModel : AppViewModelBase
 {
+    private readonly Settings settings;
+
     public BarcodeController Controller { get; } = new();
 
     [ObservableProperty]
@@ -24,15 +26,17 @@ public sealed partial class SettingViewModel : AppViewModelBase
         ApiContext apiContext,
         Settings settings)
     {
+        this.settings = settings;
+
         Controller.AimMode = true;
         Controller.VibrationOnDetect = true;
         Controller.CaptureNextFrame = false;
 
         ApiEndPoint = settings.ApiEndPoint;
         AIServiceEndPoint = settings.AIServiceEndPoint;
-        AIServiceKey = settings.AIServiceKey;
+        AIServiceKey = string.Empty;
 
-        DetectCommand = new DelegateCommand<IReadOnlySet<BarcodeResult>>(x =>
+        DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
             if (x.Count > 0)
             {
@@ -51,7 +55,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
                     }
                     if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
                     {
-                        settings.AIServiceKey = aiServiceKey;
+                        await settings.SetAIServiceKeyAsync(aiServiceKey);
                     }
                 }
                 catch (UriFormatException)
@@ -62,10 +66,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
         });
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
+        AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
+
         Controller.Enable = true;
-        return Task.CompletedTask;
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)

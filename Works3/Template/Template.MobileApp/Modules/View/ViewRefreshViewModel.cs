@@ -2,6 +2,7 @@ namespace Template.MobileApp.Modules.View;
 
 using Fonts;
 
+// 暗号用途ではないサンプルデータ生成の乱数のため抑止
 #pragma warning disable CA5394
 public sealed partial class ViewRefreshViewModel : AppViewModelBase
 {

@@ -105,7 +105,7 @@
                     <Grid RowDefinitions="56,Auto"
                           ColumnDefinitions="Auto,*">
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGraph2ViewModel}}, Path=ToggleCommand}"
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIGraph2ViewModel}}, Path=ToggleCommand, x:DataType={x:Type module:UIGraph2ViewModel}}"
                                                   CommandParameter="{Binding .}" />
                         </Grid.GestureRecognizers>
 

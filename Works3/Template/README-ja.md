@@ -2,6 +2,8 @@
 
 Template project for MAUI.
 
+現状はAndroid専用 (`net10.0-android`)。iOS側はBehaviorsの空スタブのみでComponentsの実装は存在しない。
+
 # Memo
 
 - 物理キーボードの処理については template-maui-keyboard に分離

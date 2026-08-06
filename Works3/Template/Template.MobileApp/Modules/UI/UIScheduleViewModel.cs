@@ -5,7 +5,7 @@ using Template.MobileApp.Services;
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {
-    private readonly ScheduleService scheduleService = new();
+    private readonly ScheduleService scheduleService;
 
     private readonly IDispatcherTimer timer;
 
@@ -24,8 +24,12 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool ShowCurrentTime { get; set; }
 
-    public UIScheduleViewModel(IDispatcher dispatcher)
+    public UIScheduleViewModel(
+        IDispatcher dispatcher,
+        ScheduleService scheduleService)
     {
+        this.scheduleService = scheduleService;
+
         // 現在時刻ラインは 1 分毎に更新する
         CurrentTime = DateTime.Now.TimeOfDay;
         timer = dispatcher.CreateTimer();

@@ -37,7 +37,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="HeaderLabel"
+            <Style x:Key="RefreshHeaderLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
@@ -160,7 +160,7 @@
             <HorizontalStackLayout Style="{StaticResource HeaderRow}">
                 <Label Style="{StaticResource HeaderIcon}"
                        Text="{x:Static fonts:MaterialIcons.Newspaper}" />
-                <Label Style="{StaticResource HeaderLabel}"
+                <Label Style="{StaticResource RefreshHeaderLabel}"
                        Text="News" />
             </HorizontalStackLayout>
             <Border Style="{StaticResource HeaderCountBorder}">

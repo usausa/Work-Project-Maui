@@ -8,8 +8,10 @@ using Template.MobileApp.Services;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {
-    // ReSharper disable once AsyncVoidMethod
-    public async void Initialize(IServiceProvider services)
+    // 非同期初期化のTask。App.OnStartが画面遷移前に完了を待つ
+    public Task StartupTask { get; private set; } = Task.CompletedTask;
+
+    public void Initialize(IServiceProvider services)
     {
         // Setup provider
         ResolveProvider.Default.Provider = services;
@@ -38,14 +40,19 @@ public sealed class ApplicationInitializer : IMauiInitializeService
             settings.UniqueId = uniqueId.ToString();
         }
 
-        // Service
-        var dataService = services.GetRequiredService<DataService>();
-        await dataService.RebuildAsync();
-
         var apiContext = services.GetRequiredService<ApiContext>();
         if (!String.IsNullOrEmpty(settings.ApiEndPoint))
         {
             apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
         }
+
+        // Service
+        StartupTask = InitializeAsync(services);
+    }
+
+    private static async Task InitializeAsync(IServiceProvider services)
+    {
+        var dataService = services.GetRequiredService<DataService>();
+        await dataService.RebuildAsync();
     }
 }

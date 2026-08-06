@@ -60,7 +60,7 @@
                 <Setter Property="StrokeThickness" Value="0" />
             </Style>
 
-            <Style x:Key="HeaderGrid"
+            <Style x:Key="MoneyHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="8" />
             </Style>
@@ -203,7 +203,7 @@
                 <Setter Property="StrokeThickness" Value="0" />
             </Style>
 
-            <Style x:Key="MenuGrid"
+            <Style x:Key="MoneyMenuGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="0,16" />
                 <Setter Property="RowSpacing" Value="16" />
@@ -423,7 +423,7 @@
                 <Border Grid.Row="0"
                         Style="{StaticResource HeaderBorder}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp">
-                    <Grid Style="{StaticResource HeaderGrid}"
+                    <Grid Style="{StaticResource MoneyHeaderGrid}"
                           RowDefinitions="*,*"
                           ColumnDefinitions="3*,2*">
                         <Label Grid.Row="0" Grid.Column="0"
@@ -493,7 +493,7 @@
                 <Border Grid.Row="2"
                         Style="{StaticResource MenuBorder}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200">
-                    <Grid Style="{StaticResource MenuGrid}"
+                    <Grid Style="{StaticResource MoneyMenuGrid}"
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*,*,*">
 

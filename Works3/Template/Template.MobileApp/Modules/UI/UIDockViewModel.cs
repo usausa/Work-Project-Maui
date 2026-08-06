@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.UI;
 
+// 暗号用途ではないサンプルデータ生成の乱数のため抑止
 #pragma warning disable CA5394
 public sealed class UIDockViewModel : AppViewModelBase
 {
@@ -242,7 +243,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "VolumeDown"
+                Parameter = "Cpu"
             };
             Buttons.Add(cpuButton);
             memButton = new DeckButtonInfo
@@ -255,7 +256,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "VolumeDown"
+                Parameter = "Memory"
             };
             Buttons.Add(memButton);
         });

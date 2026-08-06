@@ -109,7 +109,7 @@
                 <Setter Property="FontSize" Value="36" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="BleScanValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="48" />
@@ -161,7 +161,7 @@
                                                    Style="{StaticResource ValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
-                                <Label Style="{StaticResource ValueLabel}"
+                                <Label Style="{StaticResource BleScanValueLabel}"
                                        Text="{Binding Temperature, StringFormat='{0:F1}'}"
                                        behaviors:AnimationOption.BounceTrigger="{Binding Temperature}" />
                                 <Label Style="{StaticResource UnitLabel}"
@@ -172,7 +172,7 @@
                                                    Style="{StaticResource ValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
-                                <Label Style="{StaticResource ValueLabel}"
+                                <Label Style="{StaticResource BleScanValueLabel}"
                                        Text="{Binding Humidity}"
                                        behaviors:AnimationOption.BounceTrigger="{Binding Humidity}" />
                                 <Label Style="{StaticResource UnitLabel}"
@@ -192,7 +192,7 @@
                                                HorizontalOptions="Center">
                             <Label Style="{StaticResource IconLabel}"
                                    Text="💨" />
-                            <Label Style="{StaticResource ValueLabel}"
+                            <Label Style="{StaticResource BleScanValueLabel}"
                                    Text="{Binding Co2}"
                                    behaviors:AnimationOption.BounceTrigger="{Binding Co2}" />
                             <Label Style="{StaticResource UnitLabel}"

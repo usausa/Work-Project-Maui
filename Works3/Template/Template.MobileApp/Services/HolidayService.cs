@@ -2,11 +2,11 @@ namespace Template.MobileApp.Services;
 
 public sealed class HolidayService
 {
+// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<DateOnly> GetHolidays(DateOnly start, DateOnly end)
     {
-        var twoMonthsAgo = DateOnly.FromDateTime(DateTime.Today).AddMonths(-2);
-        if (start < new DateOnly(twoMonthsAgo.Year, twoMonthsAgo.Month, 1))
+        if (SampleDataBoundary.IsBeforeLimit(start))
         {
             return Array.Empty<DateOnly>();
         }

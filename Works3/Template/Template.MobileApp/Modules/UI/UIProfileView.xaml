@@ -52,7 +52,7 @@
             </Style>
 
             <!-- Name / meta -->
-            <Style x:Key="NameLabel"
+            <Style x:Key="ProfileNameLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,-40,0,2" />
                 <Setter Property="FontSize" Value="20" />
@@ -127,7 +127,7 @@
                 <Setter Property="Margin" Value="0,4,0,0" />
             </Style>
 
-            <Style x:Key="ActionButtonBase"
+            <Style x:Key="ProfileActionButtonBase"
                    TargetType="Button">
                 <Setter Property="WidthRequest" Value="52" />
                 <Setter Property="HeightRequest" Value="52" />
@@ -143,13 +143,13 @@
 
             <Style x:Key="FollowButton"
                    TargetType="Button"
-                   BasedOn="{StaticResource ActionButtonBase}">
+                   BasedOn="{StaticResource ProfileActionButtonBase}">
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
             <Style x:Key="LikeButton"
                    TargetType="Button"
-                   BasedOn="{StaticResource ActionButtonBase}">
+                   BasedOn="{StaticResource ProfileActionButtonBase}">
                 <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
                 <Setter Property="WidthRequest" Value="64" />
                 <Setter Property="HeightRequest" Value="64" />
@@ -159,7 +159,7 @@
 
             <Style x:Key="StarButton"
                    TargetType="Button"
-                   BasedOn="{StaticResource ActionButtonBase}">
+                   BasedOn="{StaticResource ProfileActionButtonBase}">
                 <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
             </Style>
 
@@ -273,7 +273,7 @@
                 </Border>
 
                 <!-- Name / meta -->
-                <Label Style="{StaticResource NameLabel}"
+                <Label Style="{StaticResource ProfileNameLabel}"
                        Text="{Binding UserName}" />
                 <Label Style="{StaticResource OccupationLabel}"
                        Text="{Binding Occupation}" />
@@ -403,21 +403,19 @@
                             <Label Style="{StaticResource SectionTitle}"
                                    Text="フォト" />
                         </HorizontalStackLayout>
-                        <CollectionView HeightRequest="190"
-                                        ItemsSource="{Binding Photos}">
-                            <CollectionView.ItemsLayout>
-                                <GridItemsLayout Orientation="Vertical"
-                                                 Span="3" />
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
+                        <!-- 件数固定の一覧のため、縦ScrollView内で仮想化が無効になるCollectionViewは使わずBindableLayoutで並べる -->
+                        <FlexLayout Wrap="Wrap"
+                                    BindableLayout.ItemsSource="{Binding Photos}">
+                            <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="module:UIProfilePhoto">
-                                    <Border Style="{StaticResource PhotoBorder}">
+                                    <Border Style="{StaticResource PhotoBorder}"
+                                            FlexLayout.Basis="33.33%">
                                         <Image Style="{StaticResource PhotoImage}"
                                                Source="{Binding Image}" />
                                     </Border>
                                 </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
                     </VerticalStackLayout>
                 </Border>
 

@@ -24,7 +24,7 @@
                                     FalseValue="{StaticResource YellowLighten5}" />
 
             <Style x:Key="AddressHeaderGrid"
-                   TargetType="Label">
+                   TargetType="Grid">
                 <Setter Property="Padding" Value="8" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten1}" />
             </Style>

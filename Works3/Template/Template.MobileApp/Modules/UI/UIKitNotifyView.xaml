@@ -43,7 +43,7 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="TitleLabel" TargetType="Label">
+            <Style x:Key="KitNotifyTitleLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken4}" />
@@ -92,7 +92,7 @@
                             <Label Style="{StaticResource IconLabel}" Text="{Binding Icon}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
-                            <Label Style="{StaticResource TitleLabel}" Text="{Binding Title}">
+                            <Label Style="{StaticResource KitNotifyTitleLabel}" Text="{Binding Title}">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding IsUnread}"

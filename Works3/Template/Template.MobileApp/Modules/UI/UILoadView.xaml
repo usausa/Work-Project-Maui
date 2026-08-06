@@ -30,7 +30,7 @@
                 <Setter Property="PeakNeedleColor" Value="#B3FFD700" />
             </Style>
 
-            <Style x:Key="ValueLabel"
+            <Style x:Key="LoadValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="End" />
@@ -85,7 +85,7 @@
                              PeakValue="{Binding Peak}" />
 
         <Label Grid.Row="0"
-               Style="{StaticResource ValueLabel}">
+               Style="{StaticResource LoadValueLabel}">
             <Label.FormattedText>
                 <FormattedString>
                     <Span Style="{StaticResource ValueSpan}"

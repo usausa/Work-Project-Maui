@@ -15,16 +15,19 @@ public sealed class DateTimeConverter : JsonConverter<DateTime>
 
         try
         {
-            return DateTime.Parse(value, CultureInfo.InvariantCulture);
+            // オフセットなし文字列はUTCとみなし、常にUTC Kindで保持する
+            return DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
         }
-        catch
+        catch (Exception ex)
         {
-            throw new FormatException();
+            throw new FormatException($"Invalid datetime format. value=[{value}]", ex);
         }
     }
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture));
+        // Unspecifiedは内部規約どおりUTCとみなす
+        var utc = value.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value, DateTimeKind.Utc) : value.ToUniversalTime();
+        writer.WriteStringValue(utc.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture));
     }
 }

@@ -320,7 +320,12 @@ public static partial class MauiProgram
 
         config.BindSingleton<HttpService>();
 
+        // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
+        config.BindSingleton<ScheduleService>();
+        config.BindSingleton<HolidayService>();
+
         // Usecase
+        config.BindSingleton<INetworkInteraction, DialogNetworkInteraction>();
         config.BindSingleton<NetworkOperator>();
         config.BindSingleton<NetworkUsecase>();
         config.BindSingleton<CognitiveUsecase>();
@@ -329,7 +334,8 @@ public static partial class MauiProgram
         config.BindSingleton(new ActivityCalculator(0.0005, 65, 0.6));
 
         // Startup
-        config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
+        config.BindSingleton<ApplicationInitializer>();
+        config.BindSingleton<IMauiInitializeService>(static p => p.GetRequiredService<ApplicationInitializer>());
     }
 
     // ------------------------------------------------------------

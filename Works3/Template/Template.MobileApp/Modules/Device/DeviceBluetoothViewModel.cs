@@ -38,35 +38,56 @@ public sealed partial class DeviceBluetoothViewModel : AppViewModelBase
 
     private async Task ExecutePrint()
     {
+        if (!bluetoothSerialFactory.IsSupported)
+        {
+            State = BluetoothPrintState.Failed;
+            Detail = "Bluetooth is not supported on this device.";
+            return;
+        }
+
         State = BluetoothPrintState.Connecting;
         Detail = "Connecting to \"DummyPrinter\"...";
 
-        using var port = await bluetoothSerialFactory.ConnectAsync("DummyPrinter");
-        if (port is null)
+        // 外部IFのIO例外は発生が予期されるため個別にcatchし、Stateを確実に復帰させる
+        try
+        {
+            using var port = await bluetoothSerialFactory.ConnectAsync("DummyPrinter");
+            if (port is null)
+            {
+                State = BluetoothPrintState.Failed;
+                Detail = "Failed to connect.";
+                return;
+            }
+
+            State = BluetoothPrintState.Printing;
+            Detail = "Sending test data...";
+
+            // Printing
+            await using var lwr = new LineReaderWriter(port.Input, port.Output);
+
+            await lwr.WriteLineAsync("Test");
+
+            var response = await lwr.ReadLineAsync();
+            if (response is not "OK")
+            {
+                State = BluetoothPrintState.Failed;
+                Detail = "Failed to read response.";
+                return;
+            }
+
+            State = BluetoothPrintState.Completed;
+            Detail = "Printed successfully.";
+        }
+        catch (IOException)
         {
             State = BluetoothPrintState.Failed;
-            Detail = "Failed to connect.";
-            return;
+            Detail = "Failed to communicate.";
         }
-
-        State = BluetoothPrintState.Printing;
-        Detail = "Sending test data...";
-
-        // Printing
-        await using var lwr = new LineReaderWriter(port.Input, port.Output);
-
-        await lwr.WriteLineAsync("Test");
-
-        var response = await lwr.ReadLineAsync();
-        if (response is not "OK")
+        catch (Java.Lang.Throwable)
         {
             State = BluetoothPrintState.Failed;
-            Detail = "Failed to read response.";
-            return;
+            Detail = "Failed to communicate.";
         }
-
-        State = BluetoothPrintState.Completed;
-        Detail = "Printed successfully.";
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);

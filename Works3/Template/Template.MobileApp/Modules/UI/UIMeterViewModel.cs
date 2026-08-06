@@ -13,8 +13,9 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private const double BrakeVelocity = 96d / 60;
     private const double DefaultVelocity = 32d / 60;
 
-    private readonly PeriodicTimer timer;
-    private readonly CancellationTokenSource cancellationTokenSource;
+    private PeriodicTimer? timer;
+    private CancellationTokenSource? cancellationTokenSource;
+    private Task? loopTask;
 
     private readonly AtomicInteger stickX = new();
     private readonly AtomicInteger stickY = new();
@@ -66,27 +67,45 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
         set => buttonY.Value = value;
     }
 
-    public UIMeterViewModel()
+    // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
+    public override Task OnNavigatedToAsync(INavigationContext context)
     {
         timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000d / 60));
         cancellationTokenSource = new CancellationTokenSource();
+        loopTask = StartTimerAsync(timer, cancellationTokenSource.Token);
+        return Task.CompletedTask;
+    }
 
-        _ = StartTimerAsync();
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        if (loopTask is null)
+        {
+            return;
+        }
+
+        await cancellationTokenSource!.CancelAsync();
+        await loopTask;
+        cancellationTokenSource.Dispose();
+        cancellationTokenSource = null;
+        timer!.Dispose();
+        timer = null;
+        loopTask = null;
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
-            timer.Dispose();
+            // 通常はOnNavigatingFromAsyncで解放済み。ここは保険
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
+            timer?.Dispose();
         }
 
         base.Dispose(disposing);
     }
 
-    private async Task StartTimerAsync()
+    private async Task StartTimerAsync(PeriodicTimer periodicTimer, CancellationToken token)
     {
         try
         {
@@ -98,7 +117,7 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
             var prevBrake = false;
 
             var watch = Stopwatch.StartNew();
-            while (await timer.WaitForNextTickAsync(cancellationTokenSource.Token))
+            while (await periodicTimer.WaitForNextTickAsync(token))
             {
                 // Speed
                 var a = ButtonA;

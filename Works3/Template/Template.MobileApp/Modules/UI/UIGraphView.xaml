@@ -23,7 +23,7 @@
                                                   EvenColor="Transparent"
                                                   OddColor="{StaticResource GrayLighten4}" />
 
-            <Style x:Key="HeaderLabel"
+            <Style x:Key="GraphHeaderLabel"
                    TargetType="Label">
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="14" />
@@ -89,7 +89,7 @@
           Style="{StaticResource FillGrid}">
         <Border Grid.Row="0"
                 Style="{StaticResource HeaderBarBorder}">
-            <Label Style="{StaticResource HeaderLabel}"
+            <Label Style="{StaticResource GraphHeaderLabel}"
                    Text="{Binding HeaderText}" />
         </Border>
 

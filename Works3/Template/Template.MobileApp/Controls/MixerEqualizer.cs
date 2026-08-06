@@ -39,6 +39,7 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
         Array.Empty<int>(),
         propertyChanged: OnValuesChanged);
 
+// バインディング/プロトコル上の都合で配列プロパティを許容するため抑止
 #pragma warning disable CA1819
     public int[] Values
     {

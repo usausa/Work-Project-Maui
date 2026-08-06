@@ -11,8 +11,8 @@
     <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
     <MauiXamlInflator>SourceGen</MauiXamlInflator>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
-    <!-- TODO -->
-    <NoWarn>$(NoWarn);NU1608;NU1903</NoWarn>
+    <!-- XA4301: BarcodeScanning.Native.Maui re-bundles libbarhopper_v3.so already provided by its MLKit dependency. Harmless duplicate, not fixable on the app side -->
+    <NoWarn>$(NoWarn);XA4301</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Template</ApplicationTitle>
@@ -39,13 +39,12 @@
   </PropertyGroup>
   -->
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-    <AndroidKeyStore>True</AndroidKeyStore>
-    <AndroidSigningKeyStore>example.keystore</AndroidSigningKeyStore>
-    <AndroidSigningKeyAlias>example</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>example</AndroidSigningKeyPass>
-    <AndroidSigningStorePass>example</AndroidSigningStorePass>
+  <!-- Release署名は .Signing.props (gitignore対象) でAndroidKeyStore/AndroidSigningKeyStore等を注入する。未設定時はdebug署名 -->
+  <PropertyGroup>
+    <AndroidKeyStore>False</AndroidKeyStore>
   </PropertyGroup>
+
+  <Import Project="..\.Signing.props" Condition="Exists('..\.Signing.props')" />
 
   <PropertyGroup>
     <EmbeddedFlavor>Development</EmbeddedFlavor>
@@ -119,8 +118,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="BunnyTail.MemberAccessor" Version="1.9.0" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="14.2.0" />
+    <PackageReference Include="BunnyTail.MemberAccessor" Version="1.11.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="14.2.2" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.1.0" />
     <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
     <PackageReference Include="Google.Protobuf" Version="3.35.1" />
@@ -133,6 +132,8 @@
     <PackageReference Include="Mapsui.Maui" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.9" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <!-- GHSA-2m69-gcr7-jv3q対応: Microsoft.Data.Sqliteの推移参照2.1.11を修正版へピン止め (解消後は削除可) -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.12" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">none</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>

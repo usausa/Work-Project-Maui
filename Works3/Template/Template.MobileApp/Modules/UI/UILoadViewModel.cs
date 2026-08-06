@@ -67,16 +67,17 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         return peak;
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        noiseMonitor.Start();
-        return Task.CompletedTask;
+        if (await Permissions.RequestMicrophoneAsync())
+        {
+            noiseMonitor.Start();
+        }
     }
 
-    public override Task OnNavigatingFromAsync(INavigationContext context)
+    public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
-        noiseMonitor.Stop();
-        return Task.CompletedTask;
+        await noiseMonitor.StopAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
