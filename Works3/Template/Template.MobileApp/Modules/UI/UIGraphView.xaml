@@ -59,7 +59,7 @@
                 <Setter Property="TextColor" Value="#FF888888" />
             </Style>
 
-            <Style x:Key="HeaderBarBorder"
+            <Style x:Key="GraphHeaderBarBorder"
                    TargetType="Border">
                 <Setter Property="BackgroundColor" Value="#FF2D2D30" />
                 <Setter Property="Stroke" Value="#FF2D2D30" />
@@ -88,7 +88,7 @@
     <Grid RowDefinitions="Auto,*"
           Style="{StaticResource FillGrid}">
         <Border Grid.Row="0"
-                Style="{StaticResource HeaderBarBorder}">
+                Style="{StaticResource GraphHeaderBarBorder}">
             <Label Style="{StaticResource GraphHeaderLabel}"
                    Text="{Binding HeaderText}" />
         </Border>

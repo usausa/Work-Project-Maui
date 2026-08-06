@@ -11,6 +11,9 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsPreview { get; set; } = true;
 
+    [ObservableProperty]
+    public partial bool IsProcessing { get; set; }
+
     public CameraController Controller { get; } = new();
 
     public DetectDrawing Drawing { get; } = new();
@@ -68,32 +71,46 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        if (IsPreview)
+        // 推論中の再入でReplaceBitmapが使用中のビットマップを破棄しないようガードする
+        if (IsProcessing)
         {
-            // Capture
-            await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
-            if (input is null)
+            return;
+        }
+
+        IsProcessing = true;
+        try
+        {
+            if (IsPreview)
             {
-                return;
+                // Capture
+                await using var input = await Controller.CaptureAsync().ConfigureAwait(true);
+                if (input is null)
+                {
+                    return;
+                }
+
+                await Controller.StopPreviewAsync();
+
+                // Bitmap
+                var bitmap = ImageHelper.ToNormalizeBitmap(input);
+                Image.ReplaceBitmap(bitmap);
+
+                // Detect
+                var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
+
+                // Update
+                Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            }
+            else
+            {
+                await Controller.StartPreviewAsync();
             }
 
-            await Controller.StopPreviewAsync();
-
-            // Bitmap
-            var bitmap = ImageHelper.ToNormalizeBitmap(input);
-            Image.ReplaceBitmap(bitmap);
-
-            // Detect
-            var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);
-
-            // Update
-            Drawing.Update(bitmap.Width, bitmap.Height, results.Where(static x => x.Score >= 0.5).ToArray());
+            IsPreview = !IsPreview;
         }
-        else
+        finally
         {
-            await Controller.StartPreviewAsync();
+            IsProcessing = false;
         }
-
-        IsPreview = !IsPreview;
     }
 }

@@ -62,7 +62,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="SubNameLabel"
+            <Style x:Key="PosSubNameLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
@@ -70,18 +70,18 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="NameWithSubLabel"
+            <Style x:Key="PosNameWithSubLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="End" />
             </Style>
 
-            <Style x:Key="NameWithSubNameSpan"
+            <Style x:Key="PosNameWithSubNameSpan"
                    TargetType="Span">
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="NameWithSubOptionSpan"
+            <Style x:Key="PosNameWithSubOptionSpan"
                    TargetType="Span">
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="FontSize" Value="14" />
@@ -95,21 +95,21 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="SubValueLabel"
+            <Style x:Key="PosSubValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
-            <Style x:Key="LargeValueLabel"
+            <Style x:Key="PosLargeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="FontSize" Value="28" />
             </Style>
 
-            <Style x:Key="HugeValueLabel"
+            <Style x:Key="PosHugeValueLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDarken2}" />
@@ -263,12 +263,12 @@
               Style="{StaticResource ValueRowGrid}"
               ColumnDefinitions="*,Auto,24">
             <Label Grid.Column="0"
-                   Style="{StaticResource NameWithSubLabel}">
+                   Style="{StaticResource PosNameWithSubLabel}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Style="{StaticResource NameWithSubNameSpan}"
+                        <Span Style="{StaticResource PosNameWithSubNameSpan}"
                               Text="外税" />
-                        <Span Style="{StaticResource NameWithSubOptionSpan}"
+                        <Span Style="{StaticResource PosNameWithSubOptionSpan}"
                               Text=" 8%" />
                     </FormattedString>
                 </Label.FormattedText>
@@ -290,7 +290,7 @@
                    Style="{StaticResource PosNameLabel}"
                    Text="合計" />
             <Label Grid.Column="1"
-                   Style="{StaticResource HugeValueLabel}"
+                   Style="{StaticResource PosHugeValueLabel}"
                    behaviors:LabelOption.CountUpValue="{Binding Total}"
                    behaviors:LabelOption.CountUpFormat="{}￥ {0:N0}"
                    behaviors:LabelOption.CountUpDuration="450" />
@@ -304,10 +304,10 @@
             <Grid Style="{StaticResource ValueRowGrid}"
                   ColumnDefinitions="*,Auto,24">
                 <Label Grid.Column="0"
-                       Style="{StaticResource SubNameLabel}"
+                       Style="{StaticResource PosSubNameLabel}"
                        Text="内消費税" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource SubValueLabel}"
+                       Style="{StaticResource PosSubValueLabel}"
                        Text="{Binding InnerTax, StringFormat='(￥ {0:N0})'}" />
                 <Label Grid.Column="2"
                        Style="{StaticResource LinkLabel}"
@@ -380,7 +380,7 @@
                    Style="{StaticResource PosNameLabel}"
                    Text="お釣り" />
             <Label Grid.Column="1"
-                   Style="{StaticResource LargeValueLabel}"
+                   Style="{StaticResource PosLargeValueLabel}"
                    Text="{Binding Change, StringFormat='￥ {0:N0}'}">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label"

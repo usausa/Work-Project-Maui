@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.Network;
 
-// 暗号用途ではないサンプルデータ生成の乱数のため抑止
 #pragma warning disable CA5394
 public sealed class NetworkRealtimeViewModel : AppViewModelBase
 {

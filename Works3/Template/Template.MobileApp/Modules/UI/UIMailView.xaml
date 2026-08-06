@@ -27,14 +27,14 @@
                                        TrueValue="{StaticResource BlueDarken2}"
                                        FalseValue="{StaticResource GrayDarken1}" />
 
-            <Style x:Key="HeaderRowLayout"
+            <Style x:Key="MailHeaderRowLayout"
                    TargetType="FlexLayout">
                 <Setter Property="Padding" Value="6,0" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="JustifyContent" Value="SpaceBetween" />
             </Style>
 
-            <Style x:Key="HeaderColumnLayout"
+            <Style x:Key="MailHeaderColumnLayout"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="12" />
             </Style>
@@ -61,7 +61,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="HeaderOptionButton"
+            <Style x:Key="MailHeaderOptionButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="40" />
@@ -74,7 +74,7 @@
                 <Setter Property="FontFamily" Value="MaterialIcons" />
             </Style>
 
-            <Style x:Key="HeaderToggle"
+            <Style x:Key="MailHeaderToggle"
                    TargetType="controls:TextToggle">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -87,7 +87,7 @@
                 <Setter Property="UnselectedBackgroundColor" Value="{StaticResource BlueDarken4}" />
             </Style>
 
-            <Style x:Key="HeaderFilterButton"
+            <Style x:Key="MailHeaderFilterButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="120" />
@@ -241,32 +241,32 @@
 
         <!-- Header1 -->
         <FlexLayout Grid.Row="0"
-                    Style="{StaticResource HeaderRowLayout}">
-            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
+                    Style="{StaticResource MailHeaderRowLayout}">
+            <HorizontalStackLayout Style="{StaticResource MailHeaderColumnLayout}">
                 <Button Style="{StaticResource MailHeaderIconButton}"
                         Text="{x:Static fonts:MaterialIcons.Inbox}" />
                 <Label Style="{StaticResource MailHeaderLabel}"
                        Text="受信トレイ" />
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
-                <Button Style="{StaticResource HeaderOptionButton}"
+            <HorizontalStackLayout Style="{StaticResource MailHeaderColumnLayout}">
+                <Button Style="{StaticResource MailHeaderOptionButton}"
                         Text="{x:Static fonts:MaterialIcons.Notifications}" />
-                <Button Style="{StaticResource HeaderOptionButton}"
+                <Button Style="{StaticResource MailHeaderOptionButton}"
                         Text="{x:Static fonts:MaterialIcons.Search}" />
             </HorizontalStackLayout>
         </FlexLayout>
 
         <!-- Header2 -->
         <FlexLayout Grid.Row="1"
-                    Style="{StaticResource HeaderRowLayout}">
-            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
-                <controls:TextToggle Style="{StaticResource HeaderToggle}"
+                    Style="{StaticResource MailHeaderRowLayout}">
+            <HorizontalStackLayout Style="{StaticResource MailHeaderColumnLayout}">
+                <controls:TextToggle Style="{StaticResource MailHeaderToggle}"
                                      OnText="優先" OffText="その他" />
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Style="{StaticResource HeaderColumnLayout}">
-                <Button Style="{StaticResource HeaderFilterButton}"
+            <HorizontalStackLayout Style="{StaticResource MailHeaderColumnLayout}">
+                <Button Style="{StaticResource MailHeaderFilterButton}"
                         Text="フィルター"
                         ImageSource="{markup:Material {x:Static fonts:MaterialIcons.Filter_list},
                                                       Color=White,

@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.Sample;
 
 using Template.MobileApp.Graphics.Drawing;
 
-// 暗号用途ではないサンプルデータ生成の乱数のため抑止
 #pragma warning disable CA5394
 public sealed partial class SampleChartViewModel : AppViewModelBase
 {

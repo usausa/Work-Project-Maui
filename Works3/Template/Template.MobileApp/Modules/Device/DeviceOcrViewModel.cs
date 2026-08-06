@@ -14,6 +14,9 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsProcessing { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsCameraEnabled { get; set; }
+
     public DeviceOcrViewModel(
         IOcrReader ocrReader)
     {
@@ -25,7 +28,7 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         // CameraViewがプレビューを自動開始するため事前に権限を要求しておく
-        await Permissions.RequestCameraAsync();
+        IsCameraEnabled = await Permissions.RequestCameraAsync();
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
@@ -34,7 +37,7 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
 
     protected override async Task OnNotifyFunction4()
     {
-        if (IsProcessing)
+        if (IsProcessing || !IsCameraEnabled)
         {
             return;
         }

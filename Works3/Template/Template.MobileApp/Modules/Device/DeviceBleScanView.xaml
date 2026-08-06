@@ -96,7 +96,7 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="ValueHorizontalStack"
+            <Style x:Key="BleScanValueHorizontalStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
@@ -158,7 +158,7 @@
 
                         <Grid ColumnDefinitions="*,*">
                             <HorizontalStackLayout Grid.Column="0"
-                                                   Style="{StaticResource ValueHorizontalStack}">
+                                                   Style="{StaticResource BleScanValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
@@ -169,7 +169,7 @@
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Grid.Column="1"
-                                                   Style="{StaticResource ValueHorizontalStack}">
+                                                   Style="{StaticResource BleScanValueHorizontalStack}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
@@ -187,7 +187,7 @@
                         <BoxView Style="{StaticResource MarginBoxView}"
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
 
-                        <HorizontalStackLayout Style="{StaticResource ValueHorizontalStack}"
+                        <HorizontalStackLayout Style="{StaticResource BleScanValueHorizontalStack}"
                                                IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}"
                                                HorizontalOptions="Center">
                             <Label Style="{StaticResource IconLabel}"

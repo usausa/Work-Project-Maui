@@ -9,7 +9,6 @@ public sealed partial class NoiseMonitor
 
     private int bufferSize;
 
-    // 解放は計測ループのfinally (CleanupMeasure) で行い、DisposeはStopAsync経由でループ完了を待つため抑止
 #pragma warning disable CA2213
     private AudioRecord? audioRecord;
 #pragma warning restore CA2213

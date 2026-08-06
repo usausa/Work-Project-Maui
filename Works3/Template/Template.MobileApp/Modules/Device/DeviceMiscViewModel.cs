@@ -75,7 +75,6 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
         SpeakCommand = MakeDelegateCommand(() =>
         {
-// ValueTaskはイベント引数で中継され呼び出し元で一度だけawaitされるため抑止
 #pragma warning disable CA2012
             _ = speech.SpeakAsync("テストです");
 #pragma warning restore CA2012

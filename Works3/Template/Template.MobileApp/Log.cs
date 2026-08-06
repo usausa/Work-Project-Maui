@@ -37,4 +37,9 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Nfc tag read error.")]
     public static partial void WarnNfcReadError(this ILogger logger, Exception exception);
+
+    // Startup
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
+    public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 }

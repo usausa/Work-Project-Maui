@@ -37,7 +37,25 @@ public sealed partial class App
         // 権限要求は起動時に一括では行わず、各機能の利用画面側でCheck→Requestする
 
         // 非同期初期化(DB再構築)の完了を待ってから画面遷移する
-        await serviceProvider.GetRequiredService<ApplicationInitializer>().StartupTask;
+        var initializer = serviceProvider.GetRequiredService<ApplicationInitializer>();
+        await initializer.StartupTask;
+
+        // DBを作れない環境では以降の画面が成立しないため、原因を提示して終了する
+        // (無言でクラッシュすると次回起動でも同じ所で落ち、理由が分からないまま復帰できないため)
+        if (initializer.InitializeError is not null)
+        {
+            var page = Current?.Windows[0].Page;
+            if (page is not null)
+            {
+                await page.DisplayAlertAsync(
+                    "Initialize error",
+                    $"Failed to initialize database.\r\n{initializer.InitializeError.Message}",
+                    "Exit");
+            }
+
+            Current?.Quit();
+            return;
+        }
 
         // Navigate
         var navigator = serviceProvider.GetRequiredService<INavigator>();

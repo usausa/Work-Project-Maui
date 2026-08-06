@@ -2,7 +2,6 @@ namespace Template.MobileApp.Services;
 
 public sealed class HolidayService
 {
-// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<DateOnly> GetHolidays(DateOnly start, DateOnly end)
     {

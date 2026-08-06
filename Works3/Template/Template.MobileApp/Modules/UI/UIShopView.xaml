@@ -44,7 +44,7 @@
                 <Setter Property="Aspect" Value="AspectFill" />
             </Style>
 
-            <Style x:Key="HeaderTextStack"
+            <Style x:Key="ShopHeaderTextStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -234,7 +234,7 @@
                        Source="profile.jpg" />
             </Border>
             <VerticalStackLayout Grid.Column="1"
-                                 Style="{StaticResource HeaderTextStack}">
+                                 Style="{StaticResource ShopHeaderTextStack}">
                 <Label Style="{StaticResource GreetingLabel}"
                        Text="{Binding Greeting}" />
                 <Label Style="{StaticResource SubGreetingLabel}"

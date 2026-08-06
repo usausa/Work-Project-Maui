@@ -17,19 +17,19 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="HeaderLayout"
+            <Style x:Key="RefreshHeaderLayout"
                    TargetType="FlexLayout">
                 <Setter Property="Padding" Value="6,0" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDarken2}" />
                 <Setter Property="JustifyContent" Value="SpaceBetween" />
             </Style>
 
-            <Style x:Key="HeaderRow"
+            <Style x:Key="RefreshHeaderRow"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="8" />
             </Style>
 
-            <Style x:Key="HeaderIcon"
+            <Style x:Key="RefreshHeaderIcon"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="28" />
@@ -45,7 +45,7 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="HeaderCountBorder"
+            <Style x:Key="RefreshHeaderCountBorder"
                    TargetType="Border">
                 <Setter Property="Padding" Value="10,4" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -54,7 +54,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 14" />
             </Style>
 
-            <Style x:Key="HeaderCountLabel"
+            <Style x:Key="RefreshHeaderCountLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -156,15 +156,15 @@
     <Grid RowDefinitions="48,*">
 
         <FlexLayout Grid.Row="0"
-                    Style="{StaticResource HeaderLayout}">
-            <HorizontalStackLayout Style="{StaticResource HeaderRow}">
-                <Label Style="{StaticResource HeaderIcon}"
+                    Style="{StaticResource RefreshHeaderLayout}">
+            <HorizontalStackLayout Style="{StaticResource RefreshHeaderRow}">
+                <Label Style="{StaticResource RefreshHeaderIcon}"
                        Text="{x:Static fonts:MaterialIcons.Newspaper}" />
                 <Label Style="{StaticResource RefreshHeaderLabel}"
                        Text="News" />
             </HorizontalStackLayout>
-            <Border Style="{StaticResource HeaderCountBorder}">
-                <Label Style="{StaticResource HeaderCountLabel}"
+            <Border Style="{StaticResource RefreshHeaderCountBorder}">
+                <Label Style="{StaticResource RefreshHeaderCountLabel}"
                        Text="{Binding Items.Count, StringFormat='{0} items'}" />
             </Border>
         </FlexLayout>

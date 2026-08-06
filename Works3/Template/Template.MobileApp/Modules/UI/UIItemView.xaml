@@ -136,7 +136,7 @@
                 <Setter Property="TextColor" Value="{StaticResource PinkAccent2}" />
             </Style>
 
-            <Style x:Key="TitleRowGrid"
+            <Style x:Key="ItemTitleRowGrid"
                    TargetType="Grid">
                 <Setter Property="Margin" Value="0,4,0,0" />
                 <Setter Property="ColumnSpacing" Value="12" />
@@ -276,7 +276,7 @@
                 <Label Style="{StaticResource CategoryLabel}"
                        Text="{Binding Category}" />
 
-                <Grid Style="{StaticResource TitleRowGrid}"
+                <Grid Style="{StaticResource ItemTitleRowGrid}"
                       ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource ItemTitleLabel}"

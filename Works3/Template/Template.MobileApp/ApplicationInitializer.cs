@@ -1,5 +1,6 @@
 namespace Template.MobileApp;
 
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 using Smart.Mvvm.Resolver;
@@ -10,6 +11,9 @@ public sealed class ApplicationInitializer : IMauiInitializeService
 {
     // 非同期初期化のTask。App.OnStartが画面遷移前に完了を待つ
     public Task StartupTask { get; private set; } = Task.CompletedTask;
+
+    // DB初期化に失敗した場合の例外。App.OnStartが原因を提示してから終了する
+    public Exception? InitializeError { get; private set; }
 
     public void Initialize(IServiceProvider services)
     {
@@ -50,9 +54,18 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         StartupTask = InitializeAsync(services);
     }
 
-    private static async Task InitializeAsync(IServiceProvider services)
+    private async Task InitializeAsync(IServiceProvider services)
     {
-        var dataService = services.GetRequiredService<DataService>();
-        await dataService.RebuildAsync();
+        try
+        {
+            var dataService = services.GetRequiredService<DataService>();
+            await dataService.RebuildAsync();
+        }
+        // ファイルロック・権限・DB破損は発生が予期される失敗のため個別に捕捉する
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SqliteException)
+        {
+            InitializeError = ex;
+            services.GetRequiredService<ILogger<ApplicationInitializer>>().ErrorDatabaseInitializeFailed(ex);
+        }
     }
 }

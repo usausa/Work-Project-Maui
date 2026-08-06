@@ -9,7 +9,6 @@ public class ProcessColor
 
 public sealed class SuicaProcessColorConverter : IValueConverter
 {
-// バインディング/プロトコル上の都合で配列プロパティを許容するため抑止
 #pragma warning disable CA1819
     public ProcessColor[] Values { get; set; } = [];
 #pragma warning restore CA1819

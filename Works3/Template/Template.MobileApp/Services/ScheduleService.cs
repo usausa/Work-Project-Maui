@@ -63,7 +63,6 @@ public sealed class ScheduleService
         (26, "海外出張",   4, ScheduleStyle.Filled, Blue,         null,         false),
     ];
 
-// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<ScheduleEvent> GetEvents(DateOnly start, DateOnly end)
     {
@@ -136,7 +135,6 @@ public sealed class ScheduleService
     }
 #pragma warning restore CA1822
 
-// DI注入の見本としてインスタンスサービスを維持するため抑止
 #pragma warning disable CA1822
     public IReadOnlyList<Stamp> GetStamps(DateOnly start, DateOnly end)
     {
