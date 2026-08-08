@@ -29,7 +29,7 @@ public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
     {
         if (disposing)
         {
-            Image.ReplaceBitmap(null);
+            ImageHelper.ReplaceBitmap(Image, null);
         }
 
         base.Dispose(disposing);
@@ -82,7 +82,7 @@ public sealed partial class SampleCvNetObjectViewModel : AppViewModelBase
 
             // Bitmap (所有権はImage側のため差し替え時に旧ビットマップを解放する)
             var bitmap = ImageHelper.ToNormalizeBitmap(input);
-            Image.ReplaceBitmap(bitmap);
+            ImageHelper.ReplaceBitmap(Image, bitmap);
 
             // シャッターフラッシュのトリガー
             CaptureCount++;

@@ -46,7 +46,6 @@ public static class SqlHelper
 
             sql.Append(type);
 
-            // コンパイラ内部属性ではなく公式APIでnull許容を判定する (Nullable値型・参照型の双方に対応)
             var nullableColumn = isNullable || (NullabilityContext.Create(column.Property).WriteState == NullabilityState.Nullable);
             if (!nullableColumn || (column.Property.GetCustomAttribute<PrimaryKeyAttribute>() is not null))
             {

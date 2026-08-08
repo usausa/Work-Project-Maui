@@ -20,7 +20,6 @@ public static class ReactiveSignalR
 
             disposable.Add(Disposable.Create(cts.Cancel));
             disposable.Add(Observable.FromAsync(() => TryConnectWithRetryAsync(connection, retryInterval, cts.Token)).Subscribe());
-            // Rxの購読解除は同期契約のため、切断処理はasync voidではなくTaskとして投げっぱなしにする
             disposable.Add(Disposable.Create(() => _ = ShutdownAsync(connection)));
 
             return disposable;

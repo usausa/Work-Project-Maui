@@ -2,7 +2,6 @@ namespace Template.MobileApp.Helpers.Data;
 
 using Smart.Data.Mapper.Handlers;
 
-// アプリ内部の日時はUTCで統一し、表示時のみローカル変換する
 public sealed class DateTimeTypeHandler : TypeHandler<DateTime>
 {
     public override void SetValue(IDbDataParameter parameter, DateTime value)

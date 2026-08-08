@@ -11,7 +11,6 @@ public sealed class ApiDelegatingHandler : DelegatingHandler
         this.apiContext = apiContext;
     }
 
-    // 401ハンドリング(トークンリフレッシュ)は実案件でサーバ仕様に合わせて実装すること
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var token = apiContext.Token;

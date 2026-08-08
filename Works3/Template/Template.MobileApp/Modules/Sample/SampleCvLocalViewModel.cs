@@ -31,7 +31,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     {
         if (disposing)
         {
-            Image.ReplaceBitmap(null);
+            ImageHelper.ReplaceBitmap(Image, null);
         }
 
         base.Dispose(disposing);
@@ -93,7 +93,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
                 // Bitmap
                 var bitmap = ImageHelper.ToNormalizeBitmap(input);
-                Image.ReplaceBitmap(bitmap);
+                ImageHelper.ReplaceBitmap(Image, bitmap);
 
                 // Detect
                 var results = await cognitiveUsecase.DetectAsync(bitmap).ConfigureAwait(true);

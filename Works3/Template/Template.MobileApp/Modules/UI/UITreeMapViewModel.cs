@@ -31,7 +31,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
     {
         if (disposing)
         {
-            Image.ReplaceBitmap(null);
+            ImageHelper.ReplaceBitmap(Image, null);
         }
 
         base.Dispose(disposing);
@@ -96,7 +96,7 @@ public sealed partial class UITreeMapViewModel : AppViewModelBase
             }).ConfigureAwait(true);
 
             // Update
-            Image.ReplaceBitmap(bitmap);
+            ImageHelper.ReplaceBitmap(Image, bitmap);
             Drawing.Update(TreeMapNode<ColorCount>.Build(colors, static x => x.Count));
 
             // シャッターフラッシュのトリガー

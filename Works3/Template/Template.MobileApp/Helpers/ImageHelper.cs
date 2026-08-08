@@ -2,6 +2,16 @@ namespace Template.MobileApp.Helpers;
 
 public static class ImageHelper
 {
+    public static void ReplaceBitmap(SKBitmapImageSource source, SKBitmap? bitmap)
+    {
+        var old = source.Bitmap;
+        source.Bitmap = bitmap;
+        if (!ReferenceEquals(old, bitmap))
+        {
+            old.Dispose();
+        }
+    }
+
     public static SKBitmap ToNormalizeBitmap(Stream stream)
     {
         using var codec = SKCodec.Create(stream);

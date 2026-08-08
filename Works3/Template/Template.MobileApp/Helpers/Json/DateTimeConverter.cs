@@ -15,7 +15,6 @@ public sealed class DateTimeConverter : JsonConverter<DateTime>
 
         try
         {
-            // オフセットなし文字列はUTCとみなし、常にUTC Kindで保持する
             return DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
         }
         catch (Exception ex)
@@ -26,7 +25,6 @@ public sealed class DateTimeConverter : JsonConverter<DateTime>
 
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        // Unspecifiedは内部規約どおりUTCとみなす
         var utc = value.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(value, DateTimeKind.Utc) : value.ToUniversalTime();
         writer.WriteStringValue(utc.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture));
     }

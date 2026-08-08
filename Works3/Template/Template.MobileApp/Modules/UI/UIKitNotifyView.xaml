@@ -82,7 +82,6 @@
                     </Border.Triggers>
                     <Grid ColumnDefinitions="Auto,Auto,*,Auto"
                           ColumnSpacing="12">
-                        <!-- 未読アクセントバー -->
                         <BoxView Grid.Column="0"
                                  WidthRequest="4"
                                  CornerRadius="2"
@@ -107,7 +106,6 @@
                         <VerticalStackLayout Grid.Column="3"
                                              Spacing="6">
                             <Label Style="{StaticResource TimeLabel}" Text="{Binding Time}" />
-                            <!-- 未読ドット -->
                             <BoxView WidthRequest="8"
                                      HeightRequest="8"
                                      CornerRadius="4"

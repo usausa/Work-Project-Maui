@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.View;
 
+using Template.MobileApp.Helpers;
+
 public sealed partial class ViewDrawingViewModel : AppViewModelBase
 {
     public DrawingController Controller { get; } = new();
@@ -26,7 +28,7 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
     {
         if (disposing)
         {
-            Image.ReplaceBitmap(null);
+            ImageHelper.ReplaceBitmap(Image, null);
         }
 
         base.Dispose(disposing);
@@ -49,13 +51,13 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
             var stream = await Controller.GetImageStream();
             if (stream is not null)
             {
-                Image.ReplaceBitmap(SKBitmap.Decode(stream));
+                ImageHelper.ReplaceBitmap(Image, SKBitmap.Decode(stream));
                 HasImage = true;
             }
         }
         else
         {
-            Image.ReplaceBitmap(null);
+            ImageHelper.ReplaceBitmap(Image, null);
             HasImage = false;
         }
     }
