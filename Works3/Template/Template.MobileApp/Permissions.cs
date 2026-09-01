@@ -10,6 +10,7 @@ public sealed class ActivityRecognition : MauiPermissions.BasePlatformPermission
 #endif
 }
 
+#pragma warning disable CA1724
 public static class Permissions
 {
     public static ValueTask<bool> RequestCameraAsync() =>
@@ -37,3 +38,4 @@ public static class Permissions
         return status == PermissionStatus.Granted;
     }
 }
+#pragma warning restore CA1724

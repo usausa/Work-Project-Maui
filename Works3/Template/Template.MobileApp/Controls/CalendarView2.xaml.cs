@@ -890,7 +890,7 @@ public partial class CalendarView2
         {
             return SKColor.Empty;
         }
-        if (SelectedStartDate is not { } start || SelectedEndDate is not { } end)
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
         {
             return SKColor.Empty;
         }
@@ -898,7 +898,7 @@ public partial class CalendarView2
         {
             (start, end) = (end, start);
         }
-        return date > start && date < end ? RangeBackground.ToSKColor() : SKColor.Empty;
+        return (date > start) && (date < end) ? RangeBackground.ToSKColor() : SKColor.Empty;
     }
 
     private SKColor GetDateTextSkColor(DayView day)
@@ -926,11 +926,11 @@ public partial class CalendarView2
 
     private bool IsDateDisabled(DateOnly date)
     {
-        if (MinDate is { } min && date < min)
+        if ((MinDate is { } min) && (date < min))
         {
             return true;
         }
-        if (MaxDate is { } max && date > max)
+        if ((MaxDate is { } max) && (date > max))
         {
             return true;
         }
@@ -947,7 +947,7 @@ public partial class CalendarView2
 
     private bool IsInRange(DateOnly date)
     {
-        if (SelectedStartDate is not { } start || SelectedEndDate is not { } end)
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
         {
             return false;
         }
@@ -955,7 +955,7 @@ public partial class CalendarView2
         {
             (start, end) = (end, start);
         }
-        return date >= start && date <= end;
+        return (date >= start) && (date <= end);
     }
 
     // ------------------------------------------------------------------ Localization
@@ -1023,7 +1023,7 @@ public partial class CalendarView2
                 {
                     break;
                 }
-                if (absDx >= SwipeThreshold || Math.Abs(stepDx) >= SwipeFlickThreshold)
+                if ((absDx >= SwipeThreshold) || (Math.Abs(stepDx) >= SwipeFlickThreshold))
                 {
                     NavigateBySwipe(dx < 0 ? 1 : -1);
                 }
@@ -1127,7 +1127,7 @@ public partial class CalendarView2
                 break;
 
             case CalendarSelectionMode.Range:
-                if (SelectedStartDate is null || (SelectedStartDate is not null && SelectedEndDate is not null))
+                if ((SelectedStartDate is null) || ((SelectedStartDate is not null) && (SelectedEndDate is not null)))
                 {
                     SelectedStartDate = date;
                     SelectedEndDate = null;

@@ -14,7 +14,7 @@ public sealed class BarcodeDrawing : DrawingObject
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
     {
-        if (results is not null && results.Count > 0)
+        if ((results is not null) && (results.Count > 0))
         {
             var scale = 1 / canvas.DisplayScale;
             canvas.Scale(scale, scale);

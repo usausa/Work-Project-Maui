@@ -87,7 +87,7 @@ public sealed class ScheduleService
                     if (date.DayOfWeek == dow)
                     {
                         var ev = CreateEvent($"w{idx++:D4}", title, date, date, style, Colors.Transparent, color);
-                        if (ev.StartDate <= end && ev.EndDate >= start)
+                        if ((ev.StartDate <= end) && (ev.EndDate >= start))
                         {
                             events.Add(ev);
                         }
@@ -105,7 +105,7 @@ public sealed class ScheduleService
                     evEnd = new DateOnly(year, month, daysInMonth);
                 }
 
-                if (evStart <= end && evEnd >= start)
+                if ((evStart <= end) && (evEnd >= start))
                 {
                     events.Add(CreateEvent($"m{idx++:D4}", title, evStart, evEnd, style, bg, fg ?? Colors.White));
                 }
@@ -124,7 +124,7 @@ public sealed class ScheduleService
                     evEnd = new DateOnly(year, month, daysInMonth);
                 }
 
-                if (evStart <= end && evEnd >= start)
+                if ((evStart <= end) && (evEnd >= start))
                 {
                     events.Add(CreateEvent($"o{idx++:D4}", t.Title, evStart, evEnd, t.Style, t.Bg, t.Fg ?? Colors.White, t.Underline));
                 }
@@ -156,7 +156,7 @@ public sealed class ScheduleService
                 var t = StampTemplates[(month + (i * 2)) % StampTemplates.Length];
                 var day = Math.Min(t.DayOffset, daysInMonth);
                 var date = new DateOnly(year, month, day);
-                if (date >= start && date <= end)
+                if ((date >= start) && (date <= end))
                 {
                     stamps.Add(new Stamp
                     {

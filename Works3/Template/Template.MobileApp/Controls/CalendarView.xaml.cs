@@ -644,7 +644,7 @@ public partial class CalendarView : ContentView
 
     private static void OnViewChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is CalendarView view && newValue is MonthView month)
+        if ((bindable is CalendarView view) && (newValue is MonthView month))
         {
             view.Render(month);
         }
@@ -721,7 +721,7 @@ public partial class CalendarView : ContentView
 
     private static void OnSelectionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if (bindable is CalendarView view && view.View is { } month)
+        if ((bindable is CalendarView view) && (view.View is { } month))
         {
             view.RebuildWeeksHostOnly(month);
         }
@@ -772,7 +772,7 @@ public partial class CalendarView : ContentView
 
         // Determine navigation direction from previous displayed month.
         // lastNavDirection is pre-set by swipe; otherwise auto-detect from date comparison.
-        if (lastNavDirection == 0 && (previousYear != 0))
+        if ((lastNavDirection == 0) && (previousYear != 0))
         {
             var prevOrdinal = (previousYear * 12) + previousMonth;
             var newOrdinal = (month.Year * 12) + month.Month;
@@ -934,7 +934,7 @@ public partial class CalendarView : ContentView
         {
             MonthIndicatorHost.BindingContext = month;
         }
-        else if (MonthIndicatorEnabled && MonthIndicatorHost.Content is Label indicatorLabel)
+        else if (MonthIndicatorEnabled && (MonthIndicatorHost.Content is Label indicatorLabel))
         {
             indicatorLabel.Text = month.Month.ToString(CultureInfo.InvariantCulture);
             indicatorLabel.TextColor = MonthIndicatorColor;
@@ -1221,11 +1221,11 @@ public partial class CalendarView : ContentView
 
     private bool IsDateDisabled(DateOnly date)
     {
-        if (MinDate is { } min && date < min)
+        if ((MinDate is { } min) && (date < min))
         {
             return true;
         }
-        if (MaxDate is { } max && date > max)
+        if ((MaxDate is { } max) && (date > max))
         {
             return true;
         }
@@ -1247,7 +1247,7 @@ public partial class CalendarView : ContentView
         {
             return Colors.Transparent;
         }
-        if (SelectedStartDate is not { } start || SelectedEndDate is not { } end)
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
         {
             return Colors.Transparent;
         }
@@ -1255,12 +1255,12 @@ public partial class CalendarView : ContentView
         {
             (start, end) = (end, start);
         }
-        return (date > start && date < end) ? RangeBackground : Colors.Transparent;
+        return ((date > start) && (date < end)) ? RangeBackground : Colors.Transparent;
     }
 
     private bool IsInRange(DateOnly date, bool endpoints)
     {
-        if (SelectedStartDate is not { } start || SelectedEndDate is not { } end)
+        if ((SelectedStartDate is not { } start) || (SelectedEndDate is not { } end))
         {
             return false;
         }
@@ -1268,7 +1268,7 @@ public partial class CalendarView : ContentView
         {
             (start, end) = (end, start);
         }
-        return endpoints ? (date >= start && date <= end) : (date > start && date < end);
+        return endpoints ? ((date >= start) && (date <= end)) : ((date > start) && (date < end));
     }
 
     // ------------------------------------------------------------------ Swipe gestures (PanGestureRecognizer for reliable Android detection)
@@ -1337,7 +1337,7 @@ public partial class CalendarView : ContentView
                 {
                     break;
                 }
-                if (absDx >= SwipeThreshold || Math.Abs(stepDx) >= SwipeFlickThreshold)
+                if ((absDx >= SwipeThreshold) || (Math.Abs(stepDx) >= SwipeFlickThreshold))
                 {
                     NavigateBySwipe(dx < 0 ? 1 : -1);
                 }
@@ -1389,7 +1389,7 @@ public partial class CalendarView : ContentView
                 break;
 
             case CalendarSelectionMode.Range:
-                if (SelectedStartDate is null || (SelectedStartDate is not null && SelectedEndDate is not null))
+                if ((SelectedStartDate is null) || ((SelectedStartDate is not null) && (SelectedEndDate is not null)))
                 {
                     // Start a new range.
                     SelectedStartDate = date;

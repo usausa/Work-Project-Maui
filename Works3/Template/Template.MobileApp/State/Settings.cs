@@ -1,5 +1,6 @@
 namespace Template.MobileApp.State;
 
+#pragma warning disable CA1724
 public sealed class Settings
 {
     private const string AIServiceKeyName = "AIServiceKey";
@@ -71,3 +72,4 @@ public sealed class Settings
         await secureStorage.SetAsync(AIServiceKeyName, value);
     }
 }
+#pragma warning restore CA1724

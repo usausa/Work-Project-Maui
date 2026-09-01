@@ -110,7 +110,7 @@ public sealed class MonthViewBuilder(DayOfWeek weekStartDayOfWeek = DayOfWeek.Mo
 
     private static DayKind DetermineKind(DateOnly date, HashSet<DateOnly>? holidays)
     {
-        if (holidays is not null && holidays.Contains(date))
+        if ((holidays is not null) && holidays.Contains(date))
         {
             return DayKind.Holiday;
         }

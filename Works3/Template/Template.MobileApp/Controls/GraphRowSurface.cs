@@ -127,7 +127,7 @@ public sealed class GraphRowSurface : SKCanvasView
         canvas.Save();
         var scaleX = (float)(e.Info.Width / Width);
         var scaleY = (float)(e.Info.Height / Height);
-        if (float.IsFinite(scaleX) && float.IsFinite(scaleY) && scaleX > 0 && scaleY > 0)
+        if (Single.IsFinite(scaleX) && Single.IsFinite(scaleY) && (scaleX > 0) && (scaleY > 0))
         {
             canvas.Scale(scaleX, scaleY);
         }
@@ -167,7 +167,7 @@ public sealed class GraphRowSurface : SKCanvasView
     {
         canvas.Clear(SKColors.Transparent);
 
-        var rowHeight = (Height > 0) && double.IsFinite(Height) ? (float)Height : DefaultRowHeight;
+        var rowHeight = (Height > 0) && Double.IsFinite(Height) ? (float)Height : DefaultRowHeight;
         var nodeCenterY = NodeCenterY > 0f ? NodeCenterY : rowHeight / 2f;
         var lineWidth = LineWidth;
 

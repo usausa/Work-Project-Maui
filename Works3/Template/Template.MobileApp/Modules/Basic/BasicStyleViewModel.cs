@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Modules.Basic;
 
+#pragma warning disable CA1002
 public sealed partial class BasicStyleViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
@@ -50,3 +51,4 @@ public sealed partial class BasicStyleViewModel : AppViewModelBase
         return (int?)selected?.Key;
     }
 }
+#pragma warning restore CA1002

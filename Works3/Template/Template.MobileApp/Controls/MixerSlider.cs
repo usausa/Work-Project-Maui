@@ -302,7 +302,7 @@ public sealed class MixerSlider : GraphicsView, IDrawable
         var thumbY = (float)(trackBottom - (valuePercentage * trackHeight));
 
         // Tick
-        if (HasTickMarks && TickMarkCount > 1)
+        if (HasTickMarks && (TickMarkCount > 1))
         {
             canvas.StrokeColor = TickMarkColor;
             canvas.StrokeSize = TickWidth;

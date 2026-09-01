@@ -29,7 +29,7 @@ public sealed class DrawingControl : GraphicsView
         if (oldValue is not null)
         {
             oldValue.Detach();
-            Drawable = null!;
+            Drawable = null;
         }
         if (newValue is not null)
         {

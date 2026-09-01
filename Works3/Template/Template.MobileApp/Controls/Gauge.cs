@@ -933,9 +933,9 @@ public sealed class Gauge : SKCanvasView
                 ? LabelFormatter(value)
                 : LabelConverter is not null
                     ? LabelConverter.Convert(value, typeof(string), null, CultureInfo.CurrentCulture) as string ?? string.Empty
-                    : string.Format(LabelFormat, value);
+                    : String.Format(LabelFormat, value);
 
-            if (string.IsNullOrEmpty(text))
+            if (String.IsNullOrEmpty(text))
             {
                 continue;
             }
@@ -963,8 +963,8 @@ public sealed class Gauge : SKCanvasView
 
         // 中央値表示の垂直基準位置を ValueOffsetY で調整する
         var baseCy = center.Y + (r * ValueOffsetY);
-        var valueText = string.Format(ValueFormat, displayValue);
-        var hasUnit = !string.IsNullOrEmpty(Unit);
+        var valueText = String.Format(ValueFormat, displayValue);
+        var hasUnit = !String.IsNullOrEmpty(Unit);
 
         using var valueFont = new SKFont(SKTypeface.Default, ValueFontSize * density);
         using var valuePaint = new SKPaint();
@@ -1003,19 +1003,19 @@ public sealed class Gauge : SKCanvasView
             var vw = valueFont.MeasureText(valueText);
             canvas.DrawText(valueText, center.X - (vw / 2f), valueBaseline, SKTextAlign.Left, valueFont, valuePaint);
 
-            var uw = unitFont.MeasureText(Unit!);
-            canvas.DrawText(Unit!, center.X - (uw / 2f), unitBaseline, SKTextAlign.Left, unitFont, unitPaint);
+            var uw = unitFont.MeasureText(Unit);
+            canvas.DrawText(Unit, center.X - (uw / 2f), unitBaseline, SKTextAlign.Left, unitFont, unitPaint);
         }
         else
         {
             // 単位右置き: 数値と単位を横に並べ、合計幅を中央に揃える
             var vw = valueFont.MeasureText(valueText);
-            var uw = unitFont.MeasureText(Unit!);
+            var uw = unitFont.MeasureText(Unit);
             var totalW = vw + 4f + uw;
             var startX = center.X - (totalW / 2f);
 
             canvas.DrawText(valueText, startX, baseCy - ((vm.Ascent + vm.Descent) / 2f), SKTextAlign.Left, valueFont, valuePaint);
-            canvas.DrawText(Unit!, startX + vw + 4f, baseCy - ((um.Ascent + um.Descent) / 2f), SKTextAlign.Left, unitFont, unitPaint);
+            canvas.DrawText(Unit, startX + vw + 4f, baseCy - ((um.Ascent + um.Descent) / 2f), SKTextAlign.Left, unitFont, unitPaint);
         }
     }
 

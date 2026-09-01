@@ -51,6 +51,7 @@ public sealed class Circle : IShape
     }
 }
 
+#pragma warning disable CA1002
 public sealed class ShapeDrawing : DrawingObject
 {
     public SizeF Size { get; set; }
@@ -70,3 +71,4 @@ public sealed class ShapeDrawing : DrawingObject
         }
     }
 }
+#pragma warning restore CA1002

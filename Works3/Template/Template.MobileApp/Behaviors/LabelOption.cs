@@ -110,7 +110,7 @@ public static partial class LabelOption
             {
                 var current = from + ((to - from) * v);
                 label.SetValue(CountUpDisplayValueProperty, current);
-                label.Text = string.Format(CultureInfo.CurrentCulture, format, current);
+                label.Text = String.Format(CultureInfo.CurrentCulture, format, current);
             },
             16,
             (uint)GetCountUpDuration(label),
@@ -118,7 +118,7 @@ public static partial class LabelOption
             (_, _) =>
             {
                 label.SetValue(CountUpDisplayValueProperty, to);
-                label.Text = string.Format(CultureInfo.CurrentCulture, format, to);
+                label.Text = String.Format(CultureInfo.CurrentCulture, format, to);
             });
     }
 }

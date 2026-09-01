@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 
+#pragma warning disable CA1724
 public sealed partial class App
 {
     private readonly IServiceProvider serviceProvider;
@@ -62,3 +63,4 @@ public sealed partial class App
         await navigator.ForwardAsync(ViewId.Menu);
     }
 }
+#pragma warning restore CA1724

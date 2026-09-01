@@ -7,7 +7,7 @@ public sealed class BadgeCountConverter : IValueConverter
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not int count || count <= 0)
+        if ((value is not int count) || (count <= 0))
         {
             return string.Empty;
         }

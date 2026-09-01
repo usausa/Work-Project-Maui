@@ -3,7 +3,7 @@
 外部の記事・OSS 51 件を「本サンプルに取り込む価値があるか」で評価した結果。
 判断根拠・技術詳細は [Reference_Analysis.md](Reference_Analysis.md) を参照。
 
-改訂: 2026-08-24 (前提条件の見直しに伴い全面改訂 / Shiny Controls を S-51 として追加 / **D1〜D18 決定済み。D19 と C-14 は後日対応**)
+改訂: 2026-08-24 (前提条件の見直しに伴い全面改訂 / Shiny Controls を S-51 として追加 / SCP (SSH.NET) をユーザー指示で追加 / **D1〜D18 決定済み。D19+C-14 は後日対応。D20〜D22 は未決**)
 
 **前提**: NuGet 追加は禁止ではないが、既存パッケージや他ライブラリで同等機能が実現できるものは追加しない。
 追加先は UI 画面に限らず、MAUI の基本要素サンプルであれば任意のモジュールに入れる。
@@ -30,12 +30,12 @@
 
 ## 2. 結論
 
-51 件中、取り込み候補は **41 件**。新規 NuGet の追加は **1 件のみ**（+ 確認待ち 1 件）。Shiny Controls の参照追加は D13 で判断 (推奨: 参照しない)。
+51 件中、取り込み候補は **42 件** (うち B-20 の SCP はユーザー指示による追加)。新規 NuGet の追加は **2 件**（`Microsoft.AspNetCore.Components.WebView.Maui` / `SSH.NET`）+ 確認待ち 1 件（`BruTile.MbTiles`）。Shiny Controls の参照追加は D13 で判断 (推奨: 参照しない)。
 
 | 区分 | 件数 |
 | --- | --- |
 | 優先度 A (即着手) | 12 |
-| 優先度 B (設計判断を伴う) | 19 |
+| 優先度 B (設計判断を伴う) | 20 |
 | 優先度 C (小物 / ドキュメント) | 12 |
 | 不採用 (1) ライブラリ・資料としては有用 | 22 |
 | 不採用 (2) サンプル側が優れており参考自体が不要 | 16 |
@@ -70,6 +70,9 @@
 | D17 | 小型入力コントロール群 | **簡単なものだけ採用** — `ColorPicker` / `DurationPicker` は採用、`RangeSlider` / `AutoCompleteEntry` (難度中) は見送り |
 | D18 | チャット UI の二重実装 (`Controls/ChatView` と `UIChatView`) | **案A — 現状維持**。用途の違いによる意図的な使い分けとして残す。C-13 (バブル色のバインダブル化) は**検討扱い** |
 | — | カレンダーの正 | **`CalendarView2` (Skia 自前描画版) を正とする** |
+| D20 | **SSH.NET (SCP) の追加可否** | **未決**。`SSH.NET` 2026.0.0 / MIT / 推移依存に **`BouncyCastle.Cryptography` (新規)**。.NET 標準にも導入済みパッケージにも同等機能は無いため追加は正当。案A: 追加 (推移依存を事前確認) / 案B: 追加しない / 案C: 増分次第で再判断。**推奨は案A**。ただし **Android Release はトリミングされるため実機確認が必須** |
+| D21 | SCP サンプルのスコープ | **未決**。案A: SCP のみ (アップロード / ダウンロード + 進捗) / 案B: SCP + SFTP (一覧・削除・リネーム) / 案C: SCP + リモートコマンド実行。**推奨は案A** |
+| D22 | 接続情報の保管とホスト鍵検証 | **未決**。保管は案A: ホスト/ポート/ユーザー名を `IPreferences`、パスワード/鍵を `ISecureStorage` (既存 `Settings` に倣う) を推奨。ホスト鍵は案A: **TOFU (初回に指紋を承認して保存、以降は不一致で中断)** を推奨。**無条件受け入れは避ける** |
 | D19 | 未使用になった `CalendarView` (旧) の扱い | **【後日対応 / 本セッション対象外】**。旧版は 1,490 行が**どこからも参照されていない**。案A: 削除し `CalendarView2` を `CalendarView` にリネーム / 案B: 削除のみ / 案C: 比較サンプルとして残す。**推奨は案A**（案C にも教材価値あり）。C-14 も同時に扱う |
 
 
@@ -117,6 +120,7 @@
 | B-17 | **`CollectionView.RemainingItemsThreshold` による追加読み込み** (無限スクロール) — D14 により ChatView から振り替え | `Modules/View/ViewCollectionView.xaml` |
 | B-18 | **【低優先・メモのみ / 実装しない】Walkthrough (要素スポットライト型コーチマーク)** — コスト中 (D16) | (未定) |
 | ~~B-19~~ | `StaggeredGrid` は **B-1 に統合** | `Layouts/` |
+| B-20 | **SCP 転送サンプル** — 空スタブの `NetworkScpView` を実装しメニューに結線。接続 / アップロード / ダウンロード / 進捗 / キャンセル / ホスト鍵確認。`FilePicker` (使用箇所ゼロ) のサンプル化も兼ねる (D20〜D22 が前提) | `Modules/Network/NetworkScp*` + `Services/ScpService.cs` (新規) + `State/Settings.cs` |
 
 ---
 
@@ -181,6 +185,10 @@
 | UI | スケジュール | `Modules/UI/UIScheduleView.xaml` | 日チップ + 日次タイムテーブル | イベントのカード化 / 所要時間と日合計 / 空き時間ハイライト | B-9 |
 | View | 自作入力部品 | (新規) `ViewInputView` | 両 Toolkit にも無い小型入力 | ColorPicker / DurationPicker | C-12 |
 | View | Collection | `Modules/View/ViewCollectionView.xaml` | グループ + SwipeView | `RemainingItemsThreshold` による追加読み込み | B-17 |
+| Network | Network メニュー | `Modules/Network/NetworkMenuView.xaml` | Network 配下への入口 (空きスロット 2 つ) | `Grid.Row="7"` を SCP に結線 | B-20 |
+| Network | SCP 転送 | `Modules/Network/NetworkScpView.xaml` | **現在は空スタブ・メニュー未結線で到達不可** | 接続 / アップロード / ダウンロード / 進捗 / キャンセル / ホスト鍵の指紋確認 | B-20 |
+| 基盤 | SCP サービス | (新規) `Services/ScpService.cs` | `ScpClient` のラッパ | DI 登録 / 進捗イベント中継 / キャンセル対応 | B-20 |
+| 基盤 | 設定 | `State/Settings.cs` | `IPreferences` + `ISecureStorage` の使い分け | SCP のホスト / 認証情報 / ホスト鍵指紋 | B-20 |
 | 基盤 | チャットコントロール | `Controls/ChatView.xaml` | AI チャット用の吹き出し | 見た目のバインダブルプロパティ | C-13 |
 | 基盤 | カレンダーコントロール | `Controls/CalendarView2.xaml` (正) / `CalendarView.xaml` (旧・未参照 1,490 行) | 月カレンダー描画 | **後日対応** — コメント反映と旧版の削除/リネーム | C-14 / D19 |
 | 基盤 | スケジュール供給 | `Services/ScheduleService.cs` | 月/日ビュー共有のイベント供給 | `IScheduleEventProvider` 化 | B-9 |

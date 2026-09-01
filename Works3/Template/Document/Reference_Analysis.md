@@ -539,6 +539,62 @@ Shiny にあり既存にも両 Toolkit にも無い小型入力: `ColorPicker` /
 **【後日対応】旧 `CalendarView` の扱いは本セッションの対象外。** 別途あらためて判断する。
 **C-14 (コメントの実態合わせ) も D19 と同時に扱う** — 案A を採る場合はリネームでコメントごと書き直しになるため、先にコメントだけ直しても手戻りになる。
 
+### D20. SSH.NET (SCP) パッケージの追加可否
+
+**ユーザー指示 (2026-08-24) により SCP 対応を計画に追加する。**
+
+現状確認 — **`Modules/Network/NetworkScpView.xaml` は空のスタブとして既に存在する**。
+`ViewId.NetworkScp` は `Modules/ViewId.cs:76` に登録済み、`[View(ViewId.NetworkScp)]` も付いているが、
+本体は `<!-- Menu -->` のみで、`NetworkScpViewModel` も戻る処理しか持たない。さらに `NetworkMenuView.xaml` から結線されていないため**到達できない**。
+一方でメニューには `Grid.Row="7"` / `Grid.Row="8"` の**空きスロットが 2 つ** (`IsEnabled="False"` / `Text=""`) 空いている。
+
+| 項目 | 内容 |
+| --- | --- |
+| パッケージ | `SSH.NET` (Renci.SshNet) **2026.0.0** (2026-08-09 リリース) |
+| ライセンス | MIT |
+| ターゲット | .NET 8.0 以上 / .NET Standard 2.0 / .NET Framework 4.6.2 以上 |
+| 推移依存 | **`BouncyCastle.Cryptography` ≥ 2.7.0 (新規)** / `Microsoft.Extensions.Logging.Abstractions` ≥ 8.0.3 (既存の `Microsoft.Extensions.Logging.Debug` 経由で導入済み) |
+| 代替の有無 | **無い**。.NET 標準にも導入済みパッケージにも SSH / SCP の同等機能は存在しない |
+
+前提の「既存もしくは他ライブラリで同等の機能を実現しているものは追加しない」に照らすと、**SSH/SCP は例外に当たらず追加が正当化される**。
+
+- **案A**: 追加する。事前に `dotnet list package --include-transitive` で推移依存の実際の増分を確認する
+- **案B**: 追加しない (SCP は見送り、スタブも削除)
+- **案C**: 追加するが、`BouncyCastle` の増分が許容できない場合は再判断
+
+**推奨: 案A**。ただし**注意点が 1 つある** — Android の Release ビルドは既定でトリミングされる。
+本プロジェクトの csproj / Directory.Build.* にトリミング設定は無く、既定に任せている状態。
+SSH.NET と BouncyCastle は暗号アルゴリズムの解決にリフレクションを使う箇所があるため、**Debug で動いても Release で失敗しうる**。
+**必ず Release ビルドで実機確認**し、失敗する場合は `TrimmerRootAssembly` で退避する。この確認は C-10 の「Release ビルドで測る」手順と同じ位置づけ。
+
+### D21. SCP サンプルのスコープ
+
+`SSH.NET` は `ScpClient` (SCP) / `SftpClient` (SFTP) / `SshClient` (コマンド実行) を持つ。
+
+- **案A**: **SCP のみ** — アップロード / ダウンロード + 進捗表示
+- **案B**: SCP + SFTP — `SftpClient` でディレクトリ一覧 / 削除 / リネームまで
+- **案C**: SCP + `SshClient.RunCommand` によるリモートコマンド実行
+
+**推奨: 案A**。指示が SCP であること、`ScpClient` と `SftpClient` は API が別物で 1 画面に詰めると散らかることが理由。
+案B に広げるなら画面を分ける (`NetworkScp` / `NetworkSftp`) 方が良く、メニューの空きスロットは 2 つあるので枠は足りる。
+
+### D22. 接続情報の保管とホスト鍵検証
+
+**接続情報の保管** — `State/Settings.cs` が `IPreferences` (平文) と `ISecureStorage` (鍵類) を使い分ける前例を持つ (`GetAIServiceKeyAsync` / `SetAIServiceKeyAsync` は旧 `Preferences` からの移行処理付き)。
+
+- **案A**: ホスト / ポート / ユーザー名は `IPreferences`、パスワード / 秘密鍵は `ISecureStorage`。既存 `Settings` に倣う
+- **案B**: 画面内の入力のみで保存しない
+
+**推奨: 案A**。既存の作法をそのまま適用でき、`ISecureStorage` の使い方サンプルとしても機能する。
+
+**ホスト鍵検証** — `SshClient` / `ScpClient` は `HostKeyReceived` イベントで指紋を検証できる。**サンプルが無条件受け入れを書くと誤った作法を広めることになる**ため、扱いを決めておく。
+
+- **案A**: TOFU (Trust On First Use) — 初回接続時に指紋を表示してユーザーが承認し、`ISecureStorage` に保存。次回以降は不一致なら接続を中断する
+- **案B**: 指紋を画面に表示するが、接続は常に許可する
+- **案C**: 検証しない (`e.CanTrust = true` 固定)
+
+**推奨: 案A**。実装量は「指紋の保存と比較」だけで小さく、セキュリティの作法を示せる。**案C は避ける**。
+
 ---
 
 ## 4. 採用候補
@@ -582,6 +638,7 @@ Shiny にあり既存にも両 Toolkit にも無い小型入力: `ColorPicker` /
 | B-16 | **Scene のダブルバッファ (試験導入)** — A-3 の実測後、最も重い 1 シーンに試験導入して再計測し、有意差があれば基盤機能として本採用、無ければ破棄 | S-04 | `Graphics/Scene/SceneObject.cs` | **D8。必ず Release ビルドで測る。結果は `Document/Development.md` へ** |
 | B-17 | **`CollectionView.RemainingItemsThreshold` による追加読み込み** — 下方向スクロールで次ページを読む無限スクロール。`RemainingItemsThreshold` + `RemainingItemsThresholdReachedCommand` の 2 属性と VM のコマンド 1 本 | S-51 / 1.2 | `Modules/View/ViewCollectionView.xaml` | **D14 により ChatView から振り替え**。チャットは「最新が末尾・末尾追従」の作りのため、末尾到達で発火する本機能は過去読み込みに使えない |
 | B-18 | **【低優先・メモのみ / 実装しない】Walkthrough (要素スポットライト型コーチマーク)** — 対象要素を指してツアーを進め、初回のみ自動実行。実装方針: `Grid` 全面オーバーレイ + `Border` のくり抜き + 対象要素の絶対座標取得、初回判定は `State/Settings.cs` (`IPreferences`) | S-51 | (未定) | **D16 により実装しない。** コストは中 — 対象要素の絶対座標取得と `ScrollView` 内要素への追従が要注意 |
+| B-20 | **SCP 転送サンプル** — 空スタブの `Modules/Network/NetworkScpView` を実装し、`NetworkMenuView.xaml` の空きスロット (`Grid.Row="7"`) に結線する。`Services/ScpService.cs` に `Renci.SshNet.ScpClient` のラッパを置いて DI 登録し、接続 / アップロード / ダウンロード / キャンセルを VM から操作する。進捗は `ScpClient.Uploading` / `Downloading` イベント (`Uploaded` / `Size`) を既存 `AnimationOption.ProgressTo` へ流す。アップロード元の選択に **`FilePicker` (現在プロジェクトで使用箇所ゼロ)** を使い、未使用 API のサンプル化も兼ねる。保存先は `FileSystem.CacheDirectory` | ユーザー指示 (2026-08-24) | `Modules/Network/NetworkScp*` + `Services/ScpService.cs` (新規) + `State/Settings.cs` + `Modules/Network/NetworkMenuView.xaml` | **D20〜D22 が前提**。決まれば実装は素直。**Release (トリミング有効) での動作確認が必須** |
 
 ### 優先度 C — 小物 / ドキュメント作業
 
@@ -676,7 +733,16 @@ Shiny にあり既存にも両 Toolkit にも無い小型入力: `ColorPicker` /
 | チャット | `Modules/UI/UIChatView.xaml` | 吹き出し / リアクション / 既読 / スタンプ | 変更なし (D14 により機能追加は見送り) | — |
 | 設定 (見た目) | `Modules/UI/UIKitSettingView.xaml` | iOS 風グルーピングリスト | 変更なし (A-10 とは役割を分ける) | — |
 
-### 5.7 共通基盤 (画面外)
+### 5.7 Modules/Network
+
+| 対象 | 現在のファイル名 | 何用か | 追加する要素 | 項目 |
+| --- | --- | --- | --- | --- |
+| Network メニュー | `Modules/Network/NetworkMenuView.xaml` | Network 配下への入口 (空きスロット 2 つ) | `Grid.Row="7"` を SCP に結線 | B-20 |
+| SCP 転送 | `Modules/Network/NetworkScpView.xaml` | **現在は空スタブ (`<!-- Menu -->` のみ・メニュー未結線で到達不可)** | 接続 / アップロード / ダウンロード / 進捗 / キャンセル / ホスト鍵の指紋確認 | B-20 |
+| SCP サービス | (新規) `Services/ScpService.cs` | `ScpClient` のラッパ (DI 登録) | 接続情報の受け渡し、進捗イベントの中継、`CancellationToken` 対応 | B-20 |
+| 設定 | `State/Settings.cs` | `IPreferences` + `ISecureStorage` の使い分け | SCP のホスト / ポート / ユーザー名 (Preferences)、パスワード / 秘密鍵 / ホスト鍵指紋 (SecureStorage) | B-20 / D22 |
+
+### 5.8 共通基盤 (画面外)
 
 | 対象 | 現在のファイル名 | 何用か | 追加する要素 | 項目 |
 | --- | --- | --- | --- | --- |

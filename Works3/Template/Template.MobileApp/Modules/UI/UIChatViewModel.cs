@@ -46,7 +46,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     {
         this.dispatcher = dispatcher;
 
-        SendCommand = MakeDelegateCommand(ExecuteSend, () => !string.IsNullOrWhiteSpace(InputText));
+        SendCommand = MakeDelegateCommand(ExecuteSend, () => !String.IsNullOrWhiteSpace(InputText));
         SendStampCommand = MakeDelegateCommand<string>(ExecuteSendStamp);
         PickImageCommand = MakeDelegateCommand(static () => { });
         PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);

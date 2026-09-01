@@ -13,6 +13,7 @@ public sealed class DataServiceOptions
     public string Path { get; set; } = default!;
 }
 
+#pragma warning disable CA1002
 public sealed class DataService
 {
     private readonly DataServiceOptions options;
@@ -168,3 +169,4 @@ public sealed class DataService
     public ValueTask<int> DeleteWorkAsync(long id) =>
         provider.UsingAsync(con => con.ExecuteAsync(SqlDelete<WorkEntity>.ByKey(), new { Id = id }));
 }
+#pragma warning restore CA1002

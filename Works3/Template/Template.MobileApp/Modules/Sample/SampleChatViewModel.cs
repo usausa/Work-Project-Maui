@@ -27,7 +27,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public SampleChatViewModel()
     {
-        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !string.IsNullOrWhiteSpace(InputText));
+        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !String.IsNullOrWhiteSpace(InputText));
         PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(InputText))

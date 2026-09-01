@@ -103,7 +103,7 @@ public sealed class DayTimetableView : SKCanvasView
         canvas.Clear(SKColors.White);
 
         var scale = (float)(e.Info.Width / Width);
-        if (!float.IsFinite(scale) || (scale <= 0))
+        if (!Single.IsFinite(scale) || (scale <= 0))
         {
             return;
         }

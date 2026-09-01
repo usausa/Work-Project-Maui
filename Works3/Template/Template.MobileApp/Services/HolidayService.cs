@@ -15,7 +15,7 @@ public sealed class HolidayService
         {
             foreach (var d in GetYearHolidays(year))
             {
-                if (d >= start && d <= end)
+                if ((d >= start) && (d <= end))
                 {
                     holidays.Add(d);
                 }
@@ -84,8 +84,8 @@ public sealed class HolidayService
         {
             var candidate = h.AddDays(1);
             if (!set.Contains(candidate) &&
-                candidate.DayOfWeek != DayOfWeek.Sunday &&
-                candidate.DayOfWeek != DayOfWeek.Saturday &&
+                (candidate.DayOfWeek != DayOfWeek.Sunday) &&
+                (candidate.DayOfWeek != DayOfWeek.Saturday) &&
                 set.Contains(candidate.AddDays(1)))
             {
                 sandwiched.Add(candidate);
