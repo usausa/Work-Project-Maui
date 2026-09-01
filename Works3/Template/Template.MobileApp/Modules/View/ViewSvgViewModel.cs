@@ -1,41 +1,29 @@
 namespace Template.MobileApp.Modules.View;
 
-using Svg.Skia;
-
 public sealed partial class ViewSvgViewModel : AppViewModelBase
 {
-    private readonly IFileSystem fileSystem;
-
+    // SvgView.Source にパスを渡すだけでロード/キャッシュはコントロール側が行う
     [ObservableProperty]
-    public partial SKSvg? Svg { get; set; }
+    public partial string SvgSource { get; set; } = Path.Combine("Svg", "dotnet_bot.svg");
 
     [ObservableProperty]
     public partial string Selected { get; set; } = "dotnet_bot";
 
     public IObserveCommand SelectCommand { get; }
 
-    public ViewSvgViewModel(IFileSystem fileSystem)
+    public ViewSvgViewModel()
     {
-        this.fileSystem = fileSystem;
-
-        SelectCommand = MakeAsyncCommand<string>(LoadAsync);
+        SelectCommand = MakeDelegateCommand<string>(Select);
     }
 
-    public override Task OnNavigatingToAsync(INavigationContext context) => LoadAsync("dotnet_bot");
-
-    private async Task LoadAsync(string name)
+    private void Select(string name)
     {
-        var path = name switch
+        SvgSource = name switch
         {
             "vite" => Path.Combine("web-app", "vite.svg"),
             "react" => Path.Combine("web-app", "assets", "react-CHdo91hT.svg"),
             _ => Path.Combine("Svg", "dotnet_bot.svg")
         };
-
-        var svg = new SKSvg();
-        await using var stream = await fileSystem.OpenAppPackageFileAsync(path);
-        svg.Load(stream);
-        Svg = svg;
         Selected = name;
     }
 

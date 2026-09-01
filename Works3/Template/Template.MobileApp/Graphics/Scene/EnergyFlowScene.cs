@@ -72,7 +72,8 @@ public sealed class EnergyFlowScene : SceneObject
         canvas.Save();
         canvas.Scale(s);
 
-        DrawDotGrid(canvas, vh);
+        // ドット背景は不変のためキャッシュから再生する
+        DrawCachedLayer(canvas, "grid", BaseWidth, vh, c => DrawDotGrid(c, vh));
         DrawHeader(canvas);
         DrawKpiCards(canvas);
         DrawElectricSection(canvas, Time);

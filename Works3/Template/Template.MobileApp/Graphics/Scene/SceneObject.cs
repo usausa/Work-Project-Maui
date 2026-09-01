@@ -134,7 +134,54 @@ public abstract class SceneObject : ISceneObject, IDisposable
             textFont.Dispose();
             textFontBold.Dispose();
             textPaint.Dispose();
+
+            foreach (var layer in layerCache.Values)
+            {
+                layer.Picture?.Dispose();
+            }
+
+            layerCache.Clear();
         }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Layer cache
+    //--------------------------------------------------------------------------------
+
+    private sealed class CachedLayer
+    {
+        public SKPicture? Picture { get; set; }
+
+        public float Width { get; set; }
+
+        public float Height { get; set; }
+    }
+
+    private readonly Dictionary<string, CachedLayer> layerCache = [];
+
+    // 静的レイヤ (背景グリッド・目盛り・パネル枠等の不変描画) を SKPicture として記録し、
+    // 以降のフレームでは再生のみ行う。サイズが変わったときだけ draw を再実行する。
+    // 呼び出し時点のキャンバス変換 (Scale 等) の中で再生されるため、記録は仮想座標系で行うこと。
+    protected void DrawCachedLayer(SKCanvas canvas, string key, float width, float height, Action<SKCanvas> draw)
+    {
+        if (!layerCache.TryGetValue(key, out var layer))
+        {
+            layer = new CachedLayer();
+            layerCache[key] = layer;
+        }
+
+        if ((layer.Picture is null) || (MathF.Abs(layer.Width - width) > 0.5f) || (MathF.Abs(layer.Height - height) > 0.5f))
+        {
+            layer.Picture?.Dispose();
+            layer.Picture = null;
+            using var recorder = new SKPictureRecorder();
+            draw(recorder.BeginRecording(new SKRect(0f, 0f, width, height)));
+            layer.Picture = recorder.EndRecording();
+            layer.Width = width;
+            layer.Height = height;
+        }
+
+        canvas.DrawPicture(layer.Picture);
     }
 
     //--------------------------------------------------------------------------------

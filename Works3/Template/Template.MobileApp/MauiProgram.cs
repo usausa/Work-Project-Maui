@@ -135,11 +135,25 @@ public static partial class MauiProgram
     // Application
     // ------------------------------------------------------------
 
-    // ReSharper disable UnusedParameter.Local
     private static void ConfigureLifecycleEvents(ILifecycleBuilder effects)
     {
+        // プラットフォーム固有ライフサイクルのフック例。挙動は変えずログ出力のみ行う
+        // (確認は adb logcat -s AppLifecycle)
+#if ANDROID
+        effects.AddAndroid(static android => android
+            .OnCreate(static (activity, _) => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnCreate)))
+            .OnStart(static activity => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnStart)))
+            .OnResume(static activity => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnResume)))
+            .OnPause(static activity => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnPause)))
+            .OnStop(static activity => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnStop)))
+            .OnDestroy(static activity => LogLifecycleEvent(activity, nameof(AndroidLifecycle.OnDestroy))));
+#endif
     }
-    // ReSharper restore UnusedParameter.Local
+
+#if ANDROID
+    private static void LogLifecycleEvent(Android.App.Activity activity, string eventName) =>
+        Android.Util.Log.Debug("AppLifecycle", $"{activity.LocalClassName} {eventName}");
+#endif
 
     // ReSharper disable UnusedParameter.Local
     private static void ConfigureEssentials(IEssentialsBuilder config)

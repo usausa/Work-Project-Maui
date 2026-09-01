@@ -101,7 +101,8 @@
             <Grid Style="{StaticResource FrameGrid}"
                   RowDefinitions="*,Auto">
                 <controls:SvgView Grid.Row="0"
-                                  Svg="{Binding Svg}" />
+                                  Source="{Binding SvgSource}"
+                                  Placeholder="Svg/dotnet_bot.svg" />
                 <HorizontalStackLayout Grid.Row="1"
                                        Style="{StaticResource FileRow}">
                     <Label Style="{StaticResource FileIcon}"

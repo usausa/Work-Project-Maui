@@ -275,21 +275,9 @@ public sealed class FlightHudScene : SceneObject
         canvas.Restore();
         canvas.Restore();
 
-        // Roll scale
+        // Roll scale (不変のためキャッシュから再生)
         const float rollR = 112f;
-        for (var a = -45; a <= 45; a += 15)
-        {
-            var rad = DegToRad(a - 90f);
-            var x1 = 200f + (rollR * MathF.Cos(rad));
-            var y1 = cy + (rollR * MathF.Sin(rad));
-            var len = a == 0 ? 9f : 6f;
-            var x2 = 200f + ((rollR + len) * MathF.Cos(rad));
-            var y2 = cy + ((rollR + len) * MathF.Sin(rad));
-            Stroke.StrokeCap = SKStrokeCap.Butt;
-            Stroke.Color = Main.WithAlpha(150);
-            Stroke.StrokeWidth = 1.4f;
-            canvas.DrawLine(x1, y1, x2, y2, Stroke);
-        }
+        DrawCachedLayer(canvas, "roll", BaseWidth, cy + rollR + 16f, c => DrawRollScale(c, cy, rollR));
 
         var rollRad = DegToRad(-sim.RollDeg - 90f);
         var tx = 200f + ((rollR - 4f) * MathF.Cos(rollRad));
@@ -323,6 +311,23 @@ public sealed class FlightHudScene : SceneObject
         DrawGlowLine(canvas, fx - 21f, fy, fx - 9f, fy, Bright, 2f);
         DrawGlowLine(canvas, fx + 9f, fy, fx + 21f, fy, Bright, 2f);
         DrawGlowLine(canvas, fx, fy - 9f, fx, fy - 16f, Bright, 2f);
+    }
+
+    private void DrawRollScale(SKCanvas canvas, float cy, float rollR)
+    {
+        for (var a = -45; a <= 45; a += 15)
+        {
+            var rad = DegToRad(a - 90f);
+            var x1 = 200f + (rollR * MathF.Cos(rad));
+            var y1 = cy + (rollR * MathF.Sin(rad));
+            var len = a == 0 ? 9f : 6f;
+            var x2 = 200f + ((rollR + len) * MathF.Cos(rad));
+            var y2 = cy + ((rollR + len) * MathF.Sin(rad));
+            Stroke.StrokeCap = SKStrokeCap.Butt;
+            Stroke.Color = Main.WithAlpha(150);
+            Stroke.StrokeWidth = 1.4f;
+            canvas.DrawLine(x1, y1, x2, y2, Stroke);
+        }
     }
 
     //--------------------------------------------------------------------------------
@@ -419,38 +424,8 @@ public sealed class FlightHudScene : SceneObject
         var cx = 102f;
         var cy = vh - 152f;
 
-        Fill.Color = Panel;
-        canvas.DrawCircle(cx, cy, r, Fill);
-
-        Stroke.StrokeCap = SKStrokeCap.Butt;
-        Stroke.Color = Main.WithAlpha(90);
-        Stroke.StrokeWidth = 1.8f;
-        canvas.DrawCircle(cx, cy, r, Stroke);
-        Stroke.Color = Main.WithAlpha(50);
-        Stroke.StrokeWidth = 1f;
-        canvas.DrawCircle(cx, cy, r + 4f, Stroke);
-
-        Stroke.Color = Main.WithAlpha(70);
-        for (var i = 1; i <= 2; i++)
-        {
-            canvas.DrawCircle(cx, cy, r * i / 3f, Stroke);
-        }
-
-        canvas.DrawLine(cx - r, cy, cx + r, cy, Stroke);
-        canvas.DrawLine(cx, cy - r, cx, cy + r, Stroke);
-
-        for (var a = 0; a < 360; a += 30)
-        {
-            var rad = DegToRad(a);
-            Stroke.Color = Main.WithAlpha(140);
-            Stroke.StrokeWidth = 1.2f;
-            canvas.DrawLine(
-                cx + ((r - 5f) * MathF.Cos(rad)),
-                cy + ((r - 5f) * MathF.Sin(rad)),
-                cx + (r * MathF.Cos(rad)),
-                cy + (r * MathF.Sin(rad)),
-                Stroke);
-        }
+        // 不変のスコープ盤面 (背景円 / リング / 十字 / 方位目盛) はキャッシュから再生
+        DrawCachedLayer(canvas, "radar", BaseWidth, vh, c => DrawRadarChrome(c, cx, cy, r));
 
         // Sweep (heading-up)
         canvas.Save();
@@ -554,6 +529,42 @@ public sealed class FlightHudScene : SceneObject
         DrawText(canvas, "RDR A-A", cx - r, cy - r - 10f, 9f, Main, bold: true);
         DrawText(canvas, "40NM", cx + r, cy - r - 10f, 9f, Main.WithAlpha(170), align: SKTextAlign.Right);
         DrawText(canvas, $"CONTACTS {sim.Contacts.Count}  IFF ON", cx, cy + r + 14f, 8f, Main.WithAlpha(150), align: SKTextAlign.Center);
+    }
+
+    private void DrawRadarChrome(SKCanvas canvas, float cx, float cy, float r)
+    {
+        Fill.Color = Panel;
+        canvas.DrawCircle(cx, cy, r, Fill);
+
+        Stroke.StrokeCap = SKStrokeCap.Butt;
+        Stroke.Color = Main.WithAlpha(90);
+        Stroke.StrokeWidth = 1.8f;
+        canvas.DrawCircle(cx, cy, r, Stroke);
+        Stroke.Color = Main.WithAlpha(50);
+        Stroke.StrokeWidth = 1f;
+        canvas.DrawCircle(cx, cy, r + 4f, Stroke);
+
+        Stroke.Color = Main.WithAlpha(70);
+        for (var i = 1; i <= 2; i++)
+        {
+            canvas.DrawCircle(cx, cy, r * i / 3f, Stroke);
+        }
+
+        canvas.DrawLine(cx - r, cy, cx + r, cy, Stroke);
+        canvas.DrawLine(cx, cy - r, cx, cy + r, Stroke);
+
+        for (var a = 0; a < 360; a += 30)
+        {
+            var rad = DegToRad(a);
+            Stroke.Color = Main.WithAlpha(140);
+            Stroke.StrokeWidth = 1.2f;
+            canvas.DrawLine(
+                cx + ((r - 5f) * MathF.Cos(rad)),
+                cy + ((r - 5f) * MathF.Sin(rad)),
+                cx + (r * MathF.Cos(rad)),
+                cy + (r * MathF.Sin(rad)),
+                Stroke);
+        }
     }
 
     private static SKPath CreateCirclePath(float cx, float cy, float r)

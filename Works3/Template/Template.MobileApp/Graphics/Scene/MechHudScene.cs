@@ -144,10 +144,6 @@ public sealed class MechHudScene : SceneObject
 
     private readonly MechHudSim sim = new();
 
-    private SKPath? terrainPath;
-    private float terrainWidth;
-    private float terrainHeight;
-
     private SKShader? vignette;
     private int vignetteWidth;
     private int vignetteHeight;
@@ -272,52 +268,13 @@ public sealed class MechHudScene : SceneObject
         const float w = 368f;
         var h = vh - y0 - 26f;
 
-        DrawCutPanel(canvas, x0, y0, w, h, 12f, Panel, Main.WithAlpha(150), 1.6f);
+        // パネル枠 / 等高線 / グリッド / 固定ラベルは不変のためキャッシュから再生
+        DrawCachedLayer(canvas, "map", BaseWidth, vh, c => DrawMapStatic(c, x0, y0, w, h));
 
         canvas.Save();
         using (var clip = CreateCutPanel(x0 + 2f, y0 + 2f, w - 4f, h - 4f, 10f))
         {
             canvas.ClipPath(clip);
-        }
-
-        // Terrain contour (cached)
-        if ((terrainPath is null) || (MathF.Abs(terrainWidth - w) > 0.5f) || (MathF.Abs(terrainHeight - h) > 0.5f))
-        {
-            terrainPath?.Dispose();
-            terrainPath = BuildTerrain(x0, y0, w, h);
-            terrainWidth = w;
-            terrainHeight = h;
-        }
-
-        Stroke.StrokeCap = SKStrokeCap.Butt;
-        Stroke.Color = Main.WithAlpha(85);
-        Stroke.StrokeWidth = 1f;
-        canvas.DrawPath(terrainPath, Stroke);
-
-        // Grid A-F x 1-8
-        const int cols = 6;
-        const int rows = 8;
-        Stroke.Color = Main.WithAlpha(36);
-        for (var i = 1; i < cols; i++)
-        {
-            var x = x0 + (w * i / cols);
-            canvas.DrawLine(x, y0, x, y0 + h, Stroke);
-        }
-
-        for (var i = 1; i < rows; i++)
-        {
-            var y = y0 + (h * i / rows);
-            canvas.DrawLine(x0, y, x0 + w, y, Stroke);
-        }
-
-        for (var i = 0; i < cols; i++)
-        {
-            DrawText(canvas, ((char)('A' + i)).ToString(), x0 + (w * (i + 0.5f) / cols), y0 + 14f, 8f, Main.WithAlpha(120), align: SKTextAlign.Center);
-        }
-
-        for (var i = 0; i < rows; i++)
-        {
-            DrawText(canvas, (i + 1).ToString(), x0 + 8f, y0 + (h * (i + 0.5f) / rows) + 3f, 8f, Main.WithAlpha(120));
         }
 
         // World -> map projection (own at center, +/-700m x)
@@ -326,24 +283,6 @@ public sealed class MechHudScene : SceneObject
         var cy = y0 + (h / 2f);
         float MapX(float wx) => cx + (wx * scale);
         float MapY(float wy) => cy - (wy * scale);
-
-        // Objective
-        var ox = MapX(250f);
-        var oy = MapY(-350f);
-        using (var diamondBuilder = new SKPathBuilder())
-        {
-            diamondBuilder.MoveTo(ox, oy - 6f);
-            diamondBuilder.LineTo(ox + 6f, oy);
-            diamondBuilder.LineTo(ox, oy + 6f);
-            diamondBuilder.LineTo(ox - 6f, oy);
-            diamondBuilder.Close();
-            using var diamond = diamondBuilder.Detach();
-            Stroke.Color = Amber.WithAlpha(200);
-            Stroke.StrokeWidth = 1.6f;
-            canvas.DrawPath(diamond, Stroke);
-        }
-
-        DrawText(canvas, "OBJ-A", ox + 9f, oy + 3f, 8f, Amber.WithAlpha(200));
 
         // Squad
         foreach (var unit in sim.Squad)
@@ -368,9 +307,6 @@ public sealed class MechHudScene : SceneObject
                 canvas.DrawCircle(ux, uy, 2.5f, Fill);
             }
         }
-
-        DrawText(canvas, "D2", MapX(-390f), MapY(460f) - 8f, 8f, Cyan.WithAlpha(160));
-        DrawText(canvas, "D3", MapX(465f), MapY(-395f) - 8f, 8f, Cyan.WithAlpha(160));
 
         // Hostiles
         foreach (var contact in sim.Contacts)
@@ -410,6 +346,82 @@ public sealed class MechHudScene : SceneObject
 
         canvas.Restore();
         DrawText(canvas, "D1-1", cx + 9f, cy + 3f, 8f, Bright.WithAlpha(200));
+
+        canvas.Restore();
+    }
+
+    private void DrawMapStatic(SKCanvas canvas, float x0, float y0, float w, float h)
+    {
+        DrawCutPanel(canvas, x0, y0, w, h, 12f, Panel, Main.WithAlpha(150), 1.6f);
+
+        canvas.Save();
+        using (var clip = CreateCutPanel(x0 + 2f, y0 + 2f, w - 4f, h - 4f, 10f))
+        {
+            canvas.ClipPath(clip);
+        }
+
+        // Terrain contour (記録は再生成時のみ行われるためパスの使い捨てで良い)
+        using (var terrain = BuildTerrain(x0, y0, w, h))
+        {
+            Stroke.StrokeCap = SKStrokeCap.Butt;
+            Stroke.Color = Main.WithAlpha(85);
+            Stroke.StrokeWidth = 1f;
+            canvas.DrawPath(terrain, Stroke);
+        }
+
+        // Grid A-F x 1-8
+        const int cols = 6;
+        const int rows = 8;
+        Stroke.Color = Main.WithAlpha(36);
+        for (var i = 1; i < cols; i++)
+        {
+            var x = x0 + (w * i / cols);
+            canvas.DrawLine(x, y0, x, y0 + h, Stroke);
+        }
+
+        for (var i = 1; i < rows; i++)
+        {
+            var y = y0 + (h * i / rows);
+            canvas.DrawLine(x0, y, x0 + w, y, Stroke);
+        }
+
+        for (var i = 0; i < cols; i++)
+        {
+            DrawText(canvas, ((char)('A' + i)).ToString(), x0 + (w * (i + 0.5f) / cols), y0 + 14f, 8f, Main.WithAlpha(120), align: SKTextAlign.Center);
+        }
+
+        for (var i = 0; i < rows; i++)
+        {
+            DrawText(canvas, (i + 1).ToString(), x0 + 8f, y0 + (h * (i + 0.5f) / rows) + 3f, 8f, Main.WithAlpha(120));
+        }
+
+        var scale = (w - 20f) / 1400f;
+        var cx = x0 + (w / 2f);
+        var cy = y0 + (h / 2f);
+        float MapX(float wx) => cx + (wx * scale);
+        float MapY(float wy) => cy - (wy * scale);
+
+        // Objective
+        var ox = MapX(250f);
+        var oy = MapY(-350f);
+        using (var diamondBuilder = new SKPathBuilder())
+        {
+            diamondBuilder.MoveTo(ox, oy - 6f);
+            diamondBuilder.LineTo(ox + 6f, oy);
+            diamondBuilder.LineTo(ox, oy + 6f);
+            diamondBuilder.LineTo(ox - 6f, oy);
+            diamondBuilder.Close();
+            using var diamond = diamondBuilder.Detach();
+            Stroke.Color = Amber.WithAlpha(200);
+            Stroke.StrokeWidth = 1.6f;
+            canvas.DrawPath(diamond, Stroke);
+        }
+
+        DrawText(canvas, "OBJ-A", ox + 9f, oy + 3f, 8f, Amber.WithAlpha(200));
+
+        // Platoon fixed labels
+        DrawText(canvas, "D2", MapX(-390f), MapY(460f) - 8f, 8f, Cyan.WithAlpha(160));
+        DrawText(canvas, "D3", MapX(465f), MapY(-395f) - 8f, 8f, Cyan.WithAlpha(160));
 
         canvas.Restore();
 
@@ -530,8 +542,6 @@ public sealed class MechHudScene : SceneObject
     {
         if (disposing)
         {
-            terrainPath?.Dispose();
-            terrainPath = null;
             vignette?.Dispose();
             vignette = null;
         }
