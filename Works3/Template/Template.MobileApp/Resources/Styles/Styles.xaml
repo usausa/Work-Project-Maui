@@ -20,6 +20,8 @@
 
     <Color x:Key="SelectFocusColor">#FFF9C4</Color>
 
+    <Color x:Key="NoErrorColor">Transparent</Color>
+
     <!-- ================================================================================ -->
     <!-- Converter -->
     <!-- ================================================================================ -->
@@ -409,6 +411,23 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Spacing" Value="0" />
         <Setter Property="VerticalOptions" Value="Fill" />
+    </Style>
+
+    <Style x:Key="FillHorizontalStack"
+           TargetType="HorizontalStackLayout">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Spacing" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <Style x:Key="SideFlexLayout"
+           TargetType="FlexLayout">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="JustifyContent" Value="SpaceBetween" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <!-- ================================================================================ -->
@@ -827,6 +846,13 @@
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+    <Style x:Key="GroupSpan"
+           TargetType="Span">
+        <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
     <Style x:Key="NameLabel"
            TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
@@ -860,8 +886,61 @@
     </Style>
 
     <!-- ================================================================================ -->
+    <!-- Entry -->
+    <!-- ================================================================================ -->
+
+    <Style x:Key="InputEntry"
+           TargetType="Entry">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="behaviors:Border.Color" Value="{StaticResource BorderColor}" />
+        <Setter Property="behaviors:Border.Width" Value="1" />
+        <Setter Property="behaviors:EntryOption.HandleEnterKey" Value="True" />
+        <Setter Property="behaviors:EntryOption.DisableShowSoftInputOnFocus" Value="True" />
+        <Setter Property="behaviors:EntryOption.SelectAllOnFocus" Value="True" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SelectFocusColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================================ -->
     <!-- CollectionView -->
     <!-- ================================================================================ -->
+
+    <Style x:Key="ItemCollectionGrid"
+           TargetType="Grid">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
+    </Style>
+
+    <Style x:Key="ItemCollectionLabel"
+           TargetType="Label">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+    </Style>
 
     <Style x:Key="ItemCollectionButtonBase"
            TargetType="Button">

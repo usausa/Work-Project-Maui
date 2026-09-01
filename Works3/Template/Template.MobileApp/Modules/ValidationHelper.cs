@@ -6,13 +6,12 @@ using Smart.Mvvm.Resolver;
 
 internal static class ValidationHelper
 {
-    // UIスレッドからの利用前提の使い回しバッファ
     [ThreadStatic]
     private static List<ValidationResult>? validationResults;
 
     public static void Validate(object target, string name, ErrorInfo errors)
     {
-        var accessor = AccessorRegistry.FindAccessor(target.GetType());
+        var accessor = AccessorProvider.FindAccessor(target.GetType());
         if (accessor is null)
         {
             throw new InvalidOperationException($"Accessor is not supported. type=[{target.GetType()}]");

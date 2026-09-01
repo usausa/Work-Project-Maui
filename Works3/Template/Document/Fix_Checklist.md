@@ -13,28 +13,12 @@ Template.MobileApp のコードレビュー(2026-08-05)に始まる一連の修�
 
 # 第1部 — 残課題
 
-## 1. 判断が必要な項目
-
-### J-3. `.editorconfig` の IDE0079 無効化(死んだ抑止の再発防止)
-
-| 場所 | 設定 |
-|---|---|
-| `.editorconfig:99` | `dotnet_remove_unnecessary_suppression_exclusions = all:warning` |
-| `.editorconfig:490` | `dotnet_diagnostic.IDE0079.severity = warning` |
-
-99行目が**全ルールを IDE0079 の検査対象から除外**しているため、490行目の `warning` 指定は事実上死んでいる。これが「発火し得ない `#pragma` が9行残っていた」原因。
-
-- **(a)** 99行目を `none` にして有効化 → 不要な抑止がビルド警告になる
-- **(b)** 現状維持
-
-⚠️ (a) にすると**残り34件の抑止から警告が噴き出す可能性**があり、量が読めない。まず変更してビルドし件数を見てから本採用を判断する進め方を推奨。
-
-## 2. 未対応(優先度低)
+## 1. 未対応(優先度低)
 
 - `SecureStorage.GetAsync` の復元・キーストア無効化時の例外が未捕捉(エッジケース)
 - `HttpService` の `CancellationToken` を `NetworkOperator` のデリゲート型経由で呼び出し側から渡せるようにする(現在は口が無く未使用。転送は10分の有限タイムアウトで暫定対応済み)
 
-## 3. 実機検証が必要な項目(実物・サーバが必要)
+## 2. 実機検証が必要な項目(実物・サーバが必要)
 
 | # | 内容 | 関連 |
 |---|---|---|
@@ -46,7 +30,7 @@ Template.MobileApp のコードレビュー(2026-08-05)に始まる一連の修�
 | 6 | CV サンプル: キャプチャ→検出の繰り返しでメモリ増加なし | SKBitmap |
 | 7 | 端末 TZ を変えて DB 保存→表示 | DateTime |
 
-## 4. レビュー時に「対応不要」と判断した項目(再掲)
+## 3. レビュー時に「対応不要」と判断した項目(再掲)
 
 除外: `OnNotifyFunction1` の116ファイル重複解消 / SemanticProperties・AutomationId の付与 / gRPC・SignalR・Ollama の実装 / QR コードからの通信先・APIキー無検証受け入れ
 
