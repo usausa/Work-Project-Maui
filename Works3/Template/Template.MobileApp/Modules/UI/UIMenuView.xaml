@@ -14,7 +14,7 @@
              shell:ShellProperty.Function1Enabled="True">
 
     <Grid Style="{StaticResource MenuGrid}"
-          RowDefinitions="*,*,*,*,*,*,*,*,*,*"
+          RowDefinitions="*,*,*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*,*">
 
         <!-- 決済・EC -->
@@ -212,6 +212,22 @@
                 CommandParameter="{markup:ViewId UIEnergy}"
                 Text="Energy"
                 ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bolt}}" />
+
+        <!-- 描画デモ -->
+        <Button Grid.Row="10" Grid.Column="0"
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIWheel}"
+                Text="Wheel"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Attractions}}" />
+        <Button Grid.Row="10" Grid.Column="1"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
+        <Button Grid.Row="10" Grid.Column="2"
+                Style="{StaticResource MenuIconButton}"
+                IsEnabled="False"
+                Text="" />
 
     </Grid>
 

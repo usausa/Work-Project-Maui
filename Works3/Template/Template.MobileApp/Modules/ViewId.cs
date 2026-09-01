@@ -159,6 +159,7 @@ public enum ViewId
     UIKitSetting,
     UIKitOnboard,
     UIKitTracking,
+    UIWheel,
 
     // UI (SkiaSharp)
     UIFlight,
