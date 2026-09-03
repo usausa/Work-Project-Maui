@@ -15,6 +15,7 @@ public enum ViewId
     BasicLocale,
     BasicDialog,
     BasicValidation,
+    BasicSetting,
 
     // Navigation
     NavigationMenu,
@@ -85,6 +86,7 @@ public enum ViewId
     SampleMap2,
 
     SampleChart,
+    SampleSfChart,
     SampleMedia,
 
     SampleMarkdown,
@@ -99,6 +101,8 @@ public enum ViewId
     SampleCvLocal,
 
     SampleChat,
+
+    SampleCrop,
 
     // View
     ViewMenu,
@@ -120,8 +124,18 @@ public enum ViewId
     ViewGraphics,
 
     ViewDrawing,
+    ViewLayout,
+    ViewState,
+    ViewToolkit,
+    ViewDragDrop,
+    ViewCustom,
 
     ViewEffect,
+
+    // App
+    AppMenu,
+    AppCalc,
+    AppGame,
 
     // UI
     UIMenu,

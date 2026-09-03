@@ -9,13 +9,38 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
 
     public ShapeDrawing Drawing { get; } = new();
 
+    public SketchDrawing Sketch { get; } = new();
+
+    public PulseRingDrawing Pulse { get; } = new();
+
+    public ProgressArcDrawing Countdown { get; } = new();
+
     [ObservableProperty]
     public partial int ShapeCount { get; set; }
+
+    [ObservableProperty]
+    public partial int SketchCount { get; set; }
+
+    [ObservableProperty]
+    public partial ImageSource? ExportedImage { get; set; }
+
+    [ObservableProperty]
+    public partial bool HasExport { get; set; }
+
+    [ObservableProperty]
+    public partial bool CountdownRunning { get; set; }
+
+    [ObservableProperty]
+    public partial bool CountdownDone { get; set; }
 
     public IObserveCommand AddLineCommand { get; }
     public IObserveCommand AddCircleCommand { get; }
     public IObserveCommand AddRectCommand { get; }
     public IObserveCommand ClearCommand { get; }
+    public IObserveCommand UndoSketchCommand { get; }
+    public IObserveCommand ClearSketchCommand { get; }
+    public IObserveCommand ExportSketchCommand { get; }
+    public IObserveCommand StartCountdownCommand { get; }
 
     public ViewGraphicsViewModel()
     {
@@ -50,6 +75,47 @@ public sealed partial class ViewGraphicsViewModel : AppViewModelBase
             Drawing.Invalidate();
             ShapeCount = 0;
         });
+
+        // Sketch (IInteractiveDrawing + PNG エクスポート)
+        Sketch.StrokesChanged += (_, _) => SketchCount = Sketch.StrokeCount;
+        UndoSketchCommand = MakeDelegateCommand(Sketch.Undo);
+        ClearSketchCommand = MakeDelegateCommand(Sketch.Clear);
+        ExportSketchCommand = MakeDelegateCommand(() =>
+        {
+            using var stream = new MemoryStream();
+            Sketch.ExportPng(stream, 420, 240);
+            var bytes = stream.ToArray();
+            ExportedImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+            HasExport = true;
+        });
+
+        // Countdown (完走時のみ通知される)
+        StartCountdownCommand = MakeDelegateCommand(() =>
+        {
+            CountdownDone = false;
+            if (Countdown.Start(5f, () =>
+                {
+                    CountdownRunning = false;
+                    CountdownDone = true;
+                }))
+            {
+                CountdownRunning = true;
+            }
+        });
+    }
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
+        Pulse.Start();
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        Pulse.Stop();
+        Countdown.Cancel();
+        CountdownRunning = false;
+        return Task.CompletedTask;
     }
 
     private void AddShape(IShape shape)

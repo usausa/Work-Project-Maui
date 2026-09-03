@@ -40,7 +40,12 @@ public sealed partial class UIWheelViewModel : AppViewModelBase
     {
         // 3周+ランダム角。減速停止はWheelDrawing側 (実行中の再実行はWheelDrawingが無視する)
         var extra = 1080f + (random.Next(360 * 4) / 4f);
-        if (Drawing.Spin(extra, 4200, winner => { Winner = winner; HasResult = true; }))
+        var started = Drawing.Spin(extra, 4200, winner =>
+        {
+            Winner = winner;
+            HasResult = true;
+        });
+        if (started)
         {
             HasResult = false;
         }

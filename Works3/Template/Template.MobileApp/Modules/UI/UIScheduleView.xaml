@@ -49,12 +49,43 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <!-- 日合計サマリー -->
+            <Style x:Key="SummaryBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="12,0,12,8" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="SummaryCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+            </Style>
+
+            <Style x:Key="SummaryFreeValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SummaryValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,*"
+          RowDefinitions="Auto,Auto,*"
           BackgroundColor="White">
 
         <!-- 7 日チップ -->
@@ -105,8 +136,36 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <!-- 日合計サマリー (件数 / 所要時間合計 / 空き時間) -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SummaryBorder}">
+            <Grid ColumnDefinitions="*,*,*">
+                <VerticalStackLayout Grid.Column="0"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="予定" />
+                    <Label Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding EventCount, StringFormat='{0} 件'}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="合計" />
+                    <Label Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding TotalTimeText}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2"
+                                     Spacing="2">
+                    <Label Style="{StaticResource SummaryCaptionLabel}"
+                           Text="空き" />
+                    <Label Style="{StaticResource SummaryFreeValueLabel}"
+                           Text="{Binding FreeTimeText}" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
         <!-- タイムテーブル -->
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="2">
             <controls:DayTimetableView Events="{Binding Events}"
                                        CurrentTime="{Binding CurrentTime}"
                                        ShowCurrentTime="{Binding ShowCurrentTime}" />

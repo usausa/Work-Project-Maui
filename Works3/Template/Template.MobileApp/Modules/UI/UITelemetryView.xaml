@@ -10,7 +10,9 @@
              s:BindingContextResolver.Type="{x:Type module:UITelemetryViewModel}"
              shell:ShellProperty.Title="Telemetry"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True">
+             shell:ShellProperty.Function2Text="Buffer"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True">
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">

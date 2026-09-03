@@ -5,7 +5,7 @@ using Template.MobileApp.Services;
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {
-    private readonly ScheduleService scheduleService;
+    private readonly IScheduleEventProvider scheduleService;
 
     private readonly IDispatcherTimer timer;
 
@@ -24,9 +24,19 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool ShowCurrentTime { get; set; }
 
+    // 日合計 (件数 / 所要時間合計 / 空き時間)
+    [ObservableProperty]
+    public partial int EventCount { get; private set; }
+
+    [ObservableProperty]
+    public partial string TotalTimeText { get; private set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string FreeTimeText { get; private set; } = string.Empty;
+
     public UIScheduleViewModel(
         IDispatcher dispatcher,
-        ScheduleService scheduleService)
+        IScheduleEventProvider scheduleService)
     {
         this.scheduleService = scheduleService;
 
@@ -72,6 +82,7 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         {
             Events = [];
             ShowCurrentTime = false;
+            UpdateSummary();
             return;
         }
 
@@ -96,6 +107,18 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
         Events = events;
         ShowCurrentTime = day.IsToday;
+        UpdateSummary();
+    }
+
+    private void UpdateSummary()
+    {
+        EventCount = Events.Count;
+        TotalTimeText = TimetableCalculator.FormatDuration(TimeSpan.FromTicks(Events.Sum(static x => (x.End - x.Start).Ticks)));
+
+        // 空き時間は 8:00-20:00 のうちイベントで埋まっていない時間 (重複はマージして数える)
+        var busy = TimetableCalculator.MergeBusy(Events, TimeSpan.FromHours(8), TimeSpan.FromHours(20));
+        var busyTotal = TimeSpan.FromTicks(busy.Sum(static x => (x.End - x.Start).Ticks));
+        FreeTimeText = TimetableCalculator.FormatDuration(TimeSpan.FromHours(12) - busyTotal);
     }
 
     private static int StableHash(string value)

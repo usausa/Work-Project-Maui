@@ -21,14 +21,56 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
         new() { Name = "浅草寺", Description = "台東区浅草", Location = new Location(35.714765, 139.796655) }
     ];
 
+    // 皇居周辺の範囲 (Polygon)
+    private static readonly Location[] AreaPoints =
+    [
+        new(35.693040, 139.746205),
+        new(35.689457, 139.756673),
+        new(35.678895, 139.754146),
+        new(35.679670, 139.742630),
+        new(35.687168, 139.740683)
+    ];
+
+    [ObservableProperty]
+    public partial bool RouteVisible { get; set; }
+
+    [ObservableProperty]
+    public partial bool AreaVisible { get; set; }
+
+    [ObservableProperty]
+    public partial bool CircleVisible { get; set; }
+
     public ICommand HomeCommand { get; }
 
     public ICommand ToggleMapTypeCommand { get; }
+
+    public ICommand ToggleRouteCommand { get; }
+
+    public ICommand ToggleAreaCommand { get; }
+
+    public ICommand ToggleCircleCommand { get; }
 
     public SampleMap1ViewModel()
     {
         HomeCommand = MakeDelegateCommand(Controller.MoveToHome);
         ToggleMapTypeCommand = MakeDelegateCommand(() => CurrentMapType = CurrentMapType == MapType.Street ? MapType.Hybrid : MapType.Street);
+
+        // MapElements のデモ: 経路 (スポット巡回) / 範囲 (皇居周辺) / 半径円 (東京駅 1.5km)
+        ToggleRouteCommand = MakeDelegateCommand(() =>
+        {
+            RouteVisible = !RouteVisible;
+            Controller.SetRoute(RouteVisible ? Spots.Select(static x => x.Location) : null);
+        });
+        ToggleAreaCommand = MakeDelegateCommand(() =>
+        {
+            AreaVisible = !AreaVisible;
+            Controller.SetArea(AreaVisible ? AreaPoints : null);
+        });
+        ToggleCircleCommand = MakeDelegateCommand(() =>
+        {
+            CircleVisible = !CircleVisible;
+            Controller.SetCircle(CircleVisible ? new Location(InitialLatitude, InitialLongitude) : null, 1.5);
+        });
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);

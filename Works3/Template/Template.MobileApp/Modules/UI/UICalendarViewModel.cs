@@ -13,7 +13,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
     private readonly IDialog dialog;
 
-    private readonly ScheduleService scheduleService;
+    private readonly IScheduleEventProvider scheduleService;
     private readonly HolidayService holidayService;
 
     private MonthViewBuilder builder = new(DayOfWeek.Monday);
@@ -75,7 +75,7 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
 
     public UICalendarViewModel(
         IDialog dialog,
-        ScheduleService scheduleService,
+        IScheduleEventProvider scheduleService,
         HolidayService holidayService)
     {
         this.dialog = dialog;

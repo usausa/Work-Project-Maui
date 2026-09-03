@@ -12,8 +12,10 @@
              s:BindingContextResolver.Type="{x:Type module:EditListViewModel}"
              shell:ShellProperty.Title="List"
              shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function3Text="{Binding IsSelectionMode, Converter={s:BoolToText True='Cancel', False='Select'}}"
              shell:ShellProperty.Function4Text="New"
              shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
@@ -100,14 +102,53 @@
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
             </Style>
 
+            <!-- 選択モード時の一括操作バー -->
+            <Style x:Key="SelectionBarBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
+            </Style>
+
+            <Style x:Key="SelectionCountLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SelectionBarButton"
+                   TargetType="Button">
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            </Style>
+
+            <Style x:Key="SelectionBarButtonDanger"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SelectionBarButton}">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource RootGrid}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
-        <CollectionView ItemsSource="{Binding Items}"
-                        SelectionMode="Single">
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="{Binding SelectionMode}"
+                        SelectedItems="{Binding SelectedItems}">
             <CollectionView.EmptyView>
                 <VerticalStackLayout Style="{StaticResource EmptyStack}">
                     <Border Style="{StaticResource EmptyIconBorder}">
@@ -122,7 +163,21 @@
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type entity:WorkEntity}">
-                    <Border Style="{StaticResource WorkRowBorder}">
+                    <Border x:Name="RowBorder"
+                            Style="{StaticResource WorkRowBorder}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="RowBorder" Property="Border.BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                                            <Setter TargetName="RowBorder" Property="Border.Stroke" Value="{StaticResource BlueDefault}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
                         <Grid ColumnDefinitions="Auto,*,Auto,Auto"
                               ColumnSpacing="10">
                             <Border Grid.Column="0"
@@ -138,18 +193,54 @@
                                     behaviors:ButtonOption.PressEffect="True"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=SelectCommand, x:DataType={x:Type module:EditListViewModel}}"
                                     CommandParameter="{Binding}"
-                                    Text="{x:Static fonts:MaterialIcons.Edit}" />
+                                    Text="{x:Static fonts:MaterialIcons.Edit}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=IsSelectionMode, x:DataType={x:Type module:EditListViewModel}}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
                             <Button Grid.Column="3"
                                     Style="{StaticResource ItemCollectionButtonDanger}"
                                     behaviors:ButtonOption.PressEffect="True"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:EditListViewModel}}"
                                     CommandParameter="{Binding}"
-                                    Text="{x:Static fonts:MaterialIcons.Delete}" />
+                                    Text="{x:Static fonts:MaterialIcons.Delete}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type module:EditListViewModel}}, Path=IsSelectionMode, x:DataType={x:Type module:EditListViewModel}}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <!-- 選択モード時の一括操作バー -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SelectionBarBorder}"
+                IsVisible="{Binding IsSelectionMode}">
+            <Grid ColumnDefinitions="*,Auto,Auto"
+                  ColumnSpacing="8">
+                <Label Grid.Column="0"
+                       Style="{StaticResource SelectionCountLabel}"
+                       Text="{Binding SelectedItems.Count, StringFormat='{0} 件選択'}" />
+                <Button Grid.Column="1"
+                        Style="{StaticResource SelectionBarButton}"
+                        Command="{Binding SelectAllCommand}"
+                        Text="全選択" />
+                <Button Grid.Column="2"
+                        Style="{StaticResource SelectionBarButtonDanger}"
+                        Command="{Binding BulkDeleteCommand}"
+                        Text="削除" />
+            </Grid>
+        </Border>
 
     </Grid>
 

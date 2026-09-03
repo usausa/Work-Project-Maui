@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Modules.View.ViewRefreshView"
              x:DataType="{x:Type module:ViewRefreshViewModel}"
@@ -178,8 +179,11 @@
                     <s:CollectionControlBehavior Controller="{Binding Controller}" />
                 </CollectionView.Behaviors>
                 <CollectionView.EmptyView>
-                    <!-- 初回ロード中のスケルトン -->
-                    <VerticalStackLayout>
+                    <!-- 初回ロード中のスケルトン (SfShimmer が自作スケルトンの形に沿って波アニメーションを描く) -->
+                    <sf:SfShimmer IsActive="True"
+                                  VerticalOptions="Start">
+                        <sf:SfShimmer.CustomView>
+                            <VerticalStackLayout>
                         <Border Style="{StaticResource SkeletonCardBorder}">
                             <Grid Style="{StaticResource SkeletonGrid}"
                                   RowDefinitions="Auto,Auto"
@@ -228,7 +232,13 @@
                                          Style="{StaticResource SkeletonBarThin}" />
                             </Grid>
                         </Border>
-                    </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </sf:SfShimmer.CustomView>
+                        <sf:SfShimmer.Content>
+                            <BoxView HeightRequest="0"
+                                     Color="Transparent" />
+                        </sf:SfShimmer.Content>
+                    </sf:SfShimmer>
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:NewsItem}">

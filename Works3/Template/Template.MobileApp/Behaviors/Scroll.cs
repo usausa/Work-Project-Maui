@@ -119,6 +119,64 @@ public static partial class Scroll
         target.TranslationY = Math.Max(0, e.ScrollY) * 0.5;
     }
 
+    // ------------------------------------------------------------------ RatioCommand
+
+    // スクロール位置を 0-1 の比率へ正規化してコマンドに渡す (スクロール連動アニメーション用)
+    public static readonly BindableProperty RatioCommandProperty = BindableProperty.CreateAttached(
+        "RatioCommand",
+        typeof(ICommand),
+        typeof(Scroll),
+        null,
+        propertyChanged: OnRatioCommandChanged);
+
+    public static ICommand? GetRatioCommand(BindableObject bindable) => (ICommand?)bindable.GetValue(RatioCommandProperty);
+
+    public static void SetRatioCommand(BindableObject bindable, ICommand? value) => bindable.SetValue(RatioCommandProperty, value);
+
+    private static void OnRatioCommandChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            scrollView.Scrolled -= OnRatioScrolled;
+        }
+        if (newValue is not null)
+        {
+            scrollView.Scrolled += OnRatioScrolled;
+        }
+    }
+
+    private static void OnRatioScrolled(object? sender, ScrolledEventArgs e)
+    {
+        if (sender is not ScrollView scrollView)
+        {
+            return;
+        }
+
+        var command = GetRatioCommand(scrollView);
+        if (command is null)
+        {
+            return;
+        }
+
+        // スクロール可能量の大きい方の軸を比率化する
+        var extentX = scrollView.ContentSize.Width - scrollView.Width;
+        var extentY = scrollView.ContentSize.Height - scrollView.Height;
+        var ratio = extentX > extentY
+            ? (extentX > 0 ? e.ScrollX / extentX : 0d)
+            : (extentY > 0 ? e.ScrollY / extentY : 0d);
+        ratio = Math.Clamp(ratio, 0d, 1d);
+
+        if (command.CanExecute(ratio))
+        {
+            command.Execute(ratio);
+        }
+    }
+
     // ------------------------------------------------------------------ ShowOnAwayFromLastTarget
 
     public static readonly BindableProperty ShowOnAwayFromLastTargetProperty = BindableProperty.CreateAttached(

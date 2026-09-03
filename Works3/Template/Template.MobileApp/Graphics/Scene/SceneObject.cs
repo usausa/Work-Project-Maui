@@ -9,6 +9,8 @@ public interface ISceneObject
     void Detach();
 
     void Render(SKCanvas canvas, int width, int height);
+
+    bool Touch(SKPoint location, int width, int height);
 }
 
 // DrawingObject の Skia(SKCanvas)版。ビューから切り離した描画モデル基底で、
@@ -47,9 +49,89 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
     void ISceneObject.Detach() => control = null;
 
-    void ISceneObject.Render(SKCanvas canvas, int width, int height) => OnRender(canvas, width, height);
-
     public void Invalidate() => control?.InvalidateSurface();
+
+    //--------------------------------------------------------------------------------
+    // Render / Touch
+    //--------------------------------------------------------------------------------
+
+    // 論理解像度の固定 (opt-in / Breakout の RescalingCanvas 相当)。
+    // 設定すると uniform scale + レターボックスで描画され、OnRender / OnTouch には仮想解像度が渡る。
+    // 既存 4 シーンは「幅基準 + 高さ追従」のデザインのため未使用 (ゲーム的シーン向けの基盤)
+    protected SKSize? VirtualSize { get; set; }
+
+    // ダブルバッファ (D8 で本採用・既定 ON)。ループスレッドでオフスクリーンサーフェスへ描画し、UI スレッドは転写のみ行う。
+    // Release 実測 (Pixel/Telemetry) で約 30fps→約 60fps に倍増したため既定とした。Telemetry の Function2 で比較切替できる
+    public bool UseDoubleBuffer { get; set; } = true;
+
+    private readonly Lock bufferSync = new();
+
+    private SKSurface? bufferSurface;
+
+    private SKImage? frontImage;
+
+    private int bufferWidth;
+
+    private int bufferHeight;
+
+    private volatile int lastWidth;
+
+    private volatile int lastHeight;
+
+    void ISceneObject.Render(SKCanvas canvas, int width, int height)
+    {
+        lastWidth = width;
+        lastHeight = height;
+
+        if (UseDoubleBuffer)
+        {
+            lock (bufferSync)
+            {
+                if (frontImage is not null)
+                {
+                    canvas.DrawImage(frontImage, 0f, 0f, new SKSamplingOptions(SKFilterMode.Nearest));
+                    return;
+                }
+            }
+        }
+
+        var start = Stopwatch.GetTimestamp();
+        RenderCore(canvas, width, height);
+        RecordFrame(Stopwatch.GetElapsedTime(start).TotalMilliseconds, "direct");
+    }
+
+    bool ISceneObject.Touch(SKPoint location, int width, int height)
+    {
+        if (VirtualSize is { } virtualSize)
+        {
+            var scale = Math.Min(width / virtualSize.Width, height / virtualSize.Height);
+            var x = (location.X - ((width - (virtualSize.Width * scale)) / 2f)) / scale;
+            var y = (location.Y - ((height - (virtualSize.Height * scale)) / 2f)) / scale;
+            return OnTouch(new SKPoint(x, y), (int)virtualSize.Width, (int)virtualSize.Height);
+        }
+
+        return OnTouch(location, width, height);
+    }
+
+    private void RenderCore(SKCanvas canvas, int width, int height)
+    {
+        if (VirtualSize is { } virtualSize)
+        {
+            var scale = Math.Min(width / virtualSize.Width, height / virtualSize.Height);
+            canvas.Save();
+            canvas.Translate((width - (virtualSize.Width * scale)) / 2f, (height - (virtualSize.Height * scale)) / 2f);
+            canvas.Scale(scale);
+            OnRender(canvas, (int)virtualSize.Width, (int)virtualSize.Height);
+            canvas.Restore();
+        }
+        else
+        {
+            OnRender(canvas, width, height);
+        }
+    }
+
+    // タップ入力。処理した場合は true を返す (ジェスチャを consume する)
+    protected virtual bool OnTouch(SKPoint location, int width, int height) => false;
 
     //--------------------------------------------------------------------------------
     // Run loop
@@ -87,26 +169,122 @@ public abstract class SceneObject : ISceneObject, IDisposable
             using var timer = new PeriodicTimer(Interval);
             while (await timer.WaitForNextTickAsync(token))
             {
-                MainThread.BeginInvokeOnMainThread(() =>
+                if (UseDoubleBuffer && (lastWidth > 0))
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
+                    // ダブルバッファ: ループスレッド上で更新とオフスクリーン描画まで行い、UI スレッドは転写のみ
                     var t = (float)clock.Elapsed.TotalSeconds;
                     var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
                     lastTime = t;
 
                     Time = t;
                     Update(t, dt);
-                    Invalidate();
-                });
+                    RenderToBuffer(lastWidth, lastHeight);
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        if (!token.IsCancellationRequested)
+                        {
+                            Invalidate();
+                        }
+                    });
+                }
+                else
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        var t = (float)clock.Elapsed.TotalSeconds;
+                        var dt = Math.Clamp(t - lastTime, 0f, 0.1f);
+                        lastTime = t;
+
+                        Time = t;
+                        Update(t, dt);
+                        Invalidate();
+                    });
+                }
             }
         }
         catch (OperationCanceledException)
         {
             // Ignore
+        }
+    }
+
+    private void RenderToBuffer(int width, int height)
+    {
+        var start = Stopwatch.GetTimestamp();
+
+        if ((bufferSurface is null) || (bufferWidth != width) || (bufferHeight != height))
+        {
+            bufferSurface?.Dispose();
+            bufferSurface = SKSurface.Create(new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul));
+            bufferWidth = width;
+            bufferHeight = height;
+        }
+
+        var canvas = bufferSurface.Canvas;
+        canvas.Clear();
+        RenderCore(canvas, width, height);
+        canvas.Flush();
+
+        var image = bufferSurface.Snapshot();
+        lock (bufferSync)
+        {
+            frontImage?.Dispose();
+            frontImage = image;
+        }
+
+        RecordFrame(Stopwatch.GetElapsedTime(start).TotalMilliseconds, "buffer");
+    }
+
+    //--------------------------------------------------------------------------------
+    // Frame stats
+    //--------------------------------------------------------------------------------
+
+    // Release ビルドでの実測用 (Console 出力は logcat の mono-stdout に出る)。
+    // ダブルバッファ試験 (D8) の対象画面が滞在中のみ有効化する
+    public static bool FrameStatsEnabled { get; set; }
+
+    private double statTotal;
+
+    private double statMax;
+
+    private int statCount;
+
+    private long statLastReport;
+
+    private void RecordFrame(double milliseconds, string mode)
+    {
+        if (!FrameStatsEnabled)
+        {
+            return;
+        }
+
+        statTotal += milliseconds;
+        statMax = Math.Max(statMax, milliseconds);
+        statCount++;
+
+        var now = Environment.TickCount64;
+        if (statLastReport == 0)
+        {
+            statLastReport = now;
+        }
+        else if (now - statLastReport >= 3000)
+        {
+            // Console 出力は Release では logcat に出ないため Android の Log を直接使う
+            var message = $"{GetType().Name} {mode} avg={statTotal / statCount:F2}ms max={statMax:F2}ms frames={statCount}";
+#if ANDROID
+            Android.Util.Log.Debug("SceneStats", message);
+#else
+            Console.WriteLine($"[SceneStats] {message}");
+#endif
+            statTotal = 0d;
+            statMax = 0d;
+            statCount = 0;
+            statLastReport = now;
         }
     }
 
@@ -141,6 +319,15 @@ public abstract class SceneObject : ISceneObject, IDisposable
             }
 
             layerCache.Clear();
+
+            lock (bufferSync)
+            {
+                frontImage?.Dispose();
+                frontImage = null;
+            }
+
+            bufferSurface?.Dispose();
+            bufferSurface = null;
         }
     }
 

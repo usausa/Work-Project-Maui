@@ -155,6 +155,7 @@
     </PackageReference>
     <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="Rester" Version="2.13.0" />
+    <PackageReference Include="SSH.NET" Version="2026.0.0" />
     <PackageReference Include="Shiny.BluetoothLE" version="5.4.0" />
     <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="5.4.0" />
     <PackageReference Include="Shiny.Hosting.Maui" Version="5.4.0" />
@@ -184,6 +185,33 @@
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui\Smart.Maui.csproj" />
+  </ItemGroup>
+
+  <!-- Smart.Resolver / Smart.Navigation / Smart.Data.Mapper はリフレクションで型やコンストラクタを解決するため、
+       Release のトリミングから除外する (未指定だと PageContextStorage 等のコンストラクタが削られ起動時にクラッシュする) -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Template.MobileApp" />
+    <TrimmerRootAssembly Include="Smart" />
+    <TrimmerRootAssembly Include="Smart.Converter" />
+    <TrimmerRootAssembly Include="Smart.Data" />
+    <TrimmerRootAssembly Include="Smart.Data.Mapper" />
+    <TrimmerRootAssembly Include="Smart.Data.Mapper.Builders" />
+    <TrimmerRootAssembly Include="Smart.Mapper" />
+    <TrimmerRootAssembly Include="Smart.Mvvm" />
+    <TrimmerRootAssembly Include="Smart.Navigation" />
+    <TrimmerRootAssembly Include="Smart.Navigation.Extensions.DependencyInjection" />
+    <TrimmerRootAssembly Include="Smart.Navigation.Maui" />
+    <TrimmerRootAssembly Include="Smart.Navigation.Resolver" />
+    <TrimmerRootAssembly Include="Smart.Reactive" />
+    <TrimmerRootAssembly Include="Smart.Resolver" />
+    <TrimmerRootAssembly Include="Smart.Resolver.Extensions.DependencyInjection" />
+    <TrimmerRootAssembly Include="Smart.Maui" />
+    <TrimmerRootAssembly Include="Smart.Maui.Extensions" />
+    <TrimmerRootAssembly Include="MauiComponents" />
+    <TrimmerRootAssembly Include="MauiComponents.Resolver" />
+    <!-- SSH.NET / BouncyCastle も暗号アルゴリズム解決にリフレクションを使うため保護する -->
+    <TrimmerRootAssembly Include="Renci.SshNet" />
+    <TrimmerRootAssembly Include="BouncyCastle.Cryptography" />
   </ItemGroup>
 
   <ItemGroup>

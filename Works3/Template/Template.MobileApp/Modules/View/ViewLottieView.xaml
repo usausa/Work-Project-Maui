@@ -93,6 +93,51 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
+            <!-- スクロール連動 / 長押し進行 (B-7) -->
+            <Style x:Key="ScrubStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="ScrubCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
+            <Style x:Key="ScrubTrackBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="900" />
+                <Setter Property="HeightRequest" Value="36" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="{StaticResource BlueDefault}" Offset="0" />
+                            <GradientStop Color="{StaticResource PinkDefault}" Offset="1" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrubTrackLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="HoldButton"
+                   TargetType="Button">
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -127,6 +172,24 @@
                                Style="{StaticResource TimeLabel}"
                                Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.f}'}" />
                     </Grid>
+                </VerticalStackLayout>
+
+                <!-- スクロール連動 / 長押し進行 -->
+                <VerticalStackLayout Style="{StaticResource ScrubStack}">
+                    <Label Style="{StaticResource ScrubCaptionLabel}"
+                           Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                behaviors:Scroll.RatioCommand="{Binding ScrubCommand}">
+                        <Border Style="{StaticResource ScrubTrackBorder}">
+                            <Label Style="{StaticResource ScrubTrackLabel}"
+                                   Text="→ → → スクロールで再生位置が進みます → → →" />
+                        </Border>
+                    </ScrollView>
+                    <Button Style="{StaticResource HoldButton}"
+                            behaviors:AnimationOption.HoldCommand="{Binding ScrubCommand}"
+                            behaviors:AnimationOption.HoldDuration="2000"
+                            Text="長押しで進行 (2 秒)" />
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout Style="{StaticResource TransportRow}">

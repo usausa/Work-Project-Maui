@@ -126,8 +126,11 @@
     </ContentView.Resources>
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+    <!-- RemainingItemsThreshold: 残り 3 グループまでスクロールしたら追加読み込み -->
     <CollectionView ItemsSource="{Binding List}"
-                    IsGrouped="True">
+                    IsGrouped="True"
+                    RemainingItemsThreshold="3"
+                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
         <CollectionView.GroupHeaderTemplate>
             <DataTemplate x:DataType="{x:Type models:AddressGroup}">
                 <Grid Style="{StaticResource AddressHeaderGrid}"
@@ -196,6 +199,13 @@
                 </SwipeView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
+        <CollectionView.Footer>
+            <Label Padding="16,12"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource SecondaryTextColor}"
+                   Text="{Binding List.Count, StringFormat='{0} グループ読み込み済み (最下部で追加読み込み)'}" />
+        </CollectionView.Footer>
     </CollectionView>
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 

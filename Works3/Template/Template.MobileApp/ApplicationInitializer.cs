@@ -17,6 +17,26 @@ public sealed class ApplicationInitializer : IMauiInitializeService
 
     public void Initialize(IServiceProvider services)
     {
+        try
+        {
+            InitializeCore(services);
+        }
+        catch (Exception ex)
+        {
+            // Release (トリミング有効) では例外メッセージがリソースキー化され原因が追えなくなるため、
+            // 起動失敗時は型と内部例外の連鎖を logcat へ完全出力してから落とす
+            // (Console 出力は Release では logcat に転送されないため Android の Log を直接使う)
+#if ANDROID
+            Android.Util.Log.Error("StartupError", ex.ToString());
+#else
+            Console.WriteLine($"[StartupError] {ex}");
+#endif
+            throw;
+        }
+    }
+
+    private void InitializeCore(IServiceProvider services)
+    {
         // Setup provider
         ResolveProvider.Default.Provider = services;
 

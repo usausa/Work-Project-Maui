@@ -90,13 +90,16 @@
                 ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Smart_toy}}" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleSfChart}"
+                Text="Sf Chart" />
 
         <Button Grid.Row="6" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
-                IsEnabled="False"
-                Text="" />
+                Style="{StaticResource MenuIconButton}"
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId SampleCrop}"
+                Text="Crop"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Crop}}" />
         <Button Grid.Row="6" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"

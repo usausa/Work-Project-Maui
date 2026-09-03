@@ -7,6 +7,17 @@ public interface IDrawingObject : IDrawable
     void Detach();
 }
 
+// DrawingControl のタッチ操作 (GraphicsView の Start/Drag/EndInteraction) を受け取る Drawing。
+// 座標は DrawingControl の論理座標 (OnDraw の dirtyRect と同じ空間)
+public interface IInteractiveDrawing
+{
+    void OnInteractionStart(PointF point);
+
+    void OnInteractionDrag(PointF point);
+
+    void OnInteractionEnd(PointF point);
+}
+
 #pragma warning disable CA1033
 public abstract class DrawingObject : IDrawingObject
 {
@@ -90,5 +101,13 @@ public abstract class DrawingObject : IDrawingObject
     }
 
     protected abstract void OnDraw(ICanvas canvas, RectF dirtyRect);
+
+    // 画面表示と同じ OnDraw を使って PNG を書き出す (スプライトエディタ記事の Render 共用構成)
+    public void ExportPng(Stream stream, int width, int height)
+    {
+        using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height, 1f);
+        OnDraw(context.Canvas, new RectF(0f, 0f, width, height));
+        context.WriteToStream(stream);
+    }
 }
 #pragma warning restore CA1033

@@ -71,5 +71,40 @@ public sealed class Settings
 
         await secureStorage.SetAsync(AIServiceKeyName, value);
     }
+
+    // SCP (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
+
+    private const string ScpPasswordName = "ScpPassword";
+
+    public string ScpHost
+    {
+        get => preferences.Get<string>(nameof(ScpHost), default!);
+        set => preferences.Set(nameof(ScpHost), value);
+    }
+
+    public int ScpPort
+    {
+        get => preferences.Get(nameof(ScpPort), 22);
+        set => preferences.Set(nameof(ScpPort), value);
+    }
+
+    public string ScpUser
+    {
+        get => preferences.Get<string>(nameof(ScpUser), default!);
+        set => preferences.Set(nameof(ScpUser), value);
+    }
+
+    public async ValueTask<string?> GetScpPasswordAsync() => await secureStorage.GetAsync(ScpPasswordName);
+
+    public async ValueTask SetScpPasswordAsync(string value)
+    {
+        if (String.IsNullOrEmpty(value))
+        {
+            secureStorage.Remove(ScpPasswordName);
+            return;
+        }
+
+        await secureStorage.SetAsync(ScpPasswordName, value);
+    }
 }
 #pragma warning restore CA1724

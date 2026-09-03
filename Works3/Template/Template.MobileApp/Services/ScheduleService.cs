@@ -2,7 +2,7 @@ namespace Template.MobileApp.Services;
 
 using Template.MobileApp.Models.Sample.Calendar;
 
-public sealed class ScheduleService
+public sealed class ScheduleService : IScheduleEventProvider
 {
 #pragma warning disable IDE0052
 #pragma warning disable CA1823
@@ -63,16 +63,15 @@ public sealed class ScheduleService
         (26, "海外出張",   4, ScheduleStyle.Filled, Blue,         null,         false),
     ];
 
-#pragma warning disable CA1822
-    public IReadOnlyList<ScheduleEvent> GetEvents(DateOnly start, DateOnly end)
+    public IReadOnlyList<ScheduleEvent> GetEvents(DateOnly startDate, DateOnly endDate)
     {
-        if (SampleDataBoundary.IsBeforeLimit(start))
+        if (SampleDataBoundary.IsBeforeLimit(startDate))
         {
             return Array.Empty<ScheduleEvent>();
         }
 
         var events = new List<ScheduleEvent>();
-        var months = EnumerateMonths(start, end);
+        var months = EnumerateMonths(startDate, endDate);
         var idx = 0;
 
         foreach (var (year, month) in months)
@@ -87,7 +86,7 @@ public sealed class ScheduleService
                     if (date.DayOfWeek == dow)
                     {
                         var ev = CreateEvent($"w{idx++:D4}", title, date, date, style, Colors.Transparent, color);
-                        if ((ev.StartDate <= end) && (ev.EndDate >= start))
+                        if ((ev.StartDate <= endDate) && (ev.EndDate >= startDate))
                         {
                             events.Add(ev);
                         }
@@ -105,7 +104,7 @@ public sealed class ScheduleService
                     evEnd = new DateOnly(year, month, daysInMonth);
                 }
 
-                if ((evStart <= end) && (evEnd >= start))
+                if ((evStart <= endDate) && (evEnd >= startDate))
                 {
                     events.Add(CreateEvent($"m{idx++:D4}", title, evStart, evEnd, style, bg, fg ?? Colors.White));
                 }
@@ -124,7 +123,7 @@ public sealed class ScheduleService
                     evEnd = new DateOnly(year, month, daysInMonth);
                 }
 
-                if ((evStart <= end) && (evEnd >= start))
+                if ((evStart <= endDate) && (evEnd >= startDate))
                 {
                     events.Add(CreateEvent($"o{idx++:D4}", t.Title, evStart, evEnd, t.Style, t.Bg, t.Fg ?? Colors.White, t.Underline));
                 }
@@ -133,18 +132,16 @@ public sealed class ScheduleService
 
         return events.OrderBy(e => e.StartDate).ToList();
     }
-#pragma warning restore CA1822
 
-#pragma warning disable CA1822
-    public IReadOnlyList<Stamp> GetStamps(DateOnly start, DateOnly end)
+    public IReadOnlyList<Stamp> GetStamps(DateOnly startDate, DateOnly endDate)
     {
-        if (SampleDataBoundary.IsBeforeLimit(start))
+        if (SampleDataBoundary.IsBeforeLimit(startDate))
         {
             return Array.Empty<Stamp>();
         }
 
         var stamps = new List<Stamp>();
-        var months = EnumerateMonths(start, end);
+        var months = EnumerateMonths(startDate, endDate);
         var idx = 0;
 
         foreach (var (year, month) in months)
@@ -156,7 +153,7 @@ public sealed class ScheduleService
                 var t = StampTemplates[(month + (i * 2)) % StampTemplates.Length];
                 var day = Math.Min(t.DayOffset, daysInMonth);
                 var date = new DateOnly(year, month, day);
-                if ((date >= start) && (date <= end))
+                if ((date >= startDate) && (date <= endDate))
                 {
                     stamps.Add(new Stamp
                     {
@@ -173,12 +170,11 @@ public sealed class ScheduleService
 
         return stamps;
     }
-#pragma warning restore CA1822
 
-    private static IEnumerable<(int Year, int Month)> EnumerateMonths(DateOnly start, DateOnly end)
+    private static IEnumerable<(int Year, int Month)> EnumerateMonths(DateOnly startDate, DateOnly endDate)
     {
-        var current = new DateOnly(start.Year, start.Month, 1);
-        var last = new DateOnly(end.Year, end.Month, 1);
+        var current = new DateOnly(startDate.Year, startDate.Month, 1);
+        var last = new DateOnly(endDate.Year, endDate.Month, 1);
         while (current <= last)
         {
             yield return (current.Year, current.Month);
@@ -189,8 +185,8 @@ public sealed class ScheduleService
     private static ScheduleEvent CreateEvent(
         string id,
         string title,
-        DateOnly start,
-        DateOnly end,
+        DateOnly startDate,
+        DateOnly endDate,
         ScheduleStyle style,
         Color bg,
         Color fg,
@@ -199,8 +195,8 @@ public sealed class ScheduleService
         {
             Id = id,
             Title = title,
-            StartDate = start,
-            EndDate = end,
+            StartDate = startDate,
+            EndDate = endDate,
             Style = style,
             BackgroundColor = bg,
             TextColor = fg,

@@ -21,7 +21,18 @@ public sealed class SceneControl : SKCanvasView
     public SceneControl()
     {
         BackgroundColor = Colors.Transparent;
+        EnableTouchEvents = true;
         PaintSurface += OnPaintSurface;
+        Touch += OnTouch;
+    }
+
+    // タップをシーンへ転送する (座標は Render と同じピクセル座標系)
+    private void OnTouch(object? sender, SKTouchEventArgs e)
+    {
+        if ((e.ActionType == SKTouchAction.Pressed) && (Scene is { } scene))
+        {
+            e.Handled = scene.Touch(e.Location, (int)CanvasSize.Width, (int)CanvasSize.Height);
+        }
     }
 
     private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)

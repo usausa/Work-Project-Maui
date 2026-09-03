@@ -20,6 +20,9 @@ public sealed class DayTimetableView : SKCanvasView
     private static readonly SKColor LineColor = new(0xE0, 0xE0, 0xE0);
     private static readonly SKColor TimeTextColor = new(0x9E, 0x9E, 0x9E);
     private static readonly SKColor CurrentTimeColor = new(0xE5, 0x39, 0x35);
+    private static readonly SKColor CardBorderColor = new(0xEE, 0xEE, 0xEE);
+    private static readonly SKColor FreeFillColor = new(0x43, 0xA0, 0x47, 0x12);
+    private static readonly SKColor FreeTextColor = new(0x66, 0xBB, 0x6A);
 
     public static readonly BindableProperty HourHeightProperty = BindableProperty.Create(
         nameof(HourHeight),
@@ -139,8 +142,28 @@ public sealed class DayTimetableView : SKCanvasView
             paint.Style = SKPaintStyle.Stroke;
         }
 
-        // イベント(開始順のグリーディ法でレーン割付)
+        var areaLeft = TimeColumnWidth + 8f;
+        var areaRight = width - PaddingRight;
+
+        // 空き時間帯のハイライト (イベントの隙間を薄い緑で塗る)
         var events = Events;
+        foreach (var (freeStart, freeEnd) in TimetableCalculator.GetFreeSlots(events ?? [], TimeSpan.FromHours(StartHour), TimeSpan.FromHours(EndHour)))
+        {
+            var y1 = PaddingTop + ((float)(freeStart.TotalHours - StartHour) * hourHeight);
+            var y2 = PaddingTop + ((float)(freeEnd.TotalHours - StartHour) * hourHeight);
+            paint.Style = SKPaintStyle.Fill;
+            paint.Color = FreeFillColor;
+            canvas.DrawRoundRect(new SKRect(areaLeft, y1 + 1f, areaRight, y2 - 1f), 6f, 6f, paint);
+
+            // 45 分以上の隙間にはラベルを添える
+            if (freeEnd - freeStart >= TimeSpan.FromMinutes(45))
+            {
+                paint.Color = FreeTextColor;
+                canvas.DrawText($"空き {TimetableCalculator.FormatDuration(freeEnd - freeStart)}", areaLeft + 8f, y1 + 16f, SKTextAlign.Left, font, paint);
+            }
+        }
+
+        // イベント(開始順のグリーディ法でレーン割付)
         if (events is { Count: > 0 })
         {
             var sorted = events.OrderBy(static x => x.Start).ToList();
@@ -167,29 +190,48 @@ public sealed class DayTimetableView : SKCanvasView
             }
 
             var laneCount = Math.Max(1, lanes.Count);
-            var areaWidth = width - TimeColumnWidth - 8f - PaddingRight;
+            var areaWidth = areaRight - areaLeft;
             var laneWidth = (areaWidth - ((laneCount - 1) * LaneSpacing)) / laneCount;
+
+            // カードの持ち上げ影 (白地 + ドロップシャドウ)
+            using var cardPaint = new SKPaint();
+            cardPaint.IsAntialias = true;
+            cardPaint.Style = SKPaintStyle.Fill;
+            cardPaint.Color = SKColors.White;
+            cardPaint.ImageFilter = SKImageFilter.CreateDropShadow(0f, 2f, 3f, 3f, new SKColor(0x00, 0x00, 0x00, 0x30));
 
             paint.Style = SKPaintStyle.Fill;
             foreach (var (ev, lane) in assignments)
             {
                 var y1 = PaddingTop + ((float)(ev.Start.TotalHours - StartHour) * hourHeight);
                 var y2 = PaddingTop + ((float)(ev.End.TotalHours - StartHour) * hourHeight);
-                var x1 = TimeColumnWidth + 8f + (lane * (laneWidth + LaneSpacing));
-                var rect = new SKRect(x1, y1 + 1f, x1 + laneWidth, y2 - 1f);
+                var x1 = areaLeft + (lane * (laneWidth + LaneSpacing));
+                var rect = new SKRect(x1, y1 + 2f, x1 + laneWidth, y2 - 2f);
 
-                var color = ev.Color.ToSKColor();
-                paint.Color = color.WithAlpha(48);
-                canvas.DrawRoundRect(rect, 6f, 6f, paint);
+                // カード地
+                canvas.DrawRoundRect(rect, 8f, 8f, cardPaint);
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = 1f;
+                paint.Color = CardBorderColor;
+                canvas.DrawRoundRect(rect, 8f, 8f, paint);
+                paint.Style = SKPaintStyle.Fill;
 
                 // 左端のアクセントバー
+                var color = ev.Color.ToSKColor();
                 paint.Color = color;
-                canvas.DrawRoundRect(new SKRect(rect.Left, rect.Top, rect.Left + 4f, rect.Bottom), 2f, 2f, paint);
+                canvas.DrawRoundRect(new SKRect(rect.Left + 4f, rect.Top + 4f, rect.Left + 8f, rect.Bottom - 4f), 2f, 2f, paint);
+
+                // 所要時間ラベル (レーンが狭いときは省く)
+                if (rect.Width >= 110f)
+                {
+                    paint.Color = color;
+                    canvas.DrawText(TimetableCalculator.FormatDuration(ev.End - ev.Start), rect.Right - 8f, rect.Top + 18f, SKTextAlign.Right, boldFont, paint);
+                }
 
                 paint.Color = new SKColor(0x42, 0x42, 0x42);
-                canvas.DrawText(ev.Title, rect.Left + 10f, rect.Top + 16f, SKTextAlign.Left, boldFont, paint);
+                canvas.DrawText(ev.Title, rect.Left + 14f, rect.Top + 18f, SKTextAlign.Left, boldFont, paint);
                 paint.Color = TimeTextColor;
-                canvas.DrawText($"{ev.Start:hh\\:mm} - {ev.End:hh\\:mm}", rect.Left + 10f, rect.Top + 32f, SKTextAlign.Left, font, paint);
+                canvas.DrawText($"{ev.Start:hh\\:mm} - {ev.End:hh\\:mm}", rect.Left + 14f, rect.Top + 34f, SKTextAlign.Left, font, paint);
             }
         }
 

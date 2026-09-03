@@ -19,12 +19,20 @@ public sealed partial class ViewLottieViewModel : AppViewModelBase
     public IObserveCommand PlayPauseCommand { get; }
     public IObserveCommand ResetCommand { get; }
     public IObserveCommand SeekCommand { get; }
+    public IObserveCommand ScrubCommand { get; }
 
     public ViewLottieViewModel()
     {
         PlayPauseCommand = MakeDelegateCommand(() => IsAnimationEnabled = !IsAnimationEnabled);
         ResetCommand = MakeDelegateCommand(() => Progress = TimeSpan.Zero);
         SeekCommand = MakeDelegateCommand<double>(x => Progress = TimeSpan.FromSeconds(x));
+
+        // スクロール連動 / 長押し進行 (B-7): 0-1 の比率で再生位置を進める
+        ScrubCommand = MakeDelegateCommand<double>(x =>
+        {
+            IsAnimationEnabled = false;
+            Progress = Duration.Ticks > 0 ? TimeSpan.FromTicks((long)(Duration.Ticks * x)) : TimeSpan.Zero;
+        });
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);

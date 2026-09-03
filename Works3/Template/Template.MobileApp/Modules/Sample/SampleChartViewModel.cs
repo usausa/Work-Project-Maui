@@ -41,6 +41,23 @@ public sealed partial class SampleChartViewModel : AppViewModelBase
             case ChartKind.Donut:
                 Drawing.ShowDonut(Enumerable.Range(0, 5).Select(_ => (double)random.Next(10, 40)).ToList());
                 break;
+            case ChartKind.Stacked:
+                Drawing.ShowStacked(Enumerable.Range(0, 6)
+                    .Select(_ => Enumerable.Range(0, 3).Select(_ => (double)random.Next(10, 40)).ToArray())
+                    .ToList());
+                break;
+            case ChartKind.Scatter:
+                Drawing.ShowScatter(Enumerable.Range(0, 24)
+                    .Select(_ => new PointF(random.Next(0, 100), random.Next(0, 100)))
+                    .ToList());
+                break;
+            case ChartKind.Heat:
+                Drawing.ShowHeat(Enumerable.Range(0, 7)
+                    .Select(r => Enumerable.Range(0, 12)
+                        .Select(c => (Math.Sin((r * 0.9d) + (c * 0.5d)) * 40d) + random.Next(0, 30))
+                        .ToArray())
+                    .ToArray());
+                break;
             default:
                 Drawing.ShowCandle(CreateCandles(12));
                 break;

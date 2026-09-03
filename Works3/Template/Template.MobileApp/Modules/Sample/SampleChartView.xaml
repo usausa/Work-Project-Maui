@@ -39,7 +39,9 @@
         <!-- 切替セグメント -->
         <Grid Grid.Row="0"
               Margin="16,12"
+              RowDefinitions="Auto,Auto"
               ColumnDefinitions="*,*,*,*"
+              RowSpacing="8"
               ColumnSpacing="8">
             <Button Grid.Column="0"
                     Style="{StaticResource SegmentButton}"
@@ -92,6 +94,48 @@
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Kind}"
                                  Value="{x:Static drawing:ChartKind.Candle}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Stacked}"
+                    Text="Stacked">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Stacked}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Scatter}"
+                    Text="Scatter">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Scatter}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="TextColor" Value="White" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource SegmentButton}"
+                    Command="{Binding SelectCommand}"
+                    CommandParameter="{x:Static drawing:ChartKind.Heat}"
+                    Text="Heat">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Kind}"
+                                 Value="{x:Static drawing:ChartKind.Heat}">
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                         <Setter Property="TextColor" Value="White" />
                     </DataTrigger>

@@ -246,6 +246,9 @@ public sealed class TelemetryScene : SceneObject
 
         DrawText(canvas, "POS", 352f, 28f, 8f, Dim);
         DrawGlowText(canvas, "P04", 352f, 46f, 14f, White, 3f, bold: true);
+
+        // ダブルバッファ試験 (D8) の現在モード
+        DrawText(canvas, UseDoubleBuffer ? "MODE BUFFER" : "MODE DIRECT", 16f, 60f, 8f, Dim);
     }
 
     //--------------------------------------------------------------------------------

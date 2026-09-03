@@ -22,6 +22,12 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool WavePulseEnabled { get; set; } = true;
 
+    [ObservableProperty]
+    public partial bool ConfettiEnabled { get; set; }
+
+    [ObservableProperty]
+    public partial int LongPressCount { get; set; }
+
     public IObserveCommand ReplayCommand { get; }
 
     public IObserveCommand BadgePrevCommand { get; }
@@ -32,6 +38,10 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
 
     public IObserveCommand FeedbackCommand { get; }
 
+    public IObserveCommand CelebrateCommand { get; }
+
+    public IObserveCommand LongPressCommand { get; }
+
     public ViewEffectViewModel()
     {
         ReplayCommand = MakeDelegateCommand(() => ReplayCount++);
@@ -39,6 +49,8 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
         BadgeNextCommand = MakeDelegateCommand(() => UpdateBadge(1));
         AmountCommand = MakeDelegateCommand(UpdateAmount);
         FeedbackCommand = MakeDelegateCommand(() => FeedbackCount++);
+        CelebrateCommand = MakeDelegateCommand(() => ConfettiEnabled = !ConfettiEnabled);
+        LongPressCommand = MakeDelegateCommand(() => LongPressCount++);
     }
 
     public override Task OnNavigatedToAsync(INavigationContext context)

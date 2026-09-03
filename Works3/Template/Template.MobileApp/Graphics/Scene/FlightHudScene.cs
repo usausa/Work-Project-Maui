@@ -132,11 +132,59 @@ public sealed class FlightHudScene : SceneObject
 
     private readonly FlightHudSim sim = new();
 
+    private FlightContact? selectedContact;
+
     private SKShader? vignette;
     private int vignetteWidth;
     private int vignetteHeight;
 
     protected override void Update(float t, float dt) => sim.Update(t, dt);
+
+    // レーダー上のブリップをタップで選択する (SceneControl → OnTouch のヒットテスト例)
+    protected override bool OnTouch(SKPoint location, int width, int height)
+    {
+        var s = width / BaseWidth;
+        var vx = location.X / s;
+        var vy = location.Y / s;
+        var vh = height / s;
+        const float r = 84f;
+        const float cx = 102f;
+        var cy = vh - 152f;
+
+        var dx = vx - cx;
+        var dy = vy - cy;
+        if (((dx * dx) + (dy * dy)) > ((r + 8f) * (r + 8f)))
+        {
+            return false;
+        }
+
+        FlightContact? nearest = null;
+        var nearestDistance = 14f;
+        foreach (var contact in sim.Contacts)
+        {
+            if (contact.RangeNm > 40f)
+            {
+                continue;
+            }
+
+            var rel = FlightHudSim.Wrap360(contact.BearingDeg - sim.HeadingDeg);
+            var screenDeg = FlightHudSim.Wrap360(rel - 90f);
+            var rad = DegToRad(screenDeg);
+            var rr = contact.RangeNm / 40f * r;
+            var x = cx + (rr * MathF.Cos(rad));
+            var y = cy + (rr * MathF.Sin(rad));
+            var distance = MathF.Sqrt(((vx - x) * (vx - x)) + ((vy - y) * (vy - y)));
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearest = contact;
+            }
+        }
+
+        // 同じブリップの再タップは選択解除
+        selectedContact = ReferenceEquals(selectedContact, nearest) ? null : nearest;
+        return true;
+    }
 
     protected override void OnRender(SKCanvas canvas, int width, int height)
     {
@@ -500,6 +548,14 @@ public sealed class FlightHudScene : SceneObject
                     canvas.DrawRect(x - 3f, y - 3f, 6f, 6f, Fill);
                     break;
             }
+
+            // タップ選択中のブリップを囲う
+            if (ReferenceEquals(contact, selectedContact))
+            {
+                Stroke.Color = Bright;
+                Stroke.StrokeWidth = 1.5f;
+                canvas.DrawCircle(x, y, 7.5f, Stroke);
+            }
         }
 
         // Own ship
@@ -529,6 +585,18 @@ public sealed class FlightHudScene : SceneObject
         DrawText(canvas, "RDR A-A", cx - r, cy - r - 10f, 9f, Main, bold: true);
         DrawText(canvas, "40NM", cx + r, cy - r - 10f, 9f, Main.WithAlpha(170), align: SKTextAlign.Right);
         DrawText(canvas, $"CONTACTS {sim.Contacts.Count}  IFF ON", cx, cy + r + 14f, 8f, Main.WithAlpha(150), align: SKTextAlign.Center);
+
+        // 選択中ターゲットの情報
+        if (selectedContact is { } selected)
+        {
+            var iff = selected.Iff switch
+            {
+                FlightIff.Hostile => "HOS",
+                FlightIff.Friendly => "FRD",
+                _ => "UNK"
+            };
+            DrawText(canvas, $"TGT {iff}  BRG {(int)selected.BearingDeg:000}  RNG {selected.RangeNm:0.0}NM", cx, cy + r + 26f, 8f, Amber, bold: true, align: SKTextAlign.Center);
+        }
     }
 
     private void DrawRadarChrome(SKCanvas canvas, float cx, float cy, float r)

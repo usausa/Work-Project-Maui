@@ -4,6 +4,8 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
@@ -378,6 +380,80 @@
                                  InputTransparent="True"
                                  behaviors:AnimationOption.FlashTrigger="{Binding FeedbackCount}" />
                     </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Toolkit 演出(Confetti / TouchBehavior / IconTint) -->
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="Toolkit 演出(Confetti / Touch / IconTint)" />
+            <Border Style="{StaticResource EffectCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid HeightRequest="150">
+                        <Border Padding="0"
+                                BackgroundColor="{StaticResource BlueGrayDarken4}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 8" />
+                        <extended:SKConfettiView IsAnimationEnabled="{Binding ConfettiEnabled}">
+                            <extended:SKConfettiView.Systems>
+                                <extended:SKConfettiSystemCollection>
+                                    <extended:SKConfettiSystem />
+                                </extended:SKConfettiSystemCollection>
+                            </extended:SKConfettiView.Systems>
+                        </extended:SKConfettiView>
+                        <Button Style="{StaticResource SmallActionButton}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="End"
+                                Margin="0,0,0,8"
+                                Command="{Binding CelebrateCommand}"
+                                Text="Celebrate" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="12">
+                        <Border Grid.Column="0"
+                                Padding="12"
+                                BackgroundColor="{StaticResource BlueLighten5}"
+                                Stroke="{StaticResource BlueLighten3}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8">
+                            <Border.Behaviors>
+                                <mct:TouchBehavior PressedScale="0.95"
+                                                   PressedOpacity="0.6"
+                                                   LongPressCommand="{Binding LongPressCommand}" />
+                            </Border.Behaviors>
+                            <Label FontSize="12"
+                                   TextColor="{StaticResource BlueGrayDarken2}"
+                                   Text="TouchBehavior: 押すと縮む / 長押しでカウント" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               FontSize="14"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource GrayDarken2}"
+                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}"
+                               behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}" />
+                    </Grid>
+                    <HorizontalStackLayout Spacing="20">
+                        <Image Source="account.png"
+                               WidthRequest="40"
+                               HeightRequest="40" />
+                        <Image Source="account.png"
+                               WidthRequest="40"
+                               HeightRequest="40">
+                            <Image.Behaviors>
+                                <mct:IconTintColorBehavior TintColor="{StaticResource BlueDefault}" />
+                            </Image.Behaviors>
+                        </Image>
+                        <Image Source="account.png"
+                               WidthRequest="40"
+                               HeightRequest="40">
+                            <Image.Behaviors>
+                                <mct:IconTintColorBehavior TintColor="{StaticResource RedDefault}" />
+                            </Image.Behaviors>
+                        </Image>
+                        <Label FontSize="12"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource GrayDarken2}"
+                               Text="IconTintColorBehavior" />
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Border>
 

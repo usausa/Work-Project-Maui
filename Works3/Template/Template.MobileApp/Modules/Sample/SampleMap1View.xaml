@@ -67,6 +67,22 @@
                                                   Color={StaticResource GrayDarken3},
                                                   Size=24}"
                          Command="{Binding HomeCommand}" />
+            <!-- MapElements: 経路 / 範囲 / 半径円 -->
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Route},
+                                                  Color={StaticResource BlueDefault},
+                                                  Size=24}"
+                         Command="{Binding ToggleRouteCommand}" />
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Pentagon},
+                                                  Color={StaticResource GreenDefault},
+                                                  Size=24}"
+                         Command="{Binding ToggleAreaCommand}" />
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{markup:Material {x:Static fonts:MaterialIcons.Circle},
+                                                  Color={StaticResource RedDefault},
+                                                  Size=24}"
+                         Command="{Binding ToggleCircleCommand}" />
         </VerticalStackLayout>
 
     </Grid>

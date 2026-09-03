@@ -9,6 +9,7 @@ public enum EnterAnimationType
 
 public static class AnimationOption
 {
+    private const string HoldAnimationName = "AnimationOptionHold";
     private const string PulseAnimationName = "AnimationOptionPulse";
     private const string BounceAnimationName = "AnimationOptionBounce";
     private const string FadeInAnimationName = "AnimationOptionFadeIn";
@@ -51,6 +52,7 @@ public static class AnimationOption
             element.Loaded -= OnPulseLoaded;
             element.Unloaded -= OnPulseUnloaded;
             element.AbortAnimation(PulseAnimationName);
+            element.Scale = 1.0;
         }
     }
 
@@ -384,6 +386,125 @@ public static class AnimationOption
         {
             bar.Loaded -= OnProgressBarLoaded;
             _ = bar.ProgressTo(GetProgressTo(bar), 800, Easing.CubicOut);
+        }
+    }
+
+    // ------------------------------------------------------------------ Hold (長押しで 0-1 を進める)
+
+    public static readonly BindableProperty HoldCommandProperty = BindableProperty.CreateAttached(
+        "HoldCommand",
+        typeof(ICommand),
+        typeof(AnimationOption),
+        null,
+        propertyChanged: OnHoldCommandChanged);
+
+    public static ICommand? GetHoldCommand(BindableObject bindable) => (ICommand?)bindable.GetValue(HoldCommandProperty);
+
+    public static void SetHoldCommand(BindableObject bindable, ICommand? value) => bindable.SetValue(HoldCommandProperty, value);
+
+    public static readonly BindableProperty HoldDurationProperty = BindableProperty.CreateAttached(
+        "HoldDuration",
+        typeof(int),
+        typeof(AnimationOption),
+        2000);
+
+    public static int GetHoldDuration(BindableObject bindable) => (int)bindable.GetValue(HoldDurationProperty);
+
+    public static void SetHoldDuration(BindableObject bindable, int value) => bindable.SetValue(HoldDurationProperty, value);
+
+    // 進行中の値 (0-1)。途中で離したときの巻き戻しに使う
+    private static readonly BindableProperty HoldProgressProperty = BindableProperty.CreateAttached(
+        "HoldProgress",
+        typeof(double),
+        typeof(AnimationOption),
+        0d);
+
+    private static void OnHoldCommandChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not Button button)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            button.Pressed -= OnHoldPressed;
+            button.Released -= OnHoldReleased;
+        }
+        if (newValue is not null)
+        {
+            button.Pressed += OnHoldPressed;
+            button.Released += OnHoldReleased;
+        }
+    }
+
+    private static void OnHoldPressed(object? sender, EventArgs e)
+    {
+        if (sender is not Button button)
+        {
+            return;
+        }
+
+        button.AbortAnimation(HoldAnimationName);
+
+        // 完走済みなら先頭から、途中なら続きから進める
+        var progress = (double)button.GetValue(HoldProgressProperty);
+        if (progress >= 1d)
+        {
+            progress = 0d;
+        }
+
+        var length = (uint)Math.Max(1, (int)((1d - progress) * GetHoldDuration(button)));
+        button.Animate(
+            HoldAnimationName,
+            v =>
+            {
+                button.SetValue(HoldProgressProperty, v);
+                ExecuteHold(button, v);
+            },
+            progress,
+            1d,
+            16,
+            length,
+            Easing.Linear);
+    }
+
+    private static void OnHoldReleased(object? sender, EventArgs e)
+    {
+        if (sender is not Button button)
+        {
+            return;
+        }
+
+        button.AbortAnimation(HoldAnimationName);
+
+        // 完走前に離したら素早く巻き戻す
+        var progress = (double)button.GetValue(HoldProgressProperty);
+        if (progress is <= 0d or >= 1d)
+        {
+            return;
+        }
+
+        button.Animate(
+            HoldAnimationName,
+            v =>
+            {
+                button.SetValue(HoldProgressProperty, v);
+                ExecuteHold(button, v);
+            },
+            progress,
+            0d,
+            16,
+            (uint)Math.Max(1, (int)(progress * 250)),
+            Easing.CubicOut);
+    }
+
+    private static void ExecuteHold(BindableObject bindable, double value)
+    {
+        var command = GetHoldCommand(bindable);
+        if ((command is not null) && command.CanExecute(value))
+        {
+            command.Execute(value);
         }
     }
 

@@ -15,7 +15,7 @@
           RowDefinitions="*,Auto">
         <Grid Grid.Row="0"
               Style="{StaticResource MenuGrid}"
-              RowDefinitions="*,*,*,*,*,*,*,*,*">
+              RowDefinitions="*,*,*,*,*,*,*,*,*,*">
             <Button Grid.Row="0"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding ForwardCommand}"
@@ -61,6 +61,11 @@
                     Command="{Binding ForwardCommand}"
                     CommandParameter="{markup:ViewId Setting}"
                     Text="9.Setting" />
+            <Button Grid.Row="9"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId AppMenu}"
+                    Text="10.App" />
         </Grid>
 
         <FlexLayout Grid.Row="1"

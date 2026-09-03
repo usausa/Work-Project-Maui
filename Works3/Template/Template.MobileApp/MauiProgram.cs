@@ -70,6 +70,7 @@ public static partial class MauiProgram
             .UseMauiComponents()
             .UseCommunityToolkitServices()
             .UseCustomView()
+            .ConfigureCustomLayouts()
             .ConfigureComponents()
             .ConfigureHttpClient()
             .ConfigureContainer()
@@ -134,6 +135,14 @@ public static partial class MauiProgram
     // ------------------------------------------------------------
     // Application
     // ------------------------------------------------------------
+
+    private static MauiAppBuilder ConfigureCustomLayouts(this MauiAppBuilder builder)
+    {
+        // ILayoutManagerFactory: レイアウト型ごとにマネージャを DI で差し替えるフック
+        // (Layouts/AppLayoutManagerFactory 参照。CascadeStackLayout のみ対象で他は既定のまま)
+        builder.Services.AddSingleton<ILayoutManagerFactory, Template.MobileApp.Layouts.AppLayoutManagerFactory>();
+        return builder;
+    }
 
     private static void ConfigureLifecycleEvents(ILifecycleBuilder effects)
     {
@@ -335,7 +344,7 @@ public static partial class MauiProgram
         config.BindSingleton<HttpService>();
 
         // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
-        config.BindSingleton<ScheduleService>();
+        config.BindSingleton<IScheduleEventProvider, ScheduleService>();
         config.BindSingleton<HolidayService>();
 
         // Usecase
@@ -346,6 +355,7 @@ public static partial class MauiProgram
 
         // Models
         config.BindSingleton(new ActivityCalculator(0.0005, 65, 0.6));
+        config.BindSingleton<ScpService>();
 
         // Startup
         config.BindSingleton<ApplicationInitializer>();

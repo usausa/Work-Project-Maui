@@ -93,15 +93,18 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="SettingGroupStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="2" />
+            <Style x:Key="SettingRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="MinimumHeightRequest" Value="26" />
             </Style>
 
             <Style x:Key="SettingCaptionLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="WidthRequest" Value="108" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="SettingValueLabel"
@@ -110,6 +113,7 @@
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="behaviors:AnimationOption.HighlightColor" Value="{StaticResource AmberLighten4}" />
             </Style>
 
@@ -163,16 +167,20 @@
                            Text="Network" />
                 </Grid>
 
-                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
-                    <Label Style="{StaticResource SettingCaptionLabel}"
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
                            Text="EndPoint" />
-                    <Label Style="{StaticResource SettingValueLabel}"
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding ApiEndPoint}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding ApiEndPoint}" />
-                    <Label Style="{StaticResource SettingEmptyLabel}"
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource EmptyConverter}}" />
-                </VerticalStackLayout>
+                </Grid>
 
                 <BoxView Style="{StaticResource PanelDivider}" />
 
@@ -186,24 +194,84 @@
                            Text="AI Service" />
                 </Grid>
 
-                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
-                    <Label Style="{StaticResource SettingCaptionLabel}"
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
                            Text="EndPoint" />
-                    <Label Style="{StaticResource SettingValueLabel}"
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
                            IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding AIServiceEndPoint}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceEndPoint}" />
-                    <Label Style="{StaticResource SettingEmptyLabel}"
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource EmptyConverter}}" />
-                </VerticalStackLayout>
+                </Grid>
 
-                <VerticalStackLayout Style="{StaticResource SettingGroupStack}">
-                    <Label Style="{StaticResource SettingCaptionLabel}"
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
                            Text="ServiceKey" />
-                    <Label Style="{StaticResource SettingValueLabel}"
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
                            Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}" />
-                </VerticalStackLayout>
+                </Grid>
+
+                <BoxView Style="{StaticResource PanelDivider}" />
+
+                <Grid Style="{StaticResource SectionHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SectionHeaderIcon}"
+                           Text="{x:Static fonts:MaterialIcons.Sync_alt}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SectionHeaderLabel}"
+                           Text="SCP" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Host" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding ScpHost, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ScpHost}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpHost}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding ScpHost, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="User" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding ScpUser, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding ScpUser}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpUser}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding ScpUser, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Password" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           Text="{Binding ScpPassword, Converter={StaticResource MaskTextConverter}}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpPassword}" />
+                </Grid>
 
             </VerticalStackLayout>
         </Border>
