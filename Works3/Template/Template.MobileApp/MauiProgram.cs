@@ -1,10 +1,13 @@
 namespace Template.MobileApp;
 
+using System.Net.Http.Headers;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
 using BarcodeScanning;
+
+using BunnyTail.DependencyInjection;
 
 using CommunityToolkit.Maui;
 
@@ -13,8 +16,6 @@ using Fonts;
 using Indiko.Maui.Controls.Markdown;
 
 using Maui.PDFView;
-
-using MauiComponents.Resolver;
 
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.LifecycleEvents;
@@ -31,7 +32,6 @@ using Shiny;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 using Smart.Data.Mapper;
-using Smart.Resolver;
 
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -47,6 +47,8 @@ using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
 {
+    private const string ModulesNamespace = "Template.MobileApp.Modules";
+
     public static MauiApp CreateMauiApp() =>
         MauiApp.CreateBuilder()
             .UseMauiApp<App>()
@@ -71,8 +73,6 @@ public static partial class MauiProgram
             .UseCommunityToolkitServices()
             .UseCustomView()
             .ConfigureCustomLayouts()
-            .ConfigureComponents()
-            .ConfigureHttpClient()
             .ConfigureContainer()
             .Build();
 
@@ -253,81 +253,89 @@ public static partial class MauiProgram
     }
 
     // ------------------------------------------------------------
-    // Components
+    // Container
     // ------------------------------------------------------------
-
-    private static MauiAppBuilder ConfigureComponents(this MauiAppBuilder builder)
-    {
-        // Components
-        builder.Services.AddBluetoothLE();
-        builder.Services.AddBluetoothLeHosting();
-        builder.Services.AddSingleton<UserCharacteristic>();
-
-        return builder;
-    }
 
     private static MauiAppBuilder ConfigureContainer(this MauiAppBuilder builder)
     {
-        builder.ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
-
+        builder.ConfigureContainer(
+            new GeneratedServiceProviderFactory(static options => options.TrackTransientDisposables = false),
+            ConfigureContainer);
         return builder;
     }
 
-    private static void ConfigureContainer(ResolverConfig config)
+    private static void ConfigureContainer(IServiceCollection services)
     {
-        config
-            .UseAutoBinding()
-            .UseArrayBinding()
-            .UseAssignableBinding()
-            .UsePropertyInjector()
-            .UsePageContextScope();
+        // View & ViewModel
+        services.AddTransient<MainPage>();
+        services.AddTransient<MainPageViewModel>();
+        services.AddViews();
+        services.AddViewModels();
+        services.AddContexts();
 
         // MauiComponents
-        config.AddComponentsDialog(static c =>
+        services.AddComponentsDialog(static c =>
         {
             ConfigureDialogDesign(c);
             c.EnablePromptEnterAction = true;
             c.EnablePromptSelectAll = true;
         });
-        config.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
-        config.AddComponentsPopupPlugin<PopupFocusPlugin>();
-        config.AddComponentsScreen();
-        config.AddComponentsLocation();
-        config.AddComponentsSpeech();
-        config.AddCommunication();
+        services.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
+        services.AddComponentsPopupPlugin<PopupFocusPlugin>();
+        services.AddComponentsScreen();
+        services.AddComponentsLocation();
+        services.AddComponentsSpeech();
 
         // Messenger
-        config.BindSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
+        services.AddSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
 
         // Navigator
-        config.AddNavigator(static c =>
+        services.AddNavigator(static (_, config) =>
         {
-            c.UseMauiNavigationProvider();
-            c.AddResolverPlugin();
-            c.AddPlugin<NavigationFocusPlugin>();
-            c.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
+            config.UseMauiNavigationProvider();
+            config.AddPlugin<NavigationFocusPlugin>();
+            config.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
 
         // Components
-        config.BindSingleton<IStorageManager, StorageManager>();
-        config.BindSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
-        config.BindSingleton<INfcReader, NfcReader>();
-        config.BindSingleton<INoiseMonitor, NoiseMonitor>();
-        config.BindSingleton<IOcrReader, OcrReader>();
-        config.BindSingleton<IActivityRecognizer, ActivityRecognizer>();
+        services.AddSingleton<IStorageManager, StorageManager>();
+        services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
+        services.AddSingleton<INfcReader, NfcReader>();
+        services.AddSingleton<INoiseMonitor, NoiseMonitor>();
+        services.AddSingleton<IOcrReader, OcrReader>();
+        services.AddSingleton<IActivityRecognizer, ActivityRecognizer>();
 
-        config.BindSingleton(AudioManager.Current);
+        services.AddSingleton(AudioManager.Current);
+
+        // Bluetooth
+        services.AddBluetoothLE();
+        services.AddBluetoothLeHosting();
+        services.AddSingleton<UserCharacteristic>();
 
         // Resource
-        config.BindSingleton<ResourceDictionary>(_ => Application.Current!.Resources);
+        services.AddSingleton<ResourceDictionary>(static _ => Application.Current!.Resources);
 
         // State
-        config.BindSingleton<DeviceState>();
-        config.BindSingleton<Session>();
-        config.BindSingleton<Settings>();
+        services.AddSingleton<DeviceState>();
+        services.AddSingleton<Session>();
+        services.AddSingleton<Settings>();
+
+        // HttpClient
+        services
+            .AddHttpClient(ApiNames.Default, SetupHttpClient)
+            .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
+            .AddHttpMessageHandler<ApiDelegatingHandler>();
+        // 転送用: 大きいファイルを通常APIの30秒で切らないよう長めにする。
+        // 無限にすると無応答時に中断手段が無くなるため上限は設ける (呼び出し側がCancellationTokenを渡す場合はそちらが優先)
+        services
+            .AddHttpClient(ApiNames.Transfer, SetupTransferHttpClient)
+            .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
+            .AddHttpMessageHandler<ApiDelegatingHandler>();
+        services.AddTransient<ApiDelegatingHandler>();
+        services.AddSingleton<ApiContext>();
 
         // Service
-        config.BindSingleton(static p =>
+        services.AddSingleton(static p =>
         {
             var storage = p.GetRequiredService<IStorageManager>();
             return new DataServiceOptions
@@ -339,31 +347,73 @@ public static partial class MauiProgram
 #endif
             };
         });
-        config.BindSingleton<DataService>();
+        services.AddSingleton<DataService>();
 
-        config.BindSingleton<HttpService>();
+        services.AddSingleton<HttpService>();
 
         // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
-        config.BindSingleton<IScheduleEventProvider, ScheduleService>();
-        config.BindSingleton<HolidayService>();
+        services.AddSingleton<IScheduleEventProvider, ScheduleService>();
+        services.AddSingleton<HolidayService>();
 
         // Usecase
-        config.BindSingleton<INetworkInteraction, DialogNetworkInteraction>();
-        config.BindSingleton<NetworkOperator>();
-        config.BindSingleton<NetworkUsecase>();
-        config.BindSingleton<CognitiveUsecase>();
+        services.AddSingleton<INetworkInteraction, DialogNetworkInteraction>();
+        services.AddSingleton<NetworkOperator>();
+        services.AddSingleton<NetworkUsecase>();
+        services.AddSingleton<CognitiveUsecase>();
 
         // Models
-        config.BindSingleton(new ActivityCalculator(0.0005, 65, 0.6));
-        config.BindSingleton<ScpService>();
+        services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
+        services.AddSingleton<ScpService>();
 
         // Startup
-        config.BindSingleton<ApplicationInitializer>();
-        config.BindSingleton<IMauiInitializeService>(static p => p.GetRequiredService<ApplicationInitializer>());
+        services.AddSingleton<ApplicationInitializer>();
+        services.AddSingleton<IMauiInitializeService>(static p => p.GetRequiredService<ApplicationInitializer>());
     }
 
     // ------------------------------------------------------------
-    // View & Dialog
+    // Network
+    // ------------------------------------------------------------
+
+    private static void SetupHttpClient(IServiceProvider provider, HttpClient client)
+    {
+        client.BaseAddress = provider.GetRequiredService<ApiContext>().BaseAddress;
+        client.Timeout = TimeSpan.FromSeconds(30);
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+    }
+
+    private static void SetupTransferHttpClient(IServiceProvider provider, HttpClient client)
+    {
+        client.BaseAddress = provider.GetRequiredService<ApiContext>().BaseAddress;
+        client.Timeout = TimeSpan.FromMinutes(10);
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+        client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+    }
+
+    private static HttpMessageHandler CreateHttpMessageHandler() =>
+        new SocketsHttpHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            PooledConnectionLifetime = TimeSpan.FromMinutes(1)
+        };
+
+    // ------------------------------------------------------------
+    // View & ViewModel
+    // ------------------------------------------------------------
+
+    // ReSharper disable UnusedMethodReturnValue.Local
+    [ComponentRegistration(Lifetime.Transient, "View$", Namespace = ModulesNamespace)]
+    private static partial IServiceCollection AddViews(this IServiceCollection services);
+
+    [ComponentRegistration(Lifetime.Transient, "ViewModel$", Namespace = ModulesNamespace)]
+    private static partial IServiceCollection AddViewModels(this IServiceCollection services);
+
+    [ComponentRegistration(Lifetime.Transient, "Context$", Namespace = ModulesNamespace)]
+    private static partial IServiceCollection AddContexts(this IServiceCollection services);
+    // ReSharper restore UnusedMethodReturnValue.Local
+
+    // ------------------------------------------------------------
+    // Navigation
     // ------------------------------------------------------------
 
     [ViewSource]

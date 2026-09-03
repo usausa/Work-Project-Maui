@@ -40,6 +40,18 @@ public sealed class ApplicationInitializer : IMauiInitializeService
         // Setup provider
         ResolveProvider.Default.Provider = services;
 
+#if DEBUG
+        // 生成ファクトリで解決できずリフレクションへフォールバックした型を確認する
+        // (出力を GeneratedFactory.cs に貼り付けて生成対象に加える)
+        if (services is BunnyTail.DependencyInjection.GeneratedServiceProvider generatedProvider)
+        {
+            foreach (var line in BunnyTail.DependencyInjection.Diagnostics.ServiceFactoryReportExtensions.DescribeRuntimeFallbacks(generatedProvider).Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            {
+                System.Diagnostics.Debug.WriteLine(line);
+            }
+        }
+#endif
+
         var settings = services.GetRequiredService<Settings>();
 
         // Initial setting

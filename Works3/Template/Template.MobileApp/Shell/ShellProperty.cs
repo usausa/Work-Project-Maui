@@ -6,6 +6,15 @@ using Smart.Maui.Interactivity;
 
 public static class ShellProperty
 {
+    // 現在表示中のビュー。遷移で退場するビューのバインディング解除がプロパティ変更を発火させ、
+    // 直後のシェル状態を旧値で上書きするのを防ぐ (現在のビューからの変更のみ反映する)
+    private static WeakReference<BindableObject>? currentView;
+
+    internal static void SetCurrentView(BindableObject? view)
+    {
+        currentView = view is null ? null : new WeakReference<BindableObject>(view);
+    }
+
     // ------------------------------------------------------------
     // Shell
     // ------------------------------------------------------------
@@ -133,6 +142,12 @@ public static class ShellProperty
 
     private static void PropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
+        // 現在のビュー以外 (退場中のビュー等) からの変更は反映しない
+        if ((currentView is null) || !currentView.TryGetTarget(out var current) || !ReferenceEquals(current, bindable))
+        {
+            return;
+        }
+
         var parent = ((ContentView)bindable).Parent;
         if (parent?.BindingContext is IShellControl shell)
         {

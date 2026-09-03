@@ -670,6 +670,16 @@ ScpUser=deploy
 ScpPassword=********
 ```
 
+### DI コンテナ移行(BunnyTail.DependencyInjection。plus1 後の未コミット変更)
+
+- 運用: DEBUG 起動時に `DescribeRuntimeFallbacks` の出力(そのまま貼れる属性行)を `GeneratedFactory.cs` へ貼り、ライブラリ内部で登録される型(`AddComponentsXxx` / `UseShiny` 等)のファクトリを明示生成する。自コードの `AddSingleton<T>` 等はジェネレータが自動生成する
+- `Shiny.AndroidPlatform` は属性を書いてもファクトリ生成されない(生成不能な ctor)ため**リフレクションフォールバックのまま残置**(従来も Smart.Resolver のリフレクション生成であり同等)
+- **退場ビューのバインディング解除が ShellProperty(バインドされた Function4Enabled 等)の変更を発火し、遷移直後のシェル状態を旧値で上書きする**(Smart.Navigation 3.8 で BindingContext 解除順が変化)→ `ShellProperty` に「現在ビューのみ反映」の CurrentView ガードを追加(症状=タイトルが 1 画面遅れる。Wizard / Lottie / Edit List などバインドを持つ画面の離脱で再現)
+- ページスコープは Navigation 3.8 の DI 拡張が担う: Context を DI に Transient 登録+`IScopeLifecycle`(OnScopeInitialize/OnScopeTerminate)。`[Scope]` プロパティ注入・複数画面での共有・離脱時破棄まで従来どおり(実機で確認済み)
+- `SudokuCellViewModel(int,int)` のような手動 new 前提の型も "ViewModel$" パターンで DI 登録される(解決されなければ無害。ValidateOnBuild は無効)
+- 検証中に **BACK 終了→即再起動で白画面**になる事象を確認(コールド起動 / ホーム→再開は正常)。プロセス生存中の再起動で `App.OnStart` の初回ナビゲーションが走らない構造によるもので **DI 移行とは独立**(`Task_Checklist.md` 0 節=最優先対応)
+- adb での Entry 入力は日本語 IME の未確定に注意: `input text` の後 KEYCODE_ENTER(66) で確定し、BACK(4) でキーボードを閉じてから画面下の F キーをタップする
+
 ### アナライザ / .NET
 
 - IDisposable の所有は**フィールドでなく get-only プロパティ + 宣言時初期化**にする(CA2000/CA2213 は `Disposables.Add` を所有移転と認識しない)。`CancellationTokenSource` フィールドは `Dispose(bool)` オーバーライドで明示 Dispose
@@ -698,6 +708,8 @@ ScpPassword=********
 | `Document/Task_Checklist.md` | **新規**。残作業の統合マスター(上記 2 本 + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合) |
 | `Modules/Main/MenuView.xaml` | メニュー刷新(2026-09-03): **番号プレフィックス廃止**・並び替え(View → Sample → UI → App、**Setting を最後**)・**UI 行を 2 列化**(UI 1 / UI 2) |
 | `Modules/UI/UIMenu1*` / `UIMenu2*` | **UIMenu を分離**(2026-09-03): UI 1=アプリ系 18 画面 / UI 2=可視化・計器・HUD 系 13 画面。**各 8 段×3 列でグループ毎に行を分け、余りセルは可視の無効ボタン**(メニュー規約=8 段以上・グループ配置・空きセルあり)。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除 |
+| DI コンテナ移行 (横断・多数) | **Usa.Smart.Resolver を廃止し `BunnyTail.DependencyInjection` 0.4.0 へ移行**(2026-09-03。`template-maui2` の 69ba9a41 と同様の変更)。csproj=Smart.Resolver 系 2+Navigation.Resolver+MauiComponents.Resolver 参照を削除、Smart.Navigation 3.4→**3.8**/Mvvm 2.11/BunnyTail 系整合、TrimmerRootAssembly から Resolver 系 4 行削除。`MauiProgram`=`GeneratedServiceProviderFactory`+`IServiceCollection` 化(View/ViewModel/Context は `[ComponentRegistration]` のソース生成 `AddViews`/`AddViewModels`/`AddContexts`、HttpClient 登録も ConfigureContainer へ統合し `Services/AppHostBuilderExtensions.cs` 削除)。**`GeneratedFactory.cs` 新設**(ライブラリ内部登録型のファクトリ明示生成=Shiny 4 型+MauiComponents 8 型+App+PopupFocusPlugin+CT PopupService)。`WizardContext`=IInitializable/IDisposable→**`IScopeLifecycle`**。`ApplicationInitializer` に DEBUG 時のフォールバック報告出力 |
+| `Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs` | **移行で表面化した不具合の修正**: 退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加 |
 | `Resources/Images/` + csproj | **用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+ **プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映) |
 | `.editorconfig` | 軽微な調整 |
 
