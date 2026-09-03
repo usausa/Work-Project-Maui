@@ -1,9 +1,9 @@
 namespace Template.MobileApp.Modules.UI;
 
-[View(ViewId.UIMenu)]
-public sealed partial class UIMenuView
+[View(ViewId.UIMenu1)]
+public sealed partial class UIMenu1View
 {
-    public UIMenuView()
+    public UIMenu1View()
     {
         InitializeComponent();
     }

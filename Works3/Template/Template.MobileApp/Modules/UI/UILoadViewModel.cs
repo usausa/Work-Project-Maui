@@ -80,7 +80,7 @@ public sealed partial class UILoadViewModel : AppViewModelBase
         await noiseMonitor.StopAsync();
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 

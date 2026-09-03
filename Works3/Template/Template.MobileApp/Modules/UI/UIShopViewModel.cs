@@ -46,7 +46,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
             ? AllItems
             : AllItems.Where(x => x.Title.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

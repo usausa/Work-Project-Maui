@@ -138,7 +138,8 @@ public enum ViewId
     AppGame,
 
     // UI
-    UIMenu,
+    UIMenu1,
+    UIMenu2,
     UILogin,
     UIProfile,
     UIMoney,

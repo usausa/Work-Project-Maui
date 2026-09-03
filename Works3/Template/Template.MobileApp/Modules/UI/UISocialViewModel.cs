@@ -97,7 +97,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     public UISocialViewModel()
     {
-        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu));
+        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu1));
 
         HasIconNotificationMail = true;
         HasIconNotificationInfo = true;

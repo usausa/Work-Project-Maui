@@ -171,6 +171,23 @@ InspectCode(JetBrains.ReSharper.CommandLineTools)を使用して静的チェッ�
 XAML記述の統一にはXaml Stylerを使用する。  
 Visual Studioの拡張機能としてインストールすること。  
 
+## Releaseビルドでの検証と計測
+
+描画や性能の計測、リフレクションを使用するライブラリの動作確認は、Debugビルドではなく**Releaseビルド+実機**で行う。  
+
+- AndroidのReleaseビルドは既定でトリミングされるため、リフレクション経由で生成される型(DIコンテナからの解決等)が「Debugでは動くがReleaseでは起動しない」形で壊れることがある。本テンプレートではSmart.Navigation内部型のコンストラクタが削除され起動不能になった前例があり、csprojの`TrimmerRootAssembly`でアプリ本体と関連ライブラリをトリミング対象から除外して解決している。ライブラリ追加時は同ItemGroupへの追加要否を確認し、**Releaseでの起動確認までを完了条件とする**
+- `Console.WriteLine`はReleaseビルドではlogcatに出力されない(stdout転送はDebugのみ)。Releaseで回収するログは`Android.Util.Log`を直接使用する(起動失敗=`StartupError`タグ、描画計測=`SceneStats`タグ)
+
+計測手順は以下の形とする。  
+
+```
+dotnet build Template.MobileApp/Template.MobileApp.csproj -c Release -f net10.0-android -t:Run
+(対象画面に滞在して操作)
+adb logcat -s SceneStats
+```
+
+計測例として、SceneControl(SKCanvasViewの60fps自走描画)のダブルバッファ有無をUI > TelemetryのFunction2トグルで切り替えて比較した結果、直描きが約30fps(平均16.5〜17.8ms)、ダブルバッファが約60fps(平均14.0〜14.5ms)となり、`SceneObject.UseDoubleBuffer`を既定ONとしている。  
+
 ----
 
 # 🌱新規プロジェクト作成
@@ -836,6 +853,28 @@ WPF/UWP/Xamarin.Forms等と同様だが、固有の方言や機能的な制限�
 
 Xamarin.Formsの内容であるが、同様の項目が多いので以下の内容は理解しておくこと。  
 https://qiita.com/toshi0607/items/241a7161491092d2a3e0
+
+## リスト表示
+
+リストの表示手段は以下の基準で選定する。  
+
+|手段|使いどころ|
+|:----|:----|
+|CollectionView|**一覧表示の既定**。件数が多い/可変の一覧、選択(Single/Multiple)、EmptyView、増分ロード(RemainingItemsThreshold)、グリッド/横方向レイアウトが必要な場合。仮想化される|
+|BindableLayout|カード内の数件〜十数件の小さな繰り返し表示。仮想化されず全要素が実体化されるため、件数が多いものには使用しない。親のScrollViewにスクロールを任せる補助的なリスト向け|
+|ListView|新規では使用しない(CollectionViewで代替)。既存コードとの互換やCell固有機能が必要な場合のみ|
+
+- チャットのような末尾追従は`CollectionView`+`ItemsUpdatingScrollMode=KeepLastItemInView`を使用する
+- 複数選択は`SelectionMode=Multiple`+`SelectedItems`に`ObservableCollection<object>`をバインドする形とする(選択変更でコレクションの中身が更新される)
+- 件数固定の少数項目はリスト化せずXAML直書きも選択肢とする
+
+## タッチフィードバック
+
+タップ可能な非Button要素(カード、リスト項目等)のタッチフィードバックには`SfEffectsView`(Syncfusion.Maui.Toolkit)を使用する。  
+
+- `TouchDownEffects="Ripple"`で囲むのを基本形とし、タップ処理は`TouchDownCommand`または内側の`TapGestureRecognizer`で行う
+- Buttonには`SfEffectsView`ではなく`ButtonOption.PressEffect`(自作Behavior)を使用する
+- 本テンプレートでは約100箇所で使用しており、**今後も継続使用する**(Syncfusion.Maui.Toolkitは無償・導入済みであり、自作置換の利益がない)。ただし無償版に含まれないコントロール(ゲージ等)は使用しない
 
 ## MVVM
 
