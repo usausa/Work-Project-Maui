@@ -632,6 +632,10 @@ A-9 の補足:
 
 ### MAUI / XAML
 
+- **MAUI 10 で `Page.OnBackButtonPressed` は素の `ContentPage` では呼ばれない**。`MauiAppCompatActivity` の `OnBackPressed()` override が廃止され、AndroidX `OnBackPressedDispatcher` のコールバック 1 本になったため。有効判定は `Window.CanConsumeBackNavigation` で、Shell / NavigationPage / FlyoutPage / MultiPage 以外は常に false → **自前で `OnBackPressedCallback` を登録するしかない**。`android:enableOnBackInvokedCallback="false"` の退避策も効かない (dispatcher に有効なコールバックが無いだけなので結局システム既定の finish になる)。関連: dotnet/maui#31266 (OnBackButtonPressed の見直し提案)
+- **`App.OnStart` はプロセスに 1 回しか呼ばれない**(`Application.SendStart()` の `_isStarted` ガード)。Android では Activity 再生成のたびに `CreateWindow` は呼ばれるが `OnStart` は呼ばれないため、**画面構築を `OnStart` に依存させると再生成で白画面になる**。公式ドキュメント (App lifecycle) も標準は `Window` のイベント (`Created` = Android の `OnPostCreate`) で、`Application.OnStart` は登場しない。関連: dotnet/maui#18845 (Verified / Backlog・未修正)
+- Activity 再生成は BACK 以外でも起きる。`ConfigurationChanges` に `FontScale` / `Locale` が無いため、**端末のフォントサイズ・言語変更で必ず再生成**される (`adb shell settings put system font_scale 1.30` で再現可能)
+- `launchMode` (`singleTop` / `singleTask` / `singleInstance`) は「既存インスタンスの再利用方法」の設定なので、**finish 済みで再利用対象が無いケースには効かない**。BACK で Task / ActivityRecord は消滅し、プロセスだけが `oom_score_adj` 900 の空プロセスとして残る
 - **Syncfusion の URL 名前空間は Charts / SparkCharts / SunburstChart を解決できない**(MAUIG1001 の不可解な ElementNode エラー)→ チャート系は `clr-namespace` で参照。チャートの `Fill`/`Stroke` は Brush 型のためリテラル色を指定
 - Smart.Mvvm の `[ObservableProperty]` に CommunityToolkit 流の `OnXxxChanged` partial フックは無い(CS0759)→ `PropertyChanged` 購読が本プロジェクトの定型
 - `SKConfettiView` は `Systems` を明示定義(xmlns の assembly は `SkiaSharp.Extended.UI`)。`SfShimmer.CustomView` は既存スケルトンに波アニメだけ足せる
@@ -712,6 +716,10 @@ ScpPassword=********
 | `Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs` | **移行で表面化した不具合の修正**: 退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加 |
 | `Resources/Images/` + csproj | **用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+ **プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映) |
 | `.editorconfig` | 軽微な調整 |
+| `Platforms/Android/MainActivity.cs` | **BACK キーの受け取りを自前化** (2026-09-04)。MAUI 10 の `MauiAppCompatActivity` は `OnBackPressed()` の override を廃止し、AndroidX `OnBackPressedDispatcher` へ登録した `MauiOnBackPressedCallback` のみで BACK を処理する。その `Enabled` は `Window.CanConsumeBackNavigation` (Shell/NavigationPage/FlyoutPage/MultiPage のみ true) で決まるため、**素の ContentPage では `Page.OnBackButtonPressed` が一切呼ばれない**。`base.OnCreate` の後に自前の `OnBackPressedCallback` (`Enabled=true`) を追加して `Page.SendBackButtonPressed()` へ流す (後勝ちで先に呼ばれる)。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック |
+| `App.xaml.cs` / `Log.cs` | **Activity 再生成時の初期画面復帰** (2026-09-04)。`Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみのため、プロセス生存のまま Activity が作り直されると `App.OnStart()` が再実行されず初回遷移が走らない → 新しい `MainPage` のコンテナが空で**白画面**。`CreateWindow` で 2 回目以降の `Window.Created` に `RestoreInitialViewAsync` を繋ぎ、`navigator.Exit()` → `ForwardAsync(ViewId.Menu)` で入り直す (初回遷移が未完了なら `OnStart` 側に任せる)。例外は `ContinueWith(OnlyOnFaulted)` で観測しログのみ。`Log.cs` に `InfoWindowRecreated` / `WarnWindowRecreateError` を追加 |
+| `Modules/Main/MenuViewModel.cs` | ルート画面の BACK に `AndroidHelper.MoveTaskToBack()` を結線 (2026-09-04)。戻り先が無いルートでは終了せずバックグラウンドへ送る (Android の作法)。Activity が生き残るので再生成経路も踏まない。既存の未使用ヘルパを初めて使用 |
+| (他テンプレートへ横展開) | 同じ対策を `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映 (2026-09-04)。全プロジェクト 0 エラー・自コード由来の警告 0。`template-maui-blazor` は `OnStart` に画面遷移が無く UI が XAML で宣言済みのため **B-1 は対象外**で A-1 のみ。Works3/Template と `template-maui` は該当 4 ファイルを同一に保つ |
 
 **残作業**: フェーズ4〜9 + SCP の実機確認と SCP の転送実テスト、画像アセット拡充(素材待ち) → `Task_Checklist.md` で管理。
 

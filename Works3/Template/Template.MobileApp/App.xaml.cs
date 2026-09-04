@@ -10,9 +10,14 @@ public sealed partial class App
 {
     private readonly IServiceProvider serviceProvider;
 
+    private readonly ILogger<App> log;
+
+    private bool windowCreated;
+
     public App(IServiceProvider serviceProvider, ILogger<App> log)
     {
         this.serviceProvider = serviceProvider;
+        this.log = log;
 
         // Light theme based application
         Current!.UserAppTheme = AppTheme.Light;
@@ -25,24 +30,57 @@ public sealed partial class App
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(serviceProvider.GetRequiredService<MainPage>());
+        var window = new Window(serviceProvider.GetRequiredService<MainPage>());
+
+        if (windowCreated)
+        {
+            window.Created += OnWindowRecreated;
+        }
+
+        windowCreated = true;
+
+        return window;
+    }
+
+    private void OnWindowRecreated(object? sender, EventArgs e)
+    {
+        if (sender is Window window)
+        {
+            window.Created -= OnWindowRecreated;
+        }
+
+        RestoreInitialViewAsync().ContinueWith(
+            t => log.WarnWindowRecreateError(t.Exception!),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.Default);
+    }
+
+    private async Task RestoreInitialViewAsync()
+    {
+        var navigator = serviceProvider.GetRequiredService<INavigator>();
+
+        if (navigator.CurrentViewId is null)
+        {
+            return;
+        }
+
+        log.InfoWindowRecreated();
+
+        navigator.Exit();
+
+        await navigator.ForwardAsync(ViewId.Menu);
     }
 
     // ReSharper disable once AsyncVoidMethod
-    // 例外時はグローバルハンドラ経由でCrashReportに記録されfail-fastとなる (次回起動時に表示)
     protected override async void OnStart()
     {
         // Report previous exception
         await CrashReport.ShowReport();
 
-        // 権限要求は起動時に一括では行わず、各機能の利用画面側でCheck→Requestする
-
-        // 非同期初期化(DB再構築)の完了を待ってから画面遷移する
         var initializer = serviceProvider.GetRequiredService<ApplicationInitializer>();
         await initializer.StartupTask;
 
-        // DBを作れない環境では以降の画面が成立しないため、原因を提示して終了する
-        // (無言でクラッシュすると次回起動でも同じ所で落ち、理由が分からないまま復帰できないため)
         if (initializer.InitializeError is not null)
         {
             var page = Current?.Windows[0].Page;

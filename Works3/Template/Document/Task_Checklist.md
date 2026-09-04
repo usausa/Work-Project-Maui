@@ -23,14 +23,97 @@
 
 **事象**: BACK でアプリを終了した直後にランチャーから再起動すると白画面になる(`am start` の直接起動でも同事象)。コールド起動とホーム→再開は正常。DI 移行(2026-09-03)とは独立の経路で、移行検証中に発見。
 
-**原因の見立て**: プロセス生存中の再起動では `App.OnStart` が再実行されず初回ナビゲーションが走らない+新しい Window/MainPage のコンテナへ表示中ビューが再接続されない。
+- [x] **0-1** 調査 (2026-09-03) — Pixel 9a / Android 16 / Release ビルドで再現・計測。**独立した 2 つの不具合の連鎖**と判明(下記 原因A / 原因B)
 
-- [ ] **0-1** 調査: 再起動時のライフサイクル(`App.CreateWindow` / `OnStart` / `OnResume`)と `NavigationContainerBehavior` のコンテナ差し替え時の挙動を特定する
-- [ ] **0-2** 対策の実装(方向性の候補、調査結果で選定):
-  - (a) コンテナ再接続: 新しいコンテナが設定されたとき、ナビゲータの表示中ビューを再アタッチする
-  - (b) 再起動検知で初期化: プロセス生存中の再起動を検知し、ナビゲーションスタックをリセットして初期画面へ遷移し直す
-  - (c) Window/MainPage の再利用: `CreateWindow` で毎回 new せず保持したものを返す
-- [ ] **0-3** 確認: ①コールド起動 ②ホーム→再開 ③**BACK 終了→即再起動** ④`am start` 直接起動 の 4 経路で正常表示(Release ビルド)。回転・タスクキルからの復帰も壊れていないこと
+### 原因A: BACK がアプリに届かない (MAUI 10 での回帰)
+
+実測 (`adb logcat -s AppLifecycle:D App:D` / `pidof`):
+
+| 操作 | 実測結果 |
+| --- | --- |
+| Menu 画面で BACK | `OnPause`→`OnStop`→`OnDestroy`。**プロセスは生存**(pid 不変) |
+| Basic メニュー画面で BACK | 親メニューへ戻らずアプリ終了。`BasicMenuViewModel.OnNotifyBackAsync` は呼ばれない |
+| 再起動 (`am start`) | `LaunchState: WARM`・pid 不変・`App` コンストラクタのログ (`Application start`) が出ない |
+
+→ 常に `true` を返す `MainPage.OnBackButtonPressed()` が**一度も呼ばれていない**。つまり BACK は「アプリ内戻り」も「終了の抑止」もできていない。
+
+原因は MAUI 10.0.100 の Android 実装:
+
+- `MauiAppCompatActivity` は `OnBackPressed()` の override を**廃止**し(メタデータ確認済み。MAUI 9 には存在した)、AndroidX `OnBackPressedDispatcher` に登録した `MauiOnBackPressedCallback` のみで BACK を処理する
+- その `Enabled` は `ShouldRegisterPredictiveBackCallback()` = `Window is IBackNavigationState { CanConsumeBackNavigation: true }` で決まる
+- `Window.CanConsumeBackNavigation(Page)` は Shell / NavigationPage / FlyoutPage / MultiPage 以外(= 素の `ContentPage`)では **常に false**(MAUI 側コメント: カスタムページの `OnBackButtonPressed` の戻り値は事前に判定できないため back-to-home アニメーションを潰さない方針)
+- 本アプリの `Window.Page` は素の `ContentPage` (`MainPage`) なのでコールバックは無効のまま → システム既定の BACK (Activity finish) が走る
+
+補足:
+
+- Android 16 / targetSdk 36 では `onBackPressed` も `KEYCODE_BACK` も配送されない。加えて MAUI 側に override が無いため、`android:enableOnBackInvokedCallback="false"` の退避策では**直らない**(dispatcher に戻るだけで有効なコールバックが無い)
+- 参考: dotnet/maui#31266 (Page.OnBackButtonPressed の見直し) / dotnet/maui#33523
+
+### 原因B: プロセス生存中の Activity 再生成に耐えられない
+
+原因A で Activity が finish されると、プロセス生存のまま Activity だけが作り直される。このとき:
+
+1. `MainActivity.OnCreate` → `App.CreateWindow` が再度呼ばれ、**新しい `MainPage`** が DI (Transient) から生成される
+2. MAUI の `Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみ → **`App.OnStart()` は再実行されない** → 唯一の初回遷移 `navigator.ForwardAsync(ViewId.Menu)` が走らない
+3. `INavigator` は Singleton なのでスタックは旧 View を保持したまま。`NavigationContainerBehavior` → `ContainerResolver.Attach()` は**参照を差し替えるだけ**で、表示中 View を新コンテナへ付け替えない
+4. 結果として `AbsoluteLayout` が空 → 白画面。スクリーンショットではステータスバーだけ青い(新 `MainPage` の `StatusBarBehavior` は動作)、ヘッダー/ファンクションは新 `MainPageViewModel` の初期値で非表示
+
+**原因B は BACK と無関係に再現する**(実測): アプリ表示中に端末のフォントサイズを変更すると `OnPause`→`OnStop`→`OnDestroy`→`OnCreate` と Activity が再生成され(pid 不変)、画面が完全に空になる(uiautomator でテキスト 0 件)。`ConfigurationChanges` に `FontScale` / `Locale` が無いため。**通常の利用操作で踏める不具合**なので、原因A を直しても原因B は必ず対処が必要。
+
+**Activity の設定(launchMode 等)では直せない**(実測): BACK で Task / ActivityRecord は完全に消滅し(`Task #83` → 消滅 → 再起動で `Task #84`)、プロセスだけが `oom_score_adj` 0→900 の空プロセスとして残る。launchMode は「**既存インスタンスがあるとき**にどう再利用するか」の設定なので、finish 済みで再利用対象が無い今回は `singleTop` / `singleTask` / `singleInstance` のいずれでも新規 `OnCreate` になる。`alwaysRetainTaskState` もタスク生存中の話。manifest に「BACK で finish させない」スイッチは無い。
+
+- [x] **0-2** 【判断】対策方針の選定 (2026-09-04) — **A-1 + B-1 + 任意項目**を採用
+  - **A-1 (採用)** `MainActivity` で自前の `OnBackPressedCallback` を `Enabled = true` で `OnBackPressedDispatcher` に登録し、`Page.SendBackButtonPressed()` へ流す。`base.OnCreate` の後に追加することで MAUI のコールバックより後勝ちで確実に受け取れる。アプリ側ロジック(`MainPage.OnBackButtonPressed` → `ShellEvent.Back`)は現状のまま使える。代償はシステムの back-to-home アニメーションが出なくなること
+  - A-2 (不採用) `MainPage` を `NavigationPage` 等でラップして `CanConsumeBackNavigation` を true にする案。シェル構造(ヘッダー/ファンクション/コンテナ)の作り直しが必要で影響が大きい
+  - A-3 (不採用) MAUI 側の修正待ち。dotnet/maui#31266 は提案段階(.NET 10 SR11 マイルストーン)で時期未定
+  - **B-1 (採用)** `App.CreateWindow` で 2 回目以降の `Window` にだけ `Created` ハンドラを付け、`navigator.Exit()` → `ForwardAsync(ViewId.Menu)` を実行する。`IWindow.Created()` の直後に `SendStart()` が呼ばれるため、コールド起動時の `OnStart` と同じタイミングになり副作用が少ない
+    - 既知の副作用: `Navigator.Exit()` は `Controller` を経由せず `provider.CloseView` を直接呼ぶため `plugin.OnClose` が走らない(= `ScopePlugin` の参照カウントが減らない)。本アプリで `[Scope]` を使うのは Navigation > Wizard の 3 画面のみで、影響は「再生成後に Wizard の入力値が残る」程度。厳密にやるなら Smart.Navigation 側で `Exit()` を Controller 経由へ直す
+  - B-2 (不採用) コンテナ再接続。破棄済み Activity / MauiContext のハンドラを持つ View の付け替えになりリスク高(将来案)
+  - B-3 (不採用) Window/MainPage の再利用。`Window.Destroying()` で `RemoveWindow` + `Handler.DisconnectHandler()` が走るため非推奨
+  - **任意 (採用)** ルート画面 `MenuViewModel.OnNotifyBackAsync` → `AndroidHelper.MoveTaskToBack()`。A-1 だけだとルート画面の BACK が無反応になるため、Android の作法に合わせてバックグラウンドへ送る。Activity が生き残るので白画面経路も踏まない
+- [x] **0-3** 対策A の実装 (2026-09-04) — `Platforms/Android/MainActivity.cs`(`BackPressedCallback` 追加。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック)
+- [x] **0-4** 対策B の実装 (2026-09-04) — `App.xaml.cs`(`windowCreated` フラグ + `OnWindowRecreated` / `RestoreInitialViewAsync`。初回遷移が未完了なら `OnStart` 側に任せる)、`Log.cs`(`InfoWindowRecreated` / `WarnWindowRecreateError` 追加)、`Modules/Main/MenuViewModel.cs`(`OnNotifyBackAsync`)。ビルド警告ゼロ(自コード由来 0 件。残 10 件は BLE バインディング由来の既存 Release 警告)
+- [x] **0-5** 確認 (2026-09-04・Release ビルド・Pixel 9a / Android 16) — 全経路 OK
+
+| 確認項目 | 結果 |
+| --- | --- |
+| ①コールド起動 | `LaunchState: COLD` → Menu 表示 |
+| ②ホーム→再開 | `OnStop`→`OnStart`/`OnResume` のみ、Menu 表示 |
+| ③サブ画面の BACK | Basic → BACK → **Menu へ復帰**(従来はアプリ終了) |
+| ④ルート画面の BACK | ランチャーへ戻るが **`OnDestroy` 無し・pid 不変**(バックグラウンド化) |
+| ⑤BACK 終了→即再起動 | BACK で終了しなくなったため経路自体が消滅。復帰は Menu 表示 |
+| ⑥`am start` 直接起動 | Menu 表示 |
+| ⑦フォントサイズ変更 | `OnDestroy`→`OnCreate` 後に `Window recreated. Restore initial view.` ログ → **Menu 表示**(従来は完全な空画面) |
+| ⑧他アプリ切替→復帰 / プロセス kill→再起動 | いずれも Menu 表示 |
+
+- [x] **0-6** 他テンプレートへの反映 (2026-09-04) — 全プロジェクトで **0 エラー・自コード由来の警告 0**
+
+| プロジェクト | A-1 | B-1 | ルート BACK | 確認 |
+| --- | --- | --- | --- | --- |
+| `template-maui-keyboard` | 済 | 済 `ViewId.KeyMenu` | `KeyMenuViewModel` | **実機確認済み**(1.Entry → BACK → Key メニューへ復帰 / ルート BACK でバックグラウンド化 / サブ画面でフォントサイズ変更 → `Window recreated` → Key メニュー)。ユーザーが手動でスタイル調整 |
+| `template-maui` | 済 | 済 `ViewId.Menu` | `MenuViewModel` | 該当 4 ファイルが Works3/Template と**完全一致**、AppId も同一 (`template.mobileapp`) のため実機確認は Works3 で代替 |
+| `template-maui2` | 済 | 済 `ViewId.Menu` | `MenuViewModel` | 同上 (AppId 同一)。既存警告 24 件は全て XA4301 (ネイティブライブラリ重複) |
+| `template-maui-blazor` | 済 | **対象外** | `MainPage.OnBackButtonPressed` | **実機確認済み**(BACK でバックグラウンド化・pid 不変、復帰で BlazorWebView の状態も維持) |
+
+> `template-maui-blazor` は `App.OnStart` に画面遷移が無く、UI が `MainPage.xaml` の `BlazorWebView` として宣言済みのため、Activity 再生成でも `CreateWindow` が丸ごと組み直す = **原因B が成立しない**。A-1 のみ入れ、TODO スタブだった `MainPage.OnBackButtonPressed` に `AndroidHelper.MoveTaskToBack()` を足して他テンプレートとルート挙動を揃えた (BlazorWebView の履歴戻しは TODO のまま)
+
+> Works3/Template は `template-maui` と該当 4 ファイルを**同一に保つ**のが不変条件のため、手動編集後のスタイル (コメント整理 / ログ定義は `// Startup` 節 / `#if ANDROID` なし) に合わせ直した
+
+**再現手順 / 確認手順** (adb は PATH 未登録・`C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe`):
+
+```
+adb shell am force-stop template.mobileapp
+adb logcat -c
+adb shell am start -W -n template.mobileapp/template.mobileapp.MainActivity
+adb shell input keyevent KEYCODE_BACK
+adb shell pidof template.mobileapp            # 対策後は BACK でも生存し続ける
+adb shell am start -W -n template.mobileapp/template.mobileapp.MainActivity
+adb shell uiautomator dump /sdcard/ui.xml && adb shell cat /sdcard/ui.xml   # テキスト 0 件なら白画面
+adb logcat -d -s AppLifecycle:D App:D         # Window recreated ログの有無
+adb shell settings put system font_scale 1.30 # 構成変更で Activity 再生成 (確認後 1.0 へ戻す)
+```
+
+> **実機への入れ替え時の注意**: 端末に入っていたビルドは **IDE デプロイの debug 署名**(`CN=Android Debug`)で、`dotnet build -c Release` が出す `example.keystore` 署名の APK では `INSTALL_FAILED_UPDATE_INCOMPATIBLE` になる。アンインストール(データ消去)を避けるには、ビルド済み APK を **`%LOCALAPPDATA%\Xamarin\Mono for Android\debug.keystore`**(storepass/keypass=`android`、alias=`androiddebugkey`)で `apksigner sign` し直してから `adb install -r` する。`~/.android/debug.keystore` は別鍵なので不可
 
 ---
 
