@@ -306,17 +306,17 @@ adb shell settings put system font_scale 1.30 # 構成変更で Activity 再生�
 
 ---
 
-### 1-11. メニュー再編+画像前準備(2026-09-03・Release ビルド)
+### 1-11. メニュー再編+画像前準備(2026-09-03/09-05・Release ビルド)
 
 | 画面 | 現在のファイル名 | 変更 |
 | --- | --- | --- |
-| メインメニュー | `Modules/Main/MenuView.xaml` | 番号プレフィックス廃止・並び替え(Setting 最後)・UI 行の 2 列化 |
-| UI 1 / UI 2 | `Modules/UI/UIMenu1View.xaml` / `UIMenu2View.xaml` | 旧 UIMenu を分離。UI 1=アプリ系 18 / UI 2=可視化・計器・HUD 系 13。**各 8 段×3 列・グループ毎に行分け+空きセル**。F4 相互遷移 |
+| メインメニュー | `Modules/Main/MenuView.xaml` | 番号プレフィックス廃止・並び替え(Setting 最後)。**2026-09-05: 9 段×2 列化**(Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・8 段目は無効ボタン行)+**全ボタンに Material アイコン追加** |
+| UI 1 / UI 2 | `Modules/UI/UIMenu1View.xaml` / `UIMenu2View.xaml` | 旧 UIMenu を分離。UI 1=アプリ系 18 / UI 2=可視化・計器・HUD 系 13。グループ毎に行分け+空きセル。F4 相互遷移。**2026-09-05: 各 3 列×9 段化**(列数は UI 1/UI 2 で統一。UI 1 が 2 列だと収まらないため 2 列化は見送り) |
 | (全画面) | `Resources/Images/` 階層化 + プレースホルダ 42 枚 | 参照はファイル名のままのため表示への影響なし(確認対象) |
 
-- [ ] メインメニュー: 番号なしで Basic / Navigation / Device / Data / Network / View / Sample / UI / App / Setting の順(Setting が最後)。UI 行だけ「UI 1 / UI 2」の 2 列
-- [ ] UI 1: 8 段。グループ毎に行が分かれ(決済 EC / ツール / プロフィール / 通信 / 日付・予定)、余りセルは無効ボタン。F4「UI 2」で UI 2 へ、F1(Back)でメインメニューへ
-- [ ] UI 2: 8 段。グループ毎に行が分かれ(データ可視化 / 計器・ゲージ / HUD / 描画デモ+拡張用の空き行)、余りセルは無効ボタン。F4「UI 1」で UI 1 へ
+- [ ] メインメニュー: 番号なし・全ボタンにアイコン付きで Basic / Navigation / Device / Data\|Network / View / Sample\|App / UI 1\|UI 2 / (無効ボタン行) / Setting の 9 段(Setting が最終行)
+- [ ] UI 1: 9 段×3 列。グループ毎に行が分かれ(決済 EC / ツール / プロフィール / 通信 / 日付・予定+拡張用の空き行)、余りセルは無効ボタン。F4「UI 2」で UI 2 へ、F1(Back)でメインメニューへ
+- [ ] UI 2: 9 段×3 列。グループ毎に行が分かれ(データ可視化 / 計器・ゲージ / HUD / 描画デモ+拡張用の空き行)、余りセルは無効ボタン。F4「UI 1」で UI 1 へ
 - [ ] UI 1 / UI 2 配下の画面から Back で**元のメニュー側**へ戻る(例: Shop→UI 1、Flight→UI 2)
 - [ ] 画像を使う画面(Profile / Shop / Item / Cart / Stream / Character / Chat / Social / Mail / Login / Super / Pet)の表示が従来どおり(Images 階層化でリソース名不変の確認)
 

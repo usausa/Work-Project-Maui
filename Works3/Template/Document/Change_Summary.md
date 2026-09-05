@@ -710,8 +710,8 @@ ScpPassword=********
 | `Document/UI_Verification_Checklist.md` | 残確認のみへの再構成。**2026-09-03 に `Task_Checklist.md` へ統合して削除** |
 | `Document/Implementation_Checklist.md` | 新規(未追跡)。**2026-09-03 に `Task_Checklist.md` へ統合して削除** |
 | `Document/Task_Checklist.md` | **新規**。残作業の統合マスター(上記 2 本 + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合) |
-| `Modules/Main/MenuView.xaml` | メニュー刷新(2026-09-03): **番号プレフィックス廃止**・並び替え(View → Sample → UI → App、**Setting を最後**)・**UI 行を 2 列化**(UI 1 / UI 2) |
-| `Modules/UI/UIMenu1*` / `UIMenu2*` | **UIMenu を分離**(2026-09-03): UI 1=アプリ系 18 画面 / UI 2=可視化・計器・HUD 系 13 画面。**各 8 段×3 列でグループ毎に行を分け、余りセルは可視の無効ボタン**(メニュー規約=8 段以上・グループ配置・空きセルあり)。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除 |
+| `Modules/Main/MenuView.xaml` | メニュー刷新(2026-09-03): **番号プレフィックス廃止**・並び替え(View → Sample → UI → App、**Setting を最後**)。**2026-09-05: 9 段×2 列へ再構成**(Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り 1 行は可視の無効ボタン)+**全ボタンに Material アイコン追加**(`MenuIconButton` 化。Widgets/Navigation/Devices/Storage/Cloud/Layers/Science/Apps/Palette/Insights/Settings) |
+| `Modules/UI/UIMenu1*` / `UIMenu2*` | **UIMenu を分離**(2026-09-03): UI 1=アプリ系 18 画面 / UI 2=可視化・計器・HUD 系 13 画面。グループ毎に行を分け、余りセルは可視の無効ボタン。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除。**2026-09-05: 各 3 列×9 段化**(メニュー規約を 9 段基本へ改定)。2 列化も検討したが、UI 1 の 18 ボタンは 2 列×9 段=18 セルちょうどでグループ行分けが成立せず、**列数は UI 1/UI 2 で統一する方針(ユーザー決定)のため両方 3 列を維持**して拡張行を追加 |
 | DI コンテナ移行 (横断・多数) | **Usa.Smart.Resolver を廃止し `BunnyTail.DependencyInjection` 0.4.0 へ移行**(2026-09-03。`template-maui2` の 69ba9a41 と同様の変更)。csproj=Smart.Resolver 系 2+Navigation.Resolver+MauiComponents.Resolver 参照を削除、Smart.Navigation 3.4→**3.8**/Mvvm 2.11/BunnyTail 系整合、TrimmerRootAssembly から Resolver 系 4 行削除。`MauiProgram`=`GeneratedServiceProviderFactory`+`IServiceCollection` 化(View/ViewModel/Context は `[ComponentRegistration]` のソース生成 `AddViews`/`AddViewModels`/`AddContexts`、HttpClient 登録も ConfigureContainer へ統合し `Services/AppHostBuilderExtensions.cs` 削除)。**`GeneratedFactory.cs` 新設**(ライブラリ内部登録型のファクトリ明示生成=Shiny 4 型+MauiComponents 8 型+App+PopupFocusPlugin+CT PopupService)。`WizardContext`=IInitializable/IDisposable→**`IScopeLifecycle`**。`ApplicationInitializer` に DEBUG 時のフォールバック報告出力 |
 | `Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs` | **移行で表面化した不具合の修正**: 退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加 |
 | `Resources/Images/` + csproj | **用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+ **プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映) |
@@ -760,6 +760,7 @@ ScpPassword=********
 
 ※ 表は 2026-07-07 時点の実態。その後の区間5で空セルの多くが結線された(Main=10 行化で App 追加 / Basic=Setting / View=Layout・DragDrop・State・Toolkit・Custom / Sample=Sf Chart・Crop / Network=SCP / UI=11 行化で Wheel)。**差異を統一しない方針自体は不変**。
 ※ 2026-09-03: メインメニューの**番号プレフィックスを廃止**し並び替え(View → Sample → UI → App → Setting 最後、UI 行のみ 2 列)。**UIMenu は UIMenu1(アプリ系 18)/ UIMenu2(可視化・計器・HUD 系 13)へ分離**(F4 相互遷移)。**メニューは 8 段以上を確保し、グループ毎に行を分けて余りセルを可視の無効ボタンにする形へ統一**(ユーザー指示)。
+※ 2026-09-05: **メニュー規約を 9 段基本へ改定**(ユーザー指示)。メインメニュー=9 段×2 列(関連項目 Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り行は無効ボタン)+**全ボタンに Material アイコン追加**。UI 1/UI 2=**各 3 列×9 段**。2 列化は UI 1(18 ボタン=2 列×9 段の 18 セルちょうど)でグループ行分けが成立しないため見送り、**UI 1/UI 2 の列数は統一する**(ユーザー決定=片方だけの 2 列化はしない)。
 
 ### 対応しない・保留と確定した項目(旧チェックリストから移設)
 

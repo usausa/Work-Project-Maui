@@ -316,6 +316,7 @@ public static partial class MauiProgram
         services.AddSingleton<ResourceDictionary>(static _ => Application.Current!.Resources);
 
         // State
+        services.AddSingleton(BusyState.Default);
         services.AddSingleton<DeviceState>();
         services.AddSingleton<Session>();
         services.AddSingleton<Settings>();
