@@ -1,4 +1,4 @@
-# 変更内容まとめ (uibase → plus1)
+# 変更内容まとめ (uibase → fix2)
 
 `Works3/Template` 配下の変更を、git タグの区間ごとに **画面単位** でまとめたドキュメント。
 **Git の差分を確認しながら「何を行なったのか」を確認するための参考資料**とすることを目的とする。
@@ -13,7 +13,10 @@
 | [3. uibase3 → uibase4](#3-uibase3--uibase4--外部リファレンス評価とライブラリ追従) | 2026-08-15 → 09-01 | 1 | 10 | +1,273 / -26 | **外部リファレンス評価**の追加とライブラリ API 追従 |
 | [4. uibase4 → fix1](#4-uibase4--fix1--アナライザ設定の全面見直し) | 2026-09-01 | 1 | 42 | +308 / -172 | **アナライザ設定の全面見直し**と機械的追従 |
 | [5. fix1 → plus1](#5-fix1--plus1--外部リファレンス評価の実装フェーズ110) | 2026-09-01 → 09-03 | 3 | 130 | +9,967 / -1,781 | **外部リファレンス評価の実装**(新規12画面・App モジュール新設・SCP・描画基盤拡張) |
+| [6. plus1 → baseup1](#6-plus1--baseup1--基盤刷新di-移行白画面対策メニュー再編) | 2026-09-03 → 09-05 | 9 | 135 | +2,129 / -1,693 | **基盤刷新**(DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合) |
+| [7. baseup1 → fix2](#7-baseup1--fix2--resharper-全件対応と-scene-描画の重大バグ修正) | 2026-09-05 | 1 | 66 | +459 / -333 | **ReSharper 全件対応**(254 件)と **Scene 描画の重大バグ修正**(かくつき・ANR・SIGSEGV) |
 
+- fix2 以降(執筆時点)の変更はサブモジュール参照の更新(`Works3/MauiComponents` / `Works3/Smart.Maui`)のみ。
 - 関連ドキュメント: 残作業(実機確認 / 実テスト / 画像アセット / バックログ)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
   - `Fix_Checklist.md`(区間2で作成)と `Reference_Summary.md` / `Reference_Analysis.md`(区間3で作成)は**区間5で削除**され、内容は本書と上記へ統合された。
   - `UI_Development_Log.md`(区間1で新設した経緯・ナレッジの記録)は **2026-09-03 に本書へ統合して削除**(ナレッジ=各区間の C 節、恒常情報=付録)。
@@ -674,16 +677,6 @@ ScpUser=deploy
 ScpPassword=********
 ```
 
-### DI コンテナ移行(BunnyTail.DependencyInjection。plus1 後の未コミット変更)
-
-- 運用: DEBUG 起動時に `DescribeRuntimeFallbacks` の出力(そのまま貼れる属性行)を `GeneratedFactory.cs` へ貼り、ライブラリ内部で登録される型(`AddComponentsXxx` / `UseShiny` 等)のファクトリを明示生成する。自コードの `AddSingleton<T>` 等はジェネレータが自動生成する
-- `Shiny.AndroidPlatform` は属性を書いてもファクトリ生成されない(生成不能な ctor)ため**リフレクションフォールバックのまま残置**(従来も Smart.Resolver のリフレクション生成であり同等)
-- **退場ビューのバインディング解除が ShellProperty(バインドされた Function4Enabled 等)の変更を発火し、遷移直後のシェル状態を旧値で上書きする**(Smart.Navigation 3.8 で BindingContext 解除順が変化)→ `ShellProperty` に「現在ビューのみ反映」の CurrentView ガードを追加(症状=タイトルが 1 画面遅れる。Wizard / Lottie / Edit List などバインドを持つ画面の離脱で再現)
-- ページスコープは Navigation 3.8 の DI 拡張が担う: Context を DI に Transient 登録+`IScopeLifecycle`(OnScopeInitialize/OnScopeTerminate)。`[Scope]` プロパティ注入・複数画面での共有・離脱時破棄まで従来どおり(実機で確認済み)
-- `SudokuCellViewModel(int,int)` のような手動 new 前提の型も "ViewModel$" パターンで DI 登録される(解決されなければ無害。ValidateOnBuild は無効)
-- 検証中に **BACK 終了→即再起動で白画面**になる事象を確認(コールド起動 / ホーム→再開は正常)。プロセス生存中の再起動で `App.OnStart` の初回ナビゲーションが走らない構造によるもので **DI 移行とは独立**(`Task_Checklist.md` 0 節=最優先対応)
-- adb での Entry 入力は日本語 IME の未確定に注意: `input text` の後 KEYCODE_ENTER(66) で確定し、BACK(4) でキーボードを閉じてから画面下の F キーをタップする
-
 ### アナライザ / .NET
 
 - IDisposable の所有は**フィールドでなく get-only プロパティ + 宣言時初期化**にする(CA2000/CA2213 は `Disposables.Add` を所有移転と認識しない)。`CancellationTokenSource` フィールドは `Dispose(bool)` オーバーライドで明示 Dispose
@@ -698,32 +691,119 @@ ScpPassword=********
 - トリミング時は例外メッセージがリソースキー化されるため、**起動失敗時の完全な例外連鎖ログが無いと原因が追えない**。調査手順: `adb logcat -d -b crash` でスタック → メッセージがキーのみなら例外連鎖ログを仕込んで再現 → 内部例外で特定
 - 新規作成したテキストファイルは **LF になっていることがある** → CRLF 規約のため作成後に改行コードを確認して変換する(パイプ処理は python の `os.walk` が確実)
 
-## D. 補足 — plus1 時点で未コミットの変更
+---
 
-フェーズ10(ドキュメント追記)と記録類の更新は、**plus1 の時点では作業ツリーに未コミット**。
+# 6. plus1 → baseup1 — 基盤刷新(DI 移行・白画面対策・メニュー再編)
+
+フェーズ10 の記録類に続けて、**DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合**を行なった区間(2026-09-03 → 09-05)。コミットは 9 本。
+
+## A. 画面単位の変更
+
+### A-1. メニュー画面の再編
+
+| 画面 | 変更 |
+|---|---|
+| メインメニュー(`Modules/Main/MenuView.xaml`) | **番号プレフィックス廃止**・並び替え(View → Sample → UI → App、**Setting を最後**)→ **9 段×2 列へ再構成**(Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り 1 行は可視の無効ボタン)+**全ボタンに Material アイコン追加**(`MenuIconButton` 化。Widgets/Navigation/Devices/Storage/Cloud/Layers/Science/Apps/Palette/Insights/Settings) |
+| UI メニュー(`Modules/UI/UIMenu1*` / `UIMenu2*`) | **旧 UIMenu を UIMenu1(アプリ系 18 画面)/ UIMenu2(可視化・計器・HUD 系 13 画面)へ分離**。グループ毎に行を分け、余りセルは可視の無効ボタン。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除。**各 3 列×9 段**(メニュー規約を 9 段基本へ改定。2 列化も検討したが UI 1 の 18 ボタンは 2 列×9 段=18 セルちょうどでグループ行分けが成立せず、**列数は UI 1/UI 2 で統一する方針=両方 3 列**を維持して拡張行を追加) |
+| `Modules/Main/MenuViewModel.cs` | ルート画面の BACK に `AndroidHelper.MoveTaskToBack()` を結線。戻り先が無いルートでは終了せずバックグラウンドへ送る(Android の作法)。Activity が生き残るので再生成経路も踏まない |
+
+## B. 画面以外の変更
+
+### B-1. DI コンテナ移行(Usa.Smart.Resolver → BunnyTail.DependencyInjection 0.4.0)
+
+`template-maui2` の 69ba9a41 と同様の変更(2026-09-03)。
+
+- csproj: Smart.Resolver 系 2+Navigation.Resolver+MauiComponents.Resolver 参照を削除、Smart.Navigation 3.4→**3.8** / Mvvm 2.11 / BunnyTail 系整合、TrimmerRootAssembly から Resolver 系 4 行削除
+- `MauiProgram`: `GeneratedServiceProviderFactory`+`IServiceCollection` 化。View/ViewModel/Context は `[ComponentRegistration]` のソース生成 `AddViews`/`AddViewModels`/`AddContexts`、HttpClient 登録も ConfigureContainer へ統合し `Services/AppHostBuilderExtensions.cs` 削除
+- **`GeneratedFactory.cs` 新設**: ライブラリ内部登録型のファクトリ明示生成(Shiny 4 型+MauiComponents 8 型+App+PopupFocusPlugin+CT PopupService)
+- `WizardContext`: IInitializable/IDisposable → **`IScopeLifecycle`**。`ApplicationInitializer` に DEBUG 時のフォールバック報告出力
+
+### B-2. 移行で表面化した不具合の修正(`Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs`)
+
+退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加。
+
+### B-3. BACK キーと Activity 再生成(白画面)対策(2026-09-04)
 
 | ファイル | 内容 |
 |---|---|
-| `Document/Change_Summary.md` | **本書**。タグ区間×画面単位の変更まとめとして新設(2026-09-03 に `UI_Development_Log.md` を統合) |
-| `Document/Development.md`(+39行) | フェーズ10。「リスト表示」(CollectionView / BindableLayout / ListView の選定基準)、「タッチフィードバック」(非 Button=`SfEffectsView`、Button=`ButtonOption.PressEffect`)、「Release ビルドでの検証と計測」(`TrimmerRootAssembly` の前例・Release 起動確認の必須化・`SceneStats` 計測手順・D8 実測)の3節を追記 |
-| `Document/UI_Development_Log.md`(+274行) | フェーズ1〜10の完了記録・ナレッジ・決定アーカイブ(D1〜D22 と不採用理由)。**2026-09-03 に本書へ統合して削除** |
-| `Document/UI_Verification_Checklist.md` | 残確認のみへの再構成。**2026-09-03 に `Task_Checklist.md` へ統合して削除** |
-| `Document/Implementation_Checklist.md` | 新規(未追跡)。**2026-09-03 に `Task_Checklist.md` へ統合して削除** |
-| `Document/Task_Checklist.md` | **新規**。残作業の統合マスター(上記 2 本 + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合) |
-| `Modules/Main/MenuView.xaml` | メニュー刷新(2026-09-03): **番号プレフィックス廃止**・並び替え(View → Sample → UI → App、**Setting を最後**)。**2026-09-05: 9 段×2 列へ再構成**(Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り 1 行は可視の無効ボタン)+**全ボタンに Material アイコン追加**(`MenuIconButton` 化。Widgets/Navigation/Devices/Storage/Cloud/Layers/Science/Apps/Palette/Insights/Settings) |
-| `Modules/UI/UIMenu1*` / `UIMenu2*` | **UIMenu を分離**(2026-09-03): UI 1=アプリ系 18 画面 / UI 2=可視化・計器・HUD 系 13 画面。グループ毎に行を分け、余りセルは可視の無効ボタン。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除。**2026-09-05: 各 3 列×9 段化**(メニュー規約を 9 段基本へ改定)。2 列化も検討したが、UI 1 の 18 ボタンは 2 列×9 段=18 セルちょうどでグループ行分けが成立せず、**列数は UI 1/UI 2 で統一する方針(ユーザー決定)のため両方 3 列を維持**して拡張行を追加 |
-| DI コンテナ移行 (横断・多数) | **Usa.Smart.Resolver を廃止し `BunnyTail.DependencyInjection` 0.4.0 へ移行**(2026-09-03。`template-maui2` の 69ba9a41 と同様の変更)。csproj=Smart.Resolver 系 2+Navigation.Resolver+MauiComponents.Resolver 参照を削除、Smart.Navigation 3.4→**3.8**/Mvvm 2.11/BunnyTail 系整合、TrimmerRootAssembly から Resolver 系 4 行削除。`MauiProgram`=`GeneratedServiceProviderFactory`+`IServiceCollection` 化(View/ViewModel/Context は `[ComponentRegistration]` のソース生成 `AddViews`/`AddViewModels`/`AddContexts`、HttpClient 登録も ConfigureContainer へ統合し `Services/AppHostBuilderExtensions.cs` 削除)。**`GeneratedFactory.cs` 新設**(ライブラリ内部登録型のファクトリ明示生成=Shiny 4 型+MauiComponents 8 型+App+PopupFocusPlugin+CT PopupService)。`WizardContext`=IInitializable/IDisposable→**`IScopeLifecycle`**。`ApplicationInitializer` に DEBUG 時のフォールバック報告出力 |
-| `Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs` | **移行で表面化した不具合の修正**: 退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加 |
-| `Resources/Images/` + csproj | **用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+ **プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映) |
-| `.editorconfig` | 軽微な調整 |
-| `Platforms/Android/MainActivity.cs` | **BACK キーの受け取りを自前化** (2026-09-04)。MAUI 10 の `MauiAppCompatActivity` は `OnBackPressed()` の override を廃止し、AndroidX `OnBackPressedDispatcher` へ登録した `MauiOnBackPressedCallback` のみで BACK を処理する。その `Enabled` は `Window.CanConsumeBackNavigation` (Shell/NavigationPage/FlyoutPage/MultiPage のみ true) で決まるため、**素の ContentPage では `Page.OnBackButtonPressed` が一切呼ばれない**。`base.OnCreate` の後に自前の `OnBackPressedCallback` (`Enabled=true`) を追加して `Page.SendBackButtonPressed()` へ流す (後勝ちで先に呼ばれる)。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック |
-| `App.xaml.cs` / `Log.cs` | **Activity 再生成時の初期画面復帰** (2026-09-04)。`Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみのため、プロセス生存のまま Activity が作り直されると `App.OnStart()` が再実行されず初回遷移が走らない → 新しい `MainPage` のコンテナが空で**白画面**。`CreateWindow` で 2 回目以降の `Window.Created` に `RestoreInitialViewAsync` を繋ぎ、`navigator.Exit()` → `ForwardAsync(ViewId.Menu)` で入り直す (初回遷移が未完了なら `OnStart` 側に任せる)。例外は `ContinueWith(OnlyOnFaulted)` で観測しログのみ。`Log.cs` に `InfoWindowRecreated` / `WarnWindowRecreateError` を追加 |
-| `Modules/Main/MenuViewModel.cs` | ルート画面の BACK に `AndroidHelper.MoveTaskToBack()` を結線 (2026-09-04)。戻り先が無いルートでは終了せずバックグラウンドへ送る (Android の作法)。Activity が生き残るので再生成経路も踏まない。既存の未使用ヘルパを初めて使用 |
-| (他テンプレートへ横展開) | 同じ対策を `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映 (2026-09-04)。全プロジェクト 0 エラー・自コード由来の警告 0。`template-maui-blazor` は `OnStart` に画面遷移が無く UI が XAML で宣言済みのため **B-1 は対象外**で A-1 のみ。Works3/Template と `template-maui` は該当 4 ファイルを同一に保つ |
-| `Graphics/Scene/SceneObject.cs` | **【重大バグ修正 2026-09-05】D8 ダブルバッファの描画がメインスレッドで実行されていた問題**。`Loop` の `await WaitForNextTickAsync` に `ConfigureAwait(false)` が無く、`Start()`(main)から継続が main の SynchronizationContext へ戻り、**RenderToBuffer(フルスクリーン CPU 描画+Snapshot)+転写の 2 重描画を毎フレーム main で実行**→Scene 画面で main 飽和(実測 Release 112%/Debug は 1 フレーム 3.25 秒)=**全 UI のかくつき・タップ不応答(ANR)・退場時の Stop/Dispose 競合で SIGSEGV**(9/5 に 4 連発)。修正=①`ConfigureAwait(false)` でループをスレッドプール化 ②`Stop()` がループ Task の完了を待ってから CTS を破棄(進行中フレームと Dispose の競合防止)③ループ稼働中は main の直接描画フォールバックを無効化(共有 SKPaint の 2 スレッド同時使用を根絶)。**実機検証済み(Debug/Release 両方)**: Flight 表示中 main 128%→28〜36%(描画はワーカー)・Back 即応答・退場後全スレッドアイドル・Scene 4 画面連続入退場でクラッシュ/ANR ゼロ。原因特定は bugreport の ANR trace+tombstone(fault addr 0x48)+スレッド別 CPU 実測 |
-| ReSharper inspectcode 対応 (横断・多数) | **2026-09-05: `jb inspectcode`(Release 解析)全 254 件を分類して対応**。機械修正 68 件=末尾カンマ削除 41 / `async`→Task 直返し 11(`HttpService` 全 API+`NetworkScpViewModel`)/ 冗長な既定値引数 4 / 空 `default: break;` 3 / XAML `x:Name` リネーム 3(`_self`→`Self`×2・`indicators`→`Indicators`)/ 冗長 using 2(`MediaController`=CT.Maui 15 で `MediaElementState` が Core へ移動済み・`MapsuiMapManagers`)/ 冗長 xmlns 2 / partial の重複基底型 1(`CalendarView.xaml.cs`)/ 空行 1。**方針決定: Grid の Row/ColumnDefinitions は Style の Setter で定義せず Grid 側に個別記述**(12 スタイル→55 Grid へインライン化。Basic 4+Data+Device 4+ViewEasing の 10 画面。値は同一のため表示不変)= `Xaml.IndexOutOfGridDefinition` 誤検知 99 件解消。**`x:Reference`/`RelativeSource` バインドの誤検知 25 件は `ReSharper disable/restore Xaml.BindingWithContextNotResolved` コメントで範囲抑止**(14 箇所)。未使用代入 17 件は **Debug 計測(`[Conditional]` の `Debug.WriteLine`)でのみ使用のため対応除外**(後に**現状維持で確定**=ユーザー決定)。**B 群・C 群はステップバイステップで完走**(2026-09-05・都度ユーザー確認): `field` キーワード化(UICalendarViewModel=`#pragma IDE0032` 撤去)/ null 免罪符→**ReSharper disable once へ変更**(DrawingControl=Roslyn IDE0370 との板挟み解消)+ImageHelper は `bitmap!` / MixerEqualizer の冗長条件 `(peak > 0)` 削除 / BluetoothSerial の引数 `adapter`→`bluetoothAdapter` / **DeviceLocationView+ViewCustomView に `FallbackValue='-'` 8 件、Motion 4 項目は末端 null 用に `TargetNullValue='-'` 併用**(実機確認済み。`HighlightTrigger` の 1 件のみ挙動変化回避で意図的に未適用)/ StyleCop SA1500(field 初期化子構文の誤検知)を `#pragma` 局所抑止。**最終残 18 件=全て確定済みの許容**(Debug 計測 17+HighlightTrigger 1)= `Task_Checklist.md` 6 節 |
+| `Platforms/Android/MainActivity.cs` | **BACK キーの受け取りを自前化**。MAUI 10 の `MauiAppCompatActivity` は `OnBackPressed()` の override を廃止し、AndroidX `OnBackPressedDispatcher` へ登録した `MauiOnBackPressedCallback` のみで BACK を処理する。その `Enabled` は `Window.CanConsumeBackNavigation`(Shell/NavigationPage/FlyoutPage/MultiPage のみ true)で決まるため、**素の ContentPage では `Page.OnBackButtonPressed` が一切呼ばれない**。`base.OnCreate` の後に自前の `OnBackPressedCallback`(`Enabled=true`)を追加して `Page.SendBackButtonPressed()` へ流す(後勝ちで先に呼ばれる)。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック |
+| `App.xaml.cs` / `Log.cs` | **Activity 再生成時の初期画面復帰**。`Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみのため、プロセス生存のまま Activity が作り直されると `App.OnStart()` が再実行されず初回遷移が走らない → 新しい `MainPage` のコンテナが空で**白画面**。`CreateWindow` で 2 回目以降の `Window.Created` に `RestoreInitialViewAsync` を繋ぎ、`navigator.Exit()` → `ForwardAsync(ViewId.Menu)` で入り直す(初回遷移が未完了なら `OnStart` 側に任せる)。例外は `ContinueWith(OnlyOnFaulted)` で観測しログのみ。`Log.cs` に `InfoWindowRecreated` / `WarnWindowRecreateError` を追加 |
+| (他テンプレートへ横展開) | 同じ対策を `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映。全プロジェクト 0 エラー・自コード由来の警告 0。`template-maui-blazor` は `OnStart` に画面遷移が無く UI が XAML で宣言済みのため一部対象外。Works3/Template と `template-maui` は該当 4 ファイルを同一に保つ |
 
-**残作業**: フェーズ4〜9 + SCP の実機確認と SCP の転送実テスト、画像アセット拡充(素材待ち) → `Task_Checklist.md` で管理。
+### B-4. リソース — Images の用途別階層化(画像アセット拡充の前準備)
+
+`Resources/Images/` を**用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+**プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映)。
+
+### B-5. ドキュメントの統合(2026-09-03)
+
+| ファイル | 内容 |
+|---|---|
+| `Document/Change_Summary.md` | **本書**。タグ区間×画面単位の変更まとめとして新設(`UI_Development_Log.md` を統合して削除。ナレッジ=各区間の C 節、恒常情報=付録) |
+| `Document/Task_Checklist.md` | **新規**。残作業の統合マスター(`UI_Verification_Checklist.md`+`Implementation_Checklist.md`+旧 `UI_Task_Checklist.md`+`Image_Asset_Expansion_Plan.md` を統合し、4 本とも削除) |
+| `Document/Development.md`(+39行) | フェーズ10。「リスト表示」「タッチフィードバック」「Release ビルドでの検証と計測」の 3 節を追記 |
+
+### B-6. その他
+
+- `.editorconfig` の軽微な調整
+- `MauiProgram` に `BusyState.Default` の Singleton 登録を追加
+
+## C. この区間のナレッジ
+
+### DI コンテナ移行(BunnyTail.DependencyInjection)
+
+- 運用: DEBUG 起動時に `DescribeRuntimeFallbacks` の出力(そのまま貼れる属性行)を `GeneratedFactory.cs` へ貼り、ライブラリ内部で登録される型(`AddComponentsXxx` / `UseShiny` 等)のファクトリを明示生成する。自コードの `AddSingleton<T>` 等はジェネレータが自動生成する
+- `Shiny.AndroidPlatform` は属性を書いてもファクトリ生成されない(生成不能な ctor)ため**リフレクションフォールバックのまま残置**(従来も Smart.Resolver のリフレクション生成であり同等)
+- **退場ビューのバインディング解除が ShellProperty(バインドされた Function4Enabled 等)の変更を発火し、遷移直後のシェル状態を旧値で上書きする**(Smart.Navigation 3.8 で BindingContext 解除順が変化)→ `ShellProperty` に「現在ビューのみ反映」の CurrentView ガードを追加(症状=タイトルが 1 画面遅れる。Wizard / Lottie / Edit List などバインドを持つ画面の離脱で再現)
+- ページスコープは Navigation 3.8 の DI 拡張が担う: Context を DI に Transient 登録+`IScopeLifecycle`(OnScopeInitialize/OnScopeTerminate)。`[Scope]` プロパティ注入・複数画面での共有・離脱時破棄まで従来どおり(実機で確認済み)
+- `SudokuCellViewModel(int,int)` のような手動 new 前提の型も "ViewModel$" パターンで DI 登録される(解決されなければ無害。ValidateOnBuild は無効)
+- 検証中に **BACK 終了→即再起動で白画面**になる事象を確認(コールド起動 / ホーム→再開は正常)。プロセス生存中の再起動で `App.OnStart` の初回ナビゲーションが走らない構造によるもので **DI 移行とは独立** → 本区間の B-3 で対策済み
+- adb での Entry 入力は日本語 IME の未確定に注意: `input text` の後 KEYCODE_ENTER(66) で確定し、BACK(4) でキーボードを閉じてから画面下の F キーをタップする
+
+---
+
+# 7. baseup1 → fix2 — ReSharper 全件対応と Scene 描画の重大バグ修正
+
+`jb inspectcode` の指摘 **254 件を全数分類して対応**し、その過程で発覚した **Scene 描画基盤の重大バグ(かくつき・ANR・SIGSEGV)を修正**した区間(2026-09-05)。コミットは 1 本。
+
+## A. 画面単位の変更
+
+### A-1. DeviceLocationView / ViewCustomView — 未取得値の「-」表示
+
+- `FallbackValue='-'` を 8 バインドへ追加(位置**未取得**=`Location` が null でパス不成立のとき「-」表示)
+- Motion 4 項目(Altitude/Course/Speed/Accuracy)は **`TargetNullValue='-'` を併用**(取得済みでも Course/Speed 等の**末端プロパティが null** のとき「-」表示。従来は単位だけが残っていた)。実機確認済み
+- `AnimationOption.HighlightTrigger` の 1 バインドのみ**意図的に未適用**(FallbackValue を付けると初回位置取得時にハイライトが発火する挙動変化が出るため)
+
+### A-2. XAML 横断(ReSharper 対応)
+
+- **方針決定: Grid の `RowDefinitions`/`ColumnDefinitions` は Style の Setter で定義せず Grid 側に個別記述**(12 スタイル→55 Grid へインライン化。Basic 4+Data+Device 4+ViewEasing の 10 画面。値は同一のため表示不変)= `Xaml.IndexOutOfGridDefinition` 誤検知 99 件解消
+- `x:Reference`/`RelativeSource` バインドの誤検知 25 件は `ReSharper disable/restore Xaml.BindingWithContextNotResolved` コメントで範囲抑止(14 箇所)
+- XAML `x:Name` リネーム(`_self`→`Self`×2・`indicators`→`Indicators`)、冗長 xmlns 削除 2
+
+## B. 画面以外の変更
+
+### B-1. 【重大バグ修正】`Graphics/Scene/SceneObject.cs` — ダブルバッファ描画がメインスレッドで実行されていた
+
+区間5(D8)で導入したダブルバッファの `Loop` は、`await WaitForNextTickAsync` に `ConfigureAwait(false)` が無く、`Start()`(main)からの継続が main の SynchronizationContext へ戻るため、**RenderToBuffer(フルスクリーン CPU 描画+Snapshot)+転写の 2 重描画を毎フレーム main で実行**していた。
+
+- 症状: Scene 画面(Flight 等)で main 飽和(実測 Release 112%/Debug は 1 フレーム 3.25 秒)=**全 UI のかくつき・タップ不応答(ANR)**、退場時の Stop/Dispose 競合で **SIGSEGV**(fault addr 0x48。9/5 に 4 連発)
+- 修正: ①`ConfigureAwait(false)` でループをスレッドプール化 ②`Stop()` がループ Task の完了を待ってから CTS を破棄(進行中フレームと Dispose の競合防止) ③ループ稼働中は main の直接描画フォールバックを無効化(共有 SKPaint の 2 スレッド同時使用を根絶)
+- **実機検証済み(Debug/Release 両方)**: Flight 表示中 main 128%→28〜36%(描画はワーカー)・Back 即応答・退場後全スレッドアイドル・Scene 4 画面連続入退場でクラッシュ/ANR ゼロ
+
+### B-2. ReSharper inspectcode 対応(C# 側)
+
+- **機械修正 68 件**: 末尾カンマ削除 41 / `async`→Task 直返し 11(`HttpService` 全 API+`NetworkScpViewModel`)/ 冗長な既定値引数 4 / 空 `default: break;` 3 / 冗長 using 2(`MediaController`=CT.Maui 15 で `MediaElementState` が Core へ移動済み・`MapsuiMapManagers`)/ partial の重複基底型 1(`CalendarView.xaml.cs`)/ 空行 1 ほか
+- **個別判断分(ステップバイステップ・都度ユーザー確認)**: `field` キーワード化(`UICalendarViewModel`=`#pragma IDE0032` 撤去)/ null 免罪符→**`ReSharper disable once` へ変更**(`DrawingControl`=Roslyn IDE0370 との板挟み解消。`ImageHelper` は `bitmap!`)/ `MixerEqualizer` の冗長条件 `(peak > 0)` 削除 / `BluetoothSerial` の引数 `adapter`→`bluetoothAdapter` / StyleCop SA1500(field 初期化子構文の誤検知)を `#pragma` 局所抑止
+- 未使用代入 17 件は **Debug 計測(`[Conditional]` の `Debug.WriteLine`)でのみ使用のため現状維持で確定**(ユーザー決定)
+- **最終残 18 件=全て確定済みの許容**(Debug 計測 17+HighlightTrigger 1)。残対応の経緯は `Task_Checklist.md` 6 節
+
+## C. この区間のナレッジ
+
+- inspectcode は **Bash 系シェルで実行**する(PowerShell は `--properties:` がコロンで分割され「Specify only one solution file」で失敗)。`.sln.DotSettings`(旧 .sln 名)は .slnx 解析にも適用される
+- **Release 解析では `[Conditional("DEBUG")]` の `Debug.WriteLine` でのみ使う変数が RedundantAssignment 誤検知**になる(削除すると Debug ビルドが壊れる)
+- **ReSharper と Roslyn の nullable 解釈が食い違うことがある**: null 代入を R# だけが指摘し、`!` を付けると Roslyn が IDE0370「抑制は不要」→ 素の null+`// ReSharper disable once` で両立。**StyleCop SA1500 は C# 14 の field 初期化子構文 `} = 値;` を誤検知** → `#pragma` 局所抑止
+- `FallbackValue` は「パス不成立(親が null)」のみに効き、**末端プロパティ自体の null には `TargetNullValue`** が必要(どちらも `StringFormat` を通らず素の値が表示される)
+- 稀に inspectcode のソースジェネレータ実行が COR_E_APPLICATION 例外で失敗し、CSharpErrors 数百件の不良 run になる → そのまま再実行すれば正常化する
+- Scene バグの調査手法: bugreport の ANR trace(main が libSkiaSharp 内)+tombstone 一覧(`am_crash`/`am_anr` は `logcat -b events`)+`top -b -n 1 -H -p` のスレッド別 CPU+「メニューのみ=アイドル / Flight 入場で発症」の二分探索。**Mono アプリは ART 系ダンプ(`am profile` / `kill -3`)が効かない**
 
 ---
 
