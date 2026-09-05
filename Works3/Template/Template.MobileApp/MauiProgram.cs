@@ -140,7 +140,7 @@ public static partial class MauiProgram
     {
         // ILayoutManagerFactory: レイアウト型ごとにマネージャを DI で差し替えるフック
         // (Layouts/AppLayoutManagerFactory 参照。CascadeStackLayout のみ対象で他は既定のまま)
-        builder.Services.AddSingleton<ILayoutManagerFactory, Template.MobileApp.Layouts.AppLayoutManagerFactory>();
+        builder.Services.AddSingleton<ILayoutManagerFactory, Layouts.AppLayoutManagerFactory>();
         return builder;
     }
 
@@ -326,8 +326,6 @@ public static partial class MauiProgram
             .AddHttpClient(ApiNames.Default, SetupHttpClient)
             .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)
             .AddHttpMessageHandler<ApiDelegatingHandler>();
-        // 転送用: 大きいファイルを通常APIの30秒で切らないよう長めにする。
-        // 無限にすると無応答時に中断手段が無くなるため上限は設ける (呼び出し側がCancellationTokenを渡す場合はそちらが優先)
         services
             .AddHttpClient(ApiNames.Transfer, SetupTransferHttpClient)
             .ConfigurePrimaryHttpMessageHandler(CreateHttpMessageHandler)

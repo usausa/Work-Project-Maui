@@ -555,3 +555,45 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 - [ ]【判断】`Controls/ChatView` バブル色のバインダブル化(C-13・D18): 検討扱い・未確定
 - [ ] UISocial 背景の専用化(1080×1920 / 9:16 のゲーム風背景。「任意」扱い・44 枚には含まず)
 - [ ] `AnimationOption.ResetEnter` の Scale 1 固定リセット(静的 Scale+EnterAnimation 併用が将来出た場合に、TranslationY と同じ基準値退避パターンで対処)
+
+---
+
+## 6. ReSharper 指摘の残対応(2026-09-05 inspectcode 全 254 件を分類)
+
+再実行コマンド(**Bash 系シェルで実行**。PowerShell は `--properties:` が分割され「Specify only one solution file」になる):
+
+```bash
+jb inspectcode Template.MobileApp.slnx -f=xml -o=results.xml --no-build --no-swea --properties:Configuration=Release
+```
+
+対応済み: **A 群=機械修正 68 件** / **C-1=Style の Row/ColumnDefinitions を Grid 個別記述化(方針決定)99 件** / **C-2=バインド誤検知を ReSharper disable/restore コメントで抑止 25 件(14 箇所)**。以下が残り。
+
+### 6-1.【判断】B 群=SUGGESTION スタイル系 26 件(直すのは機械的・直すかどうかが判断)
+
+- [x] B-1 target-typed new 化(2026-09-05 全対応済み)
+- [x] B-2 for→foreach 5 件(2026-09-05 対応済み)
+- [x] B-3 引数 IEnumerable 化(2026-09-05 全対応済み)
+- [x] B-4 null 伝播化(2026-09-05 全対応済み。AppGameViewModel は C# 14 の `?.` 代入)
+- [x] B-5(2026-09-05 全対応済み。`field` キーワード化も採用・実施=`#pragma IDE0032` 抑止を撤去)
+
+### 6-2.【判断】C 群の残り 19 件
+
+- [x] C-3 using 初期化子分解 4 件(2026-09-05 対応済み=SKPaint/SKFont のプロパティ設定へ分解)
+- [x] C-4 AssignNullToNotNullAttribute 2 件(2026-09-05 対応=ライブラリ注釈と実態の乖離に null 免罪符+理由コメント。※DrawingControl 側は IDE0370 との板挟みが判明 → 6-4)
+- [x] C-5 ConditionIsAlwaysTrueOrFalse(2026-09-05 対応=`value >= 0` 保証により冗長な `(peak > 0)` を削除)
+- [x] C-6 ParameterHidesMember(2026-09-05 対応=引数を `bluetoothAdapter` へリネーム・ユーザー選択)
+- [x] C-7 AsyncVoidLambda 1 件(2026-09-05 対応済み)
+- [x] C-8 `Xaml.PossibleNullReferenceException`(2026-09-05 決定=**FallbackValue='-' を適用**(ユーザー決定)。DeviceLocationView 7+ViewCustomView 1。Motion 4 項目は末端 null(Course/Speed 等)向けに **TargetNullValue='-' も併用**。**`HighlightTrigger` の 1 件のみ意図的に未適用で残す**=FallbackValue を付けると初回位置取得時にハイライトが発火する挙動変化が出るため)
+
+### 6-3.【判断】未使用代入 17 件=Debug 計測パターンのため A 群から除外
+
+`var t0 = sw.Elapsed;` 等が `[Conditional("DEBUG")]` の `Debug.WriteLine` でのみ使用され、**Release 解析でのみ未使用扱い**になるもの(削除すると Debug ビルドが壊れる)。対象: `CalendarView.xaml.cs` 11 / `MonthViewBuilder.cs` 5 / `UICalendarViewModel.cs` 1。
+
+- [x] **決定(2026-09-05・ユーザー決定): (a) 現状維持**(Debug 診断として残す。Release 解析の inspectcode では 17 件が誤検知として残り続けるのを許容)
+
+### 6-4. ツール間の板挟み 2 件(2026-09-05 の修正で表面化→同日解消)
+
+- [x] IDE0370(`DrawingControl.cs`): `null!` を素の `null`+`// ReSharper disable once AssignNullToNotNullAttribute` へ変更(ユーザー決定)。コンパイラは null 代入を許容・R# のみ誤検知の食い違いを両ツール解消
+- [x] SA1500(`UICalendarViewModel.cs`): `field` キーワードの初期化子構文の誤検知を `#pragma warning disable SA1500` で局所抑止(ユーザー決定)
+
+**最終状態(2026-09-05)**: inspectcode 残 **18 件=全て確定済みの許容**(6-3 の Debug 計測 17=現状維持+`HighlightTrigger` の FallbackValue 未適用 1=挙動変化回避)。6 節の作業はこれで完了。
