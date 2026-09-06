@@ -1,4 +1,4 @@
-# 変更内容まとめ (uibase → fix2)
+# 変更内容まとめ (uibase → fix3)
 
 `Works3/Template` 配下の変更を、git タグの区間ごとに **画面単位** でまとめたドキュメント。
 **Git の差分を確認しながら「何を行なったのか」を確認するための参考資料**とすることを目的とする。
@@ -15,8 +15,9 @@
 | [5. fix1 → plus1](#5-fix1--plus1--外部リファレンス評価の実装フェーズ110) | 2026-09-01 → 09-03 | 3 | 130 | +9,967 / -1,781 | **外部リファレンス評価の実装**(新規12画面・App モジュール新設・SCP・描画基盤拡張) |
 | [6. plus1 → baseup1](#6-plus1--baseup1--基盤刷新di-移行白画面対策メニュー再編) | 2026-09-03 → 09-05 | 9 | 135 | +2,129 / -1,693 | **基盤刷新**(DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合) |
 | [7. baseup1 → fix2](#7-baseup1--fix2--resharper-全件対応と-scene-描画の重大バグ修正) | 2026-09-05 | 1 | 66 | +459 / -333 | **ReSharper 全件対応**(254 件)と **Scene 描画の重大バグ修正**(かくつき・ANR・SIGSEGV) |
+| [8. fix2 → back](#8-fix2--back--back初期化方式の刷新白画面対策-b-1-の方式変更) | 2026-09-05 → 09-06 | 4 | 15 | +276 / -233 | **BACK/初期化方式の刷新**(白画面対策 B-1 を StartupState 方式へ・ApplicationInitializer 廃止) |
+| [9. back → fix3](#9-back--fix3--calendar--location-の手直し) | 2026-09-06 | 2 | 4 | +15 / -36 | **Calendar / Location の手直し**(Debug 計測撤去・未取得表示の空状態化) |
 
-- fix2 以降(執筆時点)の変更はサブモジュール参照の更新(`Works3/MauiComponents` / `Works3/Smart.Maui`)のみ。
 - 関連ドキュメント: 残作業(実機確認 / 実テスト / 画像アセット / バックログ)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
   - `Fix_Checklist.md`(区間2で作成)と `Reference_Summary.md` / `Reference_Analysis.md`(区間3で作成)は**区間5で削除**され、内容は本書と上記へ統合された。
   - `UI_Development_Log.md`(区間1で新設した経緯・ナレッジの記録)は **2026-09-03 に本書へ統合して削除**(ナレッジ=各区間の C 節、恒常情報=付録)。
@@ -728,7 +729,7 @@ ScpPassword=********
 |---|---|
 | `Platforms/Android/MainActivity.cs` | **BACK キーの受け取りを自前化**。MAUI 10 の `MauiAppCompatActivity` は `OnBackPressed()` の override を廃止し、AndroidX `OnBackPressedDispatcher` へ登録した `MauiOnBackPressedCallback` のみで BACK を処理する。その `Enabled` は `Window.CanConsumeBackNavigation`(Shell/NavigationPage/FlyoutPage/MultiPage のみ true)で決まるため、**素の ContentPage では `Page.OnBackButtonPressed` が一切呼ばれない**。`base.OnCreate` の後に自前の `OnBackPressedCallback`(`Enabled=true`)を追加して `Page.SendBackButtonPressed()` へ流す(後勝ちで先に呼ばれる)。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック |
 | `State/StartupState.cs` / `App.xaml.cs` / `MainPageViewModel.cs` / `MauiProgram.cs` | **Activity 再生成時の初期画面復帰** (2026-09-06 に方式変更)。`Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみのため、プロセス生存のまま Activity が作り直されると `App.OnStart()` が再実行されず初回遷移が走らない → 新しい `MainPage` のコンテナが空で**白画面**。**初期画面への遷移を `MainPageViewModel.OnCreated()` へ移動**した(`MainPage.xaml` の `s:AppLifecycleBehavior` が `Window.Created` を購読するため **Activity 生成のたびに必ず走り**、復帰時の `Resumed` では走らない)。`OnCreated` を `async void` にして 「`await startup.Completed` → `Navigator.Exit()` → `ForwardAsync(ViewId.Menu)`」を実行する。起動時の初期化(DB再構築・クラッシュレポート)は `App.OnStart` に残し、完了を **`State/StartupState.cs`** へ通知する(`TaskCompletionSource` を隠蔽し `Completed` / `NotifyCompleted()` のみ公開。**完了後に待ち始めても即座に返る**ため作り直し後の ViewModel でも取りこぼさない。単発の `IReactiveMessenger` は `Subject<T>` でリプレイしないため不可)。`OnDestroying` の `destroying` フラグは初期化中に作り直された場合の二重遷移防止。旧方式(`CreateWindow` で 2 回目以降の `Window.Created` を拾う `windowCreated` / `RestoreInitialViewAsync` / 専用ログ 2 件)は撤去し `App` は元の姿へ |
-| (他テンプレートへ横展開) | 同じ対策を `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映。全プロジェクト 0 エラー・自コード由来の警告 0。`template-maui-blazor` は `OnStart` に画面遷移が無く UI が XAML で宣言済みのため一部対象外。Works3/Template と `template-maui` は該当 4 ファイルを同一に保つ |
+| (他テンプレートへ横展開) | A-1 (BACK の受け取り) は `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映済み。**新方式の B-1 (`StartupState` + `OnCreated`) は `template-maui-keyboard` のみ**。`template-maui-blazor` は `INavigator` の参照が 1 箇所も無く UI が `BlazorWebView` として XAML 宣言済みのため **B-1 は対象外**で、代わりに DB 初期化のエラー処理 (`InitializeDataAsync` + ダイアログ + `Quit()`) を揃えた。`template-maui` への反映は 2026-09-06 のユーザー判断で**不要**。全プロジェクト 0 エラー・自コード由来の警告 0 |
 
 ### B-4. リソース — Images の用途別階層化(画像アセット拡充の前準備)
 
@@ -804,6 +805,60 @@ ScpPassword=********
 - `FallbackValue` は「パス不成立(親が null)」のみに効き、**末端プロパティ自体の null には `TargetNullValue`** が必要(どちらも `StringFormat` を通らず素の値が表示される)
 - 稀に inspectcode のソースジェネレータ実行が COR_E_APPLICATION 例外で失敗し、CSharpErrors 数百件の不良 run になる → そのまま再実行すれば正常化する
 - Scene バグの調査手法: bugreport の ANR trace(main が libSkiaSharp 内)+tombstone 一覧(`am_crash`/`am_anr` は `logcat -b events`)+`top -b -n 1 -H -p` のスレッド別 CPU+「メニューのみ=アイドル / Flight 入場で発症」の二分探索。**Mono アプリは ART 系ダンプ(`am profile` / `kill -3`)が効かない**
+
+---
+
+# 8. fix2 → back — BACK/初期化方式の刷新(白画面対策 B-1 の方式変更)
+
+白画面対策の B-1(Activity 再生成時の初期画面復帰)を、**旧方式(`App.CreateWindow` での復帰)から `StartupState` 方式へ作り直した**区間(2026-09-05 → 09-06)。コミットは 4 本(サブモジュール参照更新 1 本を含む)。詳細な経緯・実測・判断の記録は `Task_Checklist.md` 0 節。
+
+## A. 画面単位の変更
+
+なし(シェル基盤のみ)。
+
+## B. 画面以外の変更
+
+### B-1. 初期画面遷移の `MainPageViewModel` への移設(`StartupState` 方式)
+
+- **初期画面への遷移を `App.OnStart` から `MainPageViewModel.OnCreated` へ移す**。`MainPage` は `Window` 生成のたびに作り直され、`MainPage.xaml` の `s:AppLifecycleBehavior` が `Window.Created` で `IAppLifecycle.OnCreated()` を呼ぶため、**Activity の作り直しのたびに必ず走る**(復帰時は `Resumed` なので呼ばれない)
+- 起動時の初期化(DB 再構築・クラッシュレポート表示)は `App` に残し、完了を **`State/StartupState.cs`(新規)** へ通知。`TaskCompletionSource` を隠して `Completed` / `NotifyCompleted()` だけを公開し、**完了後に待ち始めても即座に返る**ため、作り直しで生成し直された ViewModel でも取りこぼさない
+- 旧方式(`App.CreateWindow` で 2 回目以降の `Window.Created` を拾い `RestoreInitialViewAsync`)は撤去。`windowCreated` フラグ・`CurrentViewId` ガード・専用ログ 2 件が不要になり、`App.CreateWindow` は素の実装へ戻った
+- `OnDestroying` で立てる `destroying` フラグで、初期化が終わる前に作り直された場合に新旧 ViewModel が二重に遷移するのを防止
+- 新方式の他テンプレートへの展開状況は区間 6 B-3 の表と `Task_Checklist.md` 0-6 を参照(`template-maui` は反映不要=ユーザー判断)
+
+### B-2. `ApplicationInitializer` の廃止(初期化の `App` への集約)
+
+`ApplicationInitializer`(`IMauiInitializeService`・103 行)を削除し、DB 初期化は `App.OnStart` 内の `InitializeDataAsync()` へ移動。`MauiProgram` に `StartupState` の Singleton 登録を追加。
+
+### B-3. 細かな警告整理
+
+アナライザ抑止の追加(`BasicStyleViewModel`=IDE0028 / `CollectionGroup`=CA1000 等)とコレクション式化(`[.. items]`)など少量の機械的整理(`LineReaderWriter` / `TreeMapNode` / `DeviceNfcViewModel` / `SampleCvLocalViewModel` / `ViewCollectionViewModel`)。
+
+## C. この区間のナレッジ
+
+- `Application.SendStart()` は `_isStarted` ガードで**プロセス内 1 回のみ**。プロセス生存中の Activity 再生成では `App.OnStart()` が再実行されないため、「作り直しのたびに走ってほしい初期遷移」は `Window.Created` 起点(`AppLifecycleBehavior` → `OnCreated`)へ置く
+- 単発のイベントバス(`IReactiveMessenger`)は `Subject<T>` 実装で**リプレイしない**ため、再生成後に購読しても通知が来ず白画面に戻る → 完了状態の受け渡しは `TaskCompletionSource` を包んだ状態クラス(`StartupState`)で行う
+- 既知の副作用: `Navigator.Exit()` は `Controller` を経由せず `provider.CloseView` を直接呼ぶため `plugin.OnClose` が走らない(= `ScopePlugin` の参照カウントが減らない)。本アプリで `[Scope]` を使うのは Navigation > Wizard の 3 画面のみで、影響は「作り直し後に Wizard の入力値が残る」程度
+
+---
+
+# 9. back → fix3 — Calendar / Location の手直し
+
+## A. 画面単位の変更
+
+### A-1. DeviceLocationView — 未取得表示を「空状態パネル」へ変更
+
+区間 7 で入れた `FallbackValue='-'` / `TargetNullValue='-'` 方式を撤回し、**測位待ちは専用の空状態表示(Acquiring location... パネル+Pulse アニメーション)へデザイン変更**。`Location` の null 判定(`NullToBoolConverter`)で空状態と測位結果を切り替える。
+
+### A-2. UICalendar — Debug 計測の撤去
+
+- `MonthViewBuilder.cs` / `UICalendarViewModel.cs`: `Stopwatch`+`Debug.WriteLine` の計測コードを**撤去**(区間 7 の 6-3 で「現状維持」とした判断を変更)
+- `CalendarView.xaml.cs`: 計測は残し `// ReSharper disable RedundantAssignment` コメントで抑止
+- あわせて `UICalendarViewModel` の SA1500 `#pragma` を `FirstDayOfWeek` プロパティ全体を囲む位置へ調整
+
+## B. 画面以外の変更
+
+なし。
 
 ---
 

@@ -4,6 +4,8 @@
 2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合した。
 経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
 
+**現在の優先事項 = 7 節**(`tmpl-plan-maui.md` からの移管課題。2026-09-06 組み込み)。以降は 1 節(実機確認)→ 2〜5 節の順。
+
 ## 運用ルール
 
 - 作業はこの番号で指示・進行する(例:「4-4-A を実施」)。完了した項目は `[x]` にし、行末に完了日を追記。問題があれば行末にメモ
@@ -96,10 +98,10 @@
 | プロジェクト | A-1 | B-1 の方式 | ルート BACK | 確認 |
 | --- | --- | --- | --- | --- |
 | `Works3/Template` | 済 | **新方式**(`StartupState` + `OnCreated`) | `MenuViewModel` | **実機確認済み (2026-09-06)** |
-| `template-maui-keyboard` | 済 | **新方式**(`ViewId.KeyMenu`) | `KeyMenuViewModel` | **実機確認済み (2026-09-04)** |
-| `template-maui` | 済 | 旧方式のまま(**要追従**) | `MenuViewModel` | Works3 と 4 ファイル同一の不変条件が崩れている |
-| `template-maui2` | 済 | 旧方式のまま(**要追従**) | `MenuViewModel` | 既存警告 24 件は全て XA4301 |
-| `template-maui-blazor` | 済 | **対象外** | `MainPage.OnBackButtonPressed` | 実機確認済み (2026-09-04) |
+| `template-maui-keyboard` | 済 | **新方式**(`ViewId.KeyMenu`) | `KeyMenuViewModel` | **実機確認済み (2026-09-04)**。2026-09-06 に Works3 の確定形へ整合(ReSharper ディレクティブ追加 / コメント統一 / 登録順) |
+| `template-maui` | 済 | 旧方式のまま | `MenuViewModel` | **対象外 (2026-09-06 ユーザー判断で反映不要)**。Works3 と 4 ファイル同一の不変条件は現在適用外 |
+| `template-maui2` | 済 | 旧方式のまま | `MenuViewModel` | 未追従。既存警告 24 件は全て XA4301 |
+| `template-maui-blazor` | 済 | **対象外**(`INavigator` の参照が無い) | `MainPage.OnBackButtonPressed` | 実機確認済み (2026-09-04 / 2026-09-06)。2026-09-06 に DB 初期化のエラー処理を Works3 と同形へ揃えた |
 
 > `template-maui-blazor` は `App.OnStart` に画面遷移が無く、UI が `MainPage.xaml` の `BlazorWebView` として宣言済み、かつ `INavigator` の参照が 1 箇所も無いため **原因B が成立しない**。A-1 のみ入れ、TODO スタブだった `MainPage.OnBackButtonPressed` に `AndroidHelper.MoveTaskToBack()` を足して他テンプレートとルート挙動を揃えた
 
@@ -592,12 +594,14 @@ jb inspectcode Template.MobileApp.slnx -f=xml -o=results.xml --no-build --no-swe
 - [x] C-6 ParameterHidesMember(2026-09-05 対応=引数を `bluetoothAdapter` へリネーム・ユーザー選択)
 - [x] C-7 AsyncVoidLambda 1 件(2026-09-05 対応済み)
 - [x] C-8 `Xaml.PossibleNullReferenceException`(2026-09-05 決定=**FallbackValue='-' を適用**(ユーザー決定)。DeviceLocationView 7+ViewCustomView 1。Motion 4 項目は末端 null(Course/Speed 等)向けに **TargetNullValue='-' も併用**。**`HighlightTrigger` の 1 件のみ意図的に未適用で残す**=FallbackValue を付けると初回位置取得時にハイライトが発火する挙動変化が出るため)
+  - **2026-09-06(fix3)で方式変更**: DeviceLocationView は FallbackValue/TargetNullValue を撤回し、**測位待ちの空状態パネル**(`Location` の null 判定で切替)へデザイン変更(`Change_Summary.md` 区間 9)
 
 ### 6-3.【判断】未使用代入 17 件=Debug 計測パターンのため A 群から除外
 
 `var t0 = sw.Elapsed;` 等が `[Conditional("DEBUG")]` の `Debug.WriteLine` でのみ使用され、**Release 解析でのみ未使用扱い**になるもの(削除すると Debug ビルドが壊れる)。対象: `CalendarView.xaml.cs` 11 / `MonthViewBuilder.cs` 5 / `UICalendarViewModel.cs` 1。
 
 - [x] **決定(2026-09-05・ユーザー決定): (a) 現状維持**(Debug 診断として残す。Release 解析の inspectcode では 17 件が誤検知として残り続けるのを許容)
+- [x] **2026-09-06(fix3)で方針変更**: `MonthViewBuilder` / `UICalendarViewModel` は計測ごと**撤去**、`CalendarView.xaml.cs` は計測を残して `// ReSharper disable RedundantAssignment` で抑止 → 17 件は解消見込み
 
 ### 6-4. ツール間の板挟み 2 件(2026-09-05 の修正で表面化→同日解消)
 
@@ -605,3 +609,35 @@ jb inspectcode Template.MobileApp.slnx -f=xml -o=results.xml --no-build --no-swe
 - [x] SA1500(`UICalendarViewModel.cs`): `field` キーワードの初期化子構文の誤検知を `#pragma warning disable SA1500` で局所抑止(ユーザー決定)
 
 **最終状態(2026-09-05)**: inspectcode 残 **18 件=全て確定済みの許容**(6-3 の Debug 計測 17=現状維持+`HighlightTrigger` の FallbackValue 未適用 1=挙動変化回避)。6 節の作業はこれで完了。
+※2026-09-06(fix3)の変更(6-3 の撤去/抑止・C-8 の空状態化)で残数の構成が変わったため、次回 `jb inspectcode` 実行時に再集計する。
+
+---
+
+## 7.【優先】`tmpl-plan-maui.md` からの移管課題(2026-09-06 組み込み)
+
+`D:\GitHubTemplate\tmpl-plan-maui.md`(MAUI トラック強化プラン)のうち**未対応の項目を優先事項として本書へ移管**した(2026-09-06 ユーザー指示)。対応済みの項目は記載しない。**keyboard / blazor 向けの対応(同書 §4 / §5)は対象外**。
+画像アセット拡充(同書 3-8)は本書 **4 節**で管理中、iOS 対応(同書 3-13)は**保留継続**のため、この節には含めない。
+
+### template-maui への反映(同書 §1 の残り)
+
+- [ ] **7-1** `Document/Development.md` を template-maui へ持ち込む(同書 1-4)。作業用ドキュメント 13 ファイルの除外時に**必須の Development.md まで落ちている**。DB マイグレーション未実装の唯一の緩和策(「実案件適用時の注意」章)なので必ず入れる
+- [ ] **7-2** template-maui README の TODO 実態同期(同書 1-9)。実装済みの **Chat / Chart / Gauge / Calendar / Media / Cognitive(SampleCvNetFace+Azure.AI.Vision)/ HybridWebView(WebViewBind・WebViewController)** が TODO に残っている。未実装の WiFi manager / Biometric / Bottom sheet / Push / Local notification は TODO のまま残す
+
+### 機能実装(同書 §3 継続課題)
+
+- [ ] **7-3** WiFi manager 実装(同書 3-1。`DeviceWiFiViewModel` は 6 行の空スタブ)
+- [ ] **7-4** 生体認証の完成(同書 3-2。`DeviceBiometricViewModel` も 6 行の空スタブ。画面と ViewId は登録済み)
+- [ ] **7-5** Bottom sheet(同書 3-3。実装なし)
+- [ ] **7-6** 【判断】Push 通知(FCM)/ Local notification(同書 3-4)
+- [ ] **7-7** DB マイグレーション機構(同書 3-5。`DataService.RebuildAsync`=毎起動で物理削除→再作成の user_version ベース置換。7-1 の Development.md 章で緩和する前提のため連動)
+- [ ] **7-8** ダークモード(同書 3-6。`UserAppTheme=Light` 固定・`AppThemeBinding` 0 件。Colors.xaml は 4 テンプレートでバイト一致のため**対応するなら 4 本同時が効率的**)
+- [ ] **7-9** ローカライズ拡充(同書 3-7。resx は Messages / Names とも 5 件のみ。機構は動作済み)
+- [ ] **7-10** `Controls/SocialControls.cs` の TODO 10 件整理(同書 3-9。2026-09-06 時点で 10 件現存を確認)
+- [ ] **7-11** 【判断】TimeProvider の MAUI 方式(同書 3-10。設定は EmbeddedBuildProperty のビルド時注入方式のため、wpf / avalonia の `AddOptions<T>().ValidateOnStart()` はそのまま移植不可)
+- [ ] **7-12** 【判断】Analyzers.ruleset 正典差分 11 ルールの扱い(同書 3-12。CA1416 / CA2007 は MAUI 固有の合理性あり単純追随不可。CA1014 / CA1305 / CA1824 / CA1861 は再検討余地。正典統一トラック〈aidd 側セッション〉と連動)
+
+### ソースレビュー由来(同書 付録のうち、本リポジトリで未対応と実測確認した分)
+
+- [ ] **7-13** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
+
+> 注: 同書 付録の「`ApplicationInitializer` の async void → 起動ゲート化」は **StartupState 方式(0 節 B-1)で対応済み**、「`App.xaml.cs` の権限要求遅延」は**区間 2 のコードレビュー対応で画面側へ移動済み**のため記載しない。BACK/白画面修正の template-maui 反映(同書 §2-1)は **0-6 で決着済み**(A-1 反映済み・新 B-1 は反映不要=ユーザー判断)。機能追加アイデア(オフライン同期・ディープリンク・アクセシビリティ設定・起動状態画面 等)は必要になったら同書 付録を参照。
