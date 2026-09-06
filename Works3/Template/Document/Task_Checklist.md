@@ -4,8 +4,9 @@
 2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合した。
 経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
 
-**2026-09-06: 実機確認(旧 1 節の 1-1〜1-12)が完了**したため、確認 OK の記述は削除し **NG 項目だけを 1 節に残した**。
-**現在の優先事項 = 1 節(実機確認の NG 5 件)→ 6 節(`tmpl-plan-maui.md` からの移管課題)**。以降は 2〜5 節。
+**2026-09-06: 実機確認(旧 1 節の 1-1〜1-12)が完了**したため、確認 OK の記述は削除し **NG 項目だけを 1 節に残した**。同日、**7 節(Smart ライブラリの活用・予備調査済み)を追加**。
+**現在の優先事項 = 1 節(実機確認の NG 5 件)→ 7 節(Smart ライブラリ活用)→ 6 節(`tmpl-plan-maui.md` 移管課題)**。以降は 2〜5 節。
+※ 7 節は着手前に決める【判断】項目あり(7-3-0 パッケージ欠落 / 7-4-0 採用可否)。
 
 ## 運用ルール
 
@@ -291,3 +292,84 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 - [ ] **6-13** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
 
 > 注: 同書 付録の「`ApplicationInitializer` の async void → 起動ゲート化」は **StartupState 方式で対応済み**(`Change_Summary.md` 区間 8)、「`App.xaml.cs` の権限要求遅延」は**区間 2 のコードレビュー対応で画面側へ移動済み**のため記載しない。BACK/白画面修正の template-maui 反映(同書 §2-1)も**決着済み**(A-1 反映済み・新 B-1 は反映不要=ユーザー判断。詳細は `Change_Summary.md` 区間 6 B-3)。機能追加アイデア(オフライン同期・ディープリンク・アクセシビリティ設定・起動状態画面 等)は必要になったら同書 付録を参照。
+
+---
+
+## 7. Smart ライブラリの活用(2026-09-06 予備調査済み)
+
+ユーザー指示による 4 件。**予備調査は完了済み**(各項の内容は調査結果に基づく事実。ライブラリのソースは `D:\GitHub\Smart-Net-*`)。
+
+**全項目に共通する前提**: 4 件中 3 件は **csproj に `PackageReference` と `TrimmerRootAssembly` が既にあり、コードからは 1 箇所も使われていない**「参照だけ入っている」状態だった。したがって作業は*パッケージ追加*ではなく **「使う」または「参照を消す」の二択**から始まる。
+
+| ライブラリ | 参照中の版 | コードでの使用 | 対応 |
+| --- | --- | --- | --- |
+| `Usa.Smart.Navigation(.Maui)` | 3.9.0 | 使用中(Effect 機構が未使用) | 7-1 |
+| `Usa.Smart.Results` | 2.2.0 | **0 件**(自前 `Models/Result.cs` で代用中) | 7-2 |
+| `Usa.Smart.Data.Accessor` | 3.0.0-beta8 | **0 件**(`Data.Mapper` 2.16.0 を使用中) | 7-3 |
+| `Usa.Smart.Mapper` | 1.0.0-beta8 | **0 件**(2023-07 追加以来ずっと未使用) | 7-4 |
+
+**推奨着手順**: 7-2(小・効果明確)→ 7-1(小・新機能)→ 7-4(小・要判断)→ 7-3(大・前提整備が必要)。
+
+### 7-1. アニメーション付き画面遷移(Navigation へ新規画面を追加)
+
+**調査結果**: ライブラリに **Effect 機構**が実装済み。`IMauiNavigationEffect` + `NavigationParameter.WithEffect(key)` で、Provider がページ切替の前後に効果を await する仕組み。標準 6 種(None/Forward/Back/Push/Pop/Fade)は **`UseMauiNavigationProvider()` が自動登録済み**のため `MauiProgram` の変更は不要。エフェクトは**非同期経路のみ**(`ForwardAsync`/`PushAsync`/`PopAsync`)で走るが、アプリ側は既に全面的に非同期 API を使用しているため**そのまま有効**。既存画面の変更も不要(効果は呼び出し側のパラメータ指定のみ)。
+
+- MAUI 用のサンプルはライブラリに無く、**WPF の `Example.WindowsApp\Modules\Effect\`(メニュー+デモ画面+カスタム効果 5 種+自動付与プラグイン)が 1:1 の移植元**。`IWindowsNavigationEffect`→`IMauiNavigationEffect`、`DoubleAnimation`→`TranslateToAsync`/`FadeToAsync` の置換で移植できる
+- 追加に必要なのは 1 画面あたり **View.xaml / View.xaml.cs / ViewModel の 3 ファイル + `Modules/ViewId.cs` への enum 追加 + メニューボタン**のみ(DI 登録と ViewId マッピングは `[ComponentRegistration]` / `[ViewSource]` で自動)
+- Navigation メニュー(`NavigationMenuView.xaml`)に**空き行が 3 行**(6〜8 行目)ある
+
+- [ ] **7-1-1** 効果選択メニュー + 遷移先デモ画面を追加(標準 6 効果を切り替えて体感できる形。目安 2〜4h)
+- [ ] **7-1-2**(任意)カスタム効果の追加(WPF 例の Zoom/Drop/Flip/Rotate 相当)。`UseMauiNavigationProvider(options => options.RegisterEffect(...))` へ差し替えが必要
+- [ ] **7-1-3**(任意)遷移元/先の型で効果を自動選択するプラグイン(`PluginBase.OnPrepareParameter`)
+- [ ] **7-1-4** 実機確認。**次の 3 点は既知の要注意点**:
+  - コンテナの `AbsoluteLayout`(`MainPage.xaml`)に `IsClippedToBounds` が無く、**スライド中にヘッダへはみ出す可能性**(対策は当該 AbsoluteLayout に直接 `IsClippedToBounds="True"`。共有スタイルは変更しない)
+  - 標準の Slide 効果は **Open/Close のみ対応で Activate/Deactivate は素通り**(= `PushAsync`/`PopAsync` では片側が無音になる)。4 フェーズ対応は Fade のみ
+  - アニメ中(250ms)の連打で `Navigator is already executing.` 例外の可能性(要実機確認)
+
+### 7-2. `Usa.Smart.Results` の活用
+
+**調査結果**: `Result` / `Result<T>` / `Error` / `Maybe<T>` を提供する `readonly struct` ベースのライブラリ。依存パッケージなし・`IsAotCompatible=true`・リフレクション不使用で**トリミング対応は不要**。アプリには**自前の劣化版 `Models/Result.cs`(`IResult<T>` + `Result.Success/Failed`)があり、5 ファイル 19 箇所で使用中**。
+
+- **`global using Template.MobileApp.Models;` があるため `Result` 名が衝突(CS0104)する**。したがって **7-2-1(自前 Result.cs の撤去)は他の作業の前提**
+- 現状 `NetworkOperator` は `NetworkErrorKind` と `StatusCode` を算出しているのに `Result.Failed<T>()` で**失敗理由を捨てている**。`Error` 派生型に載せれば呼び出し側まで理由が届く
+
+- [x] **7-2-1** 自前 `Models/Result.cs` を撤去し `Smart.Results` へ置き換え(2026-09-06 完了)。`GlobalUsing.cs` に `global using Smart.Results;` 追加。**失敗理由を `NetworkError(Kind, Status)`(`Error` 派生)で伝えるように変更**(従来は `Result.Failed<T>()` で理由を破棄していた)。応答自体が無い場合は `Result.Failure<T>("Network is unavailable.")`(string→Error の暗黙変換)
+- [x] **7-2-2** `ExpressionCalculator.Evaluate` を `Result<double>` へ(2026-09-06 完了)。`CalculationResult` は削除。VM 側は `result.IsSuccess` / `result.Error.Message`(`MemberNotNullWhen` により else 節で非 null 確定)
+- [x] **7-2-3** `CropDrawing.ExportCrop` の `(0,0)` センチネルを `Result<(int Width, int Height)>` へ(2026-09-06 完了)。消費側は `TryGetValue(out var size)` でマジックナンバー判定を排除
+- [x] **7-2-4**【判断】`Services/ScpService.cs` の `ScpTransferResult` → **2026-09-07 ユーザー決定: 対応不要**。`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に素直に嵌まらず、fingerprint をサービスのプロパティへ逃がすリファクタが必要になるため。現状の record のまま維持する
+- [x] **7-2-5** 対象外の確認(記録): `SettingParser.TryGetXxx`(BCL 慣習)/ `LineReaderWriter.TryReadLine`(`ref` ホットパス)/ 成否を含まない多値タプル(`(X,Y)` 等)/ `ExpressionCalculator` 内部の例外は**現状維持**で確定
+
+> **7-2 の実施結果(2026-09-06)**: ビルド 0 エラー 0 警告。実機確認済み — ①電卓の成功(`2+3×4`→`14`)と失敗(不完全な式→「式が不完全です」= `Error.Message` 表示)②Crop の書き出し(`143 x 134 px / 43,767 bytes`)③Network の失敗経路(接続不可 → タイムアウト → エラーダイアログ表示・成功ダイアログは出ない)。**Network の成功経路のみ API サーバが必要なため未確認**(2 節で扱う)。**7-2 は 2026-09-07 に全項目完了**(7-2-4 は対応不要で確定)。
+
+### 7-3. `Usa.Smart.Data.Mapper` → `Usa.Smart.Data.Accessor` への移行
+
+**調査結果**: v3 は **`[DataAccessor]` 付き partial class + partial メソッドをソースジェネレータが実装展開**する方式(v2 の interface + リフレクション方式は廃止)。`IsAotCompatible=true` で、**実 SQLite に対する AOT テスト**(`Smart.Data.Accessor.AotTests`)もあり MAUI/トリミングとの相性は良好。むしろ現行の `SqlHelper`(`NullabilityInfoContext` によるリフレクション DDL 生成)が消えるぶん改善。SQLite は標準 Builder 属性(コアパッケージ同梱)で利用でき、MySql/Postgres/SqlServer パッケージは方言拡張専用。
+
+現行規模: **エンティティ 3 型・SQL 17 本・動的 SQL ゼロ(全て静的 CRUD)・呼び出し側 18 箇所**。シグネチャ互換で置換できるため移行自体は機械的。
+
+**着手前に潰すべき前提が 2 つある**:
+
+- [ ] **7-3-0**【要対応・ブロッカー】`Usa.Smart.Data.Accessor.Extensions.DependencyInjection` の **3.0.0-beta8 がローカルフィードに存在しない**(あるのは beta7 と、古い `3.0.0`=Smart.Data 2.10.0 依存)。SemVer 上 `3.0.0 > 3.0.0-beta8` のため**素直に入れると古い版を掴む罠**。beta8 を pack するかバージョン固定するかを決める
+- [ ] **7-3-1** 土台のみ投入して **MAUI/Android でソースジェネレータと `.sql` の `AdditionalFiles` 取り込みが動くことを先に確認**(空の `[DataAccessor]` クラス 1 個でビルド)。**移行の最大の不確実性はここ**
+- [ ] **7-3-2** `DateTimeTypeHandler` を `IValueConverter<long, DateTime>` へ移植し、クラススコープ `[TypeHandler]` で適用(グローバル設定 `SqlMapperConfig.Default.ConfigureTypeHandlers` は廃止)。※`GuidTypeHandler` は**どのエンティティにも Guid が無く実質デッドコード**のため移植不要
+- [ ] **7-3-3** 読み取り系 4 メソッドを移行(`DataService` はラッパとして残し呼び出し側は無変更)
+- [ ] **7-3-4** 更新系(非トランザクション)を移行。`InsertDataAsync` の `SQLITE_CONSTRAINT` 判定はラッパ側に残す
+- [ ] **7-3-5** トランザクション系 2 メソッド。**`IDbProvider` パターンは複数メソッドを 1 トランザクションで括れない**ため、`DbTransaction` を引数で渡す形にし `UsingTx` は `DataService` に残す
+- [ ] **7-3-6** DDL(`SqlHelper.MakeCreate<T>()`)を `.sql` ファイル化(PRAGMA 3 本 + CREATE TABLE 3 本)
+- [ ] **7-3-7** `Usa.Smart.Data.Mapper` / `.Builders` の参照・`TrimmerRootAssembly`・`SqlHelper.cs`・TypeHandler 2 種・エンティティの `[PrimaryKey]` を撤去
+- [ ] **7-3-8** 実機確認(Data 画面 / Edit 画面 / 初回起動の DB 再構築 / Bulk 10,000 件)
+
+> **既知の落とし穴**: ①`Data.Mapper.Builders` はテーブル名から `Entity` サフィックスを自動除去する(`DataEntity`→`Data`)が、**Accessor にこの機能は無い**。Builder 属性に `Table = "Data"` を明示しないと実行時まで気付けない ②TypeHandler の適用範囲がグローバル→アクセサクラス単位に変わるため、アクセサを分割するなら `[AccessorProfile]` + `[ExecuteConfig]` で共有する ③エンティティ型は XAML のコンパイル済みバインドやナビゲーションパラメータを跨ぐため、**改名・再形状化はスコープ外**(属性の差し替えのみに留める)
+
+### 7-4. `Usa.Smart.Mapper` の活用
+
+**調査結果**: 想定していた実行時 API(`SmartMapper` / `MapperConfig` / `IMapper`)は**削除済み**で、現在は **`[Mapper]` を付けた `static partial` メソッドをソースジェネレータが実装展開する方式**。DI 登録は不要(静的メソッドのため `MauiProgram` の変更もゼロ)。リフレクション・式木を使わず、AOT 非安全な経路に落ちると **SMP0402 でコンパイルエラー**になるため実行時に黙って壊れる余地がない。**このアプリの `[ObservableProperty] public partial` プロパティに対して正常動作することは実ビルドで検証済み**。
+
+**ただし適用候補が乏しい**: このアプリは**エンティティを直接 UI にバインドする設計**で Entity→ViewModel の変換層が無く、API レスポンスも変換せず直接消費している。全 526 ファイルを走査した結果、マッピング形状の箇所は 10 件程度で、**明確な置き換え候補は 1 件のみ**だった。
+
+- [ ] **7-4-0**【判断】**使うか、参照を消すか**を決める。現在 1.0.0-beta8(正式版前)を 2023-07 から未使用のまま参照しており、テンプレートとして良くない状態。採用しないなら csproj の `PackageReference` と `TrimmerRootAssembly` の 2 行を削除する
+- [ ] **7-4-1** 置き換え(採用する場合): `Models/Sample/SwitchBotTemperature.cs` の `CopyTo` 拡張メソッド(**6/6 プロパティが変換ロジックなしの単純コピー**)を `[Mapper]` 化。呼び出し元は `DeviceBleScanViewModel.cs` 1 箇所
+- [ ] **7-4-2**【判断】使用例の追加(採用する場合の本命): `Models/Api/DataListResponseEntry`(Id int, Name string)と `Models/Entity/WorkEntity`(Id long, Name string)が**ほぼ同形なのに変換コードが無い**。ここに「API レスポンス → DB エンティティ」の変換を足すと、型変換(int↔long)・`[MapProperty]` の名前解決・`[MapConstant]`/`[MapExpression]` による `CreateAt` 補完まで 1 画面で見せられる。置き場所は Data 画面(既に CRUD ボタンが並ぶ)が最適
+- [ ] **7-4-3** 対象外の確認(記録): `MonthViewBuilder` / `DeviceInfoViewModel`(ソースが 3 つ)/ `GraphBuilder` / `ScheduleService` / NFC・BLE のバイト列パース等は、**置き換えるとコード量が増え可読性が落ちる**ため見送り。`Select` 射影 28 件にオブジェクト間マッピングは 1 件も無い
+
+> **紛らわしい点**: `Usa.Smart.Mapper`(オブジェクトマッパー。ソース= `D:\GitHub\Smart-Net-Mapper`)と `Usa.Smart.Data.Mapper`(SQL マイクロ ORM。ソース= `D:\GitHub\Smart-Net-Data-Mapper`)は**別物**。7-3 で移行するのは後者。

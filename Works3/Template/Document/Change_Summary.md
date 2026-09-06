@@ -881,6 +881,25 @@ ScpPassword=********
 
 # 10. fix3 以降(次のタグまでの変更)
 
+### `Usa.Smart.Results` の採用(Task_Checklist 7-2 の実施。2026-09-06)
+
+**参照だけあって未使用だった `Usa.Smart.Results` 2.2.0 を実際に使うようにし、自前の劣化版を撤去した**。
+
+| 対象 | 変更 |
+|---|---|
+| `Models/Result.cs` | **削除**。自前の `IResult<T>` + `Result.Success/Failed`(失敗理由を持てない実装)を撤去 |
+| `GlobalUsing.cs` | `global using Smart.Results;` を追加(`Smart.Reactive` と `Smart.Text` の間) |
+| `Usecase/NetworkOperator.cs` | 戻り値を `IResult<T>` → `Result<T>` へ。**`sealed record NetworkError(NetworkErrorKind Kind, HttpStatusCode Status) : Error(...)` を新設**し、従来 `Result.Failed<T>()` で**捨てていた失敗理由(種別・ステータス)を呼び出し側へ伝えるようにした**。応答自体が無い場合(ネットワーク未接続)は `Result.Failure<T>("Network is unavailable.")` で string→Error の暗黙変換を利用 |
+| `Usecase/NetworkUsecase.cs` | `ValueTask<IResult<object>>` → `ValueTask<Result<object>>`(`IsSuccess`/`Value` の呼び出しは不変) |
+| `Models/App/ExpressionCalculator.cs` | `Evaluate` の戻り値を `Result<double>` へ。`readonly record struct CalculationResult(bool, double, string)` は削除。失敗は `Result.Failure<double>("式が空です")` のようにメッセージのみで返す |
+| `Modules/App/AppCalcViewModel.cs` | `result.Success`/`result.Error` → `result.IsSuccess`/`result.Error.Message`。`[MemberNotNullWhen(false)]` により else 節で `Error` が非 null 確定になるため `!` は不要 |
+| `Graphics/Drawing/CropDrawing.cs` / `Modules/Sample/SampleCropViewModel.cs` | `(int Width, int Height)` の `(0,0)` センチネル返却を `Result<(int Width, int Height)>` へ。消費側は `TryGetValue(out var size)` でマジックナンバー判定(`if (width == 0)`)を排除 |
+
+- **名前衝突の解消が前提だった**: `global using Template.MobileApp.Models;` があるため、自前の `Result` を残したまま `global using Smart.Results;` を足すと CS0104 になる。`Models/Result.cs` の削除とセットで実施
+- 対象外として確定: `SettingParser.TryGetXxx`(BCL 慣習)/ `LineReaderWriter.TryReadLine`(`ref` ホットパス)/ 成否を含まない多値タプル / `ExpressionCalculator` 内部の例外(境界で結果型に変換済み)
+- `Services/ScpService.cs` の `ScpTransferResult` は **対応不要で確定**(2026-09-07 ユーザー決定)。`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に素直に嵌まらず、fingerprint をサービスのプロパティへ逃がすリファクタが必要になるため、現状の record のまま維持する
+- ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)。Network の成功経路のみ API サーバが必要なため未確認
+
 ### 旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
 
 - **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)

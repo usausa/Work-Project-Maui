@@ -127,9 +127,9 @@ public sealed class NetworkUsecase
     // Test
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IResult<object>> GetTestErrorAsync(int code) =>
+    public ValueTask<Result<object>> GetTestErrorAsync(int code) =>
         networkOperator.ExecuteVerbose(n => n.GetTestErrorAsync(code));
 
-    public ValueTask<IResult<object>> GetTestDelayAsync(int timeout) =>
+    public ValueTask<Result<object>> GetTestDelayAsync(int timeout) =>
         networkOperator.ExecuteVerbose(n => n.GetTestDelayAsync(timeout));
 }
