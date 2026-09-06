@@ -853,12 +853,22 @@ ScpPassword=********
 ### A-2. UICalendar — Debug 計測の撤去
 
 - `MonthViewBuilder.cs` / `UICalendarViewModel.cs`: `Stopwatch`+`Debug.WriteLine` の計測コードを**撤去**(区間 7 の 6-3 で「現状維持」とした判断を変更)
-- `CalendarView.xaml.cs`: 計測は残し `// ReSharper disable RedundantAssignment` コメントで抑止
+- `CalendarView.xaml.cs`(旧 XAML 版): 計測は残し `// ReSharper disable RedundantAssignment` コメントで抑止(※この旧版は区間 10 で削除)
 - あわせて `UICalendarViewModel` の SA1500 `#pragma` を `FirstDayOfWeek` プロパティ全体を囲む位置へ調整
 
 ## B. 画面以外の変更
 
 なし。
+
+---
+
+# 10. fix3 以降(次のタグまでの変更)
+
+### 旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
+
+- **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)
+- `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
+- `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
 
 ---
 
@@ -958,7 +968,7 @@ ScpPassword=********
 | D16 | Walkthrough は実装しない (方針メモ: `Grid` 全面オーバーレイ + `Border` くり抜き + 対象要素の絶対座標取得 + `ScrollView` 内追従に注意 + 初回判定は `State/Settings.cs`) |
 | D17 | 自作入力は `ColorPicker` / `DurationPicker` のみ (RangeSlider / AutoComplete は難度中で見送り) |
 | D18 | チャット UI の二重実装 (`Controls/ChatView` ⇔ `UIChatView`) は現状維持。C-13 (バブル色) は検討扱い |
-| D19 | 旧 `CalendarView` (未参照 1,490 行) の削除/リネームは**後日対応** (`CalendarView2` が正。C-14 のコメント実態合わせも同時) |
+| D19 | 旧 `CalendarView` (未参照 1,490 行) の削除/リネームは**後日対応** (`CalendarView2` が正。C-14 のコメント実態合わせも同時) → **2026-09-06 実施済み**(区間 10) |
 | D20 | SSH.NET 2026.0.0 追加 (増分 = BouncyCastle.Cryptography のみ) |
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |

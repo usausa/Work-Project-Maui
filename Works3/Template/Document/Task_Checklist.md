@@ -561,7 +561,7 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 
 ## 5. バックログ(任意・後日。指示があれば着手)
 
-- [ ]【後日対応】旧 `CalendarView` の整理(C-14+D19): `CalendarView2` が正。未参照 1,490 行の削除 or リネーム + `UICalendarView.xaml` のコメント実態合わせ(案は `Change_Summary.md` 付録D の D19)
+- [x] 旧 `CalendarView` の整理(C-14+D19)— **2026-09-06 完了**: 旧 XAML 版 CalendarView(未参照 1,490 行)を削除し、**`CalendarView2` を `CalendarView` へリネーム**(git mv・クラス名/x:Class/参照 70 箇所)。`UICalendarView.xaml` の切替コメントも実態合わせ。ビルド警告ゼロ・実機で表示/月送り/イベント/選択モード確認済み
 - [ ]【判断】`Controls/ChatView` バブル色のバインダブル化(C-13・D18): 検討扱い・未確定
 - [ ] UISocial 背景の専用化(1080×1920 / 9:16 のゲーム風背景。「任意」扱い・44 枚には含まず)
 - [ ] `AnimationOption.ResetEnter` の Scale 1 固定リセット(静的 Scale+EnterAnimation 併用が将来出た場合に、TranslationY と同じ基準値退避パターンで対処)
