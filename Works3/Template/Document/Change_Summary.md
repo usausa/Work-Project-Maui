@@ -731,6 +731,18 @@ ScpPassword=********
 | `State/StartupState.cs` / `App.xaml.cs` / `MainPageViewModel.cs` / `MauiProgram.cs` | **Activity 再生成時の初期画面復帰** (2026-09-06 に方式変更)。`Application.SendStart()` は `_isStarted` ガードでプロセス内 1 回のみのため、プロセス生存のまま Activity が作り直されると `App.OnStart()` が再実行されず初回遷移が走らない → 新しい `MainPage` のコンテナが空で**白画面**。**初期画面への遷移を `MainPageViewModel.OnCreated()` へ移動**した(`MainPage.xaml` の `s:AppLifecycleBehavior` が `Window.Created` を購読するため **Activity 生成のたびに必ず走り**、復帰時の `Resumed` では走らない)。`OnCreated` を `async void` にして 「`await startup.Completed` → `Navigator.Exit()` → `ForwardAsync(ViewId.Menu)`」を実行する。起動時の初期化(DB再構築・クラッシュレポート)は `App.OnStart` に残し、完了を **`State/StartupState.cs`** へ通知する(`TaskCompletionSource` を隠蔽し `Completed` / `NotifyCompleted()` のみ公開。**完了後に待ち始めても即座に返る**ため作り直し後の ViewModel でも取りこぼさない。単発の `IReactiveMessenger` は `Subject<T>` でリプレイしないため不可)。`OnDestroying` の `destroying` フラグは初期化中に作り直された場合の二重遷移防止。旧方式(`CreateWindow` で 2 回目以降の `Window.Created` を拾う `windowCreated` / `RestoreInitialViewAsync` / 専用ログ 2 件)は撤去し `App` は元の姿へ |
 | (他テンプレートへ横展開) | A-1 (BACK の受け取り) は `template-maui` / `template-maui2` / `template-maui-keyboard` / `template-maui-blazor` へ反映済み。**新方式の B-1 (`StartupState` + `OnCreated`) は `template-maui-keyboard` のみ**。`template-maui-blazor` は `INavigator` の参照が 1 箇所も無く UI が `BlazorWebView` として XAML 宣言済みのため **B-1 は対象外**で、代わりに DB 初期化のエラー処理 (`InitializeDataAsync` + ダイアログ + `Quit()`) を揃えた。`template-maui` への反映は 2026-09-06 のユーザー判断で**不要**。全プロジェクト 0 エラー・自コード由来の警告 0 |
 
+**検討して不採用にした案**(旧 `Task_Checklist.md` 0 節の調査記録より):
+
+| 案 | 内容 | 不採用の理由 |
+|---|---|---|
+| A-2 | `MainPage` を `NavigationPage` 等でラップして `CanConsumeBackNavigation` を true にする | シェル構造(ヘッダー/ファンクション/コンテナ)の作り直しが必要で影響が大きい |
+| A-3 | MAUI 側の修正待ち | dotnet/maui#31266 は提案段階(.NET 10 SR11 マイルストーン)で時期未定 |
+| B-2 | コンテナ再接続(表示中 View を新コンテナへ付け替え) | 破棄済み Activity / MauiContext のハンドラを持つ View の付け替えになりリスク高 |
+| B-3 | Window/MainPage の再利用 | `Window.Destroying()` で `RemoveWindow` + `Handler.DisconnectHandler()` が走るため非推奨 |
+| — | `launchMode` / `alwaysRetainTaskState` 等の manifest 設定 | **実測で否定**。BACK で Task / ActivityRecord は完全に消滅し(`Task #83` → 消滅 → 再起動で `Task #84`)プロセスだけが空プロセス(`oom_score_adj` 0→900)として残る。launchMode は「既存インスタンスの再利用方法」の設定なので finish 済みでは効かない |
+
+**実測メモ**: ①原因B は **BACK と無関係に再現する** — 表示中に端末のフォントサイズを変更すると `ConfigurationChanges` に `FontScale`/`Locale` が無いため Activity が再生成され(pid 不変)画面が完全に空になる(uiautomator でテキスト 0 件)。通常操作で踏める不具合のため原因A を直しても対処必須だった ②Android 16 / targetSdk 36 では `onBackPressed` も `KEYCODE_BACK` も配送されず、`android:enableOnBackInvokedCallback="false"` の退避策も効かない(dispatcher に戻るだけで有効なコールバックが無い) ③確認は 8 経路(コールド起動 / ホーム→再開 / サブ画面 BACK / ルート BACK / BACK 終了→即再起動 / `am start` 直接起動 / フォントサイズ変更 / 他アプリ切替・プロセス kill)で全て Menu 表示を確認(2026-09-04・Release)
+
 ### B-4. リソース — Images の用途別階層化(画像アセット拡充の前準備)
 
 `Resources/Images/` を**用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+**プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映)。
@@ -795,11 +807,16 @@ ScpPassword=********
 - **機械修正 68 件**: 末尾カンマ削除 41 / `async`→Task 直返し 11(`HttpService` 全 API+`NetworkScpViewModel`)/ 冗長な既定値引数 4 / 空 `default: break;` 3 / 冗長 using 2(`MediaController`=CT.Maui 15 で `MediaElementState` が Core へ移動済み・`MapsuiMapManagers`)/ partial の重複基底型 1(`CalendarView.xaml.cs`)/ 空行 1 ほか
 - **個別判断分(ステップバイステップ・都度ユーザー確認)**: `field` キーワード化(`UICalendarViewModel`=`#pragma IDE0032` 撤去)/ null 免罪符→**`ReSharper disable once` へ変更**(`DrawingControl`=Roslyn IDE0370 との板挟み解消。`ImageHelper` は `bitmap!`)/ `MixerEqualizer` の冗長条件 `(peak > 0)` 削除 / `BluetoothSerial` の引数 `adapter`→`bluetoothAdapter` / StyleCop SA1500(field 初期化子構文の誤検知)を `#pragma` 局所抑止
 - 未使用代入 17 件は **Debug 計測(`[Conditional]` の `Debug.WriteLine`)でのみ使用のため現状維持で確定**(ユーザー決定)
-- **最終残 18 件=全て確定済みの許容**(Debug 計測 17+HighlightTrigger 1)。残対応の経緯は `Task_Checklist.md` 6 節
+- **最終残 18 件=全て確定済みの許容**(Debug 計測 17+HighlightTrigger 1)。※この 2 件は区間 9 でさらに方針変更(計測は撤去/抑止・Location は空状態表示へ)したため、残数は次回 inspectcode 実行時に再集計する
 
 ## C. この区間のナレッジ
 
-- inspectcode は **Bash 系シェルで実行**する(PowerShell は `--properties:` がコロンで分割され「Specify only one solution file」で失敗)。`.sln.DotSettings`(旧 .sln 名)は .slnx 解析にも適用される
+- inspectcode の再実行コマンド(**Bash 系シェルで実行**する。PowerShell は `--properties:` がコロンで分割され「Specify only one solution file」で失敗)。`.sln.DotSettings`(旧 .sln 名)は .slnx 解析にも適用される
+
+  ```bash
+  jb inspectcode Template.MobileApp.slnx -f=xml -o=results.xml --no-build --no-swea --properties:Configuration=Release
+  ```
+
 - **Release 解析では `[Conditional("DEBUG")]` の `Debug.WriteLine` でのみ使う変数が RedundantAssignment 誤検知**になる(削除すると Debug ビルドが壊れる)
 - **ReSharper と Roslyn の nullable 解釈が食い違うことがある**: null 代入を R# だけが指摘し、`!` を付けると Roslyn が IDE0370「抑制は不要」→ 素の null+`// ReSharper disable once` で両立。**StyleCop SA1500 は C# 14 の field 初期化子構文 `} = 値;` を誤検知** → `#pragma` 局所抑止
 - `FallbackValue` は「パス不成立(親が null)」のみに効き、**末端プロパティ自体の null には `TargetNullValue`** が必要(どちらも `StringFormat` を通らず素の値が表示される)
@@ -810,7 +827,7 @@ ScpPassword=********
 
 # 8. fix2 → back — BACK/初期化方式の刷新(白画面対策 B-1 の方式変更)
 
-白画面対策の B-1(Activity 再生成時の初期画面復帰)を、**旧方式(`App.CreateWindow` での復帰)から `StartupState` 方式へ作り直した**区間(2026-09-05 → 09-06)。コミットは 4 本(サブモジュール参照更新 1 本を含む)。詳細な経緯・実測・判断の記録は `Task_Checklist.md` 0 節。
+白画面対策の B-1(Activity 再生成時の初期画面復帰)を、**旧方式(`App.CreateWindow` での復帰)から `StartupState` 方式へ作り直した**区間(2026-09-05 → 09-06)。コミットは 4 本(サブモジュール参照更新 1 本を含む)。原因の詳細・不採用案・実測メモは**区間 6 の B-3** にまとめてある。
 
 ## A. 画面単位の変更
 
