@@ -66,13 +66,18 @@
   - **A-1 (採用)** `MainActivity` で自前の `OnBackPressedCallback` を `Enabled = true` で `OnBackPressedDispatcher` に登録し、`Page.SendBackButtonPressed()` へ流す。`base.OnCreate` の後に追加することで MAUI のコールバックより後勝ちで確実に受け取れる。アプリ側ロジック(`MainPage.OnBackButtonPressed` → `ShellEvent.Back`)は現状のまま使える。代償はシステムの back-to-home アニメーションが出なくなること
   - A-2 (不採用) `MainPage` を `NavigationPage` 等でラップして `CanConsumeBackNavigation` を true にする案。シェル構造(ヘッダー/ファンクション/コンテナ)の作り直しが必要で影響が大きい
   - A-3 (不採用) MAUI 側の修正待ち。dotnet/maui#31266 は提案段階(.NET 10 SR11 マイルストーン)で時期未定
-  - **B-1 (採用)** `App.CreateWindow` で 2 回目以降の `Window` にだけ `Created` ハンドラを付け、`navigator.Exit()` → `ForwardAsync(ViewId.Menu)` を実行する。`IWindow.Created()` の直後に `SendStart()` が呼ばれるため、コールド起動時の `OnStart` と同じタイミングになり副作用が少ない
-    - 既知の副作用: `Navigator.Exit()` は `Controller` を経由せず `provider.CloseView` を直接呼ぶため `plugin.OnClose` が走らない(= `ScopePlugin` の参照カウントが減らない)。本アプリで `[Scope]` を使うのは Navigation > Wizard の 3 画面のみで、影響は「再生成後に Wizard の入力値が残る」程度。厳密にやるなら Smart.Navigation 側で `Exit()` を Controller 経由へ直す
+  - **B-1 (採用・2026-09-06 に方式変更)** 初期画面への遷移を `App` から `MainPageViewModel` へ移す。`MainPage` は `Window` 生成のたびに作り直され、`MainPage.xaml` の `s:AppLifecycleBehavior` が `Window.Created` を購読して `IAppLifecycle.OnCreated()` を呼ぶため、**Activity の作り直しのたびに必ず走る**(復帰時は `Resumed` なので呼ばれない)。`OnCreated` を `async void` にして「初期化状態の完了を待つ → `Navigator.Exit()` → `ForwardAsync(初期ViewId)`」の3行にする
+    - 起動時の初期化(DB再構築・クラッシュレポート表示)は `App` に残し、完了を `State/StartupState.cs` へ通知する。`TaskCompletionSource` を隠して `Completed` / `NotifyCompleted()` だけを公開するため、`App` も `MainPageViewModel` も仕組みを意識しない。**完了後に待ち始めても即座に返る**ので、作り直しで生成し直された ViewModel でも取りこぼさない
+    - 単発のイベントバス(`IReactiveMessenger`)は不可。`Subject<T>` 実装でリプレイしないため、再生成後に購読しても通知が来ず白画面に戻る
+    - `OnDestroying` で立てる `destroying` フラグは、**初期化がまだ終わっていない最中に作り直された**場合に古い ViewModel と新しい ViewModel の両方が遷移してしまうのを防ぐためのもの
+    - 旧方式(`App.CreateWindow` で 2 回目以降の `Window.Created` を拾い `RestoreInitialViewAsync` を実行)は撤去。`windowCreated` フラグ・`CurrentViewId` ガード・専用ログ2件が不要になり、`App` は元の姿へ戻った
+    - 既知の副作用: `Navigator.Exit()` は `Controller` を経由せず `provider.CloseView` を直接呼ぶため `plugin.OnClose` が走らない(= `ScopePlugin` の参照カウントが減らない)。本アプリで `[Scope]` を使うのは Navigation > Wizard の 3 画面のみで、影響は「作り直し後に Wizard の入力値が残る」程度
+    - 【判断保留】`StartupState` という名前は仮。「初期化状態」寄りにするか「スタートアップ状態」寄りにするかは要再確認
   - B-2 (不採用) コンテナ再接続。破棄済み Activity / MauiContext のハンドラを持つ View の付け替えになりリスク高(将来案)
   - B-3 (不採用) Window/MainPage の再利用。`Window.Destroying()` で `RemoveWindow` + `Handler.DisconnectHandler()` が走るため非推奨
   - **任意 (採用)** ルート画面 `MenuViewModel.OnNotifyBackAsync` → `AndroidHelper.MoveTaskToBack()`。A-1 だけだとルート画面の BACK が無反応になるため、Android の作法に合わせてバックグラウンドへ送る。Activity が生き残るので白画面経路も踏まない
 - [x] **0-3** 対策A の実装 (2026-09-04) — `Platforms/Android/MainActivity.cs`(`BackPressedCallback` 追加。未処理時は自身を一時無効化して `OnBackPressedDispatcher.OnBackPressed()` へフォールバック)
-- [x] **0-4** 対策B の実装 (2026-09-04) — `App.xaml.cs`(`windowCreated` フラグ + `OnWindowRecreated` / `RestoreInitialViewAsync`。初回遷移が未完了なら `OnStart` 側に任せる)、`Log.cs`(`InfoWindowRecreated` / `WarnWindowRecreateError` 追加)、`Modules/Main/MenuViewModel.cs`(`OnNotifyBackAsync`)。ビルド警告ゼロ(自コード由来 0 件。残 10 件は BLE バインディング由来の既存 Release 警告)
+- [x] **0-4** 対策B の実装 (2026-09-04 / 2026-09-06 に方式変更) — `State/StartupState.cs`(新規)、`MauiProgram.cs`(`services.AddSingleton<StartupState>();` 1行)、`App.xaml.cs`(`OnStart` の末尾で `NotifyCompleted()`。`CreateWindow` は素の実装に戻す)、`MainPageViewModel.cs`(`StartupState` 注入 + `OnCreated` を `async void` 化 + `OnDestroying` で `destroying`)。`Log.cs` への追加は不要。ビルド警告ゼロ(自コード由来 0 件。残 10 件は BLE バインディング由来の既存 Release 警告)
 - [x] **0-5** 確認 (2026-09-04・Release ビルド・Pixel 9a / Android 16) — 全経路 OK
 
 | 確認項目 | 結果 |
@@ -86,18 +91,21 @@
 | ⑦フォントサイズ変更 | `OnDestroy`→`OnCreate` 後に `Window recreated. Restore initial view.` ログ → **Menu 表示**(従来は完全な空画面) |
 | ⑧他アプリ切替→復帰 / プロセス kill→再起動 | いずれも Menu 表示 |
 
-- [x] **0-6** 他テンプレートへの反映 (2026-09-04) — 全プロジェクトで **0 エラー・自コード由来の警告 0**
+- [x] **0-6** 他テンプレートへの反映 — 全プロジェクトで **0 エラー・自コード由来の警告 0**
 
-| プロジェクト | A-1 | B-1 | ルート BACK | 確認 |
+| プロジェクト | A-1 | B-1 の方式 | ルート BACK | 確認 |
 | --- | --- | --- | --- | --- |
-| `template-maui-keyboard` | 済 | 済 `ViewId.KeyMenu` | `KeyMenuViewModel` | **実機確認済み**(1.Entry → BACK → Key メニューへ復帰 / ルート BACK でバックグラウンド化 / サブ画面でフォントサイズ変更 → `Window recreated` → Key メニュー)。ユーザーが手動でスタイル調整 |
-| `template-maui` | 済 | 済 `ViewId.Menu` | `MenuViewModel` | 該当 4 ファイルが Works3/Template と**完全一致**、AppId も同一 (`template.mobileapp`) のため実機確認は Works3 で代替 |
-| `template-maui2` | 済 | 済 `ViewId.Menu` | `MenuViewModel` | 同上 (AppId 同一)。既存警告 24 件は全て XA4301 (ネイティブライブラリ重複) |
-| `template-maui-blazor` | 済 | **対象外** | `MainPage.OnBackButtonPressed` | **実機確認済み**(BACK でバックグラウンド化・pid 不変、復帰で BlazorWebView の状態も維持) |
+| `Works3/Template` | 済 | **新方式**(`StartupState` + `OnCreated`) | `MenuViewModel` | **実機確認済み (2026-09-06)** |
+| `template-maui-keyboard` | 済 | **新方式**(`ViewId.KeyMenu`) | `KeyMenuViewModel` | **実機確認済み (2026-09-04)** |
+| `template-maui` | 済 | 旧方式のまま(**要追従**) | `MenuViewModel` | Works3 と 4 ファイル同一の不変条件が崩れている |
+| `template-maui2` | 済 | 旧方式のまま(**要追従**) | `MenuViewModel` | 既存警告 24 件は全て XA4301 |
+| `template-maui-blazor` | 済 | **対象外** | `MainPage.OnBackButtonPressed` | 実機確認済み (2026-09-04) |
 
-> `template-maui-blazor` は `App.OnStart` に画面遷移が無く、UI が `MainPage.xaml` の `BlazorWebView` として宣言済みのため、Activity 再生成でも `CreateWindow` が丸ごと組み直す = **原因B が成立しない**。A-1 のみ入れ、TODO スタブだった `MainPage.OnBackButtonPressed` に `AndroidHelper.MoveTaskToBack()` を足して他テンプレートとルート挙動を揃えた (BlazorWebView の履歴戻しは TODO のまま)
+> `template-maui-blazor` は `App.OnStart` に画面遷移が無く、UI が `MainPage.xaml` の `BlazorWebView` として宣言済み、かつ `INavigator` の参照が 1 箇所も無いため **原因B が成立しない**。A-1 のみ入れ、TODO スタブだった `MainPage.OnBackButtonPressed` に `AndroidHelper.MoveTaskToBack()` を足して他テンプレートとルート挙動を揃えた
 
-> Works3/Template は `template-maui` と該当 4 ファイルを**同一に保つ**のが不変条件のため、手動編集後のスタイル (コメント整理 / ログ定義は `// Startup` 節 / `#if ANDROID` なし) に合わせ直した
+> **Works3/Template の実機確認 (2026-09-06・Release)**: コールド起動(DB初期化待ち後に Menu 表示)/ Data メニュー(DB依存画面)が開く / `--activity-clear-task` で Menu へ復帰 / Basic → ホーム → 復帰で Basic を維持 / Basic で BACK → Menu / ルート BACK でバックグラウンド化(pid 不変)/ **フォントサイズ変更で `OnDestroy`→`OnCreate` 後に Menu 表示**(検証中に偶然 1.15→1.0 の変更が発生した際も正しく復帰)
+
+> 遷移前の待機中は **clickable 0 / focusable 0 / 表示テキストなし**(keyboard で起動を6秒遅らせて実測)。`MainPage` のヘッダー・ファンクションボタンはツリーには存在するが `IsVisible` が既定 `false` のため誤タップの余地は無い
 
 **再現手順 / 確認手順** (adb は PATH 未登録・`C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe`):
 

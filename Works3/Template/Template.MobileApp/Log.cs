@@ -9,11 +9,8 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Information, Message = "Application start. version=[{version}], runtime=[{runtime}]")]
     public static partial void InfoApplicationStart(this ILogger logger, Version? version, Version runtime);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Window recreated. Restore initial view.")]
-    public static partial void InfoWindowRecreated(this ILogger logger);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Window recreate navigation error.")]
-    public static partial void WarnWindowRecreateError(this ILogger logger, Exception exception);
+    [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
+    public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 
     // State
 
@@ -43,9 +40,4 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Nfc tag read error.")]
     public static partial void WarnNfcReadError(this ILogger logger, Exception exception);
-
-    // Startup
-
-    [LoggerMessage(Level = LogLevel.Error, Message = "Database initialize failed.")]
-    public static partial void ErrorDatabaseInitializeFailed(this ILogger logger, Exception exception);
 }
