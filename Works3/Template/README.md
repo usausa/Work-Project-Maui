@@ -10,23 +10,54 @@ Template project for MAUI.
 <img width="25%" src="Document/Device_BLE.png" />
 <img width="25%" src="Document/Device_NFC.png" />
 <img width="25%" src="Document/Device_Activity.png" />
+<img width="25%" src="Document/Sample_Chart.png" />
+<img width="25%" src="Document/Sample_SfChart.png" />
+<img width="25%" src="Document/Sample_Markdown.png" />
+<img width="25%" src="Document/Sample_Pdf.png" />
 <img width="25%" src="Document/Sample_CV.png" />
-<img width="25%" src="Document/UI_Money.png" />
-<img width="25%" src="Document/UI_Pos.png" />
-<img width="25%" src="Document/UI_Deck.png" />
-<img width="25%" src="Document/UI_Load.png" />
+<img width="25%" src="Document/Sample_Chat.png" />
+<img width="25%" src="Document/Sample_Crop.png" />
+<img width="25%" src="Document/App_Calc.png" />
+<img width="25%" src="Document/App_Game.png" />
 <img width="25%" src="Document/UI_Login.png" />
+<img width="25%" src="Document/UI_Money.png" />
+<img width="25%" src="Document/UI_Super.png" />
+<img width="25%" src="Document/UI_Pos.png" />
+<img width="25%" src="Document/UI_Shop.png" />
+<img width="25%" src="Document/UI_Item.png" />
+<img width="25%" src="Document/UI_Cart.png" />
+<img width="25%" src="Document/UI_Deck.png" />
+<img width="25%" src="Document/UI_KitDash.png" />
+<img width="25%" src="Document/UI_KitNotify.png" />
+<img width="25%" src="Document/UI_KitSetting.png" />
+<img width="25%" src="Document/UI_KitTracking.png" />
+<img width="25%" src="Document/UI_KitOnboard.png" />
+<img width="25%" src="Document/UI_Profile.png" />
+<img width="25%" src="Document/UI_Character.png" />
+<img width="25%" src="Document/UI_Pet.png" />
+<img width="25%" src="Document/UI_Feel.png" />
 <img width="25%" src="Document/UI_Mail.png" />
-<img width="25%" src="Document/UI_Meter.png" />
-<img width="25%" src="Document/UI_Mixier.png" />
-<img width="25%" src="Document/UI_Radar.png" />
+<img width="25%" src="Document/UI_Chat.png" />
+<img width="25%" src="Document/UI_Social.png" />
+<img width="25%" src="Document/UI_Stream.png" />
+<img width="25%" src="Document/UI_Schedule.png" />
+<img width="25%" src="Document/UI_Calendar.png" />
+<img width="25%" src="Document/UI_Timeline.png" />
 <img width="25%" src="Document/UI_Carousel.png" />
 <img width="25%" src="Document/UI_Collection.png" />
 <img width="25%" src="Document/UI_Refresh.png" />
-<img width="25%" src="Document/UI_Social.png" />
-<img width="25%" src="Document/UI_Character.png" />
-<img width="25%" src="Document/UI_Timeline.png" />
+<img width="25%" src="Document/UI_Graph.png" />
+<img width="25%" src="Document/UI_Graph2.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
+<img width="25%" src="Document/UI_Mixier.png" />
+<img width="25%" src="Document/UI_Meter.png" />
+<img width="25%" src="Document/UI_Gauge.png" />
+<img width="25%" src="Document/UI_Load.png" />
+<img width="25%" src="Document/UI_Radar.png" />
+<img width="25%" src="Document/UI_Flight.png" />
+<img width="25%" src="Document/UI_Tactical.png" />
+<img width="25%" src="Document/UI_Telemetry.png" />
+<img width="25%" src="Document/UI_Energy.png" />
 </p>
 
 # TODO
@@ -35,16 +66,10 @@ Template project for MAUI.
   - [ ] **WiFi manager**
   - [ ] Biometric
 - UI
-  - [ ] **Chat**
-  - [ ] **Chart**
   - [ ] **Bottom sheet**
-  - [ ] **Gauge**
-  - [ ] Calendar/Schedule
 - Other
-  - [ ] **Media play**
   - [ ] **Cognitive service**
   - [ ] **Chat AI**
-  - [ ] **HybridWebView**
   - [ ] Push -> Hybrid?
   - [ ] Local notification -> Hybrid?
 - API server
