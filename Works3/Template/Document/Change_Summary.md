@@ -972,6 +972,41 @@ ScpPassword=********
 - `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
 - `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
 
+### Grid の Spacing を Style へ集約(2026-09-07)
+
+XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全廃し、画面ローカルの `Style`(`TargetType="Grid"`)の `Setter` へ移した。**27 ファイル・39 箇所**。
+
+| 対象 | 追加したスタイルキー |
+|---|---|
+| `Controls/` | `InfoCard.xaml` = `HeaderGrid` / `CalendarView.xaml` = `CalendarRootGrid`(いずれもローカルの `ResourceDictionary` を新設) |
+| `Modules/Basic/` | `BasicBehaviorView` = `SwitchRowGrid` / `BasicStyleView` = `SegmentRowGrid` |
+| `Modules/Sample/` | `SampleChartView` = `SegmentGrid` / `SampleChatView` = `ExtractItemGrid` / `SampleCropView` = `ExportResultGrid` / `SampleMediaView` = `ControlBarGrid` |
+| `Modules/View/` | `ViewCarouselView` = `CarouselCardGrid` / `ViewCustomView` = `ColorPreviewGrid` / `ViewDragDropView` = `BoardGrid` / `ViewEasingView` = `RootGrid` / `ViewEffectView` = `EffectRowGrid`(5 箇所で共用) / `ViewStateView` = `StateButtonGrid` |
+| `Modules/Device/` | `DeviceSensorView` = `SensorRowGrid`(Compass / Level の 2 箇所で共用) |
+| `Modules/Network/` | `NetworkScpView` = `TransferButtonGrid` |
+| `Modules/UI/` | `UICalendarView` = `RootGrid` / `ModeBarGrid`、`UIGraphView` = `GraphRowGrid`、`UIGraph2View` = `CommitInfoGrid`、`UIKitNotifyView` = `NotifyRowGrid`、`UISuperView` = `SearchRowGrid`、`UIKitDashView` = 既存 `KitDashHeaderGrid` に Setter を追加 |
+| `Modules/Navigation/` | `EditListView` = `WorkRowGrid` / `SelectionBarGrid`、`EffectDemoView` = `InfoGrid` / `ButtonRowGrid`、`EffectDialogView` = `InfoGrid` |
+| `Modules/Toolkit/` | `ToolkitChartView` = `FunnelGrid` / `SparkGrid` |
+
+- `RowDefinitions` / `ColumnDefinitions` は従来どおり要素側にインライン記述する。`Margin` / `Padding` / `BackgroundColor` / `HeightRequest` も移していない
+- 共有スタイル(`Resources/Styles/Styles.xaml`)は変更しない。同じ値を複数箇所で使う画面は 1 キーを共用する
+- ビルド 0 エラー 0 警告。実機(Pixel 9a)で対象画面を巡回して表示崩れと `StaticResource` 解決エラーが無いことを確認
+
+### `ILayoutManagerFactory` の撤去(2026-09-07)
+
+`CascadeStackLayout` を `Layout` 派生に変更し、`CreateLayoutManager()` の override でカスケード配置を返すようにした(`CircularLayout` / `StaggeredGrid` と同じ形)。
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/CascadeStackLayout.cs`(新規) | `Layout` 派生。`CreateLayoutManager()` で入れ子の `CascadeLayoutManager` を返す。ずらす量は `Offset` 依存プロパティ(既定 20) |
+| `Layouts/AppLayoutManagerFactory.cs`(削除) | `ILayoutManagerFactory` 実装と `VerticalStackLayout` 派生の `CascadeStackLayout`、`CascadeLayoutManager` |
+| `MauiProgram.cs` | `UseCustomLayouts()` とその中の `AddSingleton<ILayoutManagerFactory, AppLayoutManagerFactory>()` を削除 |
+| `Controls/CircularLayout.cs` / `Controls/StaggeredGrid.cs`(移動) | `Layouts/` を廃止し `Controls/` へ統合。名前空間は `Template.MobileApp.Controls` |
+| `Modules/View/ViewLayoutView.xaml` | カードのタイトルと説明を新しい仕組みに合わせ、`layouts:` 名前空間を廃止して既存の `controls:` に統一 |
+
+- `ILayoutManagerFactory` は「自分で継承できない型(標準の `Grid` / `StackLayout` や他社ライブラリのレイアウト)のマネージャを差し替える」ためのフックで、自作レイアウトには不要。MAUI の `Layout.LayoutManager` は `GetLayoutManagerFromFactory(this) ?? CreateLayoutManager()` の順で解決する
+- ビルド 0 エラー 0 警告。実機(Pixel 9a)で View > Layout の CircularLayout / StaggeredGrid / CascadeStackLayout の 3 カードを確認
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
