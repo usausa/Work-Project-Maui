@@ -52,7 +52,7 @@ public sealed class NetworkUsecase
         if (result.IsSuccess)
         {
             // 取得した一覧を Work テーブルへ保存する (Navigation > Edit で確認できる)
-            await dataService.InsertWorkEnumerableAsync(result.Value.Entries.Select(ObjectMapper.ToWorkEntity));
+            await dataService.ReplaceWorkEnumerableAsync(result.Value.Entries.Select(ObjectMapper.ToWorkEntity));
 
             await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]\r\nSaved to Work table.");
         }

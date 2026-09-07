@@ -305,40 +305,22 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 | --- | --- | --- | --- |
 | `Usa.Smart.Navigation(.Maui)` | 3.9.0 | 使用中(Effect 機構も 2026-09-07 から使用) | 7-1 **完了** |
 | `Usa.Smart.Results` | 2.2.0 | 使用中(2026-09-06 から。自前 `Models/Result.cs` は撤去) | 7-2 **完了** |
-| `Usa.Smart.Data.Accessor` | 3.0.0-beta8 | **0 件**(`Data.Mapper` 2.16.0 を使用中) | 7-3 |
+| `Usa.Smart.Data.Accessor` | 3.0.0-beta8 | 使用中(2026-09-07 から。`Data.Mapper` は撤去) | 7-3 **完了** |
 | `Usa.Smart.Mapper` | 1.0.0-beta8 | 使用中(2026-09-07 から。`Models/ObjectMapper.cs`) | 7-4 **完了** |
 
-**残り**: 7-3(大・前提整備が必要)のみ。7-1 / 7-2 / 7-4 は完了(内容・実機確認結果は `Change_Summary.md` 区間10 に記録)。
+**7 節は全項目完了**(内容・実機確認結果は `Change_Summary.md` 区間10 に記録)。
 
 ### 7-1. アニメーション付き画面遷移 — **2026-09-07 全項目完了**
 
-7-1-1(メニュー+デモ画面)/ 7-1-2(カスタム効果 Zoom/Drop/Flip/Rotate + Dialog 片側効果)/ 7-1-3(`DialogEffectPlugin` による自動付与)/ 7-1-4(実機確認)とも完了。要注意点 3 件の結果: はみ出し=`IsClippedToBounds` をアプリ側で設定 / Slide 系の Activate・Deactivate 素通り=ライブラリ側で 4 フェーズ化済み(リリース待ち)/ 連打=例外にならない。内容は `Change_Summary.md` 区間10「遷移効果(Effect)デモの追加」を参照。
-
-- [ ] **7-1-5** `Usa.Smart.Navigation` / `.Maui` を Slide 4 フェーズ化版(3.9.0 より後の版)へ更新したら、Push (Stack) で遷移元が下へスライドアウトし、Pop で遷移先が上からスライドインすることを実機で再確認する(アプリ側の変更は不要)
+7-1-1(メニュー+デモ画面)/ 7-1-2(カスタム効果 Zoom/Drop/Flip/Rotate + Dialog 片側効果)/ 7-1-3(`DialogEffectPlugin` による自動付与)/ 7-1-4(実機確認)とも完了。要注意点 3 件の結果: はみ出し=`IsClippedToBounds` をアプリ側で設定 / Slide 系の Activate・Deactivate 素通り=ライブラリ側で 4 フェーズ化し、`Usa.Smart.Navigation` 3.10.0 で Pop 時に遷移先が上からスライドインすることを実機確認済み / 連打=例外にならない。内容は `Change_Summary.md` 区間10「遷移効果(Effect)デモの追加」を参照。
 
 ### 7-2. `Usa.Smart.Results` の活用 — **2026-09-07 全項目完了**
 
 7-2-1(自前 `Models/Result.cs` 撤去 + `NetworkError`)/ 7-2-2(`ExpressionCalculator` → `Result<double>`)/ 7-2-3(`CropDrawing.ExportCrop` → `Result<(int,int)>`)/ 7-2-5(対象外の確定)とも完了。7-2-4 の `ScpTransferResult` は**対応不要**。Network > Get server time は失敗経路・成功経路(ローカル起動した `WorkMauiServer` で確認)とも確認済み。詳細は `Change_Summary.md` 区間10「`Usa.Smart.Results` の採用」を参照。
 
-### 7-3. `Usa.Smart.Data.Mapper` → `Usa.Smart.Data.Accessor` への移行
+### 7-3. `Usa.Smart.Data.Mapper` → `Usa.Smart.Data.Accessor` への移行 — **2026-09-07 完了**
 
-**調査結果**: v3 は **`[DataAccessor]` 付き partial class + partial メソッドをソースジェネレータが実装展開**する方式(v2 の interface + リフレクション方式は廃止)。`IsAotCompatible=true` で、**実 SQLite に対する AOT テスト**(`Smart.Data.Accessor.AotTests`)もあり MAUI/トリミングとの相性は良好。むしろ現行の `SqlHelper`(`NullabilityInfoContext` によるリフレクション DDL 生成)が消えるぶん改善。SQLite は標準 Builder 属性(コアパッケージ同梱)で利用でき、MySql/Postgres/SqlServer パッケージは方言拡張専用。
-
-現行規模: **エンティティ 3 型・SQL 17 本・動的 SQL ゼロ(全て静的 CRUD)・呼び出し側 18 箇所**。シグネチャ互換で置換できるため移行自体は機械的。
-
-**着手前に潰すべき前提が 2 つある**:
-
-- [ ] **7-3-0**【要対応・ブロッカー】`Usa.Smart.Data.Accessor.Extensions.DependencyInjection` の **3.0.0-beta8 がローカルフィードに存在しない**(あるのは beta7 と、古い `3.0.0`=Smart.Data 2.10.0 依存)。SemVer 上 `3.0.0 > 3.0.0-beta8` のため**素直に入れると古い版を掴む罠**。beta8 を pack するかバージョン固定するかを決める
-- [ ] **7-3-1** 土台のみ投入して **MAUI/Android でソースジェネレータと `.sql` の `AdditionalFiles` 取り込みが動くことを先に確認**(空の `[DataAccessor]` クラス 1 個でビルド)。**移行の最大の不確実性はここ**
-- [ ] **7-3-2** `DateTimeTypeHandler` を `IValueConverter<long, DateTime>` へ移植し、クラススコープ `[TypeHandler]` で適用(グローバル設定 `SqlMapperConfig.Default.ConfigureTypeHandlers` は廃止)。※`GuidTypeHandler` は**どのエンティティにも Guid が無く実質デッドコード**のため移植不要
-- [ ] **7-3-3** 読み取り系 4 メソッドを移行(`DataService` はラッパとして残し呼び出し側は無変更)
-- [ ] **7-3-4** 更新系(非トランザクション)を移行。`InsertDataAsync` の `SQLITE_CONSTRAINT` 判定はラッパ側に残す
-- [ ] **7-3-5** トランザクション系 2 メソッド。**`IDbProvider` パターンは複数メソッドを 1 トランザクションで括れない**ため、`DbTransaction` を引数で渡す形にし `UsingTx` は `DataService` に残す
-- [ ] **7-3-6** DDL(`SqlHelper.MakeCreate<T>()`)を `.sql` ファイル化(PRAGMA 3 本 + CREATE TABLE 3 本)
-- [ ] **7-3-7** `Usa.Smart.Data.Mapper` / `.Builders` の参照・`TrimmerRootAssembly`・`SqlHelper.cs`・TypeHandler 2 種・エンティティの `[PrimaryKey]` を撤去
-- [ ] **7-3-8** 実機確認(Data 画面 / Edit 画面 / 初回起動の DB 再構築 / Bulk 10,000 件)
-
-> **既知の落とし穴**: ①`Data.Mapper.Builders` はテーブル名から `Entity` サフィックスを自動除去する(`DataEntity`→`Data`)が、**Accessor にこの機能は無い**。Builder 属性に `Table = "Data"` を明示しないと実行時まで気付けない ②TypeHandler の適用範囲がグローバル→アクセサクラス単位に変わるため、アクセサを分割するなら `[AccessorProfile]` + `[ExecuteConfig]` で共有する ③エンティティ型は XAML のコンパイル済みバインドやナビゲーションパラメータを跨ぐため、**改名・再形状化はスコープ外**(属性の差し替えのみに留める)
+`Services/DataAccessor.cs`(`[DataAccessor]`、18 メソッド)へ移行し、`DataService` は公開シグネチャを変えず DI から受け取る `IDbProvider` / `DataAccessor` に委譲するラッパとして残した(呼び出し側 18 箇所は無変更)。DI 拡張パッケージは不要(7-3-0 のブロッカーは解消)。`Data.Mapper` / `.Builders` の参照と `SqlHelper` / TypeHandler 2 種は撤去。Builder 属性の `Table = "..."` はエンティティクラスの `[Name]` へ置き換え、`DataServiceOptions` は `IDbProvider` の登録へ統合済み(3.0.0-beta10)。`DataAccessor` の DI 登録は `[DataAccessorRegistration]` の生成メソッド `AddDataAccessors` に置き換え済み(3.0.0-beta11)。実機確認済み(起動時の DB 再構築 / Data 画面の CRUD と Bulk 10,000 件 / Edit 画面の一覧・新規・更新・削除 / Network > Data list の洗い替え保存)。詳細は `Change_Summary.md` 区間10「`Usa.Smart.Data.Accessor` への移行」を参照。
 
 ### 7-4. `Usa.Smart.Mapper` の活用 — **2026-09-07 完了(採用)**
 

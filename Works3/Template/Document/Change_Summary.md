@@ -881,6 +881,31 @@ ScpPassword=********
 
 # 10. fix3 以降(次のタグまでの変更)
 
+### `Usa.Smart.Data.Accessor` への移行(Task_Checklist 7-3。2026-09-07)
+
+`[DataAccessor]` 付き partial class の partial メソッドをソースジェネレータが ADO.NET コードへ展開する方式(3.0.0-beta11)へ移行し、`Usa.Smart.Data.Mapper` / `.Builders` を撤去した。
+
+| 対象 | 内容 |
+|---|---|
+| `Services/DataAccessor.cs`(新規) | 17 メソッド。CRUD は Builder 属性(`[Insert]` / `[Update]` / `[Delete]` / `[SelectSingle]` / `[Count]`。テーブル名はエンティティクラスの `[Name]` から解決)、それ以外は `Services/Sql/DataAccessor.{メソッド名}.sql`(6 本: PRAGMA 3 文と CREATE TABLE 3 文は `;` 区切りで各 1 ファイル、ORDER BY 付き SELECT 2 本、採番付き INSERT、UPDATE)。初期化(`ExecutePragmaAsync` / `CreateTablesAsync`)は `DbConnection` 引数、トランザクション系(`InsertBulkData` / `InsertWorkAsync`)は `DbTransaction` 引数で呼び出し側の接続を使う |
+| `Services/DataService.cs` | 公開シグネチャは維持し、DI から受け取る `IDbProvider` / `DataAccessor` に委譲するラッパに変更。`SQLITE_CONSTRAINT` の判定と `UsingTx` / `UsingTxAsync` によるトランザクションはこちらに残す。`ReplaceWorkEnumerableAsync`(全件削除 + 追加を 1 トランザクションで行う洗い替え)を追加。`QueryAllBulkDataList` の戻り値は `IReadOnlyList<T>` |
+| `Models/Entity/*.cs` | クラスに `[Name("Data")]` / `[Name("BulkData")]` / `[Name("Work")]`(Builder のテーブル名)。`[PrimaryKey]` → `[Key]`(複合キーは `[Key(n)]`)。`DataEntity.CreateAt` に `[TypeHandler(typeof(DateTimeTicksConverter))]` |
+| `Helpers/Data/DateTimeTicksConverter.cs`(新規) | `IValueConverter<long, DateTime>`(UTC ticks で保存。旧 `DateTimeTypeHandler` と同じ変換) |
+| 削除 | `Helpers/Data/SqlHelper.cs`(リフレクションによる DDL 生成)、`DateTimeTypeHandler.cs`、`GuidTypeHandler.cs`(Guid プロパティを持つエンティティが無く未使用) |
+| `MauiProgram.cs` / csproj | `IDbProvider`(`DelegateDbProvider`。DB のパスは `IStorageManager` から組み立てて接続文字列にする。`DataServiceOptions` は廃止し、`DataService.RebuildAsync` が削除するファイルのパスは `IDbProvider.CreateConnection()` の `DataSource` から得る)を DI 登録。`DataAccessor` の登録は `[DataAccessorRegistration]` を付けた partial メソッド `AddDataAccessors`(3.0.0-beta11 のソースジェネレータが `AddSingleton<DataAccessor>(services, static p => new DataAccessor(p.GetRequiredService<IDbProvider>()))` の実装を生成)で行い、`services.AddDataAccessors()` を呼ぶ。`SqlMapperConfig` の TypeHandler 登録を削除。`Usa.Smart.Data.Mapper` / `.Builders` の `PackageReference` と `TrimmerRootAssembly` を削除。`Usa.Smart.Data.Accessor.Extensions.DependencyInjection` は使用しない |
+
+**実装上の注意(ライブラリの動作)**
+- SQL ファイル名は `{クラス名}.{メソッド名}.sql`(無い場合は SDA0401)。3.0.0-beta9 からは `Async` サフィックスを除いた名前でも一致する(beta8 までは完全一致)。`**/Sql/*.sql` はパッケージの targets が `AdditionalFiles` として自動登録するため csproj の変更は不要
+- `[Sql]` によるインライン SQL は使わず、必ず `.sql` ファイルにする
+- 1 ファイル内の `;` 区切りの複数文はそのまま 1 つの `CommandText` になり、`Microsoft.Data.Sqlite` が順に実行する(`PRAGMA journal_mode=WAL` の戻り行は `ExecuteNonQuery` で無視される)
+- `[Select]` Builder は ORDER BY を付けない(必要なら SQL ファイル)。`[Delete]` Builder は引数なしだと WHERE なしの全件削除になる。Builder のテーブル名は `Table = "..."` → エンティティクラスの `[Name]`(3.0.0-beta10 から) → クラス名(`Entity` サフィックスは除去されない)の順で決まる
+- `[TypeHandler]` はエンティティのプロパティ単位で、Builder の INSERT(`ToDb`)と行マッピング(`FromDb`)の両方に適用される
+- 生成コードは `-p:EmitCompilerGeneratedFiles=true` で `obj/Debug/net10.0-android/generated/Smart.Data.Accessor.Generator/` に出力して確認できる(通常ビルドでは削除される)
+
+- ビルド 0 エラー 0 警告。実機(Pixel 9a)で確認: 起動時の DB 再構築(PRAGMA / DDL の複数文実行)、Data 画面の Insert(重複時は Key duplicate)・Query(`CreateAt` の UTC ticks 往復)・Update・Delete・BulkInsert 10,000 件(461ms)・QueryAll・DeleteAll、Navigation > Edit の一覧・新規(採番 #5)・更新・削除。端末から取り出した DB ファイルを直接読んで行の状態も確認
+- `[Name]` への置き換えと `DataServiceOptions` 廃止後(3.0.0-beta10)も実機で再確認: 生成 SQL のテーブル名が `"Data"` / `"BulkData"` / `"Work"` になること、起動時の DB 再構築(旧ファイルの削除と再作成、Work に Sample-1〜4)、Data 画面の Insert・Query・Update・Delete・BulkInsert・DeleteAll、Edit 画面の一覧
+- `[DataAccessorRegistration]` の生成メソッドへ切り替え後(3.0.0-beta11)も実機で再確認: 生成された `MauiProgram.Registration.g.cs` の登録内容、BunnyTail の生成ファクトリ(`DataService`)が `DataAccessor` を依存として解決すること、起動時の DB 再構築、Data 画面の Insert・Query・BulkInsert・DeleteAll、Edit 画面の一覧
+
 ### `Usa.Smart.Mapper` の採用(Task_Checklist 7-4。2026-09-07)
 
 `[Mapper]` 付き `static partial` メソッドをソースジェネレータが展開する方式(1.0.0-beta8)。マッパーは `Models/ObjectMapper.cs` に集約する。
@@ -889,8 +914,8 @@ ScpPassword=********
 |---|---|
 | `Models/ObjectMapper.cs` | `Map(SwitchBotTemperature source, SwitchBotTemperature destination)`(既存インスタンスへの上書き)と `ToWorkEntity(DataListResponseEntry source)`(生成。Id は int→long の暗黙変換)。属性指定なしの同名自動マッピングのみ |
 | `Models/Sample/SwitchBotTemperature.cs` / `Modules/Device/DeviceBleScanViewModel.cs` | 手書きの `CopyTo` 拡張メソッドを削除し `ObjectMapper.Map(data, current)` へ |
-| `Usecase/NetworkUsecase.cs` | `GetDataListAsync` で取得した一覧を `ToWorkEntity` で変換して Work テーブルへ保存し、件数をダイアログ表示(`DataService` を注入) |
-| `Services/DataService.cs` | `SaveWorkEnumerableAsync`(`INSERT OR REPLACE` をトランザクションで実行) |
+| `Usecase/NetworkUsecase.cs` | `GetDataListAsync` で取得した一覧を `ToWorkEntity` で変換し、Work テーブルを洗い替え(全件削除 + 追加)してから件数をダイアログ表示(`DataService` を注入) |
+| `Services/DataService.cs` | `ReplaceWorkEnumerableAsync`(全件削除 + 追加を 1 トランザクションで実行) |
 
 - ジェネレータは `this` 付きの拡張メソッド形には対応していない(通常の static メソッドとして呼ぶ)
 - 生成コードは `-p:EmitCompilerGeneratedFiles=true` で `obj/.../generated/` に出力して確認(インクリメンタルビルドでは出力されないためソースの更新が必要)。`Map` は 6 プロパティの代入、`ToWorkEntity` は `new WorkEntity()` + Id/Name の代入
@@ -918,7 +943,7 @@ ScpPassword=********
 - 表示値の反映は `OnNavigatingToAsync` で行う(`OnNavigatedToAsync` はアニメーション完了後に呼ばれる)。`Navigator` は `CreateView` 時に注入済み
 - スタック上にあるかの判定は `context.Attribute.IsStacked() || Navigator.StackedCount > 1`(Push で積まれる場合と、積まれた状態からの Forward(Replay)の両方)。Replay 後の Back も `PopAsync` になりスタックにビューが残らない
 - 連打による二重遷移は起きない。footer ボタンは `MakeAsyncCommand` の BusyState 連動で遷移中は BusyOverlay がタップを吸収、ハードウェア Back は `BusyState.IsBusy` で抑止、アニメ中のビューは Provider が `InputTransparent` にする
-- 標準の Slide 系効果(Forward/Back/Push/Pop)は `Usa.Smart.Navigation.Maui` 3.9.0 では Open/Close のみ対応(Push (Stack) では遷移元が即座に消え、Pop では遷移先が即座に現れる)。`Smart-Net-Navigation` 側で MAUI/WPF/Avalonia の Slide 効果を 4 フェーズ化済み(3.9.0 より後の版で反映。Task_Checklist 7-1-5)
+- 標準の Slide 系効果(Forward/Back/Push/Pop)は `Usa.Smart.Navigation.Maui` 3.9.0 では Open/Close のみ対応(Push (Stack) では遷移元が即座に消え、Pop では遷移先が即座に現れる)。`Smart-Net-Navigation` 側で MAUI/WPF/Avalonia の Slide 効果を 4 フェーズ化し、3.10.0 へ更新した実機で Pop 時に遷移先が上からスライドインすることを確認済み
 
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で 13 ボタン全経路(標準 6 / 独自 4 / Stack 2 / Plugin 1)+ Replay(通常・スタック時)+ card Back / footer Back / ハードウェア Back を確認。4 フェーズ化版の Slide は修正版 DLL の直接参照で Pop 時に復帰側が上からスライドインすることを確認済み
 
@@ -946,6 +971,12 @@ ScpPassword=********
 - **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)
 - `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
 - `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
+
+## C. この区間のナレッジ
+
+- **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
+- ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
+- 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
 
 ---
 
