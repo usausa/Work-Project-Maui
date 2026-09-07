@@ -85,13 +85,6 @@
                 <Setter Property="HeightRequest" Value="48" />
             </Style>
 
-            <Style x:Key="CenterHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -123,9 +116,6 @@
                 <Button Style="{StaticResource CloseButton}"
                         Command="{Binding CloseCommand}"
                         Text="Close" />
-
-                <Label Style="{StaticResource CenterHintLabel}"
-                       Text="No effect was specified by the caller.&#x0a;DialogEffectPlugin applied it from [DialogView]." />
 
             </VerticalStackLayout>
         </Border>

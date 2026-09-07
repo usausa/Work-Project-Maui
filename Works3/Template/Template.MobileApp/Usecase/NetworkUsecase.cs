@@ -13,16 +13,20 @@ public sealed class NetworkUsecase
 
     private readonly ApiContext apiContext;
 
+    private readonly DataService dataService;
+
     public NetworkUsecase(
         IDialog dialog,
         IStorageManager storageManager,
         NetworkOperator networkOperator,
-        ApiContext apiContext)
+        ApiContext apiContext,
+        DataService dataService)
     {
         this.dialog = dialog;
         this.storageManager = storageManager;
         this.networkOperator = networkOperator;
         this.apiContext = apiContext;
+        this.dataService = dataService;
     }
 
     //--------------------------------------------------------------------------------
@@ -47,7 +51,10 @@ public sealed class NetworkUsecase
         var result = await networkOperator.ExecuteVerbose(static n => n.GetDataListAsync());
         if (result.IsSuccess)
         {
-            await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]");
+            // 取得した一覧を Work テーブルへ保存する (Navigation > Edit で確認できる)
+            await dataService.InsertWorkEnumerableAsync(result.Value.Entries.Select(ObjectMapper.ToWorkEntity));
+
+            await dialog.InformationAsync($"Get success.\r\ncount=[{result.Value.Entries.Length}]\r\nSaved to Work table.");
         }
     }
 

@@ -92,13 +92,6 @@
                 <Setter Property="HeightRequest" Value="48" />
             </Style>
 
-            <Style x:Key="CenterHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -117,8 +110,7 @@
 
                 <Grid RowDefinitions="Auto,Auto,Auto"
                       ColumnDefinitions="Auto,*"
-                      RowSpacing="8"
-                      ColumnSpacing="16">
+                      ColumnSpacing="16" RowSpacing="8">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource ItemNameLabel}"
                            Text="Played" />
@@ -152,9 +144,6 @@
                             Command="{Binding ReplayCommand}"
                             Text="Replay" />
                 </Grid>
-
-                <Label Style="{StaticResource CenterHintLabel}"
-                       Text="Back → return with the paired effect&#x0a;Replay → open again with the same effect" />
 
             </VerticalStackLayout>
         </Border>

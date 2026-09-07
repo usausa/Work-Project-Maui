@@ -306,9 +306,9 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 | `Usa.Smart.Navigation(.Maui)` | 3.9.0 | 使用中(Effect 機構も 2026-09-07 から使用) | 7-1 **完了** |
 | `Usa.Smart.Results` | 2.2.0 | 使用中(2026-09-06 から。自前 `Models/Result.cs` は撤去) | 7-2 **完了** |
 | `Usa.Smart.Data.Accessor` | 3.0.0-beta8 | **0 件**(`Data.Mapper` 2.16.0 を使用中) | 7-3 |
-| `Usa.Smart.Mapper` | 1.0.0-beta8 | **0 件**(2023-07 追加以来ずっと未使用) | 7-4 |
+| `Usa.Smart.Mapper` | 1.0.0-beta8 | 使用中(2026-09-07 から。`Models/ObjectMapper.cs`) | 7-4 **完了** |
 
-**残りの推奨着手順**: 7-4(小・要判断)→ 7-3(大・前提整備が必要)。7-1 / 7-2 は完了(内容・実機確認結果・ハマりどころは `Change_Summary.md` 区間10 に記録)。
+**残り**: 7-3(大・前提整備が必要)のみ。7-1 / 7-2 / 7-4 は完了(内容・実機確認結果は `Change_Summary.md` 区間10 に記録)。
 
 ### 7-1. アニメーション付き画面遷移 — **2026-09-07 全項目完了**
 
@@ -318,9 +318,7 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 
 ### 7-2. `Usa.Smart.Results` の活用 — **2026-09-07 全項目完了**
 
-7-2-1(自前 `Models/Result.cs` 撤去 + `NetworkError`)/ 7-2-2(`ExpressionCalculator` → `Result<double>`)/ 7-2-3(`CropDrawing.ExportCrop` → `Result<(int,int)>`)/ 7-2-5(対象外の確定)とも完了。7-2-4 の `ScpTransferResult` は**対応不要**。詳細は `Change_Summary.md` 区間10「`Usa.Smart.Results` の採用」を参照。
-
-- [ ] **7-2-6** Network > Get server time の**成功経路**のみ API サーバが必要なため未確認(失敗経路は確認済み)。サーバが用意できた時点で確認する
+7-2-1(自前 `Models/Result.cs` 撤去 + `NetworkError`)/ 7-2-2(`ExpressionCalculator` → `Result<double>`)/ 7-2-3(`CropDrawing.ExportCrop` → `Result<(int,int)>`)/ 7-2-5(対象外の確定)とも完了。7-2-4 の `ScpTransferResult` は**対応不要**。Network > Get server time は失敗経路・成功経路(ローカル起動した `WorkMauiServer` で確認)とも確認済み。詳細は `Change_Summary.md` 区間10「`Usa.Smart.Results` の採用」を参照。
 
 ### 7-3. `Usa.Smart.Data.Mapper` → `Usa.Smart.Data.Accessor` への移行
 
@@ -342,15 +340,8 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 
 > **既知の落とし穴**: ①`Data.Mapper.Builders` はテーブル名から `Entity` サフィックスを自動除去する(`DataEntity`→`Data`)が、**Accessor にこの機能は無い**。Builder 属性に `Table = "Data"` を明示しないと実行時まで気付けない ②TypeHandler の適用範囲がグローバル→アクセサクラス単位に変わるため、アクセサを分割するなら `[AccessorProfile]` + `[ExecuteConfig]` で共有する ③エンティティ型は XAML のコンパイル済みバインドやナビゲーションパラメータを跨ぐため、**改名・再形状化はスコープ外**(属性の差し替えのみに留める)
 
-### 7-4. `Usa.Smart.Mapper` の活用
+### 7-4. `Usa.Smart.Mapper` の活用 — **2026-09-07 完了(採用)**
 
-**調査結果**: 想定していた実行時 API(`SmartMapper` / `MapperConfig` / `IMapper`)は**削除済み**で、現在は **`[Mapper]` を付けた `static partial` メソッドをソースジェネレータが実装展開する方式**。DI 登録は不要(静的メソッドのため `MauiProgram` の変更もゼロ)。リフレクション・式木を使わず、AOT 非安全な経路に落ちると **SMP0402 でコンパイルエラー**になるため実行時に黙って壊れる余地がない。**このアプリの `[ObservableProperty] public partial` プロパティに対して正常動作することは実ビルドで検証済み**。
-
-**ただし適用候補が乏しい**: このアプリは**エンティティを直接 UI にバインドする設計**で Entity→ViewModel の変換層が無く、API レスポンスも変換せず直接消費している。全 526 ファイルを走査した結果、マッピング形状の箇所は 10 件程度で、**明確な置き換え候補は 1 件のみ**だった。
-
-- [ ] **7-4-0**【判断】**使うか、参照を消すか**を決める。現在 1.0.0-beta8(正式版前)を 2023-07 から未使用のまま参照しており、テンプレートとして良くない状態。採用しないなら csproj の `PackageReference` と `TrimmerRootAssembly` の 2 行を削除する
-- [ ] **7-4-1** 置き換え(採用する場合): `Models/Sample/SwitchBotTemperature.cs` の `CopyTo` 拡張メソッド(**6/6 プロパティが変換ロジックなしの単純コピー**)を `[Mapper]` 化。呼び出し元は `DeviceBleScanViewModel.cs` 1 箇所
-- [ ] **7-4-2**【判断】使用例の追加(採用する場合の本命): `Models/Api/DataListResponseEntry`(Id int, Name string)と `Models/Entity/WorkEntity`(Id long, Name string)が**ほぼ同形なのに変換コードが無い**。ここに「API レスポンス → DB エンティティ」の変換を足すと、型変換(int↔long)・`[MapProperty]` の名前解決・`[MapConstant]`/`[MapExpression]` による `CreateAt` 補完まで 1 画面で見せられる。置き場所は Data 画面(既に CRUD ボタンが並ぶ)が最適
-- [ ] **7-4-3** 対象外の確認(記録): `MonthViewBuilder` / `DeviceInfoViewModel`(ソースが 3 つ)/ `GraphBuilder` / `ScheduleService` / NFC・BLE のバイト列パース等は、**置き換えるとコード量が増え可読性が落ちる**ため見送り。`Select` 射影 28 件にオブジェクト間マッピングは 1 件も無い
+`Models/ObjectMapper.cs` に集約。A(`SwitchBotTemperature` の `CopyTo` → `ObjectMapper.Map`)と B(`DataListResponseEntry` → `WorkEntity` の変換。Network > Data list の取得結果を Work テーブルへ保存し Navigation > Edit で確認できる)を実装、実機確認済み。以下は見送り(記録): `Modules/Main/SettingViewModel.cs`(同名 3 + 算出 1)/ `Modules/Device/DeviceInfoViewModel.cs`(3 ソース・全件別名)/ `Services/ScheduleService.cs` の `GetStamps`(ループ由来の値あり)/ `Modules/Navigation/Modal/InputNumberViewModel.cs`(3 行)。内容と確認結果は `Change_Summary.md` 区間10「`Usa.Smart.Mapper` の採用」を参照。
 
 > **紛らわしい点**: `Usa.Smart.Mapper`(オブジェクトマッパー。ソース= `D:\GitHub\Smart-Net-Mapper`)と `Usa.Smart.Data.Mapper`(SQL マイクロ ORM。ソース= `D:\GitHub\Smart-Net-Data-Mapper`)は**別物**。7-3 で移行するのは後者。

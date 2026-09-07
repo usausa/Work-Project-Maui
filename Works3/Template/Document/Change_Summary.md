@@ -881,6 +881,21 @@ ScpPassword=********
 
 # 10. fix3 以降(次のタグまでの変更)
 
+### `Usa.Smart.Mapper` の採用(Task_Checklist 7-4。2026-09-07)
+
+`[Mapper]` 付き `static partial` メソッドをソースジェネレータが展開する方式(1.0.0-beta8)。マッパーは `Models/ObjectMapper.cs` に集約する。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/ObjectMapper.cs` | `Map(SwitchBotTemperature source, SwitchBotTemperature destination)`(既存インスタンスへの上書き)と `ToWorkEntity(DataListResponseEntry source)`(生成。Id は int→long の暗黙変換)。属性指定なしの同名自動マッピングのみ |
+| `Models/Sample/SwitchBotTemperature.cs` / `Modules/Device/DeviceBleScanViewModel.cs` | 手書きの `CopyTo` 拡張メソッドを削除し `ObjectMapper.Map(data, current)` へ |
+| `Usecase/NetworkUsecase.cs` | `GetDataListAsync` で取得した一覧を `ToWorkEntity` で変換して Work テーブルへ保存し、件数をダイアログ表示(`DataService` を注入) |
+| `Services/DataService.cs` | `SaveWorkEnumerableAsync`(`INSERT OR REPLACE` をトランザクションで実行) |
+
+- ジェネレータは `this` 付きの拡張メソッド形には対応していない(通常の static メソッドとして呼ぶ)
+- 生成コードは `-p:EmitCompilerGeneratedFiles=true` で `obj/.../generated/` に出力して確認(インクリメンタルビルドでは出力されないためソースの更新が必要)。`Map` は 6 プロパティの代入、`ToWorkEntity` は `new WorkEntity()` + Id/Name の代入
+- ビルド 0 エラー 0 警告。実機(Pixel 9a)で `WorkMauiServer` をローカル起動(`dotnet run --no-launch-profile --urls http://127.0.0.1:5000`)+ `adb reverse tcp:5000 tcp:5000` + 端末の `ApiEndPoint` を `http://localhost:5000/` にして Network > Data list を実行 → 「count=[10] Saved to Work table.」→ Navigation > Edit の一覧に Data-1〜Data-10 を確認。`Map` は生成コードが旧 `CopyTo` と同一であることで確認
+
 ### 遷移効果(Effect)デモの追加(Task_Checklist 7-1。2026-09-07)
 
 `Usa.Smart.Navigation.Maui` の Effect 機構(`IMauiNavigationEffect` + `NavigationParameter.WithEffect`)によるアニメーション付き画面遷移を Navigation 配下の新規 3 画面で示す。既存画面は変更しない。
@@ -924,7 +939,7 @@ ScpPassword=********
 - **名前衝突の解消が前提だった**: `global using Template.MobileApp.Models;` があるため、自前の `Result` を残したまま `global using Smart.Results;` を足すと CS0104 になる。`Models/Result.cs` の削除とセットで実施
 - 対象外として確定: `SettingParser.TryGetXxx`(BCL 慣習)/ `LineReaderWriter.TryReadLine`(`ref` ホットパス)/ 成否を含まない多値タプル / `ExpressionCalculator` 内部の例外(境界で結果型に変換済み)
 - `Services/ScpService.cs` の `ScpTransferResult` は対応不要(`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に嵌まらない)。現状の record のまま維持する
-- ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)。Network の成功経路のみ API サーバが必要なため未確認
+- ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)と成功経路(ローカル起動した `WorkMauiServer` + `adb reverse` で「Get success. time=[...]」。2026-09-07 確認)
 
 ### 旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
 
