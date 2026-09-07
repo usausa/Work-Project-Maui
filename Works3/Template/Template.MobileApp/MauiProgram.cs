@@ -39,6 +39,7 @@ using Syncfusion.Maui.Toolkit.Hosting;
 using Template.MobileApp.Behaviors;
 using Template.MobileApp.Components;
 using Template.MobileApp.Extender;
+using Template.MobileApp.Extender.Effects;
 using Template.MobileApp.Helpers;
 using Template.MobileApp.Helpers.Data;
 using Template.MobileApp.Modules;
@@ -293,8 +294,9 @@ public static partial class MauiProgram
         // Navigator
         services.AddNavigator(static (_, config) =>
         {
-            config.UseMauiNavigationProvider();
+            config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
             config.AddPlugin<NavigationFocusPlugin>();
+            config.AddPlugin(new DialogEffectPlugin(ViewSource()));
             config.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
 

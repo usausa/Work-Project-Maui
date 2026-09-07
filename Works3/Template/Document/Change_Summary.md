@@ -881,6 +881,32 @@ ScpPassword=********
 
 # 10. fix3 以降(次のタグまでの変更)
 
+### 遷移効果(Effect)デモの追加(Task_Checklist 7-1。2026-09-07)
+
+`Usa.Smart.Navigation.Maui` の Effect 機構(`IMauiNavigationEffect` + `NavigationParameter.WithEffect`)によるアニメーション付き画面遷移を Navigation 配下の新規 3 画面で示す。既存画面は変更しない。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Navigation/Effect/EffectMenuView(+ViewModel)` | 効果選択メニュー(9 段×2 列)。標準 6 効果(Forward/Back/Push/Pop/Fade/None)とアプリ定義 4 効果(Zoom/Drop/Flip/Rotate)は `ForwardAsync(Demo, WithEffect(key))`、Push (Stack)/Fade (Stack) は `PushAsync`、Dialog (Plugin) は効果未指定の `ForwardAsync` |
+| `Modules/Navigation/Effect/EffectDemoView(+ViewModel)` | 再生した効果・戻りの効果・遷移種別(Forward / Push (stacked))を表示。Back は対になる効果(`AppEffect.Reverse`: Forward↔Back / Push↔Pop / 他は同一)で `PopAsync` または `ForwardAsync`、Replay は同じ効果で自分自身へ Forward |
+| `Modules/Navigation/Effect/EffectDialogView(+ViewModel)` | `[DialogView]` 属性付きのダイアログ風画面。呼び出し側は効果を指定せず、Plugin が付与した効果名を表示 |
+| `Extender/Effects/AppEffect.cs` | 効果キー定数(Zoom/Drop/Flip/Rotate/DialogOpen/DialogClose)+ `Reverse()` |
+| `Extender/Effects/{Zoom,Drop,Flip,Rotate,Dialog}Effect.cs` | `IMauiNavigationEffect` 実装。Zoom=拡大+フェード、Drop=上から落下(`Easing.BounceOut`)/上へ抜け、Flip=`RotationY` の 3D 回転、Rotate=回転+フェード、DialogEffect=開き側/閉じ側の片側効果(`open` 引数)。いずれも 4 フェーズ(Open/Close/Activate/Deactivate)対応 |
+| `Extender/Effects/NavigationProviderOptionsExtensions.cs` | `RegisterAppEffects()` でアプリ定義 6 効果を登録 |
+| `Extender/DialogEffectPlugin.cs` / `Extender/DialogViewAttribute.cs` | `PluginBase.OnPrepareParameter` で効果未指定時に `[DialogView]` 付き ViewId への遷移→DialogOpen、からの遷移→DialogClose を自動付与。判定用の ViewId 集合は `ViewSource()` から属性で抽出 |
+| `MauiProgram.cs` | `UseMauiNavigationProvider(static options => options.RegisterAppEffects())`、`AddPlugin(new DialogEffectPlugin(ViewSource()))` |
+| `MainPage.xaml` | コンテナの `AbsoluteLayout` に `IsClippedToBounds="True"`(効果再生中のビューをヘッダ/フッタへ重ねない。MAUI の Layout は既定でクリップしない) |
+| `Modules/ViewId.cs` / `NavigationMenuView.xaml` | `NavigationEffectMenu/Demo/Dialog` を追加、Navigation メニュー 6 行目に「🍒 Effect」 |
+
+**実装上の注意(ライブラリの動作)**
+- `ForwardStrategy.UpdateStackAsync` は Open(新)と Close(旧)を `Task.WhenAll` で同時再生し、新ビューは `Children.Add` で常に手前になる。閉じる側だけが動く効果(DialogClose)は再生前に `ZIndex = 1` へ上げる
+- 表示値の反映は `OnNavigatingToAsync` で行う(`OnNavigatedToAsync` はアニメーション完了後に呼ばれる)。`Navigator` は `CreateView` 時に注入済み
+- スタック上にあるかの判定は `context.Attribute.IsStacked() || Navigator.StackedCount > 1`(Push で積まれる場合と、積まれた状態からの Forward(Replay)の両方)。Replay 後の Back も `PopAsync` になりスタックにビューが残らない
+- 連打による二重遷移は起きない。footer ボタンは `MakeAsyncCommand` の BusyState 連動で遷移中は BusyOverlay がタップを吸収、ハードウェア Back は `BusyState.IsBusy` で抑止、アニメ中のビューは Provider が `InputTransparent` にする
+- 標準の Slide 系効果(Forward/Back/Push/Pop)は `Usa.Smart.Navigation.Maui` 3.9.0 では Open/Close のみ対応(Push (Stack) では遷移元が即座に消え、Pop では遷移先が即座に現れる)。`Smart-Net-Navigation` 側で MAUI/WPF/Avalonia の Slide 効果を 4 フェーズ化済み(3.9.0 より後の版で反映。Task_Checklist 7-1-5)
+
+- ビルド 0 エラー 0 警告。実機(Pixel 9a)で 13 ボタン全経路(標準 6 / 独自 4 / Stack 2 / Plugin 1)+ Replay(通常・スタック時)+ card Back / footer Back / ハードウェア Back を確認。4 フェーズ化版の Slide は修正版 DLL の直接参照で Pop 時に復帰側が上からスライドインすることを確認済み
+
 ### `Usa.Smart.Results` の採用(Task_Checklist 7-2 の実施。2026-09-06)
 
 **参照だけあって未使用だった `Usa.Smart.Results` 2.2.0 を実際に使うようにし、自前の劣化版を撤去した**。
@@ -897,7 +923,7 @@ ScpPassword=********
 
 - **名前衝突の解消が前提だった**: `global using Template.MobileApp.Models;` があるため、自前の `Result` を残したまま `global using Smart.Results;` を足すと CS0104 になる。`Models/Result.cs` の削除とセットで実施
 - 対象外として確定: `SettingParser.TryGetXxx`(BCL 慣習)/ `LineReaderWriter.TryReadLine`(`ref` ホットパス)/ 成否を含まない多値タプル / `ExpressionCalculator` 内部の例外(境界で結果型に変換済み)
-- `Services/ScpService.cs` の `ScpTransferResult` は **対応不要で確定**(2026-09-07 ユーザー決定)。`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に素直に嵌まらず、fingerprint をサービスのプロパティへ逃がすリファクタが必要になるため、現状の record のまま維持する
+- `Services/ScpService.cs` の `ScpTransferResult` は対応不要(`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に嵌まらない)。現状の record のまま維持する
 - ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)。Network の成功経路のみ API サーバが必要なため未確認
 
 ### 旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)

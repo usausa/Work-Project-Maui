@@ -297,49 +297,30 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 
 ## 7. Smart ライブラリの活用(2026-09-06 予備調査済み)
 
-ユーザー指示による 4 件。**予備調査は完了済み**(各項の内容は調査結果に基づく事実。ライブラリのソースは `D:\GitHub\Smart-Net-*`)。
+4 件。**予備調査は完了済み**(ライブラリのソースは `D:\GitHub\Smart-Net-*`)。
 
 **全項目に共通する前提**: 4 件中 3 件は **csproj に `PackageReference` と `TrimmerRootAssembly` が既にあり、コードからは 1 箇所も使われていない**「参照だけ入っている」状態だった。したがって作業は*パッケージ追加*ではなく **「使う」または「参照を消す」の二択**から始まる。
 
 | ライブラリ | 参照中の版 | コードでの使用 | 対応 |
 | --- | --- | --- | --- |
-| `Usa.Smart.Navigation(.Maui)` | 3.9.0 | 使用中(Effect 機構が未使用) | 7-1 |
-| `Usa.Smart.Results` | 2.2.0 | **0 件**(自前 `Models/Result.cs` で代用中) | 7-2 |
+| `Usa.Smart.Navigation(.Maui)` | 3.9.0 | 使用中(Effect 機構も 2026-09-07 から使用) | 7-1 **完了** |
+| `Usa.Smart.Results` | 2.2.0 | 使用中(2026-09-06 から。自前 `Models/Result.cs` は撤去) | 7-2 **完了** |
 | `Usa.Smart.Data.Accessor` | 3.0.0-beta8 | **0 件**(`Data.Mapper` 2.16.0 を使用中) | 7-3 |
 | `Usa.Smart.Mapper` | 1.0.0-beta8 | **0 件**(2023-07 追加以来ずっと未使用) | 7-4 |
 
-**推奨着手順**: 7-2(小・効果明確)→ 7-1(小・新機能)→ 7-4(小・要判断)→ 7-3(大・前提整備が必要)。
+**残りの推奨着手順**: 7-4(小・要判断)→ 7-3(大・前提整備が必要)。7-1 / 7-2 は完了(内容・実機確認結果・ハマりどころは `Change_Summary.md` 区間10 に記録)。
 
-### 7-1. アニメーション付き画面遷移(Navigation へ新規画面を追加)
+### 7-1. アニメーション付き画面遷移 — **2026-09-07 全項目完了**
 
-**調査結果**: ライブラリに **Effect 機構**が実装済み。`IMauiNavigationEffect` + `NavigationParameter.WithEffect(key)` で、Provider がページ切替の前後に効果を await する仕組み。標準 6 種(None/Forward/Back/Push/Pop/Fade)は **`UseMauiNavigationProvider()` が自動登録済み**のため `MauiProgram` の変更は不要。エフェクトは**非同期経路のみ**(`ForwardAsync`/`PushAsync`/`PopAsync`)で走るが、アプリ側は既に全面的に非同期 API を使用しているため**そのまま有効**。既存画面の変更も不要(効果は呼び出し側のパラメータ指定のみ)。
+7-1-1(メニュー+デモ画面)/ 7-1-2(カスタム効果 Zoom/Drop/Flip/Rotate + Dialog 片側効果)/ 7-1-3(`DialogEffectPlugin` による自動付与)/ 7-1-4(実機確認)とも完了。要注意点 3 件の結果: はみ出し=`IsClippedToBounds` をアプリ側で設定 / Slide 系の Activate・Deactivate 素通り=ライブラリ側で 4 フェーズ化済み(リリース待ち)/ 連打=例外にならない。内容は `Change_Summary.md` 区間10「遷移効果(Effect)デモの追加」を参照。
 
-- MAUI 用のサンプルはライブラリに無く、**WPF の `Example.WindowsApp\Modules\Effect\`(メニュー+デモ画面+カスタム効果 5 種+自動付与プラグイン)が 1:1 の移植元**。`IWindowsNavigationEffect`→`IMauiNavigationEffect`、`DoubleAnimation`→`TranslateToAsync`/`FadeToAsync` の置換で移植できる
-- 追加に必要なのは 1 画面あたり **View.xaml / View.xaml.cs / ViewModel の 3 ファイル + `Modules/ViewId.cs` への enum 追加 + メニューボタン**のみ(DI 登録と ViewId マッピングは `[ComponentRegistration]` / `[ViewSource]` で自動)
-- Navigation メニュー(`NavigationMenuView.xaml`)に**空き行が 3 行**(6〜8 行目)ある
+- [ ] **7-1-5** `Usa.Smart.Navigation` / `.Maui` を Slide 4 フェーズ化版(3.9.0 より後の版)へ更新したら、Push (Stack) で遷移元が下へスライドアウトし、Pop で遷移先が上からスライドインすることを実機で再確認する(アプリ側の変更は不要)
 
-- [ ] **7-1-1** 効果選択メニュー + 遷移先デモ画面を追加(標準 6 効果を切り替えて体感できる形。目安 2〜4h)
-- [ ] **7-1-2**(任意)カスタム効果の追加(WPF 例の Zoom/Drop/Flip/Rotate 相当)。`UseMauiNavigationProvider(options => options.RegisterEffect(...))` へ差し替えが必要
-- [ ] **7-1-3**(任意)遷移元/先の型で効果を自動選択するプラグイン(`PluginBase.OnPrepareParameter`)
-- [ ] **7-1-4** 実機確認。**次の 3 点は既知の要注意点**:
-  - コンテナの `AbsoluteLayout`(`MainPage.xaml`)に `IsClippedToBounds` が無く、**スライド中にヘッダへはみ出す可能性**(対策は当該 AbsoluteLayout に直接 `IsClippedToBounds="True"`。共有スタイルは変更しない)
-  - 標準の Slide 効果は **Open/Close のみ対応で Activate/Deactivate は素通り**(= `PushAsync`/`PopAsync` では片側が無音になる)。4 フェーズ対応は Fade のみ
-  - アニメ中(250ms)の連打で `Navigator is already executing.` 例外の可能性(要実機確認)
+### 7-2. `Usa.Smart.Results` の活用 — **2026-09-07 全項目完了**
 
-### 7-2. `Usa.Smart.Results` の活用
+7-2-1(自前 `Models/Result.cs` 撤去 + `NetworkError`)/ 7-2-2(`ExpressionCalculator` → `Result<double>`)/ 7-2-3(`CropDrawing.ExportCrop` → `Result<(int,int)>`)/ 7-2-5(対象外の確定)とも完了。7-2-4 の `ScpTransferResult` は**対応不要**。詳細は `Change_Summary.md` 区間10「`Usa.Smart.Results` の採用」を参照。
 
-**調査結果**: `Result` / `Result<T>` / `Error` / `Maybe<T>` を提供する `readonly struct` ベースのライブラリ。依存パッケージなし・`IsAotCompatible=true`・リフレクション不使用で**トリミング対応は不要**。アプリには**自前の劣化版 `Models/Result.cs`(`IResult<T>` + `Result.Success/Failed`)があり、5 ファイル 19 箇所で使用中**。
-
-- **`global using Template.MobileApp.Models;` があるため `Result` 名が衝突(CS0104)する**。したがって **7-2-1(自前 Result.cs の撤去)は他の作業の前提**
-- 現状 `NetworkOperator` は `NetworkErrorKind` と `StatusCode` を算出しているのに `Result.Failed<T>()` で**失敗理由を捨てている**。`Error` 派生型に載せれば呼び出し側まで理由が届く
-
-- [x] **7-2-1** 自前 `Models/Result.cs` を撤去し `Smart.Results` へ置き換え(2026-09-06 完了)。`GlobalUsing.cs` に `global using Smart.Results;` 追加。**失敗理由を `NetworkError(Kind, Status)`(`Error` 派生)で伝えるように変更**(従来は `Result.Failed<T>()` で理由を破棄していた)。応答自体が無い場合は `Result.Failure<T>("Network is unavailable.")`(string→Error の暗黙変換)
-- [x] **7-2-2** `ExpressionCalculator.Evaluate` を `Result<double>` へ(2026-09-06 完了)。`CalculationResult` は削除。VM 側は `result.IsSuccess` / `result.Error.Message`(`MemberNotNullWhen` により else 節で非 null 確定)
-- [x] **7-2-3** `CropDrawing.ExportCrop` の `(0,0)` センチネルを `Result<(int Width, int Height)>` へ(2026-09-06 完了)。消費側は `TryGetValue(out var size)` でマジックナンバー判定を排除
-- [x] **7-2-4**【判断】`Services/ScpService.cs` の `ScpTransferResult` → **2026-09-07 ユーザー決定: 対応不要**。`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に素直に嵌まらず、fingerprint をサービスのプロパティへ逃がすリファクタが必要になるため。現状の record のまま維持する
-- [x] **7-2-5** 対象外の確認(記録): `SettingParser.TryGetXxx`(BCL 慣習)/ `LineReaderWriter.TryReadLine`(`ref` ホットパス)/ 成否を含まない多値タプル(`(X,Y)` 等)/ `ExpressionCalculator` 内部の例外は**現状維持**で確定
-
-> **7-2 の実施結果(2026-09-06)**: ビルド 0 エラー 0 警告。実機確認済み — ①電卓の成功(`2+3×4`→`14`)と失敗(不完全な式→「式が不完全です」= `Error.Message` 表示)②Crop の書き出し(`143 x 134 px / 43,767 bytes`)③Network の失敗経路(接続不可 → タイムアウト → エラーダイアログ表示・成功ダイアログは出ない)。**Network の成功経路のみ API サーバが必要なため未確認**(2 節で扱う)。**7-2 は 2026-09-07 に全項目完了**(7-2-4 は対応不要で確定)。
+- [ ] **7-2-6** Network > Get server time の**成功経路**のみ API サーバが必要なため未確認(失敗経路は確認済み)。サーバが用意できた時点で確認する
 
 ### 7-3. `Usa.Smart.Data.Mapper` → `Usa.Smart.Data.Accessor` への移行
 
