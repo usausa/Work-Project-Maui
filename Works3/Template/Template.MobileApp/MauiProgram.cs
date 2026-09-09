@@ -253,9 +253,6 @@ public static partial class MauiProgram
 
     private static void ConfigureComponents(IServiceCollection services)
     {
-        // Startup
-        services.AddSingleton<Startup>();
-
         // View & ViewModel
         services.AddTransient<MainPage>();
         services.AddTransient<MainPageViewModel>();

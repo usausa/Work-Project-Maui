@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.App"
              x:Class="Template.MobileApp.Modules.App.AppMenuView"
@@ -20,13 +19,13 @@
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId AppCalc}"
                 Text="Calculator"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Calculate}}" />
+                ImageSource="{x:Static markup:AppIcons.Calculate}" />
         <Button Grid.Row="1"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId AppGame}"
                 Text="Sudoku"
-                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Grid_on}}" />
+                ImageSource="{x:Static markup:AppIcons.GridOn}" />
         <Button Grid.Row="2"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False" />
