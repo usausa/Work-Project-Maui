@@ -35,6 +35,10 @@ public sealed partial class App
         // Report previous exception
         await CrashReport.ShowReport();
 
+        // Prepare static resources
+        var startup = serviceProvider.GetRequiredService<Startup>();
+        await startup.PrepareAsync();
+
         // Initialize database
         var initializeError = await InitializeDataAsync();
         if (initializeError is not null)
@@ -54,6 +58,9 @@ public sealed partial class App
 
         // Completed
         serviceProvider.GetRequiredService<StartupState>().NotifyCompleted();
+
+        // Warmup remaining resources
+        await startup.WarmupAsync();
     }
 
     private async Task<Exception?> InitializeDataAsync()

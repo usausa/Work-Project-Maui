@@ -1007,9 +1007,78 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - `ILayoutManagerFactory` は「自分で継承できない型(標準の `Grid` / `StackLayout` や他社ライブラリのレイアウト)のマネージャを差し替える」ためのフックで、自作レイアウトには不要。MAUI の `Layout.LayoutManager` は `GetLayoutManagerFromFactory(this) ?? CreateLayoutManager()` の順で解決する
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で View > Layout の CircularLayout / StaggeredGrid / CascadeStackLayout の 3 カードを確認
 
+### アイコンフォントのプリロード(2026-09-08 / 2026-09-09 対象拡大)
+
+初回表示の画面でボタンのアイコンが遅れて入り、文字位置が動いて見える問題への対処。
+
+| 対象 | 内容 |
+|---|---|
+| `Startup.cs`(新規) | 起動時に用意する static なリソースをまとめる。`PrepareAsync` は Typeface(`IFontManager.GetTypeface`)と最初の画面のグリフ、`WarmupAsync` は残りのボタンアイコンを `IImageSourceServiceProvider` 経由で温める。`FontImageSource` の指定は XAML と揃える(キャッシュのキーにサイズと色が含まれるため)。色は `Application.Current.Resources` から解決する。所要時間を Debug ログへ出力 |
+| `App.xaml.cs` | DB 初期化の前に `Startup.PrepareAsync`、`StartupState.NotifyCompleted()` の後に `Startup.WarmupAsync` を呼ぶ。業務データの初期化と起動完了の通知は App 側に残す |
+| `MauiProgram.cs` | `Startup` を DI へ登録 |
+| `Log.cs` | `DebugFontWarmup` を追加 |
+
+対象は XAML の `Button.ImageSource` に指定している全 88 グリフ。サイズと色の組み合わせ毎に温める。
+
+| 指定 | グリフ数 | 温めるタイミング |
+|---|---|---|
+| Material / 24 / White(`markup:MenuIcon`)のうち MenuView 分 | 11 | 初期表示前 |
+| Material / 24 / White の残り | 57 | 初期表示後 |
+| Material / 18 / BlueGrayDarken1 | 17 | 初期表示後 |
+| Material / 18 / RedDefault | 1 | 初期表示後 |
+| Material / 18 / GreenDefault | 1 | 初期表示後 |
+| Material / 36 / White | 1 | 初期表示後 |
+
+- `Button.ImageSource`(`FontImageSource`)は `ImageSourcePartLoader.UpdateImageSourceAsync` が await を挟むため**最初のレイアウトに間に合わない**。アイコンが後から入ると `ContentLayout="Top"` の構成が変わり、文字が下へ動く
+- **グリフのビットマップはキャッシュされる**。同じ集合を続けて 2 回読むと 2 回目は 134ms → 11ms になる
+- Button 側は `ImageSourcePartExtensions.UpdateSourceAsync` から `GetDrawableAsync(imageSource, context)` を呼ぶ。温め側も同じ経路を使う
+- 型名 `Startup` は `AndroidX.Startup` 名前空間と競合するため、`App` と同じく CA1724 を `#pragma` で抑止している
+- FluentUI は `Label.Text` でのみ使っており `ImageSource` には無いため、グリフの温めは Material だけ。Typeface は両方生成する
+- グリフの要求は `Task.WhenAll` で並列に投げ、初期表示後の分は 16 件毎に区切って UI スレッドを長く占有しないようにする
+- 実測(Pixel 9a、6 回)
+
+| 段階 | 内容 | 実測 |
+|---|---|---|
+| Typeface | 2 フォント | 13〜14ms(起動をブロック) |
+| glyph(startup) | 11 グリフ | 113〜139ms、多くは 115ms(起動をブロック) |
+| glyph(rest) | 77 グリフ | 186〜244ms、多くは 190ms(初期表示の後ろで実行) |
+
+- glyph(startup) の大半は経路構築の固定費で、グリフ数にはあまり依存しない
+- Menu 表示直後にタップしても遷移は遅くならない(tap→Navigated 225 / 262 / 265ms。ブロックしない場合の基準値は 278〜290ms)
+- 根治する場合は `Button.ImageSource` をやめ、アイコン用とテキスト用の `Label` を並べる構成にする(未実施)
+- ビルド 0 エラー 0 警告。実機で Menu / UI 1 / UI 2 / Device > Misc の表示を確認
+
+### フッターボタンのタッチフィードバックの終端(2026-09-08)
+
+UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く見える問題への対処。
+
+| 対象 | 内容 |
+|---|---|
+| `Extender/NavigationFeedbackPlugin.cs`(新規) | `OnNavigatedTo` でページのプラットフォームビューへ `JumpDrawablesToCurrentState()` を呼び、実行中のタッチフィードバックを終端する(`ViewGroup` は子孫へ伝播する) |
+| `MauiProgram.cs` | `AddPlugin<NavigationFeedbackPlugin>()` を追加 |
+
+- フッターのボタンは `MainPage.xaml` にあり、ページ差し替えを跨いで生存する。ページ内のボタンは遷移で破棄されるためリップルもそこで止まるが、フッターボタンは**新しい画面の上で再生が続いていた**。UI 1 と UI 2 の相互遷移はフッター経由しか無いため、2 画面目だけが遅く見えていた。`Menu` は `FunctionVisible="False"` でフッターごと消えるため元から発生しない
+- 遷移完了までの時間は変わらない。ページ生成で UI スレッドが約 200ms ブロックされ、タッチフィードバックの開始もその分遅れる(遷移のたびに遷移先を作り直しており、UI メニュー 1 画面あたり `MaterialButton` を 27 個生成する)
+- 実測(Pixel 9a、UI 1 → UI 2): リップルの描画が tap+196ms〜1032ms から tap+168ms〜352ms になり、ページ内ボタンのタップ(tap+197ms〜385ms)と同じ長さになった
+
+タップから最後のフレームまでの時間。
+
+| 遷移 | 変更前 | 変更後 |
+|---|---|---|
+| Menu → UI 1 | 292ms | 341ms |
+| Menu → UI 2 | 268ms | 244ms |
+| UI 1 → UI 2 | 899ms | 439ms |
+| UI 2 → UI 1 | 905ms | 431ms |
+| UI 1 → Menu | 242ms | 200ms |
+| UI 2 → Menu | 256ms | 197ms |
+
+- ビルド 0 エラー 0 警告。実機で Menu / UI 1 / UI 2 / UILogin / BasicMenu の遷移を確認
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
+- **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
+- **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
 - ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
 - 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
 
