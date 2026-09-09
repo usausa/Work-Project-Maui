@@ -89,10 +89,11 @@
                 Text="Chat"
                 ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Smart_toy}}" />
         <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId SampleSfChart}"
-                Text="Sf Chart" />
+                Text="Sf Chart"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Insert_chart}}" />
 
         <Button Grid.Row="6" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"

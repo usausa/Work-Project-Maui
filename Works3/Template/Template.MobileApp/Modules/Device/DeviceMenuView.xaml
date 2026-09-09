@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceMenuView"
@@ -16,101 +17,119 @@
           RowDefinitions="*,*,*,*,*,*,*,*,*"
           ColumnDefinitions="*,*">
         <Button Grid.Row="0" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceInfo}"
-                Text="Info" />
+                Text="Info"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Info}}" />
         <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceStatus}"
-                Text="Status" />
+                Text="Status"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Assessment}}" />
 
         <Button Grid.Row="1" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceSensor}"
-                Text="Sensor" />
+                Text="Sensor"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Sensors}}" />
         <Button Grid.Row="1" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceLocation}"
-                Text="Location" />
+                Text="Location"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Location_on}}" />
 
         <Button Grid.Row="2" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceQrDisplay}"
-                Text="QR Display" />
+                Text="QR Display"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Qr_code}}" />
         <Button Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceQrScan}"
-                Text="QR Scan" />
+                Text="QR Scan"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Qr_code_scanner}}" />
 
         <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceCamera}"
-                Text="Camera" />
+                Text="Camera"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Photo_camera}}" />
         <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceOcr}"
-                Text="OCR" />
+                Text="OCR"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Document_scanner}}" />
 
         <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="WiFi" />
+                Text="WiFi"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Wifi}}" />
         <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceBluetooth}"
-                Text="Bluetooth" />
+                Text="Bluetooth"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bluetooth}}" />
 
         <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceBleScan}"
-                Text="BLE Scan" />
+                Text="BLE Scan"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bluetooth_searching}}" />
         <Button Grid.Row="5" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceBleHost}"
-                Text="BLE Host" />
+                Text="BLE Host"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Bluetooth_connected}}" />
 
         <Button Grid.Row="6" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceNfc}"
-                Text="NFC" />
+                Text="NFC"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Nfc}}" />
         <Button Grid.Row="6" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceAudio}"
-                Text="Audio" />
+                Text="Audio"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Volume_up}}" />
 
         <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceActivity}"
-                Text="Activity" />
+                Text="Activity"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Directions_run}}" />
         <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 IsEnabled="False"
-                Text="Biometric" />
+                Text="Biometric"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Fingerprint}}" />
 
         <Button Grid.Row="8" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceCommunication}"
-                Text="Communication" />
+                Text="Communication"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Cell_tower}}" />
         <Button Grid.Row="8" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId DeviceMisc}"
-                Text="Misc" />
+                Text="Misc"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.More_horiz}}" />
     </Grid>
 
 </ContentView>

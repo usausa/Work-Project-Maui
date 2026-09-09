@@ -1018,12 +1018,12 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 | `MauiProgram.cs` | `Startup` を DI へ登録 |
 | `Log.cs` | `DebugFontWarmup` を追加 |
 
-対象は XAML の `Button.ImageSource` に指定している全 88 グリフ。サイズと色の組み合わせ毎に温める。
+対象は XAML の `Button.ImageSource` に指定している全 140 グリフ。サイズと色の組み合わせ毎に温める。
 
 | 指定 | グリフ数 | 温めるタイミング |
 |---|---|---|
 | Material / 24 / White(`markup:MenuIcon`)のうち MenuView 分 | 11 | 初期表示前 |
-| Material / 24 / White の残り | 57 | 初期表示後 |
+| Material / 24 / White の残り | 109 | 初期表示後 |
 | Material / 18 / BlueGrayDarken1 | 17 | 初期表示後 |
 | Material / 18 / RedDefault | 1 | 初期表示後 |
 | Material / 18 / GreenDefault | 1 | 初期表示後 |
@@ -1035,18 +1035,37 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - 型名 `Startup` は `AndroidX.Startup` 名前空間と競合するため、`App` と同じく CA1724 を `#pragma` で抑止している
 - FluentUI は `Label.Text` でのみ使っており `ImageSource` には無いため、グリフの温めは Material だけ。Typeface は両方生成する
 - グリフの要求は `Task.WhenAll` で並列に投げ、初期表示後の分は 16 件毎に区切って UI スレッドを長く占有しないようにする
-- 実測(Pixel 9a、6 回)
+- 実測(Pixel 9a、3 回)
 
 | 段階 | 内容 | 実測 |
 |---|---|---|
-| Typeface | 2 フォント | 13〜14ms(起動をブロック) |
-| glyph(startup) | 11 グリフ | 113〜139ms、多くは 115ms(起動をブロック) |
-| glyph(rest) | 77 グリフ | 186〜244ms、多くは 190ms(初期表示の後ろで実行) |
+| Typeface | 2 フォント | 13ms(起動をブロック) |
+| glyph(startup) | 11 グリフ | 116ms(起動をブロック) |
+| glyph(rest) | 129 グリフ | 228〜232ms(初期表示の後ろで実行) |
 
-- glyph(startup) の大半は経路構築の固定費で、グリフ数にはあまり依存しない
+- glyph(startup) の大半は経路構築の固定費で、グリフ数にはあまり依存しない。ただし画像のディスクキャッシュが溜まると伸びる(同じ 11 グリフで 116ms → 170ms まで観測。`pm clear` 後は 116ms に戻る)
 - Menu 表示直後にタップしても遷移は遅くならない(tap→Navigated 225 / 262 / 265ms。ブロックしない場合の基準値は 278〜290ms)
 - 根治する場合は `Button.ImageSource` をやめ、アイコン用とテキスト用の `Label` を並べる構成にする(未実施)
 - ビルド 0 エラー 0 警告。実機で Menu / UI 1 / UI 2 / Device > Misc の表示を確認
+
+### メニュー画面のアイコン追加(2026-09-09)
+
+アイコンの無かったメニュー画面にアイコンを付け、`Button.ImageSource` の指定を全メニューで揃える。
+
+| 画面 | 追加数 |
+|---|---|
+| `Modules/Device/DeviceMenuView.xaml` | 18 |
+| `Modules/View/ViewMenuView.xaml` | 17 |
+| `Modules/Network/NetworkMenuView.xaml` | 11 |
+| `Modules/Basic/BasicMenuView.xaml` | 9 |
+| `Modules/App/AppMenuView.xaml` | 2 |
+| `Modules/Sample/SampleMenuView.xaml` | 1(Sf Chart のみ未設定だった) |
+
+- 指定は既存と同じ `markup:MenuIcon`(Material / 24 / White)。スタイルは `MenuButton` から `MenuIconButton` へ変更し、`xmlns:fonts` を追加する
+- 可視の無効ボタン(空セル)は対象外。`DeviceMenu` の WiFi / Biometric は項目名を持つ無効ボタンなのでアイコンを付ける
+- `Modules/Navigation/NavigationMenuView.xaml` はラベル先頭の果物の絵文字をそのまま使うため対象外
+- 追加分は `Startup.cs` のウォームアップ対象に反映する(Material / 24 / White が 68 → 120 グリフ)
+- ビルド 0 エラー 0 警告。実機で Basic / Device / Network / View / App の表示を確認
 
 ### フッターボタンのタッチフィードバックの終端(2026-09-08)
 
@@ -1077,6 +1096,7 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
+- **`pm clear` は Debug ビルドのアプリを起動不能にする**。Fast Deployment のアセンブリは `/data/user/0/<pkg>/files/.__override__/<abi>` に置かれるため、データ消去で一緒に消えて `No assemblies found in ...__override__` で abort する(APK 内にはアセンブリが無い)。**再デプロイ(`-t:Install`)で復旧**する。併せて実行時パーミッションも全て取り消されるので `pm grant` で戻す
 - **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
 - **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
 - ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない

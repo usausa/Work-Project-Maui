@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              x:Class="Template.MobileApp.Modules.View.ViewMenuView"
@@ -17,102 +18,119 @@
           ColumnDefinitions="*,*">
 
         <Button Grid.Row="0" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewCollection}"
-                Text="Collection" />
+                Text="Collection"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.View_list}}" />
         <Button Grid.Row="0" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewLayout}"
-                Text="Layout" />
+                Text="Layout"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.View_quilt}}" />
 
         <Button Grid.Row="1" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewCarousel}"
-                Text="Carousel" />
+                Text="Carousel"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.View_carousel}}" />
         <Button Grid.Row="1" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewRefresh}"
-                Text="Refresh" />
+                Text="Refresh"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Refresh}}" />
 
         <Button Grid.Row="2" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewBorder}"
-                Text="Border" />
+                Text="Border"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Border_style}}" />
         <Button Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewShadow}"
-                Text="Shadow" />
+                Text="Shadow"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Blur_on}}" />
 
         <Button Grid.Row="3" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewAnimation}"
-                Text="Animation" />
+                Text="Animation"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Animation}}" />
         <Button Grid.Row="3" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewEasing}"
-                Text="Easing" />
+                Text="Easing"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Show_chart}}" />
 
         <Button Grid.Row="4" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewLottie}"
-                Text="Lottie" />
+                Text="Lottie"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Movie_filter}}" />
         <Button Grid.Row="4" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewSvg}"
-                Text="Svg" />
+                Text="Svg"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Image}}" />
 
         <Button Grid.Row="5" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewGraphics}"
-                Text="Graphics" />
+                Text="Graphics"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Brush}}" />
         <Button Grid.Row="5" Grid.Column="1"
                 Style="{StaticResource MenuButton}"
                 IsEnabled="False"
                 Text="" />
 
         <Button Grid.Row="6" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewDrawing}"
-                Text="Drawing" />
+                Text="Drawing"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Draw}}" />
         <Button Grid.Row="6" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewDragDrop}"
-                Text="DragDrop" />
+                Text="DragDrop"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Drag_indicator}}" />
 
         <Button Grid.Row="7" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewEffect}"
-                Text="Effect" />
+                Text="Effect"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Auto_awesome}}" />
         <Button Grid.Row="7" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewState}"
-                Text="State" />
+                Text="State"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Toggle_on}}" />
 
         <Button Grid.Row="8" Grid.Column="0"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewToolkit}"
-                Text="Toolkit" />
+                Text="Toolkit"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Handyman}}" />
         <Button Grid.Row="8" Grid.Column="1"
-                Style="{StaticResource MenuButton}"
+                Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
                 CommandParameter="{markup:ViewId ViewCustom}"
-                Text="Custom" />
+                Text="Custom"
+                ImageSource="{markup:MenuIcon {x:Static fonts:MaterialIcons.Extension}}" />
     </Grid>
 
 
