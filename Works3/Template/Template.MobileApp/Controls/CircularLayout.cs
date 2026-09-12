@@ -204,7 +204,7 @@ public sealed class CircularLayout : Layout
         }
 
         // 円の中心を原点とした、全ての子を含む外接矩形
-        private static Rect ComputeExtent(double[] angles, double radius, double maxChild)
+        private static Rect ComputeExtent(IEnumerable<double> angles, double radius, double maxChild)
         {
             var minX = Double.PositiveInfinity;
             var maxX = Double.NegativeInfinity;

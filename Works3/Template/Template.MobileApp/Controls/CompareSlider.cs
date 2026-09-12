@@ -10,14 +10,12 @@ public sealed class CompareSlider : ContentView
         nameof(BeforeContent),
         typeof(View),
         typeof(CompareSlider),
-        null,
         propertyChanged: static (bindable, _, newValue) => ((CompareSlider)bindable).beforeHost.Content = newValue as View);
 
     public static readonly BindableProperty AfterContentProperty = BindableProperty.Create(
         nameof(AfterContent),
         typeof(View),
         typeof(CompareSlider),
-        null,
         propertyChanged: static (bindable, _, newValue) => ((CompareSlider)bindable).afterHost.Content = newValue as View);
 
     public static readonly BindableProperty PositionProperty = BindableProperty.Create(
