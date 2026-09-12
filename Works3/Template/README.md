@@ -34,21 +34,17 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Character.png" />
 <img width="25%" src="Document/UI_Shop.png" />
 <img width="25%" src="Document/UI_Cart.png" />
-<img width="25%" src="Document/UI_Pet.png" />
+<img width="25%" src="Document/UI_Monster.png" />
 </p>
 
 # TODO
 
-- Device
-  - [ ] **WiFi manager**
-  - [ ] Biometric
-- UI
-  - [ ] **Bottom sheet**
-- Other
-  - [ ] **Cognitive service**
-  - [ ] **Chat AI**
-  - [ ] Push -> Hybrid?
-  - [ ] Local notification -> Hybrid?
+| Category | Feature |
+| --- | --- |
+| Device | **WiFi manager** / Biometric |
+| View | Grid control(Table) |
+| UI | **Bottom sheet** |
+| Other | **Cognitive service** / **Chat AI** / Push -> Hybrid? / Local notification -> Hybrid? |
 
 # Implement
 
@@ -62,5 +58,5 @@ Template project for MAUI.
 | View | Collection / Layout / Carousel / Refresh / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State / Toolkit / Custom |
 | Sample | Web view / HybridWebView / Map / Map2 / Chart / SfChart / Media play / Markdown / PDF reader / Object detection(Local) / Chat / Crop |
 | App | Calculator / Sudoku |
-| UI | Login / Money / Super / POS / Shop / Item / Cart / Dock / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Profile / Character / Pet / Feel / Mail / Chat / Social / Stream / Schedule / Calendar / Timeline |
-| UI (Visualization) | Graph / Graph2 / TreeMap / Mixer / Meter / Gauge / Load / Radar / Flight / Tactical / Telemetry / Energy / Wheel |
+| UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Schedule / Calendar / Timeline / Mail / Chat / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
+| UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |

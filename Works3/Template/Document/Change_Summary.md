@@ -56,8 +56,8 @@
 | UITimeline | 日付 | 旧 `UITimelineSample`。進行中イベントのドット Pulse + ヘッダ/リストの FadeUp 入場 |
 | UIGraph | 可視化 | Git グラフ表現の可視化画面(`Resources/Raw/Graph/repository.json` を読み込み) |
 | UIGraph2 | 可視化 | 旧 `UITimeline`(Git グラフ別表現)を改名。リスト全体の FadeUp 入場 |
-| UIFeel | キャラ | 7つの hex セルのタップ選択(自系統色の枠3px + チェックバッジ移動)、中央→外周の Pop 開花入場 |
-| UIPet | キャラ | ステータスバー4本を ProgressBar 化 + `ProgressTo` による伸長アニメ、数値 CountUp、Heart ボタン結線(HP+5 / 上限400)、Add to Party トグル |
+| UIFeel(2026-09-12 廃止。hex 配置は `Controls/HoneycombLayout` として ViewLayout へ) | キャラ | 7つの hex セルのタップ選択(自系統色の枠3px + チェックバッジ移動)、中央→外周の Pop 開花入場 |
+| UIMonster(旧 UIPet) | キャラ | ステータスバー4本を ProgressBar 化 + `ProgressTo` による伸長アニメ、数値 CountUp、Heart ボタン結線(HP+5 / 上限400)、Add to Party トグル |
 | UIKitOnboard | Kit | Skip / Get Started 結線(→ Kit Dashboard)、ページスワイプでテキスト FadeIn |
 | UIKitSetting | Kit | Switch を ObservableProperty 化して実バインド、グループ FadeUp 段差 |
 | UIKitDash | Kit | メトリクス4カード Pop 段差、Heart Rate カード FadeUp、ベル未読ドット Pulse、リンク2カード Ripple |
@@ -1097,6 +1097,25 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 
 - ビルド 0 エラー 0 警告。実機で Menu / UI 1 / UI 2 / UILogin / BasicMenu の遷移を確認
 
+### 外部リファレンス評価 第2弾 N1 — 自作レイアウト / コントロールの追加(2026-09-10)
+
+`Document/Reference_Nova_Nalu.md`(Nova.Avalonia.UI / Nalu の評価)の N1-1〜N1-4。Nova.Avalonia.UI のパネル / コントロールを MAUI の `Layout` + `ILayoutManager` / `ContentView` で自作した。新規 NuGet なし。
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/OverlapPanel.cs`(新規) | 子を `OffsetX` / `OffsetY` でずらして重ねる `Layout`。`ReverseZIndex=true` で先頭の子が最前面(子の `ZIndex` を `OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で振り直す)。負のオフセットは逆方向へずらす |
+| `Controls/VariableSizeWrapPanel.cs`(新規) | 列数固定のタイルグリッド。添付 `ColumnSpan` / `RowSpan`、`Columns` / `RowHeight`(NaN で行毎に子の高さから自動)/ `Spacing`。空きセルは先頭から埋め戻す |
+| `Controls/CircularLayout.cs` | `StartAngle`(既定 -90)/ `SweepAngle`(既定 360)/ `DistributeEvenly`(既定 true)/ `FitToArc`(既定 false。`Radius` 指定時のみ有効)を追加。既定値では従来の全周配置と同じ |
+| `Controls/AvatarGroup.cs`(新規) | `OverlapPanel` ベースの重ねアバター。`ItemsSource`(画像名 / `ImageSource`)/ `ItemTemplate` / `MaxDisplayed` / `Overlap` / `ShowCount` / `AvatarSize` / `StrokeColor` / `CountBackgroundColor` / `CountTextColor`。超過分は「+N」、`INotifyCollectionChanged` の増減に追従 |
+| `Controls/CompareSlider.cs`(新規) | `BeforeContent` / `AfterContent` を仕切りのドラッグ(Pan)またはタップで見比べる。`Position`(0〜1、TwoWay)/ `Orientation` / `HandleColor` / `HandleSize`。After は `RectangleGeometry` でクリップ |
+| `Modules/UI/UIStreamDetailView.xaml` / VM | 「Friends watching」の重ねアバター(負の `Spacing` + 固定の「+3」)を `controls:AvatarGroup` に置き換え。VM に `Friends`(6 件)。スタイル 5 件を `FriendsAvatars` 1 件に集約 |
+| `Modules/UI/UIKitDashView.xaml` / VM | ハートカードと 2×2 のメトリクス(`Metrics[0..3]` の固定インデックス)を `VariableSizeWrapPanel`(Columns=2)1 つに統合。VM は `Tiles`(`UIKitDashHero` + `UIKitDashMetric`×4。`EnterDelay` はモデル側)を `BindableLayout` + `UIKitDashTileTemplateSelector` で流し込む。ハートカードは `ColumnSpan=2`。ヘッダへの -30 の重なりはパネル側の `Margin`(ハート→メトリクス間は 16→12) |
+| `Modules/Sample/SampleCvLocalView.xaml` | 撮影後の原画 `Image` + `DetectDrawing` を `CompareSlider`(Before=原画 / After=原画+検出枠)に変更。`DrawingControl` は `InputTransparent` |
+| `Modules/View/ViewLayoutView.xaml` | CircularLayout カードに半円(`StartAngle=180` / `SweepAngle=180` / `FitToArc`)の例、`VariableSizeWrapPanel`(Columns=3 で span 混在)/ `OverlapPanel`(カスケードと `ReverseZIndex` の円)のカードを追加(7 カード) |
+| `Modules/View/ViewCustomView.xaml` / VM | `AvatarGroup`(Add / Remove で「+N」の変化)/ `CompareSlider`(色フィルタの前後)のカードを追加(6 カード)。VM に `Avatars`(`ObservableCollection`)/ `ComparePosition` / `AddAvatarCommand` / `RemoveAvatarCommand` |
+
+- ビルド 0 エラー 0 警告(Debug)。実機確認は `Task_Checklist.md` 8 節
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1105,6 +1124,11 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 - **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
 - ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
 - 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
+- 自作 `Layout` の重なり順は Arrange 順では決まらない。子の `ZIndex` を `Layout.OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で設定する(`ZIndex` の変更はハンドラ側の並べ替えだけで再レイアウトは起きない)
+- `BindableLayout` はレイアウトの子を全て管理するため、静的な子と `ItemsSource` の子は同居できない。種別毎のモデル + `BindableLayout.ItemTemplateSelector` で 1 本にする。テンプレート毎の入場遅延はモデルのプロパティ(`EnterDelay`)にバインドする
+- `HeightRequest` を持つ子は `Fill` でもセルいっぱいに広がらない(`ComputeFrame` が明示サイズを優先する)。タイル用のスタイルには `HeightRequest` を持たせない
+- `GraphicsView` はタッチを消費する。親のジェスチャで受けたい重ね表示では `InputTransparent="True"` にする
+- Avalonia の `Panel`(`MeasureOverride` / `ArrangeOverride` / `StyledProperty` / `AttachedProperty`)は MAUI の `Layout` + `ILayoutManager` / `BindableProperty(.CreateAttached)` に対応する。配置を `DesiredSize` から決定的に再計算する形にすると `Measure` / `ArrangeChildren` で同じ詰め込みを共有できる
 
 ---
 
@@ -1177,6 +1201,9 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 | カード/チップ/ステップ | `controls:InfoCard`(Title/Icon/IconColor+Content)/ `controls:StatusChip`(Text/Icon/ChipColor/IconColor/TextColor)/ `controls:StepIndicator`(CurrentStep/TotalSteps/AccentColor) | 第2弾で新設した共通部品 |
 | 空状態 | `CollectionView.EmptyView` / 中央 VStack+円形アイコン(96)+説明の定型 | 0件/未取得/未実装の表示 |
 | その他 | `CameraOverlayView`(撮影ガイド枠)/ `MapBind`+`MapController(.MoveTo)` / `EasingCurveView` / `JetBrainsMono`(等幅数値)/ `NotoSerifJP`(Skia 日本語) | — |
+| 重ね配置 / 重ねアバター | `controls:OverlapPanel`(OffsetX/OffsetY/ReverseZIndex)/ `controls:AvatarGroup`(ItemsSource/MaxDisplayed/Overlap/AvatarSize/CountBackgroundColor/CountTextColor。超過分は「+N」) | カード束、視聴中フレンド等 |
+| 可変タイル / 円弧 | `controls:VariableSizeWrapPanel`(Columns/RowHeight/Spacing + 添付 ColumnSpan/RowSpan)/ `controls:CircularLayout`(Radius/StartAngle/SweepAngle/DistributeEvenly/FitToArc + 添付 Angle) | ダッシュボードのタイル、半円メニュー |
+| 比較 | `controls:CompareSlider`(BeforeContent/AfterContent/Position TwoWay/Orientation/HandleColor)。After 側の `GraphicsView` は `InputTransparent` にする | 検出前後・フィルタ前後 |
 
 ## 付録D. 外部リファレンス評価 決定・不採用アーカイブ(旧 Reference_Analysis.md / Reference_Summary.md より)
 

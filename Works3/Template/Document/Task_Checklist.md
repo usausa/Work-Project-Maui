@@ -7,6 +7,7 @@
 **2026-09-06: 実機確認(旧 1 節の 1-1〜1-12)が完了**したため、確認 OK の記述は削除し **NG 項目だけを 1 節に残した**。同日、**7 節(Smart ライブラリの活用・予備調査済み)を追加**。
 **現在の優先事項 = 1 節(実機確認の NG 5 件)→ 7 節(Smart ライブラリ活用)→ 6 節(`tmpl-plan-maui.md` 移管課題)**。以降は 2〜5 節。
 ※ 7 節は着手前に決める【判断】項目あり(7-3-0 パッケージ欠落 / 7-4-0 採用可否)。
+**2026-09-10: 8 節(外部リファレンス評価 第2弾。N1 は実装済みで実機確認待ち)を追加**。
 
 ## 運用ルール
 
@@ -327,3 +328,28 @@ Raw 2 件は**同名上書きのためコード変更不要**。各グループ�
 `Models/ObjectMapper.cs` に集約。A(`SwitchBotTemperature` の `CopyTo` → `ObjectMapper.Map`)と B(`DataListResponseEntry` → `WorkEntity` の変換。Network > Data list の取得結果を Work テーブルへ保存し Navigation > Edit で確認できる)を実装、実機確認済み。以下は見送り(記録): `Modules/Main/SettingViewModel.cs`(同名 3 + 算出 1)/ `Modules/Device/DeviceInfoViewModel.cs`(3 ソース・全件別名)/ `Services/ScheduleService.cs` の `GetStamps`(ループ由来の値あり)/ `Modules/Navigation/Modal/InputNumberViewModel.cs`(3 行)。内容と確認結果は `Change_Summary.md` 区間10「`Usa.Smart.Mapper` の採用」を参照。
 
 > **紛らわしい点**: `Usa.Smart.Mapper`(オブジェクトマッパー。ソース= `D:\GitHub\Smart-Net-Mapper`)と `Usa.Smart.Data.Mapper`(SQL マイクロ ORM。ソース= `D:\GitHub\Smart-Net-Data-Mapper`)は**別物**。7-3 で移行するのは後者。
+
+---
+
+## 8. 外部リファレンス評価 第2弾(`Reference_Nova_Nalu.md`。2026-09-10 追加)
+
+Nova.Avalonia.UI / Nalu の評価。N1(自作レイアウト / コントロール 4 件)は実装済み(`Change_Summary.md` 区間10「外部リファレンス評価 第2弾 N1」)。N2(chrome / プラットフォーム 4 件)と N3(【判断】11 件)は同書の番号で指示を受けて着手する。
+
+### 8-1. N1 の実機確認(Debug ビルド)
+
+| 画面 | 現在のファイル名 | 変更 |
+| --- | --- | --- |
+| View > Layout | `Modules/View/ViewLayoutView.xaml` | CircularLayout カードに半円の例、VariableSizeWrapPanel / OverlapPanel のカード追加(計 7 カード) |
+| View > Custom | `Modules/View/ViewCustomView.xaml` | AvatarGroup / CompareSlider のカード追加(計 6 カード) |
+| UI 1 > Stream → Detail | `Modules/UI/UIStreamDetailView.xaml` | Friends watching を AvatarGroup に置き換え |
+| UI 1 > Kit Dash | `Modules/UI/UIKitDashView.xaml` | ハートカード + メトリクスを VariableSizeWrapPanel に統合 |
+| Sample > Custom Vision(Local) | `Modules/Sample/SampleCvLocalView.xaml` | 撮影後の表示を CompareSlider に変更 |
+
+- [ ] **8-1-1** Layout: 半円が上向きの弧(左→上→右に 1〜5)でカード内に収まり、上下に余白が出ない。従来の全周 7 個(WEEK)は変化なし
+- [ ] **8-1-2** Layout: VariableSizeWrapPanel が 2×1 / 1×2 / 2×2 / 3×1 のタイルを隙間なく 5 行に詰める(1×2 が右端 2 段、2×2 が左下、3×1 が最下段)
+- [ ] **8-1-3** Layout: OverlapPanel 左=1→2→3 が右下へずれ後ろの番号が手前、右=青→緑→橙→灰の円で左(青)が最前面
+- [ ] **8-1-4** Custom: AvatarGroup が 4 人 +「+1」。Add で「+2」…最大 8 人、Remove で減り 4 人以下は「+N」が消える
+- [ ] **8-1-5** Custom: CompareSlider の仕切りをドラッグ / タップすると右側(青フィルタ)の範囲が変わり Position 表示が追従する。縦スクロールと競合しないか(競合する場合は N3-11① を先に実施)
+- [ ] **8-1-6** Stream Detail: Friends watching が 3 人 +「+3」(白枠 32px・半透明の「+3」)
+- [ ] **8-1-7** Kit Dash: ハートカードが全幅でヘッダに 30px 重なり、メトリクス 4 枚が 2 列で下に並ぶ。入場アニメ(FadeUp / Pop の段差)
+- [ ] **8-1-8** Custom Vision: Detect 後に仕切りが中央に出て、左=原画のみ / 右=検出枠付き。ドラッグで境界が動く。Retry で撮影に戻れる
