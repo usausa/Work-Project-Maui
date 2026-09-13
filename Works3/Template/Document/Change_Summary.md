@@ -1191,7 +1191,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で View > Layout の表示を確認
 
-### ステータスバーの画面追従(Task_Checklist 6-1。2026-09-13)
+### ステータスバーの画面追従(2026-09-13)
 
 `MainPage.xaml` の `toolkit:StatusBarBehavior` は起動時に `BlueDefault` + `LightContent` を 1 回適用するだけだったため、ヘッダの無い画面でも青い帯が残っていた。画面が `Title` / `Function` と同じ要領でステータスバーの色とアイコン色を宣言できるようにした。
 
@@ -1207,6 +1207,19 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - Android 15 以降は `Window.SetStatusBarColor` が効かないため、Toolkit は DecorView の最上部にステータスバーの高さの View を重ねて色を出す(`Transparent` のときだけ `LayoutNoLimits` + `SetDecorFitsSystemWindows(false)` で edge-to-edge)。`IScreen.SetFullscreen(true)` の画面(Dock)でもこの View は残るので、色を背景に合わせる
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Menu = 青、Dock = `#212121`、Social = 黒、Stream = 青(ヘッダあり)を確認し、各画面から戻ると青に復帰する
 
+### Edge-to-Edge / キーボードの確認(2026-09-13)
+
+`MainPage` の `SafeAreaEdges="Default"` とキーボード(ウィンドウ既定の `adjust=pan`)を実機(Pixel 9a / Android 17 / Debug)で確認し、いずれも**現状維持で確定**(付録D D26)。コード変更なし。
+
+| 確認点 | 結果 |
+|---|---|
+| フッタとナビゲーション領域 | ページの下 Padding = ジェスチャー 63px / 3 ボタン 126px。フッタ(下端 2361 / 2298)はナビ領域と重ならず、余白も出ない |
+| `mct:Popup` / `SfBottomSheet` | Popup は中央配置の別ウィンドウ、BottomSheet はページコンテナ内。インセットの影響なし |
+| ディスプレイカットアウト | 152px のステータス帯の中。ヘッダ(152〜278)に影響なし |
+| キーボード(現状 `adjust=pan`) | ウィンドウ全体がパンし(Validation 852px / Login 73px)、フォーカス中の `Entry` はキーボードの直上に保たれる。ヘッダは画面外、フッタはキーボードの下 |
+| `adjustResize` + `SafeAreaEdges="SoftInput"`(画面ルート) | `ScrollView` ルートはキーボードとの重なり分(880px)の下 Padding が付き全コンテンツをキーボード上へスクロールできるが、フォーカス中の `Entry` へは自動スクロールしない。固定 `Grid` ルート(Login)は内容が潰れる |
+| `InputNumberView` | 自前テンキーで `Entry` を持たず IME は出ない(対象外) |
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1214,7 +1227,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
 - **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
 - ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
-- - 予測型バック(D25 で現状維持): 自前の `OnBackPressedCallback` が有効なあいだはシステムのアニメーション(back-to-home / cross-activity)は出ない。`OnBackPressedDispatcher`(AndroidX Activity 1.9)が API 34+ で `OnBackAnimationCallback` を登録するため、最上位の有効なコールバックに `HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled` が届く。進捗はスワイプ 800px で約 0.7。**ボタン操作(3 ボタンナビ / `KEYCODE_BACK`)でも Android 17 では `Started` が `SwipeEdge = 2`(エッジなし)で来て、直後に `Pressed`、`Progressed` は来ない**
+- 予測型バック(D25 で現状維持): 自前の `OnBackPressedCallback` が有効なあいだはシステムのアニメーション(back-to-home / cross-activity)は出ない。`OnBackPressedDispatcher`(AndroidX Activity 1.9)が API 34+ で `OnBackAnimationCallback` を登録するため、最上位の有効なコールバックに `HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled` が届く。進捗はスワイプ 800px で約 0.7。**ボタン操作(3 ボタンナビ / `KEYCODE_BACK`)でも Android 17 では `Started` が `SwipeEdge = 2`(エッジなし)で来て、直後に `Pressed`、`Progressed` は来ない**
 - ジェスチャーの検証: ナビゲーションモードは `adb shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural`(戻すときは `...navbar.threebutton`。`settings get secure navigation_mode` で 2 = ジェスチャー / 0 = 3 ボタン)。途中で止める・戻す操作は `input motionevent DOWN 3 y` → `MOVE x y` を刻む → `UP`(`input swipe` は一気に完了する)。縮小量はスクショの要素端の位置から算出できる
 - 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
 - 自作 `Layout` の重なり順は Arrange 順では決まらない。子の `ZIndex` を `Layout.OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で設定する(`ZIndex` の変更はハンドラ側の並べ替えだけで再レイアウトは起きない)
@@ -1228,6 +1241,9 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
 - `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
 - `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
+- MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
+- `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る
+- `uiautomator dump` は IME ウィンドウの下にあるノードを出力しない(フォーカス中の `EditText` が出なければキーボードに隠れている)。IME の表示状態は `dumpsys input_method` の `mInputShown`
 
 ---
 
@@ -1309,7 +1325,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 51 件 (S-01〜S-51) を評価し、採用分は全て実装完了 (2026-09-01〜02)。QR ペイロード例や実装対象は各完了記録を参照。
 
-### 決定事項 (D1〜D25)
+### 決定事項 (D1〜D26)
 
 | # | 決定 |
 | --- | --- |
@@ -1336,8 +1352,9 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |
 | D23 | 第2弾 (`Reference_Nova_Nalu.md`) N1 は OverlapPanel + AvatarGroup / CircularLayout の円弧 / VariableSizeWrapPanel の 3 件を採用確定。**CompareSlider は撤去** (2026-09-13) |
-| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は `Task_Checklist.md` 6 節へ移し、`Reference_Nova_Nalu.md` は削除 |
+| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は 6-1 = 区間 10「ステータスバーの画面追従」/ D25 / D26 で完了、`Reference_Nova_Nalu.md` は削除 |
 | D25 | 予測型バック (第2弾 6-4) は**現状維持で確定** (2026-09-13)。エッジスワイプ / BACK ボタン / フッタの Back は同じ経路 (`ShellEvent.Back` → `OnNotifyBackAsync`。フッタは `OnNotifyFunction1` から同じメソッドへ) で遷移し、スワイプ進捗に連動する縮小表現は入れない |
+| D26 | Edge-to-Edge (第2弾 6-2) とキーボード (6-3) は**現状維持で確定** (2026-09-13)。`MainPage` は `SafeAreaEdges="Default"`、ウィンドウは既定の `adjust=pan` のまま、`IKeyboardState` は追加しない (確認結果は区間 10「Edge-to-Edge / キーボードの確認」) |
 
 ### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
