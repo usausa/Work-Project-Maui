@@ -1253,6 +1253,26 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: Sudoku は Auto を押すたびに 1 マスずつ埋まり(放置しても進まない)、New で再開。Wheel は Spin から停止・演出・結果表示まで確認(寿司 / 焼肉で紙吹雪、その他はきらめき)
 - ビルド 0 エラー 0 警告(Debug)、inspectcode(Release)0 件
 
+### MaskedBehavior と相関検証の修正(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Basic/BasicBehaviorView.xaml` | `mct:MaskedBehavior` に `UnmaskedCharacter="0"` を追加。既定の入力位置文字は `X` のため、`Mask="000-0000-0000"` だけでは全て固定文字扱いになり入力が一切受け付けられなかった |
+| `Modules/Basic/BasicValidationViewModel.cs` / View | Confirm の相関検証(`[Compare]`)を入力の度に実行(`PropertyChanged` で Confirm 自身の変更時もエラーを消して再検証。Password の変更時は Confirm 入力済みの場合のみ)。View の `ValidateOnUnfocused` は不要になったため除去 |
+
+- 実機確認: 電話番号の入力が `090-1234-5678` に整形される。Confirm をフォーカスしたまま `ab` → エラー表示、`abc` → 消える、`abcd` → 再表示
+- ビルド 0 エラー 0 警告(Debug)
+
+### DragDrop のドロップ先表示(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/View/ViewDragDropViewModel.cs` | 並べ替えの挿入位置を方向で分ける(同じリスト内で下へ動かすときはドロップ先の後ろ、上へ動かすときは前。隣の行へ落として入れ替わらない問題の修正)。`DragTask` を `ObservableObject` にして `IsSource`(ドラッグ元)/ `IsOver`(重なり中)/ `IsOverAbove` / `IsOverBelow`(挿入線の位置)を追加。VM に `IsDragging` / `TodoOver` / `DoneOver` と `DropCompletedCommand` / `ItemOverCommand` / `ItemLeaveCommand` / `ListOverCommand` / `ListLeaveCommand`。強調の解除は `EndDrag`(DropCompleted と各ドロップ処理の末尾) |
+| `Modules/View/ViewDragDropView.xaml` | ドラッグ中は受け入れ先を全て表示(行=青の破線枠、TODO / DONE 列=青の破線枠+薄青、ゴミ箱=赤の破線枠+薄赤)。重ねている先は濃く(行=挿入位置の線 `InsertLine`(上へ動かすときは上端、下へ動かすときは下端)+ 薄青 + 実線、列=濃い青、ゴミ箱=従来の赤)。ドラッグ元の行は Opacity 0.35。`DropGestureRecognizer` の `DragOver` / `DragLeave` を行と列にも配線 |
+
+- 実機確認: 並べ替え(4 → 5 で入れ替わる / 5 → 2 で 2 の前に入る)/ TODO → DONE の移動 / ゴミ箱削除 / 対象外への中断のいずれでも、ドラッグ中の表示と終了後の解除が正しい
+- ビルド 0 エラー 0 警告(Debug)
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1274,6 +1294,9 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
 - `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
 - `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
+- **ドロップ成功で元の行を作り直すと `DragGestureRecognizer.DropCompleted` は届かない**(BindableLayout がリストの Remove / Insert で行の View を再生成し、`ActionDragEnded` を受け取る元 View が消えるため)。ドラッグ状態の解除は DropCompleted だけに頼らず、各ドロップ処理の末尾でも行う。対象外へ落とした場合(元の View が残る)は DropCompleted が届く
+- CommunityToolkit の `MaskedBehavior` は **`UnmaskedCharacter`(既定 `X`)の位置だけが入力欄**。数字を `0` で表したマスク(`000-0000-0000`)は `UnmaskedCharacter="0"` を付けないと全て固定文字になり何も入力できない
+- `AppViewModelBase.Validate(name)` は失敗時に `AddError` するだけで成功時に消さない。入力の度に検証するときは `Errors.ClearErrors(name)` → `Validate(name)` の順に呼ぶ(Smart.Maui の `ValidateOnTextChanged` 添付プロパティも同じ理由でそのままでは消えない)
 - **Microsoft.Maui.Graphics(Android)で `SetFillPaint` のグラデーションは `FillColor` を設定しても解除されない**(`FillPaintWithAlpha` は色を設定するがシェーダは残るため、以降の塗りが全てグラデーション色になる)。グラデーションで塗る区間は `SaveState` / `RestoreState` で囲む(状態の複製が破棄されるので元の Paint に残らない)
 - **MAUI 10 の Android `SecureStorage` は `Remove` / `RemoveAll` も `EncryptedSharedPreferences` の生成を通る**ため、復号できない状態では `GetAsync` と同じ例外になる(`RemoveAll` は復旧手段にならない)。MAUI 側が捕捉するのは `AEADBadTagException`(キー単位)と `InvalidProtocolBufferException`(keyset 破損)だけで、Tink が keyset の復号に失敗して平文として読み直した結果の `GeneralSecurityException`(`empty keyset` 等)は素通りする。復旧は `Application.Context.GetSharedPreferences(alias).Edit().Clear()` で実体を消す
 - **`UniformItemsLayout`(CommunityToolkit)はセルサイズを先頭の子の DesiredSize だけで決め、各子を `Measure(セル幅, セル高)` → `Arrange` する**。子ごとに Margin を変えて罫線を作ると、明示 HeightRequest とセル高の食い違いで 1dp の隙間が行によって消える。罫線が要る格子は `Grid` の Spacing とスペーサ行・列で作る(位置は同じ星サイズから決まるため、丸めで隙間が 0 にならない)

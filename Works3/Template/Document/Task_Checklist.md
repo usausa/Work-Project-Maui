@@ -1,11 +1,11 @@
 # 残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 1 節 → 4 節 → 5 節。以降は 2〜3 節。
+優先順 = 3 節 → 4 節。以降は 1〜2 節。
 
 ## 運用ルール
 
-- 作業はこの番号で指示・進行する(例:「4-1 を実施」)。完了した項目は本書から削除し、内容は `Change_Summary.md` に記録する
+- 作業はこの番号で指示・進行する(例:「3-1 を実施」)。完了した項目は本書から削除し、内容は `Change_Summary.md` に記録する
 - **【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
@@ -18,40 +18,32 @@
 
 ---
 
-## 1. 実機確認で判明した要対応項目
+## 1. SCP の実機確認と転送実テスト(要 SSH サーバ)
 
-- [ ] **1-1** Basic > Behavior: **`MaskedBehavior` が正しく動作しない**(電話番号の `000-0000-0000` 整形が効かない)。原因調査から
-- [ ] **1-2** Basic > Validation: パスワード一致の相関検証が**フォーカスを外した時のみ**動く → **入力が変わる度**に検証する方式へ
-- [ ] **1-3** View > DragDrop: **ドロップ先が分かりやすい**表現がほしい(現状はゴミ箱のみハイライト)
-
----
-
-## 2. SCP の実機確認と転送実テスト(要 SSH サーバ)
-
-- [ ] **2-1** Network メニュー: 「SCP」が追加され遷移できる(未設定時は接続先が「未設定 (設定画面の QR で投入)」でボタン無効)
-- [ ] **2-2** Main > Setting: 項目の**ラベルと現在値が横並び**で表示される。SCP セクション(Host/User/Password)があり、QR(`ScpHost=...` 形式)を読むと反映される
-- [ ] **2-3** Network > SCP: QR 投入後、「アップロード」でファイル選択 → 進捗バー → 完了ログ。「ダウンロード」で同ファイルがキャッシュへ取得される。転送中「キャンセル」で中断。接続後にサーバのホスト鍵指紋が参考表示される(照合は行わない)
+- [ ] **1-1** Network メニュー: 「SCP」が追加され遷移できる(未設定時は接続先が「未設定 (設定画面の QR で投入)」でボタン無効)
+- [ ] **1-2** Main > Setting: 項目の**ラベルと現在値が横並び**で表示される。SCP セクション(Host/User/Password)があり、QR(`ScpHost=...` 形式)を読むと反映される
+- [ ] **1-3** Network > SCP: QR 投入後、「アップロード」でファイル選択 → 進捗バー → 完了ログ。「ダウンロード」で同ファイルがキャッシュへ取得される。転送中「キャンセル」で中断。接続後にサーバのホスト鍵指紋が参考表示される(照合は行わない)
 
 ---
 
-## 3. バックログ(任意・後日。指示があれば着手)
+## 2. バックログ(任意・後日。指示があれば着手)
 
-- [ ] **3-1**【判断】`Controls/ChatView` バブル色のバインダブル化(C-13・D18): 検討扱い・未確定
-- [ ] **3-2** UISocial 背景の専用化(1080×1920 / 9:16 のゲーム風背景)
-- [ ] **3-3** `AnimationOption.ResetEnter` の Scale 1 固定リセット(静的 Scale+EnterAnimation 併用が将来出た場合に、TranslationY と同じ基準値退避パターンで対処)
+- [ ] **2-1**【判断】`Controls/ChatView` バブル色のバインダブル化(C-13・D18): 検討扱い・未確定
+- [ ] **2-2** UISocial 背景の専用化(1080×1920 / 9:16 のゲーム風背景)
+- [ ] **2-3** `AnimationOption.ResetEnter` の Scale 1 固定リセット(静的 Scale+EnterAnimation 併用が将来出た場合に、TranslationY と同じ基準値退避パターンで対処)
 
 ---
 
-## 4.【優先】`tmpl-plan-maui.md` からの移管課題
+## 3.【優先】`tmpl-plan-maui.md` からの移管課題
 
 `D:\GitHubTemplate\tmpl-plan-maui.md`(MAUI トラック強化プラン)の未対応項目(同書の番号を併記)。**keyboard / blazor 向けの対応(同書 §4 / §5)と iOS 対応(同書 3-13。保留継続)は対象外**。
 参照サンプルは `C:\Users\machi\Desktop\Maui`(残置 18 件)。ファイルパスは `Template.MobileApp/` からの相対。
 
 ### 機能実装(同書 §3)
 
-4-1 / 4-2 は画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。プラットフォーム実装は `Components/Nfc.cs` + `Nfc.android.cs` と同じ構成(共通インターフェース + `*.android.cs`)に揃える。
+3-1 / 3-2 は画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。プラットフォーム実装は `Components/Nfc.cs` + `Nfc.android.cs` と同じ構成(共通インターフェース + `*.android.cs`)に揃える。
 
-#### 4-1 WiFi manager(同書 3-1)
+#### 3-1 WiFi manager(同書 3-1)
 
 参照: `■MauiWifi`(`maui_wifi_manager-main` + `IWifiNetworkService.shared.cs`)
 
@@ -66,16 +58,16 @@
 | `Platforms/Android/AndroidManifest.xml` | 権限 | `CHANGE_WIFI_STATE` / `NEARBY_WIFI_DEVICES` 追加(`ACCESS_WIFI_STATE` は既存) |
 | `Permissions.cs` | 権限要求 | `NEARBY_WIFI_DEVICES` 用の `BasePlatformPermission` 派生 + 要求メソッド(`ActivityRecognition` と同形) |
 
-- [ ] **4-1** 表示: SSID / BSSID / IP アドレス / 信号強度 / リンク速度 / 周波数帯 / 接続状態
+- [ ] **3-1** 表示: SSID / BSSID / IP アドレス / 信号強度 / リンク速度 / 周波数帯 / 接続状態
   - 制約: Android 10 以降、`WifiInfo.SSID` は位置情報権限が無いと `<unknown ssid>`。既存の `Permissions.RequestLocationAsync()` を `OnNavigatedToAsync` で要求する
   - 制約: `getScanResults` は Android 9 以降スロットリング対象。スキャン一覧を出す場合は結果キャッシュを再利用する
   - 制約: Android 10 以降、任意 SSID への直接接続は不可(`WifiNetworkSuggestion` / `WifiNetworkSpecifier` 経由のみ)
 
-#### 4-2 生体認証(同書 3-2)
+#### 3-2 生体認証(同書 3-2)
 
 参照: `Bio`(`Maui.Biometric-main` / `MauiBiometricPluginSample-main` / `NET-MAUI-FingerPrint-main`)
 
-- [ ] **4-2-0**【判断】実装方式 — 案A `Components/Biometric.cs` + `.android.cs` を自作(`Xamarin.AndroidX.Biometric` を追加)/ 案B `Maui.Biometric` パッケージを参照
+- [ ] **3-2-0**【判断】実装方式 — 案A `Components/Biometric.cs` + `.android.cs` を自作(`Xamarin.AndroidX.Biometric` を追加)/ 案B `Maui.Biometric` パッケージを参照
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
@@ -88,23 +80,23 @@
 | `Platforms/Android/AndroidManifest.xml` | 権限 | `USE_BIOMETRIC` 追加 |
 | `Template.MobileApp.csproj` | パッケージ | 案A: `Xamarin.AndroidX.Biometric` 追加 |
 
-- [ ] **4-2** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
+- [ ] **3-2** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
   - 制約: `androidx.biometric` は `androidx.fragment` に依存する。csproj は `Xamarin.AndroidX.Fragment.Ktx` をピン止めしているため、追加後に `dotnet list package --include-transitive` で競合を確認する
   - `BiometricPrompt` が要求する `FragmentActivity` は `MainActivity`(`MauiAppCompatActivity` 派生)で満たしている。基底クラスの変更は不要
 
-#### 4-3 Bottom sheet の独自実装(同書 3-3)
+#### 3-3 Bottom sheet の独自実装(同書 3-3)
 
 View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別に、Syncfusion に依存しない自作版を検討する。
 
-- [ ] **4-3**【判断】自作版の要否と範囲(ドラッグで開閉するシート + 背景の暗転。`Controls/` へ `Layout` / `ContentView` 派生で追加し、View メニューの画面で実演)
+- [ ] **3-3**【判断】自作版の要否と範囲(ドラッグで開閉するシート + 背景の暗転。`Controls/` へ `Layout` / `ContentView` 派生で追加し、View メニューの画面で実演)
 
-#### 4-4 通知(同書 3-4)
+#### 3-4 通知(同書 3-4)
 
 参照: `Plugin.LocalNotification-master`(`Sample/Direct` / `Sample/Maui`)、`0_maui-samples/10.0/PlatformIntegration/LocalNotificationsDemo`、`0_MauiSamples/MauiNotifications`、FCM は `0_maui-samples/10.0/WebServices/PushNotificationsDemo`。`NotificationManager` / `NotificationCompat` の参照は 0 件。
 
-- [ ] **4-4-0**【判断】ローカル通知の実装方式 — 案A `Components/Notification.cs` + `.android.cs` を自作 / 案B `Plugin.LocalNotification` を参照
-- [ ] **4-4-1**【判断】画面の置き場 — Device メニューは 9 行 × 2 列で満杯。案A `DeviceMiscView` に `InfoCard` を追加(現在 Screen / Feedback / Light / Speech の 4 枚)/ 案B 新規画面 + Device メニュー 10 行目(9 段規約から外れる)
-- [ ] **4-4-2**【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログをローカル通知の画面に追記する
+- [ ] **3-4-0**【判断】ローカル通知の実装方式 — 案A `Components/Notification.cs` + `.android.cs` を自作 / 案B `Plugin.LocalNotification` を参照
+- [ ] **3-4-1**【判断】画面の置き場 — Device メニューは 9 行 × 2 列で満杯。案A `DeviceMiscView` に `InfoCard` を追加(現在 Screen / Feedback / Light / Speech の 4 枚)/ 案B 新規画面 + Device メニュー 10 行目(9 段規約から外れる)
+- [ ] **3-4-2**【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログをローカル通知の画面に追記する
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
@@ -117,26 +109,26 @@ View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別
 | `Permissions.cs` | 権限要求 | `POST_NOTIFICATIONS`(Android 13+)の要求メソッド |
 | `Platforms/Android/MainActivity.cs` | 起動 Intent | 通知タップ時のペイロード受け取り |
 
-- [ ] **4-4** ローカル通知(即時 / スケジュール / アクションボタン / タップ時ペイロード)
+- [ ] **3-4** ローカル通知(即時 / スケジュール / アクションボタン / タップ時ペイロード)
   - 制約: Android 8 以降、通知チャンネルの事前作成が必須。チャンネル ID は `Components/Notification.cs` に定数化
   - 制約: 通知タップからの画面遷移は `StartupState` の初期遷移完了を待ってから行う(`Change_Summary.md` 区間8)
   - 制約: スケジュール通知で `AlarmManager` の完全一致指定を使う場合、Android 12 以降は `SCHEDULE_EXACT_ALARM` が必要
 
 ### ソースレビュー由来(同書 付録)
 
-- [ ] **4-5** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
+- [ ] **3-5** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
 
 ### 参照のみで未使用のパッケージ(2026-09-13 実測)
 
-- [ ] **4-6**【判断】`Azure.AI.Vision.Face` / `Azure.AI.Vision.ImageAnalysis` / `OllamaSharp` は csproj の参照のみでコードから未使用。使う(Cognitive service = `SampleCvNet*` の認識呼び出し / Chat AI = `SampleChat` の実応答)か、参照を外すかを決める
+- [ ] **3-6**【判断】`Azure.AI.Vision.Face` / `Azure.AI.Vision.ImageAnalysis` / `OllamaSharp` は csproj の参照のみでコードから未使用。使う(Cognitive service = `SampleCvNet*` の認識呼び出し / Chat AI = `SampleChat` の実応答)か、参照を外すかを決める
 
 ---
 
-## 5. 参照サンプルからの追加機能(`C:\Users\machi\Desktop\Maui`)
+## 4. 参照サンプルからの追加機能(`C:\Users\machi\Desktop\Maui`)
 
 `tmpl-plan-maui.md` に無い追加候補。ファイルパスは `Template.MobileApp/` からの相対。
 
-### 5-1 SfNavigationDrawer
+### 4-1 SfNavigationDrawer
 
 参照: `maui-toolkit-samples-master/NavigationDrawer`、`SyncFusion`(ソース)。`Syncfusion.Maui.Toolkit` の `SfNavigationDrawer` は参照 0 件。追加パッケージ不要。
 
@@ -144,14 +136,14 @@ View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別
 | --- | --- | --- |
 | `Modules/View/ViewToolkitView.xaml` + `ViewToolkitViewModel.cs` | Syncfusion / CommunityToolkit の未使用機能の実演(6 種掲載) | ドロワーを追加 |
 
-- [ ] **5-1** ドロワーの追加
+- [ ] **4-1** ドロワーの追加
   - 制約: Syncfusion の URL 形式 xmlns で解決できない場合は `clr-namespace` 指定(MAUIG1001)
 
-### 5-2 メモリ監視オーバーレイ
+### 4-2 メモリ監視オーバーレイ
 
 参照: `maude-main`。計測は `[SceneStats]` の `Android.Util.Log` 出力のみで、アプリ内の可視化は無い。
 
-- [ ] **5-2-0**【判断】全画面共通のオーバーレイ(`MainPage` の `AbsoluteLayout` 上)にするか、専用画面にするか
+- [ ] **4-2-0**【判断】全画面共通のオーバーレイ(`MainPage` の `AbsoluteLayout` 上)にするか、専用画面にするか
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
@@ -159,29 +151,29 @@ View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別
 | `Modules/Device/DeviceSensorViewModel.cs` | `IAccelerometer` を注入済み | 起動トリガは `IAccelerometer.ShakeDetected` を使う(シェイク判定の自作は不要) |
 | 新規オーバーレイ View / ViewModel | — | `GC.GetTotalMemory` / `Process.WorkingSet64` の定期サンプリング + ライブチャート |
 
-- [ ] **5-2** サンプリングとライブチャート
+- [ ] **4-2** サンプリングとライブチャート
 
-### 5-3 リーク検出(DEBUG 限定)
+### 4-3 リーク検出(DEBUG 限定)
 
 参照: `MemoryToolkit.Maui-main`。`DisconnectHandler()` の呼び出しは 0 件。
 
-- [ ] **5-3-0**【判断】案A `MemoryToolkit.Maui` を参照(`TrimmerRootAssembly` 追加)/ 案B ページ離脱時の `DisconnectHandler()` 呼び出しのみ自前で入れる
+- [ ] **4-3-0**【判断】案A `MemoryToolkit.Maui` を参照(`TrimmerRootAssembly` 追加)/ 案B ページ離脱時の `DisconnectHandler()` 呼び出しのみ自前で入れる
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
 | `MauiProgram.cs` | `ConfigureDebug` | DEBUG 限定で有効化(`GC.Collect()` を多用するため Release では無効) |
 | `Template.MobileApp.csproj` | パッケージ / トリミング | 案A: パッケージ + `TrimmerRootAssembly` 追加 |
 
-- [ ] **5-3** 有効化と検出結果の確認
+- [ ] **4-3** 有効化と検出結果の確認
 
-### 5-4 アクセシビリティ(SemanticProperties / AutomationId)
+### 4-4 アクセシビリティ(SemanticProperties / AutomationId)
 
 参照: `0_maui-samples/10.0/Apps/DeveloperBalance/Pages/*.xaml`(`SemanticProperties` の付け方)、`0_maui-samples/10.0/UITesting/BasicAppiumNunitSample/MauiApp/MainPage.xaml`(`AutomationId` の付け方)。`SemanticProperties` / `AutomationId` は 0 件。
 
-- [ ] **5-4-0**【判断】全画面に入れるか、代表画面(`Modules/Basic/*`)のみのサンプルに留めるか
-- [ ] **5-4** `SemanticProperties.Description` / `Hint` / `HeadingLevel` をアイコンのみのボタンと `InfoCard` の見出しに付け、TalkBack で読み上げ順を実機確認する
+- [ ] **4-4-0**【判断】全画面に入れるか、代表画面(`Modules/Basic/*`)のみのサンプルに留めるか
+- [ ] **4-4** `SemanticProperties.Description` / `Hint` / `HeadingLevel` をアイコンのみのボタンと `InfoCard` の見出しに付け、TalkBack で読み上げ順を実機確認する
 
-### 5-5 画面録画(任意)
+### 4-5 画面録画(任意)
 
 参照: `Plugin.Maui.ScreenRecording-main`
 
@@ -192,5 +184,5 @@ View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別
 | `Platforms/Android/AndroidManifest.xml` | 権限 / サービス | `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PROJECTION` + `<service>` 宣言 |
 | `Modules/Device/DeviceMiscView.xaml` | — | 開始 / 停止 / 保存先表示 |
 
-- [ ] **5-5** 録画の開始 / 停止 / 保存先表示
+- [ ] **4-5** 録画の開始 / 停止 / 保存先表示
   - 制約: Android 14 以降、`MediaProjection` は前景サービス(`mediaProjection` タイプ)からの開始が必須
