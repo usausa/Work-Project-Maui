@@ -18,7 +18,7 @@
 | [8. fix2 → back](#8-fix2--back--back初期化方式の刷新白画面対策-b-1-の方式変更) | 2026-09-05 → 09-06 | 4 | 15 | +276 / -233 | **BACK/初期化方式の刷新**(白画面対策 B-1 を StartupState 方式へ・ApplicationInitializer 廃止) |
 | [9. back → fix3](#9-back--fix3--calendar--location-の手直し) | 2026-09-06 | 2 | 4 | +15 / -36 | **Calendar / Location の手直し**(Debug 計測撤去・未取得表示の空状態化) |
 
-- 関連ドキュメント: 残作業(実機確認 / 実テスト / 画像アセット / バックログ)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
+- 関連ドキュメント: 残作業(SCP 実テスト / 移管課題 / 参照サンプルからの追加機能)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
   - `Fix_Checklist.md`(区間2で作成)と `Reference_Summary.md` / `Reference_Analysis.md`(区間3で作成)は**区間5で削除**され、内容は本書と上記へ統合された。
   - `UI_Development_Log.md`(区間1で新設した経緯・ナレッジの記録)は **2026-09-03 に本書へ統合して削除**(ナレッジ=各区間の C 節、恒常情報=付録)。
 
@@ -1273,6 +1273,26 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: 並べ替え(4 → 5 で入れ替わる / 5 → 2 で 2 の前に入る)/ TODO → DONE の移動 / ゴミ箱削除 / 対象外への中断のいずれでも、ドラッグ中の表示と終了後の解除が正しい
 - ビルド 0 エラー 0 警告(Debug)
 
+### UISocial 背景の専用化(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Images/Social/social_background.png` | 新規(1024×1536 / 2:3、PNG)。従来の構図・衣装・舞台のまま、女の子を中央・膝上までの範囲で生成し直したもの(髪のボリュームを少し増やした版)。旧 `Resources/Images/Common/social_background.png` は削除 |
+| `Modules/UI/UISocialView.xaml` | 背景 `Source="social_background.png"` |
+| `Document/*.png` | 50 枚すべてを実機で撮り直し(1080×2424 RGB PNG。`UI_TreeMap` はぬいぐるみを写して解析した状態、`Device_BLE` は SwitchBot センサー 3 台を検出した状態、`Device_NFC` は FeliCa カードの読み取り結果、`Device_Activity` は 1,017 歩を計測した状態、`Sample_CV` は CV Local でレゴブロック 3 個を検出した状態、`UI_Meter` は 122 km/h でスティックを左に倒した状態、`UI_Load` はレベル履歴のバーが幅いっぱいまで溜まった状態) |
+
+- Pixel 9a(表示領域 1080×2228)では AspectFill で左右が約 13% ずつ切れる(女の子が中央のため顔と上半身は収まる)
+- ビルド 0 エラー 0 警告(Debug)
+
+### MailDateTimeStringConverter の ConvertBack(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Converters/MailDateTimeStringConverter.cs` | `ConvertBack` を `NotSupportedException` の throw から `Binding.DoNothing` の返却へ(表示専用。TwoWay で使われても例外にならず、バインドの更新も起こさない) |
+
+- 他の一方向コンバーター 18 件は `NotSupportedException` のまま
+- ビルド 0 エラー 0 警告(Debug)。実機で UIMail の日時表示を確認
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1352,6 +1372,8 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - **スコープ外**(外部リファレンス評価の前提): 生体認証 / カスタムハンドラ / App Actions / iOS / テーマ切替(AppThemeBinding) / 非同期検証 / セッションプロバイダ抽象
 - **コードレビュー対応(区間2)での除外**: `OnNotifyFunction1` の 116 ファイル重複解消 / SemanticProperties・AutomationId の付与 / gRPC・SignalR・Ollama の実装 / QR コードからの通信先・API キー無検証受け入れ
 - **保留**(必要になるまで扱わない): ダークモード対応 / ローカライズ整備 / iOS 対応 / DB マイグレーション機構
+- アクセシビリティ(`SemanticProperties` / `AutomationId` の付与、TalkBack 確認)= 対応不要(2026-09-13)
+- `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)
 - Walkthrough(B-18)= 実装しない(D16)/ NavigationRail・月次集計(C-9/C-11)= 取り下げ(D10)/ Blazor(5-4)= 対応不要 / MBTiles(4-3)= 取りやめ(いずれも詳細は付録D と区間5 B-8)
 
 ### 画面統合・類似性分析の結論
@@ -1406,7 +1428,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | D15 | Scheduler は `IScheduleEventProvider` 化のみ (9-2 で実施予定) |
 | D16 | Walkthrough は実装しない (方針メモ: `Grid` 全面オーバーレイ + `Border` くり抜き + 対象要素の絶対座標取得 + `ScrollView` 内追従に注意 + 初回判定は `State/Settings.cs`) |
 | D17 | 自作入力は `ColorPicker` / `DurationPicker` のみ (RangeSlider / AutoComplete は難度中で見送り) |
-| D18 | チャット UI の二重実装 (`Controls/ChatView` ⇔ `UIChatView`) は現状維持。C-13 (バブル色) は検討扱い |
+| D18 | チャット UI の二重実装 (`Controls/ChatView` ⇔ `UIChatView`) は現状維持。C-13 (バブル色) は**対応不要で確定** (2026-09-13) |
 | D19 | 旧 `CalendarView` (未参照 1,490 行) の削除/リネームは**後日対応** (`CalendarView2` が正。C-14 のコメント実態合わせも同時) → **2026-09-06 実施済み**(区間 10) |
 | D20 | SSH.NET 2026.0.0 追加 (増分 = BouncyCastle.Cryptography のみ) |
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |

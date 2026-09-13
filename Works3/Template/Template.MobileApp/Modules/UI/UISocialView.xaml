@@ -136,7 +136,7 @@
         <!-- Background -->
         <Image Grid.RowSpan="8"
                Style="{StaticResource BackgroundImage}"
-               Source="social_background.jpg" />
+               Source="social_background.png" />
 
         <Grid Grid.Row="0"
               Style="{StaticResource LayoutGrid}"
