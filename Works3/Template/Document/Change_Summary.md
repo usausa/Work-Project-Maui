@@ -1220,6 +1220,17 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | `adjustResize` + `SafeAreaEdges="SoftInput"`(画面ルート) | `ScrollView` ルートはキーボードとの重なり分(880px)の下 Padding が付き全コンテンツをキーボード上へスクロールできるが、フォーカス中の `Entry` へは自動スクロールしない。固定 `Grid` ルート(Login)は内容が潰れる |
 | `InputNumberView` | 自前テンキーで `Entry` を持たず IME は出ない(対象外) |
 
+### SecureStorage の復旧と通信の中断(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `State/Settings.cs` | `SecureStorage` の Get / Set / Remove を `GetSecureValueAsync` / `SetSecureValueAsync` / `RemoveSecureValue` に集約し、`Java.Lang.Throwable`(復号失敗 = `Java.Security.GeneralSecurityException` 等)を捕捉。捕捉時は `ResetSecureStorage()` で暗号化層を通さずに実体の `SharedPreferences`(`{package}.microsoft.maui.essentials.preferences`)を `Clear()` し、Get は `null`(未設定)、Set は初期化後に保存し直す |
+| `Usecase/NetworkOperator.cs` | デリゲート型を `Func<HttpService, CancellationToken, …>`(進捗版は `Func<HttpService, IProgress, CancellationToken, …>`)に変更し、各 `Execute*` に `CancellationToken cancellationToken = default` を追加。呼び出し側の中断は `NetworkOperationResult.Canceled`(新設)を返し、警告ログ・通知・再試行確認を行わない |
+| `Usecase/NetworkUsecase.cs` | 全メソッドに `CancellationToken cancellationToken = default` を追加して `HttpService` まで転送(ダミーファイル作成の `WriteAllLinesAsync` にも渡す) |
+
+- 実機確認: ①`shared_prefs/template.mobileapp.microsoft.maui.essentials.preferences.xml` の keyset を `0800`(空の Keyset として解釈される値)に書き換えて Main > Setting を開くと、変更前は `Java.Security.GeneralSecurityException: empty keyset` でクラッシュ、変更後は画面が開いて値は未設定表示・保存領域は再生成される ②ローカルの WorkServer(`api/test/delay/5000`)に対し 2 秒で中断するトークンを渡すと、インジケータが約 2 秒で閉じ、「Canceled. Retry ?」も出ない(通常の Get server time は成功)
+- ビルド 0 エラー 0 警告(Debug)
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1241,6 +1252,8 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
 - `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
 - `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
+- **MAUI 10 の Android `SecureStorage` は `Remove` / `RemoveAll` も `EncryptedSharedPreferences` の生成を通る**ため、復号できない状態では `GetAsync` と同じ例外になる(`RemoveAll` は復旧手段にならない)。MAUI 側が捕捉するのは `AEADBadTagException`(キー単位)と `InvalidProtocolBufferException`(keyset 破損)だけで、Tink が keyset の復号に失敗して平文として読み直した結果の `GeneralSecurityException`(`empty keyset` 等)は素通りする。復旧は `Application.Context.GetSharedPreferences(alias).Edit().Clear()` で実体を消す
+- SecureStorage の破損は `run-as <pkg>` で `shared_prefs/<pkg>.microsoft.maui.essentials.preferences.xml` の `__androidx_security_crypto_encrypted_prefs_key_keyset__` / `_value_keyset__` を `0800` にすると再現できる(`120a…` のような不正 protobuf は MAUI が捕捉するため再現にならない)
 - MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
 - `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る
 - `uiautomator dump` は IME ウィンドウの下にあるノードを出力しない(フォーカス中の `EditText` が出なければキーボードに隠れている)。IME の表示状態は `dumpsys input_method` の `mInputShown`
