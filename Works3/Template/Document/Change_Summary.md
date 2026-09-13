@@ -1191,6 +1191,22 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で View > Layout の表示を確認
 
+### ステータスバーの画面追従(Task_Checklist 6-1。2026-09-13)
+
+`MainPage.xaml` の `toolkit:StatusBarBehavior` は起動時に `BlueDefault` + `LightContent` を 1 回適用するだけだったため、ヘッダの無い画面でも青い帯が残っていた。画面が `Title` / `Function` と同じ要領でステータスバーの色とアイコン色を宣言できるようにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Shell/ShellProperty.cs` | 添付 `StatusBarColor`(`Color?`。null = `MainPage` の既定)/ `StatusBarStyle`(`Default` = `MainPage` の既定、`LightContent` = 白アイコン、`DarkContent` = 黒アイコン)。`UpdateShellControl` で `IShellControl` へ反映(Exited 時は既定へ) |
+| `Shell/IShellControl.cs` / `MainPageViewModel.cs` | `NotificationValue<Color?> StatusBarColor` / `NotificationValue<StatusBarStyle> StatusBarStyle` |
+| `Shell/ShellUpdateBehavior.cs` | `IShellControl` の 2 値の変更を購読し、ページに付いている `StatusBarBehavior` の `StatusBarColor` / `StatusBarStyle` へ書き込む(既定値は初回に `StatusBarBehavior` の宣言値を取り込む)。Toolkit 側は値の変更で `StatusBar.SetColor` / `SetStyle` を再適用する |
+| `MainPage.xaml` | `StatusBarBehavior` の宣言は従来どおり(既定値の置き場) |
+| `Modules/UI/UIDockView.xaml` / `UISocialView.xaml` | ヘッダ非表示の 2 画面に `shell:ShellProperty.StatusBarColor`(Dock = `GrayDarken4`、Social = `Black`)を指定 |
+
+- Toolkit の `StatusBarBehavior`(`BasePlatformBehavior`)は付けたページの `BindingContext` を引き継がないため、`StatusBarColor="{Binding ...}"` は解決されず既定の `Transparent` になる(ステータスバーが白地 + 白アイコンで読めなくなる)。値の受け渡しは Behavior 間で行う
+- Android 15 以降は `Window.SetStatusBarColor` が効かないため、Toolkit は DecorView の最上部にステータスバーの高さの View を重ねて色を出す(`Transparent` のときだけ `LayoutNoLimits` + `SetDecorFitsSystemWindows(false)` で edge-to-edge)。`IScreen.SetFullscreen(true)` の画面(Dock)でもこの View は残るので、色を背景に合わせる
+- ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Menu = 青、Dock = `#212121`、Social = 黒、Stream = 青(ヘッダあり)を確認し、各画面から戻ると青に復帰する
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1198,6 +1214,8 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
 - **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
 - ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
+- - 予測型バック(D25 で現状維持): 自前の `OnBackPressedCallback` が有効なあいだはシステムのアニメーション(back-to-home / cross-activity)は出ない。`OnBackPressedDispatcher`(AndroidX Activity 1.9)が API 34+ で `OnBackAnimationCallback` を登録するため、最上位の有効なコールバックに `HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled` が届く。進捗はスワイプ 800px で約 0.7。**ボタン操作(3 ボタンナビ / `KEYCODE_BACK`)でも Android 17 では `Started` が `SwipeEdge = 2`(エッジなし)で来て、直後に `Pressed`、`Progressed` は来ない**
+- ジェスチャーの検証: ナビゲーションモードは `adb shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural`(戻すときは `...navbar.threebutton`。`settings get secure navigation_mode` で 2 = ジェスチャー / 0 = 3 ボタン)。途中で止める・戻す操作は `input motionevent DOWN 3 y` → `MOVE x y` を刻む → `UP`(`input swipe` は一気に完了する)。縮小量はスクショの要素端の位置から算出できる
 - 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
 - 自作 `Layout` の重なり順は Arrange 順では決まらない。子の `ZIndex` を `Layout.OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で設定する(`ZIndex` の変更はハンドラ側の並べ替えだけで再レイアウトは起きない)
 - `BindableLayout` はレイアウトの子を全て管理するため、静的な子と `ItemsSource` の子は同居できない。種別毎のモデル + `BindableLayout.ItemTemplateSelector` で 1 本にする。テンプレート毎の入場遅延はモデルのプロパティ(`EnterDelay`)にバインドする
@@ -1280,6 +1298,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `toolkit:SfEffectsView TouchDownEffects="Ripple"`(+`TouchDownCommand`/`TouchDownCommandParameter`) | 全タップ要素 |
 | バッジ | `converters:BadgeCountConverter`(0→空、Max 超→「99+」) | 件数バッジ |
 | アイコン | `{markup:Material Glyph={x:Static fonts:MaterialIcons.Xxx}, Color=.., Size=..}` / `{markup:Fluent ..}` / `{markup:MenuIcon ..}` | 絵文字・生 Unicode の置換(バインド不可な点に注意) |
+| ステータスバー | `shell:ShellProperty.StatusBarColor="{StaticResource ...}"` + `StatusBarStyle="LightContent|DarkContent"`(未指定 = `MainPage.xaml` の既定 `BlueDefault` / `LightContent`) | ヘッダ非表示・全面画像の画面 |
 | カード/チップ/ステップ | `controls:InfoCard`(Title/Icon/IconColor+Content)/ `controls:StatusChip`(Text/Icon/ChipColor/IconColor/TextColor)/ `controls:StepIndicator`(CurrentStep/TotalSteps/AccentColor) | 第2弾で新設した共通部品 |
 | 空状態 | `CollectionView.EmptyView` / 中央 VStack+円形アイコン(96)+説明の定型 | 0件/未取得/未実装の表示 |
 | その他 | `CameraOverlayView`(撮影ガイド枠)/ `MapBind`+`MapController(.MoveTo)` / `EasingCurveView` / `JetBrainsMono`(等幅数値)/ `NotoSerifJP`(Skia 日本語) | — |
@@ -1290,7 +1309,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 51 件 (S-01〜S-51) を評価し、採用分は全て実装完了 (2026-09-01〜02)。QR ペイロード例や実装対象は各完了記録を参照。
 
-### 決定事項 (D1〜D24)
+### 決定事項 (D1〜D25)
 
 | # | 決定 |
 | --- | --- |
@@ -1318,6 +1337,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |
 | D23 | 第2弾 (`Reference_Nova_Nalu.md`) N1 は OverlapPanel + AvatarGroup / CircularLayout の円弧 / VariableSizeWrapPanel の 3 件を採用確定。**CompareSlider は撤去** (2026-09-13) |
 | D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は `Task_Checklist.md` 6 節へ移し、`Reference_Nova_Nalu.md` は削除 |
+| D25 | 予測型バック (第2弾 6-4) は**現状維持で確定** (2026-09-13)。エッジスワイプ / BACK ボタン / フッタの Back は同じ経路 (`ShellEvent.Back` → `OnNotifyBackAsync`。フッタは `OnNotifyFunction1` から同じメソッドへ) で遷移し、スワイプ進捗に連動する縮小表現は入れない |
 
 ### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
