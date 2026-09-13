@@ -1182,6 +1182,15 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Custom Vision の Detect → Retry → Detect、TreeMap の Count 2 回、Drawing の Save 2 回を確認(いずれも落ちず、2 回目で表示が更新される)
 
+### CircularLayout の回転 / リング(第2弾 N3-6。2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/CircularLayout.cs` | `RotateItems`(子を接線方向へ回転。子の上端が円の外側を向く。false に戻すと回転を 0 に戻す)/ `ItemAngle`(回転に加える角度)/ `OrbitSpacing`(既定 48)/ 添付 `Orbit`(0 = 中心、1 = 基本の円 = 既定、2 以降 = `Radius + (k - 1) × OrbitSpacing` のリング)を追加。リング毎に `StartAngle` / `SweepAngle` を等分し、自動半径は最外周のリングが領域に収まる大きさにする。`Angle` / `Orbit` の変更で親を再レイアウトする。既定値では従来と同じ配置 |
+| `Modules/View/ViewLayoutView.xaml` | 「CircularLayout 回転 / リング」カードを追加(8 カード)。左 = `RotateItems` の扇(5 ピル、`StartAngle=200` / `SweepAngle=140` / `FitToArc`)、右 = 中心 1 + リング 3 + リング 6 の同心円 |
+
+- ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で View > Layout の表示を確認
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1275,7 +1284,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | 空状態 | `CollectionView.EmptyView` / 中央 VStack+円形アイコン(96)+説明の定型 | 0件/未取得/未実装の表示 |
 | その他 | `CameraOverlayView`(撮影ガイド枠)/ `MapBind`+`MapController(.MoveTo)` / `EasingCurveView` / `JetBrainsMono`(等幅数値)/ `NotoSerifJP`(Skia 日本語) | — |
 | 重ね配置 / 重ねアバター | `controls:OverlapPanel`(OffsetX/OffsetY/ReverseZIndex)/ `controls:AvatarGroup`(ItemsSource/MaxDisplayed/Overlap/AvatarSize/CountBackgroundColor/CountTextColor。超過分は「+N」) | カード束、視聴中フレンド等 |
-| 可変タイル / 円弧 | `controls:VariableSizeWrapPanel`(Columns/RowHeight/Spacing + 添付 ColumnSpan/RowSpan)/ `controls:CircularLayout`(Radius/StartAngle/SweepAngle/DistributeEvenly/FitToArc + 添付 Angle) | ダッシュボードのタイル、半円メニュー |
+| 可変タイル / 円弧 | `controls:VariableSizeWrapPanel`(Columns/RowHeight/Spacing + 添付 ColumnSpan/RowSpan)/ `controls:CircularLayout`(Radius/StartAngle/SweepAngle/DistributeEvenly/FitToArc/RotateItems/ItemAngle/OrbitSpacing + 添付 Angle/Orbit) | ダッシュボードのタイル、半円メニュー、扇、同心円 |
 
 ## 付録D. 外部リファレンス評価 決定・不採用アーカイブ(旧 Reference_Analysis.md / Reference_Summary.md より)
 
@@ -1308,7 +1317,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |
 | D23 | 第2弾 (`Reference_Nova_Nalu.md`) N1 は OverlapPanel + AvatarGroup / CircularLayout の円弧 / VariableSizeWrapPanel の 3 件を採用確定。**CompareSlider は撤去** (2026-09-13) |
-| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 (Radial / Orbit / Bubble / Loop。Hex は `HoneycombLayout` として実装済み) と N3-11 (小改善 2 点) は検討中 |
+| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は `Task_Checklist.md` 6 節へ移し、`Reference_Nova_Nalu.md` は削除 |
 
 ### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
@@ -1320,4 +1329,4 @@ AlohaKit.Controls (13/15 既存充足。設計思想も DrawingObject/DrawingCon
 
 ### 不採用 (3) — 第2弾 (Nova.Avalonia.UI / Nalu。2026-09-13)
 
-Gravatar・identicon (画像アセットは 4 節で整備済み) / Scratcher / Watermark / SegmentedSlider (`Slider` + `SfSegmentedControl` で充足) / TimelinePanel (`UITimelineView` の行内描画で充足) / ResponsivePanel (縦画面固定) / ToggleTemplate (`IsVisible` 切替 + `DataTemplateSelector` で充足) / ExpanderBox (`mct:Expander` で充足) / DurationWheel (`DurationPicker` で充足) / HexPanel (`HoneycombLayout` として実装済み) / CompareSlider (実装後に撤去)
+Gravatar・identicon (画像アセットは整備済み) / Scratcher / Watermark / SegmentedSlider (`Slider` + `SfSegmentedControl` で充足) / TimelinePanel (`UITimelineView` の行内描画で充足) / ResponsivePanel (縦画面固定) / ToggleTemplate (`IsVisible` 切替 + `DataTemplateSelector` で充足) / ExpanderBox (`mct:Expander` で充足) / DurationWheel (`DurationPicker` で充足) / HexPanel (`HoneycombLayout` として実装済み) / BubblePanel / LoopPanel (`CarouselView.Loop` で充足) / CompareSlider (実装後に撤去) / 親スクロールへのタッチ伝播停止 / WheelDrawing の色パレット差し替え / Nalu Scaffold 本体 (`Usa.Smart.Navigation` と競合) / Nalu VirtualScroll (商用は別ライセンス。`CollectionView` で充足) / Nalu Magnet (alpha) / Nalu のタブバー・ドロワー・共有要素トランジション / Nova の仮想化パネル 2 種 (`CollectionView` の役割) / Nova CodeViewer

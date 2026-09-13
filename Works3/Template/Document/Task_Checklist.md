@@ -78,11 +78,20 @@
 
 ---
 
-## 6. 外部リファレンス評価 第2弾(`Reference_Nova_Nalu.md`)
+## 6. 外部リファレンス評価 第2弾(N2。`MainPage` の chrome / プラットフォーム)
 
-N2(chrome / プラットフォーム 4 件)と N3 の【判断】項目は同書の番号で指示を受けて着手する。
+Nalu Scaffold の機能のうち、`MainPage`(ヘッダ `Grid` + `AbsoluteLayout` コンテナ + フッタ `Grid`)に無い 4 点。静的分析で結論を出さず、**実機(Pixel 9a / Android 16 / Release)で裏取りしてから実装する**。BACK / Activity 再生成の再現手順は `Change_Summary.md` 区間6 B-3、決定の経緯は同 付録D D23 / D24。
 
-### 6-1. N3 の判断
+| # | 現在のファイル名 | 何用か |
+| --- | --- | --- |
+| 6-1 | `MainPage.xaml` / `Shell/ShellProperty.cs` / `Shell/IShellControl.cs` / `MainPageViewModel.cs` | ステータスバー色 / スタイルの画面別指定 |
+| 6-1 | `Modules/UI/UIDockView.xaml` / `Modules/UI/UISocialView.xaml`(+ `UIProfileView.xaml` / `UIStreamView.xaml`) | 指定する画面 |
+| 6-2 | `MainPage.xaml` | `SafeAreaEdges` |
+| 6-3 | `Platforms/Android/AndroidManifest.xml` / `Modules/Basic/BasicValidationView.xaml` / `Modules/UI/UILoginView.xaml` / `Modules/Navigation/Modal/InputNumberView.xaml` | キーボードのレイアウト調整 |
+| 6-3 | `Services/KeyboardState.cs`(新規)/ `Platforms/Android/KeyboardInsetsListener.cs`(新規)/ `Platforms/Android/MainActivity.cs` / `MauiProgram.cs` | キーボードの表示状態の公開 |
+| 6-4 | `Platforms/Android/MainActivity.cs` / `Platforms/Android/AndroidManifest.xml` / `Shell/BackGestureBehavior.cs`(新規)/ `MainPage.xaml` | 予測型バック |
 
-- [ ] **N3-6**【判断】Radial / Orbit / Bubble / Loop(Hex は `HoneycombLayout` として実装済み)。デザイン案は提示済み、採否待ち
-- [ ] **N3-11**【判断】小改善 2 点(①`ScrollView` 内の `GraphicsView` / `SKCanvasView` のタッチ横取り抑止 ②`WheelDrawing` の色パレット差し替え)。内容の確認中
+- [ ] **6-1** ステータスバーの画面追従: `MainPage.xaml` の `toolkit:StatusBarBehavior` は起動時に `BlueDefault` + `LightContent` を 1 回適用するのみ。ヘッダ非表示の画面(`UIDockView` / `UISocialView` = `ShellProperty.HeaderVisible="False"`)と全面画像の画面(`UIProfileView` / `UIStreamView`)で色が合っているかを実機で確認し、合っていなければ `ShellProperty` に添付 `StatusBarColor`(`Color?`、null = 標準色)/ `StatusBarStyle` を追加 → `IShellControl` / `MainPageViewModel` に `NotificationValue` を追加(`Function1Text` 等と同じ経路。Exited 時は既定へ)→ `MainPage.xaml` の `StatusBarBehavior` を `StatusBarColor="{Binding StatusBarColor.Value}"` / `StatusBarStyle="{Binding StatusBarStyle.Value}"` に変更(Toolkit は値変更時に `StatusBar.SetColor` / `SetStyle` を再適用する)。画面側は `shell:ShellProperty.StatusBarColor` を指定。遷移往復で色が戻ること、`mct:Popup` / `SfBottomSheet` 表示中の色も確認
+- [ ] **6-2** Edge-to-Edge / セーフエリア: `MainPage` は `SafeAreaEdges="Default"`(MAUI 10 の値は None / SoftInput / Container / Default / All)。Android 16(edge-to-edge 強制)で ①フッタ `FunctionGrid` がジェスチャーナビゲーション領域と重ならない ②`mct:Popup` / `SfBottomSheet` の下端 ③ディスプレイカットアウトとヘッダの関係 を確認。【判断】`SafeAreaEdges="None"` にして chrome(`HeaderGrid`)がインセット分の上 `Padding` を持ち、画面をステータスバー下まで描ける方式(ヘッダ非表示の 2 画面は各自で上 `Padding` が必要 = 全画面に影響)にするか、現状維持 + 6-1 で色だけ追従にするか
+- [ ] **6-3** キーボードインセット: `AndroidManifest.xml` に `windowSoftInputMode` の指定が無く `MauiAppCompatActivity` の既定に依存。①入力画面 3 つ(`BasicValidationView` の `RootScroll`、`UILoginView` の `FillGrid`、`InputNumberView` の `mct:Popup`)のルートに `SafeAreaEdges="SoftInput"` を付け、最下段の `Entry` がキーボードに隠れないこと・Login のタイトル画像行(160)が潰れないことを実機確認(`adjustResize` との二重適用で二重に縮む場合はどちらか一方にする) ②【判断】キーボードの表示 / 高さを VM から観測する `IKeyboardState`(`NotificationValue<bool> IsVisible` / `NotificationValue<double> Height`)を追加するか。`Platforms/Android/KeyboardInsetsListener.cs` で `ViewCompat.SetOnApplyWindowInsetsListener(decorView, …)` の `WindowInsetsCompat.Type.Ime()` を監視し、`MainActivity.OnCreate`(`BackPressedCallback` と同じ場所)で登録、`MauiProgram.ConfigureContainer` に Singleton 登録。利用例は `UILoginView` でキーボード表示中にタイトル画像を畳む
+- [ ] **6-4** 予測型バック: `MainActivity.BackPressedCallback` は常時 `Enabled = true` で BACK を横取りするため Android 13+ の予測型バックのアニメーションは出ない(区間6 B-3 で確定済みの代償)。参照中の `Xamarin.AndroidX.Activity` 1.9.3.2 には進捗 API(`HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled`)がある。①`BackPressedCallback` に 3 メソッドを override して進捗(0〜1)と `SwipeEdge` を MAUI 側へ通知 ②`Shell/BackGestureBehavior.cs`(`MainPage` の `AbsoluteLayout` コンテナに付与)で現在ビューに `Scale = 1 - 0.1 × p` / `TranslationX = ±24 × p` を適用し、Cancelled で戻す(Pressed は従来どおり `SendBackButtonPressed`)③`AndroidManifest.xml` に `android:enableOnBackInvokedCallback="true"` を明示。ルート画面は `MoveTaskToBack` 方式のためシステムの back-to-home アニメは出ない(自前のスケールダウンのみ)。区間6 B-3 の全経路(サブ画面 BACK の途中キャンセル、フォントサイズ変更後の Activity 再生成を含む)を再走し、**両立しないなら現状維持で確定**
