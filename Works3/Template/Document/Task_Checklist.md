@@ -22,9 +22,7 @@
 
 - [ ] **1-1** Basic > Behavior: **`MaskedBehavior` が正しく動作しない**(電話番号の `000-0000-0000` 整形が効かない)。原因調査から
 - [ ] **1-2** Basic > Validation: パスワード一致の相関検証が**フォーカスを外した時のみ**動く → **入力が変わる度**に検証する方式へ
-- [ ] **1-3** App > Sudoku: 盤面の**線が描画されていない箇所がある**
-- [ ] **1-4** App > Calculator: **ボタンをもう少し大きく**したい(上部に余白があるため活用できる)
-- [ ] **1-5** View > DragDrop: **ドロップ先が分かりやすい**表現がほしい(現状はゴミ箱のみハイライト)
+- [ ] **1-3** View > DragDrop: **ドロップ先が分かりやすい**表現がほしい(現状はゴミ箱のみハイライト)
 
 ---
 
@@ -124,22 +122,13 @@ View > Toolkit の `SfBottomSheet`(`Modules/View/ViewToolkitView.xaml`)とは別
   - 制約: 通知タップからの画面遷移は `StartupState` の初期遷移完了を待ってから行う(`Change_Summary.md` 区間8)
   - 制約: スケジュール通知で `AlarmManager` の完全一致指定を使う場合、Android 12 以降は `SCHEDULE_EXACT_ALARM` が必要
 
-#### その他(同書 §3)
-
-- [ ] **4-5** DB マイグレーション機構(同書 3-5。`DataService.RebuildAsync`=毎起動で物理削除→再作成の user_version ベース置換)。参照: `0_MauiSamples/Database`
-- [ ] **4-6** ダークモード(同書 3-6。`UserAppTheme=Light` 固定・`AppThemeBinding` 0 件。Colors.xaml は 4 テンプレートでバイト一致のため**対応するなら 4 本同時が効率的**)。参照: `0_maui-samples/10.0/UserInterface/ThemingDemo` + `SystemThemesDemo`、`maui-toolkit-samples-master/Theme`
-- [ ] **4-7** ローカライズ拡充(同書 3-7。resx は Messages / Names とも 5 件のみ。機構は動作済み)。参照: `0_maui-samples/10.0/Fundamentals/Localization`、`0_MauiSamples/MauiLocalization`
-- [ ] **4-8** `Controls/SocialControls.cs` の TODO 10 件整理(同書 3-9)
-- [ ] **4-9** 【判断】TimeProvider の MAUI 方式(同書 3-10。設定は EmbeddedBuildProperty のビルド時注入方式のため、wpf / avalonia の `AddOptions<T>().ValidateOnStart()` はそのまま移植不可)
-- [ ] **4-10** 【判断】Analyzers.ruleset 正典差分 11 ルールの扱い(同書 3-12。CA1416 / CA2007 は MAUI 固有の合理性あり単純追随不可。CA1014 / CA1305 / CA1824 / CA1861 は再検討余地。正典統一トラック〈aidd 側セッション〉と連動)
-
 ### ソースレビュー由来(同書 付録)
 
-- [ ] **4-11** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
+- [ ] **4-5** `Converters/MailDateTimeStringConverter.cs` の `ConvertBack` 是正(現状 `NotSupportedException` を throw。`Binding.DoNothing` 返却か OneWay 専用の明示へ)
 
 ### 参照のみで未使用のパッケージ(2026-09-13 実測)
 
-- [ ] **4-12**【判断】`Azure.AI.Vision.Face` / `Azure.AI.Vision.ImageAnalysis` / `OllamaSharp` は csproj の参照のみでコードから未使用。使う(Cognitive service = `SampleCvNet*` の認識呼び出し / Chat AI = `SampleChat` の実応答)か、参照を外すかを決める
+- [ ] **4-6**【判断】`Azure.AI.Vision.Face` / `Azure.AI.Vision.ImageAnalysis` / `OllamaSharp` は csproj の参照のみでコードから未使用。使う(Cognitive service = `SampleCvNet*` の認識呼び出し / Chat AI = `SampleChat` の実応答)か、参照を外すかを決める
 
 ---
 

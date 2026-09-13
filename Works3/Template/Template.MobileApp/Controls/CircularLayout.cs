@@ -321,7 +321,7 @@ public sealed class CircularLayout : Layout
                 var step = full || !layout.DistributeEvenly
                     ? sweep / count
                     : (count > 1 ? sweep / (count - 1) : 0d);
-                var index = indices.TryGetValue(orbit, out var current) ? current : 0;
+                var index = indices.GetValueOrDefault(orbit);
                 indices[orbit] = index + 1;
 
                 var angle = GetAngle(bindable);

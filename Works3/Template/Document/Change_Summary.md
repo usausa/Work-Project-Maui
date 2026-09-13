@@ -1231,6 +1231,28 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: ①`shared_prefs/template.mobileapp.microsoft.maui.essentials.preferences.xml` の keyset を `0800`(空の Keyset として解釈される値)に書き換えて Main > Setting を開くと、変更前は `Java.Security.GeneralSecurityException: empty keyset` でクラッシュ、変更後は画面が開いて値は未設定表示・保存領域は再生成される ②ローカルの WorkServer(`api/test/delay/5000`)に対し 2 秒で中断するトークンを渡すと、インジケータが約 2 秒で閉じ、「Canceled. Retry ?」も出ない(通常の Get server time は成功)
 - ビルド 0 エラー 0 警告(Debug)
 
+### Sudoku の盤面線と Calculator のボタン(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/App/AppGameView.xaml` / VM | 盤面を `mct:UniformItemsLayout` + セル Margin から **`Grid`** へ変更。細線は `RowSpacing` / `ColumnSpacing` = 1、太線は 3x3 境界に挟んだ幅 2 のスペーサ行・列(`Auto,Auto,Auto,2,…` / `*,*,*,2,…`)+ Spacing で 4。セルは `Grid.Row` / `Grid.Column` を VM の `GridRow` / `GridColumn`(= 行列 + ブロック数)にバインド(`Margin` は廃止) |
+| `Modules/App/AppCalcView.xaml` | ボタン行を 44 / 60 → **56 / 76** に拡大(`RowDefinitions="*,56,56,76,76,76,76,76"`)、関数ボタンの FontSize 14 → 16 |
+
+- 実機確認: 盤面の横線・縦線とも細線 6 本(2〜3px)+太線 2 本(10〜11px)が全て描画される(変更前は行 1-2 / 4-5 の横線が消え、太線も 6px)。セルのタップ選択と数字入力は従来どおり。Calculator は表示部の余白が減りボタンが一回り大きい
+- ビルド 0 エラー 0 警告(Debug)
+
+### Sudoku の自動モードと Wheel の描画・演出(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/App/AppGameView.xaml` / VM / `Models/App/SudokuGame.cs` | 「新しい問題」ボタンをフッタ **F4「New」**へ。**F3「Auto」= 押すたびに 1 マス**、未確定(空きまたは誤入力)のマスをランダムに 1 つ選んで正解を入れ、そのマスを選択表示(自動で進行はしない)。モデルに `GetSolution(row, col)` を追加 |
+| `Graphics/Drawing/WheelDrawing.cs` | 項目を `WheelItem(Label, Effect)` に。描画を作り込み: 扇形は放射グラデーション(`RadialGradientPaint`)、外輪は影付きの暗い環 + 金縁 + 電球 24 個(回転中は流れ、演出中は点滅)、金属調のハブ、影付きの赤いポインタ、太字ラベル(左半分は 180 度回して読める向き)。停止後の演出を追加: 当選セグメントの明滅 + **Sparkle**(ポインタ周辺のきらめき)/ **Confetti**(画面上端から舞い落ちる紙吹雪 110 枚・3.2 秒)。演出の配置は seed 由来の疑似乱数で毎フレーム決定的に計算 |
+| `Modules/UI/UIWheelView.xaml` / VM | SPIN ボタンを廃止し **F4「Spin」**へ(ホイールのタップでも回転)。寿司 / 焼肉を当たり枠(Confetti)にし、結果の見出しを「JACKPOT!」(琥珀・太字)に切り替え |
+| `State/Settings.cs` / `Controls/CircularLayout.cs` / `Helpers/ImageHelper.cs` | inspectcode の指摘を解消(単純 await の `async` 除去 / `GetValueOrDefault` / 注釈と実態が異なる null 条件アクセスは理由付きで抑止) |
+
+- 実機確認: Sudoku は Auto を押すたびに 1 マスずつ埋まり(放置しても進まない)、New で再開。Wheel は Spin から停止・演出・結果表示まで確認(寿司 / 焼肉で紙吹雪、その他はきらめき)
+- ビルド 0 エラー 0 警告(Debug)、inspectcode(Release)0 件
+
 ## C. この区間のナレッジ
 
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
@@ -1252,7 +1274,9 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
 - `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
 - `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
+- **Microsoft.Maui.Graphics(Android)で `SetFillPaint` のグラデーションは `FillColor` を設定しても解除されない**(`FillPaintWithAlpha` は色を設定するがシェーダは残るため、以降の塗りが全てグラデーション色になる)。グラデーションで塗る区間は `SaveState` / `RestoreState` で囲む(状態の複製が破棄されるので元の Paint に残らない)
 - **MAUI 10 の Android `SecureStorage` は `Remove` / `RemoveAll` も `EncryptedSharedPreferences` の生成を通る**ため、復号できない状態では `GetAsync` と同じ例外になる(`RemoveAll` は復旧手段にならない)。MAUI 側が捕捉するのは `AEADBadTagException`(キー単位)と `InvalidProtocolBufferException`(keyset 破損)だけで、Tink が keyset の復号に失敗して平文として読み直した結果の `GeneralSecurityException`(`empty keyset` 等)は素通りする。復旧は `Application.Context.GetSharedPreferences(alias).Edit().Clear()` で実体を消す
+- **`UniformItemsLayout`(CommunityToolkit)はセルサイズを先頭の子の DesiredSize だけで決め、各子を `Measure(セル幅, セル高)` → `Arrange` する**。子ごとに Margin を変えて罫線を作ると、明示 HeightRequest とセル高の食い違いで 1dp の隙間が行によって消える。罫線が要る格子は `Grid` の Spacing とスペーサ行・列で作る(位置は同じ星サイズから決まるため、丸めで隙間が 0 にならない)
 - SecureStorage の破損は `run-as <pkg>` で `shared_prefs/<pkg>.microsoft.maui.essentials.preferences.xml` の `__androidx_security_crypto_encrypted_prefs_key_keyset__` / `_value_keyset__` を `0800` にすると再現できる(`120a…` のような不正 protobuf は MAUI が捕捉するため再現にならない)
 - MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
 - `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る

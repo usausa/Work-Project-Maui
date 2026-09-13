@@ -60,16 +60,16 @@ public sealed class Settings
         return await GetSecureValueAsync(AIServiceKeyName);
     }
 
-    public async ValueTask SetAIServiceKeyAsync(string value)
+    public ValueTask SetAIServiceKeyAsync(string value)
     {
         // SetAsyncは空文字を受け付けないため、クリアは削除として扱う
         if (String.IsNullOrEmpty(value))
         {
             RemoveSecureValue(AIServiceKeyName);
-            return;
+            return ValueTask.CompletedTask;
         }
 
-        await SetSecureValueAsync(AIServiceKeyName, value);
+        return SetSecureValueAsync(AIServiceKeyName, value);
     }
 
     // SCP (接続情報は設定画面のQRで投入する。パスワードはSecureStorageに保存する)
@@ -94,17 +94,17 @@ public sealed class Settings
         set => preferences.Set(nameof(ScpUser), value);
     }
 
-    public async ValueTask<string?> GetScpPasswordAsync() => await GetSecureValueAsync(ScpPasswordName);
+    public ValueTask<string?> GetScpPasswordAsync() => GetSecureValueAsync(ScpPasswordName);
 
-    public async ValueTask SetScpPasswordAsync(string value)
+    public ValueTask SetScpPasswordAsync(string value)
     {
         if (String.IsNullOrEmpty(value))
         {
             RemoveSecureValue(ScpPasswordName);
-            return;
+            return ValueTask.CompletedTask;
         }
 
-        await SetSecureValueAsync(ScpPasswordName, value);
+        return SetSecureValueAsync(ScpPasswordName, value);
     }
 
     // ------------------------------------------------------------
