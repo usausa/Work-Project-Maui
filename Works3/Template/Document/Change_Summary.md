@@ -841,7 +841,7 @@ ScpPassword=********
 - 起動時の初期化(DB 再構築・クラッシュレポート表示)は `App` に残し、完了を **`State/StartupState.cs`(新規)** へ通知。`TaskCompletionSource` を隠して `Completed` / `NotifyCompleted()` だけを公開し、**完了後に待ち始めても即座に返る**ため、作り直しで生成し直された ViewModel でも取りこぼさない
 - 旧方式(`App.CreateWindow` で 2 回目以降の `Window.Created` を拾い `RestoreInitialViewAsync`)は撤去。`windowCreated` フラグ・`CurrentViewId` ガード・専用ログ 2 件が不要になり、`App.CreateWindow` は素の実装へ戻った
 - `OnDestroying` で立てる `destroying` フラグで、初期化が終わる前に作り直された場合に新旧 ViewModel が二重に遷移するのを防止
-- 新方式の他テンプレートへの展開状況は区間 6 B-3 の表と `Task_Checklist.md` 0-6 を参照(`template-maui` は反映不要=ユーザー判断)
+- 新方式の他テンプレートへの展開状況は区間 6 B-3 の表を参照(`template-maui` は反映不要)
 
 ### B-2. `ApplicationInitializer` の廃止(初期化の `App` への集約)
 
@@ -881,7 +881,7 @@ ScpPassword=********
 
 # 10. fix3 以降(次のタグまでの変更)
 
-### `Usa.Smart.Data.Accessor` への移行(Task_Checklist 7-3。2026-09-07)
+### `Usa.Smart.Data.Accessor` への移行(2026-09-07)
 
 `[DataAccessor]` 付き partial class の partial メソッドをソースジェネレータが ADO.NET コードへ展開する方式(3.0.0-beta11)へ移行し、`Usa.Smart.Data.Mapper` / `.Builders` を撤去した。
 
@@ -906,7 +906,7 @@ ScpPassword=********
 - `[Name]` への置き換えと `DataServiceOptions` 廃止後(3.0.0-beta10)も実機で再確認: 生成 SQL のテーブル名が `"Data"` / `"BulkData"` / `"Work"` になること、起動時の DB 再構築(旧ファイルの削除と再作成、Work に Sample-1〜4)、Data 画面の Insert・Query・Update・Delete・BulkInsert・DeleteAll、Edit 画面の一覧
 - `[DataAccessorRegistration]` の生成メソッドへ切り替え後(3.0.0-beta11)も実機で再確認: 生成された `MauiProgram.Registration.g.cs` の登録内容、BunnyTail の生成ファクトリ(`DataService`)が `DataAccessor` を依存として解決すること、起動時の DB 再構築、Data 画面の Insert・Query・BulkInsert・DeleteAll、Edit 画面の一覧
 
-### `Usa.Smart.Mapper` の採用(Task_Checklist 7-4。2026-09-07)
+### `Usa.Smart.Mapper` の採用(2026-09-07)
 
 `[Mapper]` 付き `static partial` メソッドをソースジェネレータが展開する方式(1.0.0-beta8)。マッパーは `Models/ObjectMapper.cs` に集約する。
 
@@ -921,7 +921,7 @@ ScpPassword=********
 - 生成コードは `-p:EmitCompilerGeneratedFiles=true` で `obj/.../generated/` に出力して確認(インクリメンタルビルドでは出力されないためソースの更新が必要)。`Map` は 6 プロパティの代入、`ToWorkEntity` は `new WorkEntity()` + Id/Name の代入
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で `WorkMauiServer` をローカル起動(`dotnet run --no-launch-profile --urls http://127.0.0.1:5000`)+ `adb reverse tcp:5000 tcp:5000` + 端末の `ApiEndPoint` を `http://localhost:5000/` にして Network > Data list を実行 → 「count=[10] Saved to Work table.」→ Navigation > Edit の一覧に Data-1〜Data-10 を確認。`Map` は生成コードが旧 `CopyTo` と同一であることで確認
 
-### 遷移効果(Effect)デモの追加(Task_Checklist 7-1。2026-09-07)
+### 遷移効果(Effect)デモの追加(2026-09-07)
 
 `Usa.Smart.Navigation.Maui` の Effect 機構(`IMauiNavigationEffect` + `NavigationParameter.WithEffect`)によるアニメーション付き画面遷移を Navigation 配下の新規 3 画面で示す。既存画面は変更しない。
 
@@ -947,7 +947,7 @@ ScpPassword=********
 
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で 13 ボタン全経路(標準 6 / 独自 4 / Stack 2 / Plugin 1)+ Replay(通常・スタック時)+ card Back / footer Back / ハードウェア Back を確認。4 フェーズ化版の Slide は修正版 DLL の直接参照で Pop 時に復帰側が上からスライドインすることを確認済み
 
-### `Usa.Smart.Results` の採用(Task_Checklist 7-2 の実施。2026-09-06)
+### `Usa.Smart.Results` の採用(2026-09-06)
 
 **参照だけあって未使用だった `Usa.Smart.Results` 2.2.0 を実際に使うようにし、自前の劣化版を撤去した**。
 
@@ -1114,7 +1114,73 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 | `Modules/View/ViewLayoutView.xaml` | CircularLayout カードに半円(`StartAngle=180` / `SweepAngle=180` / `FitToArc`)の例、`VariableSizeWrapPanel`(Columns=3 で span 混在)/ `OverlapPanel`(カスケードと `ReverseZIndex` の円)のカードを追加(7 カード) |
 | `Modules/View/ViewCustomView.xaml` / VM | `AvatarGroup`(Add / Remove で「+N」の変化)/ `CompareSlider`(色フィルタの前後)のカードを追加(6 カード)。VM に `Avatars`(`ObservableCollection`)/ `ComparePosition` / `AddAvatarCommand` / `RemoveAvatarCommand` |
 
-- ビルド 0 エラー 0 警告(Debug)。実機確認は `Task_Checklist.md` 8 節
+- ビルド 0 エラー 0 警告(Debug)。実機確認は 2026-09-13 に完了。CompareSlider は 2026-09-13 に撤去(後述)
+
+### 画像アセットの生成と反映(2026-09-11〜12)
+
+Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` の用途別フォルダへ配置してコードの参照・文言・配色を合わせた。画像ごとの一覧と一括確認ギャラリーは `Document/Image_Generation_List.md`、全プロンプトは `Document/Image_Generation_Prompts.md`、非採用画像は `Document/ImageCandidates/`、サムネイルは `Document/Thumbnails/`。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Images/Shop/` | `product_device01〜03.jpg`(900×1200)/ `product_gear01〜06.jpg`(800×800)。PC・ガジェット(ノート PC / モニター / デスクトップ / キーボード / マウス / ヘッドセット / Web カメラ / SSD / USB-C ドック)。旧 `product_apparel` / `product_beauty` から改名 |
+| `Resources/Images/Stream/` | `poster01〜06.jpg`(600×900。作品ごとに配色を変えたジャンル別ポスター)/ `stream_hero.jpg`(1600×900)/ `stream_clip01〜03.jpg`(1280×720) |
+| `Resources/Images/Profile/` | `profile_cover.jpg`(1536×1024。マイクラ風の夕暮れの街)/ `gallery01〜06.jpg`(1000×1000。旅行 / 料理 / 街並み / 自然 / カフェ / 夜景のイラスト)。`avatar_user.jpg` は現行のまま |
+| `Resources/Images/Onboard/` / `Banner/` | `onboard01〜03.jpg`(1080×1080。人物なし)/ `banner01〜03.jpg`(1200×600。モールの宣伝・人物なし) |
+| `Resources/Images/Chat/` | `avatar_person01〜05.jpg`(256×256。アニメ少女 / メカヘッド / スライム / マイクラ風 usa7 / 銀髪の少年) |
+| `Resources/Images/Character/` | `usa1〜8_full.jpg` をリデザイン版(1024×1024)、`usa1〜8_face.jpg` をマイクラ風(256×256)に差し替え |
+| `Resources/Images/Common/social_background.png` | 構図はそのままのブラッシュアップ版(1024×1536) |
+| `Resources/Images/Monster/monster01.jpg` | ゼリー猫のモンスター(1000×1000)。使わない候補は `Resources` に含めず `ImageCandidates/monster_c01〜08_*.jpg` に保存。旧 `Pet/pet01〜03.jpg` は削除 |
+| 生成対象外 | `login_hero.png`(UILogin は `profile.jpg` を使用)/ `Raw/Social/player.jpg` / `Raw/Avatar/mofusand.jpg` / `avatar_user.jpg` |
+
+| 画面 | 内容 |
+|---|---|
+| UIShop | 商品 9 件を PC 機器の名称・円価格(`¥179,800` 等)へ。「こんにちは、アンナさん / デスク周りをアップグレード」。商品画像は `AspectFit` + Margin の余白付き中央表示(`PopularImage` / `ItemImage`)。アクセント色 `PinkAccent2` → `BlueDefault`、`PinkLighten5` → `BlueLighten5` |
+| UIItem | メカニカルキーボード / ¥19,800 / キーボード / 説明文。サイズタグを「スイッチ 赤軸 / 茶軸 / 青軸」(`SelectedSwitch` / `SwitchCommand`、スタイル `Variant*`)へ。「数量」「カートに入れる」。アクセント色をブルーへ |
+| UICart | 明細 3 件(キーボード / マウス / ヘッドセット)。単価は円の整数(`¥{0:N0}`。割引は円未満切り捨て)。ショッピングカート / カートに N 点 / スプリングセール −10% / 適用済み / 小計 / 割引 / 合計 / レジに進む、完了ダイアログも日本語。アクセント色をブルーへ |
+| UIMonster(旧 UIPet) | View / VM / `ViewId` / 画像フォルダを Pet → Monster に改名。名前「ぷるにゃ」/ 種族「ゼリーキャット」/ 説明文 / タグ(水タイプ / のんびり / 甘えん坊)/「パーティーに加える」「✓ パーティー参加中」。カードの Padding を Border から内側の VerticalStackLayout へ移し、Heart ボタンの Bounce が左端で切れないようにした |
+| UISuper | バナー = オータムセール開催中 / 新作ギフト入荷 / ポイントキャンペーン |
+| UIStream / UIStreamDetail | ヒーロー「君の知らない空の果てで」(2024 · SF · 2h 18m / 本日の高評価)。ポスター = 星海のリング / 紅の残響 / 屋上の約束 / キッチン三人組 / 山の記憶(詳細の関連作品に浮遊城の魔導士)、セクション = 高評価 / オリジナル / 急上昇 / アクション & アドベンチャー。詳細のあらすじ・出演・予告編 3 件・フレンド 5 件(`avatar_person01〜05`)を日本語化 |
+| UIChat | 送信者 = M･I･O / 日本酒飲郎 / 悪いスライム / †聖天使†、自分。アバターは `avatar_person01〜05` |
+| UIProfile | カバー `profile_cover.jpg`、ギャラリー `gallery01〜06.jpg` |
+| UIKitDash / UIKitNotify / UIKitSetting / UIKitOnboard / UIKitTracking | 本文を日本語化(おはようございます / うさうさうさん、平均心拍数・歩数・心拍数・消費カロリー・睡眠、注文 #2412 / はじめに、通知 5 件、アカウント / 環境設定、ようこそ / いつでもつながる / さあ、始めよう、スキップ / 始める、注文番号 / 到着予定 / 注文受付〜配達完了)。タイトルは Dashboard / Notifications / Settings / Onboarding / Tracking。Onboarding は `onboard01〜03.jpg` |
+| `Document/UI_*.png` | Shop / Item / Cart / Monster(旧 `UI_Pet.png`)/ Super / Stream / Chat / Profile / Onboard / Character / Social / KitDash / KitNotify / KitSetting / KitTracking を実機で撮り直し(1080×2424 RGB PNG) |
+| `README.md` | TODO を表形式に(Grid control / WiFi manager / Bottom sheet 等)。Image の一覧に `UI_Monster.png` |
+
+- 生成は `images/generations`(JSON)と `images/edits`(参照画像付き)。目標サイズは生成後に切り出し・縮小して JPEG 品質 80 で保存
+- ビルド 0 エラー 0 警告(Debug)。実機で全画面の表示を確認
+
+### UI 1 / UI 2 メニューの再配置と UIFeel の廃止(2026-09-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/UI/UIMenu1View.xaml` / `UIMenu2View.xaml` | 各 3 列×9 段 → **2 列×9 段**。UI 1 = Profile \| Login / Money \| Super / POS \| Shop / Schedule \| Calendar / Timeline \| − / Mail \| Chat / Kit \| − / Graph \| Graph2 / TreeMap \| −。UI 2 = Stream \| Dock / Load \| Gauge / Meter \| Mixer / Monster \| Wheel / Character \| Social / Radar \| − / Flight \| Tactical / Telemetry \| Energy / − \| −。余りセルは可視の無効ボタン |
+| 戻り先 | Graph / Graph2 / TreeMap → UI 1。Dock(Back / Exit)/ Stream / Character / Monster / Social → UI 2 |
+| UIFeel | 廃止(View / VM / `ViewId.UIFeel` / `Document/UI_Feel.png` を削除)。hex の花形配置は `Controls/HoneycombLayout` として View > Layout へ |
+| `Controls/HoneycombLayout.cs`(新規) | 列を交互に半セルずらし、上のセルから順に埋める `Layout`(`Columns` / `Spacing` / `StaggerEvenColumns`。セルサイズは子の DesiredSize の最大値)。3 列に 7 個で中央 1 + 周囲 6 の花形 |
+| `Modules/View/ViewLayoutView.xaml` / VM | 「HoneycombLayout (自作)」カードを CircularLayout の次に追加(8 カード)。VM の `Hexes`(`ViewLayoutHex`: Label / Icon / Fill / Accent / Delay / IsSelected)を `BindableLayout` で表示し、タップで選択(枠 3px + チェックバッジ、中央→外周の Pop 入場)。以降のカードの入場遅延を 1 段ずつ後ろへ |
+| `README.md` | Implement の「UI」「UI (Visualization)」行を「UI 1」「UI 2」に変更(メニューと同じ内訳。Feel を除去) |
+
+- ビルド 0 エラー 0 警告(Debug)。実機でメニュー・戻り先・Layout の表示とタップ選択を確認
+
+### ReSharper 指摘の解消(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/AvatarGroup.cs` / `Controls/CompareSlider.cs` | `BindableProperty.Create` の既定値 `null`(引数の既定値と同じ)を削除(4 件)。`ItemTemplate is not null && ItemTemplate.CreateContent() is View` を `ItemTemplate?.CreateContent() is View view` に統合 |
+| `Controls/CircularLayout.cs` | `ComputeExtent` の引数を `double[]` → `IEnumerable<double>` |
+
+- inspectcode(Release)0 件、Debug ビルド 0 警告。Release ビルドに残る 10 件の警告は Android SDK 側(`BluetoothGattServerCallback.OnServiceAdded` の動的登録 ×8、registered dynamically ×2)
+
+### CompareSlider の撤去と `ReplaceBitmap` の修正(2026-09-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/CompareSlider.cs` | 削除 |
+| `Modules/View/ViewCustomView.xaml` / VM | CompareSlider のカードと `CompareBorder` / `CompareTint` スタイル、VM の `ComparePosition` を削除(5 カード) |
+| `Modules/Sample/SampleCvLocalView.xaml` | 撮影後の表示を原画 `Image` + `DetectDrawing` の重ね(N1 以前の形)に戻した |
+| `Helpers/ImageHelper.cs` | `ReplaceBitmap` の `old.Dispose()` を `old?.Dispose()` に修正。`SKBitmapImageSource.Bitmap` の初期値は null のため、初回のキャプチャ / 読み込みで `NullReferenceException` になっていた(呼び出し元 8 箇所: Custom Vision(Local)/ CvNet 5 画面 / UI TreeMap の撮影 / View Drawing の保存プレビュー) |
+
+- ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Custom Vision の Detect → Retry → Detect、TreeMap の Count 2 回、Drawing の Save 2 回を確認(いずれも落ちず、2 回目で表示が更新される)
 
 ## C. この区間のナレッジ
 
@@ -1129,6 +1195,12 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 - `HeightRequest` を持つ子は `Fill` でもセルいっぱいに広がらない(`ComputeFrame` が明示サイズを優先する)。タイル用のスタイルには `HeightRequest` を持たせない
 - `GraphicsView` はタッチを消費する。親のジェスチャで受けたい重ね表示では `InputTransparent="True"` にする
 - Avalonia の `Panel`(`MeasureOverride` / `ArrangeOverride` / `StyledProperty` / `AttachedProperty`)は MAUI の `Layout` + `ILayoutManager` / `BindableProperty(.CreateAttached)` に対応する。配置を `DesiredSize` から決定的に再計算する形にすると `Measure` / `ArrangeChildren` で同じ詰め込みを共有できる
+- Foundry `gpt-image-2` の `images/generations` は JSON のみ(multipart は 400)、参照画像を渡す `images/edits` は multipart(`image[]`)。生成サイズは 1024x1024 / 1536x1024 / 1024x1536 のみで、目標サイズは生成後に切り出し・縮小する。既存作品に似た語や特徴(pocket monster 等)は安全フィルタで `moderation_blocked` になる
+- VS Code の Markdown プレビューはワークスペース外(`../`)の画像を表示しない。ドキュメントから参照する確認用サムネイルは `Document/` 配下に置く
+- `Border` の内容は Border の枠ではなく内容要素の枠でクリップされる(Android の `ContentViewGroup`)。内容の端にある要素を Scale で大きくする(Bounce 等)場合は、Padding を Border ではなく内側のレイアウトに持たせる
+- `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
+- `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
+- `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
 
 ---
 
@@ -1170,6 +1242,7 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 ※ 表は 2026-07-07 時点の実態。その後の区間5で空セルの多くが結線された(Main=10 行化で App 追加 / Basic=Setting / View=Layout・DragDrop・State・Toolkit・Custom / Sample=Sf Chart・Crop / Network=SCP / UI=11 行化で Wheel)。**差異を統一しない方針自体は不変**。
 ※ 2026-09-03: メインメニューの**番号プレフィックスを廃止**し並び替え(View → Sample → UI → App → Setting 最後、UI 行のみ 2 列)。**UIMenu は UIMenu1(アプリ系 18)/ UIMenu2(可視化・計器・HUD 系 13)へ分離**(F4 相互遷移)。**メニューは 8 段以上を確保し、グループ毎に行を分けて余りセルを可視の無効ボタンにする形へ統一**(ユーザー指示)。
 ※ 2026-09-05: **メニュー規約を 9 段基本へ改定**(ユーザー指示)。メインメニュー=9 段×2 列(関連項目 Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り行は無効ボタン)+**全ボタンに Material アイコン追加**。UI 1/UI 2=**各 3 列×9 段**。2 列化は UI 1(18 ボタン=2 列×9 段の 18 セルちょうど)でグループ行分けが成立しないため見送り、**UI 1/UI 2 の列数は統一する**(ユーザー決定=片方だけの 2 列化はしない)。
+※ 2026-09-12: **UI 1 / UI 2 を 2 列×9 段へ**(UI 1 = Profile \| Login / Money \| Super / POS \| Shop / Schedule \| Calendar / Timeline \| − / Mail \| Chat / Kit \| − / Graph \| Graph2 / TreeMap \| −、UI 2 = Stream \| Dock / Load \| Gauge / Meter \| Mixer / Monster \| Wheel / Character \| Social / Radar \| − / Flight \| Tactical / Telemetry \| Energy / 余り 1 行)。UIPet → UIMonster 改名、UIFeel 廃止(hex 配置は `HoneycombLayout` として View > Layout へ)。全メニューが 1 列または 2 列になった
 
 ### 対応しない・保留と確定した項目(旧チェックリストから移設)
 
@@ -1203,13 +1276,12 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 | その他 | `CameraOverlayView`(撮影ガイド枠)/ `MapBind`+`MapController(.MoveTo)` / `EasingCurveView` / `JetBrainsMono`(等幅数値)/ `NotoSerifJP`(Skia 日本語) | — |
 | 重ね配置 / 重ねアバター | `controls:OverlapPanel`(OffsetX/OffsetY/ReverseZIndex)/ `controls:AvatarGroup`(ItemsSource/MaxDisplayed/Overlap/AvatarSize/CountBackgroundColor/CountTextColor。超過分は「+N」) | カード束、視聴中フレンド等 |
 | 可変タイル / 円弧 | `controls:VariableSizeWrapPanel`(Columns/RowHeight/Spacing + 添付 ColumnSpan/RowSpan)/ `controls:CircularLayout`(Radius/StartAngle/SweepAngle/DistributeEvenly/FitToArc + 添付 Angle) | ダッシュボードのタイル、半円メニュー |
-| 比較 | `controls:CompareSlider`(BeforeContent/AfterContent/Position TwoWay/Orientation/HandleColor)。After 側の `GraphicsView` は `InputTransparent` にする | 検出前後・フィルタ前後 |
 
 ## 付録D. 外部リファレンス評価 決定・不採用アーカイブ(旧 Reference_Analysis.md / Reference_Summary.md より)
 
 51 件 (S-01〜S-51) を評価し、採用分は全て実装完了 (2026-09-01〜02)。QR ペイロード例や実装対象は各完了記録を参照。
 
-### 決定事項 (D1〜D22)
+### 決定事項 (D1〜D24)
 
 | # | 決定 |
 | --- | --- |
@@ -1235,6 +1307,8 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 | D20 | SSH.NET 2026.0.0 追加 (増分 = BouncyCastle.Cryptography のみ) |
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |
+| D23 | 第2弾 (`Reference_Nova_Nalu.md`) N1 は OverlapPanel + AvatarGroup / CircularLayout の円弧 / VariableSizeWrapPanel の 3 件を採用確定。**CompareSlider は撤去** (2026-09-13) |
+| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 (Radial / Orbit / Bubble / Loop。Hex は `HoneycombLayout` として実装済み) と N3-11 (小改善 2 点) は検討中 |
 
 ### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
@@ -1243,3 +1317,7 @@ LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTab
 ### 不採用 (2) — 本サンプル側が優れた / 同等の実装を持つため参考自体が不要
 
 AlohaKit.Controls (13/15 既存充足。設計思想も DrawingObject/DrawingControl として実装済み) / Grial SvgImage (SvgView が同構成) / The49 ViewClickListener・AiForms AddCommandEffect (TouchBehavior + ButtonOption で充足) / AiForms FAB (MapFabButton スタイルで充足) / slideshare 標準 UI 論 (UISocial 等で実装済み) / SimpleCalculator (ToTrimmedString のみ反映) / 数独記事 (題材のみ) / MauiScientificCalculator csproj (UI 構成のみ反映) / TimeRecorder アーキテクチャ (UI 要素のみ 9-2 へ) / PhotoAlbum バックエンド構成 / All the Lists (基準の明文化のみ 10-1 へ) / ライフサイクル記事 (実例のみ反映) / Doom.Mobile (Release 計測の知見のみ) / Breakout (プール / 論理解像度 / 状態機械を実装・反映済み) / Shiny の既存充足分 (Wizard / Parallax / SignaturePad / Toast / Shimmer / Badge / OTP / TreeView / CameraView ほか)
+
+### 不採用 (3) — 第2弾 (Nova.Avalonia.UI / Nalu。2026-09-13)
+
+Gravatar・identicon (画像アセットは 4 節で整備済み) / Scratcher / Watermark / SegmentedSlider (`Slider` + `SfSegmentedControl` で充足) / TimelinePanel (`UITimelineView` の行内描画で充足) / ResponsivePanel (縦画面固定) / ToggleTemplate (`IsVisible` 切替 + `DataTemplateSelector` で充足) / ExpanderBox (`mct:Expander` で充足) / DurationWheel (`DurationPicker` で充足) / HexPanel (`HoneycombLayout` として実装済み) / CompareSlider (実装後に撤去)
