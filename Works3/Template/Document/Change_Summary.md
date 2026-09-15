@@ -1443,8 +1443,59 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告(Debug)。実機で 承認依頼(承認 / 却下)の通知 → シェードの「却下」で `ボタン [reject]: SO-2026-000123`、本体タップで `タップ: SO-2026-000123`、Schedule → 正確なアラーム未許可の旨を表示し 14 秒以内にリマインダーが届く、Cancel で消えることを確認
 
+### ネットワーク実装(template-maui-server 対向)(2026-09-15)
+
+対向サーバーを template-maui-server(`D:\GitHubTemplate\template-maui-server`、8081 = Web / API、8084 = gRPC)にし、Web API / ストレージ / SignalR / gRPC を実装した。サーバー側の変更も同時に行なった(同リポジトリの README に反映)。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Network/NetworkMenuView.xaml` | Download \| Upload の行を HTTP \| Storage に、Realtime \| gRPC を 2 列に(単発ボタンは残置) |
+| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | Data の CRUD(一覧は 20 件ずつ追加読み込み、行選択で詳細取得)、ログイン状態(Id / 有効期限)、10 秒待つ API のキャンセル、ログ |
+| `Modules/Network/NetworkStorageView.xaml` + `NetworkStorageViewModel.cs`(新規) | ストレージの一覧(階層移動)、ファイル / 写真のアップロード(進捗 + キャンセル)、ダウンロード(公開フォルダ)、削除 |
+| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | 乱数のダミーを SignalR の実データに。サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、受信した通知の一覧(前面はトースト、バックグラウンドはローカル通知) |
+| `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC チャット(管理画面 `/chat` と相互、切断中の送信は再接続後に配送)と単項 RPC |
+| `Services/MonitorConnection.cs`(新規) | SignalR の常時接続(初回接続のバックオフ再試行 / 自動再接続 / Closed 後のやり直し / ネットワーク復帰で即再試行 / 停止) |
+| `Services/Chat/`(新規) | サーバーの WPF サンプル `Chat/` の移植(`ChatClient` = 指数バックオフ再接続 + 送信キュー)と `chat.proto` / `server.proto` のコピー |
+| `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | Data CRUD / ストレージ一覧・削除(PUT / DELETE は `HttpClient` を `RestResponse` に包む)、`LoginId` / `TokenExpires`、通信系ログの分離 |
+| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 で保存した Id により再ログインして 1 回だけ再送、`ExecuteTransfer`(インジケーターなし)、常時接続用の `EnsureLoginAsync` / `GetTokenAsync` |
+| `Models/Api/` | `DataListResponse`(`Id` long / `Total`)、`DataResponse` / `DataCreateRequest` / `DataCreateResponse` / `DataUpdateRequest` / `StorageListResponse` / `MonitorMessages` |
+| `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `MonitorEndPoint` → `GrpcEndPoint`、Setting の gRPC 行 |
+| `State/Session.cs` / `App.xaml.cs` | `IsForeground`(Window の Resumed / Stopped) |
+| `MauiProgram.cs` / `Helpers/JwtHelper.cs` / `Helpers/ReactiveSignalR.cs`(削除)/ `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase + 大文字小文字を区別しない設定に、JWT の exp 取り出し、`NetworkStorage`、アイコン、`<Protobuf Include="Services\Chat\*.proto">` |
+| `Modules/Network/NetworkScpViewModel.cs` | 転送を BusyState(オーバーレイ)の外で実行し、キャンセルボタンが押せるように |
+| `Document/Development.md` | 「サーバー処理」を対向サーバーの起動 / ポート / `adb reverse` / QR の手順に更新 |
+| template-maui-server | `/qr` に全キー(`GrpcEndPoint` / Ollama / SCP、接続先以外は `Client` セクションの初期値)、`GET /api/data/list?offset=&size=`(`Total`)、SignalR `MonitorHub`(`/hubs/monitor`、JWT)+ `DeviceRegistry` + `ServerStatusWorker`(1 秒)+ `NotificationRelayWorker`、管理画面 Devices(端末一覧 / 通知送信)と Home の接続数、gRPC `info.ServerInfo/GetServerTime`、開発環境の JWT 有効期限 5 分、テスト 9 件追加(33 件) |
+
+- ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8081` / `tcp:8084`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
+
+### .NET 10 API の適用と IChatClient 抽象化(2026-09-15)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Basic/BasicSettingView.xaml` | `SearchBar.SearchIconColor` / `ReturnType="Search"`、`Switch.OffColor` |
+| `Modules/Device/DeviceMiscViewModel.cs` | `IVibration.IsSupported` / `IHapticFeedback.IsSupported` が false の端末では Vibrate / Feedback のボタンを無効に |
+| `Modules/Device/DeviceLocationViewModel.cs` + `DeviceLocationView.xaml` | `IGeolocation.IsEnabled` が false のとき測位待ちの空状態に「Location service is disabled」を表示 |
+| `Services/AiChatClientFactory.cs`(新規)/ `Modules/Sample/SampleChatViewModel.cs` / `MauiProgram.cs` | チャットの依存を `OllamaSharp` の `Chat` から `Microsoft.Extensions.AI.IChatClient` に変更。生成は `AiChatClientFactory`(設定の Ollama)。会話の履歴は VM が `List<ChatMessage>` で保持し `GetStreamingResponseAsync(history)` で送る。音声の項目抽出は `GetResponseAsync` |
+| `Document/Development.md` | `dotnet run --project … -f net10.0-android --device <シリアル>` の手順(端末が複数あるときは `--device` 必須) |
+| `Document/Other_App_Candidates.md`(新規) | 本サンプルでは対象外だが別アプリケーションで導入を検討する項目の一覧(ディープリンクを移動) |
+| `Document/Telemetry_Study.md`(新規) | クラッシュレポート / テレメトリ基盤の検討資料(現状、要件と論点、DeviceManager 型 / OpenTelemetry / 外部サービスの候補と比較、アプリ側の組み込み設計、Aspire の位置付け) |
+| `Document/Task_Checklist.md` / `README.md` | 3-1(→ Other_App_Candidates)/ 3-7(完了)/ 3-8・3-9(→ Telemetry_Study)を削除、3-2 は残りの項目に、3-5 は StyleClass の活用計画に。TODO 表を同期 |
+
+- ビルド 0 エラー 0 警告。実機で Sample > Chat が Ollama(gemma2)で応答し、2 回目の質問が 1 回目の内容を踏まえること(履歴の送信)、Basic > Setting の検索アイコンが青、Device > Misc の Vibrate / Cancel が有効、`dotnet run --device 4A071JEBF16992` で配置と起動を確認
+
 ## C. この区間のナレッジ
 
+- **`dotnet run` の Android 実機指定は `--device <シリアル>`**(.NET 10 SDK)。`-p:AdbTarget=-d` は効かず、端末が複数(実機 + エミュレーター)あると候補一覧を出して止まる。起動後は logcat を流し続ける
+- **OllamaSharp の `OllamaApiClient` は `Microsoft.Extensions.AI.IChatClient` を実装する**(パッケージは推移参照で入る)。`Chat` ヘルパの代わりに履歴を呼び出し側で持ち `GetStreamingResponseAsync(history)` で送る。`ChatMessage` はアプリの `Models.Sample.Chat.ChatMessage` と衝突するので using エイリアスで避ける(SA1209: エイリアスは名前空間 using の後)
+- **Rester の JSON 既定は camelCase(`JsonCamelCaseNamingPolicy`、大文字小文字を区別する)**: PascalCase を返すサーバーとは一致せず、配列プロパティが null のまま(`Entries` の NRE)になる。`RestConfig.Default.UseJsonSerializer` で `PropertyNamingPolicy = null` + `PropertyNameCaseInsensitive = true` にして契約を PascalCase に揃える
+- **BusyState のオーバーレイは非同期コマンドの実行中の入力を全て塞ぐ**ため、キャンセルボタン付きの長い処理(転送 / 遅延 API)は `MakeAsyncCommand` にせず、`MakeDelegateCommand` から `_ = RunAsync()` で起動して自前のフラグ(`Transferring` 等)で再入を防ぐ。`MakeDelegateCommand` の既定(`CommandBehavior.None`)は Busy 中の実行を黙って捨てるので、コマンドの有効 / 無効だけでは判断できない
+- **常時接続の再接続ループから呼ぶトークン取得に `NetworkOperator`(`IDialog.Indicator`)を通してはいけない**: バックグラウンドスレッドから UI を触って例外になり、`IsConnectionException` に該当しないためループが黙って死ぬ。`EnsureLoginAsync` は `HttpService` を直接呼ぶ
+- **`CollectionView` の `EmptyView` を `ScrollView` 内の固定高さ(`HeightRequest`)の CollectionView に置くと `EmptyViewContentView` が `requestLayout` を繰り返し(logcat の `requestLayout() improperly called`)、常時再描画になる**(uiautomator dump も `could not get idle state` で取れない)。空表示は `IsVisible` を束縛した Label に置き換える
+- **SignalR の `DateTime` は Kind を失う**: サーバーの `GetLocalNow().DateTime`(Unspecified)を受けて `ToLocalTime()` すると UTC 扱いで +9 時間ずれる。時刻は `DateTimeOffset` で送り、クライアントは `.LocalDateTime` を使う
+- **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:8084")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8081)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る
+- **`MediaPicker.PickPhotoAsync` は MAUI 10 で非推奨**(`PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 })` を使う)。Android 16 のフォトピッカーは選択後に「完了」が要る
+- **ラムダの引数 `(_, e)` の `_` は(1 つだけなら)破棄ではなく引数名**: 中で `_ = SelectAsync();` と書くとその引数への代入になる(ReSharper `AssignmentInsteadOfDiscard`)。引数名を `sender` にする
+- **管理画面(Blazor Server)を自動操作する場合**: Cookie 認証のログインフォームはアンチフォージェリ付きのため、内蔵ブラウザで `form` を submit する。Devices / Chat は Interactive Server のためページ内操作にはブラウザが要る(curl 不可)
 - **ローカル通知の自作**: Android 13 以降は `POST_NOTIFICATIONS` の実行時許可(MAUI の `Permissions.PostNotifications`)。通知のタップは `PendingIntent.GetActivity` で `MainActivity` を開き、`LaunchMode = SingleInstance` のため起動中は `OnNewIntent` に届く(extras の id は再処理を避けるため取り出したら消す)。`NotificationCompat.Builder` のバインディングは `Set*` の戻り値が nullable なのでメソッドチェーンにせず 1 行ずつ呼ぶ。`Context.NotificationService` 定数が Activity 内で型名 `NotificationService` を隠すので名前空間付きで参照する。正確なアラーム(`SetExactAndAllowWhileIdle`)は Android 14 以降は `SCHEDULE_EXACT_ALARM` が既定で不許可(`CanScheduleExactAlarms` で判定し、未許可は inexact = 数秒〜数分の前後)。Android 16 の通知シェードは同じアプリの通知をまとめる(グループ見出しのタップは展開)。ボタンのタップは通知を自動で消さないのでアプリ側で `Cancel` する
 - **Azure AI Vision の SDK**: `ImageAnalysisOptions` は構造体なので省略時は `default` を渡す(`new()` は SA1129)。People は信頼度 0.0x の候補も大量に返すので閾値で切る。タグは `Language = "ja"` で日本語。Foundry の AI Services リソース(`*.services.ai.azure.com`)は Image Analysis 4.0 に応答するが Face API は 401(Face は対応リージョンの Face / AI Services リソースが必要)
 - **Ollama を実機から使う**: PC の Ollama(127.0.0.1:11434)へ `adb reverse tcp:11434 tcp:11434` で接続先を `http://localhost:11434` にする。最初の要求はモデルのロードで 1 分近くかかる。`ollama list` は Windows ではサーバを自動起動する
@@ -1500,6 +1551,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 ## 付録A. 開発ポリシー(恒常・実装時は常に遵守)
 
 - 共有 `Styles.xaml` は変更しない(**BasedOn 派生 or 新規リソース辞書**で対応)
+- **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は BasedOn 派生。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
 - フォントサイズは許可値のみ: `6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72, 96, 160`
@@ -1541,6 +1593,9 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - **コードレビュー対応(区間2)での除外**: `OnNotifyFunction1` の 116 ファイル重複解消 / SemanticProperties・AutomationId の付与 / gRPC・SignalR・Ollama の実装 / QR コードからの通信先・API キー無検証受け入れ
 - **保留**(必要になるまで扱わない): ダークモード対応 / ローカライズ整備 / iOS 対応 / DB マイグレーション機構
 - アクセシビリティ(`SemanticProperties` / `AutomationId` の付与、TalkBack 確認)= 対応不要(2026-09-13)
+- OAuth2 認可(`WebAuthenticator` + PKCE、旧 Task_Checklist 3-11)= 対応不要(2026-09-15)
+- ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
+- Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
 - ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)
 - `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)
 - Walkthrough(B-18)= 実装しない(D16)/ NavigationRail・月次集計(C-9/C-11)= 取り下げ(D10)/ Blazor(5-4)= 対応不要 / MBTiles(4-3)= 取りやめ(いずれも詳細は付録D と区間5 B-8)

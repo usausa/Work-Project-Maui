@@ -7,21 +7,16 @@
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Review | 未コミット分の確認(0-1〜0-10) | 0 |
+| Review | 未コミット分の確認(0-1〜0-13) | 0 |
 | Network | SCP の実機確認と転送実テスト(要 SSH サーバ) | 1 |
 | Device | Biometric(生体認証) | 2-1 |
 | Device | Push(FCM) | 2-2 |
-| Navigation | Deep link(ディープリンク) | 3-1 |
 | Basic | .NET 10 API(未適用 API の反映) | 3-2 |
 | Diagnostics | Layout metrics(レイアウト診断メトリクス) | 3-3 |
 | Basic | Global xmlns | 3-4 |
-| View | Utility StyleClass(Crosswind) | 3-5 |
+| View | StyleClass(文字サイズ × 配置) | 3-5 |
 | Sample | Face identification(LargeFaceList) | 3-6 |
-| Sample | Chat(IChatClient) | 3-7 |
-| Network | Aspire | 3-8 |
-| Diagnostics | Crash report / Telemetry | 3-9 |
 | View | Material 3(UseMaterial3) | 3-10 |
-| Network | OAuth2(WebAuthenticator) | 3-11 |
 | Device | Background task(WorkManager) | 3-12 |
 
 ## 運用ルール
@@ -143,7 +138,7 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Document/Change_Summary.md` | 区間 10 のエントリ(Control メニュー / Grid・Card list / WiFi / Bottom sheet・Drawer / 診断・リーク / Azure・Ollama / 画面録画 / ローカル通知)とナレッジ、付録D 不採用 (1) の追記 | 記述と実装の一致 |
-| `Document/Task_Checklist.md` / `README.md` | 残項目(1 SCP / 2 節 / 3 節 = リンク集からの取り込み候補)、TODO / Implement / 画像 | README の TODO とサマリ表の同期、画像リンク切れなし |
+| `Document/Task_Checklist.md` / `README.md` | 残項目(1 SCP / 2 節 / 3 節)、TODO / Implement / 画像 | README の TODO とサマリ表の同期、画像リンク切れなし |
 
 - [ ] **0-9** 上記
 
@@ -153,9 +148,63 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 - [ ] **0-10** `Works3/PushSample`(README に沿って確認。`PushHub` の CA1812 抑止と `CommunityToolkit.Mvvm` の採用を含む)
 
+### 0-11 ネットワーク(対向サーバー = template-maui-server)
+
+対向サーバーは `D:\GitHubTemplate\template-maui-server`(別リポジトリ、こちらも未コミット)。起動と端末の接続は `Document/Development.md`「サーバー処理」。サーバー側のパスは `template-maui-server/src/Template.MobileServer.Web/` からの相対((server) 印)。
+
+| 現在のファイル名 | 何用か | 確認観点 |
+| --- | --- | --- |
+| `Modules/Network/NetworkMenuView.xaml` + `NetworkMenuViewModel.cs` | Network メニュー | Download \| Upload の行が HTTP \| Storage に、Realtime \| gRPC の 2 列、SCP \| 空き。単発ボタン(server time / data list / secure / login / logout / error / delay)は残置 |
+| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | Web API(Data の CRUD) | ログイン状態(Id / 有効期限)、一覧(20 件ずつ追加読み込み)、行選択で詳細、作成 / 更新 / 削除 / クリア、未ログインの作成は 401、重複は 409、10 秒待つ API とキャンセル、ログ。F2 = Reload |
+| `Modules/Network/NetworkStorageView.xaml` + `.xaml.cs` + `NetworkStorageViewModel.cs` | ストレージ(簡易 FTP API) | ディレクトリの一覧 / 下階層 / 上へ、ファイル(FilePicker)と写真(MediaPicker)のアップロード、ダウンロード(公開フォルダ)、削除(確認ダイアログ)、進捗とキャンセル。F2 = Reload |
+| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR(MonitorHub) | 遷移時に接続 / 離脱時に切断、状態 / 接続 ID / サーバー時刻、サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、通知の一覧(前面 = トースト、バックグラウンド = ローカル通知)。F2 = Connect |
+| `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC(チャット) | 接続先 / 状態 / 未配送数、単項 RPC(サーバー時刻)、チャット(管理画面 `/chat` と相互)、切断中の送信は再接続後に配送。F2 = Connect |
+| `Modules/Network/NetworkScpViewModel.cs` | SCP | 転送を BusyState の外で実行(キャンセル可能に) |
+| `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | API 呼び出し、認証状態(`LoginId` / `TokenExpires`)、通信系ログ | PUT / DELETE は `HttpClient` を `RestResponse` に包む。ログは `Services/Log.cs` に分離 |
+| `Services/MonitorConnection.cs`(新規) | SignalR の常時接続 | 初回接続のバックオフ再試行 / 自動再接続 / Closed 後のやり直し / ネットワーク復帰 / 停止 |
+| `Services/Chat/ChatClient.cs` + `ChatConnectionState.cs` / `ChatMessageEntry.cs` / `ChatMessageEventArgs.cs` / `ChatStateEventArgs.cs` / `chat.proto` / `server.proto` | gRPC チャット(サーバーの WPF サンプルの移植)と proto のコピー | 指数バックオフ再接続、送信キュー、トークンは接続ごとに取得 |
+| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 の再ログイン再送、CRUD / ストレージ / 遅延のユースケース、常時接続用の `EnsureLoginAsync` / `GetTokenAsync` | 再ログインは 1 回だけ、`ExecuteTransfer` はインジケーターなし |
+| `Models/Api/DataListResponse.cs`(`Id` long / `Total`)/ `DataResponse.cs` / `DataCreateRequest.cs` / `DataCreateResponse.cs` / `DataUpdateRequest.cs` / `StorageListResponse.cs` / `MonitorMessages.cs` | 契約 DTO | サーバー側と同じ形 |
+| `Helpers/JwtHelper.cs`(新規)/ `Helpers/ReactiveSignalR.cs`(削除) | JWT の有効期限の取り出し、未使用ヘルパの削除 | — |
+| `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `MonitorEndPoint` → `GrpcEndPoint`(QR キー同名)、Setting の gRPC 行、QR 読み取り後の表示更新 | Setting 画面の Network セクション |
+| `State/Session.cs` / `App.xaml.cs` | 前面かどうか(`IsForeground`)を Window の Resumed / Stopped で更新 | — |
+| `MauiProgram.cs` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase(大文字小文字を区別しない)に、DI、`NetworkStorage`、アイコン(`Http` / `FolderOpen` / `Hub`)、proto の参照 | ビルド |
+| `Document/Development.md` | 「サーバー処理」 | 起動 / ポート / `adb reverse` / QR の手順 |
+| (server) `Components/Pages/QrPage.razor(.cs)` / `Settings/ClientSetting.cs` / `appsettings.json` | 設定 QR(全キー、接続先以外は `Client` セクションの初期値) | `/qr` の内容(キーは環境変数か user-secrets) |
+| (server) `Endpoints/DataEndpoints.cs` / `Models/Api/DataListResponse.cs` / `Core/Services/DataService.cs` / `Core/Models/RangeResult.cs` | 一覧の範囲取得(`offset` / `size`、`Total`) | 省略時は全件 |
+| (server) `Hubs/MonitorHub.cs` / `Infrastructure/Monitor/DeviceRegistry.cs` / `DeviceEntry.cs` / `MonitorNotifier.cs` / `Models/Api/MonitorMessages.cs` / `Workers/ServerStatusWorker.cs` / `NotificationRelayWorker.cs` / `Application/ApplicationExtensions.cs` / `Program.cs` / `Application/Log.cs` | SignalR ハブと状態配信 / 通知 | JWT(`access_token` クエリも可)、KeepAlive 15 秒 / ClientTimeout 30 秒 |
+| (server) `Components/Pages/DevicesPage.razor(.cs)` / `Layout/NavMenu.razor` / `Pages/Home.razor(.cs)` / `wwwroot/css/app.css` | 管理画面の Devices(端末一覧と通知の送信)、Home の接続数 | — |
+| (server) `Protos/server.proto` / `Handlers/ServerInfoHandler.cs` | 単項 RPC(サーバー時刻、匿名) | — |
+| (server) `appsettings.Development.json` / `Assembly.cs` | JWT 有効期限 5 分(開発)、テストへの `InternalsVisibleTo` | — |
+| (server) `tests/.../DeviceRegistryTests.cs` / `DevicesPageTests.cs` / `QrPageTests.cs` / `NavMenuTests.cs` / `README.md` | テスト(33 件)と README(API 一覧 / SignalR / QR の書式) | — |
+
+- [ ] **0-11** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」参照)
+
+### 0-12 .NET 10 API の適用 / IChatClient 抽象化 / ドキュメント
+
+| 現在のファイル名 | 何用か | 確認観点 |
+| --- | --- | --- |
+| `Modules/Basic/BasicSettingView.xaml` | `SearchBar.SearchIconColor` / `ReturnType`、`Switch.OffColor` | 検索アイコンが青、Switch オフ時の色 |
+| `Modules/Device/DeviceMiscViewModel.cs` | `IVibration.IsSupported` / `IHapticFeedback.IsSupported` でボタンの有効化 | Pixel では有効のまま |
+| `Modules/Device/DeviceLocationViewModel.cs` + `DeviceLocationView.xaml` | `IGeolocation.IsEnabled` で空状態に「Location service is disabled」 | 位置情報サービスを切ると表示 |
+| `Services/AiChatClientFactory.cs`(新規)/ `Modules/Sample/SampleChatViewModel.cs` / `MauiProgram.cs` | チャットの依存を `IChatClient`(`Microsoft.Extensions.AI`)に。履歴は VM が保持、抽出は `GetResponseAsync` | Ollama で応答と 2 回目の文脈、未設定時の疑似応答 |
+| `Document/Development.md` | `dotnet run --device <シリアル>` の手順 | — |
+| `Document/Other_App_Candidates.md`(新規) | 本サンプルでは対象外、別アプリで導入を検討する項目(ディープリンク) | — |
+| `Document/Telemetry_Study.md`(新規) | クラッシュレポート / テレメトリ基盤の検討資料(DeviceManager 型 / OpenTelemetry / 外部サービス、Aspire の位置付け) | 別セッションでの検討の入力 |
+
+- [ ] **0-12** 上記
+
+### 0-13 OpenTelemetry の組み込みサンプル(別フォルダ `Works3/OtelSample`)
+
+本アプリのコードは無変更。構成 / 実行手順 / 送信の設計(OTLP/HTTP、ILogger の転送、ディスク退避と再送、クラッシュ、MAUI のレイアウト計測)/ 確認済みの動作 / 解析上の制約 / ナレッジはすべて `Works3/OtelSample/README.md`。`Document/Telemetry_Study.md` の候補 B の実証。
+
+- [ ] **0-13** `Works3/OtelSample`(README に沿って確認。`EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用を含む)
+
 ---
 
 ## 1. SCP の実機確認と転送実テスト(要 SSH サーバ)
+
+sshd は対向サーバー(template-maui-server、4 節)に含まれない。
 
 - [ ] **1-1** Network メニュー: 「SCP」が追加され遷移できる(未設定時は接続先が「未設定 (設定画面の QR で投入)」でボタン無効)
 - [ ] **1-2** Main > Setting: 項目の**ラベルと現在値が横並び**で表示される。SCP セクション(Host/User/Password)があり、QR(`ScpHost=...` 形式)を読むと反映される
@@ -215,45 +264,25 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 `■MAUI.txd`(リンク集)は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。本節へ移した項目の元行は同書から削除している。本節は取り込む価値のあるトピックだけ。ファイルパスは `Template.MobileApp/` からの相対。
 
-### 3-1 ディープリンク(App Links / カスタムスキーム)
-
-参照: https://github.com/redth/maui.applinks.sample — `MainActivity` に `[IntentFilter(new[] { Intent.ActionView }, AutoVerify = true, Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable }, DataScheme = "https", DataHost = "...")]` を付けると、URL は MAUI 側が `Application.OnAppLinkRequestReceived(Uri)` に渡す。`https` リンクの検証には Google Search Console でのドメイン所有確認と `/.well-known/assetlinks.json`(パッケージ名 + 署名 SHA-256)の配置が必要。
-
-範囲: カスタムスキーム(例 `template://device/nfc`)でアプリ起動 → `StartupState` の初期遷移完了後に該当画面へ遷移(ローカル通知の `TakePendingTap` と同じ流れ)。`https` の検証リンク(`assetlinks.json`)は配布ドメインが決まった時点で追加。
-
-| 現在のファイル名 | 何用か | 変更 |
-| --- | --- | --- |
-| `Platforms/Android/MainActivity.cs` | 起動 Intent の受け口(`LaunchMode = SingleInstance`) | `[IntentFilter]`(`ActionView` + `CategoryDefault` / `CategoryBrowsable` + `DataScheme = "template"`)を追加 |
-| `App.xaml.cs` | アプリ | `OnAppLinkRequestReceived(Uri)` をオーバーライドし、URI を保持 / 通知 |
-| `MainPageViewModel.cs` | 初期遷移 | 初期遷移の完了後に保持した URI の画面へ遷移 |
-| `Modules/ViewId.cs` | 画面 ID | URI のパスから `ViewId` への対応表 |
-| `Document/Development.md` | 手順 | `adb shell am start -a android.intent.action.VIEW -d "template://device/nfc"` の確認手順 |
-
-- [ ] **3-1** 上記。未起動 / 起動中(`OnNewIntent`)の両方で該当画面へ遷移することを確認
-
 ### 3-2 .NET 10 の未適用 API の反映
 
 参照: https://learn.microsoft.com/ja-jp/dotnet/maui/whats-new/dotnet-10?view=net-maui-10.0(要約: https://www.telerik.com/blogs/recap-whats-new-net-maui-net-10)
-適用済み: `MauiXamlInflator=SourceGen` / `UseMonoRuntime=false`(CoreCLR)/ `SafeAreaEdges` / Async 系アニメーション API(`TranslateToAsync` 等)。`ListView` / `TableView` / `MessagingCenter` / `DisplayAlert` / `Page.IsBusy` は未使用のため非推奨化の影響なし。`Shell.NavBarVisibilityAnimationEnabled` は Shell 不使用のため対象外。
+適用済み: `MauiXamlInflator=SourceGen` / `UseMonoRuntime=false`(CoreCLR)/ `SafeAreaEdges` / Async 系アニメーション API(`TranslateToAsync` 等)/ `Switch.OffColor` / `SearchBar.SearchIconColor` / `SearchBar.ReturnType`(Basic > Setting)/ `Geolocation.IsEnabled`(Device > Location の空状態)/ `Vibration.IsSupported` / `HapticFeedback.IsSupported`(Device > Misc のボタン有効化)/ `dotnet run --device`(`Development.md`)。`ListView` / `TableView` / `MessagingCenter` / `DisplayAlert` / `Page.IsBusy` は未使用のため非推奨化の影響なし。`Shell.NavBarVisibilityAnimationEnabled` は Shell 不使用のため対象外。
+
+残りは UI の追加や共有ライブラリの変更を伴うもの。
 
 | API | 概要 | 現在のファイル名 | 変更 |
 | --- | --- | --- | --- |
-| `Switch.OffColor` | オフ状態の色 | `Modules/Basic/BasicSettingView.xaml` | Switch に指定 |
-| `SearchBar.SearchIconColor` / `SearchBar.ReturnType` | 検索アイコン色と Return キーの種別 | 同上 | SearchBar に指定 |
-| `Picker` の Open / Close API、`DatePicker.Date` / `TimePicker.Time` の nullable 化 | プログラムからの開閉、未選択状態(null) | 同上 + `BasicSettingViewModel.cs` | 未選択の表現(null)と開くボタン |
+| `Picker` の Open / Close API、`DatePicker.Date` / `TimePicker.Time` の nullable 化 | プログラムからの開閉、未選択状態(null) | `Modules/Basic/BasicSettingView.xaml` + `BasicSettingViewModel.cs` | 未選択の表現(null)と開くボタン |
 | `RefreshView.IsRefreshEnabled` | `IsEnabled` と分離した引き下げ更新の有効 / 無効 | `Modules/Control/ControlRefreshView.xaml` + `ControlRefreshViewModel.cs` | 切替スイッチを追加 |
-| `Geolocation.IsEnabled` | 位置情報サービスの有効状態 | `Modules/Device/DeviceLocationViewModel.cs` | 空状態(未取得)の判定に利用 |
-| `SpeechOptions.Rate` | 読み上げ速度 | `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs`(Speech カード) | 速度スライダー |
-| `Vibration.IsSupported` / `HapticFeedback.IsSupported` | 対応可否 | 同上(Feedback カード) | 非搭載表示 |
+| `SpeechOptions.Rate` | 読み上げ速度 | `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs`(Speech カード)、MauiComponents の `ISpeechService.SpeakAsync` | 速度の引数(共有ライブラリ側)と速度スライダー |
 | `HybridWebView.WebResourceRequested` / `InvokeJavaScriptAsync`(戻り値なし)/ `WebViewInitializing` / `WebViewInitialized` | リクエストの横取り(ローカル応答・ヘッダ変更)、初期化イベント、JS 例外の .NET 側再スロー | `Modules/Sample/SampleWebAppView.xaml` + `SampleWebAppViewModel.cs` | ローカル応答のデモ |
 | `WebView` の Android 全画面動画(`allowfullscreen`)/ JavaScript 有効・無効の platform-specific | Android 固有の WebView 設定 | `Modules/Sample/SampleWebBasicView.xaml` | 設定を追加 |
-| `dotnet run -p:AdbTarget=-d` | Android 実機へのビルド + 配置を `dotnet run` で行なう | `Document/Development.md` | ビルド手順へ追記 |
 
-- [ ] **3-2-1** Basic > Setting(Switch / SearchBar / Picker・DatePicker・TimePicker)
+- [ ] **3-2-1** Basic > Setting(Picker の Open / Close、DatePicker / TimePicker の null)
 - [ ] **3-2-2** Control > Refresh(`IsRefreshEnabled`)
-- [ ] **3-2-3** Device > Location / Misc(`Geolocation.IsEnabled` / `SpeechOptions.Rate` / `IsSupported`)
+- [ ] **3-2-3** Device > Misc(`SpeechOptions.Rate`。MauiComponents 側の変更を含む)
 - [ ] **3-2-4** Sample > HybridWebView / Web view
-- [ ] **3-2-5** `Development.md`(`dotnet run -p:AdbTarget=-d`)
 
 ### 3-3 レイアウト診断メトリクス(DiagnosticPanel)
 
@@ -272,46 +301,26 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 - [ ] **3-4-0**【判断】適用範囲 — 案A `GlobalXmlns.cs` の追加のみ(既存 XAML は変更不要、新規画面から接頭辞を省略)/ 案B 全 XAML(約 120 ファイル)の接頭辞を一括で除去 / 見送り。implicit 版(プレビュー)は対象外
 
-### 3-5 ユーティリティ StyleClass(Crosswind)
+### 3-5 StyleClass の活用(文字サイズ × 配置)
 
-参照: https://github.com/sthewissen/Plugin.Maui.Crosswind — Tailwind CSS 風のユーティリティ `StyleClass`(Borders / Colors / Flexbox / Shadows / Sizing / Spacing / Transforms / Typography / Visibility)を `App` 初期化時に登録して `StyleClass="p-4 bg-blue-500 rounded-lg"` のように使う。MAUI 9.0.50 SR5 以降(2025-12)。
+方針(付録A): スタイルの基本は共有 `Styles.xaml` からの `BasedOn` 派生。`StyleClass` は複数指定できる利点を、文字サイズ × 配置のように**直交する属性の組み合わせ**にだけ使い、サイズ × 配置の数だけスタイルを用意しなくて済むようにする。色や余白などは Style 側に置き、同じプロパティを Style と StyleClass の両方で指定しない。Crosswind(https://github.com/sthewissen/Plugin.Maui.Crosswind)のような全面的なユーティリティクラスは採用しない。
 
-- [ ] **3-5-0**【判断】採否 — 共有 `Styles.xaml` を変更せず `BasedOn` 派生で運用する現行方針と、2 系統のスタイル指定が混在する。採用する場合は新規画面 1 枚での試用に限定
+| 現在のファイル名 | 何用か | 変更 |
+| --- | --- | --- | 
+| `Resources/Styles/StyleClasses.xaml` | — | 新規。`Label` 向けのクラス(`Class` 付き Style)を定義: サイズ `size-10` / `size-11` / `size-12` / `size-14` / `size-16` / `size-18` / `size-20` / `size-24` / `size-28` / `size-36` / `size-48`(付録A の許可値のうち使用中のもの)、水平配置 `align-start` / `align-center` / `align-end`、太字 `bold` |
+| `App.xaml` | リソース辞書のマージ | `StyleClasses.xaml` を追加(共有 `Styles.xaml` は変更しない) |
+| `Modules/Network/NetworkHttpView.xaml` / `NetworkStorageView.xaml` / `NetworkRealtimeView.xaml` / `NetworkGrpcView.xaml` / `NetworkScpView.xaml` | 第 1 弾の適用先 | 画面ローカルの `CaptionLabel` / `ValueLabel` / `LogLabel` 等のうち FontSize だけを持つものを `StyleClass="size-12"` 等に置き換え(色を持つものは BasedOn 派生に残しサイズだけクラスへ) |
+| `Document/Change_Summary.md` 付録A | 開発ポリシー | 上記の方針を追記(3-5-1 で実施) |
+
+- [ ] **3-5-1** クラスの定義と `App.xaml` へのマージ、付録A への方針の追記
+- [ ] **3-5-2** Network の 5 画面へ適用し、表示が変わらないことを実機で確認
+- [ ] **3-5-3** 既存画面は触るときに適用する(一括変更はしない)。Style と StyleClass の同一プロパティ指定が無いことを inspectcode / 目視で確認
 
 ### 3-6 Face 識別(LargeFaceList)
 
 参照: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/face/Azure.AI.Vision.Face/samples/Sample6_LargeFaceListAsync.md — `LargeFaceListClient` で顔リストを作成 → 顔画像を追加 → 学習 → `FindSimilarAsync` で類似顔を検索する `Azure.AI.Vision.Face` の公式サンプル。
 
 - [ ] **3-6-0**【判断】要否 — `SampleCvNetFace` は顔検出(`DetectAsync`)まで。識別(Identify / Verify / FindSimilar)は Azure の Limited Access 申請が承認されたサブスクリプションと Face API のあるリソースが必要(現在の Foundry リソースは Face が 401)。承認済みの場合のみ、登録画面(顔リストへの追加)と照合画面を追加
-
-### 3-7 チャットの `IChatClient` 抽象化
-
-参照: https://devblogs.microsoft.com/dotnet/multimodal-voice-intelligence-with-dotnet-maui/(サンプル: https://github.com/davidortinau/telepathy)— `Plugin.Maui.Audio` で録音 → Whisper(`whisper-1`)で文字起こし → `Microsoft.Extensions.AI` の `IChatClient` で LLM(GPT-4o-mini)に構造化抽出させる例(2025-06)。
-
-| 現在のファイル名 | 何用か | 変更 |
-| --- | --- | --- |
-| `Modules/Sample/SampleChatViewModel.cs` | `OllamaApiClient` の直接呼び出し(接続先とモデルは `Settings` から実行時に読む) | 依存を `IChatClient` に置き換え(`OllamaApiClient` は `IChatClient` を実装)。生成はファクトリ経由 |
-| `MauiProgram.cs` | DI | 接続先(Ollama / OpenAI / Azure OpenAI)をファクトリの登録だけで差し替え |
-
-- [ ] **3-7-0**【判断】要否 — 文字起こしは `Components` の端末内音声認識のまま(Whisper は対象外)
-
-### 3-8 Aspire 統合
-
-参照: https://learn.microsoft.com/ja-jp/dotnet/maui/data-cloud/aspire-integration?view=net-maui-10.0 — .NET 10 の MAUI 用 Aspire service defaults プロジェクト。`builder.AddServiceDefaults()` で OpenTelemetry(メトリクス / トレース)、サービスディスカバリ、`HttpClient` のディスカバリ連携を有効化する。手順の補足: https://egvijayanand.in/2025/10/29/integrating-dotnet-maui-with-aspire-a-comprehensive-guide/(実機 / エミュレータからホストへ届くアドレス解決、テレメトリの送り先 = Aspire ダッシュボード)。公式サンプル: https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/MauiAspire(解説: https://learn.microsoft.com/fr-ca/samples/dotnet/maui-samples/maui-aspire-integration/)、Aspire 側の playground: https://github.com/dotnet/aspire/tree/main/playground/AspireWithMaui(AppHost / MauiClient / MauiServiceDefaults / ServiceDefaults / WeatherApi の構成)、解説動画: https://www.youtube.com/watch?v=iQ118UkM6J4(Gerald Versluis「Official Aspire Integration for .NET MAUI is here!」)。
-
-- [ ] **3-8-0**【判断】要否 — 開発時のローカル API 接続(`WorkMauiServer` + `adb reverse` + 設定 QR)をサービスディスカバリに置き換えるか。恩恵は開発時のみで、AppHost プロジェクトの追加が必要
-
-### 3-9 クラッシュレポート / テレメトリ基盤
-
-現状は未導入(`Log.cs` のローカルログのみ)。採用する場合は `Extender/` にプラグインとして追加し、送信先のキーは設定画面の QR で投入する。
-
-| 種別 | URL | 概要 | 位置付け |
-| --- | --- | --- | --- |
-| サンプル | https://github.com/mattleibow/CloudyCrashReporting/blob/main/CloudyCrashReporting.Providers.FirebaseCrashlytics/FirebaseReporterExtensions.cs | DataDog / Dynatrace / Firebase Crashlytics / New Relic / Raygun / Sentry のクラッシュ収集 SDK を MAUI で比較した実験リポジトリ(2024-01)。共通の `Core` に `ICrashReporterProvider` を置き、各プロバイダは `UseCrashReporter()` で `ConfigureLifecycleEvents`(Android `OnCreate` で `FirebaseApp.InitializeApp` 等)に初期化を組み込む。README に対応プラットフォームと SDK 機能のマトリクス | 候補①: Firebase Crashlytics(FCM を採用するなら同じ `google-services.json` で足りる)。候補②以降の比較表 |
-| ライブラリ | https://github.com/dhindrik/TinyInsights.Maui/blob/main/TinyInsights.TestApp/MauiProgram.cs | Application Insights を送信先にしたトラッキング(クラッシュ / ページビュー / 依存呼び出し / カスタムイベント)。`UseTinyInsights(connectionString, o => ...)` の 1 行で登録、専用のダッシュボードあり(2026-08) | 候補②: Application Insights(Azure 側の他サービスと同居させる場合) |
-| 講演資料 | https://www.docswell.com/s/tanaka_733/K4P265-maui-observability | MAUI アプリで OpenTelemetry のトレース / メトリクス / ログを Application Insights へ送る構成(2022-09) | 候補③: OpenTelemetry 直接(3-8 の Aspire を採用するなら同じ経路) |
-
-- [ ] **3-9-0**【判断】要否と送信先(候補①〜③)
 
 ### 3-10 Material 3(`UseMaterial3`)
 
@@ -324,23 +333,6 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | `Resources/Styles/Styles.xaml` | 共有スタイル | 変更しない(明示指定が優先されるため差分は既定外観のみ) |
 
 - [ ] **3-10-0**【判断】採否 — 有効化は 1 行だが Android の入力系コントロールの既定外観が全画面で変わる(Basic / Setting / Kit 系の Entry・Switch・DatePicker が主な影響範囲)。採用時は全画面の目視確認と `Document/*.png` の撮り直しが必要
-
-### 3-11 OAuth2 認可(`WebAuthenticator`)
-
-参照: https://qiita.com/Yukio-Ichikawa/items/0be863291259167f3d5c — MAUI 標準の `WebAuthenticator.AuthenticateAsync(authorizeUrl, callbackUrl)` で OS ブラウザ認証 → カスタム URI スキーム(`myapp://oauth2redirect`)で認可コードを受け取り → トークン交換 → リフレッシュ トークンで更新、を `IOAuth2Provider` 抽象で Google Drive / Box に対して実装した例(2026-02)。Box は http / https しか許可しないため中継 HTTPS サーバでリダイレクトしている。
-
-範囲: Google の認可コード + PKCE(モバイルはクライアント シークレット無し)→ トークン交換 → ユーザー情報の表示まで。クライアント ID / リダイレクト スキームは設定画面の QR で投入し、トークンは `SecureStorage` に保存。`WebAuthenticator` は Essentials(`Microsoft.Maui.Authentication`)のため追加パッケージ不要。
-
-| 現在のファイル名 | 何用か | 変更 |
-| --- | --- | --- |
-| `Platforms/Android/WebAuthenticatorCallbackActivity.cs` | — | 新規。`WebAuthenticatorCallbackActivity` 派生 + `[IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable }, DataScheme = "template", DataHost = "oauth2redirect")]`(3-1 のスキームとは `DataHost` で分ける) |
-| `Modules/Network/NetworkOAuthView.xaml` + `NetworkOAuthViewModel.cs` | — | 新規。ログイン / トークン表示 / 更新 / ログアウト |
-| `Modules/Network/NetworkMenuView.xaml` | Network メニュー(空きセルあり) | ボタン追加(未設定時は無効) |
-| `Modules/ViewId.cs` | 画面 ID | 追加 |
-| `State/Settings.cs` + `Modules/Main/SettingView.xaml` / `SettingViewModel.cs` | 設定 | クライアント ID / リダイレクト URI の QR 投入と表示 |
-| `Usecase/` | — | 認可 URL の組み立て(PKCE の `code_verifier` / `code_challenge`)、トークン交換・更新の `HttpClient` 呼び出し |
-
-- [ ] **3-11-0**【判断】要否とプロバイダ — Google Cloud Console での OAuth クライアント登録(リダイレクトはカスタム スキーム)が前提
 
 ### 3-12 バックグラウンド定期タスク(WorkManager)
 
@@ -356,3 +348,4 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | `MauiProgram.cs` | `ConfigureComponents` | DI 登録 |
 
 - [ ] **3-12-0**【判断】要否 — 再起動後も残る遅延処理(同期 / 送信キュー)の需要があるか。WorkManager は再起動後に自動で再スケジュールされるため `RECEIVE_BOOT_COMPLETED` は不要。常駐(前景サービス)は対象外
+

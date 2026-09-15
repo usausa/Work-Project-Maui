@@ -60,6 +60,12 @@ UI更新時は `ObserveOnCurrentContext()` 等でマーシャリングするこ�
 テンプレートプロジェクトを取得し、Visual Studioでビルドを行なうと機能サンプルの入ったテンプレートを作成できる。  
 テンプレートプロジェクトはそのままAndroidで実行可能なので、動作確認を行ないながらソースを参照して構造を理解する。  
 
+コマンドラインからは `dotnet run` で実機(USB)やエミュレーターへビルド・配置・起動できる。端末が複数あるときは `--device` でシリアル(`adb devices` の値)を指定する(省略すると候補の一覧が表示される)。起動後は logcat の出力が続くので Ctrl+C で抜ける。
+
+```
+dotnet run --project Template.MobileApp/Template.MobileApp.csproj -f net10.0-android --device <シリアル>
+```
+
 ## ビルドバリアント
 
 単一ソースでHW固有機能を使用する複数モデルのビルドに対応する場合、設定ファイルで対象とするHW用の定義を切り替えてビルドを行なう。  
@@ -110,22 +116,28 @@ EmbeddedBuildPropertyの値の参照は、partialメソッドでBuildProperty属
 
 ## サーバー処理
 
-通信処理の対となるサーバー側テンプレートについてはtemplate-maui-serverを参照。
+通信処理の対向は template-maui-server(`D:\GitHubTemplate\template-maui-server`)。API 一覧・QR の書式・gRPC / SignalR の契約は同リポジトリの README を参照。
 
-### サーバ実装機能
+### サーバーの起動と端末の接続
 
-- [X] ファイルアップロード・ダウンロードAPI(簡易FTP)
-- [X] データベースCRUD API
-- [X] サーバー側時刻取得API(簡易NTP)
-- [X] WASM UI フロントエンド基盤
-- [X] APIリクエスト/レスポンス圧縮
-- [ ] デバイスステータス通知
-- [ ] リアルタイムサーバーPush
-- [ ] クラウドサービス向けロギング
-- [ ] フロントエンドUI(デバイスステータス、ファイル操作、DB操作)
-- [ ] フロントエンド認証機能
-- [ ] フロントエンドエラー画面
-- [ ] フロントエンドプログレス画面
+```
+cd template-maui-server
+dotnet run --project src/Template.MobileServer.Web
+```
+
+- ポート: 8081 = Web / API(HTTP/1.1)、8084 = gRPC(HTTP/2 h2c)。管理画面は `http://localhost:8081/`(初期アカウント admin / admin)
+- USB 接続の端末は `adb reverse tcp:8081 tcp:8081` と `adb reverse tcp:8084 tcp:8084` で端末側の `localhost` を PC へ転送する(LAN の端末は PC の IP で接続)
+- 端末の設定は管理画面の `/qr` が出す QR を Main > Setting の「Scan configuration QR」で読み取る(`ApiEndPoint` / `GrpcEndPoint` の既定値はサーバー自身の URL、AI サービス / Ollama / SCP の値はサーバーの設定 `Client` セクションから)
+- 開発環境(`appsettings.Development.json`)の JWT 有効期限は 5 分。期限切れ後の API 呼び出しは 401 になり、アプリ側が保存した Id で再ログインして再送する
+
+### サーバー側の機能(template-maui-server)
+
+- Web API(JWT Bearer、PascalCase JSON): サーバー時刻 / ログイン / Data CRUD(一覧は `offset` / `size` の範囲取得)/ テスト用のエラー・遅延
+- ストレージ API(簡易 FTP): 一覧 / ダウンロード / アップロード(生ボディ、gzip 展開)/ 削除
+- gRPC: チャット(双方向ストリーミング)/ サーバー時刻(単項 RPC)
+- SignalR(`/hubs/monitor`): サーバー状態の配信(1 秒ごと)/ 端末状態の受信 / 通知の送信
+- 管理画面(Blazor Server): Data / Files / Chat / Devices(接続中の端末と通知の送信)/ QR
+- 要求 / 応答の圧縮、OpenAPI(開発時)、ヘルスチェック、Serilog / OpenTelemetry
 
 ----
 
