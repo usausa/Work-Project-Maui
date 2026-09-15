@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PushClient"
+             xmlns:shared="clr-namespace:PushShared;assembly=PushShared"
+             x:Class="PushClient.MainPage"
+             x:DataType="{x:Type local:MainViewModel}"
+             Title="Push sample">
+
+    <Grid Padding="16"
+          RowSpacing="12"
+          RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+        <!-- 接続先 (adb reverse なら http://localhost:5000、LAN なら http://PC の IP:5000) -->
+        <Entry Grid.Row="0"
+               Keyboard="Url"
+               Placeholder="http://localhost:5000"
+               Text="{Binding ServerAddress}" />
+
+        <Grid Grid.Row="1"
+              ColumnSpacing="8"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding StartCommand}"
+                    Text="開始 (常駐)" />
+            <Button Grid.Column="1"
+                    Command="{Binding StopCommand}"
+                    Text="停止" />
+        </Grid>
+
+        <Grid Grid.Row="2"
+              ColumnSpacing="8"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding SendTestCommand}"
+                    Text="テスト送信" />
+            <Button Grid.Column="1"
+                    Command="{Binding OpenBatterySettingsCommand}"
+                    Text="電池の最適化" />
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="3"
+                             Spacing="4">
+            <Label FontAttributes="Bold"
+                   Text="{Binding Status, StringFormat='状態: {0}'}" />
+            <Label FontSize="12"
+                   Text="{Binding ConnectionId, StringFormat='接続 ID: {0}'}" />
+            <Label FontSize="12"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}"
+                   Text="{Binding LastError, StringFormat='エラー: {0}'}" />
+        </VerticalStackLayout>
+
+        <!-- 受信した通知 (新しいものが上) -->
+        <CollectionView Grid.Row="4"
+                        ItemsSource="{Binding Messages}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type shared:PushMessage}">
+                    <VerticalStackLayout Padding="0,6">
+                        <Label FontAttributes="Bold"
+                               Text="{Binding Title}" />
+                        <Label Text="{Binding Body}" />
+                        <Label FontSize="11"
+                               TextColor="Gray"
+                               Text="{Binding SentAt, StringFormat='{0:HH:mm:ss}'}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

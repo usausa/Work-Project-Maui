@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PushShared/PushShared.csproj" />
+  <Project Path="PushServer/PushServer.csproj" />
+  <Project Path="PushClient/PushClient.csproj" />
+</Solution>
