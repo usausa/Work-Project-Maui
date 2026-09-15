@@ -8,6 +8,8 @@ public static class ImageHelper
         source.Bitmap = bitmap!;
         if (!ReferenceEquals(old, bitmap))
         {
+            // 注釈は non-null だが初回は未設定で null になる (実行時の実態に合わせる)
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             old?.Dispose();
         }
     }

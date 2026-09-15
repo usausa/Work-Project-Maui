@@ -89,8 +89,6 @@ public enum ViewId
     SampleMap1,
     SampleMap2,
 
-    SampleChart,
-    SampleSfChart,
     SampleMedia,
 
     SampleMarkdown,
@@ -111,11 +109,6 @@ public enum ViewId
     // View
     ViewMenu,
 
-    ViewCollection,
-
-    ViewCarousel,
-    ViewRefresh,
-
     ViewBorder,
     ViewShadow,
 
@@ -130,11 +123,30 @@ public enum ViewId
     ViewDrawing,
     ViewLayout,
     ViewState,
-    ViewToolkit,
     ViewDragDrop,
-    ViewCustom,
 
     ViewEffect,
+
+    // Control
+    ControlMenu,
+
+    ControlCollection,
+
+    ControlCarousel,
+    ControlRefresh,
+
+    ControlToolkit,
+    ControlCustom,
+
+    ControlChart,
+    ControlSfChart,
+
+    ControlGrid,
+    ControlGridColumn,
+    ControlCardList,
+
+    ControlBottomSheet,
+    ControlDrawer,
 
     // App
     AppMenu,

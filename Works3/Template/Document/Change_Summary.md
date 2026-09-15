@@ -1293,8 +1293,176 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 他の一方向コンバーター 18 件は `NotSupportedException` のまま
 - ビルド 0 エラー 0 警告(Debug)。実機で UIMail の日時表示を確認
 
+### Control メニューの新設(2026-09-13)
+
+部品・一覧系の画面を Main > Control に集め、View は表現技法(レイアウト / 装飾 / アニメーション / 描画)の画面だけにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Main/MenuView.xaml` | Row 4 を `View` / `Control` の 2 列に。Control のアイコンは `AppIcons.ViewModule`(`Markup/AppIcons.cs` に追加、起動時プリロード対象) |
+| `Modules/Control/ControlMenuView.xaml` + `ControlMenuViewModel.cs` | 新規(9 段 × 2 列)。Collection \| Carousel / Refresh \| − / Toolkit \| Custom / Chart \| Sf Chart / 残り 5 段は無効ボタン |
+| `Modules/Control/ControlCollectionView` / `ControlCarouselView` / `ControlRefreshView` / `ControlToolkitView` / `ControlCustomView` | `Modules/View/View*` から移動・改名(`ViewId` も `Control*`)。戻り先は `ControlMenu` |
+| `Modules/Control/ControlChartView` / `ControlSfChartView` | `Modules/Sample/SampleChartView` / `SampleSfChartView` から移動・改名(チャートを Control に集約) |
+| `Modules/View/ViewMenuView.xaml` | Layout \| − / Border \| Shadow / Animation \| Easing / Lottie \| Svg / Graphics \| − / Drawing \| DragDrop / Effect \| State / 残り 2 段は無効ボタン |
+| `Modules/Sample/SampleMenuView.xaml` | Chart / Sf Chart を外し、Media \| − の行に |
+| `Document/Control_Collection.png` / `Control_Carousel.png` / `Control_Refresh.png` / `Control_Chart.png` / `Control_SfChart.png` | `UI_Collection` / `UI_Carousel` / `UI_Refresh` / `Sample_Chart` / `Sample_SfChart` から改名(README の Image 節は `Control_Chart.png` に追従) |
+| `README.md` | Implement 表に Control 行(Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart)、View / Sample 行から除去。TODO 表から Control menu を削除 |
+
+- View / ViewModel の DI 登録は `Modules` 名前空間配下の名前で自動登録されるため、名前空間の移動に伴う登録変更は無い
+- ビルド 0 エラー 0 警告(Debug)。実機で Main > Control > 7 画面の遷移と Back、View / Sample メニューの表示を確認
+
+### WiFi manager(2026-09-14)
+
+| 対象 | 内容 |
+|---|---|
+| `Components/WiFiManager.cs` | `IWiFiManager`(`IsSupported` / `IsRadioOn` / `Connection` / `AccessPoints` / `Enabled` / `StartScan` / `OpenSettings` / `StateChanged`)、`WiFiConnection`(SSID / BSSID / RSSI / 信号レベル / リンク速度(Rx / Tx)/ 周波数 / 規格 / IP / ゲートウェイ / DNS)、`WiFiAccessPoint`(SSID / BSSID / RSSI / 信号レベル / 周波数 / チャネル / 帯域幅 / セキュリティ / 規格 / 検出時刻)。`Nfc` と同じ共通 + `*.android.cs` の partial 構成 |
+| `Components/WiFiManager.android.cs` | `ConnectivityManager.NetworkCallback`(Android 12 以降は `IncludeLocationInfo`)で Wi-Fi の能力(`WifiInfo`)とリンク情報(`LinkProperties`)を受け取り合成。無線のオン / オフは `WIFI_STATE_CHANGED`、スキャン結果は `SCAN_RESULTS_AVAILABLE` の `BroadcastReceiver` で追従(`ScanResults` は電波の強い順、`Capabilities` からセキュリティ、周波数からチャネルを算出)。`StartScan` はシステムの回数制限で拒否されると false。信号レベルは `WifiManager.CalculateSignalLevel`、Settings は `ACTION_WIFI_SETTINGS` |
+| `Modules/Device/DeviceWiFiView.xaml` + `DeviceWiFiViewModel.cs` | 上部 = 接続中のブロック(信号アイコン / SSID / 状態バッジ / 📶 dBm・⚡ リンク速度・📡 帯域・🌐 IP の絵文字行。タップで BSSID / 周波数 / 規格 / Rx・Tx / ゲートウェイ / DNS を展開)。下部 = 検出したアクセスポイントの `CollectionView`(件数と帯域別の内訳、更新時刻、スキャンボタン。行 = 信号アイコン + SSID + 接続中 / 帯域 / 🔒 セキュリティ / 規格のバッジ + 📶 dBm・📡 チャネル・↔ 帯域幅、タップで BSSID と検出時刻を展開。接続中を先頭に電波の強い順)。行は角丸のカードにせず区切り線で仕切る。表示中だけ監視し、変化はイベントで反映。F2 = スキャン(制限中はキャッシュ表示の旨)、F4 = Wi-Fi 設定。権限が無い場合は SSID とスキャン結果が取れない旨を表示 |
+| `Converters/WiFiSignalIconConverter.cs` | 信号レベル → アイコン(未接続 / 0〜4 本) |
+| `Modules/Device/DeviceMenuView.xaml` / `MauiProgram.cs` / `Extensions.cs` / `Permissions.cs` / `Platforms/Android/AndroidManifest.xml` | WiFi ボタンを有効化、DI 登録、`StateChangedAsObservable`、`NearbyWifiDevices` 権限(Android 13 以降のみ必須)と `RequestNearbyWifiDevicesAsync`、マニフェストに `CHANGE_WIFI_STATE`(スキャン要求)/ `NEARBY_WIFI_DEVICES` を追加 |
+| `Document/Device_WiFi.png` / `README.md` | 画像を追加(Image 節)、Implement の Device 行に WiFi、TODO から削除 |
+
+- ビルド 0 エラー 0 警告(Debug)。実機で接続情報とスキャン結果(2.4 GHz / 5 GHz の 2 AP)の表示、`svc wifi disable / enable` による オフ → 未接続 → 接続中 の追従、F2 のスキャン、F4 で設定画面が開くことを確認
+
+### Grid(ClamGrid)と Card list の追加(2026-09-13)
+
+Control メニューに一覧系の 2 画面を追加した。Grid は `ClamGrid` 1.0.0(SkiaSharp 描画のグリッド)、Card list は標準の `CollectionView` によるカード一覧。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `ClamGrid` 1.0.0 を追加(SkiaSharp 4.151.2 依存で既存と同版) |
+| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` | 受注一覧 2,000 行。列は XAML の `GridColumn` で宣言し値は `OrderRow.Accessors` から Key で解決。`GridDataView<OrderRow>` が行・選択・ソートを持ち、`ColumnOrders` / `SortOrders` は TwoWay(グリッドが正規化した値を書き戻す)。見出しタップでソート(3 段階、順位表示)、見出し長押しで列設定、行タップで選択、行長押しで未処理の一括選択 / 全解除、確認列はチェックで編集。先頭 2 列固定。F2 選択解除 / F3 列設定とソートを既定へ / F4 再読込、確定(ダイアログ)/ 状態更新(変更通知で並びと色が追従) |
+| `Modules/Control/ControlGridColumnView.xaml` + `ControlGridColumnViewModel.cs` | 列設定。`GridColumnEditSession` を `PushAsync` の引数で受け取り、チェック(表示)と行ヘッダのドラッグ(順序、`GridRowMover`)で編集、Apply で `PopAsync` の引数に `Export()` を返す |
+| `Modules/Control/ControlGridStyles.cs` | `GridStyle`: 横罫線のみ・行ヘッダなし・白地の見出し・`sans-serif`・淡いブルーの選択・状態列は `CellColors` で状態ごとの色、納期は期限切れを赤字。列設定用は行ヘッダをドラッグの取っ手として表示 |
+| `Models/Control/OrderRow.cs` / `OrderStatus.cs` / `OrderSamples.cs` / `ColumnOptionAccessors.cs` | 行モデル(変更通知)、状態、ダミーデータ、列設定行のアクセサ |
+| `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` | 訪問先一覧 40 件。カードのタップで選択(青背景 + 白文字)、右端で展開(電話 / 前回訪問 / メモ)、状態(未訪問 / 訪問済 / 再訪問 / 不在)で左のストリップと背景色、重点 / 区分のバッジ(角 2px)。行は角丸のカードにせず区切り線で仕切る。ツールバー = 並替パネル(キーをタップで第 1 キー、再タップで昇降反転、最大 3 キー、順位バッジ)/ 昇降 / 全展開 / 再読込。F2 並替 / F3 未訪問の一括選択(全選択済みなら解除)/ F4 確定(ダイアログ) |
+| `Models/Control/Visit.cs` | `Visit` / `VisitStatus` / `VisitSamples`(汎用のダミー) |
+| `Modules/Parameters.cs` | 列設定セッションと列順序の受け渡し |
+| `Modules/Control/ControlMenuView.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | Row 4 = Grid \| Card List(`TableChart` / `ViewAgenda`) |
+| `Document/Control_Grid.png` / `Control_CardList.png` / `README.md` | 画像を追加(README の Image 節に 1 行)、Implement 表の Control 行に Grid(ClamGrid)/ Card list、TODO から削除 |
+
+- ビルド 0 エラー 0 警告(Debug)。ReSharper inspectcode 0 件(`ControlCardListView.xaml` の RelativeSource / `x:DataType` 指定バインドは `Xaml.BindingWithContextNotResolved` の誤検知として既存画面と同じコメントで抑止。`Helpers/ImageHelper.cs` の `old?.Dispose()` には理由付きの `ReSharper disable once` を再付与)。実機で Grid のソート / 選択 / 列設定(表示切替・ドラッグ・Apply・Reset)/ 横スクロール、Card list の選択 / 展開 / 並替パネル / 昇降 / 全展開 / F3 / F4 を確認
+
+### Bottom sheet と Drawer の追加(2026-09-14)
+
+Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Syncfusion(`SfBottomSheet` / `SfNavigationDrawer`)と自作(`Controls/BottomSheetView.cs` / `Controls/SideDrawer.cs`)を同じ内容で並べて比べる。
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/BottomSheetView.cs` | 自作のボトムシート(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `SheetContent` / `HalfExpandedRatio`(既定 0.5)/ `ExpandedRatio`(0.92)/ `CornerRadius` / `SheetBackgroundColor`。背景(タップで閉じる)と上角丸の `Border`(グラバー + 内容)を重ね、開くと半開まで上がる。ドラッグで 半開 ⇔ 全開 ⇔ 閉じる(離した位置に近い状態へ)、背景の暗さはシートの位置に連動。高さが未確定(初回表示)のときの開閉は `SizeChanged` 後に行う。ジェスチャは内側の `Grid` に付ける |
+| `Controls/SideDrawer.cs` + `SideDrawer.android.cs` | 自作のドロワー(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `DrawerContent` / `DrawerWidth`(280)/ `EdgeSwipeEnabled` / `EdgeWidth`(24)/ `DrawerBackgroundColor`。左端の帯(スワイプで開く)+ 背景(タップで閉じる)+ 影付きのパネル(ドラッグで閉じる。半分より開いていれば開く)。閉じているときは帯以外はタッチを通す(`InputTransparent` + `CascadeInputTransparent=False`)。Android は帯の上下中央 200dp を `SystemGestureExclusionRects` でシステムの戻るジェスチャから除外 |
+| `Modules/Control/ControlBottomSheetView.xaml` + `ControlBottomSheetViewModel.cs` | 新規。`SfBottomSheet`(ページを包む。`HalfExpandedRatio=0.45` / `IsModal`)と `BottomSheetView` をルートの `Grid` に兄弟で置き、同じ内容(4 項目 + 閉じる)を表示。F2 = Sf / F3 = 自作。選択した項目を「結果」カードに表示して閉じる |
+| `Modules/Control/ControlDrawerView.xaml` + `ControlDrawerViewModel.cs` | 新規。`SfNavigationDrawer`(`Position=Left` / `Transition=SlideOnTop` / 幅 280 / ヘッダ 96 / フッタ 44)と `SideDrawer` を `SfSegmentedControl` で切り替え(端のスワイプは選択中の側だけ有効)。ヘッダ(アバター / 名前 / メール)+ 5 項目(Material アイコン)+ フッタを共通の Style / `DataTemplate` で構成。F2 = 開閉。項目タップで「選択中」に反映して閉じる |
+| `Modules/Control/ControlToolkitView.xaml` + `ControlToolkitViewModel.cs` | `SfBottomSheet` の「シート」を Control > Bottom Sheet へ移し、ルートを `SfTabView` に。`SfSegmentedControl` の `SelectedIndex` は `Mode=TwoWay` を明示(Drawer 画面も同じ) |
+| `Modules/Control/ControlMenuView.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | Row 5 = Bottom Sheet \| Drawer(`VerticalAlignBottom` / `MenuOpen`)。空きは 3 段 |
+| `Document/Control_BottomSheet.png` / `Control_Drawer.png` / `README.md` | 画像を追加(Image 節に 1 行)、Implement 表の Control 行に Bottom sheet / Drawer、TODO から削除 |
+
+- ジェスチャナビゲーションでは画面の左端からのスワイプはシステムの「戻る」が優先される。`SfNavigationDrawer` の `EnableSwipeGesture` は効かず、自作は除外した帯(上下中央 200dp)から始めたときだけ開く(付録B)
+- ビルド 0 エラー 0 警告(Debug)。ReSharper inspectcode 0 件(`DeviceWiFiView.xaml` の RelativeSource バインドの誤検知を既存画面と同じコメントで抑止、`ControlToolkitView.xaml` の未使用 xmlns を削除、`WiFiManager.android.cs` の整数除算と冗長な `?.` を修正)。実機で Sf / 自作のシート(開く・上へドラッグで全開・下へドラッグで半開と閉じる・背景タップで閉じる・項目選択)、Sf / 自作のドロワー(開く・項目選択・背景タップ・パネルのドラッグで閉じる・自作は帯の中央からの端スワイプで開く)、Toolkit の `SfSegmentedControl` の選択が VM に反映されることを確認
+
+### WiFi のアクセスポイント一覧の定期更新と未検出の猶予(2026-09-14)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Device/DeviceWiFiViewModel.cs` | 表示中は「最後のスキャン要求または結果から 30 秒」経ったときだけ自前でスキャンする(他者のスキャン結果が届いていれば延期。前面アプリの制限 2 分に 4 回。拒否されたときは次回に回す)。手動スキャン(ヘッダの更新ボタンと F2)は廃止し自動のみ。新しいスキャン結果は行を差し替えず、BSSID で既存の行をその場で更新して並べ替え(`ObservableCollection.Move`)、含まれなかった行は「未検出」にして 60 秒後に消す(5 秒ごとに確認)。同じ結果の再通知(接続の変化など)では未検出の判定をしない。並びは 接続中 → 検出中を電波の強い順 → 未検出 |
+| `Modules/Device/DeviceWiFiView.xaml` | 未検出の行は半透明(Opacity 0.45)にして「未検出」バッジを付ける。ヘッダの更新ボタンと F2 = Scan を削除(F4 = 設定のみ) |
+| `Components/WiFiManager.android.cs` | スキャン結果の受信を `SCAN_RESULTS_AVAILABLE` ブロードキャストから `WifiManager.registerScanResultsCallback`(API 30)に変更(自アプリ以外が要求したスキャンの完了も受ける)。`WIFI_STATE_CHANGED` でもスキャン結果を読み直す(無線オフで空になり、一覧が未検出 → 削除の流れに乗る) |
+| `Document/Device_WiFi.png` | 撮り直し |
+
+- ビルド 0 エラー 0 警告(Debug)。実機で `svc wifi disable` → 全行が未検出(半透明)→ 60 秒後に消える → `svc wifi enable` → 再検出を確認。`dumpsys wifiscanner` で自アプリのスキャン要求が結果の 30 秒後(約 34 秒間隔)に出ること、`cmd wifi start-scan` の外部スキャンの結果をコールバックで受けて次の自前スキャンがその 30 秒後に延びることを確認
+
+### Card list と Grid の絵文字・色付きバッジ化(2026-09-14)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` | 行 = 担当者のアバター(先頭 1 文字、担当ごとの色)+ コード + 名前 / 状態(⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在、白文字の色付き)・🔥 重点・📌 今日・🆕 初回・区分(🗓 定期 / ✨ 新規 / 🔧 点検 / 💰 集金、区分ごとの淡色)のバッジ(折り返し)/ 📍 住所・👤 担当・🕒 予定の絵文字行。展開部は 📞 電話・📅 前回・📝 メモ。上部の件数は状態ごとの色付きバッジ(⏳ ✅ 🔁 🚫)。行の形(フラット + 区切り線)と選択(青地 + 白文字)は据え置き |
+| `Models/Control/OrderRow.cs` / `OrderChannel.cs` / `OrderSamples.cs` | 状態を絵文字付きに(⏳ 未処理 / 🔄 処理中 / ✋ 保留 / ✅ 完了)。フラグ列(❗ 期限切れ / 🔥 期限 3 日以内 / 💰 30 万円以上 / 📦 数量 20 以上 / 🆕 3 日以内の更新)、顧客ランク列(⭐〜⭐⭐⭐、顧客ごとに固定)、受付列(🏪 店頭 / 🌐 Web / 📞 電話 / 📠 FAX)を追加。状態更新でフラグも再評価 |
+| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` | 列を 状態 / 受注番号 / フラグ / 顧客 / ランク / 商品 / 数量 / 金額 / 納期 / 受付 / 確認 / 担当 / 更新 に。ランクと受付はソート可、フラグはソート不可 |
+| `Modules/Control/ControlGridStyles.cs` | フラグ列の背景(期限切れ = 淡い赤 / 期限間近 = 淡い橙)、ランク 3 の背景(淡い黄)、高額の金額と大口の数量の文字色、受付ごとの文字色、納期の期限切れ(赤)/ 期限間近(橙) |
+| `Document/Control_CardList.png` / `Control_Grid.png` | 撮り直し |
+
+- ClamGrid は `SKFontManager.MatchCharacter` のフォールバックで絵文字をカラーで描く。文字は絵文字既定のもの(⏳ ✅ ❗ ✋ など)を使い、VS16 が要るテキスト既定の記号(⚠ ⏸)は使わない
+- ビルド 0 エラー 0 警告(Debug)。実機で Card list のバッジ・アバター・件数、選択 / 展開、Grid の絵文字列(状態 / フラグ / ランク / 受付)と色を確認
+
+### 診断パネルのメモリ推移とリーク検出(2026-09-14)
+
+Task_Checklist 3-1(メモリ監視オーバーレイ)と 3-2(リーク検出)を、既存の診断パネルとナビゲーションプラグインへの局所的な追加で実装した。
+
+| 対象 | 内容 |
+|---|---|
+| `Shell/DiagnosticPanel.xaml` + `.xaml.cs` | 📈 で出る既存の診断オーバーレイ(DEBUG 限定、全画面共通)に、ワーキングセットの直近 60 秒のスパークライン(`GraphicsView` + パネル内の `IDrawable`)を追加。最新値を右端に置き、最小〜最大で自動スケール(1 MB 未満の変動は平ら)。線の色は Memory の値の色(安全 / 警告 / 危険)に連動。表示開始で履歴をリセット |
+| `Extender/LeakDetectionPlugin.cs` | 新規。`PluginBase.OnClose` で閉じたビューと ViewModel を `WeakReference` で保持し、5 秒後に GC(マネージド → Java → マネージド)を回して残っていれば `WarnLeakSuspected`、回収されていれば `DebugClosedObjectCollected` を出力 |
+| `MauiProgram.cs` / `Log.cs` | `#if DEBUG` でプラグインを登録。ログメッセージ 2 件を追加 |
+| `Document/Task_Checklist.md` / `README.md` | 3-1 / 3-2 を削除(3-3 画面録画 → 3-1)。TODO の Memory monitor overlay / Leak detection を削除 |
+
+- ビルド 0 エラー 0 警告(Debug)。実機で 📈 のパネルにスパークラインが描かれることを確認。Control(Card List / Grid / Bottom Sheet / Drawer)、Device(WiFi)、UI 1(Profile)を開いて戻る操作で、閉じた 36 件(ビュー 18 + ViewModel 18)がすべて回収され、リーク疑いは 0 件
+
+### Azure AI Vision / Ollama チャット / 音声入力の実装(2026-09-14)
+
+Task_Checklist 2-3(Azure / AI サービス利用部分)を実装した。接続先とキーは設定画面(QR)で投入した値を使う。
+
+| 対象 | 内容 |
+|---|---|
+| `Usecase/AzureVisionUsecase.cs` | 新規。`ImageAnalysisClient`(Image Analysis 4.0)で物体 / 人物 / タグ(日本語)/ 文字、`FaceClient` で顔を検出し、正規化した矩形 + ラベル + 信頼度(`DetectResult`)またはタグ(`TagResult`)に変換。物体と人物は信頼度 0.5 未満を除外。接続先とキー(`Settings.AIServiceEndPoint` / `GetAIServiceKeyAsync`)は呼び出しのたびに取得し、未設定は `InvalidOperationException` |
+| `Modules/Sample/SampleCvNetObjectViewModel.cs` / `People` / `Ocr` / `Face` / `Tag` + 各 View | 撮影 → 静止画表示 → `BusyState` の間に解析 → `DetectDrawing` で枠を描く(Tag は左上のパネルに 🏷 名前と %)。`RequestFailedException` / `HttpRequestException` / 未設定はダイアログで表示。解析中の再入は `IsProcessing` でガード |
+| `Graphics/Drawing/DetectDrawing.cs` | ラベルがあれば「ラベル 信頼度」を描く(ローカル検出もラベル付きに) |
+| `Modules/Sample/SampleChatViewModel.cs` + `SampleChatView.xaml` | 設定の Ollama(接続先 + モデル)があれば `OllamaSharp` の `Chat` でストリーミング応答(未設定は従来の疑似応答。冒頭のあいさつに動作モードを表示)。音声入力は `ISpeechService` の音声認識で文字起こし(無音で自動停止。認識できなければその旨を表示)、抽出は Ollama に「項目: 値」の 4 行で答えさせて読み取る(未設定 / 音声なしは固定の例) |
+| `State/Settings.cs` / `Modules/Main/SettingViewModel.cs` / `SettingView.xaml` | `OllamaEndPoint` / `OllamaModel` を追加(QR のキー名も同じ)。AI Service の節に Ollama / Model の行 |
+| `MauiProgram.cs` | `AzureVisionUsecase` の DI 登録 |
+| `Document/Sample_CvNet_Tag.png` / `README.md` | 画像を追加、Implement の Sample 行に Object / Tag / People / OCR / Face(Azure AI Vision)/ Chat(Ollama)、TODO から Cognitive service / Chat AI を削除 |
+
+- ビルド 0 エラー 0 警告(Debug)。実機(Foundry の AI Services リソース + PC の Ollama gemma2 に `adb reverse tcp:11434` で接続)で、Tag = 暗い画面から「霧 95% / 黒 90% / ぼかし 88% / 灰色 88%」、Object / People / OCR = 例外なく解析(暗い被写体のため枠なし)、Face = このリソースは Face API を持たないため 401 のダイアログ、Chat = 質問への応答がストリーミングで表示、音声 = 無音で自動停止し「(音声を認識できませんでした)」→ 抽出は固定の例、Setting = Ollama / Model の行を確認
+
+### 画面録画(2026-09-14)
+
+Task_Checklist 3-1 を `Plugin.Maui.ScreenRecording` 1.0.0-preview5 で実装した(自前の `MediaProjection` / 前景サービスは書かない)。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` / `MauiProgram.cs` | パッケージ追加、`UseScreenRecording()`(`IScreenRecording` を DI 登録) |
+| `Platforms/Android/AndroidManifest.xml` | プラグインの前景サービス(`foregroundServiceType="mediaProjection"`)と `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PROJECTION` |
+| `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs` | Recording カード(Start / Stop、保存先の表示)。保存先は公開フォルダの `recording_yyyyMMddHHmmss.mp4`、マイクは録らない |
+| `Markup/AppIcons.cs` | `SmallVideocam` / `SmallStop` |
+| `Document/Task_Checklist.md` / `README.md` | 2-3 と 3 節を削除(残りは 1 節 SCP / 2-1 生体認証 / 2-2 通知)。TODO から Screen recording を削除し Implement の Device 行へ |
+
+- ビルド 0 エラー 0 警告(Debug)。実機で Start → システムの共有ダイアログ(「画面全体を共有」→「画面を共有」)→ 「録画中...」→ Stop で `/storage/emulated/0/Android/data/template.mobileapp/files/recording_….mp4` が保存されることを確認
+
+### ローカル通知(2026-09-14)
+
+Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。FCM は 2-2 に残す)。
+
+| 対象 | 内容 |
+|---|---|
+| `Components/NotificationService.cs` | 新規。`INotificationService`(`Show` = 即時 + アクションボタン + ペイロード / `Schedule` = 指定時間後 / `Cancel` / `CanScheduleExact` / `OpenExactAlarmSettings` / `Tapped` イベント / `TakePendingTap`)。`Nfc` と同じ共通 + `*.android.cs` の partial 構成。チャンネル ID は `ChannelId` 定数 |
+| `Components/NotificationService.android.cs` | `NotificationCompat.Builder`(チャンネルは表示のたびに作成 = 既存なら no-op)。本体とボタンの `PendingIntent` は `MainActivity` を開く Activity Intent(extras に id / action / payload、requestCode は id とボタン番号で分ける)。スケジュールは `AlarmManager`(正確なアラームが許可されていれば `SetExactAndAllowWhileIdle`、未許可は `SetAndAllowWhileIdle` で前後を許容)+ `NotificationAlarmReceiver`(manifest 登録はアトリビュートから生成)。ボタンのタップは通知を消す |
+| `Platforms/Android/MainActivity.cs` | `OnCreate` / `OnNewIntent`(`LaunchMode = SingleInstance`)で `NotificationService.HandleIntent` に渡す。`Context.NotificationService` 定数と名前が衝突するため `Components.` を付けて参照 |
+| `MainPageViewModel.cs` | 初期遷移の完了後に `Tapped` を購読し、どの画面でもトーストで表示。起動前に届いたタップは `TakePendingTap` で拾う |
+| `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs` | Notification カード(Notify = 承認 / 却下ボタン付き、Schedule = 10 秒後、Cancel、Exact alarm = 許可設定を開く)。タップ結果をカードに表示 |
+| `Permissions.cs` / `Platforms/Android/AndroidManifest.xml` / `Extensions.cs` / `MauiProgram.cs` / `Markup/AppIcons.cs` | `RequestNotificationsAsync`(`PostNotifications`)、`POST_NOTIFICATIONS` / `SCHEDULE_EXACT_ALARM`、`TappedAsObservable`、DI 登録、Small アイコン 4 件 |
+| `Document/Task_Checklist.md` / `README.md` | 2-2 は Push(FCM)の判断項目だけに。Implement の Device 行に Local notification |
+
+- ビルド 0 エラー 0 警告(Debug)。実機で 承認依頼(承認 / 却下)の通知 → シェードの「却下」で `ボタン [reject]: SO-2026-000123`、本体タップで `タップ: SO-2026-000123`、Schedule → 正確なアラーム未許可の旨を表示し 14 秒以内にリマインダーが届く、Cancel で消えることを確認
+
 ## C. この区間のナレッジ
 
+- **ローカル通知の自作**: Android 13 以降は `POST_NOTIFICATIONS` の実行時許可(MAUI の `Permissions.PostNotifications`)。通知のタップは `PendingIntent.GetActivity` で `MainActivity` を開き、`LaunchMode = SingleInstance` のため起動中は `OnNewIntent` に届く(extras の id は再処理を避けるため取り出したら消す)。`NotificationCompat.Builder` のバインディングは `Set*` の戻り値が nullable なのでメソッドチェーンにせず 1 行ずつ呼ぶ。`Context.NotificationService` 定数が Activity 内で型名 `NotificationService` を隠すので名前空間付きで参照する。正確なアラーム(`SetExactAndAllowWhileIdle`)は Android 14 以降は `SCHEDULE_EXACT_ALARM` が既定で不許可(`CanScheduleExactAlarms` で判定し、未許可は inexact = 数秒〜数分の前後)。Android 16 の通知シェードは同じアプリの通知をまとめる(グループ見出しのタップは展開)。ボタンのタップは通知を自動で消さないのでアプリ側で `Cancel` する
+- **Azure AI Vision の SDK**: `ImageAnalysisOptions` は構造体なので省略時は `default` を渡す(`new()` は SA1129)。People は信頼度 0.0x の候補も大量に返すので閾値で切る。タグは `Language = "ja"` で日本語。Foundry の AI Services リソース(`*.services.ai.azure.com`)は Image Analysis 4.0 に応答するが Face API は 401(Face は対応リージョンの Face / AI Services リソースが必要)
+- **Ollama を実機から使う**: PC の Ollama(127.0.0.1:11434)へ `adb reverse tcp:11434 tcp:11434` で接続先を `http://localhost:11434` にする。最初の要求はモデルのロードで 1 分近くかかる。`ollama list` は Windows ではサーバを自動起動する
+- **設定の注入(実機テスト)**: アプリの `IPreferences` の実体は `shared_prefs/template.mobileapp_preferences.xml`(既定の SharedPreferences)、`SecureStorage` は `…microsoft.maui.essentials.preferences.xml`。`run-as` で前者にキーを平文で書くと、`Settings` の旧バージョン移行パスが起動時に SecureStorage へ移す
+- **MediaProjection の同意ダイアログ(Android 16 日本語)**: 「1 個のアプリを共有 / 画面全体を共有」のプルダウンで「画面全体を共有」を選んでから「画面を共有」。`CaptureAsync` が完了しない既知の事象は Function キー全体を止める(通知が直列のため)ので、実機スクリプトは画面ごとにアプリを再起動する
+- **uiautomator dump が古い画面**: Chat(タイピング表示)も対象。IME が出ているとウィンドウが `adjust=pan` でずれるので、下部のボタンは IME を閉じてから座標でタップする
+- **ナビゲーションのリーク確認**: Smart.Navigation の `PluginBase.OnClose` は Forward / Pop でビューが破棄されるときに呼ばれる(Push で積まれたビューは呼ばれない)ので、そこで `WeakReference` を取り、5 秒後に `GC.Collect` → `GC.WaitForPendingFinalizers` → `Java.Lang.JavaSystem.Gc` → `GC.Collect` の順で回してから生存を見る(Java 側の参照が残ると 1 回の GC では回収されない)。プラグインは Smart 側のコンテナが生成するため DI のコンストラクタ注入は使えず、ロガーは `ResolveProvider.Default` から遅延取得する
+- **Wi-Fi スキャンの頻度**: 接続中の Android はアプリが何もしなければ定期スキャンをしない(`dumpsys wifiscanner` の要求元ログ: 有効化直後のフレームワーク、Wi-Fi 設定画面、位置情報サービス(動作中は約 2 分間隔)だけ。接続中 + 画面オフでは数時間スキャンが無い)。AP の出現 / 消失のイベントは無く、あるのは「誰かのスキャンが完了した」通知(`SCAN_RESULTS_AVAILABLE` / API 30 の `registerScanResultsCallback`)だけなので、一覧の鮮度を保つには自前の `startScan` が要る。他者のスキャン結果が届いたら自前のタイマーを延期すれば無駄撃ちを避けられる。外部スキャンの再現は `adb shell cmd wifi start-scan`。参考: Plugin.MauiWifiManager(exendahal/maui_wifi_manager)は API 28 以降 `startScan` を呼ばず `ScanResults` のキャッシュを 2 秒ごとに読むだけ(通知の購読なし)
+- **ジェスチャナビゲーションと端のスワイプ**: Android 10 以降のジェスチャナビゲーションでは左右端からのスワイプをシステムが「戻る」として横取りし、アプリには届かない(`SfNavigationDrawer` の `EnableSwipeGesture` も同じ)。`View.SystemGestureExclusionRects` で除外できるが片側の上限は 200dp のため、帯の一部(上下中央 200dp)だけを除外する。矩形は View のローカル座標(px)で `Handler.PlatformView` に設定し、`SizeChanged` で更新する。`Android.Graphics.Rect` は `IDisposable` なので `using var` で作る(CA2000)
+- **`SfSegmentedControl` の `SelectedIndex`**: バインドの既定は OneWay で、タップの選択は VM に戻らない。`Mode=TwoWay` を明示する
+- **表示前の要素の高さ**: `IsVisible=false` の要素は `Height` が確定していない(−1)。表示と同時に高さを使うアニメーション(シートの開閉)は `SizeChanged` まで遅らせる
+- **`BottomSheet` という型名は `Google.Android.Material.BottomSheet` 名前空間と衝突する**(CA1724)。`BottomSheetView` のように名前を変える
+- **FlexLayout の折り返し**: 子の既定は `Shrink=1` で、幅が足りないと折り返さずに縮めて `TailTruncation` される。折り返したい Label には `FlexLayout.Shrink=0` を付ける
+- **Wi-Fi のスキャン**: `getScanResults` は Android 13 以降 `NEARBY_WIFI_DEVICES`(+ 位置情報)が必要。`startScan` は非推奨だが動作し、前面アプリは 2 分に 4 回まで(超えると false、キャッシュ済みの結果は読める)。`ScanResult.ChannelWidth` は int(`CHANNEL_WIDTH_*`)で 320 MHz は Android 13 以降。結果の `Timestamp` は起動からの μs なので `SystemClock.ElapsedRealtime` との差で時刻に直す
+- **Wi-Fi の情報取得**: Android 12 以降は `WifiManager.ConnectionInfo` が非推奨で、`NetworkCallback` に `IncludeLocationInfo` を付けて `NetworkCapabilities.TransportInfo`(`WifiInfo`)から取る。SSID / BSSID は位置情報の権限 + このフラグの両方が無いと `<unknown ssid>`。IP / ゲートウェイ / DNS は `OnLinkPropertiesChanged` の `LinkProperties`(IPv6 のリンクローカルが先に来るので IPv4 を選ぶ)。無線のオン / オフだけでは NetworkCallback は呼ばれないため `WIFI_STATE_CHANGED` を別に受ける。API 31 専用のコンストラクタは `[SupportedOSPlatform("android31.0")]` を付けて `OperatingSystem.IsAndroidVersionAtLeast(31)` で分岐(CA1416)
+- **ClamGrid**: `GridStyle` の色コールバック(`CellColors` / `RowBackground`)はデリゲートなので XAML リソースにできず、C# で組み立てて VM のプロパティから `GridStyle` にバインドする。行ヘッダは `AllowRowDragging` のときライブラリが取っ手を描くので `RowHeaderText` を重ねない。`ColumnOrders` / `SortOrders` は既定で TwoWay。列設定は `GridColumnConfigurationEventArgs.CreateEditSession()` を `PushAsync` の引数で渡し、`PopAsync` の引数で `Export()` を返して一覧側の `OnNavigatingToAsync`(restore)で受け取る
+- **Style 内の DataTrigger と x:DataType**: ページの `x:DataType` が VM のとき、DataTemplate 用 Style の `DataTrigger` の Binding は VM の型で解決されて MAUIG2045(反射バインド)になる。`Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"` のようにバインド側で型を指定する
+- **CollectionView のカード選択**: `SelectionMode=None` にして選択状態は項目側(`IsSelected`)で持ち、`TapGestureRecognizer` から VM のコマンドへ `CommandParameter="{Binding .}"` で渡す。複数条件の背景色(状態 → 選択)は `DataTrigger` を並べ、後に書いたものが勝つ性質で選択を最後に置く
 - **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
 - **`pm clear` は Debug ビルドのアプリを起動不能にする**。Fast Deployment のアセンブリは `/data/user/0/<pkg>/files/.__override__/<abi>` に置かれるため、データ消去で一緒に消えて `No assemblies found in ...__override__` で abort する(APK 内にはアセンブリが無い)。**再デプロイ(`-t:Install`)で復旧**する。併せて実行時パーミッションも全て取り消されるので `pm grant` で戻す
 - **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
@@ -1373,6 +1541,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - **コードレビュー対応(区間2)での除外**: `OnNotifyFunction1` の 116 ファイル重複解消 / SemanticProperties・AutomationId の付与 / gRPC・SignalR・Ollama の実装 / QR コードからの通信先・API キー無検証受け入れ
 - **保留**(必要になるまで扱わない): ダークモード対応 / ローカライズ整備 / iOS 対応 / DB マイグレーション機構
 - アクセシビリティ(`SemanticProperties` / `AutomationId` の付与、TalkBack 確認)= 対応不要(2026-09-13)
+- ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)
 - `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)
 - Walkthrough(B-18)= 実装しない(D16)/ NavigationRail・月次集計(C-9/C-11)= 取り下げ(D10)/ Blazor(5-4)= 対応不要 / MBTiles(4-3)= 取りやめ(いずれも詳細は付録D と区間5 B-8)
 
@@ -1440,7 +1609,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 ### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
-LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTabView で充足) / Maui.VirtualListView・MPowerKit.VirtualizeListView (データ規模的に不要) / AiForms.SettingsView (BasicSettingView で達成) / MPowerKit.GoogleMaps (API キー前提。マネージャ分割設計のみ Mapsui 実装へ反映済み) / ArcGIS (商用) / Maui.Nuke (iOS スコープ外) / ImageCropper.Maui (ネイティブラッパ。自作 = 9-6) / Evergine 3D / DrawnUI 全面採用 (実験的。SKPicture キャッシュ等の部分技法は実装済み) / Grial FluentEmoji (CDN 依存) / CSLA (相関検証のみ 3-6 へ) / LocalizationResourceManager (根本切替は不要) / AlohaKit.Layouts (CircularLayout のみ自作済み) / TemplateMAUI (Marquee/TreeView のみ自作済み) / Plugin.Maui.SegmentedControl (SfSegmentedControl で充足) / GitTrends・WeatherTwentyOne・showcase (資料) / dotnet-maui-templates・MauiAppAccelerator (開発ツール) / Shiny Controls の DataGrid・FrostedGlass・Mermaid・Tray (コスト高 / デスクトップ向け)
+LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTabView で充足) / Maui.VirtualListView・MPowerKit.VirtualizeListView (データ規模的に不要) / AiForms.SettingsView (BasicSettingView で達成) / MPowerKit.GoogleMaps (API キー前提。マネージャ分割設計のみ Mapsui 実装へ反映済み) / ArcGIS (商用) / Maui.Nuke (iOS スコープ外) / ImageCropper.Maui (ネイティブラッパ。自作 = 9-6) / Evergine 3D / DrawnUI 全面採用 (実験的。SKPicture キャッシュ等の部分技法は実装済み) / Grial FluentEmoji (CDN 依存) / CSLA (相関検証のみ 3-6 へ) / LocalizationResourceManager (根本切替は不要) / AlohaKit.Layouts (CircularLayout のみ自作済み) / TemplateMAUI (Marquee/TreeView のみ自作済み) / Plugin.Maui.SegmentedControl (SfSegmentedControl で充足) / GitTrends・WeatherTwentyOne・showcase (資料) / dotnet-maui-templates・MauiAppAccelerator (開発ツール) / Shiny Controls の DataGrid・FrostedGlass・Mermaid・Tray (コスト高 / デスクトップ向け) / Plugin.LocalNotification (thudugala。自作 Components/NotificationService で充足。NotificationRequest の項目構成 = Title / Description / BadgeNumber / Schedule / Android.ChannelId / ReturningData は参考) / MAUIHighSchool の Window.Stopped でローカル通知を予約する記事 (資料)
 
 ### 不採用 (2) — 本サンプル側が優れた / 同等の実装を持つため参考自体が不要
 

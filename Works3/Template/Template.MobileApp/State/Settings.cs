@@ -45,6 +45,20 @@ public sealed class Settings
         set => preferences.Set(nameof(AIServiceEndPoint), value);
     }
 
+    // Ollama (Chat)。接続先とモデル名は設定画面の QR で投入する
+
+    public string OllamaEndPoint
+    {
+        get => preferences.Get<string>(nameof(OllamaEndPoint), default!);
+        set => preferences.Set(nameof(OllamaEndPoint), value);
+    }
+
+    public string OllamaModel
+    {
+        get => preferences.Get<string>(nameof(OllamaModel), default!);
+        set => preferences.Set(nameof(OllamaModel), value);
+    }
+
     // キー類は平文のPreferencesではなくSecureStorageに保存する
     public async ValueTask<string?> GetAIServiceKeyAsync()
     {

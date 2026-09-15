@@ -22,6 +22,7 @@ using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 
 using Plugin.Maui.Audio;
+using Plugin.Maui.ScreenRecording;
 #if false
 using Plugin.Maui.DebugRainbows;
 #endif
@@ -67,6 +68,7 @@ public static partial class MauiProgram
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
             .UseMauiCommunityToolkitMediaElement(true)
+            .UseScreenRecording()
             .UseMauiMaps()
             .UseBarcodeScanning()
             .UseShiny()
@@ -282,6 +284,9 @@ public static partial class MauiProgram
             config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();
+#if DEBUG
+            config.AddPlugin<LeakDetectionPlugin>();
+#endif
             config.AddPlugin(new DialogEffectPlugin(ViewSource()));
             config.UseIdViewMapper(static m => m.AutoRegister(ViewSource()));
         });
@@ -290,6 +295,8 @@ public static partial class MauiProgram
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
         services.AddSingleton<INfcReader, NfcReader>();
+        services.AddSingleton<IWiFiManager, WiFiManager>();
+        services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<INoiseMonitor, NoiseMonitor>();
         services.AddSingleton<IOcrReader, OcrReader>();
         services.AddSingleton<IActivityRecognizer, ActivityRecognizer>();
@@ -349,6 +356,7 @@ public static partial class MauiProgram
         services.AddSingleton<NetworkOperator>();
         services.AddSingleton<NetworkUsecase>();
         services.AddSingleton<CognitiveUsecase>();
+        services.AddSingleton<AzureVisionUsecase>();
 
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));

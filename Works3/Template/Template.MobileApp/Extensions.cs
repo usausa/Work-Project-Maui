@@ -137,6 +137,12 @@ public static class Extensions
     public static IObservable<SpeechRecognizeEventArgs> RecognizedAsObservable(this ISpeechService speechService) =>
         Observable.FromEvent<EventHandler<SpeechRecognizeEventArgs>, SpeechRecognizeEventArgs>(static h => (_, e) => h(e), h => speechService.Recognized += h, h => speechService.Recognized -= h);
 
+    public static IObservable<EventArgs> StateChangedAsObservable(this IWiFiManager wifiManager) =>
+        Observable.FromEvent<EventHandler<EventArgs>, EventArgs>(static h => (_, e) => h(e), h => wifiManager.StateChanged += h, h => wifiManager.StateChanged -= h);
+
+    public static IObservable<NotificationTappedEventArgs> TappedAsObservable(this INotificationService notificationService) =>
+        Observable.FromEvent<EventHandler<NotificationTappedEventArgs>, NotificationTappedEventArgs>(static h => (_, e) => h(e), h => notificationService.Tapped += h, h => notificationService.Tapped -= h);
+
     public static IObservable<NfcEventArgs> DetectedAsObservable(this INfcReader nfcReader) =>
         Observable.FromEvent<EventHandler<NfcEventArgs>, NfcEventArgs>(static h => (_, e) => h(e), h => nfcReader.Detected += h, h => nfcReader.Detected -= h);
 
