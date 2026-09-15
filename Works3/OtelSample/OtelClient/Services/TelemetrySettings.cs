@@ -9,8 +9,7 @@ public static class TelemetrySettings
 
     public const string DeviceIdKey = "device_id";
 
-    // adb reverse tcp:4318 tcp:4318 で PC の OtelServer へ
-    public const string DefaultEndpoint = "http://localhost:4318/";
+    public const string DefaultEndpoint = "http://192.168.100.10:8080/";
 
     // 端末の識別子 (初回に生成して保存)
     public static string GetDeviceId()
