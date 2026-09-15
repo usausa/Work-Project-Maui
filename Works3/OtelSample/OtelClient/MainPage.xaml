@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:OtelClient"
+             x:Class="OtelClient.MainPage"
+             x:DataType="{x:Type local:MainViewModel}"
+             Title="OpenTelemetry sample">
+
+    <Grid Padding="16"
+          RowSpacing="8"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+
+        <!-- 接続先 (adb reverse なら http://localhost:4318、LAN なら http://PC の IP:4318) -->
+        <Entry Grid.Row="0"
+               Keyboard="Url"
+               Placeholder="http://localhost:4318"
+               Text="{Binding Endpoint}" />
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   VerticalOptions="Center"
+                   Text="MAUI のレイアウト計測をスパンとして送る" />
+            <Switch Grid.Column="1"
+                    IsToggled="{Binding IncludeMauiSpans}" />
+        </Grid>
+
+        <Grid Grid.Row="2"
+              ColumnSpacing="8"
+              ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding ApplyCommand}"
+                    Text="適用 (開始)" />
+            <Button Grid.Column="1"
+                    Command="{Binding StopCommand}"
+                    Text="停止" />
+            <Button Grid.Column="2"
+                    Command="{Binding FlushCommand}"
+                    Text="Flush" />
+        </Grid>
+
+        <Entry Grid.Row="3"
+               Placeholder="ログの本文"
+               Text="{Binding Message}" />
+
+        <Grid Grid.Row="4"
+              ColumnSpacing="8"
+              ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding LogInformationCommand}"
+                    Text="Info" />
+            <Button Grid.Column="1"
+                    Command="{Binding LogWarningCommand}"
+                    Text="Warning" />
+            <Button Grid.Column="2"
+                    Command="{Binding LogErrorCommand}"
+                    Text="Error (例外)" />
+        </Grid>
+
+        <Grid Grid.Row="5"
+              ColumnSpacing="8"
+              ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0"
+                    Command="{Binding RunWorkCommand}"
+                    Text="処理 (成功)" />
+            <Button Grid.Column="1"
+                    Command="{Binding RunWorkFailCommand}"
+                    Text="処理 (失敗)" />
+            <Button Grid.Column="2"
+                    Command="{Binding CrashCommand}"
+                    Text="クラッシュ" />
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="6"
+                             Spacing="4">
+            <Label FontAttributes="Bold"
+                   Text="{Binding Status, StringFormat='状態: {0}'}" />
+            <Label FontSize="12"
+                   Text="{Binding DeviceId, StringFormat='端末 ID: {0}'}" />
+            <Label FontSize="12"
+                   Text="{Binding PendingFiles, StringFormat='再送待ち (ディスク退避): {0}'}" />
+            <!-- SDK の自己診断 (送信の失敗など)。最新だけ件数付き -->
+            <Label FontSize="12"
+                   TextColor="Red"
+                   IsVisible="{Binding HasSdkMessage}"
+                   Text="{Binding SdkMessage}" />
+        </VerticalStackLayout>
+
+        <!-- 操作の記録 (新しいものが上) -->
+        <ScrollView Grid.Row="7">
+            <Label FontSize="12"
+                   LineBreakMode="WordWrap"
+                   Text="{Binding LogText}" />
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

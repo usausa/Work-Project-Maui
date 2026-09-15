@@ -1,0 +1,2 @@
+# OTLP の proto は logs ディレクトリを含む(ルートの [Ll]ogs/ 除外を打ち消す)
+!**/logs/

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="OtelServer/OtelServer.csproj" />
+  <Project Path="OtelClient/OtelClient.csproj" />
+</Solution>
