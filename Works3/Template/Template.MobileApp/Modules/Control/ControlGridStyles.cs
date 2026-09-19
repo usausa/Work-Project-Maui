@@ -102,8 +102,8 @@ internal static class ControlGridStyles
                 OrderStatus.Hold => HoldColors,
                 _ => CompletedColors
             },
-            nameof(OrderInfo.Flags) when order.IsOverdue => context.DefaultColors with { Background = OverdueBackground },
-            nameof(OrderInfo.Flags) when order.IsDueSoon => context.DefaultColors with { Background = DueSoonBackground },
+            nameof(OrderInfo.Marks) when order.IsOverdue => context.DefaultColors with { Background = OverdueBackground },
+            nameof(OrderInfo.Marks) when order.IsDueSoon => context.DefaultColors with { Background = DueSoonBackground },
             nameof(OrderInfo.Rank) when order.Rank >= 3 => context.DefaultColors with { Background = TopRankBackground },
             nameof(OrderInfo.Amount) when order.IsLargeAmount => context.DefaultColors with { TextColor = LargeAmountText },
             nameof(OrderInfo.Quantity) when order.IsBulk => context.DefaultColors with { TextColor = BulkText },

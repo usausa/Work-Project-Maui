@@ -138,14 +138,18 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
         Message = $"確定: {selected.Count} 件 / {String.Join(", ", selected.Take(3).Select(static x => x.OrderNo))}{(selected.Count > 3 ? " …" : string.Empty)}";
     }
 
-    // 選択行の状態を進める。行の変更通知でグリッドが並べ替えと色を追従させる
+    // 選択行の状態を進める。行ごとの変更通知で並べ替えないよう監視を止めてまとめて更新し、Resume で消える選択は選び直す
     private void Advance()
     {
-        var selected = Rows.SelectedItems.Cast<OrderInfo>().ToList();
+        var selected = Rows.SelectedItems.Cast<OrderInfo>().ToHashSet();
+        Rows.Suspend();
         foreach (var row in selected)
         {
             row.AdvanceStatus();
         }
+
+        Rows.Resume();
+        Rows.UpdateSelection(selected.Contains);
 
         UpdateCounts();
         Message = $"状態更新: {selected.Count} 件";

@@ -1,13 +1,22 @@
 namespace Template.MobileApp.Controls;
 
 // 左端から出るドロワー (自作)。ページの最前面に置く。IsOpen で表示、左端のスワイプで開く、
-// パネルのドラッグと背景のタップで閉じる。閉じているときは左端の帯以外はタッチを通す
-// ドラッグの終了時は、動かした距離か速さがしきい値を超えていればその方向へ、そうでなければ位置 (半分) で開閉を決める
+// パネルと背景のドラッグ (スワイプ) と背景のタップで閉じる。閉じているときは左端の帯以外はタッチを通す
+// ドラッグの終了時は、離したときの速さ (止まっていれば無し) か最後に動かした方向で開閉を決め、方向が明確でなければ位置 (半分) で決める。
+// ドラッグの続きの移動は、離したときの速さから減速して止まる (残りの距離に応じた時間)
 public sealed partial class SideDrawer : Grid
 {
     private const string AnimationName = "DrawerMove";
 
     private const uint Duration = 150;
+
+    // ドラッグの続きとして動かす時間の範囲
+    private const uint MinFlingDuration = 80;
+
+    private const uint MaxFlingDuration = 400;
+
+    // SinOut の初速は平均の π/2 倍 (時間 = 傾き × 距離 / 速さ で初速を離したときの速さに合わせる)
+    private const double FlingSlope = Math.PI / 2;
 
     private const double BackdropOpacity = 0.4;
 
@@ -15,6 +24,11 @@ public sealed partial class SideDrawer : Grid
     private const double SwipeDistance = 16;
 
     private const double SwipeVelocity = 0.2;
+
+    // 方向とみなす 1 回の移動量 (dp)。離す前にこの時間 (ms) 動いていなければ速さは無いものとする
+    private const double DirectionDistance = 1;
+
+    private const long PauseInterval = 100;
 
     public static readonly BindableProperty IsOpenProperty = BindableProperty.Create(
         nameof(IsOpen),
@@ -71,7 +85,13 @@ public sealed partial class SideDrawer : Grid
 
     private double panVelocity;
 
+    // 最後に動かした方向 (右 = 1 / 左 = -1)
+    private int panDirection;
+
     private long panTimestamp;
+
+    // ドラッグから開閉するときの時間 (IsOpen の変更で始まるアニメーションに渡す)
+    private uint? flingDuration;
 
     public bool IsOpen
     {
@@ -132,6 +152,10 @@ public sealed partial class SideDrawer : Grid
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, _) => IsOpen = false;
         backdrop.GestureRecognizers.Add(tap);
+        // 背景のドラッグもパネルのドラッグと同じ扱い (開いているときは画面のどこからでもスワイプで閉じる)
+        var backdropPan = new PanGestureRecognizer();
+        backdropPan.PanUpdated += OnPanUpdated;
+        backdrop.GestureRecognizers.Add(backdropPan);
 
         panel = new Grid
         {
@@ -180,10 +204,14 @@ public sealed partial class SideDrawer : Grid
             panel.IsVisible = true;
         }
 
-        MoveTo(open ? 0 : -DrawerWidth, open);
+        // ボタンや背景のタップからは通常の時間、ドラッグの続きは離したときの速さから減速する
+        var duration = flingDuration ?? Duration;
+        var easing = flingDuration is null ? null : Easing.SinOut;
+        flingDuration = null;
+        MoveTo(open ? 0 : -DrawerWidth, open, duration, easing);
     }
 
-    private void MoveTo(double x, bool open)
+    private void MoveTo(double x, bool open, uint duration = Duration, Easing? easing = null)
     {
         panel.AbortAnimation(AnimationName);
         var start = panel.TranslationX;
@@ -197,8 +225,8 @@ public sealed partial class SideDrawer : Grid
                 backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
             },
             16,
-            Duration,
-            open ? Easing.CubicOut : Easing.CubicIn,
+            duration,
+            easing ?? (open ? Easing.CubicOut : Easing.CubicIn),
             (_, _) =>
             {
                 backdrop.IsVisible = IsOpen;
@@ -215,19 +243,26 @@ public sealed partial class SideDrawer : Grid
                 panStart = panel.TranslationX;
                 panTotal = 0;
                 panVelocity = 0;
+                panDirection = 0;
                 panTimestamp = Environment.TickCount64;
                 backdrop.IsVisible = true;
                 panel.IsVisible = true;
                 break;
             case GestureStatus.Running:
+                var delta = e.TotalX - panTotal;
                 var now = Environment.TickCount64;
                 var elapsed = now - panTimestamp;
-                if (elapsed > 0)
+                if ((delta != 0) && (elapsed > 0))
                 {
-                    // 直前の区間の速さ (揺れを抑えるため前回と平均する)
-                    var velocity = (e.TotalX - panTotal) / elapsed;
-                    panVelocity = panVelocity == 0 ? velocity : (panVelocity + velocity) / 2;
+                    // 直前の区間の速さ (揺れを抑えるため前回と平均する。逆方向に転じたら置き換える)
+                    var velocity = delta / elapsed;
+                    panVelocity = (panVelocity == 0) || (Math.Sign(velocity) != Math.Sign(panVelocity)) ? velocity : (panVelocity + velocity) / 2;
                     panTimestamp = now;
+                }
+
+                if (Math.Abs(delta) >= DirectionDistance)
+                {
+                    panDirection = Math.Sign(delta);
                 }
 
                 panTotal = e.TotalX;
@@ -237,28 +272,44 @@ public sealed partial class SideDrawer : Grid
                 break;
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                // 短いスワイプでも方向が明確なら従う (Sf と同じ感度)。IsOpen が変わらない場合もあるため位置は明示的に戻す
-                var open = panTotal switch
-                {
-                    <= -SwipeDistance => false,
-                    >= SwipeDistance => true,
-                    _ => panVelocity switch
-                    {
-                        <= -SwipeVelocity => false,
-                        >= SwipeVelocity => true,
-                        _ => panel.TranslationX > -DrawerWidth / 2
-                    }
-                };
-                if (open == IsOpen)
-                {
-                    MoveTo(open ? 0 : -DrawerWidth, open);
-                }
-                else
-                {
-                    IsOpen = open;
-                }
-
+                Settle();
                 break;
         }
     }
+
+    // 右方向 (速いか、最後に右へ動かして合計が距離を超えた) は開く、左方向は閉じる。方向が明確でなければ半分の位置で決める。
+    // IsOpen が変わらない場合もあるため位置は明示的に戻す
+    private void Settle()
+    {
+        var x = panel.TranslationX;
+        var velocity = Environment.TickCount64 - panTimestamp > PauseInterval ? 0 : panVelocity;
+        bool open;
+        if ((velocity >= SwipeVelocity) || ((velocity >= 0) && (panDirection > 0) && (panTotal >= SwipeDistance)))
+        {
+            open = true;
+        }
+        else if ((velocity <= -SwipeVelocity) || ((velocity <= 0) && (panDirection < 0) && (panTotal <= -SwipeDistance)))
+        {
+            open = false;
+        }
+        else
+        {
+            open = x > -DrawerWidth / 2;
+        }
+
+        var duration = FlingDuration(open ? -x : x + DrawerWidth, open ? velocity : -velocity);
+        if (open == IsOpen)
+        {
+            MoveTo(open ? 0 : -DrawerWidth, open, duration, Easing.SinOut);
+        }
+        else
+        {
+            flingDuration = duration;
+            IsOpen = open;
+        }
+    }
+
+    // 離したときの速さ (dp/ms) で残りの距離を進む時間。逆方向や停止からは通常の時間
+    private static uint FlingDuration(double distance, double velocity) =>
+        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
 }

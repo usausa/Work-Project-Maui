@@ -1317,8 +1317,8 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 |---|---|
 | MauiComponents `WiFi.cs` / `WiFi.WiFiManager.cs`(2026-09-19 に `Components/WiFiManager.cs` から移動。`AddComponentsWiFi` で登録) | `IWiFiManager`(`IsSupported` / `IsRadioOn` / `Connection` / `AccessPoints` / `Enabled` / `StartScan` / `OpenSettings` / `StateChanged`)、`WiFiConnection`(SSID / BSSID / RSSI / 信号レベル / リンク速度(Rx / Tx)/ 周波数 / 規格 / IP / ゲートウェイ / DNS)、`WiFiAccessPoint`(SSID / BSSID / RSSI / 信号レベル / 周波数 / チャネル / 帯域幅 / セキュリティ / 規格 / 検出時刻)。`Nfc` と同じ共通 + `*.android.cs` の partial 構成 |
 | MauiComponents `WiFi.WiFiManager.android.cs`(+ `.ios.cs` は `IsSupported=false` で設定画面を開くだけ) | `ConnectivityManager.NetworkCallback`(Android 12 以降は `IncludeLocationInfo`)で Wi-Fi の能力(`WifiInfo`)とリンク情報(`LinkProperties`)を受け取り合成。無線のオン / オフは `WIFI_STATE_CHANGED`、スキャン結果は `SCAN_RESULTS_AVAILABLE` の `BroadcastReceiver` で追従(`ScanResults` は電波の強い順、`Capabilities` からセキュリティ、周波数からチャネルを算出)。`StartScan` はシステムの回数制限で拒否されると false。信号レベルは `WifiManager.CalculateSignalLevel`、Settings は `ACTION_WIFI_SETTINGS` |
-| `Modules/Device/DeviceWiFiView.xaml` + `DeviceWiFiViewModel.cs` | 上部 = 接続中のブロック(信号アイコン / SSID / 状態バッジ / 📶 dBm・⚡ リンク速度・📡 帯域・🌐 IP の絵文字行。タップで BSSID / 周波数 / 規格 / Rx・Tx / ゲートウェイ / DNS を展開)。下部 = 検出したアクセスポイントの `CollectionView`(件数と帯域別の内訳、更新時刻、スキャンボタン。行 = 信号アイコン + SSID + 接続中 / 帯域 / 🔒 セキュリティ / 規格のバッジ + 📶 dBm・📡 チャネル・↔ 帯域幅、タップで BSSID と検出時刻を展開。接続中を先頭に電波の強い順)。行は角丸のカードにせず区切り線で仕切る。表示中だけ監視し、変化はイベントで反映。F2 = スキャン(制限中はキャッシュ表示の旨)、F4 = Wi-Fi 設定。権限が無い場合は SSID とスキャン結果が取れない旨を表示 |
-| `Converters/WiFiSignalIconConverter.cs` | 信号レベル → アイコン(未接続 / 0〜4 本) |
+| `Modules/Device/DeviceWiFiView.xaml` + `DeviceWiFiViewModel.cs` | 上部 = 接続中のブロック(信号アイコン / SSID / 状態バッジ / 📶 dBm・⚡ リンク速度・📡 帯域・🌐 IP の絵文字行。タップで BSSID / 周波数 / 規格 / Rx・Tx / ゲートウェイ / DNS を展開)。下部 = 検出したアクセスポイントの `CollectionView`(件数と帯域別の内訳、更新時刻、スキャンボタン。行 = 信号アイコン + SSID + 接続中 / 帯域 / 🔒 セキュリティ / 規格のバッジ + 📶 dBm・📡 チャネル・↔ 帯域幅、タップで BSSID と検出時刻を展開。接続中を先頭に電波の強い順)。行は角丸のカードにせず区切り線で仕切る。表示中だけ監視し、変化はイベントで反映。F2 = スキャン(制限中はキャッシュ表示の旨)、F4 = Wi-Fi 設定。権限が無い場合は SSID とスキャン結果が取れない旨を表示。VM は `WiFiConnection?` と `WiFiAccessPointItem.AccessPoint`(`WiFiAccessPoint`)をそのまま公開し、XAML が `Connection.Ssid` / `AccessPoint.Rssi` のように直接バインド(2026-09-19)。帯域は `WiFiBandConverter`、セキュリティ(🔓 / 🔒 + 名称)は `s:MapToTextConverter`、信号色は `s:MapToColorConverter`、非公開 SSID は `s:NullToParameterConverter`、チャネル / 帯域幅 / 検出時刻は `MultiBinding` / `StringFormat` |
+| `Converters/WiFiSignalIconConverter.cs` / `WiFiBandConverter.cs` | 信号レベル → アイコン(未接続 / 0〜4 本)/ 周波数 → 帯域 |
 | `Modules/Device/DeviceMenuView.xaml` / `MauiProgram.cs` / `Extensions.cs` / `Permissions.cs` / `Platforms/Android/AndroidManifest.xml` | WiFi ボタンを有効化、DI 登録、`StateChangedAsObservable`、`NearbyWifiDevices` 権限(Android 13 以降のみ必須)と `RequestNearbyWifiDevicesAsync`、マニフェストに `CHANGE_WIFI_STATE`(スキャン要求)/ `NEARBY_WIFI_DEVICES` を追加 |
 | `Document/Device_WiFi.png` / `README.md` | 画像を追加(Image 節)、Implement の Device 行に WiFi、TODO から削除 |
 
@@ -1331,10 +1331,10 @@ Control メニューに一覧系の 2 画面を追加した。Grid は `ClamGrid
 | 対象 | 内容 |
 |---|---|
 | `Template.MobileApp.csproj` | `ClamGrid` 1.0.0 を追加(SkiaSharp 4.151.2 依存で既存と同版) |
-| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` | 受注一覧 2,000 行。列は XAML の `GridColumn` で宣言し値は `OrderRow.Accessors` から Key で解決。`GridDataView<OrderRow>` が行・選択・ソートを持ち、`ColumnOrders` / `SortOrders` は TwoWay(グリッドが正規化した値を書き戻す)。見出しタップでソート(3 段階、順位表示)、見出し長押しで列設定、行タップで選択、行長押しで未処理の一括選択 / 全解除、確認列はチェックで編集。先頭 2 列固定。F2 選択解除 / F3 列設定とソートを既定へ / F4 再読込、確定(ダイアログ)/ 状態更新(変更通知で並びと色が追従) |
+| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` | 受注一覧 2,000 行。列は XAML の `GridColumn` で宣言し値は `OrderInfo.Accessors` から Key で解決。`GridDataView<OrderInfo>` が行・選択・ソートを持ち、`ColumnOrders` / `SortOrders` は TwoWay(グリッドが正規化した値を書き戻す)。見出しタップでソート(3 段階、順位表示)、見出し長押しで列設定、行タップで選択、行長押しで未処理の一括選択 / 全解除、確認列はチェックで編集。先頭 2 列固定。F2 選択解除 / F3 列設定とソートを既定へ / F4 再読込、確定(ダイアログ)/ 状態更新(`Suspend` / `Resume` でまとめて反映し `UpdateSelection` で選び直す) |
 | `Modules/Control/ControlGridColumnView.xaml` + `ControlGridColumnViewModel.cs` | 列設定。`GridColumnEditSession` を `PushAsync` の引数で受け取り、チェック(表示)と行ヘッダのドラッグ(順序、`GridRowMover`)で編集、Apply で `PopAsync` の引数に `Export()` を返す |
 | `Modules/Control/ControlGridStyles.cs` | `GridStyle`: 横罫線のみ・行ヘッダなし・白地の見出し・`sans-serif`・淡いブルーの選択・状態列は `CellColors` で状態ごとの色、納期は期限切れを赤字。列設定用は行ヘッダをドラッグの取っ手として表示。`ListStyle` / `SettingsStyle` の static プロパティを XAML から `x:Static` で参照(列キーは `nameof`) |
-| `Models/Control/OrderRow.cs` / `OrderStatus.cs` / `OrderSamples.cs` / `ColumnOptionAccessors.cs` | 行モデル(変更通知)、状態、ダミーデータ、列設定行のアクセサ |
+| `Models/Control/OrderInfo.cs`(`OrderInfo` / `OrderStatus` / `OrderChannel` / `OrderMarks` / `OrderSamples`。2026-09-19 に 1 ファイルへ統合、`OrderRow` → `OrderInfo`)/ `ColumnOptionAccessors.cs` | 行モデル(変更通知)、状態、受付経路、目印、ダミーデータ、列設定行のアクセサ |
 | `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` / `Converters/InitialConverter.cs` | 訪問先一覧 40 件。カードのタップで選択(青背景 + 白文字)、右端で展開(電話 / 前回訪問 / メモ)、状態(未訪問 / 訪問済 / 再訪問 / 不在)で左のストリップと背景色、重点 / 区分のバッジ(角 2px)。状態 / 区分 / 担当の文言と色は `s:MapToTextConverter` / `s:MapToColorConverter`(Style の Setter にバインド。選択は DataTrigger で上書き)、日付は `StringFormat`、並替パネルにクリア(コード順)。行は角丸のカードにせず区切り線で仕切る。ツールバー = 並替パネル(キーをタップで第 1 キー、再タップで昇降反転、最大 3 キー、順位バッジ)/ 昇降 / 全展開 / 再読込。F2 並替 / F3 未訪問の一括選択(全選択済みなら解除)/ F4 確定(ダイアログ) |
 | `Models/Control/VisitInfo.cs` | `VisitInfo` / `VisitStatus` / `VisitCategory` / `VisitSamples`(汎用のダミー) |
 | `Modules/Parameters.cs` | 列設定セッションと列順序の受け渡し |
@@ -1349,9 +1349,9 @@ Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Sy
 
 | 対象 | 内容 |
 |---|---|
-| `Controls/BottomSheetView.cs` | 自作のボトムシート(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `SheetContent` / `HalfExpandedRatio`(既定 0.5)/ `ExpandedRatio`(0.92)/ `CornerRadius` / `SheetBackgroundColor`。背景(タップで閉じる)と上角丸の `Border`(グラバー + 内容)を重ね、開くと半開まで上がる。ドラッグで 半開 ⇔ 全開 ⇔ 閉じる(離した位置に近い状態へ)、背景の暗さはシートの位置に連動。高さが未確定(初回表示)のときの開閉は `SizeChanged` 後に行う。ジェスチャは内側の `Grid` に付ける |
-| `Controls/SideDrawer.cs` + `SideDrawer.android.cs` | 自作のドロワー(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `DrawerContent` / `DrawerWidth`(280)/ `EdgeSwipeEnabled` / `EdgeWidth`(24)/ `DrawerBackgroundColor`。左端の帯(スワイプで開く)+ 背景(タップで閉じる)+ 影付きのパネル(ドラッグの終了時は 16dp 以上動かした方向、または 0.2dp/ms 以上の速さの方向へ。どちらでもなければ半分の位置で開閉を決める)。閉じているときは帯以外はタッチを通す(`InputTransparent` + `CascadeInputTransparent=False`)。Android は帯の上下中央 200dp を `SystemGestureExclusionRects` でシステムの戻るジェスチャから除外 |
-| `Modules/Control/ControlBottomSheetView.xaml` + `ControlBottomSheetViewModel.cs` | 新規。`SfBottomSheet`(ページを包む。`HalfExpandedRatio=0.45` / `IsModal`)と `BottomSheetView` をルートの `Grid` に兄弟で置き、同じ内容(4 項目 + 閉じる)を表示。F2 = Sf / F3 = 自作(開いているシートがあれば閉じる)。開く / 閉じるボタンは他画面と同じ高さ 44 / 角丸 8。選択した項目を「結果」カードに表示して閉じる |
+| `Controls/BottomSheetView.cs` | 自作のボトムシート(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `SheetContent` / `HalfExpandedRatio`(既定 0.5)/ `ExpandedRatio`(0.92)/ `CornerRadius` / `SheetBackgroundColor`。背景(タップで閉じる)と上角丸の `Border`(グラバー + 内容)を重ね、開くと半開まで上がる。ドラッグで 半開 ⇔ 全開 ⇔ 閉じる(離した位置に近い状態へ)、背景の暗さはシートの位置に連動。高さが未確定(初回表示)のときの開閉は `SizeChanged` 後に行う。ジェスチャは内側の `Grid` に付ける。2026-09-19: 高さは内容に合わせる(上限 `ExpandedRatio`、内容が半開に収まるなら全開は無い)。ドラッグの終了は離したときの速さ(100ms 止まっていれば無し)か最後に動かした方向で決め(下 = 半開より上なら半開、それ以外は閉じる / 上 = 半開より下なら半開、それ以外は全開)、方向が明確でなければ離した位置に近い状態へ。ドラッグの続きは離した速さから減速(SinOut、80〜400ms)、ボタン / 背景からは 250ms。閉じる途中のドラッグは無視 |
+| `Controls/SideDrawer.cs` + `SideDrawer.android.cs` | 自作のドロワー(`Grid` 派生、依存なし)。`IsOpen`(TwoWay)/ `DrawerContent` / `DrawerWidth`(280)/ `EdgeSwipeEnabled` / `EdgeWidth`(24)/ `DrawerBackgroundColor`。左端の帯(スワイプで開く)+ 背景(タップとスワイプで閉じる)+ 影付きのパネル(ドラッグの終了はボトムシートと同じ判定 = 離したときの速さ(100ms 止まっていれば無し)か最後に動かした方向(16dp / 0.2dp/ms)、どちらでもなければ半分の位置で開閉を決め、ドラッグの続きは離した速さから減速(SinOut、80〜400ms)。ボタン / 背景からの開閉は 150ms)。閉じているときは帯以外はタッチを通す(`InputTransparent` + `CascadeInputTransparent=False`)。Android は帯の上下中央 200dp を `SystemGestureExclusionRects` でシステムの戻るジェスチャから除外 |
+| `Modules/Control/ControlBottomSheetView.xaml` + `ControlBottomSheetViewModel.cs` | 新規。`SfBottomSheet`(ページを包む。`HalfExpandedRatio=0.45` / `IsModal`)と `BottomSheetView` をルートの `Grid` に兄弟で置き、同じ内容(4 項目 + 閉じる)を表示。F2 = Sf / F3 = 自作(同じシートなら閉じる、別のシートが開いていれば閉じ終わってから開く)。開く / 閉じるボタンは他画面と同じ高さ 44 / 角丸 8。選択した項目を「結果」カードに表示して閉じる |
 | `Modules/Control/ControlDrawerView.xaml` + `ControlDrawerViewModel.cs` | 新規。`SfNavigationDrawer`(`Position=Left` / `Transition=SlideOnTop` / 幅 280 / ヘッダ 96 / フッタ 44)と `SideDrawer` を `SfSegmentedControl`(`VisibleSegmentsCount=2` で 2 分割し文言を全表示)で切り替え(端のスワイプは選択中の側だけ有効)。ヘッダ(アバター / 名前 / メール)+ 5 項目(Material アイコン)+ フッタを共通の Style / `DataTemplate` で構成。F2 = 開閉。項目タップで「選択中」に反映して閉じる |
 | `Modules/Control/ControlToolkitView.xaml` + `ControlToolkitViewModel.cs` | `SfBottomSheet` の「シート」を Control > Bottom Sheet へ移し、ルートを `SfTabView` に。`SfSegmentedControl` の `SelectedIndex` は `Mode=TwoWay` を明示(Drawer 画面も同じ) |
 | `Modules/Control/ControlMenuView.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | Row 5 = Bottom Sheet \| Drawer(`VerticalAlignBottom` / `MenuOpen`)。空きは 3 段 |
@@ -1376,7 +1376,7 @@ Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Sy
 | 対象 | 内容 |
 |---|---|
 | `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` | 行 = 担当者のアバター(先頭 1 文字、担当ごとの色)+ コード + 名前 / 状態(⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在、白文字の色付き)・🔥 重点・📌 今日・🆕 初回・区分(🗓 定期 / ✨ 新規 / 🔧 点検 / 💰 集金、区分ごとの淡色)のバッジ(折り返し)/ 📍 住所・👤 担当・🕒 予定の絵文字行。展開部は 📞 電話・📅 前回・📝 メモ。上部の件数は状態ごとの色付きバッジ(⏳ ✅ 🔁 🚫)。行の形(フラット + 区切り線)と選択(青地 + 白文字)は据え置き |
-| `Models/Control/OrderRow.cs` / `OrderChannel.cs` / `OrderSamples.cs` | 状態を絵文字付きに(⏳ 未処理 / 🔄 処理中 / ✋ 保留 / ✅ 完了)。フラグ列(❗ 期限切れ / 🔥 期限 3 日以内 / 💰 30 万円以上 / 📦 数量 20 以上 / 🆕 3 日以内の更新)、顧客ランク列(⭐〜⭐⭐⭐、顧客ごとに固定)、受付列(🏪 店頭 / 🌐 Web / 📞 電話 / 📠 FAX)を追加。状態更新でフラグも再評価 |
+| `Models/Control/OrderInfo.cs`(当時は `OrderRow.cs` / `OrderChannel.cs` / `OrderSamples.cs`) | 状態を絵文字付きに(⏳ 未処理 / 🔄 処理中 / ✋ 保留 / ✅ 完了)。フラグ列(❗ 期限切れ / 🔥 期限 3 日以内 / 💰 30 万円以上 / 📦 数量 20 以上 / 🆕 3 日以内の更新)、顧客ランク列(⭐〜⭐⭐⭐、顧客ごとに固定)、受付列(🏪 店頭 / 🌐 Web / 📞 電話 / 📠 FAX)を追加。状態更新でフラグも再評価 |
 | `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` | 列を 状態 / 受注番号 / フラグ / 顧客 / ランク / 商品 / 数量 / 金額 / 納期 / 受付 / 確認 / 担当 / 更新 に。ランクと受付はソート可、フラグはソート不可 |
 | `Modules/Control/ControlGridStyles.cs` | フラグ列の背景(期限切れ = 淡い赤 / 期限間近 = 淡い橙)、ランク 3 の背景(淡い黄)、高額の金額と大口の数量の文字色、受付ごとの文字色、納期の期限切れ(赤)/ 期限間近(橙) |
 | `Document/Control_CardList.png` / `Control_Grid.png` | 撮り直し |
@@ -1470,6 +1470,22 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告。実機で Sample > Chat が Ollama(gemma2)で応答し、2 回目の質問が 1 回目の内容を踏まえること(履歴の送信)、Basic > Setting の検索アイコンが青、Device > Misc の Vibrate / Cancel が有効、`dotnet run --device 4A071JEBF16992` で配置と起動を確認
 
+### ClamGrid 1.1.0 の Converter / OrderInfo / ボトムシート / WiFi のレコードバインド(2026-09-19)
+
+| 対象 | 内容 |
+|---|---|
+| Other-ClamGrid `GridColumn.cs` / `Rendering/GridRenderer.cs` / `Document/API.md` / `README.md` / `Directory.Build.props`(別リポジトリ、未コミット・未公開) | `GridColumn.Converter`(`IValueConverter?`)を追加。文字セルの描画と自動幅の計測で `Format` の前に適用(真偽セル / ソート / 編集は生値)。1.0.0 → 1.1.0。テスト `ConverterRunsBeforeTheFormatString` を追加 |
+| `Template.MobileApp.csproj` / `Template.MobileApp.slnx` | `ClamGrid` を公開まで `ProjectReference`(`..\..\..\..\..\GitHub\Other-ClamGrid\ClamGrid\ClamGrid.csproj`)で参照し、slnx の Library にも追加(inspectcode の解決用) |
+| `Models/Control/OrderInfo.cs` | `OrderRow.cs` / `OrderStatus.cs` / `OrderChannel.cs` / `OrderSamples.cs` を 1 ファイルに統合し `OrderRow` → `OrderInfo`。`StatusText` / `Flags`(文字列)/ `RankText` / `ChannelText` を削除し、アクセサは `Status` / `Marks`(`[Flags] OrderMarks`)/ `Rank` / `Channel` の値を返す |
+| `Modules/Control/ControlGridView.xaml` / `Converters/FlagsToTextConverter.cs` | 状態 / 受付は `s:MapToTextConverter`、ランクは `s:MapToTextConverter`(`{s:Int32 n}` → ⭐)、目印は `FlagsToTextConverter`(`[Flags]` の立っているビットの文言を `Entries` の順に連結)を列の `Converter` に指定 |
+| `Modules/Control/ControlGridViewModel.cs` | 状態更新は `Rows.Suspend()` → 更新 → `Resume()` → `UpdateSelection` で選び直す(行ごとの変更通知で全行を並べ替え直さない) |
+| `Controls/BottomSheetView.cs` | 高さを内容に合わせる(上限 `ExpandedRatio`)。ドラッグの終了は離した速さ(100ms 止まっていれば無し)と最後に動かした方向で決める(戻したドラッグは閉じない。速さは逆方向に転じたら平均せず置き換える)。ドラッグの続きは離した速さから減速(SinOut、80〜400ms)。閉じる途中のドラッグは無視 |
+| `Controls/SideDrawer.cs` | 開閉 250 → 150ms。ドラッグの終了判定と続きの減速をボトムシートと同じに(`Settle` / `FlingDuration`、`flingDuration` を `IsOpen` の変更に渡す)。背景にも `PanGestureRecognizer` を付け、開いているときは画面のどこからでもスワイプで閉じる(閉じているときの開く操作は帯 24dp × ジェスチャナビでは上下中央 200dp のまま = 付録B) |
+| `Modules/Control/ControlBottomSheetViewModel.cs` | F2 / F3 は同じシートなら閉じる、別のシートが開いていれば閉じ終わってから(300ms)開く |
+| `Modules/Device/DeviceWiFiViewModel.cs` + `DeviceWiFiView.xaml` / `Converters/WiFiBandConverter.cs` | 個別の `[ObservableProperty]` 13 個と `WiFiAccessPointItem` の透過 / 文言プロパティを削除し、`WiFiConnection?` / `WiFiAccessPoint` をそのままバインド。文言と色はコンバーター(帯域 / セキュリティ / 信号色 / 非公開 SSID)と `MultiBinding` / `StringFormat`。信号色の `DataTrigger` 9 個は `s:MapToColorConverter` 1 個に |
+
+- ビルド 0 エラー 0 警告(Debug。Release は既存の Android BLE の警告のみ)。ClamGrid は Release 0 警告、テスト 141 / 142(`GridLayoutTests.BoundariesUnderTheFrozenColumnsAreNotGrabbable` は 1.0.0 でも失敗する既存)。実機: Grid の各列の絵文字と色、未処理 662 行を一括選択しての状態更新(固まらず、選択とスクロール位置が残る)、シートの F2 / F3 切替・短いフリック・戻したドラッグ・内容に合う高さ、ドロワーの開閉(戻したドラッグは閉じない / 開かない、ゆっくり動かして止めてから離すと距離で決まる、短いフリック、帯のスワイプ、背景のスワイプ / ドラッグで閉じる)、WiFi の接続カード / 一覧 / 展開
+
 ## C. この区間のナレッジ
 
 - **`dotnet run` の Android 実機指定は `--device <シリアル>`**(.NET 10 SDK)。`-p:AdbTarget=-d` は効かず、端末が複数(実機 + エミュレーター)あると候補一覧を出して止まる。起動後は logcat を流し続ける
@@ -1500,6 +1516,10 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - **Wi-Fi のスキャン**: `getScanResults` は Android 13 以降 `NEARBY_WIFI_DEVICES`(+ 位置情報)が必要。`startScan` は非推奨だが動作し、前面アプリは 2 分に 4 回まで(超えると false、キャッシュ済みの結果は読める)。`ScanResult.ChannelWidth` は int(`CHANNEL_WIDTH_*`)で 320 MHz は Android 13 以降。結果の `Timestamp` は起動からの μs なので `SystemClock.ElapsedRealtime` との差で時刻に直す
 - **Wi-Fi の情報取得**: Android 12 以降は `WifiManager.ConnectionInfo` が非推奨で、`NetworkCallback` に `IncludeLocationInfo` を付けて `NetworkCapabilities.TransportInfo`(`WifiInfo`)から取る。SSID / BSSID は位置情報の権限 + このフラグの両方が無いと `<unknown ssid>`。IP / ゲートウェイ / DNS は `OnLinkPropertiesChanged` の `LinkProperties`(IPv6 のリンクローカルが先に来るので IPv4 を選ぶ)。無線のオン / オフだけでは NetworkCallback は呼ばれないため `WIFI_STATE_CHANGED` を別に受ける。API 31 専用のコンストラクタは `[SupportedOSPlatform("android31.0")]` を付けて `OperatingSystem.IsAndroidVersionAtLeast(31)` で分岐(CA1416)
 - **ClamGrid**: `GridStyle` の色コールバック(`CellColors` / `RowBackground`)はデリゲートなので XAML リソースにできず、C# の static プロパティ(`ControlGridStyles.ListStyle`)に組み立てて `x:Static` で `GridStyle` に渡す。**static プロパティの初期化子は色のフィールドより後に置く**(前に置くと null の色で組み立てられ、描画が止まって ANR になる)。行ヘッダは `AllowRowDragging` のときライブラリが取っ手を描くので `RowHeaderText` を重ねない。`ColumnOrders` / `SortOrders` は既定で TwoWay。列設定は `GridColumnConfigurationEventArgs.CreateEditSession()` を `PushAsync` の引数で渡し、`PopAsync` の引数で `Export()` を返して一覧側の `OnNavigatingToAsync`(restore)で受け取る
+- **ClamGrid の `GridDataView` は行の変更通知ごとに全行を並べ替え直す**: 多数の行をまとめて更新するときは `Suspend()` / `Resume()` で囲む。`Resume` は Reset 扱いで選択が消えるため `UpdateSelection` で選び直す(スクロール位置は保持される)
+- **ClamGrid の `GridColumn.Converter`(1.1.0)**: 文字セルの描画と自動幅の計測にだけ効く。ソートは `RegisterSort` の値、真偽セルと編集は生値。`s:MapToTextEntry` の `Key` に数値を書くときは `{s:Int32 n}`(文字列のキーでは `CompareTo` が例外)
+- **内容に合わせた高さは `Measure(width, PositiveInfinity)`**: `Grid` の Star 行も無限の高さ制約では内容の高さで測られる。シートの高さ = min(内容の高さ, 上限)
+- **ドラッグ終了の判定は合計の移動量だけで決めない**: 戻したドラッグも閉じてしまう。最後に動かした方向(1dp 以上の移動の符号)と離す直前 100ms の停止を見て、速さは逆方向に転じたら平均せず置き換える
 - **Style の Setter にコンバーター付きのバインドを書ける**: `<Setter Property="BackgroundColor" Value="{Binding Status, x:DataType={x:Type module:VisitCard}, Converter={StaticResource StatusRowColorConverter}}" />` で値ごとの `DataTrigger` の列挙を 1 行にできる。上書きしたい状態(選択)だけ `DataTrigger` に残す。`s:MapToTextConverter` / `s:MapToColorConverter` の `Entries` は `Key` に列挙値を `x:Static` で書く(`IComparable.CompareTo` で照合するため文字列のキーでは例外)
 - **`SfSegmentedControl` の文言切れ**: 既定の `SegmentWidth`(100)で切れる。`VisibleSegmentsCount` を指定すると幅を等分して全表示できる
 - **Style 内の DataTrigger と x:DataType**: ページの `x:DataType` が VM のとき、DataTemplate 用 Style の `DataTrigger` の Binding は VM の型で解決されて MAUIG2045(反射バインド)になる。`Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"` のようにバインド側で型を指定する

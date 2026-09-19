@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
+             xmlns:components="clr-namespace:MauiComponents;assembly=MauiComponents"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceWiFiView"
@@ -29,12 +30,32 @@
                                                 Level2="{x:Static fonts:MaterialIcons.Network_wifi_2_bar}"
                                                 Level3="{x:Static fonts:MaterialIcons.Network_wifi_3_bar}"
                                                 Level4="{x:Static fonts:MaterialIcons.Signal_wifi_4_bar}" />
+            <s:MapToColorConverter x:Key="SignalColorConverter"
+                                   DefaultValue="{StaticResource GrayDefault}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="{s:Int32 0}" Value="{StaticResource RedDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 1}" Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 2}" Value="{StaticResource AmberDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 3}" Value="{StaticResource LightGreenDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 4}" Value="{StaticResource GreenDefault}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+            <converters:WiFiBandConverter x:Key="BandConverter" />
+            <s:NullToParameterConverter x:Key="SsidConverter"
+                                        HandleEmptyString="True" />
+            <s:MapToTextConverter x:Key="SecurityTextConverter"
+                                  DefaultValue="🔒 Enterprise">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Open}" Value="🔓 オープン" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wep}" Value="🔒 WEP" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa}" Value="🔒 WPA" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa2}" Value="🔒 WPA2" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa3}" Value="🔒 WPA3" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
             <s:BoolToTextConverter x:Key="ExpandGlyphConverter"
                                    TrueValue="{x:Static fonts:MaterialIcons.Expand_less}"
                                    FalseValue="{x:Static fonts:MaterialIcons.Expand_more}" />
-            <s:BoolToTextConverter x:Key="SecurityEmojiConverter"
-                                   TrueValue="🔓"
-                                   FalseValue="🔒" />
 
             <Style x:Key="RootGrid"
                    TargetType="Grid">
@@ -65,39 +86,12 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
+            <!-- 信号レベルの色は SignalColorConverter (未接続は既定の灰色) -->
             <Style x:Key="SignalIconBase"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-                <Style.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel}"
-                                 Value="0">
-                        <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel}"
-                                 Value="1">
-                        <Setter Property="TextColor" Value="{StaticResource OrangeDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel}"
-                                 Value="2">
-                        <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel}"
-                                 Value="3">
-                        <Setter Property="TextColor" Value="{StaticResource LightGreenDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel}"
-                                 Value="4">
-                        <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
-                    </DataTrigger>
-                </Style.Triggers>
             </Style>
 
             <Style x:Key="ConnectionSignalIcon"
@@ -105,6 +99,7 @@
                    BasedOn="{StaticResource SignalIconBase}">
                 <Setter Property="FontSize" Value="56" />
                 <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="TextColor" Value="{Binding Connection.SignalLevel, Converter={StaticResource SignalColorConverter}, FallbackValue={StaticResource GrayDefault}}" />
             </Style>
 
             <Style x:Key="ConnectionStack"
@@ -287,35 +282,11 @@
             </Style>
 
             <Style x:Key="AccessPointSignalIcon"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                   TargetType="Label"
+                   BasedOn="{StaticResource SignalIconBase}">
                 <Setter Property="FontSize" Value="32" />
                 <Setter Property="WidthRequest" Value="40" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-                <Style.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="1">
-                        <Setter Property="TextColor" Value="{StaticResource OrangeDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="2">
-                        <Setter Property="TextColor" Value="{StaticResource AmberDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="3">
-                        <Setter Property="TextColor" Value="{StaticResource LightGreenDefault}" />
-                    </DataTrigger>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding SignalLevel, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="4">
-                        <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
-                    </DataTrigger>
-                </Style.Triggers>
+                <Setter Property="TextColor" Value="{Binding AccessPoint.SignalLevel, x:DataType={x:Type module:WiFiAccessPointItem}, Converter={StaticResource SignalColorConverter}}" />
             </Style>
 
             <Style x:Key="AccessPointSsidLabel"
@@ -355,8 +326,8 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
-                                 Binding="{Binding IsOpen, x:DataType={x:Type module:WiFiAccessPointItem}}"
-                                 Value="True">
+                                 Binding="{Binding AccessPoint.Security, x:DataType={x:Type module:WiFiAccessPointItem}}"
+                                 Value="{x:Static components:WiFiSecurity.Open}">
                         <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -393,53 +364,56 @@
                   ColumnSpacing="10">
                 <Label Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource ConnectionSignalIcon}"
-                       Text="{Binding SignalLevel, Converter={StaticResource SignalIconConverter}}" />
+                       Text="{Binding Connection.SignalLevel, Converter={StaticResource SignalIconConverter}, FallbackValue={x:Static fonts:MaterialIcons.Signal_wifi_off}}" />
                 <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                      Style="{StaticResource ConnectionStack}">
                     <HorizontalStackLayout Style="{StaticResource TitleRow}">
                         <Label Style="{StaticResource SsidLabel}"
-                               Text="{Binding Ssid}" />
+                               Text="{Binding Connection.Ssid, FallbackValue=''}" />
                         <Border Style="{StaticResource StateChip}">
                             <Label Style="{StaticResource StateChipLabel}"
                                    Text="{Binding StateText}" />
                         </Border>
                     </HorizontalStackLayout>
+                    <!-- 未接続 (Connection が null) のときは行ごと隠すか空欄で良い -->
+                    <!-- ReSharper disable Xaml.PossibleNullReferenceException -->
                     <FlexLayout Style="{StaticResource InfoRow}"
                                 IsVisible="{Binding IsConnected}">
                         <Label Style="{StaticResource InfoLabel}"
-                               Text="{Binding Rssi, StringFormat='📶 {0} dBm'}" />
+                               Text="{Binding Connection.Rssi, StringFormat='📶 {0} dBm'}" />
                         <Label Style="{StaticResource InfoLabel}"
-                               Text="{Binding LinkSpeed, StringFormat='⚡ {0} Mbps'}" />
+                               Text="{Binding Connection.LinkSpeed, StringFormat='⚡ {0} Mbps'}" />
                         <Label Style="{StaticResource InfoLabel}"
-                               Text="{Binding Band, StringFormat='📡 {0}'}" />
+                               Text="{Binding Connection.Frequency, Converter={StaticResource BandConverter}, StringFormat='📡 {0}'}" />
                         <Label Style="{StaticResource InfoLabel}"
-                               Text="{Binding IpAddress, StringFormat='🌐 {0}'}" />
+                               Text="{Binding Connection.IpAddress, StringFormat='🌐 {0}'}" />
                     </FlexLayout>
                     <VerticalStackLayout Spacing="2"
                                          IsVisible="{Binding IsDetailOpen}">
                         <BoxView Style="{StaticResource DetailSeparator}" />
                         <FlexLayout Style="{StaticResource InfoRow}">
                             <Label Style="{StaticResource MonoLabel}"
-                                   Text="{Binding Bssid, StringFormat='🏷 {0}'}" />
+                                   Text="{Binding Connection.Bssid, StringFormat='🏷 {0}'}" />
                             <Label Style="{StaticResource InfoLabel}"
-                                   Text="{Binding Frequency, StringFormat='📡 {0} MHz'}" />
+                                   Text="{Binding Connection.Frequency, StringFormat='📡 {0} MHz'}" />
                             <Label Style="{StaticResource InfoLabel}"
-                                   Text="{Binding Standard, StringFormat='📘 {0}'}" />
+                                   Text="{Binding Connection.Standard, StringFormat='📘 {0}'}" />
                         </FlexLayout>
                         <FlexLayout Style="{StaticResource InfoRow}">
                             <Label Style="{StaticResource InfoLabel}">
                                 <Label.Text>
                                     <MultiBinding StringFormat="{}⬇ {0} / ⬆ {1} Mbps">
-                                        <Binding Path="RxLinkSpeed" />
-                                        <Binding Path="TxLinkSpeed" />
+                                        <Binding Path="Connection.RxLinkSpeed" />
+                                        <Binding Path="Connection.TxLinkSpeed" />
                                     </MultiBinding>
                                 </Label.Text>
                             </Label>
                             <Label Style="{StaticResource InfoLabel}"
-                                   Text="{Binding Gateway, StringFormat='🚪 {0}'}" />
+                                   Text="{Binding Connection.Gateway, StringFormat='🚪 {0}'}" />
                             <Label Style="{StaticResource InfoLabel}"
-                                   Text="{Binding Dns, StringFormat='🔎 {0}'}" />
+                                   Text="{Binding Connection.Dns, StringFormat='🔎 {0}'}" />
                         </FlexLayout>
+                        <!-- ReSharper restore Xaml.PossibleNullReferenceException -->
                         <Label Style="{StaticResource HintLabel}"
                                IsVisible="{Binding HasPermission, Converter={StaticResource ReverseConverter}}"
                                Text="位置情報 / 付近の Wi-Fi 機器の権限が無いため SSID とスキャン結果は取得できません" />
@@ -499,14 +473,14 @@
                               RowDefinitions="*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource AccessPointSignalIcon}"
-                                   Text="{Binding SignalLevel, Converter={StaticResource SignalIconConverter}}" />
+                                   Text="{Binding AccessPoint.SignalLevel, Converter={StaticResource SignalIconConverter}}" />
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                                  Spacing="4"
                                                  Margin="0,0,0,8">
                                 <FlexLayout Style="{StaticResource InfoRow}">
                                     <Label Style="{StaticResource AccessPointSsidLabel}"
                                            Margin="0,0,8,0"
-                                           Text="{Binding Ssid}" />
+                                           Text="{Binding AccessPoint.Ssid, Converter={StaticResource SsidConverter}, ConverterParameter='(非公開)'}" />
                                     <Border Style="{StaticResource ConnectedChip}"
                                             Margin="0,0,6,0"
                                             IsVisible="{Binding IsConnected}">
@@ -522,44 +496,43 @@
                                     <Border Style="{StaticResource BandChip}"
                                             Margin="0,0,6,0">
                                         <Label Style="{StaticResource ChipLabel}"
-                                               Text="{Binding Band}" />
+                                               Text="{Binding AccessPoint.Frequency, Converter={StaticResource BandConverter}}" />
                                     </Border>
                                     <Border Style="{StaticResource SecurityChip}"
                                             Margin="0,0,6,0">
-                                        <Label Style="{StaticResource ChipLabel}">
-                                            <Label.Text>
-                                                <MultiBinding StringFormat="{}{0} {1}">
-                                                    <Binding Path="IsOpen"
-                                                             Converter="{StaticResource SecurityEmojiConverter}" />
-                                                    <Binding Path="SecurityText" />
-                                                </MultiBinding>
-                                            </Label.Text>
-                                        </Label>
+                                        <Label Style="{StaticResource ChipLabel}"
+                                               Text="{Binding AccessPoint.Security, Converter={StaticResource SecurityTextConverter}}" />
                                     </Border>
                                     <Border Style="{StaticResource StandardChip}"
                                             Margin="0,0,6,0"
-                                            IsVisible="{Binding Standard, Converter={StaticResource NotEmptyConverter}}">
+                                            IsVisible="{Binding AccessPoint.Standard, Converter={StaticResource NotEmptyConverter}}">
                                         <Label Style="{StaticResource StandardChipLabel}"
-                                               Text="{Binding Standard}" />
+                                               Text="{Binding AccessPoint.Standard}" />
                                     </Border>
                                 </FlexLayout>
                                 <FlexLayout Style="{StaticResource InfoRow}">
                                     <Label Style="{StaticResource InfoLabel}"
-                                           Text="{Binding Rssi, StringFormat='📶 {0} dBm'}" />
+                                           Text="{Binding AccessPoint.Rssi, StringFormat='📶 {0} dBm'}" />
+                                    <Label Style="{StaticResource InfoLabel}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}📡 ch {0} ({1} MHz)">
+                                                <Binding Path="AccessPoint.Channel" />
+                                                <Binding Path="AccessPoint.Frequency" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
                                     <Label Style="{StaticResource InfoLabel}"
-                                           Text="{Binding ChannelText, StringFormat='📡 {0}'}" />
-                                    <Label Style="{StaticResource InfoLabel}"
-                                           IsVisible="{Binding WidthText, Converter={StaticResource NotEmptyConverter}}"
-                                           Text="{Binding WidthText, StringFormat='↔ {0}'}" />
+                                           IsVisible="{Binding AccessPoint.ChannelWidth, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                                           Text="{Binding AccessPoint.ChannelWidth, StringFormat='↔ {0} MHz'}" />
                                 </FlexLayout>
                                 <VerticalStackLayout Spacing="2"
                                                      IsVisible="{Binding IsExpanded}">
                                     <BoxView Style="{StaticResource DetailSeparator}" />
                                     <FlexLayout Style="{StaticResource InfoRow}">
                                         <Label Style="{StaticResource MonoLabel}"
-                                               Text="{Binding Bssid, StringFormat='🏷 {0}'}" />
+                                               Text="{Binding AccessPoint.Bssid, StringFormat='🏷 {0}'}" />
                                         <Label Style="{StaticResource InfoLabel}"
-                                               Text="{Binding SeenText, StringFormat='🕒 {0}'}" />
+                                               Text="{Binding AccessPoint.SeenAt, StringFormat='🕒 {0:HH:mm:ss}'}" />
                                     </FlexLayout>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>

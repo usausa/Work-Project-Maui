@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Control"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
              x:Class="Template.MobileApp.Modules.Control.ControlGridView"
@@ -20,10 +21,44 @@
              shell:ShellProperty.Function4Enabled="True">
 
     <!-- ClamGrid: 列は XAML で宣言し、値は OrderInfo.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
-         状態・フラグ・ランク・受付は絵文字、セルの色は ControlGridStyles -->
+         状態・目印・ランク・受付の絵文字は列の Converter、セルの色は ControlGridStyles -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <!-- 列の文言 (値は列挙や数値のまま渡され、並べ替えも値で行う) -->
+            <s:MapToTextConverter x:Key="StatusTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Open}" Value="⏳ 未処理" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Processing}" Value="🔄 処理中" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Hold}" Value="✋ 保留" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderStatus.Completed}" Value="✅ 完了" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <converters:FlagsToTextConverter x:Key="MarksTextConverter">
+                <converters:FlagsToTextConverter.Entries>
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Overdue}" Value="❗" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.DueSoon}" Value="🔥" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.LargeAmount}" Value="💰" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Bulk}" Value="📦" />
+                    <converters:FlagsTextEntry Key="{x:Static models:OrderMarks.Recent}" Value="🆕" />
+                </converters:FlagsToTextConverter.Entries>
+            </converters:FlagsToTextConverter>
+            <s:MapToTextConverter x:Key="RankTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{s:Int32 1}" Value="⭐" />
+                    <s:MapToTextEntry Key="{s:Int32 2}" Value="⭐⭐" />
+                    <s:MapToTextEntry Key="{s:Int32 3}" Value="⭐⭐⭐" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+            <s:MapToTextConverter x:Key="ChannelTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Store}" Value="🏪 店頭" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Web}" Value="🌐 Web" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Phone}" Value="📞 電話" />
+                    <s:MapToTextEntry Key="{x:Static models:OrderChannel.Fax}" Value="📠 FAX" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
             <Style x:Key="SummaryGrid"
                    TargetType="Grid">
@@ -117,13 +152,15 @@
                            CellValueChangedCommand="{Binding CellValueChangedCommand}">
             <clam:GridColumn Key="Status"
                              Header="状態"
-                             Width="100" />
+                             Width="100"
+                             Converter="{StaticResource StatusTextConverter}" />
             <clam:GridColumn Key="OrderNo"
                              Header="受注番号"
                              Width="150" />
-            <clam:GridColumn Key="Flags"
+            <clam:GridColumn Key="Marks"
                              Header="フラグ"
                              Width="112"
+                             Converter="{StaticResource MarksTextConverter}"
                              AllowSorting="False" />
             <clam:GridColumn Key="Customer"
                              Header="顧客"
@@ -131,7 +168,8 @@
             <clam:GridColumn Key="Rank"
                              Header="ランク"
                              Width="84"
-                             Alignment="Center" />
+                             Alignment="Center"
+                             Converter="{StaticResource RankTextConverter}" />
             <clam:GridColumn Key="Product"
                              Header="商品"
                              Width="220" />
@@ -152,7 +190,8 @@
                              Format="MM/dd" />
             <clam:GridColumn Key="Channel"
                              Header="受付"
-                             Width="88" />
+                             Width="88"
+                             Converter="{StaticResource ChannelTextConverter}" />
             <clam:GridColumn Key="IsChecked"
                              Header="確認"
                              Width="64"
