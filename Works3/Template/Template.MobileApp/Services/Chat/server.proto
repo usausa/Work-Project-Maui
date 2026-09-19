@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Template.MobileServer.Info";
+
+package info;
+
+// サーバー情報(単項RPC、匿名)
+service ServerInfo {
+  // サーバー時刻を返す(接続前の疎通確認に使う)
+  rpc GetServerTime (ServerTimeRequest) returns (ServerTimeReply);
+}
+
+message ServerTimeRequest {
+}
+
+message ServerTimeReply {
+  // サーバー時刻(Unixミリ秒)
+  int64 timestamp = 1;
+}

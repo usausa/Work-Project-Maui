@@ -135,7 +135,7 @@ dotnet run --project src/Template.MobileServer.Web
 - Web API(JWT Bearer、PascalCase JSON): サーバー時刻 / ログイン / Data CRUD(一覧は `offset` / `size` の範囲取得)/ テスト用のエラー・遅延
 - ストレージ API(簡易 FTP): 一覧 / ダウンロード / アップロード(生ボディ、gzip 展開)/ 削除
 - gRPC: チャット(双方向ストリーミング)/ サーバー時刻(単項 RPC)
-- SignalR(`/hubs/monitor`): サーバー状態の配信(1 秒ごと)/ 端末状態の受信 / 通知の送信
+- SignalR(`/hubs/monitor`、認証なし): サーバー状態の配信(1 秒ごと)/ 端末状態の受信 / 通知の送信 / 管理画面からの切断
 - 管理画面(Blazor Server): Data / Files / Chat / Devices(接続中の端末と通知の送信)/ QR
 - 要求 / 応答の圧縮、OpenAPI(開発時)、ヘルスチェック、Serilog / OpenTelemetry
 

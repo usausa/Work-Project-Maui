@@ -103,6 +103,8 @@
                            Text="Search (SearchBar)" />
                     <SearchBar Placeholder="設定を検索"
                                ToolTipProperties.Text="検索ボタンで確定します"
+                               SearchIconColor="{StaticResource BlueDefault}"
+                               ReturnType="Search"
                                SearchCommand="{Binding SearchCommand}"
                                Text="{Binding SearchText}" />
                     <Label Style="{StaticResource FieldCaptionLabel}"
@@ -156,6 +158,7 @@
                                Text="通知 (Switch)" />
                         <Switch Grid.Column="1"
                                 ToolTipProperties.Text="プッシュ通知の有効/無効"
+                                OffColor="{StaticResource GrayLighten1}"
                                 IsToggled="{Binding NotificationEnabled}" />
                     </Grid>
                 </VerticalStackLayout>

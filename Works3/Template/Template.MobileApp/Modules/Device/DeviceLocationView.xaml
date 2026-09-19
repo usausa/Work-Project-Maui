@@ -155,6 +155,9 @@
                    Text="Acquiring location..." />
             <Label Style="{StaticResource EmptyHintLabel}"
                    Text="Waiting for GPS fix" />
+            <Label Style="{StaticResource EmptyHintLabel}"
+                   IsVisible="{Binding ServiceDisabled}"
+                   Text="Location service is disabled" />
         </VerticalStackLayout>
 
         <!-- 測位結果 -->

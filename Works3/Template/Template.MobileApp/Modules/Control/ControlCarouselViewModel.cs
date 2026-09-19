@@ -1,12 +1,12 @@
-namespace Template.MobileApp.Modules.View;
+namespace Template.MobileApp.Modules.Control;
 
-public sealed class ViewCarouselViewModel : AppViewModelBase
+public sealed class ControlCarouselViewModel : AppViewModelBase
 {
     public ObservableCollection<PhotoItem> Items { get; }
 
     public IObserveCommand CurrentChangedCommand { get; }
 
-    public ViewCarouselViewModel()
+    public ControlCarouselViewModel()
     {
         Items =
         [
@@ -18,7 +18,6 @@ public sealed class ViewCarouselViewModel : AppViewModelBase
         ];
         Items[0].IsCurrent = true;
 
-        // 中央のカードのみ強調(両脇は縮小・淡色化)するため現在項目をマークする
         CurrentChangedCommand = MakeDelegateCommand<PhotoItem>(current =>
         {
             foreach (var item in Items)
@@ -28,7 +27,7 @@ public sealed class ViewCarouselViewModel : AppViewModelBase
         });
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

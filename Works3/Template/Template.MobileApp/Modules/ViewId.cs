@@ -76,8 +76,9 @@ public enum ViewId
     NetworkMenu,
 
     NetworkHttp,
-    NetworkGrpc,
+    NetworkStorage,
     NetworkRealtime,
+    NetworkGrpc,
     NetworkScp,
 
     // Sample

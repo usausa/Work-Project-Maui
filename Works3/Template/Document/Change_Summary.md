@@ -1452,21 +1452,22 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 | `Modules/Network/NetworkMenuView.xaml` | Download \| Upload の行を HTTP \| Storage に、Realtime \| gRPC を 2 列に(単発ボタンは残置) |
 | `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | Data の CRUD(一覧は 20 件ずつ追加読み込み、行選択で詳細取得)、ログイン状態(Id / 有効期限)、10 秒待つ API のキャンセル、ログ |
 | `Modules/Network/NetworkStorageView.xaml` + `NetworkStorageViewModel.cs`(新規) | ストレージの一覧(階層移動)、ファイル / 写真のアップロード(進捗 + キャンセル)、ダウンロード(公開フォルダ)、削除 |
-| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | 乱数のダミーを SignalR の実データに。サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、受信した通知の一覧(前面はトースト、バックグラウンドはローカル通知) |
+| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | 乱数のダミーを SignalR の実データに。接続は `MonitorConnection.Connect()` の購読(遷移時に購読、離脱時に破棄 = 切断、再接続は購読し直し)、受信は `ServerStatus` / `Notifications` の購読。サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、受信した通知の一覧(前面はトースト、バックグラウンドはローカル通知) |
 | `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC チャット(管理画面 `/chat` と相互、切断中の送信は再接続後に配送)と単項 RPC |
-| `Services/MonitorConnection.cs`(新規) | SignalR の常時接続(初回接続のバックオフ再試行 / 自動再接続 / Closed 後のやり直し / ネットワーク復帰で即再試行 / 停止) |
+| `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続維持: `Connect()` = 購読で接続を始め破棄で切断する `IObservable<HubStatus>`(初回接続の失敗は `RetryWhen` でバックオフ再試行、ネットワーク復帰(`resume`)で待ちを打ち切り(`Amb`)、接続後の切断は `WithAutomaticReconnect` の自動再接続、`Closed` になったら `Repeat` で初回接続からやり直し)、`On<T>()` = 受信メッセージの `IObservable<T>`、`CreateRetryPolicy` = 諦めないバックオフ |
+| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(認証なし): `HubConnection` の構築(`/hubs/monitor`、KeepAlive 15 秒 / ServerTimeout 30 秒)、`Connect(baseAddress)`(`ReactiveSignalR.Connect` + 状態のログ)、`ServerStatus` / `Notifications` の `IObservable`、`ReportDeviceStatusAsync` |
 | `Services/Chat/`(新規) | サーバーの WPF サンプル `Chat/` の移植(`ChatClient` = 指数バックオフ再接続 + 送信キュー)と `chat.proto` / `server.proto` のコピー |
 | `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | Data CRUD / ストレージ一覧・削除(PUT / DELETE は `HttpClient` を `RestResponse` に包む)、`LoginId` / `TokenExpires`、通信系ログの分離 |
-| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 で保存した Id により再ログインして 1 回だけ再送、`ExecuteTransfer`(インジケーターなし)、常時接続用の `EnsureLoginAsync` / `GetTokenAsync` |
+| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 で保存した Id により再ログインして 1 回だけ再送、`ExecuteTransfer`(インジケーターなし)、gRPC チャット用の `EnsureLoginAsync` / `GetTokenAsync` |
 | `Models/Api/` | `DataListResponse`(`Id` long / `Total`)、`DataResponse` / `DataCreateRequest` / `DataCreateResponse` / `DataUpdateRequest` / `StorageListResponse` / `MonitorMessages` |
 | `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `MonitorEndPoint` → `GrpcEndPoint`、Setting の gRPC 行 |
 | `State/Session.cs` / `App.xaml.cs` | `IsForeground`(Window の Resumed / Stopped) |
-| `MauiProgram.cs` / `Helpers/JwtHelper.cs` / `Helpers/ReactiveSignalR.cs`(削除)/ `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase + 大文字小文字を区別しない設定に、JWT の exp 取り出し、`NetworkStorage`、アイコン、`<Protobuf Include="Services\Chat\*.proto">` |
+| `MauiProgram.cs` / `Helpers/JwtHelper.cs` / `Extensions.cs` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase + 大文字小文字を区別しない設定に、JWT の exp 取り出し、`ConnectivityChangedAsObservable`、`NetworkStorage`、アイコン、`<Protobuf Include="Services\Chat\*.proto">` |
 | `Modules/Network/NetworkScpViewModel.cs` | 転送を BusyState(オーバーレイ)の外で実行し、キャンセルボタンが押せるように |
 | `Document/Development.md` | 「サーバー処理」を対向サーバーの起動 / ポート / `adb reverse` / QR の手順に更新 |
-| template-maui-server | `/qr` に全キー(`GrpcEndPoint` / Ollama / SCP、接続先以外は `Client` セクションの初期値)、`GET /api/data/list?offset=&size=`(`Total`)、SignalR `MonitorHub`(`/hubs/monitor`、JWT)+ `DeviceRegistry` + `ServerStatusWorker`(1 秒)+ `NotificationRelayWorker`、管理画面 Devices(端末一覧 / 通知送信)と Home の接続数、gRPC `info.ServerInfo/GetServerTime`、開発環境の JWT 有効期限 5 分、テスト 9 件追加(33 件) |
+| template-maui-server | `/qr` に全キー(`GrpcEndPoint` / Ollama / SCP、接続先以外は `Client` セクションの初期値)、`GET /api/data/list?offset=&size=`(`Total`)、SignalR `MonitorHub`(`/hubs/monitor`、認証なし)+ `DeviceRegistry`(接続の `Abort` を保持)+ `ServerStatusWorker`(1 秒)+ `NotificationRelayWorker`、管理画面 Devices(端末一覧 / 通知送信 / 切断)と Home の接続数、gRPC `info.ServerInfo/GetServerTime`、開発環境の JWT 有効期限 5 分、テスト 11 件追加(35 件) |
 
-- ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8081` / `tcp:8084`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
+- ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8081` / `tcp:8084`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み → 管理画面の「切断」(`Closed`)で 100 ms 後に新 ID で接続済み → サーバー停止中の再接続は接続中...(0 / 2 / 5 秒のバックオフ)→ 再起動で接続済み → 離脱で切断(サーバーログの `Monitor disconnected`)。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
 
 ### .NET 10 API の適用と IChatClient 抽象化(2026-09-15)
 
@@ -1491,6 +1492,8 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - **BusyState のオーバーレイは非同期コマンドの実行中の入力を全て塞ぐ**ため、キャンセルボタン付きの長い処理(転送 / 遅延 API)は `MakeAsyncCommand` にせず、`MakeDelegateCommand` から `_ = RunAsync()` で起動して自前のフラグ(`Transferring` 等)で再入を防ぐ。`MakeDelegateCommand` の既定(`CommandBehavior.None`)は Busy 中の実行を黙って捨てるので、コマンドの有効 / 無効だけでは判断できない
 - **常時接続の再接続ループから呼ぶトークン取得に `NetworkOperator`(`IDialog.Indicator`)を通してはいけない**: バックグラウンドスレッドから UI を触って例外になり、`IsConnectionException` に該当しないためループが黙って死ぬ。`EnsureLoginAsync` は `HttpService` を直接呼ぶ
 - **`CollectionView` の `EmptyView` を `ScrollView` 内の固定高さ(`HeightRequest`)の CollectionView に置くと `EmptyViewContentView` が `requestLayout` を繰り返し(logcat の `requestLayout() improperly called`)、常時再描画になる**(uiautomator dump も `could not get idle state` で取れない)。空表示は `IsVisible` を束縛した Label に置き換える
+- **SignalR の接続維持は Rx で書ける**(`Helpers/ReactiveSignalR.cs`): 接続試行 `Observable.FromAsync(StartAsync)` を `RetryWhen`(バックオフの `Timer` と復帰シグナルの `Amb`)で繰り返し、`Concat(closed.Take(1))` + `Repeat()` で `Closed` 後に初回接続からやり直す。購読 = 接続の寿命(破棄で `StopAsync`)なので、画面の VM は `OnNavigatedTo` で購読して `OnNavigatingFrom` で破棄するだけになる。`Reconnecting` / `Reconnected` / `Closed` は `Func<T, Task>` のイベントなので `Subject` で橋渡しする
+- **SignalR クライアントが `Closed` になる条件**: `WithAutomaticReconnect` を諦めないポリシーにすると、切断はまず `Reconnecting` になり `Closed` は来ない(サーバーのプロセス kill / 再起動はこちら)。`Closed` が来るのはサーバーが再接続不可の Close を送ったとき(`HubCallerContext.Abort()`、`OnConnectedAsync` の例外)。管理画面の「切断」がこれで、`Closed` → 初回接続のやり直しの経路を実機で確認できる
 - **SignalR の `DateTime` は Kind を失う**: サーバーの `GetLocalNow().DateTime`(Unspecified)を受けて `ToLocalTime()` すると UTC 扱いで +9 時間ずれる。時刻は `DateTimeOffset` で送り、クライアントは `.LocalDateTime` を使う
 - **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:8084")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8081)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る
 - **`MediaPicker.PickPhotoAsync` は MAUI 10 で非推奨**(`PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 })` を使う)。Android 16 のフォトピッカーは選択後に「完了」が要る
@@ -1595,6 +1598,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - アクセシビリティ(`SemanticProperties` / `AutomationId` の付与、TalkBack 確認)= 対応不要(2026-09-13)
 - OAuth2 認可(`WebAuthenticator` + PKCE、旧 Task_Checklist 3-11)= 対応不要(2026-09-15)
 - ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
+- SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
 - ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)
 - `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)

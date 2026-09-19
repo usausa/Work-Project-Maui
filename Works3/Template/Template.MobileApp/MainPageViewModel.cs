@@ -2,6 +2,7 @@ namespace Template.MobileApp;
 
 using CommunityToolkit.Maui.Core;
 
+using Template.MobileApp.Components;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Shell;
 
@@ -11,6 +12,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     private readonly IScreen screen;
 
     private readonly StartupState startup;
+
+    private readonly IDialog dialog;
+
+    private readonly INotificationService notification;
 
     private bool destroying;
 
@@ -56,11 +61,14 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         INavigator navigator,
         IScreen screen,
         IDialog dialog,
-        StartupState startup)
+        StartupState startup,
+        INotificationService notification)
     {
         Navigator = navigator;
         this.screen = screen;
         this.startup = startup;
+        this.dialog = dialog;
+        this.notification = notification;
 
         Function1Command = CreateFunctionCommand(Functions[0], ShellEvent.Function1);
         Function2Command = CreateFunctionCommand(Functions[1], ShellEvent.Function2);
@@ -115,7 +123,19 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
         Navigator.Exit();
         await Navigator.ForwardAsync(ViewId.Menu);
+
+        // 通知のタップ (起動前に届いた分も含む) はどの画面でもトーストで示す。初期遷移の完了後に受け付ける
+        // ReSharper disable AsyncVoidLambda
+        Disposables.Add(notification.TappedAsObservable().ObserveOnCurrentContext().Subscribe(async x => await dialog.Toast(FormatNotificationTap(x), true)));
+        // ReSharper restore AsyncVoidLambda
+        if (notification.TakePendingTap() is { } pending)
+        {
+            await dialog.Toast(FormatNotificationTap(pending), true);
+        }
     }
+
+    private static string FormatNotificationTap(NotificationTappedEventArgs args) =>
+        args.Action is null ? $"通知: {args.Payload}" : $"通知 [{args.Action}]: {args.Payload}";
 
     public void OnActivated()
     {

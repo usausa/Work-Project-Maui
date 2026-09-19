@@ -17,7 +17,6 @@
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="README.md" />
-    <File Path="README-ja.md" />
     <File Path="Settings.XamlStyler" />
     <File Path="Template.MobileApp.sln.DotSettings" />
   </Folder>

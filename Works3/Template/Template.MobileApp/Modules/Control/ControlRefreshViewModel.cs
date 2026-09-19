@@ -1,9 +1,9 @@
-namespace Template.MobileApp.Modules.View;
+namespace Template.MobileApp.Modules.Control;
 
 using Fonts;
 
 #pragma warning disable CA5394
-public sealed partial class ViewRefreshViewModel : AppViewModelBase
+public sealed partial class ControlRefreshViewModel : AppViewModelBase
 {
     private readonly Random random = new();
 
@@ -16,7 +16,7 @@ public sealed partial class ViewRefreshViewModel : AppViewModelBase
 
     public IObserveCommand RefreshCommand { get; }
 
-    public ViewRefreshViewModel()
+    public ControlRefreshViewModel()
     {
         RefreshCommand = MakeAsyncCommand(async () =>
         {
@@ -86,7 +86,7 @@ public sealed partial class ViewRefreshViewModel : AppViewModelBase
         return item;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

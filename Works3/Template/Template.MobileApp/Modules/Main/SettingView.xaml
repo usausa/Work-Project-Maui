@@ -181,6 +181,21 @@
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="gRPC" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding GrpcEndPoint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding GrpcEndPoint}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding GrpcEndPoint}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding GrpcEndPoint, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
                 <BoxView Style="{StaticResource PanelDivider}" />
 
                 <Grid Style="{StaticResource SectionHeaderGrid}"
@@ -217,6 +232,36 @@
                            Style="{StaticResource SettingValueLabel}"
                            Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Ollama" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding OllamaEndPoint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding OllamaEndPoint}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaEndPoint}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding OllamaEndPoint, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="Model" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding OllamaModel, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding OllamaModel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaModel}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding OllamaModel, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
                 <BoxView Style="{StaticResource PanelDivider}" />

@@ -10,11 +10,15 @@ public partial class DiagnosticPanel
 
     private const double EmaAlpha = 0.9;
 
+    private const int MemoryHistoryLength = 60;
+
     private readonly Stopwatch stopwatch = new();
 
     private readonly int processorCount = Environment.ProcessorCount;
 
     private readonly IDisplay display;
+
+    private readonly MemorySparkline memorySparkline = new();
 
     private Process? currentProcess;
 
@@ -77,6 +81,7 @@ public partial class DiagnosticPanel
         InitializeComponent();
 
         display = ResolveProvider.Default.GetRequiredService<IDisplay>();
+        MemoryChart.Drawable = memorySparkline;
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -133,6 +138,7 @@ public partial class DiagnosticPanel
 
         cpuTimePrev = currentProcess.TotalProcessorTime;
         allocatedBytesPrev = GC.GetTotalAllocatedBytes();
+        memorySparkline.Clear();
 
         display.StartMonitor();
         stopwatch.Restart();
@@ -249,13 +255,16 @@ public partial class DiagnosticPanel
         };
 
         // Memory
-        MemoryLabel.Text = $"{memoryUsed:F1} MB";
-        MemoryLabel.TextColor = memoryUsed switch
+        var memoryColor = memoryUsed switch
         {
             <= 256.0f => safeColor,
             <= 512.0f => warningColor,
             _ => criticalColor
         };
+        MemoryLabel.Text = $"{memoryUsed:F1} MB";
+        MemoryLabel.TextColor = memoryColor;
+        memorySparkline.Add(memoryUsed, memoryColor);
+        MemoryChart.Invalidate();
 
         Gc0Label.Text = $"{gc0Delta}";
         Gc1Label.Text = $"{gc1Delta}";
@@ -276,5 +285,79 @@ public partial class DiagnosticPanel
             <= 8.0f => warningColor,
             _ => criticalColor
         };
+    }
+
+    private sealed class MemorySparkline : IDrawable
+    {
+        private static readonly Color GridColor = Color.FromArgb("#E0E0E0");
+
+        private readonly List<double> values = [];
+
+        private Color lineColor = Colors.Green;
+
+        public void Clear() => values.Clear();
+
+        public void Add(double value, Color color)
+        {
+            if (values.Count >= MemoryHistoryLength)
+            {
+                values.RemoveAt(0);
+            }
+
+            values.Add(value);
+            lineColor = color;
+        }
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            canvas.Antialias = true;
+            canvas.StrokeSize = 1f;
+            canvas.StrokeColor = GridColor;
+            canvas.DrawLine(dirtyRect.Left, dirtyRect.Top + 0.5f, dirtyRect.Right, dirtyRect.Top + 0.5f);
+            canvas.DrawLine(dirtyRect.Left, dirtyRect.Center.Y, dirtyRect.Right, dirtyRect.Center.Y);
+            canvas.DrawLine(dirtyRect.Left, dirtyRect.Bottom - 0.5f, dirtyRect.Right, dirtyRect.Bottom - 0.5f);
+
+            if (values.Count < 2)
+            {
+                return;
+            }
+
+            var min = values.Min();
+            var max = values.Max();
+            var range = Math.Max(1d, max - min);
+            var low = ((min + max) / 2) - (range / 2);
+            var step = dirtyRect.Width / (MemoryHistoryLength - 1);
+            var top = dirtyRect.Top + 2f;
+            var height = dirtyRect.Height - 4f;
+
+            PointF ToPoint(int i) =>
+                new(
+                    dirtyRect.Right - (step * (values.Count - 1 - i)),
+                    (float)(top + height - ((values[i] - low) / range * height)));
+
+            using var fill = new PathF();
+            fill.MoveTo(ToPoint(0).X, dirtyRect.Bottom);
+            for (var i = 0; i < values.Count; i++)
+            {
+                fill.LineTo(ToPoint(i));
+            }
+
+            fill.LineTo(dirtyRect.Right, dirtyRect.Bottom);
+            fill.Close();
+            canvas.FillColor = lineColor.WithAlpha(0.15f);
+            canvas.FillPath(fill);
+
+            using var line = new PathF();
+            line.MoveTo(ToPoint(0));
+            for (var i = 1; i < values.Count; i++)
+            {
+                line.LineTo(ToPoint(i));
+            }
+
+            canvas.StrokeSize = 2f;
+            canvas.StrokeColor = lineColor;
+            canvas.StrokeLineJoin = LineJoin.Round;
+            canvas.DrawPath(line);
+        }
     }
 }

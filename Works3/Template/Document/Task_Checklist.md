@@ -11,6 +11,9 @@
 | Network | SCP の実機確認と転送実テスト(要 SSH サーバ) | 1 |
 | Device | Biometric(生体認証) | 2-1 |
 | Device | Push(FCM) | 2-2 |
+| Network | Offline sync(未送信キュー・差分同期・競合解決) | 2-3 |
+| Basic | Startup screen(初期化の進捗・失敗・再試行) | 2-4 |
+| Basic | App structure(機能プロファイル / 診断画面 / サンプルカタログ / 遅延初期化) | 2-5 |
 | Basic | .NET 10 API(未適用 API の反映) | 3-2 |
 | Diagnostics | Layout metrics(レイアウト診断メトリクス) | 3-3 |
 | Basic | Global xmlns | 3-4 |
@@ -138,7 +141,7 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Document/Change_Summary.md` | 区間 10 のエントリ(Control メニュー / Grid・Card list / WiFi / Bottom sheet・Drawer / 診断・リーク / Azure・Ollama / 画面録画 / ローカル通知)とナレッジ、付録D 不採用 (1) の追記 | 記述と実装の一致 |
-| `Document/Task_Checklist.md` / `README.md` | 残項目(1 SCP / 2 節 / 3 節)、TODO / Implement / 画像 | README の TODO とサマリ表の同期、画像リンク切れなし |
+| `Document/Task_Checklist.md` / `README.md` | 残項目(1 SCP / 2 節 / 3 節)、TODO / Implement / 画像、旧 `tmpl-plan-maui.md` の取り込み(2-3〜2-5、付録の対応不要 3 件) | README の TODO とサマリ表の同期、画像リンク切れなし |
 
 - [ ] **0-9** 上記
 
@@ -157,26 +160,27 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | `Modules/Network/NetworkMenuView.xaml` + `NetworkMenuViewModel.cs` | Network メニュー | Download \| Upload の行が HTTP \| Storage に、Realtime \| gRPC の 2 列、SCP \| 空き。単発ボタン(server time / data list / secure / login / logout / error / delay)は残置 |
 | `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | Web API(Data の CRUD) | ログイン状態(Id / 有効期限)、一覧(20 件ずつ追加読み込み)、行選択で詳細、作成 / 更新 / 削除 / クリア、未ログインの作成は 401、重複は 409、10 秒待つ API とキャンセル、ログ。F2 = Reload |
 | `Modules/Network/NetworkStorageView.xaml` + `.xaml.cs` + `NetworkStorageViewModel.cs` | ストレージ(簡易 FTP API) | ディレクトリの一覧 / 下階層 / 上へ、ファイル(FilePicker)と写真(MediaPicker)のアップロード、ダウンロード(公開フォルダ)、削除(確認ダイアログ)、進捗とキャンセル。F2 = Reload |
-| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR(MonitorHub) | 遷移時に接続 / 離脱時に切断、状態 / 接続 ID / サーバー時刻、サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、通知の一覧(前面 = トースト、バックグラウンド = ローカル通知)。F2 = Connect |
+| `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR(MonitorHub、認証なし) | 遷移時に `Connect()` を購読 / 離脱時に破棄(= 切断)、受信は `ServerStatus` / `Notifications` の購読、状態 / 接続 ID / サーバー時刻、サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、通知の一覧(前面 = トースト、バックグラウンド = ローカル通知)。F2 = Connect |
 | `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC(チャット) | 接続先 / 状態 / 未配送数、単項 RPC(サーバー時刻)、チャット(管理画面 `/chat` と相互)、切断中の送信は再接続後に配送。F2 = Connect |
 | `Modules/Network/NetworkScpViewModel.cs` | SCP | 転送を BusyState の外で実行(キャンセル可能に) |
 | `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | API 呼び出し、認証状態(`LoginId` / `TokenExpires`)、通信系ログ | PUT / DELETE は `HttpClient` を `RestResponse` に包む。ログは `Services/Log.cs` に分離 |
-| `Services/MonitorConnection.cs`(新規) | SignalR の常時接続 | 初回接続のバックオフ再試行 / 自動再接続 / Closed 後のやり直し / ネットワーク復帰 / 停止 |
+| `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続維持(`Connect()` = 購読で接続・破棄で切断、`On<T>()`、`CreateRetryPolicy`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` |
+| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(`HubConnection` の構築、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`) | 認証なし。状態のログ、購読の破棄で `HubConnection` を破棄 |
 | `Services/Chat/ChatClient.cs` + `ChatConnectionState.cs` / `ChatMessageEntry.cs` / `ChatMessageEventArgs.cs` / `ChatStateEventArgs.cs` / `chat.proto` / `server.proto` | gRPC チャット(サーバーの WPF サンプルの移植)と proto のコピー | 指数バックオフ再接続、送信キュー、トークンは接続ごとに取得 |
-| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 の再ログイン再送、CRUD / ストレージ / 遅延のユースケース、常時接続用の `EnsureLoginAsync` / `GetTokenAsync` | 再ログインは 1 回だけ、`ExecuteTransfer` はインジケーターなし |
+| `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 の再ログイン再送、CRUD / ストレージ / 遅延のユースケース、gRPC チャット用の `EnsureLoginAsync` / `GetTokenAsync` | 再ログインは 1 回だけ、`ExecuteTransfer` はインジケーターなし |
 | `Models/Api/DataListResponse.cs`(`Id` long / `Total`)/ `DataResponse.cs` / `DataCreateRequest.cs` / `DataCreateResponse.cs` / `DataUpdateRequest.cs` / `StorageListResponse.cs` / `MonitorMessages.cs` | 契約 DTO | サーバー側と同じ形 |
-| `Helpers/JwtHelper.cs`(新規)/ `Helpers/ReactiveSignalR.cs`(削除) | JWT の有効期限の取り出し、未使用ヘルパの削除 | — |
+| `Helpers/JwtHelper.cs`(新規)/ `Extensions.cs` | JWT の有効期限の取り出し、`ConnectivityChangedAsObservable` | — |
 | `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `MonitorEndPoint` → `GrpcEndPoint`(QR キー同名)、Setting の gRPC 行、QR 読み取り後の表示更新 | Setting 画面の Network セクション |
 | `State/Session.cs` / `App.xaml.cs` | 前面かどうか(`IsForeground`)を Window の Resumed / Stopped で更新 | — |
 | `MauiProgram.cs` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase(大文字小文字を区別しない)に、DI、`NetworkStorage`、アイコン(`Http` / `FolderOpen` / `Hub`)、proto の参照 | ビルド |
 | `Document/Development.md` | 「サーバー処理」 | 起動 / ポート / `adb reverse` / QR の手順 |
 | (server) `Components/Pages/QrPage.razor(.cs)` / `Settings/ClientSetting.cs` / `appsettings.json` | 設定 QR(全キー、接続先以外は `Client` セクションの初期値) | `/qr` の内容(キーは環境変数か user-secrets) |
 | (server) `Endpoints/DataEndpoints.cs` / `Models/Api/DataListResponse.cs` / `Core/Services/DataService.cs` / `Core/Models/RangeResult.cs` | 一覧の範囲取得(`offset` / `size`、`Total`) | 省略時は全件 |
-| (server) `Hubs/MonitorHub.cs` / `Infrastructure/Monitor/DeviceRegistry.cs` / `DeviceEntry.cs` / `MonitorNotifier.cs` / `Models/Api/MonitorMessages.cs` / `Workers/ServerStatusWorker.cs` / `NotificationRelayWorker.cs` / `Application/ApplicationExtensions.cs` / `Program.cs` / `Application/Log.cs` | SignalR ハブと状態配信 / 通知 | JWT(`access_token` クエリも可)、KeepAlive 15 秒 / ClientTimeout 30 秒 |
-| (server) `Components/Pages/DevicesPage.razor(.cs)` / `Layout/NavMenu.razor` / `Pages/Home.razor(.cs)` / `wwwroot/css/app.css` | 管理画面の Devices(端末一覧と通知の送信)、Home の接続数 | — |
+| (server) `Hubs/MonitorHub.cs` / `Infrastructure/Monitor/DeviceRegistry.cs` / `DeviceEntry.cs` / `MonitorNotifier.cs` / `Models/Api/MonitorMessages.cs` / `Workers/ServerStatusWorker.cs` / `NotificationRelayWorker.cs` / `Application/ApplicationExtensions.cs` / `Program.cs` / `Application/Log.cs` | SignalR ハブと状態配信 / 通知 | 認証なし、KeepAlive 15 秒 / ClientTimeout 30 秒、`DeviceRegistry.Disconnect` |
+| (server) `Components/Pages/DevicesPage.razor(.cs)` / `Layout/NavMenu.razor` / `Pages/Home.razor(.cs)` / `wwwroot/css/app.css` | 管理画面の Devices(端末一覧、通知の送信、切断 = `HubCallerContext.Abort`)、Home の接続数 | 切断で端末が `Closed` → 新 ID で再接続 |
 | (server) `Protos/server.proto` / `Handlers/ServerInfoHandler.cs` | 単項 RPC(サーバー時刻、匿名) | — |
 | (server) `appsettings.Development.json` / `Assembly.cs` | JWT 有効期限 5 分(開発)、テストへの `InternalsVisibleTo` | — |
-| (server) `tests/.../DeviceRegistryTests.cs` / `DevicesPageTests.cs` / `QrPageTests.cs` / `NavMenuTests.cs` / `README.md` | テスト(33 件)と README(API 一覧 / SignalR / QR の書式) | — |
+| (server) `tests/.../DeviceRegistryTests.cs` / `DevicesPageTests.cs` / `QrPageTests.cs` / `NavMenuTests.cs` / `README.md` | テスト(35 件)と README(API 一覧 / SignalR(認証なし、切断)/ QR の書式) | — |
 
 - [ ] **0-11** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」参照)
 
@@ -212,9 +216,9 @@ sshd は対向サーバー(template-maui-server、4 節)に含まれない。
 
 ---
 
-## 2.【優先】`tmpl-plan-maui.md` からの移管課題
+## 2.【優先】旧 `tmpl-plan-maui.md` からの移管課題
 
-`D:\GitHubTemplate\tmpl-plan-maui.md`(MAUI トラック強化プラン)の未対応項目(同書の番号を併記)。**keyboard / blazor 向けの対応(同書 §4 / §5)と iOS 対応(同書 3-13。保留継続)は対象外**。
+旧 `D:\GitHubTemplate\tmpl-plan-maui.md`(MAUI トラック強化プラン。2026-09-17 に本節へ取り込んで削除)の未対応項目(旧番号を併記)。keyboard / blazor 向けは `D:\GitHubTemplate\tmpl-plan-maui-keyboard.md` / `tmpl-plan-maui-blazor.md`(別セッション)。iOS(旧 3-13)は保留継続、SocialControls の TODO 整理 / TimeProvider / Analyzers.ruleset 正典差分(旧 3-9 / 3-10 / 3-12)は対応不要(`Change_Summary.md` 付録)。
 参照サンプルは `C:\Users\machi\Desktop\Maui`(残置 18 件)。ファイルパスは `Template.MobileApp/` からの相対。
 
 ### 機能実装(同書 §3)
@@ -259,6 +263,22 @@ sshd は対向サーバー(template-maui-server、4 節)に含まれない。
 - [ ] **2-2-0**【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログを Notification カードに追記する(低優先)
 
 ---
+
+### 追加アイデア(同書 付録)
+
+2026-08-31 のソースレビュー由来。ディープリンク(→ `Other_App_Candidates.md`)とアクセシビリティ・外観設定は対象外。
+
+#### 2-3 オフライン同期(同書 付録 1)
+
+- [ ] **2-3-0**【判断】採否 — ローカル DB に未送信の変更を保持し、接続回復後に差分同期する。競合解決の画面を含む。採用する場合は対向(template-maui-server)の API 追加も要る
+
+#### 2-4 起動状態と再試行画面(同書 付録 4)
+
+- [ ] **2-4-0**【判断】採否 — DB 初期化 / 同期 / 設定読込の進捗・失敗・再試行を明示する起動画面。現状は `MainPageViewModel` の `StartupState` で初期化完了を待って初期遷移するだけで、失敗時の再試行導線が無い
+
+#### 2-5 アプリ構成(同書 付録 5)
+
+- [ ] **2-5-0**【判断】採否 — 生成時に画面・権限・パッケージを選ぶ機能プロファイル / アプリ内診断画面(DB・API・端末情報・初期化時間・直近エラー)/ サンプル機能カタログ(カテゴリ・対応 OS・必要権限で検索できるランチャー)/ 重い機能の遅延初期化によるモジュール分割。個別に採否を決める
 
 ## 3. リンク集からの取り込み候補
 

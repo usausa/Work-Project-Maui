@@ -1,12 +1,16 @@
 namespace Template.MobileApp.Services;
 
+using Template.MobileApp.Helpers;
+
 // UIスレッドからの書き込みを通信スレッド(ApiDelegatingHandler)が読むため、参照の可視性をvolatileで保証する
-// 401時のトークンリフレッシュはサーバ側仕様が未確定のため未実装 (実案件で実装すること)
+// 401 の再ログインは NetworkOperator が LoginId で行う (サーバーは Id のみで JWT を発行する契約)
 public sealed class ApiContext
 {
     private volatile Uri? baseAddress;
 
     private volatile string token = string.Empty;
+
+    private volatile string loginId = string.Empty;
 
     public Uri? BaseAddress
     {
@@ -14,9 +18,30 @@ public sealed class ApiContext
         set => baseAddress = value;
     }
 
-    public string Token
+    public string Token => token;
+
+    // 最後にログインした Id (空なら未ログイン)
+    public string LoginId
     {
-        get => token;
-        set => token = value;
+        get => loginId;
+        set => loginId = value;
+    }
+
+    // トークンの有効期限 (JWT の exp。ローカル時刻)
+    public DateTime? TokenExpires { get; private set; }
+
+    public bool IsAuthenticated => token.Length > 0;
+
+    public void SetToken(string value)
+    {
+        TokenExpires = JwtHelper.GetExpiration(value);
+        token = value;
+    }
+
+    public void ClearToken()
+    {
+        token = string.Empty;
+        TokenExpires = null;
+        loginId = string.Empty;
     }
 }

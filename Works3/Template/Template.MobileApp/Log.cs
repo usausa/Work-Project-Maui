@@ -1,7 +1,5 @@
 namespace Template.MobileApp;
 
-using Rester;
-
 internal static partial class Log
 {
     // Startup
@@ -25,11 +23,6 @@ internal static partial class Log
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Connectivity changed. profile=[{profile}], access=[{access}]")]
     public static partial void DebugConnectivityState(this ILogger logger, NetworkProfile profile, NetworkAccess access);
-
-    // Network
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Network operation failed. result=[{restResult}], statusCode=[{statusCode}]")]
-    public static partial void WarnNetworkOperationFailed(this ILogger logger, RestResult restResult, int statusCode, Exception? exception);
 
     // Navigation
 

@@ -78,6 +78,7 @@ public static class AppIcons
     public static readonly FontImageSource Flip = Create(MaterialIcons.Flip, MenuSize, Colors.White);
     public static readonly FontImageSource FontDownload = Create(MaterialIcons.Font_download, MenuSize, Colors.White);
     public static readonly FontImageSource FormatPaint = Create(MaterialIcons.Format_paint, MenuSize, Colors.White);
+    public static readonly FontImageSource FolderOpen = Create(MaterialIcons.Folder_open, MenuSize, Colors.White);
     public static readonly FontImageSource Forum = Create(MaterialIcons.Forum, MenuSize, Colors.White);
     public static readonly FontImageSource GridOn = Create(MaterialIcons.Grid_on, MenuSize, Colors.White);
     public static readonly FontImageSource GridView = Create(MaterialIcons.Grid_view, MenuSize, Colors.White);
@@ -88,6 +89,8 @@ public static class AppIcons
     public static readonly FontImageSource Info = Create(MaterialIcons.Info, MenuSize, Colors.White);
     public static readonly FontImageSource InsertChart = Create(MaterialIcons.Insert_chart, MenuSize, Colors.White);
     public static readonly FontImageSource Insights = Create(MaterialIcons.Insights, MenuSize, Colors.White);
+    public static readonly FontImageSource Http = Create(MaterialIcons.Http, MenuSize, Colors.White);
+    public static readonly FontImageSource Hub = Create(MaterialIcons.Hub, MenuSize, Colors.White);
     public static readonly FontImageSource Language = Create(MaterialIcons.Language, MenuSize, Colors.White);
     public static readonly FontImageSource Layers = Create(MaterialIcons.Layers, MenuSize, Colors.White);
     public static readonly FontImageSource ListAlt = Create(MaterialIcons.List_alt, MenuSize, Colors.White);

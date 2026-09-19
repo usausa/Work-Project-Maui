@@ -6,7 +6,7 @@
              InputTransparent="True">
 
     <Border Style="{StaticResource DiagnosticBorder}">
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,4,Auto">
 
             <Label Grid.Row="0" Grid.Column="0"
@@ -73,6 +73,12 @@
             <Label x:Name="AllocLabel"
                    Grid.Row="10" Grid.Column="2"
                    Style="{StaticResource DiagnosticValueLabel}" />
+
+            <GraphicsView x:Name="MemoryChart"
+                          Grid.Row="11" Grid.ColumnSpan="3"
+                          Margin="0,4,0,0"
+                          WidthRequest="160"
+                          HeightRequest="48" />
 
         </Grid>
     </Border>

@@ -31,10 +31,11 @@ public sealed class Settings
         set => preferences.Set(nameof(ApiEndPoint), value);
     }
 
-    public string MonitorEndPoint
+    // gRPC (チャット) の接続先。API と別ポート (h2c) のため別に持つ
+    public string GrpcEndPoint
     {
-        get => preferences.Get<string>(nameof(MonitorEndPoint), default!);
-        set => preferences.Set(nameof(MonitorEndPoint), value);
+        get => preferences.Get<string>(nameof(GrpcEndPoint), default!);
+        set => preferences.Set(nameof(GrpcEndPoint), value);
     }
 
     // AI Service

@@ -2,7 +2,7 @@ namespace Template.MobileApp.Models.Api;
 
 public sealed class DataListResponseEntry
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Name { get; set; } = default!;
 }
@@ -11,5 +11,8 @@ public sealed class DataListResponseEntry
 public sealed class DataListResponse
 {
     public DataListResponseEntry[] Entries { get; set; } = default!;
+
+    // 全件数 (範囲指定時の追加読み込みの終端判定)
+    public int Total { get; set; }
 }
 #pragma warning restore CA1819

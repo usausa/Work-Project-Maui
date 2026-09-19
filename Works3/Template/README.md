@@ -39,7 +39,7 @@ Template project for MAUI.
 
 <img width="25%" src="Document/Sample_CV.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
-<img width="25%" src="Document/Sample_Chart.png" />
+<img width="25%" src="Document/Control_Chart.png" />
 
 <img width="25%" src="Document/App_Calc.png" />
 <img width="25%" src="Document/App_Game.png" />
@@ -52,23 +52,32 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Monster.png" />
 <img width="25%" src="Document/UI_Character.png" />
 <img width="25%" src="Document/UI_Social.png" />
+
+<img width="25%" src="Document/Control_Grid.png" />
+<img width="25%" src="Document/Control_CardList.png" />
+<img width="25%" src="Document/Device_WiFi.png" />
+
+<img width="25%" src="Document/Control_BottomSheet.png" />
+<img width="25%" src="Document/Control_Drawer.png" />
+<img width="25%" src="Document/Sample_CvNet_Tag.png" />
 </p>
 
 # TODO
 
 | Category | Feature |
 | --- | --- |
-| Device | **WiFi manager** |
 | Device | Biometric |
-| UI | **Bottom sheet** / Navigation drawer(SfNavigationDrawer or custom) |
-| Device | Local notification / Push(FCM) |
-| Other | **Cognitive service** / **Chat AI** |
-| Control | Control menu(View \| Control, move Toolkit / Custom / Sf Chart) |
-| Control | **Grid(ClamGrid)** |
-| Control | **Card list(CollectionView)** |
-| Diagnostics | Memory monitor overlay |
-| Diagnostics | Leak detection(DEBUG) |
-| Device | Screen recording |
+| Device | Push(FCM) |
+| Network | Offline sync |
+| Basic | Startup screen(progress / retry) |
+| Basic | App structure(feature profile / diagnostics / catalog / lazy init) |
+| Basic | .NET 10 API |
+| Diagnostics | Layout metrics |
+| Basic | Global xmlns |
+| View | StyleClass(font size x alignment) |
+| Sample | Face identification |
+| View | Material 3 |
+| Device | Background task(WorkManager) |
 
 # Implement
 
@@ -76,11 +85,12 @@ Template project for MAUI.
 | --- | --- |
 | Basic | Typography / Style / Font / Converter / Behavior / Dialog / Validation / Localization / Setting |
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
-| Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize |
+| Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Screen recording / Local notification |
 | Data | SQLite |
-| Network | Web API / Realtime(SignalR) / SCP |
-| View | Collection / Layout / Carousel / Refresh / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State / Toolkit / Custom |
-| Sample | Web view / HybridWebView / Map / Map2 / Chart / SfChart / Media play / Markdown / PDF reader / Object detection(Local) / Chat / Crop |
+| Network | Web API(JWT, Data CRUD) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
+| View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
+| Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Grid(ClamGrid) / Card list / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
+| Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object / Tag / People / OCR / Face(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Sudoku |
 | UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Schedule / Calendar / Timeline / Mail / Chat / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
 | UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |

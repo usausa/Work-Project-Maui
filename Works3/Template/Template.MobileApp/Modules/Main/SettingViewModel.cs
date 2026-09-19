@@ -15,10 +15,19 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string ApiEndPoint { get; set; }
 
     [ObservableProperty]
+    public partial string GrpcEndPoint { get; set; }
+
+    [ObservableProperty]
     public partial string AIServiceEndPoint { get; set; }
 
     [ObservableProperty]
     public partial string AIServiceKey { get; set; }
+
+    [ObservableProperty]
+    public partial string OllamaEndPoint { get; set; }
+
+    [ObservableProperty]
+    public partial string OllamaModel { get; set; }
 
     [ObservableProperty]
     public partial string ScpHost { get; set; }
@@ -42,8 +51,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
         Controller.CaptureNextFrame = false;
 
         ApiEndPoint = settings.ApiEndPoint;
+        GrpcEndPoint = settings.GrpcEndPoint;
         AIServiceEndPoint = settings.AIServiceEndPoint;
         AIServiceKey = string.Empty;
+        OllamaEndPoint = settings.OllamaEndPoint;
+        OllamaModel = settings.OllamaModel;
         ScpHost = FormatScpHost(settings);
         ScpUser = settings.ScpUser;
         ScpPassword = string.Empty;
@@ -60,14 +72,32 @@ public sealed partial class SettingViewModel : AppViewModelBase
                     {
                         settings.ApiEndPoint = apiEndPoint;
                         apiContext.BaseAddress = new Uri(apiEndPoint);
+                        ApiEndPoint = apiEndPoint;
+                    }
+                    if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
+                    {
+                        settings.GrpcEndPoint = grpcEndPoint;
+                        GrpcEndPoint = grpcEndPoint;
                     }
                     if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
                     {
                         settings.AIServiceEndPoint = aiServiceEndPoint;
+                        AIServiceEndPoint = aiServiceEndPoint;
                     }
                     if (parser.TryGetString(nameof(AIServiceKey), out var aiServiceKey))
                     {
                         await settings.SetAIServiceKeyAsync(aiServiceKey);
+                        AIServiceKey = aiServiceKey;
+                    }
+                    if (parser.TryGetString(nameof(OllamaEndPoint), out var ollamaEndPoint))
+                    {
+                        settings.OllamaEndPoint = ollamaEndPoint;
+                        OllamaEndPoint = ollamaEndPoint;
+                    }
+                    if (parser.TryGetString(nameof(OllamaModel), out var ollamaModel))
+                    {
+                        settings.OllamaModel = ollamaModel;
+                        OllamaModel = ollamaModel;
                     }
 
                     // SCP (B-20)。キー名は Settings のプロパティ名に合わせる

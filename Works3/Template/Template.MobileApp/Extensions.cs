@@ -151,5 +151,8 @@ public static class Extensions
 
     public static IObservable<ActivityEventArgs> ChangedAsObservable(this IActivityRecognizer activityRecognizer) =>
         Observable.FromEvent<EventHandler<ActivityEventArgs>, ActivityEventArgs>(static h => (_, e) => h(e), h => activityRecognizer.Changed += h, h => activityRecognizer.Changed -= h);
+
+    public static IObservable<ConnectivityChangedEventArgs> ConnectivityChangedAsObservable(this IConnectivity connectivity) =>
+        Observable.FromEvent<EventHandler<ConnectivityChangedEventArgs>, ConnectivityChangedEventArgs>(static h => (_, e) => h(e), h => connectivity.ConnectivityChanged += h, h => connectivity.ConnectivityChanged -= h);
 }
 #pragma warning restore CA1724
