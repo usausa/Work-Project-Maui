@@ -4,7 +4,7 @@ using ClamGrid;
 
 using Template.MobileApp.Models.Control;
 
-// ClamGrid の見た目。罫線は横だけ、見出しは白地。状態・フラグ・ランク・受付・金額・数量・納期は値に応じて色を付ける
+// ClamGrid の見た目 (XAML から x:Static で参照)。罫線は横だけ、見出しは白地。状態・フラグ・ランク・受付・金額・数量・納期は値に応じて色を付ける
 internal static class ControlGridStyles
 {
     private static readonly Color HeaderText = Color.FromArgb("#607D8B");
@@ -41,7 +41,12 @@ internal static class ControlGridStyles
 
     private static readonly Color FaxText = Color.FromArgb("#6D4C41");
 
-    public static GridStyle CreateList() => CreateBase() with
+    // 一覧画面 / 列設定画面 (色のフィールドより後に初期化する)
+    public static GridStyle ListStyle { get; } = CreateList();
+
+    public static GridStyle SettingsStyle { get; } = CreateSettings();
+
+    private static GridStyle CreateList() => CreateBase() with
     {
         FrozenLineColor = Color.FromArgb("#CFD8DC"),
         AscendingHeaderBackground = Color.FromArgb("#E3F2FD"),
@@ -54,7 +59,7 @@ internal static class ControlGridStyles
     };
 
     // 行ヘッダはドラッグの取っ手 (AllowRowDragging のときライブラリが描く)
-    public static GridStyle CreateSettings() => CreateBase() with
+    private static GridStyle CreateSettings() => CreateBase() with
     {
         ShowRowHeaders = true,
         RowHeaderWidth = 56,
@@ -83,30 +88,30 @@ internal static class ControlGridStyles
     // 選択中は選択色を優先する
     private static GridColors SelectCellColors(GridCellColorContext context)
     {
-        if (context.IsSelected || context.Item is not OrderRow row)
+        if (context.IsSelected || context.Item is not OrderInfo order)
         {
             return context.DefaultColors;
         }
 
         return context.Column.Key switch
         {
-            "Status" => row.Status switch
+            nameof(OrderInfo.Status) => order.Status switch
             {
                 OrderStatus.Open => OpenColors,
                 OrderStatus.Processing => ProcessingColors,
                 OrderStatus.Hold => HoldColors,
                 _ => CompletedColors
             },
-            "Flags" when row.IsOverdue => context.DefaultColors with { Background = OverdueBackground },
-            "Flags" when row.IsDueSoon => context.DefaultColors with { Background = DueSoonBackground },
-            "Rank" when row.Rank >= 3 => context.DefaultColors with { Background = TopRankBackground },
-            "Amount" when row.IsLargeAmount => context.DefaultColors with { TextColor = LargeAmountText },
-            "Quantity" when row.IsBulk => context.DefaultColors with { TextColor = BulkText },
-            "DueDate" when row.IsOverdue => context.DefaultColors with { TextColor = OverdueText },
-            "DueDate" when row.IsDueSoon => context.DefaultColors with { TextColor = DueSoonText },
-            "Channel" => context.DefaultColors with
+            nameof(OrderInfo.Flags) when order.IsOverdue => context.DefaultColors with { Background = OverdueBackground },
+            nameof(OrderInfo.Flags) when order.IsDueSoon => context.DefaultColors with { Background = DueSoonBackground },
+            nameof(OrderInfo.Rank) when order.Rank >= 3 => context.DefaultColors with { Background = TopRankBackground },
+            nameof(OrderInfo.Amount) when order.IsLargeAmount => context.DefaultColors with { TextColor = LargeAmountText },
+            nameof(OrderInfo.Quantity) when order.IsBulk => context.DefaultColors with { TextColor = BulkText },
+            nameof(OrderInfo.DueDate) when order.IsOverdue => context.DefaultColors with { TextColor = OverdueText },
+            nameof(OrderInfo.DueDate) when order.IsDueSoon => context.DefaultColors with { TextColor = DueSoonText },
+            nameof(OrderInfo.Channel) => context.DefaultColors with
             {
-                TextColor = row.Channel switch
+                TextColor = order.Channel switch
                 {
                     OrderChannel.Store => StoreText,
                     OrderChannel.Web => WebText,

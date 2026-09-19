@@ -7,8 +7,6 @@ public sealed partial class ControlGridColumnViewModel : AppViewModelBase
 {
     private GridColumnEditSession session = default!;
 
-    public GridStyle GridStyle { get; } = ControlGridStyles.CreateSettings();
-
     [ObservableProperty]
     public partial GridDataView<GridColumnOption>? Rows { get; set; }
 

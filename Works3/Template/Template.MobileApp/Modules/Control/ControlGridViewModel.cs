@@ -8,14 +8,12 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
 {
     private const int RowCount = 2000;
 
-    private static readonly GridSortOrder[] DefaultSortOrders = [new("DueDate"), new("OrderNo")];
+    private static readonly GridSortOrder[] DefaultSortOrders = [new(nameof(OrderInfo.DueDate)), new(nameof(OrderInfo.OrderNo))];
 
     private readonly IDialog dialog;
 
     // 行・選択・ソート状態をまとめて持つ (グリッドの ItemsSource)
-    public GridDataView<OrderRow> Rows { get; }
-
-    public GridStyle GridStyle { get; } = ControlGridStyles.CreateList();
+    public GridDataView<OrderInfo> Rows { get; }
 
     // 列の表示 / 順序。TwoWay で結び、グリッドが正規化した値を書き戻す (null は既定へ戻す)
     [ObservableProperty]
@@ -50,20 +48,18 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
     {
         this.dialog = dialog;
 
-        Rows = new GridDataView<OrderRow>(Array.Empty<OrderRow>(), static x => x.Id);
-        Rows.RegisterSort("Status", static x => x.Status);
-        Rows.RegisterSort("OrderNo", static x => x.Id);
-        Rows.RegisterSort("Customer", static x => x.Customer, StringComparer.CurrentCulture);
-        Rows.RegisterSort("Rank", static x => x.Rank);
-        Rows.RegisterSort("Product", static x => x.Product, StringComparer.CurrentCulture);
-        Rows.RegisterSort("Quantity", static x => x.Quantity);
-        Rows.RegisterSort("Amount", static x => x.Amount);
-        Rows.RegisterSort("DueDate", static x => x.DueDate);
-        Rows.RegisterSort("Channel", static x => x.Channel);
-        Rows.RegisterSort("Staff", static x => x.Staff, StringComparer.CurrentCulture);
-        Rows.RegisterSort("UpdatedAt", static x => x.UpdatedAt);
-        Rows.PropertyChanged += OnRowsPropertyChanged;
-        Disposables.Add(Rows);
+        Rows = new GridDataView<OrderInfo>(Array.Empty<OrderInfo>(), static x => x.Id);
+        Rows.RegisterSort(nameof(OrderInfo.Status), static x => x.Status);
+        Rows.RegisterSort(nameof(OrderInfo.OrderNo), static x => x.Id);
+        Rows.RegisterSort(nameof(OrderInfo.Customer), static x => x.Customer, StringComparer.CurrentCulture);
+        Rows.RegisterSort(nameof(OrderInfo.Rank), static x => x.Rank);
+        Rows.RegisterSort(nameof(OrderInfo.Product), static x => x.Product, StringComparer.CurrentCulture);
+        Rows.RegisterSort(nameof(OrderInfo.Quantity), static x => x.Quantity);
+        Rows.RegisterSort(nameof(OrderInfo.Amount), static x => x.Amount);
+        Rows.RegisterSort(nameof(OrderInfo.DueDate), static x => x.DueDate);
+        Rows.RegisterSort(nameof(OrderInfo.Channel), static x => x.Channel);
+        Rows.RegisterSort(nameof(OrderInfo.Staff), static x => x.Staff, StringComparer.CurrentCulture);
+        Rows.RegisterSort(nameof(OrderInfo.UpdatedAt), static x => x.UpdatedAt);
 
         SortOrders = DefaultSortOrders;
 
@@ -71,19 +67,20 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
         ColumnEditCommand = MakeAsyncCommand<GridColumnConfigurationEventArgs>(x =>
             Navigator.PushAsync(ViewId.ControlGridColumn, Parameters.MakeColumnEditSession(x.CreateEditSession())));
         CellValueChangedCommand = MakeDelegateCommand<GridCellValueEventArgs>(x =>
-            Message = $"確認: {((OrderRow)x.Item).OrderNo} = {(x.NewValue ? "済" : "未")}");
+            Message = $"確認: {((OrderInfo)x.Item).OrderNo} = {(x.NewValue ? "済" : "未")}");
         CommitCommand = MakeAsyncCommand(CommitAsync, () => SelectedCount > 0);
         AdvanceCommand = MakeDelegateCommand(Advance, () => SelectedCount > 0);
-    }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            Rows.PropertyChanged -= OnRowsPropertyChanged;
-        }
-
-        base.Dispose(disposing);
+        // 選択数と件数の変化でコマンドの可否を更新する
+        Disposables.Add(Rows.PropertyChangedAsObservable()
+            .Where(x => x.PropertyName is nameof(Rows.SelectedCount) or nameof(Rows.Count))
+            .Subscribe(_ =>
+            {
+                SelectedCount = Rows.SelectedCount;
+                CommitCommand.RaiseCanExecuteChanged();
+                AdvanceCommand.RaiseCanExecuteChanged();
+            }));
+        Disposables.Add(Rows);
     }
 
     public override Task OnNavigatingToAsync(INavigationContext context)
@@ -135,7 +132,7 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
 
     private async Task CommitAsync()
     {
-        var selected = Rows.SelectedItems.Cast<OrderRow>().ToList();
+        var selected = Rows.SelectedItems.Cast<OrderInfo>().ToList();
         var amount = selected.Sum(static x => (long)x.Amount);
         await dialog.InformationAsync(String.Format(CultureInfo.CurrentCulture, "{0} 件を確定しました。\n合計 ¥{1:N0}", selected.Count, amount));
         Message = $"確定: {selected.Count} 件 / {String.Join(", ", selected.Take(3).Select(static x => x.OrderNo))}{(selected.Count > 3 ? " …" : string.Empty)}";
@@ -144,7 +141,7 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
     // 選択行の状態を進める。行の変更通知でグリッドが並べ替えと色を追従させる
     private void Advance()
     {
-        var selected = Rows.SelectedItems.Cast<OrderRow>().ToList();
+        var selected = Rows.SelectedItems.Cast<OrderInfo>().ToList();
         foreach (var row in selected)
         {
             row.AdvanceStatus();
@@ -166,15 +163,5 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
         }
 
         OpenCount = open;
-    }
-
-    private void OnRowsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(Rows.SelectedCount) or nameof(Rows.Count))
-        {
-            SelectedCount = Rows.SelectedCount;
-            CommitCommand.RaiseCanExecuteChanged();
-            AdvanceCommand.RaiseCanExecuteChanged();
-        }
     }
 }

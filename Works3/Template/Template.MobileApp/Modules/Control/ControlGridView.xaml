@@ -19,7 +19,7 @@
              shell:ShellProperty.Function3Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- ClamGrid: 列は XAML で宣言し、値は OrderRow.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
+    <!-- ClamGrid: 列は XAML で宣言し、値は OrderInfo.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
          状態・フラグ・ランク・受付は絵文字、セルの色は ControlGridStyles -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
@@ -105,11 +105,11 @@
         <!-- グリッドは自前でスクロールするため * 行に置く。先頭 2 列は固定、見出しの長押しで列設定 -->
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
-                           ValueAccessors="{x:Static models:OrderRow.Accessors}"
+                           ValueAccessors="{x:Static models:OrderInfo.Accessors}"
                            ColumnOrders="{Binding ColumnOrders}"
                            SortOrders="{Binding SortOrders}"
                            SortCycle="AscendingDescendingNone"
-                           GridStyle="{Binding GridStyle}"
+                           GridStyle="{x:Static module:ControlGridStyles.ListStyle}"
                            FrozenColumnCount="2"
                            SelectionMode="MultipleToggle"
                            SelectAllCommand="{Binding SelectAllCommand}"

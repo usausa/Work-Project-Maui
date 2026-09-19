@@ -51,7 +51,7 @@
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
                            ValueAccessors="{x:Static models:ColumnOptionAccessors.Option}"
-                           GridStyle="{Binding GridStyle}"
+                           GridStyle="{x:Static module:ControlGridStyles.SettingsStyle}"
                            RowMover="{Binding RowMover}"
                            AllowRowDragging="True"
                            AllowColumnResizing="False"

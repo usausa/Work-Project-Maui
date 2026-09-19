@@ -51,6 +51,8 @@
             <Style x:Key="OpenButton"
                    TargetType="Button"
                    BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
@@ -197,6 +199,7 @@
                             <VerticalStackLayout Spacing="8">
                                 <sf:SfSegmentedControl ItemsSource="{Binding Modes}"
                                                        SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
+                                                       VisibleSegmentsCount="2"
                                                        SegmentHeight="40" />
                                 <Label Style="{StaticResource NoteLabel}"
                                        Text="SfNavigationDrawer = Syncfusion.Maui.Toolkit (ページを包む。Position / Transition / 幅と、端のスワイプ) / 自作 = Controls/SideDrawer.cs (Grid 派生、依存なし。最前面に重ね、左端のスワイプとパネルのドラッグ、背景のタップ)" />

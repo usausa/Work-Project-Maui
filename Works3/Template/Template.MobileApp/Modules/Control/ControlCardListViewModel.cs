@@ -24,7 +24,7 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
         new("名前", static (x, y) => StringComparer.CurrentCulture.Compare(x.Name, y.Name)),
         new("状態", static (x, y) => x.Status.CompareTo(y.Status)),
         new("担当", static (x, y) => StringComparer.CurrentCulture.Compare(x.Staff, y.Staff)),
-        new("区分", static (x, y) => StringComparer.CurrentCulture.Compare(x.Category, y.Category)),
+        new("区分", static (x, y) => x.Category.CompareTo(y.Category)),
         new("コード", static (x, y) => String.CompareOrdinal(x.Code, y.Code))
     ];
 
@@ -65,6 +65,8 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
 
     public IObserveCommand ToggleDirectionCommand { get; }
 
+    public IObserveCommand ClearSortCommand { get; }
+
     public IObserveCommand ToggleExpandAllCommand { get; }
 
     public IObserveCommand ReloadCommand { get; }
@@ -82,6 +84,7 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
         ToggleSortPanelCommand = MakeDelegateCommand(() => IsSortPanelOpen = !IsSortPanelOpen);
         SelectSortKeyCommand = MakeDelegateCommand<VisitSortKey>(SelectSortKey);
         ToggleDirectionCommand = MakeDelegateCommand(ToggleDirection);
+        ClearSortCommand = MakeDelegateCommand(ClearSort);
         ToggleExpandAllCommand = MakeDelegateCommand(ToggleExpandAll);
         ReloadCommand = MakeDelegateCommand(Load);
 
@@ -177,7 +180,25 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
 
     private void ToggleDirection()
     {
+        if (activeKeys.Count == 0)
+        {
+            return;
+        }
+
         activeKeys[0].Descending = !activeKeys[0].Descending;
+        UpdateSortKeys();
+        ApplySort();
+    }
+
+    // 並べ替えを解除する (コード順)
+    private void ClearSort()
+    {
+        activeKeys.Clear();
+        foreach (var key in SortKeys)
+        {
+            key.Descending = false;
+        }
+
         UpdateSortKeys();
         ApplySort();
     }
@@ -200,8 +221,8 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
             key.IsActive = index >= 0;
         }
 
-        IsDescending = activeKeys[0].Descending;
-        SortText = String.Join(" › ", activeKeys.Select(static x => x.Name + (x.Descending ? " ↓" : " ↑")));
+        IsDescending = (activeKeys.Count > 0) && activeKeys[0].Descending;
+        SortText = activeKeys.Count > 0 ? String.Join(" › ", activeKeys.Select(static x => x.Name + (x.Descending ? " ↓" : " ↑"))) : "なし";
     }
 
     // 選択・展開の状態はカードが持つため、並べ替えでは順番だけを差し替える
@@ -211,7 +232,7 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
         {
             foreach (var key in activeKeys)
             {
-                var result = key.Compare(x.Visit, y.Visit);
+                var result = key.Compare(x.Info, y.Info);
                 if (result != 0)
                 {
                     return key.Descending ? -result : result;
@@ -231,9 +252,10 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
     private void UpdateSelectedCount() => SelectedCount = source.Count(static x => x.IsSelected);
 }
 
+// 文言と色は XAML 側のコンバーター (MapToText / MapToColor) で決める
 public sealed partial class VisitCard : ObservableObject
 {
-    public Visit Visit { get; }
+    public VisitInfo Info { get; }
 
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
@@ -241,56 +263,35 @@ public sealed partial class VisitCard : ObservableObject
     [ObservableProperty]
     public partial bool IsExpanded { get; set; }
 
-    public string Code => Visit.Code;
+    public string Code => Info.Code;
 
-    public string Name => Visit.Name;
+    public string Name => Info.Name;
 
-    public string Address => Visit.Address;
+    public string Address => Info.Address;
 
-    public string Staff => Visit.Staff;
+    public string Staff => Info.Staff;
 
-    // 担当者のアバター (先頭 1 文字)
-    public string StaffInitial => Visit.Staff[..1];
+    public VisitCategory Category => Info.Category;
 
-    public string Category => Visit.Category;
+    public string Phone => Info.Phone;
 
-    public string CategoryText => Visit.Category switch
+    public string Note => Info.Note;
+
+    public bool IsPriority => Info.IsPriority;
+
+    public bool IsToday => Info.ScheduledAt.Date == DateTime.Today;
+
+    public bool IsFirstVisit => Info.LastVisitedAt is null;
+
+    public VisitStatus Status => Info.Status;
+
+    public DateTime ScheduledAt => Info.ScheduledAt;
+
+    public DateTime? LastVisitedAt => Info.LastVisitedAt;
+
+    public VisitCard(VisitInfo info)
     {
-        "定期" => "🗓 定期",
-        "新規" => "✨ 新規",
-        "点検" => "🔧 点検",
-        _ => "💰 集金"
-    };
-
-    public string Phone => Visit.Phone;
-
-    public string Note => Visit.Note;
-
-    public bool HasNote => !String.IsNullOrEmpty(Visit.Note);
-
-    public bool IsPriority => Visit.IsPriority;
-
-    public bool IsToday => Visit.ScheduledAt.Date == DateTime.Today;
-
-    public bool IsFirstVisit => Visit.LastVisitedAt is null;
-
-    public VisitStatus Status => Visit.Status;
-
-    public string StatusText => Visit.Status switch
-    {
-        VisitStatus.Planned => "⏳ 未訪問",
-        VisitStatus.Visited => "✅ 訪問済",
-        VisitStatus.Revisit => "🔁 再訪問",
-        _ => "🚫 不在"
-    };
-
-    public string ScheduledText => Visit.ScheduledAt.ToString("MM/dd (ddd) HH:mm", CultureInfo.CurrentCulture);
-
-    public string LastVisitedText => Visit.LastVisitedAt?.ToString("yyyy/MM/dd", CultureInfo.CurrentCulture) ?? "なし";
-
-    public VisitCard(Visit visit)
-    {
-        Visit = visit;
+        Info = info;
     }
 }
 
@@ -298,7 +299,7 @@ public sealed partial class VisitSortKey : ObservableObject
 {
     public string Name { get; }
 
-    public Comparison<Visit> Compare { get; }
+    public Comparison<VisitInfo> Compare { get; }
 
     // 並替パネルに出す順位 (0 = 未使用)
     [ObservableProperty]
@@ -310,7 +311,7 @@ public sealed partial class VisitSortKey : ObservableObject
     [ObservableProperty]
     public partial bool Descending { get; set; }
 
-    public VisitSortKey(string name, Comparison<Visit> compare)
+    public VisitSortKey(string name, Comparison<VisitInfo> compare)
     {
         Name = name;
         Compare = compare;

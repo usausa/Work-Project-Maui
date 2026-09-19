@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls.Shapes;
 
 // 下から出るシート (自作)。ページの最前面に置く。IsOpen で半開の状態から表示し、
 // シートのドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景のタップで閉じる
+// ドラッグの終了時は、動かした距離か速さがしきい値を超えていればその方向の状態へ、そうでなければ離した位置に近い状態へ
 public sealed class BottomSheetView : Grid
 {
     private const string AnimationName = "SheetMove";
@@ -11,6 +12,11 @@ public sealed class BottomSheetView : Grid
     private const uint Duration = 250;
 
     private const double BackdropOpacity = 0.4;
+
+    // 状態の移動を確定する移動量 (dp) と速さ (dp/ms)。短い操作でも方向が明確なら従う
+    private const double SwipeDistance = 16;
+
+    private const double SwipeVelocity = 0.2;
 
     public static readonly BindableProperty IsOpenProperty = BindableProperty.Create(
         nameof(IsOpen),
@@ -62,6 +68,12 @@ public sealed class BottomSheetView : Grid
     private readonly ContentView contentHost;
 
     private double panStart;
+
+    private double panTotal;
+
+    private double panVelocity;
+
+    private long panTimestamp;
 
     private bool expanded;
 
@@ -240,8 +252,22 @@ public sealed class BottomSheetView : Grid
             case GestureStatus.Started:
                 sheet.AbortAnimation(AnimationName);
                 panStart = sheet.TranslationY;
+                panTotal = 0;
+                panVelocity = 0;
+                panTimestamp = Environment.TickCount64;
                 break;
             case GestureStatus.Running:
+                var now = Environment.TickCount64;
+                var elapsed = now - panTimestamp;
+                if (elapsed > 0)
+                {
+                    // 直前の区間の速さ (揺れを抑えるため前回と平均する)
+                    var velocity = (e.TotalY - panTotal) / elapsed;
+                    panVelocity = panVelocity == 0 ? velocity : (panVelocity + velocity) / 2;
+                    panTimestamp = now;
+                }
+
+                panTotal = e.TotalY;
                 var y = Math.Clamp(panStart + e.TotalY, 0, SheetHeight);
                 sheet.TranslationY = y;
                 backdrop.Opacity = BackdropOpacity * (1 - (y / SheetHeight));
@@ -253,10 +279,32 @@ public sealed class BottomSheetView : Grid
         }
     }
 
-    // 離した位置から最も近い状態へ (半開と閉じるの中間より下なら閉じる)
+    // 下方向のスワイプは 全開 → 半開 → 閉じる、上方向は 全開 へ。方向が明確でなければ離した位置から最も近い状態へ
     private void Settle()
     {
         var y = sheet.TranslationY;
+        if ((panTotal >= SwipeDistance) || (panVelocity >= SwipeVelocity))
+        {
+            if (expanded && (y < HalfY))
+            {
+                expanded = false;
+                MoveTo(HalfY);
+            }
+            else
+            {
+                IsOpen = false;
+            }
+
+            return;
+        }
+
+        if ((panTotal <= -SwipeDistance) || (panVelocity <= -SwipeVelocity))
+        {
+            expanded = true;
+            MoveTo(0);
+            return;
+        }
+
         if (y > (HalfY + SheetHeight) / 2)
         {
             IsOpen = false;

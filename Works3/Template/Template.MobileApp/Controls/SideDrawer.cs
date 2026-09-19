@@ -2,13 +2,19 @@ namespace Template.MobileApp.Controls;
 
 // 左端から出るドロワー (自作)。ページの最前面に置く。IsOpen で表示、左端のスワイプで開く、
 // パネルのドラッグと背景のタップで閉じる。閉じているときは左端の帯以外はタッチを通す
+// ドラッグの終了時は、動かした距離か速さがしきい値を超えていればその方向へ、そうでなければ位置 (半分) で開閉を決める
 public sealed partial class SideDrawer : Grid
 {
     private const string AnimationName = "DrawerMove";
 
-    private const uint Duration = 250;
+    private const uint Duration = 150;
 
     private const double BackdropOpacity = 0.4;
+
+    // 開閉を確定する移動量 (dp) と速さ (dp/ms)。短い操作でも方向が明確なら従う
+    private const double SwipeDistance = 16;
+
+    private const double SwipeVelocity = 0.2;
 
     public static readonly BindableProperty IsOpenProperty = BindableProperty.Create(
         nameof(IsOpen),
@@ -60,6 +66,12 @@ public sealed partial class SideDrawer : Grid
     private readonly Grid panel;
 
     private double panStart;
+
+    private double panTotal;
+
+    private double panVelocity;
+
+    private long panTimestamp;
 
     public bool IsOpen
     {
@@ -201,18 +213,42 @@ public sealed partial class SideDrawer : Grid
             case GestureStatus.Started:
                 panel.AbortAnimation(AnimationName);
                 panStart = panel.TranslationX;
+                panTotal = 0;
+                panVelocity = 0;
+                panTimestamp = Environment.TickCount64;
                 backdrop.IsVisible = true;
                 panel.IsVisible = true;
                 break;
             case GestureStatus.Running:
+                var now = Environment.TickCount64;
+                var elapsed = now - panTimestamp;
+                if (elapsed > 0)
+                {
+                    // 直前の区間の速さ (揺れを抑えるため前回と平均する)
+                    var velocity = (e.TotalX - panTotal) / elapsed;
+                    panVelocity = panVelocity == 0 ? velocity : (panVelocity + velocity) / 2;
+                    panTimestamp = now;
+                }
+
+                panTotal = e.TotalX;
                 var x = Math.Clamp(panStart + e.TotalX, -DrawerWidth, 0);
                 panel.TranslationX = x;
                 backdrop.Opacity = BackdropOpacity * (1 + (x / DrawerWidth));
                 break;
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                // 半分より開いていれば開く。IsOpen が変わらない場合もあるため位置は明示的に戻す
-                var open = panel.TranslationX > -DrawerWidth / 2;
+                // 短いスワイプでも方向が明確なら従う (Sf と同じ感度)。IsOpen が変わらない場合もあるため位置は明示的に戻す
+                var open = panTotal switch
+                {
+                    <= -SwipeDistance => false,
+                    >= SwipeDistance => true,
+                    _ => panVelocity switch
+                    {
+                        <= -SwipeVelocity => false,
+                        >= SwipeVelocity => true,
+                        _ => panel.TranslationX > -DrawerWidth / 2
+                    }
+                };
                 if (open == IsOpen)
                 {
                     MoveTo(open ? 0 : -DrawerWidth, open);

@@ -50,6 +50,8 @@
             <Style x:Key="OpenButton"
                    TargetType="Button"
                    BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
@@ -99,6 +101,8 @@
                    TargetType="Button"
                    BasedOn="{StaticResource SecondaryButton}">
                 <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="14" />
             </Style>
 
