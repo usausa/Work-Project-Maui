@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Control"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             x:Class="Template.MobileApp.Modules.Control.ControlGridColumnView"
+             x:DataType="{x:Type module:ControlGridColumnViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlGridColumnViewModel}"
+             shell:ShellProperty.Title="Grid Column"
+             shell:ShellProperty.Function1Text="Cancel"
+             shell:ShellProperty.Function4Text="Apply"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- 列設定もグリッドで表示する (チェックで表示切替、行ヘッダのドラッグで順序変更) -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="CaptionLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="MessageLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*,Auto">
+
+        <Label Grid.Row="0"
+               Style="{StaticResource CaptionLabel}"
+               Text="一覧の表示項目" />
+
+        <clam:ClamGridView Grid.Row="1"
+                           ItemsSource="{Binding Rows}"
+                           ValueAccessors="{x:Static models:ColumnOptionAccessors.Option}"
+                           GridStyle="{Binding GridStyle}"
+                           RowMover="{Binding RowMover}"
+                           AllowRowDragging="True"
+                           AllowColumnResizing="False"
+                           AllowColumnConfiguration="False"
+                           IsReadOnly="False"
+                           CellValueChangedCommand="{Binding CellValueChangedCommand}"
+                           RowMovedCommand="{Binding RowMovedCommand}">
+            <clam:GridColumn Key="IsVisible"
+                             Header="表示"
+                             Width="72"
+                             IsBoolean="True"
+                             Alignment="Center"
+                             AllowSorting="False" />
+            <clam:GridColumn Key="Header"
+                             Header="項目"
+                             Width="*"
+                             MinWidth="120"
+                             AllowSorting="False" />
+        </clam:ClamGridView>
+
+        <Label Grid.Row="2"
+               Style="{StaticResource MessageLabel}"
+               Text="{Binding Message}" />
+    </Grid>
+
+</ContentView>

@@ -233,6 +233,45 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
+            <!-- ローカル通知 (自作 NotificationService)。即時 (アクションボタン付き) / 10 秒後 / 取消 / 正確なアラームの許可設定 -->
+            <controls:InfoCard Title="Notification"
+                               Icon="{x:Static fonts:MaterialIcons.Notifications}"
+                               behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="400">
+                <VerticalStackLayout Style="{StaticResource ActionStack}">
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{x:Static markup:AppIcons.SmallNotifications}"
+                                Command="{Binding NotifyCommand}"
+                                Text="Notify" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{x:Static markup:AppIcons.SmallAlarm}"
+                                Command="{Binding NotifyScheduleCommand}"
+                                Text="Schedule" />
+                    </Grid>
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{x:Static markup:AppIcons.SmallNotificationsOff}"
+                                Command="{Binding NotifyCancelCommand}"
+                                Text="Cancel" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource ActionButton}"
+                                ImageSource="{x:Static markup:AppIcons.SmallAlarmOn}"
+                                Command="{Binding NotifyExactSettingCommand}"
+                                Text="Exact alarm" />
+                    </Grid>
+                    <Label Style="{StaticResource RecognizeTextLabel}"
+                           IsVisible="{Binding NotificationText, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding NotificationText}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding NotificationText}" />
+                </VerticalStackLayout>
+            </controls:InfoCard>
+
         </VerticalStackLayout>
     </ScrollView>
 

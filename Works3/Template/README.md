@@ -85,7 +85,7 @@ Template project for MAUI.
 | --- | --- |
 | Basic | Typography / Style / Font / Converter / Behavior / Dialog / Validation / Localization / Setting |
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
-| Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Screen recording / Local notification |
+| Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
 | Network | Web API(JWT, Data CRUD) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |

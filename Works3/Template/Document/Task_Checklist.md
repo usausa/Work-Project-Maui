@@ -7,7 +7,7 @@
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Review | 未コミット分の確認(0-1〜0-13) | 0 |
+| Review | 未コミット分の確認(0-1〜0-12) | 0 |
 | Network | SCP の実機確認と転送実テスト(要 SSH サーバ) | 1 |
 | Device | Biometric(生体認証) | 2-1 |
 | Device | Push(FCM) | 2-2 |
@@ -62,11 +62,11 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
-| `Template.MobileApp.csproj` | `ClamGrid` 1.0.0 / `Plugin.Maui.ScreenRecording` 1.0.0-preview5 の追加 | パッケージ参照 |
-| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` / `ControlGridStyles.cs` | 受注一覧 2,000 行 | 見出しタップでソート(3 段階・順位)、見出し長押しで列設定、行タップで選択、行長押しで未処理の一括選択 / 全解除、確認列のチェック、F2 選択解除 / F3 既定へ / F4 再読込、確定 / 状態更新。状態 / フラグ / ランク / 受付の絵文字と色 |
+| `Template.MobileApp.csproj` | `ClamGrid` 1.0.0 の追加 | パッケージ参照 |
+| `Modules/Control/ControlGridView.xaml` + `ControlGridViewModel.cs` / `ControlGridStyles.cs`(`ListStyle` / `SettingsStyle` を `x:Static` で参照)| 受注一覧 2,000 行(選択数の追従は `PropertyChangedAsObservable`、列キーは `nameof`)| 見出しタップでソート(3 段階・順位)、見出し長押しで列設定、行タップで選択、行長押しで未処理の一括選択 / 全解除、確認列のチェック、F2 選択解除 / F3 既定へ / F4 再読込、確定 / 状態更新。状態 / フラグ / ランク / 受付の絵文字と色 |
 | `Modules/Control/ControlGridColumnView.xaml` + `ControlGridColumnViewModel.cs` | 列設定 | チェックで表示、行ヘッダのドラッグで順序、Apply で反映 / Reset |
 | `Models/Control/OrderRow.cs` / `OrderStatus.cs` / `OrderChannel.cs` / `OrderSamples.cs` / `ColumnOptionAccessors.cs` | 行モデル / 状態 / 受付経路 / ダミー / 列設定行 | — |
-| `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` / `Models/Control/Visit.cs` | 訪問先一覧 40 件 | 行タップで選択(青地 + 白文字)、右端で展開、担当アバター / 状態・重点・今日・初回・区分のバッジ、絵文字の情報行、並替パネル(最大 3 キー・順位)、昇降 / 全展開 / 再読込、F3 未訪問の一括選択 / F4 確定 |
+| `Modules/Control/ControlCardListView.xaml` + `ControlCardListViewModel.cs` / `Models/Control/VisitInfo.cs` / `Converters/InitialConverter.cs` | 訪問先一覧 40 件(状態 / 区分 / 担当の文言と色は `s:MapToTextConverter` / `s:MapToColorConverter`)| 行タップで選択(青地 + 白文字)、右端で展開、担当アバター / 状態・重点・今日・初回・区分のバッジ、絵文字の情報行、並替パネル(最大 3 キー・順位、クリアでコード順)、昇降 / 全展開 / 再読込、F3 未訪問の一括選択 / F4 確定 |
 | `Modules/Parameters.cs` | 列設定セッションと列順序の受け渡し | — |
 | `Helpers/ImageHelper.cs` | `old?.Dispose()` の ReSharper 抑止コメント | — |
 | `Document/Control_Grid.png` / `Control_CardList.png` | 画像 | README |
@@ -77,7 +77,7 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
-| `Components/WiFiManager.cs` + `WiFiManager.android.cs` | 接続情報(NetworkCallback)とスキャン結果(`registerScanResultsCallback`)、無線オン / オフの追従 | — |
+| MauiComponents `WiFi.cs` / `WiFi.WiFiManager.cs` + `.android.cs` / `.ios.cs`(別リポジトリ、未コミット) | `IWiFiManager`(`AddComponentsWiFi` で登録)。接続情報(NetworkCallback)とスキャン結果(`registerScanResultsCallback`。API 30 未満はブロードキャストと 5 段階の信号レベル)、無線オン / オフの追従。iOS は `IsSupported=false` の実装 | MauiComponents が Android / iOS とも 0 警告 |
 | `Modules/Device/DeviceWiFiView.xaml` + `DeviceWiFiViewModel.cs` / `Converters/WiFiSignalIconConverter.cs` | 接続ブロック + アクセスポイント一覧 | 接続情報(タップで詳細)、一覧のバッジ / 絵文字(タップで展開)、最後の結果から 30 秒後の自動スキャン、未検出は半透明 → 60 秒で消える、F4 設定 |
 | `Modules/Device/DeviceMenuView.xaml` / `Permissions.cs` / `Platforms/Android/AndroidManifest.xml` / `Extensions.cs` / `MauiProgram.cs` | WiFi ボタン有効化、`NearbyWifiDevices` 権限、`CHANGE_WIFI_STATE` / `NEARBY_WIFI_DEVICES`、`StateChangedAsObservable`、DI | — |
 | `Document/Device_WiFi.png` | 画像 | README |
@@ -89,9 +89,9 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Controls/BottomSheetView.cs` | 自作ボトムシート(Grid 派生) | — |
-| `Controls/SideDrawer.cs` + `SideDrawer.android.cs` | 自作ドロワー(左端の帯の上下中央 200dp をシステムジェスチャから除外) | — |
-| `Modules/Control/ControlBottomSheetView.xaml` + `ControlBottomSheetViewModel.cs` | `SfBottomSheet` と自作の比較 | F2 Sf / F3 自作。ドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景タップで閉じる、項目選択で「結果」に反映 |
-| `Modules/Control/ControlDrawerView.xaml` + `ControlDrawerViewModel.cs` | `SfNavigationDrawer` と自作の比較 | セグメントで切替、F2 開閉、項目タップで「選択中」、背景タップ、パネルのドラッグで閉じる、自作は帯の中央からの端スワイプで開く(外は戻る操作) |
+| `Controls/SideDrawer.cs` + `SideDrawer.android.cs` | 自作ドロワー(左端の帯の上下中央 200dp をシステムジェスチャから除外) | ドラッグの終了は 16dp 以上動かした方向、または 0.2dp/ms 以上の速さの方向へ開閉(短いスワイプで閉じる) |
+| `Modules/Control/ControlBottomSheetView.xaml` + `ControlBottomSheetViewModel.cs` | `SfBottomSheet` と自作の比較 | F2 Sf / F3 自作(開いているシートがあれば閉じる)。開く / 閉じるボタンは高さ 44。ドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景タップで閉じる、項目選択で「結果」に反映 |
+| `Modules/Control/ControlDrawerView.xaml` + `ControlDrawerViewModel.cs` | `SfNavigationDrawer` と自作の比較 | セグメントで切替(`VisibleSegmentsCount=2` で文言を全表示)、F2 開閉、項目タップで「選択中」、背景タップ、パネルのドラッグで閉じる、自作は帯の中央からの端スワイプで開く(外は戻る操作) |
 | `Modules/Control/ControlToolkitView.xaml` + `ControlToolkitViewModel.cs` | シートタブの削除、`SfSegmentedControl.SelectedIndex` を TwoWay | セグメントのタップが選択インデックスに反映 |
 | `Document/Control_BottomSheet.png` / `Control_Drawer.png` | 画像 | README |
 
@@ -118,15 +118,7 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 
 - [ ] **0-6** 上記(端末には Foundry の EndPoint / Key と Ollama(`http://localhost:11434` / `gemma2`)を設定済み。不要なら Setting の QR で上書き)
 
-### 0-7 画面録画
-
-| 現在のファイル名 | 何用か | 確認観点 |
-| --- | --- | --- |
-| `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs`(Recording カード)/ `MauiProgram.cs`(`UseScreenRecording`)/ `Platforms/Android/AndroidManifest.xml`(前景サービス + `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PROJECTION`) | `Plugin.Maui.ScreenRecording` | Start → 共有ダイアログ(画面全体を共有)→ 録画中 → Stop で mp4 のパス |
-
-- [ ] **0-7** 上記
-
-### 0-8 ローカル通知
+### 0-7 ローカル通知
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
@@ -134,24 +126,24 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | `Platforms/Android/MainActivity.cs` / `MainPageViewModel.cs` | 起動 / 再起動 Intent からタップを拾う、初期遷移後にトースト | 通知のタップでアプリが前面になりトースト |
 | `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs`(Notification カード)/ `Permissions.cs` / `Platforms/Android/AndroidManifest.xml`(`POST_NOTIFICATIONS` / `SCHEDULE_EXACT_ALARM`)/ `Extensions.cs` / `MauiProgram.cs` | UI と権限、`TappedAsObservable`、DI | Notify → シェードの本体 / 承認 / 却下 → カードにタップ結果、Schedule → 10 秒前後で通知、Cancel、Exact alarm で設定画面 |
 
-- [ ] **0-8** 上記
+- [ ] **0-7** 上記
 
-### 0-9 ドキュメント
+### 0-8 ドキュメント
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
-| `Document/Change_Summary.md` | 区間 10 のエントリ(Control メニュー / Grid・Card list / WiFi / Bottom sheet・Drawer / 診断・リーク / Azure・Ollama / 画面録画 / ローカル通知)とナレッジ、付録D 不採用 (1) の追記 | 記述と実装の一致 |
+| `Document/Change_Summary.md` | 区間 10 のエントリ(Control メニュー / Grid・Card list / WiFi / Bottom sheet・Drawer / 診断・リーク / Azure・Ollama / ローカル通知)とナレッジ、付録D 不採用 (1) の追記 | 記述と実装の一致 |
 | `Document/Task_Checklist.md` / `README.md` | 残項目(1 SCP / 2 節 / 3 節)、TODO / Implement / 画像、旧 `tmpl-plan-maui.md` の取り込み(2-3〜2-5、付録の対応不要 3 件) | README の TODO とサマリ表の同期、画像リンク切れなし |
 
-- [ ] **0-9** 上記
+- [ ] **0-8** 上記
 
-### 0-10 プッシュ通知の自前サンプル(別フォルダ `Works3/PushSample`)
+### 0-9 プッシュ通知の自前サンプル(別フォルダ `Works3/PushSample`)
 
 本アプリのコードは無変更。構成 / 実行手順 / 再接続の設計 / 確認済みの動作 / 解析上の制約はすべて `Works3/PushSample/README.md`。
 
-- [ ] **0-10** `Works3/PushSample`(README に沿って確認。`PushHub` の CA1812 抑止と `CommunityToolkit.Mvvm` の採用を含む)
+- [ ] **0-9** `Works3/PushSample`(README に沿って確認。`PushHub` の CA1812 抑止と `CommunityToolkit.Mvvm` の採用を含む)
 
-### 0-11 ネットワーク(対向サーバー = template-maui-server)
+### 0-10 ネットワーク(対向サーバー = template-maui-server)
 
 対向サーバーは `D:\GitHubTemplate\template-maui-server`(別リポジトリ、こちらも未コミット)。起動と端末の接続は `Document/Development.md`「サーバー処理」。サーバー側のパスは `template-maui-server/src/Template.MobileServer.Web/` からの相対((server) 印)。
 
@@ -182,9 +174,9 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | (server) `appsettings.Development.json` / `Assembly.cs` | JWT 有効期限 5 分(開発)、テストへの `InternalsVisibleTo` | — |
 | (server) `tests/.../DeviceRegistryTests.cs` / `DevicesPageTests.cs` / `QrPageTests.cs` / `NavMenuTests.cs` / `README.md` | テスト(35 件)と README(API 一覧 / SignalR(認証なし、切断)/ QR の書式) | — |
 
-- [ ] **0-11** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」参照)
+- [ ] **0-10** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」参照)
 
-### 0-12 .NET 10 API の適用 / IChatClient 抽象化 / ドキュメント
+### 0-11 .NET 10 API の適用 / IChatClient 抽象化 / ドキュメント
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
@@ -196,13 +188,13 @@ Control メニュー新設以降(2026-09-13〜14)の未コミット分。確認�
 | `Document/Other_App_Candidates.md`(新規) | 本サンプルでは対象外、別アプリで導入を検討する項目(ディープリンク) | — |
 | `Document/Telemetry_Study.md`(新規) | クラッシュレポート / テレメトリ基盤の検討資料(DeviceManager 型 / OpenTelemetry / 外部サービス、Aspire の位置付け) | 別セッションでの検討の入力 |
 
-- [ ] **0-12** 上記
+- [ ] **0-11** 上記
 
-### 0-13 OpenTelemetry の組み込みサンプル(別フォルダ `Works3/OtelSample`)
+### 0-12 OpenTelemetry の組み込みサンプル(別フォルダ `Works3/OtelSample`)
 
 本アプリのコードは無変更。構成 / 実行手順 / 送信の設計(OTLP/HTTP、ILogger の転送、ディスク退避と再送、クラッシュ、MAUI のレイアウト計測)/ 確認済みの動作 / 解析上の制約 / ナレッジはすべて `Works3/OtelSample/README.md`。`Document/Telemetry_Study.md` の候補 B の実証。
 
-- [ ] **0-13** `Works3/OtelSample`(README に沿って確認。`EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用を含む)
+- [ ] **0-12** `Works3/OtelSample`(README に沿って確認。`EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用を含む)
 
 ---
 

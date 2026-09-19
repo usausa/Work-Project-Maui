@@ -22,7 +22,6 @@ using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 
 using Plugin.Maui.Audio;
-using Plugin.Maui.ScreenRecording;
 #if false
 using Plugin.Maui.DebugRainbows;
 #endif
@@ -47,6 +46,7 @@ using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
+using Template.MobileApp.Services.Chat;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -68,7 +68,6 @@ public static partial class MauiProgram
             .UseMauiCommunityToolkit(ConfigureMauiCommunityToolkit)
             .UseMauiCommunityToolkitCamera()
             .UseMauiCommunityToolkitMediaElement(true)
-            .UseScreenRecording()
             .UseMauiMaps()
             .UseBarcodeScanning()
             .UseShiny()
@@ -186,6 +185,8 @@ public static partial class MauiProgram
         // Config Rest
         RestConfig.Default.UseJsonSerializer(static config =>
         {
+            config.PropertyNamingPolicy = null;
+            config.PropertyNameCaseInsensitive = true;
             config.Converters.Add(new Template.MobileApp.Helpers.Json.DateTimeConverter());
             config.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -274,6 +275,7 @@ public static partial class MauiProgram
         services.AddComponentsScreen();
         services.AddComponentsLocation();
         services.AddComponentsSpeech();
+        services.AddComponentsWiFi();
 
         // Messenger
         services.AddSingleton<IReactiveMessenger>(ReactiveMessenger.Default);
@@ -295,7 +297,6 @@ public static partial class MauiProgram
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
         services.AddSingleton<INfcReader, NfcReader>();
-        services.AddSingleton<IWiFiManager, WiFiManager>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<INoiseMonitor, NoiseMonitor>();
         services.AddSingleton<IOcrReader, OcrReader>();
@@ -346,6 +347,9 @@ public static partial class MauiProgram
         services.AddSingleton<DataService>();
 
         services.AddSingleton<HttpService>();
+        services.AddSingleton<MonitorConnection>();
+        services.AddSingleton<ChatClient>();
+        services.AddSingleton<AiChatClientFactory>();
 
         // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
         services.AddSingleton<IScheduleEventProvider, ScheduleService>();

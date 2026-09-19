@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
+             xmlns:shell="clr-namespace:Template.MobileApp.Shell"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Control"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             x:Class="Template.MobileApp.Modules.Control.ControlGridView"
+             x:DataType="{x:Type module:ControlGridViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:ControlGridViewModel}"
+             shell:ShellProperty.Title="Grid"
+             shell:ShellProperty.Function1Text="Back"
+             shell:ShellProperty.Function2Text="Clear"
+             shell:ShellProperty.Function3Text="Reset"
+             shell:ShellProperty.Function4Text="Reload"
+             shell:ShellProperty.Function1Enabled="True"
+             shell:ShellProperty.Function2Enabled="True"
+             shell:ShellProperty.Function3Enabled="True"
+             shell:ShellProperty.Function4Enabled="True">
+
+    <!-- ClamGrid: 列は XAML で宣言し、値は OrderRow.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
+         状態・フラグ・ランク・受付は絵文字、セルの色は ControlGridStyles -->
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SummaryGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="SummaryLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SummaryLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDarken1}" />
+            </Style>
+
+            <Style x:Key="MessageLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            </Style>
+
+            <Style x:Key="ActionGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="ActionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource PrimaryButton}">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style x:Key="SubActionButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource SecondaryButton}">
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid Style="{StaticResource FillGrid}"
+          RowDefinitions="Auto,*,Auto,Auto">
+
+        <Grid Grid.Row="0"
+              Style="{StaticResource SummaryGrid}"
+              ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+            <Label Grid.Column="0"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="{Binding Rows.Count, StringFormat='{0:N0} 件'}" />
+            <Label Grid.Column="1"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="{Binding OpenCount, StringFormat='未処理 {0:N0}'}" />
+            <Label Grid.Column="3"
+                   Style="{StaticResource SummaryLabel}"
+                   Text="選択" />
+            <Label Grid.Column="4"
+                   Style="{StaticResource SummaryValueLabel}"
+                   Text="{Binding SelectedCount, StringFormat='{0:N0}'}" />
+        </Grid>
+
+        <!-- グリッドは自前でスクロールするため * 行に置く。先頭 2 列は固定、見出しの長押しで列設定 -->
+        <clam:ClamGridView Grid.Row="1"
+                           ItemsSource="{Binding Rows}"
+                           ValueAccessors="{x:Static models:OrderRow.Accessors}"
+                           ColumnOrders="{Binding ColumnOrders}"
+                           SortOrders="{Binding SortOrders}"
+                           SortCycle="AscendingDescendingNone"
+                           GridStyle="{Binding GridStyle}"
+                           FrozenColumnCount="2"
+                           SelectionMode="MultipleToggle"
+                           SelectAllCommand="{Binding SelectAllCommand}"
+                           ColumnConfigurationCommand="{Binding ColumnEditCommand}"
+                           CellValueChangedCommand="{Binding CellValueChangedCommand}">
+            <clam:GridColumn Key="Status"
+                             Header="状態"
+                             Width="100" />
+            <clam:GridColumn Key="OrderNo"
+                             Header="受注番号"
+                             Width="150" />
+            <clam:GridColumn Key="Flags"
+                             Header="フラグ"
+                             Width="112"
+                             AllowSorting="False" />
+            <clam:GridColumn Key="Customer"
+                             Header="顧客"
+                             Width="140" />
+            <clam:GridColumn Key="Rank"
+                             Header="ランク"
+                             Width="84"
+                             Alignment="Center" />
+            <clam:GridColumn Key="Product"
+                             Header="商品"
+                             Width="220" />
+            <clam:GridColumn Key="Quantity"
+                             Header="数量"
+                             Width="72"
+                             Alignment="End"
+                             Format="N0" />
+            <clam:GridColumn Key="Amount"
+                             Header="金額"
+                             Width="120"
+                             Alignment="End"
+                             Format="N0" />
+            <clam:GridColumn Key="DueDate"
+                             Header="納期"
+                             Width="90"
+                             Alignment="End"
+                             Format="MM/dd" />
+            <clam:GridColumn Key="Channel"
+                             Header="受付"
+                             Width="88" />
+            <clam:GridColumn Key="IsChecked"
+                             Header="確認"
+                             Width="64"
+                             IsBoolean="True"
+                             IsReadOnly="False"
+                             AllowSorting="False" />
+            <clam:GridColumn Key="Staff"
+                             Header="担当"
+                             Width="90" />
+            <clam:GridColumn Key="UpdatedAt"
+                             Header="更新"
+                             Width="130"
+                             Format="MM/dd HH:mm" />
+        </clam:ClamGridView>
+
+        <Label Grid.Row="2"
+               Style="{StaticResource MessageLabel}"
+               Text="{Binding Message}" />
+
+        <Grid Grid.Row="3"
+              Style="{StaticResource ActionGrid}"
+              ColumnDefinitions="*,*">
+            <Button Grid.Column="0"
+                    Style="{StaticResource ActionButton}"
+                    Command="{Binding CommitCommand}"
+                    Text="確定" />
+            <Button Grid.Column="1"
+                    Style="{StaticResource SubActionButton}"
+                    Command="{Binding AdvanceCommand}"
+                    Text="状態更新" />
+        </Grid>
+    </Grid>
+
+</ContentView>

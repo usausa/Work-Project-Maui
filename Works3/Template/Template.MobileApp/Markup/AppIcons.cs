@@ -185,8 +185,6 @@ public static class AppIcons
     public static readonly FontImageSource SmallMic = Create(MaterialIcons.Mic, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallRecordVoiceOver = Create(MaterialIcons.Record_voice_over, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallScreenshot = Create(MaterialIcons.Screenshot, SmallSize, ResourceColor("BlueGrayDarken1"));
-    public static readonly FontImageSource SmallVideocam = Create(MaterialIcons.Videocam, SmallSize, ResourceColor("BlueGrayDarken1"));
-    public static readonly FontImageSource SmallStop = Create(MaterialIcons.Stop, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallNotifications = Create(MaterialIcons.Notifications, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallNotificationsOff = Create(MaterialIcons.Notifications_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallAlarm = Create(MaterialIcons.Alarm, SmallSize, ResourceColor("BlueGrayDarken1"));
