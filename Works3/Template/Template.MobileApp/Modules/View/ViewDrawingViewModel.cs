@@ -22,16 +22,7 @@ public sealed partial class ViewDrawingViewModel : AppViewModelBase
     public ViewDrawingViewModel()
     {
         SelectColorCommand = MakeDelegateCommand<Color>(x => LineColor = x);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ImageHelper.ReplaceBitmap(Image, null);
-        }
-
-        base.Dispose(disposing);
+        Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);

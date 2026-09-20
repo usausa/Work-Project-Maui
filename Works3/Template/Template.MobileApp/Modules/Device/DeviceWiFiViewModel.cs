@@ -16,9 +16,10 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     // 直近に処理したスキャン結果 (同じ結果の再通知では未検出の判定をしない)
     private IReadOnlyList<WiFiAccessPoint>? lastResults;
 
-    private readonly SerialDisposable scanTimer = new();
+    // 自前スキャンの予約と未検出の期限切れ (表示中だけ)。破棄は Disposables に任せる
+    private SerialDisposable ScanTimer { get; } = new();
 
-    private IDisposable? expireTimer;
+    private SerialDisposable ExpireTimer { get; } = new();
 
     [ObservableProperty]
     public partial bool IsSupported { get; set; }
@@ -78,17 +79,6 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         Disposables.Add(wifiManager.StateChangedAsObservable().ObserveOnCurrentContext().Subscribe(_ => Update()));
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            scanTimer.Dispose();
-            expireTimer?.Dispose();
-        }
-
-        base.Dispose(disposing);
-    }
-
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         IsSupported = wifiManager.IsSupported;
@@ -124,26 +114,25 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
     private void StartTimers()
     {
         StopTimers();
-        expireTimer = Observable.Interval(ExpireInterval).ObserveOnCurrentContext().Subscribe(_ => Expire(DateTime.Now));
+        ExpireTimer.Disposable = Observable.Interval(ExpireInterval).ObserveOnCurrentContext().Subscribe(_ => Expire(DateTime.Now));
         ScheduleScan();
     }
 
     private void StopTimers()
     {
-        scanTimer.Disposable = null;
-        expireTimer?.Dispose();
-        expireTimer = null;
+        ScanTimer.Disposable = null;
+        ExpireTimer.Disposable = null;
     }
 
     // 自動スキャンを ScanInterval 後に予約し直す (スキャン要求と結果の受信のたびに延期される)
     private void ScheduleScan()
     {
-        if (expireTimer is null)
+        if (ExpireTimer.Disposable is null)
         {
             return;
         }
 
-        scanTimer.Disposable = Observable.Timer(ScanInterval).ObserveOnCurrentContext().Subscribe(_ => Scan());
+        ScanTimer.Disposable = Observable.Timer(ScanInterval).ObserveOnCurrentContext().Subscribe(_ => Scan());
     }
 
     // 結果は StateChanged 経由で反映。前面アプリのスキャンは 2 分に 4 回までで、超えると要求が拒否される (次回に回す)

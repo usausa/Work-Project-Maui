@@ -73,24 +73,24 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
         BorderColor = BorderColors[0];
         StrokeColor = StrokeColors[0];
 
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is nameof(StrokeDashLength1) or nameof(StrokeDashLength2))
-            {
-                StrokeDashArray.Clear();
-                if (StrokeDashLength1 > 0)
-                {
-                    StrokeDashArray.Add(StrokeDashLength1);
-                    if (StrokeDashLength2 > 0)
-                    {
-                        StrokeDashArray.Add(StrokeDashLength2);
-                    }
-                }
-            }
-        };
+        SubscribeStrokeDashLength1(_ => UpdateStrokeDashArray());
+        SubscribeStrokeDashLength2(_ => UpdateStrokeDashArray());
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    private void UpdateStrokeDashArray()
+    {
+        StrokeDashArray.Clear();
+        if (StrokeDashLength1 > 0)
+        {
+            StrokeDashArray.Add(StrokeDashLength1);
+            if (StrokeDashLength2 > 0)
+            {
+                StrokeDashArray.Add(StrokeDashLength2);
+            }
+        }
+    }
 }
