@@ -67,7 +67,6 @@ Template project for MAUI.
 | Category | Feature |
 | --- | --- |
 | Device | Biometric |
-| Device | Push(FCM) |
 | Network | Offline sync |
 | Basic | Startup screen(progress / retry) |
 | Basic | App structure(feature profile / diagnostics / catalog / lazy init) |
@@ -77,6 +76,8 @@ Template project for MAUI.
 | View | StyleClass(font size x alignment) |
 | View | Material 3 |
 | Device | Background task(WorkManager) |
+| Device | Push(FCM) |
+| Diagnostics | OpenTelemetry(crash report / telemetry) |
 
 # Implement
 

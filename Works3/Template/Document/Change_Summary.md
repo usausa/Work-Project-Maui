@@ -1,22 +1,22 @@
-# 変更内容まとめ (uibase → fix3)
+# 📝変更内容まとめ (uibase → fix3)
 
 `Works3/Template` 配下の変更を、git タグの区間ごとに **画面単位** でまとめたドキュメント。
 **Git の差分を確認しながら「何を行なったのか」を確認するための参考資料**とすることを目的とする。
 各区間は「A. 画面単位の変更」→「B. 画面以外の変更」(+「C. この区間のナレッジ」) の順で記載し、区間に紐付かない恒常情報(ポリシー / 意図的差異 / 資産レシピ / 決定アーカイブ)は末尾の**付録**に置く。
 
-## 区間の概要
+## 🗺️区間の概要
 
 | 区間 | 期間 | コミット | 変更ファイル | 変更行 | 性格 |
 |---|---|---|---|---|---|
-| [1. uibase → uibase2](#1-uibase--uibase2--ui-ブラッシュアップ) | 2026-05-16 → 07-21 | 35 | 338 | +30,254 / -2,474 | **UI ブラッシュアップ**(新規20画面・全画面の作り込み・描画基盤再編) |
-| [2. uibase2 → uibase3](#2-uibase2--uibase3--コードレビュー対応) | 2026-07-21 → 08-15 | 10 | 122 | +2,472 / -1,020 | **コードレビュー対応**(不具合修正・堅牢化・権限/DB/通信の見直し) |
-| [3. uibase3 → uibase4](#3-uibase3--uibase4--外部リファレンス評価とライブラリ追従) | 2026-08-15 → 09-01 | 1 | 10 | +1,273 / -26 | **外部リファレンス評価**の追加とライブラリ API 追従 |
-| [4. uibase4 → fix1](#4-uibase4--fix1--アナライザ設定の全面見直し) | 2026-09-01 | 1 | 42 | +308 / -172 | **アナライザ設定の全面見直し**と機械的追従 |
-| [5. fix1 → plus1](#5-fix1--plus1--外部リファレンス評価の実装フェーズ110) | 2026-09-01 → 09-03 | 3 | 130 | +9,967 / -1,781 | **外部リファレンス評価の実装**(新規12画面・App モジュール新設・SCP・描画基盤拡張) |
-| [6. plus1 → baseup1](#6-plus1--baseup1--基盤刷新di-移行白画面対策メニュー再編) | 2026-09-03 → 09-05 | 9 | 135 | +2,129 / -1,693 | **基盤刷新**(DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合) |
-| [7. baseup1 → fix2](#7-baseup1--fix2--resharper-全件対応と-scene-描画の重大バグ修正) | 2026-09-05 | 1 | 66 | +459 / -333 | **ReSharper 全件対応**(254 件)と **Scene 描画の重大バグ修正**(かくつき・ANR・SIGSEGV) |
-| [8. fix2 → back](#8-fix2--back--back初期化方式の刷新白画面対策-b-1-の方式変更) | 2026-09-05 → 09-06 | 4 | 15 | +276 / -233 | **BACK/初期化方式の刷新**(白画面対策 B-1 を StartupState 方式へ・ApplicationInitializer 廃止) |
-| [9. back → fix3](#9-back--fix3--calendar--location-の手直し) | 2026-09-06 | 2 | 4 | +15 / -36 | **Calendar / Location の手直し**(Debug 計測撤去・未取得表示の空状態化) |
+| [🎨1. uibase → uibase2](#1-uibase--uibase2--ui-ブラッシュアップ) | 2026-05-16 → 07-21 | 35 | 338 | +30,254 / -2,474 | **UI ブラッシュアップ**(新規20画面・全画面の作り込み・描画基盤再編) |
+| [🔍2. uibase2 → uibase3](#2-uibase2--uibase3--コードレビュー対応) | 2026-07-21 → 08-15 | 10 | 122 | +2,472 / -1,020 | **コードレビュー対応**(不具合修正・堅牢化・権限/DB/通信の見直し) |
+| [📚3. uibase3 → uibase4](#3-uibase3--uibase4--外部リファレンス評価とライブラリ追従) | 2026-08-15 → 09-01 | 1 | 10 | +1,273 / -26 | **外部リファレンス評価**の追加とライブラリ API 追従 |
+| [🧹4. uibase4 → fix1](#4-uibase4--fix1--アナライザ設定の全面見直し) | 2026-09-01 | 1 | 42 | +308 / -172 | **アナライザ設定の全面見直し**と機械的追従 |
+| [🔨5. fix1 → plus1](#5-fix1--plus1--外部リファレンス評価の実装フェーズ110) | 2026-09-01 → 09-03 | 3 | 130 | +9,967 / -1,781 | **外部リファレンス評価の実装**(新規12画面・App モジュール新設・SCP・描画基盤拡張) |
+| [🧩6. plus1 → baseup1](#6-plus1--baseup1--基盤刷新di-移行白画面対策メニュー再編) | 2026-09-03 → 09-05 | 9 | 135 | +2,129 / -1,693 | **基盤刷新**(DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合) |
+| [🐛7. baseup1 → fix2](#7-baseup1--fix2--resharper-全件対応と-scene-描画の重大バグ修正) | 2026-09-05 | 1 | 66 | +459 / -333 | **ReSharper 全件対応**(254 件)と **Scene 描画の重大バグ修正**(かくつき・ANR・SIGSEGV) |
+| [🔙8. fix2 → back](#8-fix2--back--back初期化方式の刷新白画面対策-b-1-の方式変更) | 2026-09-05 → 09-06 | 4 | 15 | +276 / -233 | **BACK/初期化方式の刷新**(白画面対策 B-1 を StartupState 方式へ・ApplicationInitializer 廃止) |
+| [📅9. back → fix3](#9-back--fix3--calendar--location-の手直し) | 2026-09-06 | 2 | 4 | +15 / -36 | **Calendar / Location の手直し**(Debug 計測撤去・未取得表示の空状態化) |
 
 - 関連ドキュメント: 残作業(SCP 実テスト / 移管課題 / 参照サンプルからの追加機能)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
   - `Fix_Checklist.md`(区間2で作成)と `Reference_Summary.md` / `Reference_Analysis.md`(区間3で作成)は**区間5で削除**され、内容は本書と上記へ統合された。
@@ -24,13 +24,13 @@
 
 ---
 
-# 1. uibase → uibase2 — UI ブラッシュアップ
+# 🎨1. uibase → uibase2 — UI ブラッシュアップ
 
 第1弾ブラッシュアップ + 別リポジトリ `Work-Project-MauiUI` からの UISample 取り込み + 第2弾ブラッシュアップ + 画面改名 + スタイル切り出しをまとめた区間。**UI 系はこの区間がほぼすべて**。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. メニュー画面
+### 📋A-1. メニュー画面
 
 | 画面 | 変更内容 |
 |---|---|
@@ -40,7 +40,7 @@
 | ViewMenu | 空セルを可視の無効タイル(灰色)に変更 |
 | Main/Menu・BasicMenu・DeviceMenu・NavigationMenu・NetworkMenu | 空セルの扱い以外の差異(番号プレフィックス / 絵文字 / 列数 / アイコン有無)は**意図的に維持**(統一しない方針) |
 
-### A-2. UI モジュール — 新規追加(20 画面)
+### 🎨A-2. UI モジュール — 新規追加(20 画面)
 
 いずれも View / View.xaml.cs / ViewModel の 3 ファイル一式を新設し、`ViewId` とメニューへ登録。
 
@@ -68,7 +68,7 @@
 | UIEnergy | HUD | **UICockpit を廃止して差し替え**(`UICockpitView.xaml` をベースに再構成)。`EnergyFlowScene` |
 | UITelemetry | HUD | SkiaSharp 自走描画(`TelemetryScene`) |
 
-### A-3. UI モジュール — 既存画面の改修(18 画面)
+### 🎨A-3. UI モジュール — 既存画面の改修(18 画面)
 
 | 画面 | 変更内容 |
 |---|---|
@@ -91,7 +91,7 @@
 | UITimeline(旧 Timeline) | 内容を旧 TimelineSample に差し替え(旧内容は UIGraph2 へ) |
 | UICockpit | **廃止**(View.xaml.cs / ViewModel 削除、View.xaml は UIEnergyView.xaml へ転用。`CockpitControls` も削除) |
 
-### A-4. View モジュール
+### 🖼️A-4. View モジュール
 
 | 画面 | 変更内容 |
 |---|---|
@@ -107,7 +107,7 @@
 | ViewRefresh | 初回ロード(1秒)中に EmptyView のスケルトン4行、ヘッダに Newspaper アイコン + 件数ピル、行カード白 + 枠線化 |
 | ViewSvg | 3 SVG 切替(dotnet_bot / vite / react)チップボタン + ファイル名表示 + 額装 |
 
-### A-5. Device モジュール(17 画面)
+### 📱A-5. Device モジュール(17 画面)
 
 | 画面 | 変更内容 |
 |---|---|
@@ -128,7 +128,7 @@
 | DeviceActivity | 歩数(96pt)を CountUp 化 |
 | DeviceWiFi / DeviceBiometric | 「Not implemented」空状態パネル(暫定) |
 
-### A-6. Navigation モジュール(14 画面)
+### 🧭A-6. Navigation モジュール(14 画面)
 
 | 画面 | 変更内容 |
 |---|---|
@@ -141,7 +141,7 @@
 | Navigate Initialize | 初期化3秒間スケルトン + Hourglass Pulse → 完了で緑 Task_alt カードが FadeIn |
 | InputNumber(モーダル) | 全キーにローカル派生スタイル(共有 Input*Button + PressEffect)、✔/❌ を Material の Check/Close グリフに変更 |
 
-### A-7. Basic / Main / Data / Network モジュール
+### 🧩A-7. Basic / Main / Data / Network モジュール
 
 | 画面 | 変更内容 |
 |---|---|
@@ -158,7 +158,7 @@
 | NetworkRealtime | TODO 解消=鋸波 → **ランダムウォーク擬似データ**(CPU ゆらぎ+スパイク / Memory ドリフト / Network バースト)、StatControl 3枚(青/緑/橙)、500ms 更新 |
 | NetworkMenu | VM の未使用 `RealtimeCommand`(デッドコード)を削除 |
 
-### A-8. Sample モジュール
+### 🧪A-8. Sample モジュール
 
 多くは第1弾で整備済み。この区間の主な変更は FontSize 拡大 / アイコンのマークアップ拡張化 / 軽微な整形。
 
@@ -169,7 +169,7 @@
 | SampleMedia / SamplePdf / SampleMap1 / SampleMap2 / SampleMarkdown / SampleWebApp / SampleWebBasic | 表示・操作を整備(Map 系は `MapBind` / `MapController` 経由へ) |
 | SampleCvLocal / SampleCvNet(Face/Object/Ocr/People/Tag) | CV 系の表示整備 |
 
-### A-9. 画面横断の変更
+### 🔀A-9. 画面横断の変更
 
 | 項目 | 内容 |
 |---|---|
@@ -188,9 +188,9 @@ A-9 の補足:
   - スタイル化せず残す直指定 = 動作パラメータ(`FocusedStroke` / `HighlightColor` / `ProgressColor` / `AccentColor` / DataTrigger の状態色 / セグメント重ね `Margin=-1` / 行 Grid の `ColumnSpacing`)と `FontImageSource`(Style 不可の既知制約)のみ
   - 対象外 = 直書きが僅少な 10 画面(Navigation 4 / Device 4 / Basic 2)と、バリエーション自体がコンテンツの画面(BasicFont / ViewEffect / DeviceSensor / UIFeel / UIMeter / メニュー系)
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. 新規コントロール(`Controls/`)
+### 🧰B-1. 新規コントロール(`Controls/`)
 
 | ファイル | 用途 |
 |---|---|
@@ -207,7 +207,7 @@ A-9 の補足:
 | `MixerEqualizer.cs` / `MixerKnob.cs` / `MixerSlider.cs` | 旧 `Mixier*` から**スペル修正のリネーム** |
 | `TimelineCell.cs` | **削除**(Graph 系の再構成に伴う) |
 
-### B-2. Behaviors / Converters / Markup
+### 🔧B-2. Behaviors / Converters / Markup
 
 | ファイル | 内容 |
 |---|---|
@@ -219,14 +219,14 @@ A-9 の補足:
 | `Converters/*` | 9 件新規(`AlternateRowBackground` / `BadgeCount` / `CenteredRatio` / `ChatTime` / `CollectionNotEmpty` / `CompassDirection` / `DecibelToColor` / `DurationToSeconds` / `RefKindBrush`) |
 | `Markup/FontIconExtensions.cs` | **新規**。アイコン用マークアップ拡張(基底 `Material` / `Fluent` + 用途別 `MenuIcon` / `MoneyIcon`) |
 
-### B-3. 描画基盤(`Graphics/`)の 2 名前空間分離
+### 🖌️B-3. 描画基盤(`Graphics/`)の 2 名前空間分離
 
 用途で分離し、対称形の命名({概念}Object / Control / Xxx{概念})に統一。
 
 - **`Graphics.Drawing`**(IDrawable・データ駆動): `DrawingObject`(旧 `GraphicsObject`)/ `DrawingControl`(旧 `GraphicsControl`)/ `ActivityDrawing` / `BarcodeDrawing` / `DetectDrawing` / `LoadDrawing` / `ShapeDrawing`(旧 `*Graphics` からリネーム)+ 新規 `ChartDrawing` / `ColorTreeMapDrawing` / `SensorDrawing`
 - **`Graphics.Scene`**(SKCanvas・自走アニメ): `SceneObject` / `SceneControl`(旧 `AnimatedSkiaView` 後継)+ `EnergyFlowScene` / `FlightHudScene` / `MechHudScene` / `TelemetryScene`
 
-### B-4. モデル・サービス
+### 🗄️B-4. モデル・サービス
 
 | ファイル | 内容 |
 |---|---|
@@ -237,7 +237,7 @@ A-9 の補足:
 | `Models/Sample/PhotoItem.cs` | ObservableObject 化(+ `IsCurrent`) |
 | `Services/ScheduleService.cs` / `HolidayService.cs` | **新規**。スケジュール / 祝日のサンプルデータ供給 |
 
-### B-5. リソース・ビルド設定
+### 🏗️B-5. リソース・ビルド設定
 
 | 項目 | 内容 |
 |---|---|
@@ -251,7 +251,7 @@ A-9 の補足:
 | `NoWarn` | `NU1903` を **TODO 付きで暫定追加**(次区間で解消) |
 | ドキュメント | `Document/UI_Development_Log.md` / `Document/UI_Verification_Checklist.md` を新設 |
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
 - **正確な API 名**(発明注意): CountUp=`LabelOption.CountUpValue/CountUpFormat/CountUpDuration`、フォーカス枠=`Focus.FocusedStroke/FocusedThickness`(親 Border 必須)、Make* コマンドヘルパは canExecute 自動再評価(`.Observe()` は存在しない)、`s:NullToText` は Null/NonNull 置換のみ(値パススルー不可 → 空状態は 2 ラベル + `NullToBoolConverter`)
 - `Vector3` / `Quaternion` の X/Y/Z は**フィールド**のためバインド不可 → VM で NotifyAlso 連動の計算プロパティに分解
@@ -266,13 +266,13 @@ A-9 の補足:
 
 ---
 
-# 2. uibase2 → uibase3 — コードレビュー対応
+# 🔍2. uibase2 → uibase3 — コードレビュー対応
 
 コードレビュー(2026-08-05)に基づく Phase 0〜9 の修正コミット `2f533e0f` と、その後の追補・差し戻しからなる区間。**UI の見た目を変える変更はほぼ無く、不具合修正・堅牢化・設計是正が中心**。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. 不具合の修正
+### 🐛A-1. 不具合の修正
 
 | 画面 | 変更内容 |
 |---|---|
@@ -284,7 +284,7 @@ A-9 の補足:
 | Network(サーバ時刻表示) | `.ToLocalTime()` を追加。DateTime の UTC 統一の副作用で API 経路の表示が 9 時間ずれていた |
 | Data | 保存を `DateTime.Now` → `DateTime.UtcNow`、表示側で `ToLocalTime()` |
 
-### A-2. ライフサイクル・リソース解放
+### ♻️A-2. ライフサイクル・リソース解放
 
 | 画面 | 変更内容 |
 |---|---|
@@ -297,7 +297,7 @@ A-9 の補足:
 | UIMail | `SKBitmap` を `Disposables.Add` して画面破棄時に解放(アンマネージドメモリのリーク) |
 | SampleCvLocal | **再入防止ガード**。`await DetectAsync(bitmap)` 中に再実行されると `ReplaceBitmap` が推論中のビットマップを破棄していた(use-after-dispose) |
 
-### A-3. 権限フローの画面側への移動
+### 🔐A-3. 権限フローの画面側への移動
 
 起動時の一括権限要求を廃止し、各画面の `OnNavigatedToAsync` で Check→Request するよう変更。
 
@@ -308,14 +308,14 @@ A-9 の補足:
 | Device Activity | ActivityRecognition(未許可時はダイアログ表示) |
 | UILoad | マイク |
 
-### A-4. 非搭載ハードウェアへの対応
+### 🚫A-4. 非搭載ハードウェアへの対応
 
 | 画面 | 変更内容 |
 |---|---|
 | Device Sensor | 各センサーの `IsSupported` を見て開始、`IsMonitoring` を見て停止(非搭載センサーの `FeatureNotSupportedException` を回避) |
 | Device Bluetooth / Device Nfc | アダプタ未搭載時に null を返す `IsSupported` を追加(下記 B-2 参照) |
 
-### A-5. DI・共通化
+### 🧩A-5. DI・共通化
 
 | 画面 | 変更内容 |
 |---|---|
@@ -323,7 +323,7 @@ A-9 の補足:
 | Device Misc | `speech.RecognizeCancel()` → `await speech.RecognizeCancelAsync()` |
 | SampleCvNet(Face/Object/Ocr/People/Tag) | Phase 7-3 で基底クラス `SampleCvNetViewModelBase` に共通化 → **同区間内で差し戻し**、5画面を独立 VM に戻して基底クラスを削除(サンプルは1画面で完結して読める方が良いという判断)。ビットマップ所有権とカメラ権限チェックは維持 |
 
-### A-6. XAML の是正(見た目の変更なし)
+### 🏷️A-6. XAML の是正(見た目の変更なし)
 
 | 画面 | 変更内容 |
 |---|---|
@@ -332,9 +332,9 @@ A-9 の補足:
 | UIMoney / UIMail / UIPos / UILoad / UIShop / UIItem / UIGraph / DeviceBleScan / ViewRefresh ほか | **Style キーのリネーム**(共有スタイルを隠蔽していたキーの解消)。衝突した1〜2キーだけでなく、同じ画面の同じ役割グループ全体を同じプレフィックス規則に統一(計 40 キー・98 箇所) |
 | ViewCollection / DeviceBleScan | 軽微な整形 |
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. 起動シーケンス・アプリ基盤
+### 🚀B-1. 起動シーケンス・アプリ基盤
 
 | ファイル | 内容 |
 |---|---|
@@ -345,7 +345,7 @@ A-9 の補足:
 | `Modules/ValidationHelper.cs` | **新規**。`AppViewModelBase` / `AppDialogViewModelBase` に重複していた検証処理を集約(バッファは `[ThreadStatic]`) |
 | `Shell/IShellControl.cs` / `ShellProperty.cs` / `DiagnosticPanel.xaml.cs` | Shell 状態を `FunctionState` に統合。DiagnosticPanel は `HandlerChanged` → **`Loaded`/`Unloaded`** に変更し、**世代番号でタイマーの多重起動を防止**(`StopMonitor` はフラグを倒すだけで次 tick までタイマーが生存するため) |
 
-### B-2. Components(デバイス層)の堅牢化
+### 📱B-2. Components(デバイス層)の堅牢化
 
 | ファイル | 内容 |
 |---|---|
@@ -356,7 +356,7 @@ A-9 の補足:
 | `ActivityRecognizer.*` | コンポーネント内での権限要求を削除(呼び出し側に移動)。イベントが**UI スレッド以外から発火する**契約を XML コメントで明記 |
 | `NfcExtensions.cs` | `SubArray` の負サイズをガード |
 
-### B-3. 通信・データアクセス
+### 🌐B-3. 通信・データアクセス
 
 | ファイル | 内容 |
 |---|---|
@@ -371,14 +371,14 @@ A-9 の補足:
 | `Helpers/ReactiveSignalR.cs` / `Helpers/Data/*` / `Helpers/Json/*` | async void の除去、DateTime の UTC 正規化(`DateTimeTypeHandler` / `DateTimeConverter`) |
 | `State/Settings.cs` | AI サービスキーを **Preferences → `SecureStorage`** へ移行(旧値の自動移行付き)。空文字は `Remove` として扱う |
 
-### B-4. 権限・Manifest
+### 🔐B-4. 権限・Manifest
 
 | 項目 | 内容 |
 |---|---|
 | `Permissions.cs` | `CheckStatusAsync` → 未許可なら `RequestAsync` の共通実装に統一。`ActivityRecognition` 権限クラスを追加。位置は `LocationAlways` → `LocationWhenInUse` |
 | `AndroidManifest.xml` | 不要権限を削除(`CHANGE_WIFI_STATE` / `READ/WRITE_EXTERNAL_STORAGE` / `FLASHLIGHT` / `ACCESS_BACKGROUND_LOCATION` / `USE_BIOMETRIC` / `USE_FINGERPRINT`)。`BATTERY_STATS` は**宣言が必須のため復活**。Android 11 向けレガシー Bluetooth(`maxSdkVersion="30"`)を追加、`BLUETOOTH_SCAN` に `neverForLocation` を付与。`uses-feature`(nfc / camera / bluetooth / microphone、いずれも `required="false"`)を追加 |
 
-### B-5. ビルド・アナライザ・署名
+### 🏗️B-5. ビルド・アナライザ・署名
 
 | 項目 | 内容 |
 |---|---|
@@ -392,15 +392,15 @@ A-9 の補足:
 
 ---
 
-# 3. uibase3 → uibase4 — 外部リファレンス評価とライブラリ追従
+# 📚3. uibase3 → uibase4 — 外部リファレンス評価とライブラリ追従
 
 10 ファイルのみの小さな区間。**画面の見た目・動作を変える変更は無く**、ドキュメント追加とライブラリ API 追従が中心。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
 なし。
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
 | 項目 | 内容 |
 |---|---|
@@ -415,11 +415,11 @@ A-9 の補足:
 
 ---
 
-# 4. uibase4 → fix1 — アナライザ設定の全面見直し
+# 🧹4. uibase4 → fix1 — アナライザ設定の全面見直し
 
 コミット `af18c6a4`「Fix1」1本のみ。**アナライザ / エディタ設定の全面見直しと、それに伴う機械的なコード追従**。画面の見た目・動作を変える変更は無い。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
 | 画面 | 変更内容 |
 |---|---|
@@ -428,9 +428,9 @@ A-9 の補足:
 | Navigation Shared Input | `SharedInputView.xaml.cs` の namespace に CA1716 の pragma を付与 |
 | Sample Chat / UIChat | `string.IsNullOrWhiteSpace` → `String.IsNullOrWhiteSpace` |
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. アナライザ設定(この区間の主目的)
+### 🧹B-1. アナライザ設定(この区間の主目的)
 
 | ファイル | 内容 |
 |---|---|
@@ -439,7 +439,7 @@ A-9 の補足:
 | 各ファイルの `#pragma` | ruleset から外したルールを**必要な箇所だけ** pragma で抑止(CA1724=`App` / `Extensions` / `Result` / `Parameters` / `Permissions`、CA1716=`Select` / `SharedInputView`、CA1002=`ShapeDrawing` / `ColorExtractor` / `DataService` / `BasicStyleViewModel`) |
 | `.editorconfig` | 大幅な見直し(198 行)。`[*.slnx]` / `[*.{razor,cshtml}]` / `[*.{xaml,axaml}]` のセクションを追加。多くのルールの重大度を `warning` / `silent` → **`none` または重大度なし**へ変更(括弧・using 整理・式形式メンバーなど)。`csharp_style_expression_bodied_local_functions` / `_operators` は `when_on_single_line:warning` に変更 |
 
-### B-2. アナライザ有効化に伴うコード追従
+### 🧹B-2. アナライザ有効化に伴うコード追従
 
 | 項目 | 対象 |
 |---|---|
@@ -449,17 +449,17 @@ A-9 の補足:
 | BOM 除去 | `Directory.Build.targets` / `Template.MobileApp.csproj` / `AndroidManifest.xml` |
 | `*.Designer.cs` | 自動生成物の追従 |
 
-### B-3. パッケージ更新
+### 📦B-3. パッケージ更新
 
 `Microsoft.Maui.*` 10.0.90→**10.0.100**、`CommunityToolkit.Maui` 15.0.0→15.0.1、`Usa.Smart.Resolver`(+ DI 拡張)2.15.0→**3.0.0**、`Usa.Smart.Core` 2.16.0→2.19.0、`Usa.Smart.Mvvm` 2.8.0→2.10.0、`Usa.Smart.Converter` 2.15.0→2.16.0。
 
-### B-4. ドキュメント
+### 📄B-4. ドキュメント
 
 `Reference_Summary.md` / `Reference_Analysis.md` を改訂。ユーザー指示により **SCP(SSH.NET)を B-20 として追加**し、判断項目 **D20〜D22(SSH.NET 追加可否 / SCP サンプルのスコープ / 接続情報の保管とホスト鍵検証)を未決として追記**。
 
 ---
 
-# 5. fix1 → plus1 — 外部リファレンス評価の実装(フェーズ1〜10)
+# 🔨5. fix1 → plus1 — 外部リファレンス評価の実装(フェーズ1〜10)
 
 区間3で作成した外部リファレンス評価(記事・OSS 51 件)の**採用項目を実装した区間**。コミットは3本。
 
@@ -471,9 +471,9 @@ A-9 の補足:
 
 **新規 12 画面 + `Modules/App` および `Layouts/` の新設**。新規 NuGet は `SSH.NET` の 1 件のみで、他はすべて**導入済みパッケージの未使用機能のサンプル化**または自作。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. メニュー画面(空きセルの結線)
+### 📋A-1. メニュー画面(空きセルの結線)
 
 | 画面 | 変更内容 |
 |---|---|
@@ -484,9 +484,9 @@ A-9 の補足:
 | NetworkMenu | `Grid.Row="7"` の空きボタンを **SCP** に結線(それまで到達不能だった `NetworkScpView` が開けるようになった) |
 | UIMenu | 10行 → **11行**。「描画デモ」グループを追加し **Wheel**(Material `Attractions`)を配置。残り2セルは規約どおり可視の無効ボタン |
 
-### A-2. 新規画面(12 画面)
+### 🖼️A-2. 新規画面(12 画面)
 
-#### App モジュール(新設)
+#### 📲App モジュール(新設)
 
 | 画面 | 内容 |
 |---|---|
@@ -494,7 +494,7 @@ A-9 の補足:
 | AppCalc | 科学電卓。コアは純モデル `Models/App/ExpressionCalculator`(トークナイザ → **操車場アルゴリズム**で中置→RPN → RPN 評価器の3段構成、NuGet 不使用)。四則 / %(百分率)/ 括弧 / 単項マイナス / 三角関数(DEG)/ log / ln / exp / √ / 累乗(右結合)/ 階乗 / π / e / **暗黙の乗算**(2π, 3(1+2))に対応。5列ダークレイアウト、結果表示は DSEG7、入力行末尾の「│」カーソルは `FormattedString` の Span 表現。「=」直後は演算子入力で結果から継続 |
 | AppGame | 数独。盤面ロジックは純モデル `Models/App/SudokuGame`(バックトラッキングで完全解を生成し 36 マスを残して問題化 / 入力 / 行・列・ボックスの矛盾判定 / 完成判定)。盤面は `UniformItemsLayout`(9列)+ `BindableLayout`、3x3 区切りはセル VM の `Margin` で表現。矛盾は赤字、COMPLETE! バナー + Bounce。**ライフゲーム / 2048 は純モデルの差し替えで追加できる方針**をコメントで明記 |
 
-#### View モジュール(5 画面)
+#### 🖼️View モジュール(5 画面)
 
 | 画面 | 内容 |
 |---|---|
@@ -504,7 +504,7 @@ A-9 の補足:
 | ViewDragDrop | 標準 `DragGestureRecognizer` / `DropGestureRecognizer` のデモ。①同一リスト内の並べ替え ②TODO⇔DONE のリスト間移動(列の空き領域へのドロップは末尾追加)③ゴミ箱ドロップで削除(`DragOverCommand` / `DragLeaveCommand` でハイライト)。3リスト共用の `DataTemplate` 1本で実装 |
 | ViewCustom | 自作コントロール4種のカタログ(計画の `ViewInputView` と**統合して1画面に変更**)。`MarqueeLabel` / `TreeView`(+`TreeNode`)/ `ColorPicker`(RGBA スライダ4本 + ARGB hex)/ `DurationPicker`(時0-23・分5分刻み → `TimeSpan`) |
 
-#### Basic / Sample / UI モジュール(4 画面)
+#### 🖼️Basic / Sample / UI モジュール(4 画面)
 
 | 画面 | 内容 |
 |---|---|
@@ -513,7 +513,7 @@ A-9 の補足:
 | SampleCrop | 画像切り抜き。`CropDrawing`(`IInteractiveDrawing` + `ExportPng` 共用構成)で枠移動 + 四隅ハンドルリサイズ(ヒット半径28・最小64・画像内クランプ)、三分割線 + 減光。書き出しは exporting フラグで `OnDraw` を出力モードに切替 |
 | UIWheel | 抽選ホイール。`WheelDrawing`(扇形 + 回転テキスト + ハブ/リム/上部ポインタ)。`Spin(extra, length, completed)` が CubicOut で減速停止し**完走時のみ**当選項目を通知、離脱時は `CancelSpin()` で中断(通知なし)。ホイールタップ / SPIN ボタンの両方で回転、結果は `HasResult` の DataTrigger で「？」⇔当選名を切替 + Bounce。code-behind なし |
 
-### A-3. 既存画面の強化
+### 🖼️A-3. 既存画面の強化
 
 | 画面 | 変更内容 |
 |---|---|
@@ -538,9 +538,9 @@ A-9 の補足:
 | ViewSvg | `SvgView` 拡張に伴い VM から SKSvg ロード処理が消え、**パス切替だけの VM** になった(`IFileSystem` 依存も除去) |
 | UIFlight / UITactical / UIEnergy / UITelemetry | 静的レイヤの `SKPicture` キャッシュ適用(下記 B-1)。Flight は**レーダーブリップのタップ選択**(最近傍14単位以内、再タップで解除、選択リング + TGT 情報行)を追加 |
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. Graphics 基盤の拡張
+### 🖌️B-1. Graphics 基盤の拡張
 
 | 対象 | 内容 |
 |---|---|
@@ -562,7 +562,7 @@ A-9 の補足:
 フレームレートがほぼ倍増したため **`UseDoubleBuffer` の既定を ON**(4シーン全て)に変更。Telemetry の Function2 トグルは比較デモとして残置。
 ※ 実演として入れた Energy の火花は「わかりづらい」ためユーザー判断で削除(`ScenePool<T>` は基盤として残置)。
 
-### B-2. `Layouts/` の新設(第3の拡張ポイント)
+### 🧰B-2. `Layouts/` の新設(第3の拡張ポイント)
 
 | ファイル | 内容 |
 |---|---|
@@ -570,7 +570,7 @@ A-9 の補足:
 | `StaggeredGrid.cs` | 高さの異なるカードを**最も低い列へ詰める** Pinterest 型 |
 | `AppLayoutManagerFactory.cs` | `ILayoutManagerFactory` のデモ。DI 登録したファクトリが `CascadeStackLayout` のときだけカスケード配置のマネージャを返し、他は null(=既定)。**サブクラス側を変更せずに配置アルゴリズムを差し替えられる**ことを示す |
 
-### B-3. コントロール / ビヘイビア
+### 🧰B-3. コントロール / ビヘイビア
 
 | ファイル | 内容 |
 |---|---|
@@ -584,7 +584,7 @@ A-9 の補足:
 | `Behaviors/Scroll.cs` | `RatioCommand` を新設(ScrollView のスクロール量を 0-1 に正規化して ICommand へ) |
 | `Behaviors/AnimationOption.cs` | `HoldCommand` / `HoldDuration` を新設(Button の Pressed/Released で 0-1 を進め、途中離しは 250ms で巻き戻し、完走後の再押下は先頭から) |
 
-### B-4. 地図基盤
+### 🗺️B-4. 地図基盤
 
 | ファイル | 内容 |
 |---|---|
@@ -593,7 +593,7 @@ A-9 の補足:
 | `Behaviors/MapsuiBind.cs` | `Overlay` 添付プロパティで `SKCanvasView`(InputTransparent)を同じコントローラに結線。`Viewport.WorldToScreen` で経度緯度→画面座標へ変換し、**線分ごとに `SKShader.CreateLinearGradient` を差し替えるグラデーション経路**を白ハロー付きで描画 |
 | `Resources/Raw/Map/tokyo.geojson` | **新規**。GeoJSON サンプルデータ |
 
-### B-5. モデル / サービス
+### 🗄️B-5. モデル / サービス
 
 | ファイル | 内容 |
 |---|---|
@@ -605,7 +605,7 @@ A-9 の補足:
 | `State/Settings.cs` | SCP 設定を追加。`ScpHost` / `ScpPort`(既定22)/ `ScpUser` は `IPreferences`、`ScpPassword` は `SecureStorage`。**ホスト鍵指紋の設定は D22-b の変更で撤去**(QR 照合は行わず、サーバ指紋の参考表示のみ) |
 | `MauiProgram.cs` | `ConfigureLifecycleEvents` に Android の Create / Start / Resume / Pause / Stop / Destroy フックを実装(挙動は変えずログのみ。`adb logcat -s AppLifecycle`)。`ConfigureCustomLayouts`(`ILayoutManagerFactory` の DI 登録)を追加。`ScpService` / `IScheduleEventProvider` を登録 |
 
-### B-6. Release ビルドのトリミング対応(フェーズ8の計測で発覚)
+### 🏗️B-6. Release ビルドのトリミング対応(フェーズ8の計測で発覚)
 
 初の Release 実行で**既存の潜在問題**が表面化(この区間の実装変更とは無関係)。
 
@@ -614,11 +614,11 @@ A-9 の補足:
 - **修正**: csproj に **`TrimmerRootAssembly` を追加**(`Template.MobileApp` + Smart 系 + MauiComponents 系 + `Renci.SshNet` / `BouncyCastle.Cryptography` の計21アセンブリ)
 - **副産物(恒久コード)**: `ApplicationInitializer.Initialize` に**起動失敗時の完全な例外連鎖ログ**(`StartupError` タグ)を追加。トリミング時は例外メッセージがリソースキー化されるため、これが無いと原因が追えない。また `Console.WriteLine` は Release の Android では logcat に出ないと判明したため、診断 / 計測ログは `Android.Util.Log` 直接出力へ変更
 
-### B-7. パッケージ
+### 📦B-7. パッケージ
 
 `SSH.NET` 2026.0.0 を追加(この区間で追加した唯一の NuGet)。推移依存の増分は **`BouncyCastle.Cryptography` 2.7.0 のみ**。
 
-### B-8. ドキュメントの整理(ユーザー指示)
+### 📄B-8. ドキュメントの整理(ユーザー指示)
 
 | 対象 | 内容 |
 |---|---|
@@ -632,9 +632,9 @@ A-9 の補足:
 - **Blazor Hybrid**: 別リポジトリ `template-maui-blazor` が BlazorWebView + Routes/Layout/Pages の完全な Hybrid 構成で充足しているため**対応不要で確定**
 - **MBTiles(`BruTile.MbTiles`)**: SQLitePCLRaw 3.0 系との衝突リスク + デモ用アセット未保有により**取りやめ確定**(パッケージ未追加のため削除対象なし)
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
-### MAUI / XAML
+### 🏷️MAUI / XAML
 
 - **MAUI 10 で `Page.OnBackButtonPressed` は素の `ContentPage` では呼ばれない**。`MauiAppCompatActivity` の `OnBackPressed()` override が廃止され、AndroidX `OnBackPressedDispatcher` のコールバック 1 本になったため。有効判定は `Window.CanConsumeBackNavigation` で、Shell / NavigationPage / FlyoutPage / MultiPage 以外は常に false → **自前で `OnBackPressedCallback` を登録するしかない**。`android:enableOnBackInvokedCallback="false"` の退避策も効かない (dispatcher に有効なコールバックが無いだけなので結局システム既定の finish になる)。関連: dotnet/maui#31266 (OnBackButtonPressed の見直し提案)
 - **`App.OnStart` はプロセスに 1 回しか呼ばれない**(`Application.SendStart()` の `_isStarted` ガード)。Android では Activity 再生成のたびに `CreateWindow` は呼ばれるが `OnStart` は呼ばれないため、**画面構築を `OnStart` に依存させると再生成で白画面になる**。公式ドキュメント (App lifecycle) も標準は `Window` のイベント (`Created` = Android の `OnPostCreate`) で、`Application.OnStart` は登場しない。関連: dotnet/maui#18845 (Verified / Backlog・未修正)
@@ -648,7 +648,7 @@ A-9 の補足:
 - `CollectionView.SelectedItems` は `ObservableCollection<object>` をバインドすると**双方向**に機能する(選択変更で中身が更新され、コード側の Add も UI に反映)
 - 相関検証は `[Compare(nameof(X))]` + `PropertyChanged` 購読で相手側を `ClearErrors`→`Validate` 再検証
 
-### SkiaSharp / Graphics
+### 🖌️SkiaSharp / Graphics
 
 - ICanvas(MAUI Graphics)の**ストロークにグラデーションは使えない** → 区間分割 + 色補間で代替(Line チャートのグラデーション線)
 - Drawing の PNG 出力は `Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext` が**追加パッケージなし**で使える
@@ -658,14 +658,14 @@ A-9 の補足:
 - `Animation` を直接 new すると CA2000 → `IAnimatable.Animate` 拡張なら生成が MAUI 側に隠れ警告なし。async メソッド内の `Dispatcher.Dispatch` は CA1849 → `DispatchAsync`
 - `System.Threading.Lock`(net9+)は `lock` 文でそのまま使える
 
-### Mapsui / 地図
+### 🗺️Mapsui / 地図
 
 - **`Mapsui.Styles.Color.FromString` は 3/6 桁 hex のみ対応。8 桁(アルファ付き)は実行時 ArgumentException でクラッシュ** → 半透明は `new Color(r, g, b, a)`(MAUI の `Color.FromArgb` は 8 桁可、という差異に注意)
 - `Map.Widgets` は `ConcurrentQueue` のため取り外し不可 → トグルは `widget.Enabled` で行う。タップ判定は v5 では `Map.Tapped` + `e.GetMapInfo([layer])`(`IsMapInfoLayer` は廃止)
 - GeoJSON は `GeoJsonProvider`(ファイルパス前提)より **GeoJSON4STJ 直接デシリアライズ + `ICoordinateFilter` 再投影**がアセット運用に合う(追加パッケージ不要)。`SymbolStyle` は `SymbolType`+`Fill`/`Outline` で図形シンボル可
 - Mapsui のビューポートは論理座標系 → `SKCanvasView` の物理ピクセルとは `e.Info.Width / view.Width` でスケールを合わせる
 
-### SSH / SCP
+### 🌐SSH / SCP
 
 - SSH.NET の `ScpClient(string, ...)` ctor は**旧形式(CS0618)** — パス未エスケープでコマンドインジェクションの恐れ → `ConnectionInfo` + `RemotePathTransformation.ShellQuote`
 - `ScpClient` の転送 API は同期のみ → `Task.Run` + `CancellationToken.Register(client.Disconnect)` でキャンセル対応
@@ -678,7 +678,7 @@ ScpUser=deploy
 ScpPassword=********
 ```
 
-### アナライザ / .NET
+### 🧹アナライザ / .NET
 
 - IDisposable の所有は**フィールドでなく get-only プロパティ + 宣言時初期化**にする(CA2000/CA2213 は `Disposables.Add` を所有移転と認識しない)。`CancellationTokenSource` フィールドは `Dispose(bool)` オーバーライドで明示 Dispose
 - 構造体の CA1815 は `readonly record struct` 化が最小修正 / private 例外クラスは CA1064 → public + 標準 3 コンストラクタ / `Random.Shuffle`(.NET 8+)で Fisher-Yates が 1 行
@@ -686,7 +686,7 @@ ScpPassword=********
 - インターフェースのパラメータ名 `end` は CA1716(VB 予約語)→ `startDate`/`endDate`。公開 static メソッドの `List<T>` 戻り値は CA1002 → `IReadOnlyList<T>`
 - ctor 内で自プロパティを参照するラムダは、コマンド代入**前**に `PropertyChanged` を購読すると CS8602 → 購読を代入後へ移動。`await` 跨ぎの状態ガードは CA1508(常に true 扱い)に注意
 
-### Release / 計測
+### 🏗️Release / 計測
 
 - **`Console.WriteLine` は Release の Android では logcat に出ない**(stdout 転送は Debug のみ)→ 診断 / 計測ログは `Android.Util.Log` 直接出力(`StartupError` / `SceneStats` タグ)
 - トリミング時は例外メッセージがリソースキー化されるため、**起動失敗時の完全な例外連鎖ログが無いと原因が追えない**。調査手順: `adb logcat -d -b crash` でスタック → メッセージがキーのみなら例外連鎖ログを仕込んで再現 → 内部例外で特定
@@ -694,13 +694,13 @@ ScpPassword=********
 
 ---
 
-# 6. plus1 → baseup1 — 基盤刷新(DI 移行・白画面対策・メニュー再編)
+# 🧩6. plus1 → baseup1 — 基盤刷新(DI 移行・白画面対策・メニュー再編)
 
 フェーズ10 の記録類に続けて、**DI コンテナ移行・BACK/白画面対策・メニュー再編・ドキュメント統合**を行なった区間(2026-09-03 → 09-05)。コミットは 9 本。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. メニュー画面の再編
+### 📋A-1. メニュー画面の再編
 
 | 画面 | 変更 |
 |---|---|
@@ -708,9 +708,9 @@ ScpPassword=********
 | UI メニュー(`Modules/UI/UIMenu1*` / `UIMenu2*`) | **旧 UIMenu を UIMenu1(アプリ系 18 画面)/ UIMenu2(可視化・計器・HUD 系 13 画面)へ分離**。グループ毎に行を分け、余りセルは可視の無効ボタン。**F4 で相互遷移**、31 画面の戻り先を所属メニューへ振り分け。旧 UIMenuView/VM は削除。**各 3 列×9 段**(メニュー規約を 9 段基本へ改定。2 列化も検討したが UI 1 の 18 ボタンは 2 列×9 段=18 セルちょうどでグループ行分けが成立せず、**列数は UI 1/UI 2 で統一する方針=両方 3 列**を維持して拡張行を追加) |
 | `Modules/Main/MenuViewModel.cs` | ルート画面の BACK に `AndroidHelper.MoveTaskToBack()` を結線。戻り先が無いルートでは終了せずバックグラウンドへ送る(Android の作法)。Activity が生き残るので再生成経路も踏まない |
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. DI コンテナ移行(Usa.Smart.Resolver → BunnyTail.DependencyInjection 0.4.0)
+### 🧩B-1. DI コンテナ移行(Usa.Smart.Resolver → BunnyTail.DependencyInjection 0.4.0)
 
 `template-maui2` の 69ba9a41 と同様の変更(2026-09-03)。
 
@@ -719,11 +719,11 @@ ScpPassword=********
 - **`GeneratedFactory.cs` 新設**: ライブラリ内部登録型のファクトリ明示生成(Shiny 4 型+MauiComponents 8 型+App+PopupFocusPlugin+CT PopupService)
 - `WizardContext`: IInitializable/IDisposable → **`IScopeLifecycle`**。`ApplicationInitializer` に DEBUG 時のフォールバック報告出力
 
-### B-2. 移行で表面化した不具合の修正(`Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs`)
+### 🐛B-2. 移行で表面化した不具合の修正(`Shell/ShellProperty.cs` / `ShellUpdateBehavior.cs`)
 
 退場ビューのバインディング解除が ShellProperty 変更を発火し、遷移直後のタイトル/F キー状態を旧値で上書き(Smart.Navigation 3.8 で解除順が変化)→ **現在ビューのみ反映する CurrentView ガード**を追加。
 
-### B-3. BACK キーと Activity 再生成(白画面)対策(2026-09-04)
+### 🚀B-3. BACK キーと Activity 再生成(白画面)対策(2026-09-04)
 
 | ファイル | 内容 |
 |---|---|
@@ -743,11 +743,11 @@ ScpPassword=********
 
 **実測メモ**: ①原因B は **BACK と無関係に再現する** — 表示中に端末のフォントサイズを変更すると `ConfigurationChanges` に `FontScale`/`Locale` が無いため Activity が再生成され(pid 不変)画面が完全に空になる(uiautomator でテキスト 0 件)。通常操作で踏める不具合のため原因A を直しても対処必須だった ②Android 16 / targetSdk 36 では `onBackPressed` も `KEYCODE_BACK` も配送されず、`android:enableOnBackInvokedCallback="false"` の退避策も効かない(dispatcher に戻るだけで有効なコールバックが無い) ③確認は 8 経路(コールド起動 / ホーム→再開 / サブ画面 BACK / ルート BACK / BACK 終了→即再起動 / `am start` 直接起動 / フォントサイズ変更 / 他アプリ切替・プロセス kill)で全て Menu 表示を確認(2026-09-04・Release)
 
-### B-4. リソース — Images の用途別階層化(画像アセット拡充の前準備)
+### 🖼️B-4. リソース — Images の用途別階層化(画像アセット拡充の前準備)
 
 `Resources/Images/` を**用途別 10 フォルダへ階層化**(Banner/Character/Chat/Common/Login/Onboard/Pet/Profile/Shop/Stream=Raw と同じ PascalCase。`MauiImage` glob を `Resources\Images\**` へ変更、参照はファイル名のまま)+**プレースホルダ 42 枚を配置**(現在スロットで使用中の既存画像のコピー。実素材は同名上書きで反映)。
 
-### B-5. ドキュメントの統合(2026-09-03)
+### 📄B-5. ドキュメントの統合(2026-09-03)
 
 | ファイル | 内容 |
 |---|---|
@@ -755,14 +755,14 @@ ScpPassword=********
 | `Document/Task_Checklist.md` | **新規**。残作業の統合マスター(`UI_Verification_Checklist.md`+`Implementation_Checklist.md`+旧 `UI_Task_Checklist.md`+`Image_Asset_Expansion_Plan.md` を統合し、4 本とも削除) |
 | `Document/Development.md`(+39行) | フェーズ10。「リスト表示」「タッチフィードバック」「Release ビルドでの検証と計測」の 3 節を追記 |
 
-### B-6. その他
+### 📌B-6. その他
 
 - `.editorconfig` の軽微な調整
 - `MauiProgram` に `BusyState.Default` の Singleton 登録を追加
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
-### DI コンテナ移行(BunnyTail.DependencyInjection)
+### 🧩DI コンテナ移行(BunnyTail.DependencyInjection)
 
 - 運用: DEBUG 起動時に `DescribeRuntimeFallbacks` の出力(そのまま貼れる属性行)を `GeneratedFactory.cs` へ貼り、ライブラリ内部で登録される型(`AddComponentsXxx` / `UseShiny` 等)のファクトリを明示生成する。自コードの `AddSingleton<T>` 等はジェネレータが自動生成する
 - `Shiny.AndroidPlatform` は属性を書いてもファクトリ生成されない(生成不能な ctor)ため**リフレクションフォールバックのまま残置**(従来も Smart.Resolver のリフレクション生成であり同等)
@@ -774,27 +774,27 @@ ScpPassword=********
 
 ---
 
-# 7. baseup1 → fix2 — ReSharper 全件対応と Scene 描画の重大バグ修正
+# 🐛7. baseup1 → fix2 — ReSharper 全件対応と Scene 描画の重大バグ修正
 
 `jb inspectcode` の指摘 **254 件を全数分類して対応**し、その過程で発覚した **Scene 描画基盤の重大バグ(かくつき・ANR・SIGSEGV)を修正**した区間(2026-09-05)。コミットは 1 本。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. DeviceLocationView / ViewCustomView — 未取得値の「-」表示
+### 📍A-1. DeviceLocationView / ViewCustomView — 未取得値の「-」表示
 
 - `FallbackValue='-'` を 8 バインドへ追加(位置**未取得**=`Location` が null でパス不成立のとき「-」表示)
 - Motion 4 項目(Altitude/Course/Speed/Accuracy)は **`TargetNullValue='-'` を併用**(取得済みでも Course/Speed 等の**末端プロパティが null** のとき「-」表示。従来は単位だけが残っていた)。実機確認済み
 - `AnimationOption.HighlightTrigger` の 1 バインドのみ**意図的に未適用**(FallbackValue を付けると初回位置取得時にハイライトが発火する挙動変化が出るため)
 
-### A-2. XAML 横断(ReSharper 対応)
+### 🧹A-2. XAML 横断(ReSharper 対応)
 
 - **方針決定: Grid の `RowDefinitions`/`ColumnDefinitions` は Style の Setter で定義せず Grid 側に個別記述**(12 スタイル→55 Grid へインライン化。Basic 4+Data+Device 4+ViewEasing の 10 画面。値は同一のため表示不変)= `Xaml.IndexOutOfGridDefinition` 誤検知 99 件解消
 - `x:Reference`/`RelativeSource` バインドの誤検知 25 件は `ReSharper disable/restore Xaml.BindingWithContextNotResolved` コメントで範囲抑止(14 箇所)
 - XAML `x:Name` リネーム(`_self`→`Self`×2・`indicators`→`Indicators`)、冗長 xmlns 削除 2
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. 【重大バグ修正】`Graphics/Scene/SceneObject.cs` — ダブルバッファ描画がメインスレッドで実行されていた
+### 🐛B-1. 【重大バグ修正】`Graphics/Scene/SceneObject.cs` — ダブルバッファ描画がメインスレッドで実行されていた
 
 区間5(D8)で導入したダブルバッファの `Loop` は、`await WaitForNextTickAsync` に `ConfigureAwait(false)` が無く、`Start()`(main)からの継続が main の SynchronizationContext へ戻るため、**RenderToBuffer(フルスクリーン CPU 描画+Snapshot)+転写の 2 重描画を毎フレーム main で実行**していた。
 
@@ -802,14 +802,14 @@ ScpPassword=********
 - 修正: ①`ConfigureAwait(false)` でループをスレッドプール化 ②`Stop()` がループ Task の完了を待ってから CTS を破棄(進行中フレームと Dispose の競合防止) ③ループ稼働中は main の直接描画フォールバックを無効化(共有 SKPaint の 2 スレッド同時使用を根絶)
 - **実機検証済み(Debug/Release 両方)**: Flight 表示中 main 128%→28〜36%(描画はワーカー)・Back 即応答・退場後全スレッドアイドル・Scene 4 画面連続入退場でクラッシュ/ANR ゼロ
 
-### B-2. ReSharper inspectcode 対応(C# 側)
+### 🧹B-2. ReSharper inspectcode 対応(C# 側)
 
 - **機械修正 68 件**: 末尾カンマ削除 41 / `async`→Task 直返し 11(`HttpService` 全 API+`NetworkScpViewModel`)/ 冗長な既定値引数 4 / 空 `default: break;` 3 / 冗長 using 2(`MediaController`=CT.Maui 15 で `MediaElementState` が Core へ移動済み・`MapsuiMapManagers`)/ partial の重複基底型 1(`CalendarView.xaml.cs`)/ 空行 1 ほか
 - **個別判断分(ステップバイステップ・都度ユーザー確認)**: `field` キーワード化(`UICalendarViewModel`=`#pragma IDE0032` 撤去)/ null 免罪符→**`ReSharper disable once` へ変更**(`DrawingControl`=Roslyn IDE0370 との板挟み解消。`ImageHelper` は `bitmap!`)/ `MixerEqualizer` の冗長条件 `(peak > 0)` 削除 / `BluetoothSerial` の引数 `adapter`→`bluetoothAdapter` / StyleCop SA1500(field 初期化子構文の誤検知)を `#pragma` 局所抑止
 - 未使用代入 17 件は **Debug 計測(`[Conditional]` の `Debug.WriteLine`)でのみ使用のため現状維持で確定**(ユーザー決定)
 - **最終残 18 件=全て確定済みの許容**(Debug 計測 17+HighlightTrigger 1)。※この 2 件は区間 9 でさらに方針変更(計測は撤去/抑止・Location は空状態表示へ)したため、残数は次回 inspectcode 実行時に再集計する
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
 - inspectcode の再実行コマンド(**Bash 系シェルで実行**する。PowerShell は `--properties:` がコロンで分割され「Specify only one solution file」で失敗)。`.sln.DotSettings`(旧 .sln 名)は .slnx 解析にも適用される
 
@@ -825,17 +825,17 @@ ScpPassword=********
 
 ---
 
-# 8. fix2 → back — BACK/初期化方式の刷新(白画面対策 B-1 の方式変更)
+# 🔙8. fix2 → back — BACK/初期化方式の刷新(白画面対策 B-1 の方式変更)
 
 白画面対策の B-1(Activity 再生成時の初期画面復帰)を、**旧方式(`App.CreateWindow` での復帰)から `StartupState` 方式へ作り直した**区間(2026-09-05 → 09-06)。コミットは 4 本(サブモジュール参照更新 1 本を含む)。原因の詳細・不採用案・実測メモは**区間 6 の B-3** にまとめてある。
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
 なし(シェル基盤のみ)。
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
-### B-1. 初期画面遷移の `MainPageViewModel` への移設(`StartupState` 方式)
+### 🚀B-1. 初期画面遷移の `MainPageViewModel` への移設(`StartupState` 方式)
 
 - **初期画面への遷移を `App.OnStart` から `MainPageViewModel.OnCreated` へ移す**。`MainPage` は `Window` 生成のたびに作り直され、`MainPage.xaml` の `s:AppLifecycleBehavior` が `Window.Created` で `IAppLifecycle.OnCreated()` を呼ぶため、**Activity の作り直しのたびに必ず走る**(復帰時は `Resumed` なので呼ばれない)
 - 起動時の初期化(DB 再構築・クラッシュレポート表示)は `App` に残し、完了を **`State/StartupState.cs`(新規)** へ通知。`TaskCompletionSource` を隠して `Completed` / `NotifyCompleted()` だけを公開し、**完了後に待ち始めても即座に返る**ため、作り直しで生成し直された ViewModel でも取りこぼさない
@@ -843,15 +843,15 @@ ScpPassword=********
 - `OnDestroying` で立てる `destroying` フラグで、初期化が終わる前に作り直された場合に新旧 ViewModel が二重に遷移するのを防止
 - 新方式の他テンプレートへの展開状況は区間 6 B-3 の表を参照(`template-maui` は反映不要)
 
-### B-2. `ApplicationInitializer` の廃止(初期化の `App` への集約)
+### 🚀B-2. `ApplicationInitializer` の廃止(初期化の `App` への集約)
 
 `ApplicationInitializer`(`IMauiInitializeService`・103 行)を削除し、DB 初期化は `App.OnStart` 内の `InitializeDataAsync()` へ移動。`MauiProgram` に `StartupState` の Singleton 登録を追加。
 
-### B-3. 細かな警告整理
+### 🧹B-3. 細かな警告整理
 
 アナライザ抑止の追加(`BasicStyleViewModel`=IDE0028 / `CollectionGroup`=CA1000 等)とコレクション式化(`[.. items]`)など少量の機械的整理(`LineReaderWriter` / `TreeMapNode` / `DeviceNfcViewModel` / `SampleCvLocalViewModel` / `ViewCollectionViewModel`)。
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
 - `Application.SendStart()` は `_isStarted` ガードで**プロセス内 1 回のみ**。プロセス生存中の Activity 再生成では `App.OnStart()` が再実行されないため、「作り直しのたびに走ってほしい初期遷移」は `Window.Created` 起点(`AppLifecycleBehavior` → `OnCreated`)へ置く
 - 単発のイベントバス(`IReactiveMessenger`)は `Subject<T>` 実装で**リプレイしない**ため、再生成後に購読しても通知が来ず白画面に戻る → 完了状態の受け渡しは `TaskCompletionSource` を包んだ状態クラス(`StartupState`)で行う
@@ -859,29 +859,29 @@ ScpPassword=********
 
 ---
 
-# 9. back → fix3 — Calendar / Location の手直し
+# 📅9. back → fix3 — Calendar / Location の手直し
 
-## A. 画面単位の変更
+## 🖼️A. 画面単位の変更
 
-### A-1. DeviceLocationView — 未取得表示を「空状態パネル」へ変更
+### 📍A-1. DeviceLocationView — 未取得表示を「空状態パネル」へ変更
 
 区間 7 で入れた `FallbackValue='-'` / `TargetNullValue='-'` 方式を撤回し、**測位待ちは専用の空状態表示(Acquiring location... パネル+Pulse アニメーション)へデザイン変更**。`Location` の null 判定(`NullToBoolConverter`)で空状態と測位結果を切り替える。
 
-### A-2. UICalendar — Debug 計測の撤去
+### 📅A-2. UICalendar — Debug 計測の撤去
 
 - `MonthViewBuilder.cs` / `UICalendarViewModel.cs`: `Stopwatch`+`Debug.WriteLine` の計測コードを**撤去**(区間 7 の 6-3 で「現状維持」とした判断を変更)
 - `CalendarView.xaml.cs`(旧 XAML 版): 計測は残し `// ReSharper disable RedundantAssignment` コメントで抑止(※この旧版は区間 10 で削除)
 - あわせて `UICalendarViewModel` の SA1500 `#pragma` を `FirstDayOfWeek` プロパティ全体を囲む位置へ調整
 
-## B. 画面以外の変更
+## 🧱B. 画面以外の変更
 
 なし。
 
 ---
 
-# 10. fix3 以降(次のタグまでの変更)
+# 🚧10. fix3 以降(次のタグまでの変更)
 
-### `Usa.Smart.Data.Accessor` への移行(2026-09-07)
+### 🗄️`Usa.Smart.Data.Accessor` への移行(2026-09-07)
 
 `[DataAccessor]` 付き partial class の partial メソッドをソースジェネレータが ADO.NET コードへ展開する方式(3.0.0-beta11)へ移行し、`Usa.Smart.Data.Mapper` / `.Builders` を撤去した。
 
@@ -906,7 +906,7 @@ ScpPassword=********
 - `[Name]` への置き換えと `DataServiceOptions` 廃止後(3.0.0-beta10)も実機で再確認: 生成 SQL のテーブル名が `"Data"` / `"BulkData"` / `"Work"` になること、起動時の DB 再構築(旧ファイルの削除と再作成、Work に Sample-1〜4)、Data 画面の Insert・Query・Update・Delete・BulkInsert・DeleteAll、Edit 画面の一覧
 - `[DataAccessorRegistration]` の生成メソッドへ切り替え後(3.0.0-beta11)も実機で再確認: 生成された `MauiProgram.Registration.g.cs` の登録内容、BunnyTail の生成ファクトリ(`DataService`)が `DataAccessor` を依存として解決すること、起動時の DB 再構築、Data 画面の Insert・Query・BulkInsert・DeleteAll、Edit 画面の一覧
 
-### `Usa.Smart.Mapper` の採用(2026-09-07)
+### 📦`Usa.Smart.Mapper` の採用(2026-09-07)
 
 `[Mapper]` 付き `static partial` メソッドをソースジェネレータが展開する方式(1.0.0-beta8)。マッパーは `Models/ObjectMapper.cs` に集約する。
 
@@ -921,7 +921,7 @@ ScpPassword=********
 - 生成コードは `-p:EmitCompilerGeneratedFiles=true` で `obj/.../generated/` に出力して確認(インクリメンタルビルドでは出力されないためソースの更新が必要)。`Map` は 6 プロパティの代入、`ToWorkEntity` は `new WorkEntity()` + Id/Name の代入
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で `WorkMauiServer` をローカル起動(`dotnet run --no-launch-profile --urls http://127.0.0.1:5000`)+ `adb reverse tcp:5000 tcp:5000` + 端末の `ApiEndPoint` を `http://localhost:5000/` にして Network > Data list を実行 → 「count=[10] Saved to Work table.」→ Navigation > Edit の一覧に Data-1〜Data-10 を確認。`Map` は生成コードが旧 `CopyTo` と同一であることで確認
 
-### 遷移効果(Effect)デモの追加(2026-09-07)
+### ✨遷移効果(Effect)デモの追加(2026-09-07)
 
 `Usa.Smart.Navigation.Maui` の Effect 機構(`IMauiNavigationEffect` + `NavigationParameter.WithEffect`)によるアニメーション付き画面遷移を Navigation 配下の新規 3 画面で示す。既存画面は変更しない。
 
@@ -947,7 +947,7 @@ ScpPassword=********
 
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で 13 ボタン全経路(標準 6 / 独自 4 / Stack 2 / Plugin 1)+ Replay(通常・スタック時)+ card Back / footer Back / ハードウェア Back を確認。4 フェーズ化版の Slide は修正版 DLL の直接参照で Pop 時に復帰側が上からスライドインすることを確認済み
 
-### `Usa.Smart.Results` の採用(2026-09-06)
+### 📦`Usa.Smart.Results` の採用(2026-09-06)
 
 **参照だけあって未使用だった `Usa.Smart.Results` 2.2.0 を実際に使うようにし、自前の劣化版を撤去した**。
 
@@ -966,13 +966,13 @@ ScpPassword=********
 - `Services/ScpService.cs` の `ScpTransferResult` は対応不要(`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に嵌まらない)。現状の record のまま維持する
 - ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)と成功経路(ローカル起動した `WorkMauiServer` + `adb reverse` で「Get success. time=[...]」。2026-09-07 確認)
 
-### 旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
+### 📅旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
 
 - **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)
 - `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
 - `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
 
-### Grid の Spacing を Style へ集約(2026-09-07)
+### 🎨Grid の Spacing を Style へ集約(2026-09-07)
 
 XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全廃し、画面ローカルの `Style`(`TargetType="Grid"`)の `Setter` へ移した。**27 ファイル・39 箇所**。
 
@@ -992,7 +992,7 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - 共有スタイル(`Resources/Styles/Styles.xaml`)は変更しない。同じ値を複数箇所で使う画面は 1 キーを共用する
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で対象画面を巡回して表示崩れと `StaticResource` 解決エラーが無いことを確認
 
-### `ILayoutManagerFactory` の撤去(2026-09-07)
+### 🧰`ILayoutManagerFactory` の撤去(2026-09-07)
 
 `CascadeStackLayout` を `Layout` 派生に変更し、`CreateLayoutManager()` の override でカスケード配置を返すようにした(`CircularLayout` / `StaggeredGrid` と同じ形)。
 
@@ -1007,7 +1007,7 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - `ILayoutManagerFactory` は「自分で継承できない型(標準の `Grid` / `StackLayout` や他社ライブラリのレイアウト)のマネージャを差し替える」ためのフックで、自作レイアウトには不要。MAUI の `Layout.LayoutManager` は `GetLayoutManagerFromFactory(this) ?? CreateLayoutManager()` の順で解決する
 - ビルド 0 エラー 0 警告。実機(Pixel 9a)で View > Layout の CircularLayout / StaggeredGrid / CascadeStackLayout の 3 カードを確認
 
-### アイコンの定義集約とプリロード(2026-09-08 / 2026-09-09 再構成)
+### 🔣アイコンの定義集約とプリロード(2026-09-08 / 2026-09-09 再構成)
 
 初回表示の画面でボタンのアイコンが遅れて入り、文字位置が動いて見える問題への対処。あわせて XAML の指定と温める対象の二重管理をやめる。
 
@@ -1052,7 +1052,7 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - 根治する場合は `Button.ImageSource` をやめ、アイコン用とテキスト用の `Label` を並べる構成にする(未実施)
 - ビルド 0 エラー 0 警告。実機で Menu / Device > Misc(同じインスタンスを 2 ボタンで使用・再訪問)/ Basic > Validation / UI Login(`Value` セッターでの差し替え)/ UI Money / Sample > Map の表示を確認
 
-### メニュー画面のアイコン追加(2026-09-09)
+### 📋メニュー画面のアイコン追加(2026-09-09)
 
 アイコンの無かったメニュー画面にアイコンを付け、`Button.ImageSource` の指定を全メニューで揃える。
 
@@ -1071,7 +1071,7 @@ XAML の `Grid` に直接書いていた `RowSpacing` / `ColumnSpacing` を全�
 - 追加分もウォームアップ対象に含める(Material / 24 / White が 68 → 120 個)
 - ビルド 0 エラー 0 警告。実機で Basic / Device / Network / View / App の表示を確認
 
-### フッターボタンのタッチフィードバックの終端(2026-09-08)
+### 👆フッターボタンのタッチフィードバックの終端(2026-09-08)
 
 UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く見える問題への対処。
 
@@ -1097,7 +1097,7 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 
 - ビルド 0 エラー 0 警告。実機で Menu / UI 1 / UI 2 / UILogin / BasicMenu の遷移を確認
 
-### 外部リファレンス評価 第2弾 N1 — 自作レイアウト / コントロールの追加(2026-09-10)
+### 🧰外部リファレンス評価 第2弾 N1 — 自作レイアウト / コントロールの追加(2026-09-10)
 
 `Document/Reference_Nova_Nalu.md`(Nova.Avalonia.UI / Nalu の評価)の N1-1〜N1-4。Nova.Avalonia.UI のパネル / コントロールを MAUI の `Layout` + `ILayoutManager` / `ContentView` で自作した。新規 NuGet なし。
 
@@ -1116,7 +1116,7 @@ UI 1 と UI 2 を相互に行き来したとき、2 画面目の表示が遅く�
 
 - ビルド 0 エラー 0 警告(Debug)。実機確認は 2026-09-13 に完了。CompareSlider は 2026-09-13 に撤去(後述)
 
-### 画像アセットの生成と反映(2026-09-11〜12)
+### 🖼️画像アセットの生成と反映(2026-09-11〜12)
 
 Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` の用途別フォルダへ配置してコードの参照・文言・配色を合わせた。画像ごとの一覧と一括確認ギャラリーは `Document/Image_Generation_List.md`、全プロンプトは `Document/Image_Generation_Prompts.md`、非採用画像は `Document/ImageCandidates/`、サムネイルは `Document/Thumbnails/`。
 
@@ -1149,7 +1149,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 生成は `images/generations`(JSON)と `images/edits`(参照画像付き)。目標サイズは生成後に切り出し・縮小して JPEG 品質 80 で保存
 - ビルド 0 エラー 0 警告(Debug)。実機で全画面の表示を確認
 
-### UI 1 / UI 2 メニューの再配置と UIFeel の廃止(2026-09-12)
+### 📋UI 1 / UI 2 メニューの再配置と UIFeel の廃止(2026-09-12)
 
 | 対象 | 内容 |
 |---|---|
@@ -1162,7 +1162,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機でメニュー・戻り先・Layout の表示とタップ選択を確認
 
-### ReSharper 指摘の解消(2026-09-13)
+### 🧹ReSharper 指摘の解消(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1171,7 +1171,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - inspectcode(Release)0 件、Debug ビルド 0 警告。Release ビルドに残る 10 件の警告は Android SDK 側(`BluetoothGattServerCallback.OnServiceAdded` の動的登録 ×8、registered dynamically ×2)
 
-### CompareSlider の撤去と `ReplaceBitmap` の修正(2026-09-13)
+### 🐛CompareSlider の撤去と `ReplaceBitmap` の修正(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1182,7 +1182,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Custom Vision の Detect → Retry → Detect、TreeMap の Count 2 回、Drawing の Save 2 回を確認(いずれも落ちず、2 回目で表示が更新される)
 
-### CircularLayout の回転 / リング(第2弾 N3-6。2026-09-13)
+### 🧰CircularLayout の回転 / リング(第2弾 N3-6。2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1191,7 +1191,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で View > Layout の表示を確認
 
-### ステータスバーの画面追従(2026-09-13)
+### 📱ステータスバーの画面追従(2026-09-13)
 
 `MainPage.xaml` の `toolkit:StatusBarBehavior` は起動時に `BlueDefault` + `LightContent` を 1 回適用するだけだったため、ヘッダの無い画面でも青い帯が残っていた。画面が `Title` / `Function` と同じ要領でステータスバーの色とアイコン色を宣言できるようにした。
 
@@ -1207,7 +1207,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - Android 15 以降は `Window.SetStatusBarColor` が効かないため、Toolkit は DecorView の最上部にステータスバーの高さの View を重ねて色を出す(`Transparent` のときだけ `LayoutNoLimits` + `SetDecorFitsSystemWindows(false)` で edge-to-edge)。`IScreen.SetFullscreen(true)` の画面(Dock)でもこの View は残るので、色を背景に合わせる
 - ビルド 0 エラー 0 警告(Debug)。実機(Pixel 9a)で Menu = 青、Dock = `#212121`、Social = 黒、Stream = 青(ヘッダあり)を確認し、各画面から戻ると青に復帰する
 
-### Edge-to-Edge / キーボードの確認(2026-09-13)
+### 📱Edge-to-Edge / キーボードの確認(2026-09-13)
 
 `MainPage` の `SafeAreaEdges="Default"` とキーボード(ウィンドウ既定の `adjust=pan`)を実機(Pixel 9a / Android 17 / Debug)で確認し、いずれも**現状維持で確定**(付録D D26)。コード変更なし。
 
@@ -1220,7 +1220,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 | `adjustResize` + `SafeAreaEdges="SoftInput"`(画面ルート) | `ScrollView` ルートはキーボードとの重なり分(880px)の下 Padding が付き全コンテンツをキーボード上へスクロールできるが、フォーカス中の `Entry` へは自動スクロールしない。固定 `Grid` ルート(Login)は内容が潰れる |
 | `InputNumberView` | 自前テンキーで `Entry` を持たず IME は出ない(対象外) |
 
-### SecureStorage の復旧と通信の中断(2026-09-13)
+### 🔐SecureStorage の復旧と通信の中断(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1231,7 +1231,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: ①`shared_prefs/template.mobileapp.microsoft.maui.essentials.preferences.xml` の keyset を `0800`(空の Keyset として解釈される値)に書き換えて Main > Setting を開くと、変更前は `Java.Security.GeneralSecurityException: empty keyset` でクラッシュ、変更後は画面が開いて値は未設定表示・保存領域は再生成される ②ローカルの WorkServer(`api/test/delay/5000`)に対し 2 秒で中断するトークンを渡すと、インジケータが約 2 秒で閉じ、「Canceled. Retry ?」も出ない(通常の Get server time は成功)
 - ビルド 0 エラー 0 警告(Debug)
 
-### Sudoku の盤面線と Calculator のボタン(2026-09-13)
+### 🎮Sudoku の盤面線と Calculator のボタン(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1241,7 +1241,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: 盤面の横線・縦線とも細線 6 本(2〜3px)+太線 2 本(10〜11px)が全て描画される(変更前は行 1-2 / 4-5 の横線が消え、太線も 6px)。セルのタップ選択と数字入力は従来どおり。Calculator は表示部の余白が減りボタンが一回り大きい
 - ビルド 0 エラー 0 警告(Debug)
 
-### Sudoku の自動モードと Wheel の描画・演出(2026-09-13)
+### 🎮Sudoku の自動モードと Wheel の描画・演出(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1253,7 +1253,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: Sudoku は Auto を押すたびに 1 マスずつ埋まり(放置しても進まない)、New で再開。Wheel は Spin から停止・演出・結果表示まで確認(寿司 / 焼肉で紙吹雪、その他はきらめき)
 - ビルド 0 エラー 0 警告(Debug)、inspectcode(Release)0 件
 
-### MaskedBehavior と相関検証の修正(2026-09-13)
+### 🔧MaskedBehavior と相関検証の修正(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1263,7 +1263,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: 電話番号の入力が `090-1234-5678` に整形される。Confirm をフォーカスしたまま `ab` → エラー表示、`abc` → 消える、`abcd` → 再表示
 - ビルド 0 エラー 0 警告(Debug)
 
-### DragDrop のドロップ先表示(2026-09-13)
+### 👆DragDrop のドロップ先表示(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1273,7 +1273,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 実機確認: 並べ替え(4 → 5 で入れ替わる / 5 → 2 で 2 の前に入る)/ TODO → DONE の移動 / ゴミ箱削除 / 対象外への中断のいずれでも、ドラッグ中の表示と終了後の解除が正しい
 - ビルド 0 エラー 0 警告(Debug)
 
-### UISocial 背景の専用化(2026-09-13)
+### 🖼️UISocial 背景の専用化(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1284,7 +1284,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - Pixel 9a(表示領域 1080×2228)では AspectFill で左右が約 13% ずつ切れる(女の子が中央のため顔と上半身は収まる)
 - ビルド 0 エラー 0 警告(Debug)
 
-### MailDateTimeStringConverter の ConvertBack(2026-09-13)
+### 🔧MailDateTimeStringConverter の ConvertBack(2026-09-13)
 
 | 対象 | 内容 |
 |---|---|
@@ -1293,7 +1293,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - 他の一方向コンバーター 18 件は `NotSupportedException` のまま
 - ビルド 0 エラー 0 警告(Debug)。実機で UIMail の日時表示を確認
 
-### Control メニューの新設(2026-09-13)
+### 📋Control メニューの新設(2026-09-13)
 
 部品・一覧系の画面を Main > Control に集め、View は表現技法(レイアウト / 装飾 / アニメーション / 描画)の画面だけにした。
 
@@ -1311,7 +1311,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 - View / ViewModel の DI 登録は `Modules` 名前空間配下の名前で自動登録されるため、名前空間の移動に伴う登録変更は無い
 - ビルド 0 エラー 0 警告(Debug)。実機で Main > Control > 7 画面の遷移と Back、View / Sample メニューの表示を確認
 
-### WiFi manager(2026-09-14)
+### 📶WiFi manager(2026-09-14)
 
 | 対象 | 内容 |
 |---|---|
@@ -1324,7 +1324,7 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - ビルド 0 エラー 0 警告(Debug)。実機で接続情報とスキャン結果(2.4 GHz / 5 GHz の 2 AP)の表示、`svc wifi disable / enable` による オフ → 未接続 → 接続中 の追従、F2 のスキャン、F4 で設定画面が開くことを確認
 
-### Grid(ClamGrid)と Card list の追加(2026-09-13)
+### 🧮Grid(ClamGrid)と Card list の追加(2026-09-13)
 
 Control メニューに一覧系の 2 画面を追加した。Grid は `ClamGrid` 1.0.0(SkiaSharp 描画のグリッド)、Card list は標準の `CollectionView` によるカード一覧。
 
@@ -1343,7 +1343,7 @@ Control メニューに一覧系の 2 画面を追加した。Grid は `ClamGrid
 
 - ビルド 0 エラー 0 警告(Debug)。ReSharper inspectcode 0 件(`ControlCardListView.xaml` の RelativeSource / `x:DataType` 指定バインドは `Xaml.BindingWithContextNotResolved` の誤検知として既存画面と同じコメントで抑止。`Helpers/ImageHelper.cs` の `old?.Dispose()` には理由付きの `ReSharper disable once` を再付与)。実機で Grid のソート / 選択 / 列設定(表示切替・ドラッグ・Apply・Reset)/ 横スクロール、Card list の選択 / 展開 / 並替パネル / 昇降 / 全展開 / F3 / F4 を確認
 
-### Bottom sheet と Drawer の追加(2026-09-14)
+### 📑Bottom sheet と Drawer の追加(2026-09-14)
 
 Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Syncfusion(`SfBottomSheet` / `SfNavigationDrawer`)と自作(`Controls/BottomSheetView.cs` / `Controls/SideDrawer.cs`)を同じ内容で並べて比べる。
 
@@ -1360,7 +1360,7 @@ Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Sy
 - ジェスチャナビゲーションでは画面の左端からのスワイプはシステムの「戻る」が優先される。`SfNavigationDrawer` の `EnableSwipeGesture` は効かず、自作は除外した帯(上下中央 200dp)から始めたときだけ開く(付録B)
 - ビルド 0 エラー 0 警告(Debug)。ReSharper inspectcode 0 件(`DeviceWiFiView.xaml` の RelativeSource バインドの誤検知を既存画面と同じコメントで抑止、`ControlToolkitView.xaml` の未使用 xmlns を削除、`WiFiManager.android.cs` の整数除算と冗長な `?.` を修正)。実機で Sf / 自作のシート(開く・上へドラッグで全開・下へドラッグで半開と閉じる・背景タップで閉じる・項目選択)、Sf / 自作のドロワー(開く・項目選択・背景タップ・パネルのドラッグで閉じる・自作は帯の中央からの端スワイプで開く)、Toolkit の `SfSegmentedControl` の選択が VM に反映されることを確認
 
-### WiFi のアクセスポイント一覧の定期更新と未検出の猶予(2026-09-14)
+### 📶WiFi のアクセスポイント一覧の定期更新と未検出の猶予(2026-09-14)
 
 | 対象 | 内容 |
 |---|---|
@@ -1371,7 +1371,7 @@ Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Sy
 
 - ビルド 0 エラー 0 警告(Debug)。実機で `svc wifi disable` → 全行が未検出(半透明)→ 60 秒後に消える → `svc wifi enable` → 再検出を確認。`dumpsys wifiscanner` で自アプリのスキャン要求が結果の 30 秒後(約 34 秒間隔)に出ること、`cmd wifi start-scan` の外部スキャンの結果をコールバックで受けて次の自前スキャンがその 30 秒後に延びることを確認
 
-### Card list と Grid の絵文字・色付きバッジ化(2026-09-14)
+### 🧮Card list と Grid の絵文字・色付きバッジ化(2026-09-14)
 
 | 対象 | 内容 |
 |---|---|
@@ -1384,7 +1384,7 @@ Control メニューに Bottom sheet と Drawer の 2 画面を追加した。Sy
 - ClamGrid は `SKFontManager.MatchCharacter` のフォールバックで絵文字をカラーで描く。文字は絵文字既定のもの(⏳ ✅ ❗ ✋ など)を使い、VS16 が要るテキスト既定の記号(⚠ ⏸)は使わない
 - ビルド 0 エラー 0 警告(Debug)。実機で Card list のバッジ・アバター・件数、選択 / 展開、Grid の絵文字列(状態 / フラグ / ランク / 受付)と色を確認
 
-### 診断パネルのメモリ推移とリーク検出(2026-09-14)
+### 📈診断パネルのメモリ推移とリーク検出(2026-09-14)
 
 Task_Checklist 3-1(メモリ監視オーバーレイ)と 3-2(リーク検出)を、既存の診断パネルとナビゲーションプラグインへの局所的な追加で実装した。
 
@@ -1397,7 +1397,7 @@ Task_Checklist 3-1(メモリ監視オーバーレイ)と 3-2(リーク検出)を
 
 - ビルド 0 エラー 0 警告(Debug)。実機で 📈 のパネルにスパークラインが描かれることを確認。Control(Card List / Grid / Bottom Sheet / Drawer)、Device(WiFi)、UI 1(Profile)を開いて戻る操作で、閉じた 36 件(ビュー 18 + ViewModel 18)がすべて回収され、リーク疑いは 0 件
 
-### Azure AI Vision / Ollama チャット / 音声入力の実装(2026-09-14)
+### 🤖Azure AI Vision / Ollama チャット / 音声入力の実装(2026-09-14)
 
 Task_Checklist 2-3(Azure / AI サービス利用部分)を実装した。接続先とキーは設定画面(QR)で投入した値を使う。
 
@@ -1413,7 +1413,7 @@ Task_Checklist 2-3(Azure / AI サービス利用部分)を実装した。接続�
 
 - ビルド 0 エラー 0 警告(Debug)。実機(Foundry の AI Services リソース + PC の Ollama gemma2 に `adb reverse tcp:11434` で接続)で、Tag = 暗い画面から「霧 95% / 黒 90% / ぼかし 88% / 灰色 88%」、Object / People / OCR = 例外なく解析(暗い被写体のため枠なし)、Face = このリソースは Face API を持たないため 401 のダイアログ、Chat = 質問への応答がストリーミングで表示、音声 = 無音で自動停止し「(音声を認識できませんでした)」→ 抽出は固定の例、Setting = Ollama / Model の行を確認
 
-### ローカル通知(2026-09-14)
+### 🔔ローカル通知(2026-09-14)
 
 Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。FCM は 2-2 に残す)。
 
@@ -1429,7 +1429,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告(Debug)。実機で 承認依頼(承認 / 却下)の通知 → シェードの「却下」で `ボタン [reject]: SO-2026-000123`、本体タップで `タップ: SO-2026-000123`、Schedule → 正確なアラーム未許可の旨を表示し 14 秒以内にリマインダーが届く、Cancel で消えることを確認
 
-### ネットワーク実装(template-maui-server 対向)(2026-09-15)
+### 🌐ネットワーク実装(template-maui-server 対向)(2026-09-15)
 
 対向サーバーを template-maui-server(`D:\GitHubTemplate\template-maui-server`、8080 = Web / API、9090 = gRPC)にし、Web API / ストレージ / SignalR / gRPC を実装した。サーバー側の変更も同時に行なった(同リポジトリの README に反映)。
 
@@ -1455,7 +1455,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8080` / `tcp:9090`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み → 管理画面の「切断」(`Closed`)で 100 ms 後に新 ID で接続済み → サーバー停止中の再接続は接続中...(0 / 2 / 5 秒のバックオフ)→ 再起動で接続済み → 離脱で切断(サーバーログの `Monitor disconnected`)。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
 
-### .NET 10 API の適用と IChatClient 抽象化(2026-09-15)
+### 🧩.NET 10 API の適用と IChatClient 抽象化(2026-09-15)
 
 | 対象 | 内容 |
 |---|---|
@@ -1470,7 +1470,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告。実機で Sample > Chat が Ollama(gemma2)で応答し、2 回目の質問が 1 回目の内容を踏まえること(履歴の送信)、Basic > Setting の検索アイコンが青、Device > Misc の Vibrate / Cancel が有効、`dotnet run --device 4A071JEBF16992` で配置と起動を確認
 
-### ClamGrid 1.1.0 の Converter / OrderInfo / ボトムシート / WiFi のレコードバインド(2026-09-19)
+### 🧮ClamGrid 1.1.0 の Converter / OrderInfo / ボトムシート / WiFi のレコードバインド(2026-09-19)
 
 | 対象 | 内容 |
 |---|---|
@@ -1489,7 +1489,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 - ビルド 0 エラー 0 警告(Debug。Release は既存の Android BLE の警告のみ)。ClamGrid は Release 0 警告、テスト 141 / 142(`GridLayoutTests.BoundariesUnderTheFrozenColumnsAreNotGrabbable` は 1.0.0 でも失敗する既存)。実機: Grid の各列の絵文字と色、未処理 662 行を一括選択しての状態更新(固まらず、選択とスクロール位置が残る)、シートの F2 / F3 切替・短いフリック・戻したドラッグ・内容に合う高さ、ドロワーの開閉(戻したドラッグは閉じない / 開かない、ゆっくり動かして止めてから離すと距離で決まる、短いフリック、帯のスワイプ、背景のスワイプ / ドラッグで閉じる)、WiFi の接続カード / 一覧 / 展開
 
-### Face(顔検出)の削除と Windows 検証コンソール(2026-09-19)
+### 🤖Face(顔検出)の削除と Windows 検証コンソール(2026-09-19)
 
 Face API は Image Analysis と別の専用リソース(Face リソース、または Limited Access 承認済みのサブスクリプション)が必要なため、顔検出のサンプルを削除した。
 
@@ -1504,7 +1504,7 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 
 - ビルド 0 エラー 0 警告(Debug)。CV Net メニューは Object / Tag / People / Ocr の 4 つ。実機の Sample > Chat が Wi-Fi 経由(`OllamaEndPoint=http://192.168.100.9:12321`、`adb reverse` なし)で応答
 
-### 音声入力の整理 / カメラ撮影の打ち切り / 設定判定の集約(2026-09-20)
+### 🤖音声入力の整理 / カメラ撮影の打ち切り / 設定判定の集約(2026-09-20)
 
 | 対象 | 内容 |
 |---|---|
@@ -1533,11 +1533,13 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | `Modules/Sample/SampleCvNetView.xaml(.cs)` + `SampleCvNetViewModel.cs` / `VisionFeature.cs`(新規)、`SampleCvNetMenu*` / `SampleCvNetObject*` / `SampleCvNetTag*` / `SampleCvNetPeople*` / `SampleCvNetOcr*`(削除)/ `Modules/ViewId.cs` / `Modules/Sample/SampleMenuView.xaml` + `SampleMenuViewModel.cs` | CV Net の 4 画面とサブメニューを 1 画面に統合。解析の種類(`VisionFeature`)は画面下(機能キーの上)の選択ボタンで切り替え、撮影済み(`Result`)ならプレビューに戻って撮影からやり直す(タグのパネルも消す)。選択中の色は `s:CompareToColorConverter`、撮影中 / 解析中は無効。Sample メニューは `CvNetCommand`(AI 未設定の案内)で直接遷移。機能キーは撮影中 / 解析中も Out / In / Detect の文言のまま無効にし、解析が終わって `Result` になったら Out / In を空、F4 を Retry にする(`s:CompareToText` で `Result` と比較) |
 | `Behaviors/CameraBind.cs` + `CameraBind.android.cs`(新規) | カメラのズーム(Device > Camera の ZoomIn / ZoomOut、CV Net の In / Out)が効かなかった修正。CommunityToolkit の `CameraInfo.MaximumZoomFactor` は Android で常に 1(`ZoomState` の取り出しが `as` キャストで失敗)で、`CameraView.ZoomFactor` もその値で丸められる。`CameraBind.CorrectCameraInfo`(Android の partial)が CameraX の `ProcessCameraProvider` から同じカメラの `ZoomState`(`JavaCast<IZoomState>`)を取り、正しい範囲の `CameraInfo` を作り直す。`CameraBind` は一覧を補正して返し、プレビュー開始時に接続時の選択(補正前)を補正済みに入れ替える(同じ DeviceId は等しいと判定されるため、いったん null を入れてから差し替え) |
 | `Services/Calendar/`(`HolidayService.cs` / `IScheduleEventProvider.cs` / `ScheduleService.cs`) | カレンダー系のサービスをサブフォルダへ(名前空間 `Services.Calendar`) |
+| `Document/Task_Checklist.md` / `Change_Summary.md` / `Telemetry_Study.md` / `Other_App_Candidates.md` | 章題(全階層)と項目(`【判断】`印 = ⚖️、区間の概要表のリンク)に内容を表す絵文字を付けた。絵文字は見出し文字列の直前に空白なしで置く(GitHub の見出しアンカーが変わらない。概要表からリンクする区間見出しは異体字セレクタ無しの絵文字)。`Development.md` は `#` 階層に付いていた既存のまま |
+| `Document/Task_Checklist.md` / `README.md` | 確認済みの 0-1 / 0-4 / 0-6 / 0-8 を削除。ネットワーク系の確認を機能ごと(0-1 共通 / 0-2 REST / 0-3 UL・DL / 0-4 SignalR / 0-5 gRPC / 0-6 SCP)に分割。3 節(プッシュ通知 = 旧 0-2 → 3-1、旧 1-2 → 3-2)と 4 節(OpenTelemetry = 旧 0-5 → 4-1、`OtelEndPoint` → 4-2、本アプリへの組み込みの判断 = 4-3)を新設して集約。1-3〜1-5 → 1-2〜1-4。README の TODO に OpenTelemetry |
 | `Works3/AiSample` | ChatConsole を同じ構成に(`OllamaApiClient` を直接生成、未設定は終了、疑似応答と 4 ステップを削除し `VoiceInput` に)。`AiChatClientFactory.cs` のコピーは削除 |
 
 - ビルド 0 エラー 0 警告(Debug)、AiSample 0 警告。実機: Chat = マイク → 「話しかけてください」→ 認識した文章が入力欄に入る → 送信で Ollama(Wi-Fi 経由 12321)がストリーミング応答、無音は自動で停止。CV Net Object = Detect 中は F4 が空、解析後に Retry。Device > Misc = Recognize → Stop → 無音で戻る。音声入力 = 連続 3 回の認識、途中の停止(途中結果が入力欄に残る)、無音の停止、停止直後の再開。CV Net = Detect(Object)→ Tag に切り替えるとプレビューに戻る → Detect でタグ(霧 91% ...)→ Retry でプレビュー。Network > Realtime = 接続 / 離脱で切断 / 再入で新しい接続 ID。HTTP の遅延キャンセル / Storage / WiFi / Audio の表示。**SCP(sshd = 192.168.100.99、Task_Checklist 旧 1 節)**: QR で投入 → 接続先 `root@192.168.100.99:22` → アップロード 300 KB / 40 MB / 200 MB 完了(進捗バー、指紋 SHA256 表示)→ ダウンロード 300 KB / 200 MB 完了(公開フォルダ、md5 一致)→ 200 MB の転送中キャンセル(アップロード / ダウンロード)が「キャンセルしました」で戻り途中ファイルなし → 存在しないリモート名は「失敗: scp: ...: No such file or directory」。旧 1 節(1-1〜1-3)は削除し、2 節 → 1 節、3 節 → 2 節に繰り上げ
 
-## C. この区間のナレッジ
+## 💡C. この区間のナレッジ
 
 - **`dotnet run` の Android 実機指定は `--device <シリアル>`**(.NET 10 SDK)。`-p:AdbTarget=-d` は効かず、端末が複数(実機 + エミュレーター)あると候補一覧を出して止まる。起動後は logcat を流し続ける
 - **OllamaSharp の `OllamaApiClient` は `Microsoft.Extensions.AI.IChatClient` を実装する**(パッケージは推移参照で入る)。`Chat` ヘルパの代わりに履歴を呼び出し側で持ち `GetStreamingResponseAsync(history)` で送る。`ChatMessage` はアプリの `Models.Sample.Chat.ChatMessage` と衝突するので using エイリアスで避ける(SA1209: エイリアスは名前空間 using の後)
@@ -1607,9 +1609,9 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 
 ---
 
-# 付録(区間に紐付かない恒常情報)
+# 📎付録(区間に紐付かない恒常情報)
 
-## 付録A. 開発ポリシー(恒常・実装時は常に遵守)
+## 📏付録A. 開発ポリシー(恒常・実装時は常に遵守)
 
 - 共有 `Styles.xaml` は変更しない(**BasedOn 派生 or 新規リソース辞書**で対応)
 - **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は BasedOn 派生。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
@@ -1622,10 +1624,11 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 - ReSharper の XAML バインド誤検知(`x:Reference`/`RelativeSource` に `x:DataType` 指定済みで実動作は正常)は `<!-- ReSharper disable/restore Xaml.BindingWithContextNotResolved -->` で該当範囲のみ抑止
 - コミットは実機確認後にユーザーが実施
 - **設定項目の投入は設定画面の QR に統一**(`SettingParser` の `key=value`)。手入力 Entry は作らない
+- `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
 
-## 付録B. 意図的差異・統合しない判断
+## ⚖️付録B. 意図的差異・統合しない判断
 
-### メニュー画面の差異一覧(2026-07-07 実態)
+### 📋メニュー画面の差異一覧(2026-07-07 実態)
 
 メニュー間の差異には**敢えて統一していない面がある**(ユーザー指示)。統一済みは「空セルの扱い」のみ。
 
@@ -1648,7 +1651,7 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 ※ 2026-09-05: **メニュー規約を 9 段基本へ改定**(ユーザー指示)。メインメニュー=9 段×2 列(関連項目 Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り行は無効ボタン)+**全ボタンに Material アイコン追加**。UI 1/UI 2=**各 3 列×9 段**。2 列化は UI 1(18 ボタン=2 列×9 段の 18 セルちょうど)でグループ行分けが成立しないため見送り、**UI 1/UI 2 の列数は統一する**(ユーザー決定=片方だけの 2 列化はしない)。
 ※ 2026-09-12: **UI 1 / UI 2 を 2 列×9 段へ**(UI 1 = Profile \| Login / Money \| Super / POS \| Shop / Schedule \| Calendar / Timeline \| − / Mail \| Chat / Kit \| − / Graph \| Graph2 / TreeMap \| −、UI 2 = Stream \| Dock / Load \| Gauge / Meter \| Mixer / Monster \| Wheel / Character \| Social / Radar \| − / Flight \| Tactical / Telemetry \| Energy / 余り 1 行)。UIPet → UIMonster 改名、UIFeel 廃止(hex 配置は `HoneycombLayout` として View > Layout へ)。全メニューが 1 列または 2 列になった
 
-### 対応しない・保留と確定した項目(旧チェックリストから移設)
+### 🚫対応しない・保留と確定した項目(旧チェックリストから移設)
 
 - **スコープ外**(外部リファレンス評価の前提): 生体認証 / カスタムハンドラ / App Actions / iOS / テーマ切替(AppThemeBinding) / 非同期検証 / セッションプロバイダ抽象
 - **コードレビュー対応(区間2)での除外**: `OnNotifyFunction1` の 116 ファイル重複解消 / SemanticProperties・AutomationId の付与 / gRPC・SignalR・Ollama の実装 / QR コードからの通信先・API キー無検証受け入れ
@@ -1664,14 +1667,14 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 - `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)
 - Walkthrough(B-18)= 実装しない(D16)/ NavigationRail・月次集計(C-9/C-11)= 取り下げ(D10)/ Blazor(5-4)= 対応不要 / MBTiles(4-3)= 取りやめ(いずれも詳細は付録D と区間5 B-8)
 
-### 画面統合・類似性分析の結論
+### 🔀画面統合・類似性分析の結論
 
 - **画面そのものの統合価値が高いのは3組のみ**: ①FlightHud/MechHud/Telemetry/Energy(完全同型)→ **独立維持で確定** ②Profile/Profile2 → **Profile2 ベースで UIProfile へ統合完了(2026-07-07・経緯は完了記録参照)** ③Timeline/Graph(同一 Git グラフの異表現)→ **Graph2 改名で両立(実施済み)**
 - その他(EC 3画面・Stream 親子・Chat/Mail・UIKit 5画面・Meter/Radar/Social 等)は**画面マージ非推奨**。部品/スタイル共通化の候補は挙がったが**対応不要で確定**(2026-07-07)
 - **Radar/HUD 技術メモ**(D6=別途対応の材料): レーダー描画が2実装ある(`RadarScreen`=MAUI Graphics+外部バインド / `FlightHudScreen` 内蔵=SkiaSharp 自走)。整理するなら SkiaSharp 側(Scene 化)へ寄せるのが自然。両 API を跨ぐ描画共有は不可
 - メニュー非掲載の7画面(UIItem/UICart/UIStreamDetail/UIKitNotify/UIKitSetting/UIKitOnboard/UIKitTracking)は**親子フロー**であり統合対象ではない
 
-## 付録C. 資産レシピ表 — 既存資産の正確な名前(適用時のコピー元)
+## 🧰付録C. 資産レシピ表 — 既存資産の正確な名前(適用時のコピー元)
 
 | 資産 | XAML での書き方 | 主な用途 |
 |---|---|---|
@@ -1691,11 +1694,11 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | 重ね配置 / 重ねアバター | `controls:OverlapPanel`(OffsetX/OffsetY/ReverseZIndex)/ `controls:AvatarGroup`(ItemsSource/MaxDisplayed/Overlap/AvatarSize/CountBackgroundColor/CountTextColor。超過分は「+N」) | カード束、視聴中フレンド等 |
 | 可変タイル / 円弧 | `controls:VariableSizeWrapPanel`(Columns/RowHeight/Spacing + 添付 ColumnSpan/RowSpan)/ `controls:CircularLayout`(Radius/StartAngle/SweepAngle/DistributeEvenly/FitToArc/RotateItems/ItemAngle/OrbitSpacing + 添付 Angle/Orbit) | ダッシュボードのタイル、半円メニュー、扇、同心円 |
 
-## 付録D. 外部リファレンス評価 決定・不採用アーカイブ(旧 Reference_Analysis.md / Reference_Summary.md より)
+## 🗃️付録D. 外部リファレンス評価 決定・不採用アーカイブ(旧 Reference_Analysis.md / Reference_Summary.md より)
 
 51 件 (S-01〜S-51) を評価し、採用分は全て実装完了 (2026-09-01〜02)。QR ペイロード例や実装対象は各完了記録を参照。
 
-### 決定事項 (D1〜D26)
+### ⚖️決定事項 (D1〜D26)
 
 | # | 決定 |
 | --- | --- |
@@ -1726,14 +1729,14 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | D25 | 予測型バック (第2弾 6-4) は**現状維持で確定** (2026-09-13)。エッジスワイプ / BACK ボタン / フッタの Back は同じ経路 (`ShellEvent.Back` → `OnNotifyBackAsync`。フッタは `OnNotifyFunction1` から同じメソッドへ) で遷移し、スワイプ進捗に連動する縮小表現は入れない |
 | D26 | Edge-to-Edge (第2弾 6-2) とキーボード (6-3) は**現状維持で確定** (2026-09-13)。`MainPage` は `SafeAreaEdges="Default"`、ウィンドウは既定の `adjust=pan` のまま、`IKeyboardState` は追加しない (確認結果は区間 10「Edge-to-Edge / キーボードの確認」) |
 
-### 不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
+### 🚫不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
 LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTabView で充足) / Maui.VirtualListView・MPowerKit.VirtualizeListView (データ規模的に不要) / AiForms.SettingsView (BasicSettingView で達成) / MPowerKit.GoogleMaps (API キー前提。マネージャ分割設計のみ Mapsui 実装へ反映済み) / ArcGIS (商用) / Maui.Nuke (iOS スコープ外) / ImageCropper.Maui (ネイティブラッパ。自作 = 9-6) / Evergine 3D / DrawnUI 全面採用 (実験的。SKPicture キャッシュ等の部分技法は実装済み) / Grial FluentEmoji (CDN 依存) / CSLA (相関検証のみ 3-6 へ) / LocalizationResourceManager (根本切替は不要) / AlohaKit.Layouts (CircularLayout のみ自作済み) / TemplateMAUI (Marquee/TreeView のみ自作済み) / Plugin.Maui.SegmentedControl (SfSegmentedControl で充足) / GitTrends・WeatherTwentyOne・showcase (資料) / dotnet-maui-templates・MauiAppAccelerator (開発ツール) / Shiny Controls の DataGrid・FrostedGlass・Mermaid・Tray (コスト高 / デスクトップ向け) / Plugin.LocalNotification (thudugala。自作 Components/NotificationService で充足。NotificationRequest の項目構成 = Title / Description / BadgeNumber / Schedule / Android.ChannelId / ReturningData は参考) / MAUIHighSchool の Window.Stopped でローカル通知を予約する記事 (資料)
 
-### 不採用 (2) — 本サンプル側が優れた / 同等の実装を持つため参考自体が不要
+### 🚫不採用 (2) — 本サンプル側が優れた / 同等の実装を持つため参考自体が不要
 
 AlohaKit.Controls (13/15 既存充足。設計思想も DrawingObject/DrawingControl として実装済み) / Grial SvgImage (SvgView が同構成) / The49 ViewClickListener・AiForms AddCommandEffect (TouchBehavior + ButtonOption で充足) / AiForms FAB (MapFabButton スタイルで充足) / slideshare 標準 UI 論 (UISocial 等で実装済み) / SimpleCalculator (ToTrimmedString のみ反映) / 数独記事 (題材のみ) / MauiScientificCalculator csproj (UI 構成のみ反映) / TimeRecorder アーキテクチャ (UI 要素のみ 9-2 へ) / PhotoAlbum バックエンド構成 / All the Lists (基準の明文化のみ 10-1 へ) / ライフサイクル記事 (実例のみ反映) / Doom.Mobile (Release 計測の知見のみ) / Breakout (プール / 論理解像度 / 状態機械を実装・反映済み) / Shiny の既存充足分 (Wizard / Parallax / SignaturePad / Toast / Shimmer / Badge / OTP / TreeView / CameraView ほか)
 
-### 不採用 (3) — 第2弾 (Nova.Avalonia.UI / Nalu。2026-09-13)
+### 🚫不採用 (3) — 第2弾 (Nova.Avalonia.UI / Nalu。2026-09-13)
 
 Gravatar・identicon (画像アセットは整備済み) / Scratcher / Watermark / SegmentedSlider (`Slider` + `SfSegmentedControl` で充足) / TimelinePanel (`UITimelineView` の行内描画で充足) / ResponsivePanel (縦画面固定) / ToggleTemplate (`IsVisible` 切替 + `DataTemplateSelector` で充足) / ExpanderBox (`mct:Expander` で充足) / DurationWheel (`DurationPicker` で充足) / HexPanel (`HoneycombLayout` として実装済み) / BubblePanel / LoopPanel (`CarouselView.Loop` で充足) / CompareSlider (実装後に撤去) / 親スクロールへのタッチ伝播停止 / WheelDrawing の色パレット差し替え / Nalu Scaffold 本体 (`Usa.Smart.Navigation` と競合) / Nalu VirtualScroll (商用は別ライセンス。`CollectionView` で充足) / Nalu Magnet (alpha) / Nalu のタブバー・ドロワー・共有要素トランジション / Nova の仮想化パネル 2 種 (`CollectionView` の役割) / Nova CodeViewer

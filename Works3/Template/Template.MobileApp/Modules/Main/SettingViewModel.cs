@@ -25,8 +25,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string AIServiceEndPoint { get; set; }
 
+    // SecureStorage から非同期に入るため初期値は null (初回の反映ではハイライトしない)
     [ObservableProperty]
-    public partial string AIServiceKey { get; set; }
+    public partial string? AIServiceKey { get; set; }
 
     [ObservableProperty]
     public partial string OllamaEndPoint { get; set; }
@@ -41,7 +42,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string ScpUser { get; set; }
 
     [ObservableProperty]
-    public partial string ScpPassword { get; set; }
+    public partial string? ScpPassword { get; set; }
 
     public IObserveCommand DetectCommand { get; }
 
@@ -59,12 +60,10 @@ public sealed partial class SettingViewModel : AppViewModelBase
         GrpcEndPoint = settings.GrpcEndPoint;
         OtelEndPoint = settings.OtelEndPoint;
         AIServiceEndPoint = settings.AIServiceEndPoint;
-        AIServiceKey = string.Empty;
         OllamaEndPoint = settings.OllamaEndPoint;
         OllamaModel = settings.OllamaModel;
         ScpHost = FormatScpHost(settings);
         ScpUser = settings.ScpUser;
-        ScpPassword = string.Empty;
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {

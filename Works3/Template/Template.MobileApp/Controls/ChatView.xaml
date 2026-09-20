@@ -97,7 +97,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 22" />
             </Style>
 
-            <Style x:Key="SendButton"
+            <Style x:Key="InputBarButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="44" />
@@ -105,13 +105,41 @@
                 <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
                 <Setter Property="FontSize" Value="20" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <!-- 送信 (無効時は灰色) -->
+            <Style x:Key="SendButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten2}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!-- 応答の中断 -->
+            <Style x:Key="CancelButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource InputBarButton}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
             </Style>
 
             <Style x:Key="VoiceButton"
                    TargetType="Button"
-                   BasedOn="{StaticResource SendButton}">
+                   BasedOn="{StaticResource InputBarButton}">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="behaviors:ButtonOption.HapticFeedback" Value="True" />
@@ -210,10 +238,17 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
+            <!-- 送信 (応答中は中断ボタンに入れ替わる) -->
             <Button Grid.Column="2"
                     Style="{StaticResource SendButton}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, Converter={StaticResource ReverseConverter}, x:DataType={x:Type controls:ChatView}}"
                     Command="{Binding Source={x:Reference Root}, Path=SendCommand, x:DataType={x:Type controls:ChatView}}"
                     Text="{x:Static fonts:MaterialIcons.Send}" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource CancelButton}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, x:DataType={x:Type controls:ChatView}}"
+                    Command="{Binding Source={x:Reference Root}, Path=CancelCommand, x:DataType={x:Type controls:ChatView}}"
+                    Text="{x:Static fonts:MaterialIcons.Stop}" />
         </Grid>
 
     </Grid>

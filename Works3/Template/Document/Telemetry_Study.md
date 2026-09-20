@@ -1,10 +1,10 @@
-# クラッシュレポート / テレメトリ基盤 検討資料
+# 📈クラッシュレポート / テレメトリ基盤 検討資料
 
 MAUI アプリ(本テンプレート)からクラッシュレポート・ログ・メトリクスをサーバーへ送る基盤を検討するための初期資料。検討の候補は「DeviceManager 型のサーバー + 端末向けライブラリ」「OpenTelemetry(OTLP)で汎用の収集基盤へ送る」「外部サービス」。本書は現状・候補・論点をまとめたもので、方式の決定と設計は別途行なう。
 
-## 1. 現状
+## 🧭1. 現状
 
-### アプリ(Template.MobileApp)
+### 📱アプリ(Template.MobileApp)
 
 | 項目 | 現状 | 位置 |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ MAUI アプリ(本テンプレート)からクラッシュレポート・ログ�
 | 設定の配布 | 接続先やキーは設定画面の QR(サーバーの `/qr`)で投入する | `Modules/Main/SettingViewModel.cs` |
 | 拡張の置き場 | ナビゲーションのプラグイン(`Extender/`)と DI 登録(`MauiProgram.cs`)。DEBUG 限定の登録例あり | `Extender/LeakDetectionPlugin.cs` |
 
-### サーバー側(既存資産)
+### 🖥️サーバー側(既存資産)
 
 | 資産 | 内容 | 位置 |
 | --- | --- | --- |
@@ -30,7 +30,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 - 登録 / メッセージ / 設定配信は SignalR(`/hubs/device`)、ストレージと設定取得は REST。認証は `X-Api-Key`
 - 端末情報と状態はプロバイダー(`IDeviceInfoProvider` / `IDeviceStatusProvider`)を利用側が実装する
 
-## 2. 要件と論点
+## 📏2. 要件と論点
 
 | 観点 | 内容 |
 | --- | --- |
@@ -45,16 +45,16 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 | サーバーの運用 | 自前(DeviceManager 型)か既製の収集基盤(OTel Collector + Grafana 等)か外部サービスか。保持期間、ダッシュボード、アラート |
 | ビルド | トリミング / AOT との相性(リフレクションを使うライブラリ)、Debug と Release で送信先や有効無効を切り替える |
 
-## 3. 候補
+## 💡3. 候補
 
-### A. DeviceManager 型のサーバー + 端末向けライブラリ
+### 🖥️A. DeviceManager 型のサーバー + 端末向けライブラリ
 
 - 既存の `DeviceManager` と `DeviceManager.Client` をそのまま、または本テンプレート向けに整理して使う
 - 組み込み先: `IDeviceInfoProvider` = `Settings.UniqueId` + `IDeviceInfo`、`IDeviceStatusProvider` = `DeviceState`(電池 / ネットワーク)、`AddDeviceManagerLogging()` でログ転送、`CrashReport.LogException` から `ReportCrash`、`Extender/` のプラグインで画面遷移をイベントとして送る
 - 利点: 端末管理(登録 / 一覧 / ダッシュボード)・ログ・エラーレポートが一体、タンキングと再送が実装済み、設定配信やメッセージ(プッシュ相当)も同じ経路
 - 制約: 独自プロトコル(gRPC + SignalR)で他の収集基盤とは繋がらない、gRPC は h2c の別ポート(8083)、認証は共有キー、サーバーの運用は自前
 
-### B. OpenTelemetry(OTLP)で汎用の収集基盤へ送る
+### 📡B. OpenTelemetry(OTLP)で汎用の収集基盤へ送る
 
 - OpenTelemetry .NET(`OpenTelemetry` / `OpenTelemetry.Exporter.OpenTelemetryProtocol`)は MAUI(Android)でも動く。ログは `ILoggingBuilder.AddOpenTelemetry` + OTLP エクスポーター、メトリクスは `Meter` / `MeterProvider`、トレースは `ActivitySource` / `TracerProvider`。.NET 10 の MAUI 自体が `Microsoft.Maui` の `ActivitySource` / `Meter`(レイアウトの measure / arrange 回数と所要時間)を持つ
 - OTLP は HTTP/protobuf(`http://…:4318`)が端末向き(h2c のポート分離が不要)。受け口は OTel Collector、Aspire ダッシュボード(開発時)、Grafana(Tempo / Loki / Mimir)、Seq、Azure Monitor(Azure Monitor OpenTelemetry Exporter)など。既存の template-maui-server も OTLP エクスポーターを持つため、同じ収集基盤にサーバーと端末の両方を送れる
@@ -63,7 +63,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 - 実証: `Works3/OtelSample`(同フォルダの README)。OTLP/HTTP の自前受信サーバ + MAUI クライアントで、ログ / スパン(HttpClient 計装を含む)/ メトリクス(ランタイム / MAUI レイアウト / 電池)/ クラッシュ / ディスク退避と再送を Pixel 9a で確認済み。組み込み時の注意(`EventSourceSupport`、`AddMetrics`、`AddView` でのタグ集約、`Stop` のブロック)も README に記載
 - Aspire との関係: .NET 10 の「MAUI 用 Aspire service defaults」は開発時の仕組み(AppHost がサーバーを起動し、MAUI アプリにサービスディスカバリと OTLP の接続先(Aspire ダッシュボード)を渡す)で、エミュレーター専用ではないが本番の基盤ではない。本番は Collector 等の OTLP 受け口を設定 QR で配る形になるため、Aspire はこの候補の「開発時の受け口」として扱う
 
-### C. 外部サービス
+### ☁️C. 外部サービス
 
 | サービス | 内容 | 参照 |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 | Application Insights(TinyInsights) | `UseTinyInsights(connectionString)` でクラッシュ / ページビュー / 依存呼び出し / カスタムイベント。専用ダッシュボードあり | https://github.com/dhindrik/TinyInsights.Maui |
 | OpenTelemetry → Application Insights | OTel の経路で Azure Monitor へ | https://www.docswell.com/s/tanaka_733/K4P265-maui-observability |
 
-## 4. 比較
+## ⚖️4. 比較
 
 | 観点 | A. DeviceManager 型 | B. OpenTelemetry | C. 外部サービス |
 | --- | --- | --- | --- |
@@ -84,14 +84,14 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 | プロトコル / 認証 | gRPC(h2c)+ SignalR + REST / API キー | OTLP(HTTP または gRPC)/ ヘッダー | HTTPS / DSN・キー |
 | 他システムとの接続 | 独自 | 標準(サーバー側と同じ基盤に集約できる) | サービス内 |
 
-## 5. アプリ側の組み込み設計(共通)
+## 🧩5. アプリ側の組み込み設計(共通)
 
 - `ITelemetry`(例: `TrackEvent` / `TrackMetric` / `ReportCrash` / `Flush`)を `Components` または `Services` に置き、実装(DeviceManager / OTLP / Null)を `MauiProgram.cs` で切り替える。ログは `ILoggerProvider` として差し込む
 - 接続先とキーは `Settings`(QR キー: 例 `TelemetryEndPoint` / `TelemetryKey`)。未設定なら Null 実装で動く
 - 収集点: `CrashReport`(保存済みレポートの送信)、`Extender/` のナビゲーションプラグイン(画面遷移)、`DeviceState`(電池 / ネットワーク)、`NetworkOperator`(通信の成否・所要時間・ステータス)、`DiagnosticPanel` の数値(メモリ)
 - 送信の制御: バックグラウンド移行(`Window.Stopped`)でフラッシュ、Wi-Fi 限定などの条件は `DeviceState.NetworkProfile` で判定
 
-## 6. 検討の論点(次の作業で決めること)
+## ❓6. 検討の論点(次の作業で決めること)
 
 1. 方式: A / B / C のどれか、または A のサーバーに OTLP の受け口を足す・B の永続キューを自前で足すといった組み合わせ
 2. 収集する項目と粒度(クラッシュのみから始めるか、ログ / メトリクスまで含めるか)
@@ -100,7 +100,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 5. ライブラリの形(DeviceManager.Client を NuGet 化するか、本テンプレート内の `Components` として持つか)
 6. 本テンプレートでの見せ方(Device > Misc に送信テストのカードを置くか、設定画面に接続先を出すか)
 
-## 7. 参考
+## 🔗7. 参考
 
 - OpenTelemetry .NET: https://opentelemetry.io/docs/languages/dotnet/ 、OTLP エクスポーター: https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol
 - .NET 10 MAUI の診断(`Microsoft.Maui` の ActivitySource / Meter): https://learn.microsoft.com/ja-jp/dotnet/maui/whats-new/dotnet-10?view=net-maui-10.0

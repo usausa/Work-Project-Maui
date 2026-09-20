@@ -1,4 +1,4 @@
-# 別アプリケーションでの導入検討項目
+# 💡別アプリケーションでの導入検討項目
 
 本サンプル(Template)では対象外とするが、別のアプリケーションでは導入を検討する項目の一覧。`Task_Checklist.md` から外した項目を、導入時に必要な情報(参照 / 実装範囲 / 本テンプレートでの実装位置)ごと移す。
 
@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | ディープリンク(App Links / カスタムスキーム) | URL からアプリを起動し、指定画面へ遷移する | 下記 |
 
-## ディープリンク(App Links / カスタムスキーム)
+## 🔗ディープリンク(App Links / カスタムスキーム)
 
 参照: https://github.com/redth/maui.applinks.sample — `MainActivity` に `[IntentFilter(new[] { Intent.ActionView }, AutoVerify = true, Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable }, DataScheme = "https", DataHost = "...")]` を付けると、URL は MAUI 側が `Application.OnAppLinkRequestReceived(Uri)` に渡す。`https` リンクの検証には Google Search Console でのドメイン所有確認と `/.well-known/assetlinks.json`(パッケージ名 + 署名 SHA-256)の配置が必要。iOS は Universal Links(`apple-app-site-association`)。
 
