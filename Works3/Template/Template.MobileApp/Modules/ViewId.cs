@@ -95,11 +95,7 @@ public enum ViewId
     SampleMarkdown,
     SamplePdf,
 
-    SampleCvNetMenu,
-    SampleCvNetObject,
-    SampleCvNetTag,
-    SampleCvNetPeople,
-    SampleCvNetOcr,
+    SampleCvNet,
     SampleCvLocal,
 
     SampleChat,

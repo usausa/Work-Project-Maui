@@ -68,8 +68,7 @@
 
         <Button Grid.Row="4" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleCvNetMenu}"
+                Command="{Binding CvNetCommand}"
                 Text="CV Net"
                 ImageSource="{x:Static markup:AppIcons.Cloud}" />
         <Button Grid.Row="4" Grid.Column="1"
