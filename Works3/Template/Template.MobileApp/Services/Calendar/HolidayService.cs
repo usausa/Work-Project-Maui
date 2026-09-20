@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Services;
+namespace Template.MobileApp.Services.Calendar;
 
 public sealed class HolidayService
 {

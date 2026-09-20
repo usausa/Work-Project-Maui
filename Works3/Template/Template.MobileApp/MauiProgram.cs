@@ -46,7 +46,7 @@ using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
-using Template.MobileApp.Services.Chat;
+using Template.MobileApp.Services.Calendar;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -348,7 +348,7 @@ public static partial class MauiProgram
 
         services.AddSingleton<HttpService>();
         services.AddSingleton<MonitorConnection>();
-        services.AddSingleton<ChatClient>();
+        services.AddSingleton<ChatRoomClient>();
 
         // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
         services.AddSingleton<IScheduleEventProvider, ScheduleService>();

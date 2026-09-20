@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Services;
+namespace Template.MobileApp.Services.Calendar;
 
 using Template.MobileApp.Models.Sample.Calendar;
 

@@ -10,9 +10,7 @@ public sealed class SampleCvNetMenuViewModel : AppViewModelBase
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(async x =>
         {
-            var configured = !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&
-                             !String.IsNullOrEmpty(await settings.GetAIServiceKeyAsync());
-            if (!configured)
+            if (!await settings.IsAIServiceConfiguredAsync())
             {
                 await dialog.InformationAsync("AI end point is not configured.");
                 return;

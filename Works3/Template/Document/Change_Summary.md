@@ -1442,7 +1442,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 | `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC チャット(管理画面 `/chat` と相互、切断中の送信は再接続後に配送)と単項 RPC |
 | `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続維持: `Connect()` = 購読で接続を始め破棄で切断する `IObservable<HubStatus>`(初回接続の失敗は `RetryWhen` でバックオフ再試行、ネットワーク復帰(`resume`)で待ちを打ち切り(`Amb`)、接続後の切断は `WithAutomaticReconnect` の自動再接続、`Closed` になったら `Repeat` で初回接続からやり直し)、`On<T>()` = 受信メッセージの `IObservable<T>`、`CreateRetryPolicy` = 諦めないバックオフ |
 | `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(認証なし): `HubConnection` の構築(`/hubs/monitor`、KeepAlive 15 秒 / ServerTimeout 30 秒)、`Connect(baseAddress)`(`ReactiveSignalR.Connect` + 状態のログ)、`ServerStatus` / `Notifications` の `IObservable`、`ReportDeviceStatusAsync` |
-| `Services/Chat/`(新規) | サーバーの WPF サンプル `Chat/` の移植(`ChatClient` = 指数バックオフ再接続 + 送信キュー)と `chat.proto` / `server.proto` のコピー |
+| `Services/Chat/`(新規) | サーバーの WPF サンプル `Chat/` の移植(`ChatRoomClient` = 指数バックオフ再接続 + 送信キュー)と `chat.proto` / `server.proto` のコピー |
 | `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | Data CRUD / ストレージ一覧・削除(PUT / DELETE は `HttpClient` を `RestResponse` に包む)、`LoginId` / `TokenExpires`、通信系ログの分離 |
 | `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 で保存した Id により再ログインして 1 回だけ再送、`ExecuteTransfer`(インジケーターなし)、gRPC チャット用の `EnsureLoginAsync` / `GetTokenAsync` |
 | `Models/Api/` | `DataListResponse`(`Id` long / `Total`)、`DataResponse` / `DataCreateRequest` / `DataCreateResponse` / `DataUpdateRequest` / `StorageListResponse` / `MonitorMessages` |
@@ -1462,7 +1462,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 | `Modules/Basic/BasicSettingView.xaml` | `SearchBar.SearchIconColor` / `ReturnType="Search"`、`Switch.OffColor` |
 | `Modules/Device/DeviceMiscViewModel.cs` | `IVibration.IsSupported` / `IHapticFeedback.IsSupported` が false の端末では Vibrate / Feedback のボタンを無効に |
 | `Modules/Device/DeviceLocationViewModel.cs` + `DeviceLocationView.xaml` | `IGeolocation.IsEnabled` が false のとき測位待ちの空状態に「Location service is disabled」を表示 |
-| `Services/AiChatClientFactory.cs`(新規)/ `Modules/Sample/SampleChatViewModel.cs` / `MauiProgram.cs` | チャットの依存を `OllamaSharp` の `Chat` から `Microsoft.Extensions.AI.IChatClient` に変更。生成は `AiChatClientFactory`(設定の Ollama)。会話の履歴は VM が `List<ChatMessage>` で保持し `GetStreamingResponseAsync(history)` で送る。音声の項目抽出は `GetResponseAsync` |
+| `Modules/Sample/SampleChatViewModel.cs` | チャットの依存を `OllamaSharp` の `Chat` から `Microsoft.Extensions.AI.IChatClient` に変更(`OllamaApiClient` を設定の Ollama から直接生成)。会話の履歴は VM が `List<ChatMessage>` で保持し `GetStreamingResponseAsync(history)` で送る |
 | `Document/Development.md` | `dotnet run --project … -f net10.0-android --device <シリアル>` の手順(端末が複数あるときは `--device` 必須) |
 | `Document/Other_App_Candidates.md`(新規) | 本サンプルでは対象外だが別アプリケーションで導入を検討する項目の一覧(ディープリンクを移動) |
 | `Document/Telemetry_Study.md`(新規) | クラッシュレポート / テレメトリ基盤の検討資料(現状、要件と論点、DeviceManager 型 / OpenTelemetry / 外部サービスの候補と比較、アプリ側の組み込み設計、Aspire の位置付け) |
@@ -1499,10 +1499,34 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | `Modules/Sample/SampleCvNetMenuView.xaml` / `Modules/ViewId.cs` | Face のボタンを空の無効ボタンに、`SampleCvNetFace` を削除 |
 | `Usecase/AzureVisionUsecase.cs` / `Template.MobileApp.csproj` | `DetectFacesAsync` と `Azure.AI.Vision.Face` の参照を削除(Image Analysis 4.0 の物体 / 人物 / タグ / 文字のみ) |
 | `README.md` / `Document/Task_Checklist.md` | Implement の Sample 行から Face、TODO / サマリ / 3 節から Face 識別(旧 3-6)を削除。0-8 に `Works3/AiSample` の確認項目 |
-| `Works3/AiSample`(別フォルダ) | Sample > CV Net / Chat と同じ処理を Windows のコンソールで実行する検証用ソリューション(`AzureVisionUsecase.cs` / `AiChatClientFactory.cs` は無変更のコピー)。構成 / 設定 / Azure の設定 / 確認結果は同フォルダの README |
+| `Works3/AiSample`(別フォルダ) | Sample > CV Net / Chat と同じ処理を Windows のコンソールで実行する検証用ソリューション(`AzureVisionUsecase.cs` は無変更のコピー)。構成 / 設定 / Azure の設定 / 確認結果は同フォルダの README |
 | `Platforms/Android/AndroidManifest.xml` | `android:usesCleartextTraffic="true"`。Wi-Fi 経由の Ollama(`http://<PC の IP>:<port>`)など localhost 以外への平文 HTTP は既定では `Connection failure` になる(`OllamaSharp` の `HttpClient` は Android のネイティブハンドラ) |
 
 - ビルド 0 エラー 0 警告(Debug)。CV Net メニューは Object / Tag / People / Ocr の 4 つ。実機の Sample > Chat が Wi-Fi 経由(`OllamaEndPoint=http://192.168.100.9:12321`、`adb reverse` なし)で応答
+
+### 音声入力の整理 / カメラ撮影の打ち切り / 設定判定の集約(2026-09-20)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/ChatView.xaml(.cs)` | 入力バーにマイクボタン(`VoiceCommand` / `IsListening`。コマンド未設定なら非表示、認識中は赤い停止ボタン + パルス、プレースホルダー「話しかけてください」)。コード片のテンプレート(`CodeTemplate` / `IsCode`)は削除 |
+| `Modules/Sample/SampleChatView.xaml` + `SampleChatViewModel.cs` / `Models/Sample/Chat/AiChatMessage.cs` | 音声入力を 4 ステップのオーバーレイ(録音 → 文字起こし → 抽出 → 承認)からマイクボタンに変更。途中結果を入力欄へ流し込み、最終結果(無音で自動停止 / 停止ボタン)で認識中を終える。固定文の疑似応答と抽出(`VoiceExtractItem` / `MockExtractItems`)は削除し、`OllamaApiClient` を `IChatClient` として直接生成 |
+| `Modules/Sample/SampleMenuViewModel.cs` + `SampleMenuView.xaml` | Chat は `ChatCommand`(Ollama 未設定なら「Ollama end point is not configured.」を出して遷移しない) |
+| `Services/AiChatClientFactory.cs` | 削除 |
+| `Modules/Device/DeviceMiscViewModel.cs` + `DeviceMiscView.xaml` | 音声認識の `IsListening` を最終結果で終える(`RecognizeAsync` は認識の開始で戻る)。ボタンは Recognize / Stop のトグル |
+| `Messaging/CameraController.cs` / `Modules/Sample/SampleCvNet*ViewModel.cs` / `Modules/Device/DeviceCameraViewModel.cs` / `DeviceOcrViewModel.cs` | `CaptureWithTimeoutAsync`(5 秒で打ち切り)。撮影できなければ「撮影できませんでした。もう一度お試しください。」を出してプレビューのまま続行 |
+| `Modules/Sample/SampleCvNet*View.xaml` + `ViewModel.cs` | F4 の文言は `ActionText`(処理中は空で無効、解析が終わってから Retry) |
+| `State/Settings.cs` | 通信系の設定が投入済みかの判定を拡張メソッドに集約(`IsApiConfigured` / `IsGrpcConfigured` / `IsAIServiceConfiguredAsync` / `IsOllamaConfigured` / `IsScpConfigured`)。Network メニュー / Realtime / gRPC / SCP / CV Net メニュー / Sample メニュー / `MauiProgram` が使う |
+| `Usecase/ScpUsecase.cs`(新規)/ `Services/ScpService.cs`(削除)/ `Modules/Network/NetworkScpViewModel.cs` | SCP はファイル選択(FilePicker)/ 保存先(公開フォルダ)/ 接続情報(設定)の取り出しと SSH.NET の転送を `ScpUsecase` に。結果は `ScpUploadResult` / `ScpDownloadResult`(ファイル名 / サイズ / 転送結果 = 成否・例外メッセージ・指紋)で、文言は VM |
+| `Usecase/OnnxVisionUsecase.cs`(旧 `CognitiveUsecase.cs`)/ `Usecase/DetectResult.cs` | `AzureVisionUsecase` と対の名前に変更。共有の `DetectResult` は独立ファイル |
+| `Services/ChatRoomClient.cs`(旧 `Services/Chat/ChatClient.cs` + `ChatConnectionState.cs` / `ChatMessageEntry.cs` / `ChatMessageEventArgs.cs` / `ChatStateEventArgs.cs`)/ `Services/Protos/`(`chat.proto` / `server.proto`) | gRPC チャットのクライアントを `ChatRoomClient` に改名(`Microsoft.Extensions.AI.IChatClient` との区別)し、関連型を 1 ファイルにまとめて `Services` 直下へ。proto は `Services/Protos/`(csproj の `Protobuf` を追従) |
+| `Usecase/AzureVisionUsecase.cs` / `Modules/Sample/SampleCvNet*ViewModel.cs` | 例外(`RequestFailedException` / `HttpRequestException` / `InvalidOperationException`)は Usecase の中で処理し `Result<T>`(`Error` = 例外のメッセージ)で返す。VM は `IsSuccess` で分岐して失敗をダイアログ表示 |
+| `Modules/Main/SettingViewModel.cs` | QR を 1 回読んだら 3 秒間は検出を止める(同じ QR が映り続けても繰り返し読まない) |
+| `Usecase/ScpUsecase.cs` / `Modules/Network/NetworkScpView.xaml` | キャンセルは切断ではなく転送中のストリーム操作(`CancellationStream` の Read / Write)で例外にする(`ScpClient` の同期 API は切断しても抜けないことがある)。失敗・キャンセルしたダウンロードは途中までのファイルを削除。保存先は公開フォルダ(説明文も) |
+| `Services/Calendar/SampleDataBoundary.cs` | カレンダー系だけが使うため `Services/Calendar/` へ |
+| `Services/Calendar/`(`HolidayService.cs` / `IScheduleEventProvider.cs` / `ScheduleService.cs`) | カレンダー系のサービスをサブフォルダへ(名前空間 `Services.Calendar`) |
+| `Works3/AiSample` | ChatConsole を同じ構成に(`OllamaApiClient` を直接生成、未設定は終了、疑似応答と 4 ステップを削除し `VoiceInput` に)。`AiChatClientFactory.cs` のコピーは削除 |
+
+- ビルド 0 エラー 0 警告(Debug)、AiSample 0 警告。実機: Chat = マイク → 「話しかけてください」→ 認識した文章が入力欄に入る → 送信で Ollama(Wi-Fi 経由 12321)がストリーミング応答、無音は自動で停止。CV Net Object = Detect 中は F4 が空、解析後に Retry。Device > Misc = Recognize → Stop → 無音で戻る。**SCP(sshd = 192.168.100.99、Task_Checklist 旧 1 節)**: QR で投入 → 接続先 `root@192.168.100.99:22` → アップロード 300 KB / 40 MB / 200 MB 完了(進捗バー、指紋 SHA256 表示)→ ダウンロード 300 KB / 200 MB 完了(公開フォルダ、md5 一致)→ 200 MB の転送中キャンセル(アップロード / ダウンロード)が「キャンセルしました」で戻り途中ファイルなし → 存在しないリモート名は「失敗: scp: ...: No such file or directory」。旧 1 節(1-1〜1-3)は削除し、2 節 → 1 節、3 節 → 2 節に繰り上げ
 
 ## C. この区間のナレッジ
 

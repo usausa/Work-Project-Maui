@@ -190,7 +190,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Services\Chat\*.proto" GrpcServices="Client" />
+    <Protobuf Include="Services\Protos\*.proto" GrpcServices="Client" />
   </ItemGroup>
 
   <!-- Trimmer -->

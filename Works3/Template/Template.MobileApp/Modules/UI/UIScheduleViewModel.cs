@@ -1,7 +1,7 @@
 namespace Template.MobileApp.Modules.UI;
 
 using Template.MobileApp.Models.Sample.Calendar;
-using Template.MobileApp.Services;
+using Template.MobileApp.Services.Calendar;
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {

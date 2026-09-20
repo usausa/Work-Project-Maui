@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.Sample;
 
-using Template.MobileApp.Services;
-
 public sealed class SampleMenuViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
@@ -10,12 +8,12 @@ public sealed class SampleMenuViewModel : AppViewModelBase
 
     public SampleMenuViewModel(
         IDialog dialog,
-        AiChatClientFactory chatClientFactory)
+        Settings settings)
     {
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         ChatCommand = MakeAsyncCommand(async () =>
         {
-            if (!chatClientFactory.IsConfigured)
+            if (!settings.IsOllamaConfigured())
             {
                 await dialog.InformationAsync("Ollama end point is not configured.");
                 return;

@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Services;
+namespace Template.MobileApp.Services.Calendar;
 
 // サンプルデータ生成の下限判定 (過去2ヶ月の月初より前は生成しない)
 internal static class SampleDataBoundary
