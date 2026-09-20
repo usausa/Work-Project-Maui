@@ -18,6 +18,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string GrpcEndPoint { get; set; }
 
     [ObservableProperty]
+    public partial string OtelEndPoint { get; set; }
+
+    [ObservableProperty]
     public partial string AIServiceEndPoint { get; set; }
 
     [ObservableProperty]
@@ -52,6 +55,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
         ApiEndPoint = settings.ApiEndPoint;
         GrpcEndPoint = settings.GrpcEndPoint;
+        OtelEndPoint = settings.OtelEndPoint;
         AIServiceEndPoint = settings.AIServiceEndPoint;
         AIServiceKey = string.Empty;
         OllamaEndPoint = settings.OllamaEndPoint;
@@ -78,6 +82,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
                     {
                         settings.GrpcEndPoint = grpcEndPoint;
                         GrpcEndPoint = grpcEndPoint;
+                    }
+                    if (parser.TryGetString(nameof(OtelEndPoint), out var otelEndPoint))
+                    {
+                        settings.OtelEndPoint = otelEndPoint;
+                        OtelEndPoint = otelEndPoint;
                     }
                     if (parser.TryGetString(nameof(AIServiceEndPoint), out var aiServiceEndPoint))
                     {

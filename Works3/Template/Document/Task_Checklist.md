@@ -7,7 +7,7 @@
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Review | 未コミット分の確認(0-1〜0-6) | 0 |
+| Review | 未コミット分の確認(0-1〜0-8) | 0 |
 | Network | SCP の実機確認と転送実テスト(要 SSH サーバ) | 1 |
 | Device | Biometric(生体認証) | 2-1 |
 | Device | Push(FCM) | 2-2 |
@@ -18,7 +18,6 @@
 | Diagnostics | Layout metrics(レイアウト診断メトリクス) | 3-3 |
 | Basic | Global xmlns | 3-4 |
 | View | StyleClass(文字サイズ × 配置) | 3-5 |
-| Sample | Face identification(LargeFaceList) | 3-6 |
 | View | Material 3(UseMaterial3) | 3-10 |
 | Device | Background task(WorkManager) | 3-12 |
 
@@ -42,20 +41,20 @@
 
 Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち、未確認のもの(確認済みの項目は削除済み)。確認できたグループから順にコミットする(ビルド 0 警告 / inspectcode 0 件 / 実機確認は実施済み)
 
-- コミット対象外: `.claude/worktrees/angry-feistel-0b79a0/`(worktree の残骸。削除)
-- 公開待ち: ClamGrid 1.1.0(`GridColumn.Converter`。`D:\GitHub\Other-ClamGrid`、未コミット・未公開)。公開後に `Template.MobileApp.csproj` の `ProjectReference` を `PackageReference` 1.1.0 に戻し、`Template.MobileApp.slnx` の Library から外す
+- コミット対象外: `.claude/worktrees/angry-feistel-0b79a0/`(worktree は登録解除・ブランチ削除済み。空のディレクトリだけがロックで残っているので、アプリの再起動後に削除)
 
 ### 0-1 Azure AI Vision / Ollama チャット / 音声入力
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
-| `Usecase/AzureVisionUsecase.cs` | Image Analysis 4.0(物体 / 人物 / タグ / 文字)と Face | — |
-| `Modules/Sample/SampleCvNetObjectView.xaml` / `Tag` / `People` / `Ocr` / `Face`(各 `.xaml` + `ViewModel.cs`)/ `Graphics/Drawing/DetectDrawing.cs` | 撮影 → 解析 → 枠(ラベル + 信頼度)/ タグのパネル | Setting の AI EndPoint / Key が必要。Tag は日本語のタグ、Face は Face API のあるリソースのみ(無ければ 401 のダイアログ) |
+| `Usecase/AzureVisionUsecase.cs` | Image Analysis 4.0(物体 / 人物 / タグ / 文字) | — |
+| `Modules/Sample/SampleCvNetObjectView.xaml` / `Tag` / `People` / `Ocr`(各 `.xaml` + `ViewModel.cs`)/ `Graphics/Drawing/DetectDrawing.cs` | 撮影 → 解析 → 枠(ラベル + 信頼度)/ タグのパネル | Setting の AI EndPoint / Key が必要。Tag は日本語のタグ |
 | `Modules/Sample/SampleChatView.xaml` + `SampleChatViewModel.cs` | Ollama のストリーミング応答(未設定は疑似応答)、音声入力(端末の音声認識)と Ollama の抽出 | 冒頭のあいさつに動作モード、応答、音声フローの 4 ステップ |
 | `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `OllamaEndPoint` / `OllamaModel`(QR のキー名も同じ) | Setting 画面の Ollama / Model の行 |
 | `Document/Sample_CvNet_Tag.png` | 画像 | README |
+| `Platforms/Android/AndroidManifest.xml` | `usesCleartextTraffic="true"`(localhost 以外への平文 HTTP) | Wi-Fi 経由の Ollama(`http://<PC の IP>:<port>`)で Chat が応答 |
 
-- [ ] **0-1** 上記(端末には Foundry の EndPoint / Key と Ollama(`http://localhost:11434` / `gemma2`)を設定済み。不要なら Setting の QR で上書き)
+- [ ] **0-1** 上記(端末には Foundry の EndPoint / Key と Ollama(`http://192.168.100.9:12321` = PC の Wi-Fi 側 / `gemma2`)を設定済み。不要なら Setting の QR で上書き)
 
 ### 0-2 プッシュ通知の自前サンプル(別フォルダ `Works3/PushSample`)
 
@@ -86,7 +85,7 @@ Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち�
 | `State/Session.cs` / `App.xaml.cs` | 前面かどうか(`IsForeground`)を Window の Resumed / Stopped で更新 | — |
 | `MauiProgram.cs` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Template.MobileApp.csproj` | Rester の JSON を PascalCase(大文字小文字を区別しない)に、DI、`NetworkStorage`、アイコン(`Http` / `FolderOpen` / `Hub`)、proto の参照 | ビルド |
 | `Document/Development.md` | 「サーバー処理」 | 起動 / ポート / `adb reverse` / QR の手順 |
-| (server) `Components/Pages/QrPage.razor(.cs)` / `Settings/ClientSetting.cs` / `appsettings.json` | 設定 QR(全キー、接続先以外は `Client` セクションの初期値) | `/qr` の内容(キーは環境変数か user-secrets) |
+| (server) `Components/Pages/QrPage.razor(.cs)` | 設定 QR(全キー。値の管理は 0-7 の `Setting` テーブル) | `/qr` の内容 |
 | (server) `Endpoints/DataEndpoints.cs` / `Models/Api/DataListResponse.cs` / `Core/Services/DataService.cs` / `Core/Models/RangeResult.cs` | 一覧の範囲取得(`offset` / `size`、`Total`) | 省略時は全件 |
 | (server) `Hubs/MonitorHub.cs` / `Infrastructure/Monitor/DeviceRegistry.cs` / `DeviceEntry.cs` / `MonitorNotifier.cs` / `Models/Api/MonitorMessages.cs` / `Workers/ServerStatusWorker.cs` / `NotificationRelayWorker.cs` / `Application/ApplicationExtensions.cs` / `Program.cs` / `Application/Log.cs` | SignalR ハブと状態配信 / 通知 | 認証なし、KeepAlive 15 秒 / ClientTimeout 30 秒、`DeviceRegistry.Disconnect` |
 | (server) `Components/Pages/DevicesPage.razor(.cs)` / `Layout/NavMenu.razor` / `Pages/Home.razor(.cs)` / `wwwroot/css/app.css` | 管理画面の Devices(端末一覧、通知の送信、切断 = `HubCallerContext.Abort`)、Home の接続数 | 切断で端末が `Closed` → 新 ID で再接続 |
@@ -112,9 +111,9 @@ Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち�
 
 ### 0-5 OpenTelemetry の組み込みサンプル(別フォルダ `Works3/OtelSample`)
 
-本アプリのコードは無変更。構成 / 実行手順 / 送信の設計(OTLP/HTTP、ILogger の転送、ディスク退避と再送、クラッシュ、MAUI のレイアウト計測)/ 確認済みの動作 / 解析上の制約 / ナレッジはすべて `Works3/OtelSample/README.md`。`Document/Telemetry_Study.md` の候補 B の実証。
+本アプリのコードは無変更。構成 / 実行手順 / 送信の設計(OTLP/HTTP、ILogger の転送、ディスク退避と再送、クラッシュ、MAUI のレイアウト計測)/ サーバの画面 / 確認済みの動作 / 解析上の制約 / ナレッジはすべて `Works3/OtelSample/README.md`。`Document/Telemetry_Study.md` の候補 B の実証。サーバ(`OtelServer`)は 2026-09-19 に Blazor(MudBlazor)+ SQLite のダッシュボード(Dashboard / Logs / Traces / Metrics / Dummy Data)へ刷新し、OTLP/gRPC の受け口(4317)も追加。クライアントは HTTP / gRPC を切替可(未コミット。`App_Data/` は `.gitignore`)。
 
-- [ ] **0-5** `Works3/OtelSample`(README に沿って確認。`EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用を含む)
+- [ ] **0-5** `Works3/OtelSample`(README に沿って確認。クライアント = `EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用 / サーバ = Razor コンポーネントのための CA1515 抑止(`GlobalSuppressions.cs`)、MudBlazor 9.10.0 と Microsoft.Data.Sqlite 10.0.12 の採用、ダッシュボードの各画面(実機の Pixel 9a とダミーデータで確認済み))
 
 ### 0-6 Drawer の背景スワイプ(Bottom sheet / Drawer の確認後に追加)
 
@@ -123,6 +122,22 @@ Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち�
 | `Controls/SideDrawer.cs` | 背景にも `PanGestureRecognizer`(パネルのドラッグと同じ扱い) | 開いた状態で背景を左へスワイプ / ドラッグすると閉じる(右へのフリックは開いたまま)。タップでも閉じる |
 
 - [ ] **0-6** 上記
+
+### 0-7 設定画面の OTEL 欄と表示の詰め
+
+| 現在のファイル名 | 何用か | 確認観点 |
+| --- | --- | --- |
+| `State/Settings.cs` / `Modules/Main/SettingViewModel.cs` | `OtelEndPoint`(QR のキー名も同じ。送信先として使うのは OTEL 対応時) | QR の `OtelEndPoint=` が保存されて表示される |
+| `Modules/Main/SettingView.xaml` | 設定値のパネルは内容の高さ(`Auto`)、カメラが残りを全て使う。行は 1 行表示(長い値は中央省略、キーは伏せ字)、行間 2 / 行の高さ 22 / 文字 13、見出し 15 | Network に OTEL 行、全項目が 1 行で収まる |
+| (server) `Settings/ClientSettingKeys.cs` / `Components/Pages/QrPage.razor(.cs)` / `Core/Accessors/SettingAccessor.cs` + `Sql/SettingAccessor.*.sql` / `Core/Services/SettingService.cs` / `Core/Models/Entity/SettingEntity.cs` / `Database.sql` / `appsettings.json`(`Client` 削除)/ `README.md` / `tests/.../QrPageTests.cs` | QR の値は `Setting` テーブル(Key / Value)で管理し `/qr` で編集・保存。接続先(API / gRPC / OTEL)はサーバーの URL から決めて保存しない | `/qr` で値を保存 → 再読込で残る、空欄で行が消える、生成値に `OtelEndPoint=` が出る(テスト 39 件) |
+
+- [ ] **0-7** 上記
+
+### 0-8 Windows 検証コンソール(別フォルダ `Works3/AiSample`)
+
+本アプリのコードは無変更。0-1 の `Usecase/AzureVisionUsecase.cs` と `Services/AiChatClientFactory.cs` をそのままコピーし、Sample > CV Net(画像ファイル → 解析 → 枠を描いた PNG)と Sample > Chat(Ollama のストリーミング応答 / 音声入力 4 ステップ)を Windows のコンソールで実行する。構成 / 設定(引数 / 環境変数 / appsettings.json)/ Azure の設定 / 確認済みの動作 / 解析上の制約はすべて `Works3/AiSample/README.md`。
+
+- [ ] **0-8** `Works3/AiSample`(README に沿って確認。コピーが無変更であること = `AiShared/Usecase/AzureVisionUsecase.cs` / `AiShared/Services/AiChatClientFactory.cs`)
 
 ---
 
@@ -255,12 +270,6 @@ sshd は対向サーバー(template-maui-server、4 節)に含まれない。
 - [ ] **3-5-1** クラスの定義と `App.xaml` へのマージ、付録A への方針の追記
 - [ ] **3-5-2** Network の 5 画面へ適用し、表示が変わらないことを実機で確認
 - [ ] **3-5-3** 既存画面は触るときに適用する(一括変更はしない)。Style と StyleClass の同一プロパティ指定が無いことを inspectcode / 目視で確認
-
-### 3-6 Face 識別(LargeFaceList)
-
-参照: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/face/Azure.AI.Vision.Face/samples/Sample6_LargeFaceListAsync.md — `LargeFaceListClient` で顔リストを作成 → 顔画像を追加 → 学習 → `FindSimilarAsync` で類似顔を検索する `Azure.AI.Vision.Face` の公式サンプル。
-
-- [ ] **3-6-0**【判断】要否 — `SampleCvNetFace` は顔検出(`DetectAsync`)まで。識別(Identify / Verify / FindSimilar)は Azure の Limited Access 申請が承認されたサブスクリプションと Face API のあるリソースが必要(現在の Foundry リソースは Face が 401)。承認済みの場合のみ、登録画面(顔リストへの追加)と照合画面を追加
 
 ### 3-10 Material 3(`UseMaterial3`)
 

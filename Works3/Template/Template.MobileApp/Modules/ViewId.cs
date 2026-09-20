@@ -100,7 +100,6 @@ public enum ViewId
     SampleCvNetTag,
     SampleCvNetPeople,
     SampleCvNetOcr,
-    SampleCvNetFace,
     SampleCvLocal,
 
     SampleChat,

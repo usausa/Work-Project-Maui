@@ -1431,7 +1431,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 
 ### ネットワーク実装(template-maui-server 対向)(2026-09-15)
 
-対向サーバーを template-maui-server(`D:\GitHubTemplate\template-maui-server`、8081 = Web / API、8084 = gRPC)にし、Web API / ストレージ / SignalR / gRPC を実装した。サーバー側の変更も同時に行なった(同リポジトリの README に反映)。
+対向サーバーを template-maui-server(`D:\GitHubTemplate\template-maui-server`、8080 = Web / API、9090 = gRPC)にし、Web API / ストレージ / SignalR / gRPC を実装した。サーバー側の変更も同時に行なった(同リポジトリの README に反映)。
 
 | 対象 | 内容 |
 |---|---|
@@ -1453,7 +1453,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 | `Document/Development.md` | 「サーバー処理」を対向サーバーの起動 / ポート / `adb reverse` / QR の手順に更新 |
 | template-maui-server | `/qr` に全キー(`GrpcEndPoint` / Ollama / SCP、接続先以外は `Client` セクションの初期値)、`GET /api/data/list?offset=&size=`(`Total`)、SignalR `MonitorHub`(`/hubs/monitor`、認証なし)+ `DeviceRegistry`(接続の `Abort` を保持)+ `ServerStatusWorker`(1 秒)+ `NotificationRelayWorker`、管理画面 Devices(端末一覧 / 通知送信 / 切断)と Home の接続数、gRPC `info.ServerInfo/GetServerTime`、開発環境の JWT 有効期限 5 分、テスト 11 件追加(35 件) |
 
-- ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8081` / `tcp:8084`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み → 管理画面の「切断」(`Closed`)で 100 ms 後に新 ID で接続済み → サーバー停止中の再接続は接続中...(0 / 2 / 5 秒のバックオフ)→ 再起動で接続済み → 離脱で切断(サーバーログの `Monitor disconnected`)。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
+- ビルド 0 エラー 0 警告(アプリ Debug / Release、サーバー Debug / Release)、inspectcode 0 件(両方)、サーバーのテスト 33 件成功。実機(Pixel 9a、`adb reverse tcp:8080` / `tcp:9090`)で確認: HTTP = 未ログインの作成は 401 → ログイン(有効期限表示)→ 作成 → 重複 409 → 45 件を 20 / 40 / 45 と追加読み込み → 行選択で詳細 → 更新 → 削除 → 10 秒 API を 2 秒でキャンセル → 有効期限切れ後の作成が 401 → 再ログイン → 成功。Storage = 3 MB ファイルと写真のアップロード → 一覧 / 下階層 / 上へ → ダウンロード(公開フォルダ)→ 削除。Realtime = 接続済み(サーバーログの接続 ID と一致)→ グラフとサーバー時刻 → 管理画面 Devices に端末が表示 → 通知送信(前面 = 一覧に追加、HOME 中 = ローカル通知)→ サーバー停止で再接続中 → 再起動で新 ID で接続済み → 管理画面の「切断」(`Closed`)で 100 ms 後に新 ID で接続済み → サーバー停止中の再接続は接続中...(0 / 2 / 5 秒のバックオフ)→ 再起動で接続済み → 離脱で切断(サーバーログの `Monitor disconnected`)。gRPC = 単項 RPC のサーバー時刻 → 端末 ⇔ `/chat` の相互送受信 → サーバー停止中の送信(未配送 1)→ 再起動で再接続(1 → 2 → 5 → 10 秒のバックオフ)と配送
 
 ### .NET 10 API の適用と IChatClient 抽象化(2026-09-15)
 
@@ -1475,16 +1475,34 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 | 対象 | 内容 |
 |---|---|
 | Other-ClamGrid `GridColumn.cs` / `Rendering/GridRenderer.cs` / `Document/API.md` / `README.md` / `Directory.Build.props`(別リポジトリ、未コミット・未公開) | `GridColumn.Converter`(`IValueConverter?`)を追加。文字セルの描画と自動幅の計測で `Format` の前に適用(真偽セル / ソート / 編集は生値)。1.0.0 → 1.1.0。テスト `ConverterRunsBeforeTheFormatString` を追加 |
-| `Template.MobileApp.csproj` / `Template.MobileApp.slnx` | `ClamGrid` を公開まで `ProjectReference`(`..\..\..\..\..\GitHub\Other-ClamGrid\ClamGrid\ClamGrid.csproj`)で参照し、slnx の Library にも追加(inspectcode の解決用) |
+| `Template.MobileApp.csproj` | `ClamGrid` 1.1.0(nuget.org に公開済み)へ更新 |
 | `Models/Control/OrderInfo.cs` | `OrderRow.cs` / `OrderStatus.cs` / `OrderChannel.cs` / `OrderSamples.cs` を 1 ファイルに統合し `OrderRow` → `OrderInfo`。`StatusText` / `Flags`(文字列)/ `RankText` / `ChannelText` を削除し、アクセサは `Status` / `Marks`(`[Flags] OrderMarks`)/ `Rank` / `Channel` の値を返す |
 | `Modules/Control/ControlGridView.xaml` / `Converters/FlagsToTextConverter.cs` | 状態 / 受付は `s:MapToTextConverter`、ランクは `s:MapToTextConverter`(`{s:Int32 n}` → ⭐)、目印は `FlagsToTextConverter`(`[Flags]` の立っているビットの文言を `Entries` の順に連結)を列の `Converter` に指定 |
 | `Modules/Control/ControlGridViewModel.cs` | 状態更新は `Rows.Suspend()` → 更新 → `Resume()` → `UpdateSelection` で選び直す(行ごとの変更通知で全行を並べ替え直さない) |
 | `Controls/BottomSheetView.cs` | 高さを内容に合わせる(上限 `ExpandedRatio`)。ドラッグの終了は離した速さ(100ms 止まっていれば無し)と最後に動かした方向で決める(戻したドラッグは閉じない。速さは逆方向に転じたら平均せず置き換える)。ドラッグの続きは離した速さから減速(SinOut、80〜400ms)。閉じる途中のドラッグは無視 |
 | `Controls/SideDrawer.cs` | 開閉 250 → 150ms。ドラッグの終了判定と続きの減速をボトムシートと同じに(`Settle` / `FlingDuration`、`flingDuration` を `IsOpen` の変更に渡す)。背景にも `PanGestureRecognizer` を付け、開いているときは画面のどこからでもスワイプで閉じる(閉じているときの開く操作は帯 24dp × ジェスチャナビでは上下中央 200dp のまま = 付録B) |
 | `Modules/Control/ControlBottomSheetViewModel.cs` | F2 / F3 は同じシートなら閉じる、別のシートが開いていれば閉じ終わってから(300ms)開く |
+| `State/Settings.cs` / `Modules/Main/SettingViewModel.cs` / `SettingView.xaml` | `OtelEndPoint`(QR キー同名)を追加。設定画面は設定値のパネルを内容の高さ(`Auto`)にしてカメラが残りを全て使う構成にし、行は 1 行表示(`MiddleTruncation`)、行間 2 / 高さ 22 / 文字 13 / 見出し 15 / 見出し列 84 に詰めた |
+| (server) `appsettings.json`(`Kestrel:Endpoints`)/ `launchSettings.json` / README / ChatClient の既定値 | ポート構成を 8080 = Web / API(HTTP/1.1)、9090 = gRPC(HTTP/2 h2c)へ変更(旧 8081 / 8084)。QR の gRPC 接続先は `Kestrel:Endpoints:Grpc:Url` から導出されるため追従 |
+| (server) `Setting` テーブル + `SettingService` / `SettingAccessor`、`ClientSettingKeys.cs`、`QrPage` | QR の値(AI / Ollama / SCP)を DB の Key / Value で管理し `/qr` で編集・保存(空欄は削除)。接続先 API / gRPC / OTEL はサーバーの URL から決めて保存しない。`appsettings.json` の `Client` セクションと `ClientSetting.cs` は削除 |
 | `Modules/Device/DeviceWiFiViewModel.cs` + `DeviceWiFiView.xaml` / `Converters/WiFiBandConverter.cs` | 個別の `[ObservableProperty]` 13 個と `WiFiAccessPointItem` の透過 / 文言プロパティを削除し、`WiFiConnection?` / `WiFiAccessPoint` をそのままバインド。文言と色はコンバーター(帯域 / セキュリティ / 信号色 / 非公開 SSID)と `MultiBinding` / `StringFormat`。信号色の `DataTrigger` 9 個は `s:MapToColorConverter` 1 個に |
 
 - ビルド 0 エラー 0 警告(Debug。Release は既存の Android BLE の警告のみ)。ClamGrid は Release 0 警告、テスト 141 / 142(`GridLayoutTests.BoundariesUnderTheFrozenColumnsAreNotGrabbable` は 1.0.0 でも失敗する既存)。実機: Grid の各列の絵文字と色、未処理 662 行を一括選択しての状態更新(固まらず、選択とスクロール位置が残る)、シートの F2 / F3 切替・短いフリック・戻したドラッグ・内容に合う高さ、ドロワーの開閉(戻したドラッグは閉じない / 開かない、ゆっくり動かして止めてから離すと距離で決まる、短いフリック、帯のスワイプ、背景のスワイプ / ドラッグで閉じる)、WiFi の接続カード / 一覧 / 展開
+
+### Face(顔検出)の削除と Windows 検証コンソール(2026-09-19)
+
+Face API は Image Analysis と別の専用リソース(Face リソース、または Limited Access 承認済みのサブスクリプション)が必要なため、顔検出のサンプルを削除した。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Sample/SampleCvNetFaceView.xaml(.cs)` / `SampleCvNetFaceViewModel.cs` | 削除 |
+| `Modules/Sample/SampleCvNetMenuView.xaml` / `Modules/ViewId.cs` | Face のボタンを空の無効ボタンに、`SampleCvNetFace` を削除 |
+| `Usecase/AzureVisionUsecase.cs` / `Template.MobileApp.csproj` | `DetectFacesAsync` と `Azure.AI.Vision.Face` の参照を削除(Image Analysis 4.0 の物体 / 人物 / タグ / 文字のみ) |
+| `README.md` / `Document/Task_Checklist.md` | Implement の Sample 行から Face、TODO / サマリ / 3 節から Face 識別(旧 3-6)を削除。0-8 に `Works3/AiSample` の確認項目 |
+| `Works3/AiSample`(別フォルダ) | Sample > CV Net / Chat と同じ処理を Windows のコンソールで実行する検証用ソリューション(`AzureVisionUsecase.cs` / `AiChatClientFactory.cs` は無変更のコピー)。構成 / 設定 / Azure の設定 / 確認結果は同フォルダの README |
+| `Platforms/Android/AndroidManifest.xml` | `android:usesCleartextTraffic="true"`。Wi-Fi 経由の Ollama(`http://<PC の IP>:<port>`)など localhost 以外への平文 HTTP は既定では `Connection failure` になる(`OllamaSharp` の `HttpClient` は Android のネイティブハンドラ) |
+
+- ビルド 0 エラー 0 警告(Debug)。CV Net メニューは Object / Tag / People / Ocr の 4 つ。実機の Sample > Chat が Wi-Fi 経由(`OllamaEndPoint=http://192.168.100.9:12321`、`adb reverse` なし)で応答
 
 ## C. この区間のナレッジ
 
@@ -1497,7 +1515,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - **SignalR の接続維持は Rx で書ける**(`Helpers/ReactiveSignalR.cs`): 接続試行 `Observable.FromAsync(StartAsync)` を `RetryWhen`(バックオフの `Timer` と復帰シグナルの `Amb`)で繰り返し、`Concat(closed.Take(1))` + `Repeat()` で `Closed` 後に初回接続からやり直す。購読 = 接続の寿命(破棄で `StopAsync`)なので、画面の VM は `OnNavigatedTo` で購読して `OnNavigatingFrom` で破棄するだけになる。`Reconnecting` / `Reconnected` / `Closed` は `Func<T, Task>` のイベントなので `Subject` で橋渡しする
 - **SignalR クライアントが `Closed` になる条件**: `WithAutomaticReconnect` を諦めないポリシーにすると、切断はまず `Reconnecting` になり `Closed` は来ない(サーバーのプロセス kill / 再起動はこちら)。`Closed` が来るのはサーバーが再接続不可の Close を送ったとき(`HubCallerContext.Abort()`、`OnConnectedAsync` の例外)。管理画面の「切断」がこれで、`Closed` → 初回接続のやり直しの経路を実機で確認できる
 - **SignalR の `DateTime` は Kind を失う**: サーバーの `GetLocalNow().DateTime`(Unspecified)を受けて `ToLocalTime()` すると UTC 扱いで +9 時間ずれる。時刻は `DateTimeOffset` で送り、クライアントは `.LocalDateTime` を使う
-- **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:8084")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8081)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る
+- **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:9090")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8080)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る
 - **`MediaPicker.PickPhotoAsync` は MAUI 10 で非推奨**(`PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 })` を使う)。Android 16 のフォトピッカーは選択後に「完了」が要る
 - **ラムダの引数 `(_, e)` の `_` は(1 つだけなら)破棄ではなく引数名**: 中で `_ = SelectAsync();` と書くとその引数への代入になる(ReSharper `AssignmentInsteadOfDiscard`)。引数名を `sender` にする
 - **管理画面(Blazor Server)を自動操作する場合**: Cookie 認証のログインフォームはアンチフォージェリ付きのため、内蔵ブラウザで `form` を submit する。Devices / Chat は Interactive Server のためページ内操作にはブラウザが要る(curl 不可)
@@ -1607,6 +1625,7 @@ Task_Checklist 2-2 のローカル通知を自作した(ライブラリなし。
 - ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
 - SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
+- Face(顔検出 / 顔識別、`Azure.AI.Vision.Face`)= 対象外(2026-09-19。Face API を持つ専用リソースが必要なため実装を撤去)
 - Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
 - ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)
 - `Controls/ChatView` のバブル色バインダブル化(C-13 / D18)= 対応不要(利用箇所は `SampleChatView` のみ)/ `AnimationOption.ResetEnter` の Scale 固定リセット = 対応不要(静的 Scale と `EnterAnimation` の併用なし。併用が出た場合は `EnterBaseTranslationY` と同じ基準値退避で対処)

@@ -81,8 +81,7 @@
 
         <Button Grid.Row="5" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId SampleChat}"
+                Command="{Binding ChatCommand}"
                 Text="Chat"
                 ImageSource="{x:Static markup:AppIcons.SmartToy}" />
         <Button Grid.Row="5" Grid.Column="1"

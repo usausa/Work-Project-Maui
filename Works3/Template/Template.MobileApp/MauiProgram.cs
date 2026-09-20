@@ -349,7 +349,6 @@ public static partial class MauiProgram
         services.AddSingleton<HttpService>();
         services.AddSingleton<MonitorConnection>();
         services.AddSingleton<ChatClient>();
-        services.AddSingleton<AiChatClientFactory>();
 
         // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
         services.AddSingleton<IScheduleEventProvider, ScheduleService>();
@@ -359,12 +358,12 @@ public static partial class MauiProgram
         services.AddSingleton<INetworkInteraction, DialogNetworkInteraction>();
         services.AddSingleton<NetworkOperator>();
         services.AddSingleton<NetworkUsecase>();
-        services.AddSingleton<CognitiveUsecase>();
+        services.AddSingleton<OnnxVisionUsecase>();
         services.AddSingleton<AzureVisionUsecase>();
+        services.AddSingleton<ScpUsecase>();
 
         // Models
         services.AddSingleton(new ActivityCalculator(0.0005, 65, 0.6));
-        services.AddSingleton<ScpService>();
     }
 
     // ------------------------------------------------------------
@@ -441,7 +440,7 @@ public static partial class MauiProgram
         }
 
         var apiContext = services.GetRequiredService<ApiContext>();
-        if (!String.IsNullOrEmpty(settings.ApiEndPoint))
+        if (settings.IsApiConfigured())
         {
             apiContext.BaseAddress = new Uri(settings.ApiEndPoint);
         }

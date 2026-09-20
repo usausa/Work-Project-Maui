@@ -75,7 +75,6 @@ Template project for MAUI.
 | Diagnostics | Layout metrics |
 | Basic | Global xmlns |
 | View | StyleClass(font size x alignment) |
-| Sample | Face identification |
 | View | Material 3 |
 | Device | Background task(WorkManager) |
 
@@ -90,7 +89,7 @@ Template project for MAUI.
 | Network | Web API(JWT, Data CRUD) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
 | Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Grid(ClamGrid) / Card list / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
-| Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object / Tag / People / OCR / Face(Azure AI Vision) / Chat(Ollama) / Crop |
+| Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object / Tag / People / OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Sudoku |
 | UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Schedule / Calendar / Timeline / Mail / Chat / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
 | UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |

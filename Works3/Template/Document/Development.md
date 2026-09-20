@@ -125,9 +125,9 @@ cd template-maui-server
 dotnet run --project src/Template.MobileServer.Web
 ```
 
-- ポート: 8081 = Web / API(HTTP/1.1)、8084 = gRPC(HTTP/2 h2c)。管理画面は `http://localhost:8081/`(初期アカウント admin / admin)
-- USB 接続の端末は `adb reverse tcp:8081 tcp:8081` と `adb reverse tcp:8084 tcp:8084` で端末側の `localhost` を PC へ転送する(LAN の端末は PC の IP で接続)
-- 端末の設定は管理画面の `/qr` が出す QR を Main > Setting の「Scan configuration QR」で読み取る(`ApiEndPoint` / `GrpcEndPoint` の既定値はサーバー自身の URL、AI サービス / Ollama / SCP の値はサーバーの設定 `Client` セクションから)
+- ポート: 8080 = Web / API(HTTP/1.1)、9090 = gRPC(HTTP/2 h2c)。管理画面は `http://localhost:8080/`(初期アカウント admin / admin)
+- USB 接続の端末は `adb reverse tcp:8080 tcp:8080` と `adb reverse tcp:9090 tcp:9090` で端末側の `localhost` を PC へ転送する(LAN の端末は PC の IP で接続)
+- 端末の設定は管理画面の `/qr` が出す QR を Main > Setting の「Scan configuration QR」で読み取る(`ApiEndPoint` / `GrpcEndPoint` の既定値はサーバー自身の URL、AI サービス / Ollama / SCP の値はサーバーの `Setting` テーブル = `/qr` で編集した値から)
 - 開発環境(`appsettings.Development.json`)の JWT 有効期限は 5 分。期限切れ後の API 呼び出しは 401 になり、アプリ側が保存した Id で再ログインして再送する
 
 ### サーバー側の機能(template-maui-server)

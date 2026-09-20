@@ -93,22 +93,34 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 #pragma warning restore CA2012
         });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);
-        Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x => RecognizeText = x.Text));
+        Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
+        {
+            if (!String.IsNullOrEmpty(x.Text))
+            {
+                RecognizeText = x.Text;
+            }
+
+            if (x.Complete)
+            {
+                IsListening = false;
+            }
+        }));
         RecognizeCommand = MakeAsyncCommand(async () =>
         {
+            if (IsListening)
+            {
+                await speech.RecognizeStopAsync();
+                return;
+            }
+
             RecognizeText = string.Empty;
             IsListening = true;
-            try
-            {
-                await speech.RecognizeAsync(CultureInfo.CurrentCulture);
-            }
-            finally
+            if (!await speech.RecognizeAsync(CultureInfo.CurrentCulture))
             {
                 IsListening = false;
             }
         });
 
-        // ローカル通知 (自作 NotificationService)。本体 / ボタンのタップは Tapped で受ける
         NotifyCommand = MakeAsyncCommand(async () =>
         {
             if (!await Permissions.RequestNotificationsAsync())
@@ -117,7 +129,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
                 return;
             }
 
-            notification.Show(NotificationId, "承認依頼", "受注 SO-2026-000123 の承認をお願いします", "SO-2026-000123", [new("approve", "承認"), new("reject", "却下")]);
+            notification.Show(NotificationId, "承認依頼", "SO-2026-000123 の承認をお願いします", "SO-2026-000123", [new("approve", "承認"), new("reject", "却下")]);
             NotificationText = "通知を表示しました (本体またはボタンのタップで戻ります)";
         });
         NotifyScheduleCommand = MakeAsyncCommand(async () =>
@@ -146,6 +158,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     {
         screen.SetOrientation(DisplayOrientation.Portrait);
 
+        IsListening = false;
         await speech.RecognizeCancelAsync();
     }
 

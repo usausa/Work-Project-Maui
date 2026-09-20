@@ -3,15 +3,7 @@ namespace Template.MobileApp.Usecase;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 
-public record DetectResult(
-    float Left,
-    float Top,
-    float Right,
-    float Bottom,
-    float Score,
-    string Label);
-
-public sealed class CognitiveUsecase : IDisposable
+public sealed class OnnxVisionUsecase : IDisposable
 {
     private readonly IFileSystem fileSystem;
 
@@ -23,7 +15,7 @@ public sealed class CognitiveUsecase : IDisposable
 
     private string[] labels = default!;
 
-    public CognitiveUsecase(IFileSystem fileSystem)
+    public OnnxVisionUsecase(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
     }

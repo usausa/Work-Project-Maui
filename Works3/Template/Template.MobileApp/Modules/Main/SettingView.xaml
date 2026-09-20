@@ -62,7 +62,7 @@
 
             <Style x:Key="SettingPanelBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="Padding" Value="16,8" />
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16,16,0,0" />
@@ -70,18 +70,19 @@
 
             <Style x:Key="SettingPanelStack"
                    TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="10" />
+                <Setter Property="Spacing" Value="2" />
             </Style>
 
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
+                <Setter Property="Margin" Value="0,4,0,2" />
             </Style>
 
             <Style x:Key="SectionHeaderIcon"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -89,42 +90,45 @@
             <Style x:Key="SectionHeaderLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource NameLabel}">
+                <Setter Property="FontSize" Value="15" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="SettingRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="MinimumHeightRequest" Value="26" />
+                <Setter Property="MinimumHeightRequest" Value="22" />
             </Style>
 
             <Style x:Key="SettingCaptionLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="13" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="WidthRequest" Value="108" />
+                <Setter Property="WidthRequest" Value="84" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="SettingValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="13" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+                <Setter Property="LineBreakMode" Value="MiddleTruncation" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="behaviors:AnimationOption.HighlightColor" Value="{StaticResource AmberLighten4}" />
             </Style>
 
             <Style x:Key="SettingEmptyLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="Text" Value="(not set)" />
             </Style>
 
             <Style x:Key="PanelDivider"
                    TargetType="BoxView">
+                <Setter Property="Margin" Value="0,2" />
                 <Setter Property="HeightRequest" Value="1" />
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
@@ -194,6 +198,21 @@
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding GrpcEndPoint, Converter={StaticResource EmptyConverter}}" />
+                </Grid>
+
+                <Grid Style="{StaticResource SettingRowGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource SettingCaptionLabel}"
+                           Text="OTEL" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingValueLabel}"
+                           IsVisible="{Binding OtelEndPoint, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding OtelEndPoint}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OtelEndPoint}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding OtelEndPoint, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
                 <BoxView Style="{StaticResource PanelDivider}" />

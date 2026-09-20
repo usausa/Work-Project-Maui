@@ -212,7 +212,7 @@
                     <Button Style="{StaticResource ActionButton}"
                             ImageSource="{x:Static markup:AppIcons.SmallMic}"
                             Command="{Binding RecognizeCommand}"
-                            Text="Recognize" />
+                            Text="{Binding IsListening, Converter={s:BoolToText True='Stop', False='Recognize'}}" />
 
                     <Grid Style="{StaticResource ListeningGrid}"
                           ColumnDefinitions="Auto,*"
