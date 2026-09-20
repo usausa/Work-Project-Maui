@@ -6,7 +6,6 @@ internal static class CommandLine
     public static readonly Dictionary<string, string> Switches = new(StringComparer.OrdinalIgnoreCase)
     {
         ["--endpoint"] = "OllamaEndPoint",
-        ["--model"] = "OllamaModel",
-        ["--speech"] = "Speech"
+        ["--model"] = "OllamaModel"
     };
 }

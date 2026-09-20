@@ -1,12 +1,12 @@
 # AiSample — Sample > CV Net / Chat を Windows で検証するコンソール
 
-`Works3/Template` の Sample > CV Net(Azure AI Vision)と Sample > Chat(Ollama + 音声入力)と同じ処理を Windows のコンソールで実行する。アプリの `Usecase/AzureVisionUsecase.cs` と `Services/AiChatClientFactory.cs` は**そのままコピー**して使い、コンソール側はカメラ / 画面の代わりに画像ファイルと標準入出力を担当する。`Works3/Template` とは独立したソリューションで、同じ解析設定(`.editorconfig` / `Directory.Build.props` / `Analyzers.ruleset` / `.sln.DotSettings`)を使う。
+`Works3/Template` の Sample > CV Net(Azure AI Vision)と Sample > Chat(Ollama + 音声入力)と同じ処理を Windows のコンソールで実行する。アプリの `Usecase/AzureVisionUsecase.cs` は**そのままコピー**して使い、Chat はアプリの `SampleChatViewModel` と同じ処理(`OllamaApiClient` を `IChatClient` として使う)をコンソール向けに書き、カメラ / 画面の代わりに画像ファイルと標準入出力を担当する。`Works3/Template` とは独立したソリューションで、同じ解析設定(`.editorconfig` / `Directory.Build.props` / `Analyzers.ruleset` / `.sln.DotSettings`)を使う。
 
 | プロジェクト | 内容 |
 | --- | --- |
-| `AiShared` | アプリからそのままコピーしたファイル(`Usecase/AzureVisionUsecase.cs` / `Services/AiChatClientFactory.cs`)と、それらが使う `Settings` / `DetectResult` の最小の代替。クラスライブラリ(コピーは public のまま置ける) |
+| `AiShared` | アプリからそのままコピーした `Usecase/AzureVisionUsecase.cs` と、それが使う `Settings` / `DetectResult` の最小の代替(`Settings` は ChatConsole の Ollama の設定も持つ)。クラスライブラリ(コピーは public のまま置ける) |
 | `CvConsole` | Sample > CV Net の 4 画面(Object / Tag / People / Ocr)相当。画像ファイル → Azure AI Vision → 結果の一覧 + 枠とラベルを描いた PNG |
-| `ChatConsole` | Sample > Chat 相当。Ollama(`IChatClient`)のストリーミング応答(未設定は疑似応答)と、音声入力の 4 ステップ(録音 → 文字起こし → 抽出 → 確認。文字起こしは Windows の音声認識または文字入力、抽出は Ollama) |
+| `ChatConsole` | Sample > Chat 相当。Ollama(`IChatClient`)のストリーミング応答と、音声入力(Windows の音声認識で 1 回の発話を認識して入力欄へ反映) |
 
 ## ファイル構成
 
@@ -14,20 +14,19 @@
 | --- | --- |
 | `AiSample.slnx` / `.editorconfig` / `Directory.Build.props` / `Analyzers.ruleset` / `AiSample.sln.DotSettings` / `.gitignore` | ソリューションと解析設定(Template のコピー)。`output/`(CvConsole の既定の出力先)は無視 |
 | `AiShared/Usecase/AzureVisionUsecase.cs` | **アプリのコピー(無変更)**。Image Analysis 4.0(物体 / 人物 / タグ(ja)/ 文字) |
-| `AiShared/Services/AiChatClientFactory.cs` | **アプリのコピー(無変更)**。設定の Ollama から `IChatClient` を生成(未設定は null) |
-| `AiShared/State/Settings.cs` | アプリの `Settings` の代替。コピーが使うメンバー(`AIServiceEndPoint` / `GetAIServiceKeyAsync` / `OllamaEndPoint` / `OllamaModel`)だけを同じ形で持ち、値は起動時に入れる |
-| `AiShared/Usecase/DetectResult.cs` | アプリの `CognitiveUsecase.cs` にある `DetectResult`(正規化した矩形 + 信頼度 + ラベル) |
-| `AiShared/GlobalUsing.cs` / `AiShared.csproj` | コピーが前提にする global using(`SkiaSharp` / `Template.MobileApp.State`)、パッケージ(アプリと同じ版: `Azure.AI.Vision.ImageAnalysis` 1.0.0 / `OllamaSharp` 5.4.30 / `SkiaSharp` 4.151.2) |
+| `AiShared/State/Settings.cs` | アプリの `Settings` の代替。コピーと ChatConsole が使うメンバー(`AIServiceEndPoint` / `GetAIServiceKeyAsync` / `OllamaEndPoint` / `OllamaModel`)だけを同じ形で持ち、値は起動時に入れる |
+| `AiShared/Usecase/DetectResult.cs` | アプリの `Usecase/DetectResult.cs` と同じ `DetectResult`(正規化した矩形 + 信頼度 + ラベル) |
+| `AiShared/GlobalUsing.cs` / `AiShared.csproj` | コピーが前提にする global using(`SkiaSharp` / `Smart.Results` / `Template.MobileApp.State`)、パッケージ(アプリと同じ版: `Azure.AI.Vision.ImageAnalysis` 1.0.0 / `OllamaSharp` 5.4.30 / `SkiaSharp` 4.151.2 / `Usa.Smart.Results` 2.2.0) |
 | `CvConsole/Program.cs` | 設定の読み込み(appsettings.json / 環境変数 / コマンドライン)、位置引数での 1 回実行、対話(種類 → 画像) |
-| `CvConsole/VisionRunner.cs` | 画像の読み込み(EXIF の向きを反映)→ 解析 → 一覧表示 → PNG 保存。解析の呼び出しと例外の扱いは `SampleCvNet*ViewModel` と同じ |
+| `CvConsole/VisionRunner.cs` | 画像の読み込み(EXIF の向きを反映)→ 解析 → 一覧表示 → PNG 保存。解析の呼び出しと失敗(`Result` の `Error`)の表示は `SampleCvNet*ViewModel` と同じ |
 | `CvConsole/DetectRenderer.cs` | `Graphics/Drawing/DetectDrawing.cs` と同じ見た目(線幅 5 / 文字 16 / 色は信頼度)で枠とラベルを描く。長辺 1280 に縮小して画面と同じ縮尺にする |
 | `CvConsole/Helpers/ImageHelper.cs` | アプリの `ImageHelper.ToNormalizeBitmap`(本体は同じ) |
 | `CvConsole/VisionFeature.cs` / `CommandLine.cs` / `Terminal.cs` / `appsettings.json` / `CvConsole.csproj` | 解析の種類(`All` は全種類)、スイッチの対応表と位置引数、コンソール入出力、設定の既定値、パッケージ(`Microsoft.Extensions.Configuration.*` 10.0.11) |
-| `ChatConsole/Program.cs` | 設定の読み込み、あいさつ(動作モードを表示)、入力ループ(`/voice` / `/exit`)、音声フローで反映した文章の送信 |
-| `ChatConsole/ChatSession.cs` | 会話。履歴を保持して `GetStreamingResponseAsync` で応答を流し込む / 未設定は固定文の疑似応答。`SampleChatViewModel` の `SendAsync` / `RespondByChatClientAsync` / `RespondByMockAsync` と同じ |
-| `ChatConsole/VoiceFlow.cs` | 音声入力の 4 ステップ。抽出の依頼文(「項目: 値」の 4 行)と読み取り、固定の例、案内文は `SampleChatViewModel` と同じ |
+| `ChatConsole/Program.cs` | 設定の読み込み、未設定なら「Ollama end point is not configured.」を出して終了(アプリはメニューで同じ文言を案内して画面に入らない)、`OllamaApiClient` の生成、あいさつ、入力ループ(`/voice` / `/exit`)、音声入力で反映した文章の送信 |
+| `ChatConsole/ChatSession.cs` | 会話。履歴を保持して `GetStreamingResponseAsync` で応答を流し込む。`SampleChatViewModel` の `RespondAsync` と同じ |
+| `ChatConsole/VoiceInput.cs` | 音声入力。1 回の発話を認識して文章を返す(Enter で停止、無音で自動停止、途中経過を表示)。アプリの `ChatView` のマイクボタン相当 |
 | `ChatConsole/SpeechRecognizer.cs` | Windows の音声認識(`System.Speech` のディクテーション)。1 回の発話を認識し無音で自動停止、途中経過(仮説)を表示。アプリの `ISpeechService` 相当 |
-| `ChatConsole/CommandLine.cs` / `Terminal.cs` / `appsettings.json` / `ChatConsole.csproj` | スイッチの対応表、コンソール入出力(行の書き直し / キー選択 / リダイレクト時は行入力)、設定の既定値(`http://localhost:11434` / `gemma2`)、パッケージ(`System.Speech` 10.0.11、`net10.0-windows`) |
+| `ChatConsole/CommandLine.cs` / `Terminal.cs` / `appsettings.json` / `ChatConsole.csproj` | スイッチの対応表、コンソール入出力(行の書き直し / リダイレクト時は行入力)、設定の既定値(`http://localhost:11434` / `gemma2`)、パッケージ(`System.Speech` 10.0.11、`net10.0-windows`) |
 
 ## 設定(接続先とキー)
 
@@ -38,8 +37,7 @@
 | `OutputDirectory` | 枠を描いた PNG の出力先(CvConsole) | 空 = カレントの `output/` | `AISAMPLE_OutputDirectory` | `--out <dir>` |
 | `ShowResult` | 保存した PNG を関連付けで開く(CvConsole) | `false` | `AISAMPLE_ShowResult` | `--show true` |
 | `OllamaEndPoint` | Ollama の接続先(ChatConsole) | `http://localhost:11434` | `AISAMPLE_OllamaEndPoint` | `--endpoint <url>` |
-| `OllamaModel` | Ollama のモデル名(ChatConsole)。空だと疑似応答 | `gemma2` | `AISAMPLE_OllamaModel` | `--model <name>` |
-| `Speech` | 音声認識を使う(ChatConsole)。`false` は文字入力のみ | `true` | `AISAMPLE_Speech` | `--speech false` |
+| `OllamaModel` | Ollama のモデル名(ChatConsole)。接続先かモデル名が空だと起動時に終了 | `gemma2` | `AISAMPLE_OllamaModel` | `--model <name>` |
 
 優先順は appsettings.json < 環境変数 < コマンドライン。`appsettings.json` は各プロジェクトの直下(ビルドで出力先へコピー)で、キーを書いてもよい(コミットしないこと)。アプリの Setting 画面 / QR のキー名(`AIServiceEndPoint` / `AIServiceKey` / `OllamaEndPoint` / `OllamaModel`)と同じ。
 
@@ -55,11 +53,7 @@ dotnet run --project CvConsole
 
 # ChatConsole: Ollama (既定 http://localhost:11434 / gemma2)
 dotnet run --project ChatConsole
-dotnet run --project ChatConsole -- --endpoint http://localhost:12434 --model gemma2
-
-# ChatConsole: 疑似応答 / 音声認識を使わない
-dotnet run --project ChatConsole -- --model ""
-dotnet run --project ChatConsole -- --speech false
+dotnet run --project ChatConsole -- --endpoint http://localhost:12321 --model gemma2
 ```
 
 CvConsole の出力:
@@ -70,8 +64,8 @@ CvConsole の出力:
 
 ChatConsole の操作:
 
-1. `you>` に質問を入力すると `ai>` に応答がストリーミングで流れる(応答まで `...`)。履歴ごと送るので 2 回目は 1 回目の内容を踏まえる。Ollama 未設定(モデル名が空)は固定文 4 種の疑似応答
-2. `/voice` で音声入力の 4 ステップ。[1/4] Enter で録音開始(`t` で文字入力、`q` で中止)→ 無音で自動停止(Enter で即停止)→ [2/4] 文字起こしの結果 → Enter で [3/4] 抽出(Ollama に「種別 / 期日 / 対象 / 参照」を抜き出させる。未設定または音声なしは固定の例)→ Enter で [4/4] 確認 → Enter で入力欄へ反映(`r` でやり直し、`q` で中止)
+1. `you>` に質問を入力すると `ai>` に応答がストリーミングで流れる(応答まで `...`)。履歴ごと送るので 2 回目は 1 回目の内容を踏まえる
+2. `/voice` で音声入力。話すと途中経過が行に出て、無音が続くと自動で止まる(Enter で即停止)。認識した文章が入力欄に入る
 3. 反映した文章はプロンプトに `you [文章]>` と出る。そのまま Enter で送信、別の文字列を入力するとそちらを送信
 4. `/exit` で終了
 
@@ -94,21 +88,21 @@ ChatConsole の操作:
 | アプリ | コンソール |
 | --- | --- |
 | `CameraController` で撮影 → `ImageHelper.ToNormalizeBitmap` | 画像ファイルを `ImageHelper.ToNormalizeBitmap`(同じ本体)で読む |
-| `AzureVisionUsecase.DetectObjectsAsync` / `DetectPeopleAsync` / `DetectTagsAsync` / `ReadTextAsync` | 同じ(コピー)。`Settings` の値は起動時の設定 |
+| `AzureVisionUsecase.DetectObjectsAsync` / `DetectPeopleAsync` / `DetectTagsAsync` / `ReadTextAsync`(失敗は `Result` で返す) | 同じ(コピー)。`Settings` の値は起動時の設定 |
 | `DetectDrawing`(枠 + ラベル + 信頼度、`GraphicsView`) | `DetectRenderer`(同じ描画を SkiaSharp で PNG に) |
 | `TagsText`(`🏷 名前  信頼度%`) | 同じ書式で標準出力 |
 | `IDialog.InformationAsync("解析に失敗しました。...")` | 同じ文言を標準出力 |
-| `AiChatClientFactory.Create()`(null は疑似応答) | 同じ(コピー) |
-| `SampleChatViewModel` の履歴 / ストリーミング / 疑似応答 / 例外の扱い | `ChatSession`(同じ処理) |
+| `OllamaApiClient` を `IChatClient` として生成(`SampleChatViewModel`)、未設定はメニューの案内で画面に入らない | `Program.cs`(未設定は同じ文言を出して終了) |
+| `SampleChatViewModel` の履歴 / ストリーミング / 例外の扱い | `ChatSession`(同じ処理) |
 | `ISpeechService.RecognizeAsync` / `RecognizeStopAsync` / `RecognizeCancel`(無音で自動停止、部分結果) | `SpeechRecognizer`(`System.Speech`、`RecognizeMode.Single`、`RecognizeAsyncStop` / `RecognizeAsyncCancel`、`SpeechHypothesized`) |
-| 音声フローの `VoiceStep` 1〜4、`ExtractAsync` の依頼文と `ParseExtractItems`、`ExtractHint` の文言、`MockExtractItems` | `VoiceFlow`(同じ) |
-| `ApplyVoiceCommand`(入力欄へ反映) | プロンプトに `you [文章]>`。空のまま Enter で送信 |
+| `ChatView` のマイクボタン(認識中は停止ボタン、途中結果を入力欄へ、最終結果で終了) | `VoiceInput`(Enter で停止、途中経過を行に表示) |
+| 認識した文章が入力欄に入る | プロンプトに `you [文章]>`。空のまま Enter で送信 |
 
 ## 確認済みの動作(2026-09-19、Windows 11 / .NET SDK 10.0.401)
 
 - ビルド 0 警告(Debug / Release)、`jb inspectcode AiSample.slnx --properties:Configuration=Release` 0 件
 - CvConsole(Foundry の AI Services リソース): Tag = ノート PC の商品画像で「コンピューター 100% / ノート 100% / ノートパソコン 99% / … / mac 55%」の日本語タグ、Ocr = アプリのスクリーンショット(`Document/Sample_CvNet_Tag.png`)で 9 行(「霧 95%」「Back」など)の枠とテキスト、Object / People = Microsoft のサンプル写真(Azure-Samples/cognitive-services-sample-data-files の `objects.jpg` / `faces.jpg`、docs の `presentation.png`)で person 0.94 / Skateboard 0.85 / Jeans 0.57、人物 4 人、person / display / plant を検出して枠と信頼度の色(赤〜橙)を確認。`printed_text.jpg` / `handwritten_text.jpg` の Ocr は栄養表示 15 行 / 手書き 2 行(生成画像の商品 / キャラクターでは Object / People とも 0 件)。未設定は「AI service is not configured.」、存在しないファイル / 画像でないファイル / 不正な種類はメッセージを出して継続
-- ChatConsole(PC の Ollama gemma2、`--endpoint http://localhost:12434`): 質問への応答がストリーミングで表示、2 回目の質問(「それを使う利点」)が 1 回目の内容を踏まえる、`/voice` → `t` の文字入力 → 抽出(種別: 不具合修正 / 期日: 明日 15時 / 対象: ログイン画面 / 参照: 共有済みのチケット)→ 適用 → Enter で送信。音声は Enter で録音開始 → 無音 10 秒で自動停止 → 「(音声を認識できませんでした)」→ 抽出は固定の例(アプリと同じ)。`--model ""` は疑似応答
+- ChatConsole(PC の Ollama gemma2、`--endpoint http://localhost:12321`。2026-09-20): 質問への応答がストリーミングで表示、2 回目の質問が 1 回目の内容を踏まえる、`/voice` は無音で「音声を認識できませんでした」(Enter で停止)。`--model ""` は「Ollama end point is not configured.」で終了
 
 ## 解析上の制約
 
