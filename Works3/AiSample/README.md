@@ -5,7 +5,7 @@
 | プロジェクト | 内容 |
 | --- | --- |
 | `AiShared` | アプリからそのままコピーした `Usecase/AzureVisionUsecase.cs` と、それが使う `Settings` / `DetectResult` の最小の代替(`Settings` は ChatConsole の Ollama の設定も持つ)。クラスライブラリ(コピーは public のまま置ける) |
-| `CvConsole` | Sample > CV Net の 4 画面(Object / Tag / People / Ocr)相当。画像ファイル → Azure AI Vision → 結果の一覧 + 枠とラベルを描いた PNG |
+| `CvConsole` | Sample > CV Net(Object / Tag / People / OCR の 4 種類)相当。画像ファイル → Azure AI Vision → 結果の一覧 + 枠とラベルを描いた PNG |
 | `ChatConsole` | Sample > Chat 相当。Ollama(`IChatClient`)のストリーミング応答と、音声入力(Windows の音声認識で 1 回の発話を認識して入力欄へ反映) |
 
 ## ファイル構成
@@ -18,7 +18,7 @@
 | `AiShared/Usecase/DetectResult.cs` | アプリの `Usecase/DetectResult.cs` と同じ `DetectResult`(正規化した矩形 + 信頼度 + ラベル) |
 | `AiShared/GlobalUsing.cs` / `AiShared.csproj` | コピーが前提にする global using(`SkiaSharp` / `Smart.Results` / `Template.MobileApp.State`)、パッケージ(アプリと同じ版: `Azure.AI.Vision.ImageAnalysis` 1.0.0 / `OllamaSharp` 5.4.30 / `SkiaSharp` 4.151.2 / `Usa.Smart.Results` 2.2.0) |
 | `CvConsole/Program.cs` | 設定の読み込み(appsettings.json / 環境変数 / コマンドライン)、位置引数での 1 回実行、対話(種類 → 画像) |
-| `CvConsole/VisionRunner.cs` | 画像の読み込み(EXIF の向きを反映)→ 解析 → 一覧表示 → PNG 保存。解析の呼び出しと失敗(`Result` の `Error`)の表示は `SampleCvNet*ViewModel` と同じ |
+| `CvConsole/VisionRunner.cs` | 画像の読み込み(EXIF の向きを反映)→ 解析 → 一覧表示 → PNG 保存。解析の呼び出しと失敗(`Result` の `Error`)の表示は `SampleCvNetViewModel` と同じ |
 | `CvConsole/DetectRenderer.cs` | `Graphics/Drawing/DetectDrawing.cs` と同じ見た目(線幅 5 / 文字 16 / 色は信頼度)で枠とラベルを描く。長辺 1280 に縮小して画面と同じ縮尺にする |
 | `CvConsole/Helpers/ImageHelper.cs` | アプリの `ImageHelper.ToNormalizeBitmap`(本体は同じ) |
 | `CvConsole/VisionFeature.cs` / `CommandLine.cs` / `Terminal.cs` / `appsettings.json` / `CvConsole.csproj` | 解析の種類(`All` は全種類)、スイッチの対応表と位置引数、コンソール入出力、設定の既定値、パッケージ(`Microsoft.Extensions.Configuration.*` 10.0.11) |
