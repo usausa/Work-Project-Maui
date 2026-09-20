@@ -1,0 +1,21 @@
+@page "/error"
+@using System.Diagnostics
+
+<PageTitle>Error - OtelServer</PageTitle>
+
+<MudText Typo="Typo.h5" Color="Color.Error" GutterBottom="true">Error</MudText>
+<MudText Class="mb-4">An error occurred while processing your request.</MudText>
+@if (!String.IsNullOrEmpty(requestId))
+{
+    <MudText Typo="Typo.body2" Class="mud-text-secondary">Request ID: <code>@requestId</code></MudText>
+}
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? requestId;
+
+    protected override void OnInitialized() =>
+        requestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

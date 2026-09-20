@@ -1,0 +1,82 @@
+@page "/dummy-data"
+@inject DummyDataGenerator Generator
+@inject ITelemetryStore Store
+@inject ISnackbar Snackbar
+
+<PageTitle>Dummy Data - OtelServer</PageTitle>
+
+<MudText Typo="Typo.h5" GutterBottom="true">Dummy Data</MudText>
+<MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">
+    画面確認用のダミーデータ (OtelClient が送る内容に似せたもの。端末 3 台、Work → Compute + GET のトレース、トレース ID 付きのログ、5 種のメトリクス) をストアへ直接投入する。OTLP の受け口は通らない。
+</MudText>
+
+<MudPaper Class="pa-4 mb-4" Elevation="1">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+        <MudNumericField T="int" @bind-Value="count" Min="1" Max="500" Label="Count" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width:120px" />
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ShowChart" OnClick="InjectMetrics">Metrics</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.List" OnClick="InjectLogs">Logs</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.AccountTree" OnClick="InjectTraces">Traces</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Bolt" OnClick="InjectAll">All</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteSweep" OnClick="ClearStore">Clear store</MudButton>
+    </MudStack>
+</MudPaper>
+
+<MudPaper Class="pa-4" Elevation="1">
+    <MudText Typo="Typo.subtitle1" GutterBottom="true">Current store</MudText>
+    <MudGrid Spacing="2">
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Services</MudText><MudText Typo="Typo.h6">@summary.ServiceCount</MudText></MudItem>
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Devices</MudText><MudText Typo="Typo.h6">@summary.DeviceCount</MudText></MudItem>
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Logs</MudText><MudText Typo="Typo.h6">@summary.LogCount</MudText></MudItem>
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Spans</MudText><MudText Typo="Typo.h6">@summary.SpanCount</MudText></MudItem>
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Traces</MudText><MudText Typo="Typo.h6">@summary.TraceCount</MudText></MudItem>
+        <MudItem xs="4" sm="2"><MudText Typo="Typo.caption" Class="mud-text-secondary">Metrics</MudText><MudText Typo="Typo.h6">@summary.MetricCount</MudText></MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private int count = 10;
+
+    private TelemetrySummary summary = new(0, 0, 0, 0, 0, 0, null);
+
+    protected override void OnInitialized() => RefreshSummary();
+
+    private void InjectMetrics()
+    {
+        var added = Generator.InjectMetrics(count);
+        RefreshSummary();
+        Snackbar.Add($"Injected {added} metric points", Severity.Success);
+    }
+
+    private void InjectLogs()
+    {
+        var added = Generator.InjectLogs(count);
+        RefreshSummary();
+        Snackbar.Add($"Injected {added} logs", Severity.Success);
+    }
+
+    private void InjectTraces()
+    {
+        var (spans, logs) = Generator.InjectTraces(count);
+        RefreshSummary();
+        Snackbar.Add($"Injected {count} traces ({spans} spans, {logs} logs)", Severity.Success);
+    }
+
+    private void InjectAll()
+    {
+        var metrics = Generator.InjectMetrics(count);
+        var logs = Generator.InjectLogs(count);
+        var (spans, traceLogs) = Generator.InjectTraces(count);
+        RefreshSummary();
+        Snackbar.Add($"Injected metrics={metrics}, logs={logs + traceLogs}, spans={spans}", Severity.Success);
+    }
+
+    private void ClearStore()
+    {
+        Store.Clear();
+        RefreshSummary();
+        Snackbar.Add("Store cleared", Severity.Info);
+    }
+
+    private void RefreshSummary() => summary = Store.GetSummary();
+}

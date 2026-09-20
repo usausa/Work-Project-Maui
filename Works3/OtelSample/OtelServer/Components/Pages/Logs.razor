@@ -1,0 +1,237 @@
+@page "/logs"
+@implements IDisposable
+@inject ITelemetryStore Store
+@inject NavigationManager Navigation
+
+<PageTitle>Logs - OtelServer</PageTitle>
+
+<MudText Typo="Typo.h5" GutterBottom="true">Logs</MudText>
+<MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">@entries.Count 件 (新しい順)。行のクリックで属性を展開、Trace のクリックでトレースへ。</MudText>
+
+<MudPaper Class="pa-3 mb-3" Elevation="1">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+        <MudSelect T="string" Label="Service" Value="@service" ValueChanged="OnServiceChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:180px">
+            <MudSelectItem T="string" Value="@string.Empty">(All)</MudSelectItem>
+            @foreach (var name in services)
+            {
+                <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="string" Label="Device" Value="@device" ValueChanged="OnDeviceChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:220px">
+            <MudSelectItem T="string" Value="@string.Empty">(All)</MudSelectItem>
+            @foreach (var id in devices)
+            {
+                <MudSelectItem T="string" Value="@id">@id</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="int" Label="Severity" Value="@severity" ValueChanged="OnSeverityChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:140px">
+            <MudSelectItem T="int" Value="0">(All)</MudSelectItem>
+            <MudSelectItem T="int" Value="5">Debug+</MudSelectItem>
+            <MudSelectItem T="int" Value="9">Info+</MudSelectItem>
+            <MudSelectItem T="int" Value="13">Warning+</MudSelectItem>
+            <MudSelectItem T="int" Value="17">Error+</MudSelectItem>
+        </MudSelect>
+        <MudTextField T="string" Value="@text" ValueChanged="OnTextChanged" Placeholder="本文で絞り込み..." Immediate="true" DebounceInterval="300"
+                      Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Style="min-width:240px" />
+        <MudSelect T="int" Label="Max" Value="@maxCount" ValueChanged="OnMaxCountChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:100px">
+            <MudSelectItem T="int" Value="100">100</MudSelectItem>
+            <MudSelectItem T="int" Value="500">500</MudSelectItem>
+            <MudSelectItem T="int" Value="2000">2000</MudSelectItem>
+        </MudSelect>
+        @if (!String.IsNullOrEmpty(traceId))
+        {
+            <MudChip T="string" Color="Color.Secondary" OnClose="ClearTrace" Class="mono">trace: @traceId</MudChip>
+        }
+        <MudSpacer />
+        <MudSwitch T="bool" @bind-Value="autoRefresh" Color="Color.Primary" Size="Size.Small">Auto</MudSwitch>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Refresh" OnClick="Refresh">Refresh</MudButton>
+    </MudStack>
+</MudPaper>
+
+<MudTable Items="@entries" Dense="true" Hover="true" Elevation="1" T="LogEntry" OnRowClick="OnRowClick" RowClass="cursor-pointer">
+    <HeaderContent>
+        <MudTh Style="width:110px">Time</MudTh>
+        <MudTh Style="width:140px">Device</MudTh>
+        <MudTh Style="width:100px">Severity</MudTh>
+        <MudTh>Body</MudTh>
+        <MudTh Style="width:100px">Trace</MudTh>
+        <MudTh>Attributes</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="mono">@Formats.Time(context.Timestamp)</MudTd>
+        <MudTd Class="mono">@Formats.Truncate(context.Resource.DeviceId, 16)</MudTd>
+        <MudTd><MudChip T="string" Size="Size.Small" Color="@Formats.SeverityColor(context.SeverityNumber)">@context.SeverityText</MudChip></MudTd>
+        <MudTd Class="cell-body">
+            <MudIcon Icon="@(IsExpanded(context) ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ChevronRight)" Size="Size.Small" Class="mr-1" Style="vertical-align:middle" />
+            @Formats.Truncate(context.Body, 200)
+        </MudTd>
+        <MudTd Class="mono">
+            @if (!String.IsNullOrEmpty(context.TraceId))
+            {
+                <span class="link-id" @onclick="@(() => Navigation.NavigateTo($"/traces?trace={context.TraceId}"))" @onclick:stopPropagation="true">@Formats.ShortId(context.TraceId)</span>
+            }
+            else
+            {
+                <span class="mud-text-secondary">-</span>
+            }
+        </MudTd>
+        <MudTd Class="cell-secondary">@Formats.Attributes(context.Attributes)</MudTd>
+    </RowTemplate>
+    <ChildRowContent>
+        @if (IsExpanded(context))
+        {
+            <MudTr>
+                <td colspan="6" class="row-detail">
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" md="7">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">Body</MudText>
+                            <div class="cell-wrap mono mb-2">@context.Body</div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">Attributes (scope: @context.ScopeName)</MudText>
+                            <AttributeList Attributes="@context.Attributes" />
+                        </MudItem>
+                        <MudItem xs="12" md="5">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">Resource</MudText>
+                            <AttributeList Attributes="@context.Resource.Attributes" />
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary mt-2">Trace / Span</MudText>
+                            <div class="mono">@(context.TraceId ?? "-") / @(context.SpanId ?? "-")</div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary mt-2">Received</MudText>
+                            <div class="mono">@Formats.DateTime(context.ReceivedAt)</div>
+                        </MudItem>
+                    </MudGrid>
+                </td>
+            </MudTr>
+        }
+    </ChildRowContent>
+    <NoRecordsContent>
+        <MudText Class="pa-4 mud-text-secondary">No logs.</MudText>
+    </NoRecordsContent>
+</MudTable>
+
+@code {
+    private IReadOnlyList<LogEntry> entries = [];
+
+    private IReadOnlyList<string> services = [];
+
+    private IReadOnlyList<string> devices = [];
+
+    private readonly HashSet<string> expanded = [];
+
+    private string service = string.Empty;
+
+    private string device = string.Empty;
+
+    private int severity;
+
+    private string text = string.Empty;
+
+    private string? traceId;
+
+    private int maxCount = 100;
+
+    private bool autoRefresh = true;
+
+    [SupplyParameterFromQuery(Name = "service")]
+    public string? ServiceParameter { get; set; }
+
+    [SupplyParameterFromQuery(Name = "device")]
+    public string? DeviceParameter { get; set; }
+
+    [SupplyParameterFromQuery(Name = "severity")]
+    public int? SeverityParameter { get; set; }
+
+    [SupplyParameterFromQuery(Name = "trace")]
+    public string? TraceParameter { get; set; }
+
+    protected override void OnInitialized()
+    {
+        service = ServiceParameter ?? string.Empty;
+        device = DeviceParameter ?? string.Empty;
+        severity = SeverityParameter ?? 0;
+        traceId = TraceParameter;
+        Refresh();
+        Store.Changed += OnStoreChanged;
+    }
+
+    private void OnStoreChanged(object? sender, EventArgs e)
+    {
+        if (!autoRefresh)
+        {
+            return;
+        }
+
+        InvokeAsync(() =>
+        {
+            Refresh();
+            StateHasChanged();
+        });
+    }
+
+    private void Refresh()
+    {
+        services = Store.GetServiceNames();
+        devices = Store.GetDeviceIds();
+        entries = Store.GetLogs(new LogQuery(
+            service.Length > 0 ? service : null,
+            device.Length > 0 ? device : null,
+            severity,
+            text,
+            traceId,
+            maxCount));
+    }
+
+    private static string Key(LogEntry entry) => $"{entry.Timestamp.UtcTicks}:{entry.SpanId}:{entry.Body}";
+
+    private bool IsExpanded(LogEntry entry) => expanded.Contains(Key(entry));
+
+    private void OnRowClick(TableRowClickEventArgs<LogEntry> args)
+    {
+        if (args.Item is null)
+        {
+            return;
+        }
+
+        var key = Key(args.Item);
+        if (!expanded.Remove(key))
+        {
+            expanded.Add(key);
+        }
+    }
+
+    private void OnServiceChanged(string value)
+    {
+        service = value;
+        Refresh();
+    }
+
+    private void OnDeviceChanged(string value)
+    {
+        device = value;
+        Refresh();
+    }
+
+    private void OnSeverityChanged(int value)
+    {
+        severity = value;
+        Refresh();
+    }
+
+    private void OnTextChanged(string value)
+    {
+        text = value;
+        Refresh();
+    }
+
+    private void OnMaxCountChanged(int value)
+    {
+        maxCount = value;
+        Refresh();
+    }
+
+    private void ClearTrace()
+    {
+        traceId = null;
+        Refresh();
+    }
+
+    public void Dispose() => Store.Changed -= OnStoreChanged;
+}

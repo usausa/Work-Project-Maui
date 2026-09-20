@@ -1,0 +1,188 @@
+@using System.Net
+@using System.Text
+@* 時系列の折れ線グラフ (SVG)。系列ごとに色を変え、点にツールチップ *@
+<div style="width:100%;overflow-x:auto">
+    @if (views.Count == 0)
+    {
+        <div class="mud-text-secondary" style="padding:2rem;text-align:center">@EmptyMessage</div>
+    }
+    else
+    {
+        <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height" preserveAspectRatio="xMidYMid meet" style="font-family:Roboto,sans-serif;font-size:11px;display:block">
+            @body
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:0.25rem 1rem;margin-top:0.5rem;font-size:0.8rem">
+            @foreach (var view in views)
+            {
+                <span style="display:inline-flex;align-items:center;gap:0.3rem">
+                    <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:@view.Color"></span>
+                    <span style="opacity:0.85">@view.Label</span>
+                </span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private static readonly string[] Palette =
+    [
+        "#42a5f5", "#66bb6a", "#ffa726", "#ab47bc", "#ef5350", "#26a69a", "#ec407a", "#5c6bc0"
+    ];
+
+    private const double PadLeft = 56;
+
+    private const double PadRight = 12;
+
+    private const double PadTop = 16;
+
+    private const double PadBottom = 28;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ChartSeries> Series { get; set; } = [];
+
+    [Parameter]
+    public string? Unit { get; set; }
+
+    [Parameter]
+    public int Width { get; set; } = 880;
+
+    [Parameter]
+    public int Height { get; set; } = 280;
+
+    [Parameter]
+    public string EmptyMessage { get; set; } = "No data";
+
+    // 0 から始める (件数など)
+    [Parameter]
+    public bool ZeroBased { get; set; }
+
+    private MarkupString body;
+
+    private List<SeriesView> views = [];
+
+    protected override void OnParametersSet()
+    {
+        views = [];
+        body = default;
+
+        var series = Series.Where(static x => x.Points.Count > 0).ToList();
+        if (series.Count == 0)
+        {
+            return;
+        }
+
+        var plotLeft = PadLeft;
+        var plotRight = Width - PadRight;
+        var plotTop = PadTop;
+        var plotBottom = Height - PadBottom;
+
+        var all = series.SelectMany(static x => x.Points).ToList();
+        var minT = all.Min(static x => x.Time);
+        var maxT = all.Max(static x => x.Time);
+        if (minT == maxT)
+        {
+            maxT = minT.AddSeconds(1);
+        }
+
+        var minV = ZeroBased ? 0 : all.Min(static x => x.Value);
+        var maxV = all.Max(static x => x.Value);
+        if (Math.Abs(maxV - minV) < 1e-9)
+        {
+            maxV += 1;
+            minV = ZeroBased ? 0 : minV - 1;
+        }
+
+        var pad = (maxV - minV) * 0.08;
+        minV = ZeroBased ? 0 : minV - pad;
+        maxV += pad;
+
+        var sb = new StringBuilder();
+
+        // 目盛と軸
+        for (var i = 0; i <= 4; i++)
+        {
+            var t = i / 4.0;
+            var v = minV + ((maxV - minV) * (1 - t));
+            var y = plotTop + (t * (plotBottom - plotTop));
+            AppendLine(sb, plotLeft, y, plotRight, y, 0.08);
+            AppendText(sb, plotLeft - 8, y + 3, "end", 0.7, Formats.Number(v));
+        }
+
+        for (var i = 0; i <= 4; i++)
+        {
+            var t = i / 4.0;
+            var x = plotLeft + (t * (plotRight - plotLeft));
+            AppendLine(sb, x, plotBottom, x, plotBottom + 4, 0.4);
+            var time = minT.AddSeconds(t * (maxT - minT).TotalSeconds);
+            AppendText(sb, x, plotBottom + 16, "middle", 0.7, time.ToLocalTime().ToString("HH:mm:ss", CultureInfo.InvariantCulture));
+        }
+
+        AppendLine(sb, plotLeft, plotBottom, plotRight, plotBottom, 0.5);
+        AppendLine(sb, plotLeft, plotTop, plotLeft, plotBottom, 0.5);
+
+        // 系列
+        for (var i = 0; i < series.Count; i++)
+        {
+            var color = Palette[i % Palette.Length];
+            var ordered = series[i].Points.OrderBy(static x => x.Time).ToList();
+            views.Add(new SeriesView(series[i].Label, color));
+
+            var poly = new StringBuilder();
+            foreach (var point in ordered)
+            {
+                if (poly.Length > 0)
+                {
+                    poly.Append(' ');
+                }
+
+                poly.Append(Fmt(MapX(point.Time, minT, maxT, plotLeft, plotRight))).Append(',').Append(Fmt(MapY(point.Value, minV, maxV, plotTop, plotBottom)));
+            }
+
+            if (ordered.Count > 1)
+            {
+                sb.Append(CultureInfo.InvariantCulture, $"<polyline fill=\"none\" stroke=\"{color}\" stroke-width=\"1.6\" points=\"{poly}\" />");
+            }
+
+            // 点が多いときはツールチップの点を間引く
+            var step = Math.Max(1, ordered.Count / 200);
+            for (var j = 0; j < ordered.Count; j += step)
+            {
+                var point = ordered[j];
+                var tooltip = WebUtility.HtmlEncode(string.Create(CultureInfo.InvariantCulture, $"{point.Time.ToLocalTime():HH:mm:ss} = {point.Value:0.###}"));
+                sb.Append(CultureInfo.InvariantCulture, $"<circle cx=\"{Fmt(MapX(point.Time, minT, maxT, plotLeft, plotRight))}\" cy=\"{Fmt(MapY(point.Value, minV, maxV, plotTop, plotBottom))}\" r=\"2.5\" fill=\"{color}\"><title>{tooltip}</title></circle>");
+            }
+        }
+
+        if (!String.IsNullOrEmpty(Unit))
+        {
+            AppendText(sb, plotLeft - 8, plotTop - 4, "end", 0.7, Unit);
+        }
+
+        body = new MarkupString(sb.ToString());
+    }
+
+    private static void AppendLine(StringBuilder sb, double x1, double y1, double x2, double y2, double opacity) =>
+        sb.Append(CultureInfo.InvariantCulture, $"<line x1=\"{Fmt(x1)}\" y1=\"{Fmt(y1)}\" x2=\"{Fmt(x2)}\" y2=\"{Fmt(y2)}\" stroke=\"currentColor\" stroke-opacity=\"{opacity:0.##}\" />");
+
+    private static void AppendText(StringBuilder sb, double x, double y, string anchor, double opacity, string content)
+    {
+        sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Fmt(x)}\" y=\"{Fmt(y)}\" text-anchor=\"{anchor}\" fill=\"currentColor\" fill-opacity=\"{opacity:0.##}\">");
+        sb.Append(WebUtility.HtmlEncode(content)).Append("</text>");
+    }
+
+    private static double MapX(DateTimeOffset t, DateTimeOffset minT, DateTimeOffset maxT, double left, double right)
+    {
+        var span = (maxT - minT).TotalSeconds;
+        return span <= 0 ? left : left + ((t - minT).TotalSeconds / span * (right - left));
+    }
+
+    private static double MapY(double v, double minV, double maxV, double top, double bottom)
+    {
+        var range = maxV - minV;
+        return range <= 0 ? bottom : bottom - ((v - minV) / range * (bottom - top));
+    }
+
+    private static string Fmt(double v) => v.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private sealed record SeriesView(string Label, string Color);
+}

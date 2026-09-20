@@ -29,6 +29,9 @@ public sealed partial class TelemetryHost : ILoggerProvider
     // HttpClient のメトリクス (.NET 8 以降の組み込み。スパンは AddHttpClientInstrumentation)
     private const string HttpMeterName = "System.Net.Http";
 
+    // gRPC (SocketsHttpHandler) は名前解決の計器も出す
+    private const string DnsMeterName = "System.Net.NameResolution";
+
     private static readonly ActivitySource Source = new(ServiceName);
 
     private static readonly Meter Meter = new(ServiceName);
@@ -106,7 +109,7 @@ public sealed partial class TelemetryHost : ILoggerProvider
         var endpoint = Preferences.Default.Get(TelemetrySettings.EndpointKey, string.Empty);
         if (Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
         {
-            Start(new TelemetryOptions(uri, Preferences.Default.Get(TelemetrySettings.MauiSpansKey, false)));
+            Start(new TelemetryOptions(uri, Preferences.Default.Get(TelemetrySettings.GrpcKey, false), Preferences.Default.Get(TelemetrySettings.MauiSpansKey, false)));
         }
     }
 
@@ -177,7 +180,7 @@ public sealed partial class TelemetryHost : ILoggerProvider
             .AddHttpClientInstrumentation()
             .AddOtlpExporter(exporter =>
             {
-                Configure(exporter, options.Endpoint, "v1/traces");
+                Configure(exporter, options, "v1/traces");
                 exporter.BatchExportProcessorOptions.ScheduledDelayMilliseconds = 2000;
             });
         if (options.IncludeMauiSpans)
@@ -192,12 +195,13 @@ public sealed partial class TelemetryHost : ILoggerProvider
             .AddMeter(ServiceName)
             .AddMeter(MauiSourceName)
             .AddMeter(HttpMeterName)
+            .AddMeter(DnsMeterName)
             .AddRuntimeInstrumentation()
             // MAUI のレイアウト計測は要素ごと (element.id / element.frame) にタグが付き系列が際限なく増えるため型だけで集計する
             .AddView("maui.layout.*", new MetricStreamConfiguration { TagKeys = ["element.type"] })
             .AddOtlpExporter((exporter, reader) =>
             {
-                Configure(exporter, options.Endpoint, "v1/metrics");
+                Configure(exporter, options, "v1/metrics");
                 reader.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 5000;
             })
             .Build();
@@ -213,7 +217,7 @@ public sealed partial class TelemetryHost : ILoggerProvider
                 otel.IncludeScopes = true;
                 otel.AddOtlpExporter((exporter, processor) =>
                 {
-                    Configure(exporter, options.Endpoint, "v1/logs");
+                    Configure(exporter, options, "v1/logs");
                     processor.BatchExportProcessorOptions.ScheduledDelayMilliseconds = 2000;
                 });
             }));
@@ -221,6 +225,7 @@ public sealed partial class TelemetryHost : ILoggerProvider
 
         Options = options;
         Preferences.Default.Set(TelemetrySettings.EndpointKey, options.Endpoint.ToString());
+        Preferences.Default.Set(TelemetrySettings.GrpcKey, options.UseGrpc);
         Preferences.Default.Set(TelemetrySettings.MauiSpansKey, options.IncludeMauiSpans);
     }
 
@@ -327,12 +332,22 @@ public sealed partial class TelemetryHost : ILoggerProvider
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static void Configure(OtlpExporterOptions options, Uri endpoint, string path)
+    private static void Configure(OtlpExporterOptions options, TelemetryOptions telemetry, string path)
     {
-        // OTLP/HTTP。エンドポイントはシグナルごとのパスまで指定する
-        options.Protocol = OtlpExportProtocol.HttpProtobuf;
-        options.Endpoint = new Uri(endpoint, path);
         options.TimeoutMilliseconds = 10000;
+        if (telemetry.UseGrpc)
+        {
+            // OTLP/gRPC (平文の HTTP/2)。Android 既定の AndroidMessageHandler は HTTP/2 を話せないため SocketsHttpHandler を使う
+            options.Protocol = OtlpExportProtocol.Grpc;
+            options.Endpoint = telemetry.Endpoint;
+            options.HttpClientFactory = static () => new HttpClient(new SocketsHttpHandler(), true) { Timeout = TimeSpan.FromMilliseconds(10000) };
+        }
+        else
+        {
+            // OTLP/HTTP。エンドポイントはシグナルごとのパスまで指定する
+            options.Protocol = OtlpExportProtocol.HttpProtobuf;
+            options.Endpoint = new Uri(telemetry.Endpoint, path);
+        }
     }
 
     private async Task<string> FetchServerTimeAsync(CancellationToken cancellationToken)
@@ -342,7 +357,7 @@ public sealed partial class TelemetryHost : ILoggerProvider
             return string.Empty;
         }
 
-        using var response = await HttpClient.GetAsync(new Uri(Options.Endpoint, "api/time"), cancellationToken).ConfigureAwait(false);
+        using var response = await HttpClient.GetAsync(new Uri(Options.ApiEndpoint, "api/time"), cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }

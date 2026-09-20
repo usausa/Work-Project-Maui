@@ -1,0 +1,132 @@
+@using System.Net
+@using System.Text
+@* トレースのスパンをガントチャートで表示 (SVG)。親子の深さで字下げし、状態で色分け *@
+<div style="width:100%;overflow-x:auto">
+    @if (Trace is null || Trace.Spans.Count == 0)
+    {
+        <div class="mud-text-secondary" style="padding:1rem">No spans.</div>
+    }
+    else
+    {
+        <svg width="@Width" height="@height" viewBox="0 0 @Width @height" style="font-family:Roboto,sans-serif;font-size:11px;display:block">
+            @body
+        </svg>
+    }
+</div>
+
+@code {
+    private const int LabelAreaWidth = 280;
+
+    private const int RowHeight = 24;
+
+    private const int HeaderHeight = 22;
+
+    private const int BarVerticalPad = 5;
+
+    private const double PlotRightPad = 80;
+
+    [Parameter, EditorRequired]
+    public TraceDetail? Trace { get; set; }
+
+    [Parameter]
+    public int Width { get; set; } = 880;
+
+    private MarkupString body;
+
+    private int height = 60;
+
+    protected override void OnParametersSet()
+    {
+        body = default;
+        height = 60;
+        if (Trace is null || Trace.Spans.Count == 0)
+        {
+            return;
+        }
+
+        var minT = Trace.StartTime;
+        var maxT = Trace.EndTime;
+        if (minT == maxT)
+        {
+            maxT = minT.AddMilliseconds(1);
+        }
+
+        double plotLeft = LabelAreaWidth;
+        var plotRight = Math.Max(plotLeft + 20, Width - PlotRightPad);
+
+        var ids = new HashSet<string>(Trace.Spans.Select(static x => x.SpanId), StringComparer.Ordinal);
+        var ordered = Trace.Spans.OrderBy(static x => x.StartTime).ToList();
+        var depths = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var span in ordered)
+        {
+            depths[span.SpanId] = String.IsNullOrEmpty(span.ParentSpanId) || !ids.Contains(span.ParentSpanId)
+                ? 0
+                : depths.TryGetValue(span.ParentSpanId, out var parent) ? parent + 1 : 1;
+        }
+
+        height = HeaderHeight + (ordered.Count * RowHeight) + 6;
+        var sb = new StringBuilder();
+
+        // 時間軸
+        for (var i = 0; i <= 4; i++)
+        {
+            var t = i / 4.0;
+            var x = plotLeft + (t * (plotRight - plotLeft));
+            AppendLine(sb, x, HeaderHeight, x, height, 0.08);
+            var rel = t * (maxT - minT).TotalMilliseconds;
+            AppendText(sb, x, 14, "middle", 0.7, rel < 1000 ? rel.ToString("0", CultureInfo.InvariantCulture) + "ms" : (rel / 1000).ToString("0.00", CultureInfo.InvariantCulture) + "s", 0);
+        }
+
+        AppendLine(sb, plotLeft, HeaderHeight, plotLeft, height, 0.18);
+
+        // 行
+        for (var i = 0; i < ordered.Count; i++)
+        {
+            var span = ordered[i];
+            var rowY = HeaderHeight + (i * RowHeight);
+            var labelX = 8 + (depths[span.SpanId] * 12);
+            var labelY = rowY + 16;
+            var barStart = MapX(span.StartTime, minT, maxT, plotLeft, plotRight);
+            var barWidth = Math.Max(2, MapX(span.EndTime, minT, maxT, plotLeft, plotRight) - barStart);
+            var color = span.StatusCode switch
+            {
+                "ERROR" => "#ef5350",
+                "OK" => "#66bb6a",
+                _ => "#90a4ae"
+            };
+
+            sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Fmt(labelX)}\" y=\"{Fmt(labelY)}\" font-size=\"11\">");
+            sb.Append(CultureInfo.InvariantCulture, $"<tspan fill=\"currentColor\" fill-opacity=\"0.55\">{WebUtility.HtmlEncode(span.Resource.ServiceName)}</tspan>");
+            sb.Append(CultureInfo.InvariantCulture, $"<tspan fill=\"currentColor\" fill-opacity=\"0.95\" font-weight=\"500\"> {WebUtility.HtmlEncode(Formats.Truncate(span.Name, 36))}</tspan>");
+            sb.Append("</text>");
+
+            var tooltip = WebUtility.HtmlEncode(string.Create(CultureInfo.InvariantCulture, $"{span.Resource.ServiceName} / {span.Name}\nstatus={span.StatusCode}\nduration={Formats.Duration(span.Duration)}"));
+            sb.Append(CultureInfo.InvariantCulture, $"<rect x=\"{Fmt(barStart)}\" y=\"{Fmt(rowY + BarVerticalPad)}\" width=\"{Fmt(barWidth)}\" height=\"{RowHeight - (BarVerticalPad * 2)}\" fill=\"{color}\" rx=\"2\"><title>{tooltip}</title></rect>");
+            AppendText(sb, barStart + barWidth + 4, labelY, "start", 0.8, Formats.Duration(span.Duration), 10);
+        }
+
+        body = new MarkupString(sb.ToString());
+    }
+
+    private static double MapX(DateTimeOffset t, DateTimeOffset minT, DateTimeOffset maxT, double left, double right)
+    {
+        var span = (maxT - minT).TotalSeconds;
+        return span <= 0 ? left : left + (Math.Clamp((t - minT).TotalSeconds / span, 0, 1) * (right - left));
+    }
+
+    private static string Fmt(double v) => v.ToString("0.##", CultureInfo.InvariantCulture);
+
+    private static void AppendLine(StringBuilder sb, double x1, double y1, double x2, double y2, double opacity) =>
+        sb.Append(CultureInfo.InvariantCulture, $"<line x1=\"{Fmt(x1)}\" y1=\"{Fmt(y1)}\" x2=\"{Fmt(x2)}\" y2=\"{Fmt(y2)}\" stroke=\"currentColor\" stroke-opacity=\"{opacity:0.##}\" />");
+
+    private static void AppendText(StringBuilder sb, double x, double y, string anchor, double opacity, string content, int fontSize)
+    {
+        sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Fmt(x)}\" y=\"{Fmt(y)}\" text-anchor=\"{anchor}\" fill=\"currentColor\" fill-opacity=\"{opacity:0.##}\"");
+        if (fontSize > 0)
+        {
+            sb.Append(CultureInfo.InvariantCulture, $" font-size=\"{fontSize}\"");
+        }
+
+        sb.Append('>').Append(WebUtility.HtmlEncode(content)).Append("</text>");
+    }
+}

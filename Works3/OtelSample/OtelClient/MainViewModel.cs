@@ -27,6 +27,9 @@ public sealed partial class MainViewModel : ObservableObject
     public partial string Endpoint { get; set; } = Preferences.Default.Get(TelemetrySettings.EndpointKey, TelemetrySettings.DefaultEndpoint);
 
     [ObservableProperty]
+    public partial bool UseGrpc { get; set; } = Preferences.Default.Get(TelemetrySettings.GrpcKey, false);
+
+    [ObservableProperty]
     public partial bool IncludeMauiSpans { get; set; } = Preferences.Default.Get(TelemetrySettings.MauiSpansKey, false);
 
     [ObservableProperty]
@@ -91,9 +94,9 @@ public sealed partial class MainViewModel : ObservableObject
             uri = new Uri(uri.AbsoluteUri + "/");
         }
 
-        var options = new TelemetryOptions(uri, IncludeMauiSpans);
+        var options = new TelemetryOptions(uri, UseGrpc, IncludeMauiSpans);
         var elapsed = await RunAsync(() => telemetry.Start(options)).ConfigureAwait(true);
-        AddEntry("APP", $"送信開始 {uri} ({elapsed}ms)");
+        AddEntry("APP", $"送信開始 {uri} {(UseGrpc ? "gRPC" : "HTTP")} ({elapsed}ms)");
     }
 
     [RelayCommand]
@@ -185,9 +188,19 @@ public sealed partial class MainViewModel : ObservableObject
         AddEntry("SPAN", $"Work {(result.Succeeded ? "成功" : "失敗")} {stopwatch.ElapsedMilliseconds}ms {result.Message}");
     }
 
+    // 切替時、接続先のポートが既定 (8080 / 4317) ならもう一方へ入れ替える
+    partial void OnUseGrpcChanged(bool value)
+    {
+        var (from, to) = value ? (TelemetrySettings.HttpPort, TelemetrySettings.GrpcPort) : (TelemetrySettings.GrpcPort, TelemetrySettings.HttpPort);
+        if (Uri.TryCreate(Endpoint.Trim(), UriKind.Absolute, out var uri) && (uri.Port == from))
+        {
+            Endpoint = new UriBuilder(uri) { Port = to }.Uri.ToString();
+        }
+    }
+
     private void UpdateStatus()
     {
-        Status = telemetry.Options is { } options ? $"送信中 {options.Endpoint}" : "停止";
+        Status = telemetry.Options is { } options ? $"送信中 {options.Endpoint} ({(options.UseGrpc ? "gRPC" : "HTTP")})" : "停止";
         PendingFiles = telemetry.CountPendingFiles();
     }
 

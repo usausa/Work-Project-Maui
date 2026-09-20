@@ -1,0 +1,63 @@
+/* 画面共通 (MudBlazor の補助) */
+.mono {
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
+}
+
+.cell-body {
+    max-width: 560px;
+    word-break: break-word;
+}
+
+.cell-wrap {
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.cell-secondary {
+    color: var(--mud-palette-text-secondary);
+    font-family: Consolas, monospace;
+    font-size: 0.75rem;
+}
+
+.row-detail {
+    padding: 8px 12px 12px;
+    background: var(--mud-palette-background-grey);
+}
+
+.attribute-list {
+    border-collapse: collapse;
+    font-family: Consolas, monospace;
+    font-size: 0.75rem;
+    width: 100%;
+}
+
+.attribute-list td {
+    padding: 2px 8px 2px 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--mud-palette-table-lines);
+}
+
+.attribute-key {
+    color: var(--mud-palette-text-secondary);
+    white-space: nowrap;
+    width: 1%;
+}
+
+.attribute-value {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.metric-card {
+    cursor: pointer;
+}
+
+.metric-card.selected {
+    outline: 2px solid var(--mud-palette-primary);
+}
+
+.link-id {
+    cursor: pointer;
+    text-decoration: underline dotted;
+}

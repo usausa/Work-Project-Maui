@@ -1,0 +1,186 @@
+@page "/dashboard"
+@implements IDisposable
+@inject ITelemetryStore Store
+@inject TelemetryStoreOptions Options
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard - OtelServer</PageTitle>
+
+<MudText Typo="Typo.h5" GutterBottom="true">Dashboard</MudText>
+<MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">
+    OTLP/HTTP (protobuf) を POST /v1/logs · /v1/traces · /v1/metrics で、OTLP/gRPC をポート 4317 で受信中。
+    保持: ログ @Options.MaxLogsPerService 件 / サービス、トレース @Options.MaxTraces 件、メトリクス @Options.MaxPointsPerMetricSeries 点 / 系列、@(Options.RetentionDays > 0 ? $"{Options.RetentionDays} 日" : "無期限")
+</MudText>
+
+<MudGrid Spacing="2" Class="mb-4">
+    @Card("Services", summary.ServiceCount.ToString(CultureInfo.InvariantCulture), Icons.Material.Filled.Apps, Color.Default)
+    @Card("Devices", summary.DeviceCount.ToString(CultureInfo.InvariantCulture), Icons.Material.Filled.PhoneAndroid, Color.Default)
+    @Card("Logs", summary.LogCount.ToString("N0", CultureInfo.InvariantCulture), Icons.Material.Filled.List, Color.Info)
+    @Card("Spans", summary.SpanCount.ToString("N0", CultureInfo.InvariantCulture), Icons.Material.Filled.AccountTree, Color.Tertiary)
+    @Card("Traces", summary.TraceCount.ToString("N0", CultureInfo.InvariantCulture), Icons.Material.Filled.Hub, Color.Secondary)
+    @Card("Metrics", summary.MetricCount.ToString("N0", CultureInfo.InvariantCulture), Icons.Material.Filled.ShowChart, Color.Primary)
+    @Card("Last received", summary.LastReceivedAt is { } last ? Formats.DateTime(last) : "-", Icons.Material.Filled.Schedule, Color.Success)
+    @Card("Errors (24h)", errorCount.ToString("N0", CultureInfo.InvariantCulture), Icons.Material.Filled.ErrorOutline, errorCount > 0 ? Color.Error : Color.Default)
+</MudGrid>
+
+<MudPaper Class="pa-3 mb-4" Elevation="1">
+    <MudText Typo="Typo.subtitle1" GutterBottom="true">受信件数 (直近 30 分、1 分ごと)</MudText>
+    <TimeSeriesChart Series="@ingest" Height="200" ZeroBased="true" EmptyMessage="まだ受信していません。" />
+</MudPaper>
+
+<MudPaper Class="pa-3 mb-4" Elevation="1">
+    <MudText Typo="Typo.subtitle1" GutterBottom="true">Devices</MudText>
+    <MudTable Items="@devices" Dense="true" Hover="true" Elevation="0" T="DeviceInfo">
+        <HeaderContent>
+            <MudTh>Device ID</MudTh>
+            <MudTh>Model</MudTh>
+            <MudTh>OS</MudTh>
+            <MudTh>Service</MudTh>
+            <MudTh>First seen</MudTh>
+            <MudTh>Last seen</MudTh>
+            <MudTh Style="text-align:right">Logs</MudTh>
+            <MudTh Style="text-align:right">Spans</MudTh>
+            <MudTh Style="text-align:right">Metrics</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd Class="mono">@context.DeviceId</MudTd>
+            <MudTd>@(context.Model ?? "-")</MudTd>
+            <MudTd>@(context.OsName ?? "-") @context.OsVersion</MudTd>
+            <MudTd>@context.ServiceName @context.ServiceVersion</MudTd>
+            <MudTd Class="mono">@Formats.DateTime(context.FirstSeen)</MudTd>
+            <MudTd Class="mono">@Formats.DateTime(context.LastSeen)</MudTd>
+            <MudTd Class="mono" Style="text-align:right">
+                <span class="link-id" @onclick="@(() => Navigation.NavigateTo($"/logs?device={Uri.EscapeDataString(context.DeviceId)}"))">@context.LogCount.ToString("N0", CultureInfo.InvariantCulture)</span>
+            </MudTd>
+            <MudTd Class="mono" Style="text-align:right">
+                <span class="link-id" @onclick="@(() => Navigation.NavigateTo($"/traces?device={Uri.EscapeDataString(context.DeviceId)}"))">@context.SpanCount.ToString("N0", CultureInfo.InvariantCulture)</span>
+            </MudTd>
+            <MudTd Class="mono" Style="text-align:right">@context.MetricCount.ToString("N0", CultureInfo.InvariantCulture)</MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText Class="pa-2 mud-text-secondary">端末 (device.id) からの受信はまだありません。</MudText>
+        </NoRecordsContent>
+    </MudTable>
+</MudPaper>
+
+<MudGrid Spacing="2" Class="mb-4">
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-3" Elevation="1" Style="height:100%">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-1">
+                <MudText Typo="Typo.subtitle1">Recent errors (logs)</MudText>
+                <MudSpacer />
+                <MudButton Size="Size.Small" Variant="Variant.Text" Href="/logs?severity=17">All</MudButton>
+            </MudStack>
+            <MudTable Items="@errorLogs" Dense="true" Hover="true" Elevation="0" T="LogEntry">
+                <HeaderContent>
+                    <MudTh Style="width:90px">Time</MudTh>
+                    <MudTh Style="width:90px">Severity</MudTh>
+                    <MudTh>Body</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd Class="mono">@Formats.Time(context.Timestamp)</MudTd>
+                    <MudTd><MudChip T="string" Size="Size.Small" Color="@Formats.SeverityColor(context.SeverityNumber)">@context.SeverityText</MudChip></MudTd>
+                    <MudTd Class="cell-body">@Formats.Truncate(context.Body, 120)</MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText Class="pa-2 mud-text-secondary">No errors.</MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-3" Elevation="1" Style="height:100%">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-1">
+                <MudText Typo="Typo.subtitle1">Recent errors (traces)</MudText>
+                <MudSpacer />
+                <MudButton Size="Size.Small" Variant="Variant.Text" Href="/traces?errors=true">All</MudButton>
+            </MudStack>
+            <MudTable Items="@errorTraces" Dense="true" Hover="true" Elevation="0" T="TraceSummary" OnRowClick="@(x => Navigation.NavigateTo($"/traces?trace={x.Item?.TraceId}"))">
+                <HeaderContent>
+                    <MudTh Style="width:90px">Time</MudTh>
+                    <MudTh>Root span</MudTh>
+                    <MudTh Style="width:90px">Duration</MudTh>
+                    <MudTh Style="width:70px">Errors</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd Class="mono">@Formats.Time(context.StartTime)</MudTd>
+                    <MudTd>@context.RootSpanName</MudTd>
+                    <MudTd Class="mono" Style="text-align:right">@Formats.Duration(context.Duration)</MudTd>
+                    <MudTd><MudChip T="string" Size="Size.Small" Color="Color.Error">@context.ErrorCount</MudChip></MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText Class="pa-2 mud-text-secondary">No errors.</MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Class="pa-3" Elevation="1">
+    <MudText Typo="Typo.subtitle1" GutterBottom="true">クライアントからの接続</MudText>
+    <MudText Typo="Typo.body2" Class="mud-text-secondary">
+        USB の端末は <code>adb reverse tcp:8080 tcp:8080</code>(gRPC なら <code>tcp:4317 tcp:4317</code> も)で端末の localhost を PC へ転送し、OtelClient の接続先を <code>http://localhost:8080/</code>(gRPC は <code>http://localhost:4317/</code>)にする。LAN の端末は PC の IP。
+        他の OTLP クライアントからは <code>OTEL_EXPORTER_OTLP_PROTOCOL=grpc</code> + <code>OTEL_EXPORTER_OTLP_ENDPOINT=http://&lt;host&gt;:4317</code>、または <code>http/protobuf</code> + <code>http://&lt;host&gt;:8080</code>。
+        受信内容は <code>/api/summary</code> · <code>/api/devices</code> · <code>/api/logs</code> · <code>/api/traces</code> · <code>/api/metrics</code> でも JSON で取れる。
+    </MudText>
+</MudPaper>
+
+@code {
+    private static readonly TimeSpan IngestWindow = TimeSpan.FromMinutes(30);
+
+    private TelemetrySummary summary = new(0, 0, 0, 0, 0, 0, null);
+
+    private IReadOnlyList<ChartSeries> ingest = [];
+
+    private IReadOnlyList<DeviceInfo> devices = [];
+
+    private IReadOnlyList<LogEntry> errorLogs = [];
+
+    private IReadOnlyList<TraceSummary> errorTraces = [];
+
+    private int errorCount;
+
+    private RenderFragment Card(string title, string value, string icon, Color color) =>
+        @<MudItem xs="6" sm="4" md="3">
+            <MudPaper Class="pa-3" Elevation="1">
+                <div class="d-flex align-center gap-2 mb-1">
+                    <MudIcon Icon="@icon" Color="@color" Size="Size.Small" />
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@title</MudText>
+                </div>
+                <MudText Typo="Typo.h5" Color="@color">@value</MudText>
+            </MudPaper>
+        </MudItem>;
+
+    protected override void OnInitialized()
+    {
+        Refresh();
+        Store.Changed += OnStoreChanged;
+    }
+
+    private void OnStoreChanged(object? sender, EventArgs e) =>
+        InvokeAsync(() =>
+        {
+            Refresh();
+            StateHasChanged();
+        });
+
+    private void Refresh()
+    {
+        summary = Store.GetSummary();
+        devices = Store.GetDevices();
+        var history = Store.GetIngestHistory(IngestWindow);
+        ingest =
+        [
+            new ChartSeries("Logs", history.Logs.Select(static x => new ChartPoint(x.Time, x.Count)).ToList()),
+            new ChartSeries("Spans", history.Spans.Select(static x => new ChartPoint(x.Time, x.Count)).ToList()),
+            new ChartSeries("Metrics", history.Metrics.Select(static x => new ChartPoint(x.Time, x.Count)).ToList())
+        ];
+        var errors = Store.GetLogs(new LogQuery(MinSeverity: 17, MaxCount: 2000));
+        var since = DateTimeOffset.UtcNow.AddDays(-1);
+        errorCount = errors.Count(x => x.Timestamp >= since);
+        errorLogs = errors.Take(8).ToList();
+        errorTraces = Store.GetTraces(new TraceQuery(ErrorsOnly: true, MaxCount: 8));
+    }
+
+    public void Dispose() => Store.Changed -= OnStoreChanged;
+}

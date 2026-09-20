@@ -5,11 +5,18 @@ public static class TelemetrySettings
 {
     public const string EndpointKey = "otlp_endpoint";
 
+    public const string GrpcKey = "otlp_grpc";
+
     public const string MauiSpansKey = "otlp_maui_spans";
 
     public const string DeviceIdKey = "device_id";
 
     public const string DefaultEndpoint = "http://192.168.100.10:8080/";
+
+    // サーバの HTTP (OTLP/HTTP + 画面 + API) と gRPC (OTLP/gRPC) のポート
+    public const int HttpPort = 8080;
+
+    public const int GrpcPort = 4317;
 
     // 端末の識別子 (初回に生成して保存)
     public static string GetDeviceId()

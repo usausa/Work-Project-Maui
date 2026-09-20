@@ -8,15 +8,24 @@
 
     <Grid Padding="16"
           RowSpacing="8"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
 
-        <!-- 接続先 (adb reverse なら http://localhost:4318、LAN なら http://PC の IP:4318) -->
+        <!-- 接続先 (adb reverse なら http://localhost:8080、LAN なら http://PC の IP:8080。gRPC はポート 4317) -->
         <Entry Grid.Row="0"
                Keyboard="Url"
-               Placeholder="http://localhost:4318"
+               Placeholder="http://localhost:8080"
                Text="{Binding Endpoint}" />
 
         <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   VerticalOptions="Center"
+                   Text="OTLP/gRPC で送る (ポート 4317)" />
+            <Switch Grid.Column="1"
+                    IsToggled="{Binding UseGrpc}" />
+        </Grid>
+
+        <Grid Grid.Row="2"
               ColumnDefinitions="*,Auto">
             <Label Grid.Column="0"
                    VerticalOptions="Center"
@@ -25,7 +34,7 @@
                     IsToggled="{Binding IncludeMauiSpans}" />
         </Grid>
 
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               ColumnSpacing="8"
               ColumnDefinitions="*,*,*">
             <Button Grid.Column="0"
@@ -39,11 +48,11 @@
                     Text="Flush" />
         </Grid>
 
-        <Entry Grid.Row="3"
+        <Entry Grid.Row="4"
                Placeholder="ログの本文"
                Text="{Binding Message}" />
 
-        <Grid Grid.Row="4"
+        <Grid Grid.Row="5"
               ColumnSpacing="8"
               ColumnDefinitions="*,*,*">
             <Button Grid.Column="0"
@@ -57,7 +66,7 @@
                     Text="Error (例外)" />
         </Grid>
 
-        <Grid Grid.Row="5"
+        <Grid Grid.Row="6"
               ColumnSpacing="8"
               ColumnDefinitions="*,*,*">
             <Button Grid.Column="0"
@@ -71,7 +80,7 @@
                     Text="クラッシュ" />
         </Grid>
 
-        <VerticalStackLayout Grid.Row="6"
+        <VerticalStackLayout Grid.Row="7"
                              Spacing="4">
             <Label FontAttributes="Bold"
                    Text="{Binding Status, StringFormat='状態: {0}'}" />
@@ -87,7 +96,7 @@
         </VerticalStackLayout>
 
         <!-- 操作の記録 (新しいものが上) -->
-        <ScrollView Grid.Row="7">
+        <ScrollView Grid.Row="8">
             <Label FontSize="12"
                    LineBreakMode="WordWrap"
                    Text="{Binding LogText}" />

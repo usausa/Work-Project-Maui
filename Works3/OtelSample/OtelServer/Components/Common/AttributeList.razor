@@ -1,0 +1,27 @@
+@* 属性の一覧 (キー / 値)。長い値 (スタックトレースなど) はそのまま折り返して表示 *@
+@if (Attributes.Count == 0)
+{
+    <MudText Typo="Typo.caption" Class="mud-text-secondary">@EmptyText</MudText>
+}
+else
+{
+    <table class="attribute-list">
+        <tbody>
+            @foreach (var item in Attributes)
+            {
+                <tr>
+                    <td class="attribute-key">@item.Key</td>
+                    <td class="attribute-value">@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<KeyValueAttr> Attributes { get; set; } = [];
+
+    [Parameter]
+    public string EmptyText { get; set; } = "(none)";
+}

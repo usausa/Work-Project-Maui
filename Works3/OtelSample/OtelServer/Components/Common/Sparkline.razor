@@ -1,0 +1,55 @@
+@using System.Text
+@* 折れ線だけの小さなグラフ (メトリクスの一覧用) *@
+<svg width="@Width" height="@Height" viewBox="0 0 @Width @Height" style="display:block">
+    @if (!String.IsNullOrEmpty(points))
+    {
+        <polyline fill="none" stroke="@Color" stroke-width="1.5" points="@points" />
+    }
+</svg>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ChartPoint> Points { get; set; } = [];
+
+    [Parameter]
+    public int Width { get; set; } = 240;
+
+    [Parameter]
+    public int Height { get; set; } = 48;
+
+    [Parameter]
+    public string Color { get; set; } = "#42a5f5";
+
+    private string points = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        points = string.Empty;
+        if (Points.Count < 2)
+        {
+            return;
+        }
+
+        var minT = Points.Min(static x => x.Time);
+        var maxT = Points.Max(static x => x.Time);
+        var minV = Points.Min(static x => x.Value);
+        var maxV = Points.Max(static x => x.Value);
+        var spanT = Math.Max(1, (maxT - minT).TotalSeconds);
+        var spanV = maxV - minV;
+
+        var sb = new StringBuilder();
+        foreach (var point in Points.OrderBy(static x => x.Time))
+        {
+            var x = 2 + ((Width - 4) * (point.Time - minT).TotalSeconds / spanT);
+            var y = spanV <= 0 ? Height / 2d : 2 + ((Height - 4) * (1 - ((point.Value - minV) / spanV)));
+            if (sb.Length > 0)
+            {
+                sb.Append(' ');
+            }
+
+            sb.Append(x.ToString("0.#", CultureInfo.InvariantCulture)).Append(',').Append(y.ToString("0.#", CultureInfo.InvariantCulture));
+        }
+
+        points = sb.ToString();
+    }
+}

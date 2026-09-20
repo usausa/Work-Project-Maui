@@ -1,0 +1,207 @@
+@page "/metrics"
+@implements IDisposable
+@inject ITelemetryStore Store
+
+<PageTitle>Metrics - OtelServer</PageTitle>
+
+<MudText Typo="Typo.h5" GutterBottom="true">Metrics</MudText>
+<MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">サービスの計器を一覧し、選んだ計器の推移を表示する。ヒストグラムは値 = 平均 (sum / count)、Count / Min / Max は表に出す。</MudText>
+
+<MudPaper Class="pa-3 mb-3" Elevation="1">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+        <MudSelect T="string" Label="Service" Value="@service" ValueChanged="OnServiceChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:220px" Disabled="@(services.Count == 0)">
+            @foreach (var name in services)
+            {
+                <MudSelectItem T="string" Value="@name">@name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="string" Label="Metric" Value="@metric" ValueChanged="OnMetricChanged" Variant="Variant.Outlined" Margin="Margin.Dense" Style="min-width:320px" Disabled="@(overviews.Count == 0)">
+            @foreach (var item in overviews)
+            {
+                <MudSelectItem T="string" Value="@item.Name">@item.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSpacer />
+        <MudSwitch T="bool" @bind-Value="autoRefresh" Color="Color.Primary" Size="Size.Small">Auto</MudSwitch>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Refresh" OnClick="Refresh">Refresh</MudButton>
+    </MudStack>
+</MudPaper>
+
+@if (snapshot is not null)
+{
+    <MudPaper Class="pa-3 mb-3" Elevation="1">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Class="mb-2">
+            <MudText Typo="Typo.subtitle1" Class="mono">@snapshot.MetricName</MudText>
+            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">@snapshot.Kind</MudChip>
+            @if (!String.IsNullOrEmpty(snapshot.Unit))
+            {
+                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">@snapshot.Unit</MudChip>
+            }
+            @if (!String.IsNullOrEmpty(snapshot.Description))
+            {
+                <MudText Typo="Typo.caption" Class="mud-text-secondary ml-2">@snapshot.Description</MudText>
+            }
+            <MudSpacer />
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">@snapshot.Points.Count points · @chart.Count series</MudText>
+        </MudStack>
+        <TimeSeriesChart Series="@chart" Unit="@snapshot.Unit" Width="1000" Height="300" EmptyMessage="No data points." />
+    </MudPaper>
+
+    <MudPaper Class="pa-2 mb-3" Elevation="1">
+        <MudTable Items="@LatestPoints()" Dense="true" Hover="true" Elevation="0" T="MetricPoint">
+            <HeaderContent>
+                <MudTh Style="width:120px">Time</MudTh>
+                <MudTh Style="width:120px;text-align:right">Value</MudTh>
+                <MudTh Style="width:90px;text-align:right">Count</MudTh>
+                <MudTh Style="width:100px;text-align:right">Min</MudTh>
+                <MudTh Style="width:100px;text-align:right">Max</MudTh>
+                <MudTh Style="width:140px">Device</MudTh>
+                <MudTh>Attributes</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd Class="mono">@Formats.Time(context.Timestamp)</MudTd>
+                <MudTd Class="mono" Style="text-align:right">@Formats.Value(context.Value)</MudTd>
+                <MudTd Class="mono" Style="text-align:right">@(context.Count?.ToString(CultureInfo.InvariantCulture) ?? "-")</MudTd>
+                <MudTd Class="mono" Style="text-align:right">@(context.Min is { } min ? Formats.Value(min) : "-")</MudTd>
+                <MudTd Class="mono" Style="text-align:right">@(context.Max is { } max ? Formats.Value(max) : "-")</MudTd>
+                <MudTd Class="mono">@Formats.Truncate(context.Resource.DeviceId, 16)</MudTd>
+                <MudTd Class="cell-secondary">@Formats.Attributes(context.Attributes, 4)</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+}
+
+<MudText Typo="Typo.subtitle1" GutterBottom="true">Overview (@overviews.Count metrics)</MudText>
+@if (overviews.Count == 0)
+{
+    <MudText Typo="Typo.body2" Class="mud-text-secondary pa-4">メトリクスはまだ受信していません。</MudText>
+}
+else
+{
+    <MudGrid Spacing="2">
+        @foreach (var item in overviews)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudPaper Class="@("pa-3 metric-card" + (item.Name == metric ? " selected" : string.Empty))" Elevation="1" @onclick="@(() => OnMetricChanged(item.Name))">
+                    <MudText Typo="Typo.caption" Class="mono" Style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">@item.Name</MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Baseline" Spacing="1">
+                        <MudText Typo="Typo.h6">@Formats.Number(item.Latest.Value)</MudText>
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@item.Latest.Unit</MudText>
+                        <MudSpacer />
+                        <MudChip T="string" Size="Size.Small" Variant="Variant.Text">@item.Latest.Kind</MudChip>
+                    </MudStack>
+                    <Sparkline Points="@item.Points" Width="260" Height="40" />
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@Formats.Time(item.Latest.Timestamp) · @item.PointCount pts@(item.SeriesCount > 1 ? $" · {item.SeriesCount} series" : string.Empty)</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private const int OverviewPoints = 60;
+
+    private IReadOnlyList<string> services = [];
+
+    private List<Overview> overviews = [];
+
+    private string? service;
+
+    private string? metric;
+
+    private MetricSeriesSnapshot? snapshot;
+
+    private IReadOnlyList<ChartSeries> chart = [];
+
+    private bool autoRefresh = true;
+
+    protected override void OnInitialized()
+    {
+        Refresh();
+        Store.Changed += OnStoreChanged;
+    }
+
+    private void OnStoreChanged(object? sender, EventArgs e)
+    {
+        if (!autoRefresh)
+        {
+            return;
+        }
+
+        InvokeAsync(() =>
+        {
+            Refresh();
+            StateHasChanged();
+        });
+    }
+
+    private void Refresh()
+    {
+        services = Store.GetServiceNames();
+        if (service is null || !services.Contains(service))
+        {
+            service = services.FirstOrDefault();
+        }
+
+        overviews = service is null
+            ? []
+            : Store.GetMetricNames(service)
+                .Select(name => Store.GetMetricSeries(service, name, OverviewPoints))
+                .Where(static x => x is not null)
+                .Select(static x => ToOverview(x!))
+                .ToList();
+        if (metric is null || overviews.All(x => x.Name != metric))
+        {
+            metric = overviews.FirstOrDefault()?.Name;
+        }
+
+        UpdateSnapshot();
+    }
+
+    private void UpdateSnapshot()
+    {
+        snapshot = (service is null) || (metric is null) ? null : Store.GetMetricSeries(service, metric);
+        chart = snapshot is null
+            ? []
+            : snapshot.Points
+                .GroupBy(static x => AttributeKey(x.Attributes))
+                .Select(static g => new ChartSeries(g.Key, g.OrderBy(static x => x.Timestamp).Select(static x => new ChartPoint(x.Timestamp, x.Value)).ToList()))
+                .ToList();
+    }
+
+    // 属性の組み合わせが複数ある計器は、点の多い系列をスパークラインにする
+    private static Overview ToOverview(MetricSeriesSnapshot snapshot)
+    {
+        var groups = snapshot.Points.GroupBy(static x => AttributeKey(x.Attributes)).ToList();
+        var main = groups.OrderByDescending(static g => g.Count()).First();
+        return new Overview(
+            snapshot.MetricName,
+            snapshot.Points[^1],
+            main.OrderBy(static x => x.Timestamp).Select(static x => new ChartPoint(x.Timestamp, x.Value)).ToList(),
+            snapshot.Points.Count,
+            groups.Count);
+    }
+
+    private static string AttributeKey(IReadOnlyList<KeyValueAttr> attributes) =>
+        attributes.Count == 0 ? "(default)" : String.Join(", ", attributes.Select(static x => $"{x.Key}={x.Value}"));
+
+    private IEnumerable<MetricPoint> LatestPoints() =>
+        snapshot is null ? [] : snapshot.Points.OrderByDescending(static x => x.Timestamp).Take(50);
+
+    private void OnServiceChanged(string value)
+    {
+        service = value;
+        metric = null;
+        Refresh();
+    }
+
+    private void OnMetricChanged(string value)
+    {
+        metric = value;
+        UpdateSnapshot();
+    }
+
+    public void Dispose() => Store.Changed -= OnStoreChanged;
+
+    private sealed record Overview(string Name, MetricPoint Latest, IReadOnlyList<ChartPoint> Points, int PointCount, int SeriesCount);
+}
