@@ -6,23 +6,53 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvNetObjectView"
              x:DataType="{x:Type module:SampleCvNetObjectViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleCvNetObjectViewModel}"
              shell:ShellProperty.Title="Object"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
-             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
-             shell:ShellProperty.Function4Text="{Binding IsPreview, Converter={s:BoolToText True='Detect', False='Retry'}}"
+             shell:ShellProperty.Function2Text="{Binding State, Converter={s:CompareToText True='Out', False=''}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function3Text="{Binding State, Converter={s:CompareToText True='In', False=''}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function4Text="{Binding State, Converter={StaticResource ActionTextConverter}}"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function2Enabled="{Binding IsPreview}"
-             shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
-             shell:ShellProperty.Function4Enabled="True">
+             shell:ShellProperty.Function2Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function3Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function4Enabled="{Binding State, Converter={StaticResource ActionEnabledConverter}}">
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
+
+            <!-- 状態 → 表示 -->
+            <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Capturing}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ImageVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Analyzing}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ActionEnabledConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToTextConverter x:Key="ActionTextConverter" DefaultValue="">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static module:CaptureState.Preview}" Value="Detect" />
+                    <s:MapToTextEntry Key="{x:Static module:CaptureState.Result}" Value="Retry" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
 
             <Style x:Key="RetryHintBorder"
                    TargetType="Border">
@@ -49,22 +79,25 @@
           RowDefinitions="*">
 
         <mct:CameraView Grid.Row="0"
-                        IsVisible="{Binding IsPreview}"
+                        IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}"
                         behaviors:CameraBind.Controller="{Binding Controller}" />
         <Image Grid.Row="0"
-               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
+               IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
                BackgroundColor="Black"
                Source="{Binding Image}" />
+        <drawing:DrawingControl Grid.Row="0"
+                                  IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
+                                  Drawing="{Binding Drawing}" />
 
         <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"
-                                    IsVisible="{Binding IsPreview}" />
+                                    IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
 
         <!-- 撮影後の再開ヒント -->
         <Border Grid.Row="0"
                 Style="{StaticResource RetryHintBorder}"
-                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
-                behaviors:AnimationOption.FadeInTrigger="{Binding IsPreview}">
+                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding State}">
             <Label Style="{StaticResource RetryHintLabel}"
                    Text="Retry でプレビューを再開" />
         </Border>

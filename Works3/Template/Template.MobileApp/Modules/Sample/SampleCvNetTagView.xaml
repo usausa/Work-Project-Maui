@@ -12,28 +12,91 @@
              s:BindingContextResolver.Type="{x:Type module:SampleCvNetTagViewModel}"
              shell:ShellProperty.Title="Tag"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function2Text="{Binding IsPreview, Converter={s:BoolToText True='Out', False=''}}"
-             shell:ShellProperty.Function3Text="{Binding IsPreview, Converter={s:BoolToText True='In', False=''}}"
-             shell:ShellProperty.Function4Text="{Binding IsPreview, Converter={s:BoolToText True='Detect', False='Retry'}}"
+             shell:ShellProperty.Function2Text="{Binding State, Converter={s:CompareToText True='Out', False=''}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function3Text="{Binding State, Converter={s:CompareToText True='In', False=''}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function4Text="{Binding State, Converter={StaticResource ActionTextConverter}}"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function2Enabled="{Binding IsPreview}"
-             shell:ShellProperty.Function3Enabled="{Binding IsPreview}"
-             shell:ShellProperty.Function4Enabled="True">
+             shell:ShellProperty.Function2Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function3Enabled="{Binding State, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:CaptureState.Preview}}"
+             shell:ShellProperty.Function4Enabled="{Binding State, Converter={StaticResource ActionEnabledConverter}}">
+
+    <!-- ReSharper disable Xaml.RedundantResource -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- 状態 → 表示 -->
+            <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Capturing}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ImageVisibleConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Analyzing}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToBoolConverter x:Key="ActionEnabledConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
+
+            <s:MapToTextConverter x:Key="ActionTextConverter" DefaultValue="">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static module:CaptureState.Preview}" Value="Detect" />
+                    <s:MapToTextEntry Key="{x:Static module:CaptureState.Result}" Value="Retry" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <Style x:Key="TagPanelBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+
+            <Style x:Key="TagPanelLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="LineHeight" Value="1.3" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
 
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="*">
 
         <mct:CameraView Grid.Row="0"
-                        IsVisible="{Binding IsPreview}"
+                        IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}"
                         behaviors:CameraBind.Controller="{Binding Controller}" />
         <Image Grid.Row="0"
-               IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}"
+               IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
                BackgroundColor="Black"
                Source="{Binding Image}" />
 
+        <!-- 解析結果 (タグと信頼度) -->
+        <Border Grid.Row="0"
+                Style="{StaticResource TagPanelBorder}"
+                IsVisible="{Binding TagsText, Converter={StaticResource NotEmptyConverter}}">
+            <Label Style="{StaticResource TagPanelLabel}"
+                   Text="{Binding TagsText}" />
+        </Border>
+
         <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"
-                                    IsVisible="{Binding IsPreview}" />
+                                    IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
 
     </Grid>
 
