@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AiShared/AiShared.csproj" />
+  <Project Path="CvConsole/CvConsole.csproj" />
+  <Project Path="ChatConsole/ChatConsole.csproj" />
+</Solution>
