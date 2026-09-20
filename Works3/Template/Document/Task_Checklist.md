@@ -47,7 +47,7 @@ Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Usecase/AzureVisionUsecase.cs` | Image Analysis 4.0(物体 / 人物 / タグ / 文字) | — |
-| `Modules/Sample/SampleCvNetView.xaml` + `SampleCvNetViewModel.cs` / `VisionFeature.cs` / `CaptureState.cs` / `Graphics/Drawing/DetectDrawing.cs` | 1 画面に統合。撮影 → 解析 → 枠(ラベル + 信頼度)/ タグのパネル。種類(Object / Tag / People / OCR)は画面下の選択ボタンで切り替え、撮影済みなら同じ画像を解析し直す。Sample メニューの `CvNetCommand` が AI 未設定を案内 | Setting の AI EndPoint / Key が必要。Tag は日本語のタグ |
+| `Modules/Sample/SampleCvNetView.xaml` + `SampleCvNetViewModel.cs` / `VisionFeature.cs` / `CaptureState.cs` / `Graphics/Drawing/DetectDrawing.cs` | 1 画面に統合。撮影 → 解析 → 枠(ラベル + 信頼度)/ タグのパネル。種類(Object / Tag / People / OCR)は画面下の選択ボタンで切り替え、撮影済みなら撮影からやり直す。Sample メニューの `CvNetCommand` が AI 未設定を案内 | Setting の AI EndPoint / Key が必要。Tag は日本語のタグ |
 | `Modules/Sample/SampleChatView.xaml` + `SampleChatViewModel.cs` / `Controls/ChatView.xaml(.cs)` | Ollama のストリーミング応答(`OllamaApiClient` を `IChatClient` として直接生成)。音声入力は入力欄のマイクボタン(認識中は停止ボタン、途中結果を入力欄へ、無音で自動停止)。未設定は Sample メニューの `ChatCommand` がダイアログで案内して画面に入らない | 冒頭のあいさつ(モデル名)、応答、マイク → 文章が入力欄に入る → 送信 |
 | `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `OllamaEndPoint` / `OllamaModel`(QR のキー名も同じ) | Setting 画面の Ollama / Model の行 |
 | `Document/Sample_CvNet_Tag.png` | 画像 | README |
