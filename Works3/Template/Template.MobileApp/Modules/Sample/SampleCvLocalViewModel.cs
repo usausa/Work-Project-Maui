@@ -25,16 +25,7 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
     {
         this.onnxVisionUsecase = onnxVisionUsecase;
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ImageHelper.ReplaceBitmap(Image, null);
-        }
-
-        base.Dispose(disposing);
+        Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)

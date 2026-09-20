@@ -74,8 +74,8 @@ Control メニュー新設以降(2026-09-13〜19)の未コミット分のうち�
 | `Modules/Network/NetworkGrpcView.xaml` + `NetworkGrpcViewModel.cs` | gRPC(チャット) | 接続先 / 状態 / 未配送数、単項 RPC(サーバー時刻)、チャット(管理画面 `/chat` と相互)、切断中の送信は再接続後に配送。F2 = Connect |
 | `Modules/Network/NetworkScpViewModel.cs` / `Usecase/ScpUsecase.cs` | SCP(ファイル選択 / 保存先 / 接続情報の取り出しと SSH.NET の転送は `ScpUsecase`、文言は VM) | 転送を BusyState の外で実行(キャンセル可能に)。未設定は「未設定 (設定画面の QR で投入)」 |
 | `Services/HttpService.cs` / `ApiContext.cs` / `Log.cs`(新規) | API 呼び出し、認証状態(`LoginId` / `TokenExpires`)、通信系ログ | PUT / DELETE は `HttpClient` を `RestResponse` に包む。ログは `Services/Log.cs` に分離 |
-| `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続維持(`Connect()` = 購読で接続・破棄で切断、`On<T>()`、`CreateRetryPolicy`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` |
-| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(`HubConnection` の構築、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`) | 認証なし。状態のログ、購読の破棄で `HubConnection` を破棄 |
+| `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続(`HubConnection` の生成・維持・破棄をクラスが持つ。`Connect(url)` = 購読で接続・破棄で切断、`On<T>()`、`InvokeAsync`、`IsConnected`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` |
+| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(ハブのパス / KeepAlive / ServerTimeout、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`、ログ) | 認証なし。接続の管理は `ReactiveSignalR` |
 | `Services/ChatRoomClient.cs`(関連型も同じファイル)/ `Services/Protos/chat.proto` / `server.proto` | gRPC チャット(サーバーの WPF サンプルの移植)と proto のコピー | 指数バックオフ再接続、送信キュー、トークンは接続ごとに取得 |
 | `Usecase/NetworkOperator.cs` / `NetworkUsecase.cs` | 401 の再ログイン再送、CRUD / ストレージ / 遅延のユースケース、gRPC チャット用の `EnsureLoginAsync` / `GetTokenAsync` | 再ログインは 1 回だけ、`ExecuteTransfer` はインジケーターなし |
 | `Models/Api/DataListResponse.cs`(`Id` long / `Total`)/ `DataResponse.cs` / `DataCreateRequest.cs` / `DataCreateResponse.cs` / `DataUpdateRequest.cs` / `StorageListResponse.cs` / `MonitorMessages.cs` | 契約 DTO | サーバー側と同じ形 |
