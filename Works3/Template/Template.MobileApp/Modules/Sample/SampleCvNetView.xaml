@@ -6,8 +6,8 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
-             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              x:Class="Template.MobileApp.Modules.Sample.SampleCvNetView"
              x:DataType="{x:Type module:SampleCvNetViewModel}"
              s:BindingContextResolver.Type="{x:Type module:SampleCvNetViewModel}"
@@ -28,22 +28,28 @@
             <!-- 状態 → 表示 -->
             <s:MapToBoolConverter x:Key="PreviewVisibleConverter">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Capturing}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Capturing}"
+                                      Value="True" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
             <s:MapToBoolConverter x:Key="ImageVisibleConverter">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Analyzing}" Value="True" />
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Analyzing}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}"
+                                      Value="True" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
             <s:MapToBoolConverter x:Key="ActionEnabledConverter">
                 <s:MapToBoolConverter.Entries>
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}" Value="True" />
-                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}" Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Preview}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:CaptureState.Result}"
+                                      Value="True" />
                 </s:MapToBoolConverter.Entries>
             </s:MapToBoolConverter>
 
@@ -117,15 +123,15 @@
           RowDefinitions="*,Auto">
 
         <mct:CameraView Grid.Row="0"
-                        IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}"
-                        behaviors:CameraBind.Controller="{Binding Controller}" />
+                        behaviors:CameraBind.Controller="{Binding Controller}"
+                        IsVisible="{Binding State, Converter={StaticResource PreviewVisibleConverter}}" />
         <Image Grid.Row="0"
+               Source="{Binding Image}"
                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
-               BackgroundColor="Black"
-               Source="{Binding Image}" />
+               BackgroundColor="Black" />
         <drawing:DrawingControl Grid.Row="0"
-                                  IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
-                                  Drawing="{Binding Drawing}" />
+                                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
+                                Drawing="{Binding Drawing}" />
 
         <!-- 解析結果 (タグと信頼度) -->
         <Border Grid.Row="0"
@@ -142,52 +148,51 @@
         <!-- 撮影後の再開ヒント -->
         <Border Grid.Row="0"
                 Style="{StaticResource RetryHintBorder}"
-                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}"
-                behaviors:AnimationOption.FadeInTrigger="{Binding State}">
+                behaviors:AnimationOption.FadeInTrigger="{Binding State}"
+                IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}">
             <Label Style="{StaticResource RetryHintLabel}"
                    Text="Retry でプレビューを再開" />
         </Border>
 
         <!-- 撮影瞬間のシャッターフラッシュ -->
         <BoxView Grid.Row="0"
+                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}"
                  Color="White"
-                 Opacity="0"
-                 InputTransparent="True"
-                 behaviors:AnimationOption.FlashTrigger="{Binding CaptureCount}" />
+                 InputTransparent="True" Opacity="0" />
 
-        <!-- 解析の種類 (撮影済みなら同じ画像を解析し直す) -->
+        <!-- 解析の種類 -->
         <Grid Grid.Row="1"
               Style="{StaticResource FeatureGrid}"
               ColumnDefinitions="*,*,*,*"
               IsEnabled="{Binding State, Converter={StaticResource ActionEnabledConverter}}">
             <Button Grid.Column="0"
                     Style="{StaticResource FeatureButton}"
-                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}"
-                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}"
                     Command="{Binding SelectFeatureCommand}"
                     CommandParameter="{x:Static module:VisionFeature.Objects}"
-                    Text="Object" />
+                    Text="Object"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Objects}}" />
             <Button Grid.Column="1"
                     Style="{StaticResource FeatureButton}"
-                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}"
-                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}"
                     Command="{Binding SelectFeatureCommand}"
                     CommandParameter="{x:Static module:VisionFeature.Tags}"
-                    Text="Tag" />
+                    Text="Tag"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Tags}}" />
             <Button Grid.Column="2"
                     Style="{StaticResource FeatureButton}"
-                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.People}}"
-                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.People}}"
                     Command="{Binding SelectFeatureCommand}"
                     CommandParameter="{x:Static module:VisionFeature.People}"
-                    Text="People" />
+                    Text="People"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.People}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.People}}" />
             <Button Grid.Column="3"
                     Style="{StaticResource FeatureButton}"
-                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}"
-                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}"
                     Command="{Binding SelectFeatureCommand}"
                     CommandParameter="{x:Static module:VisionFeature.Ocr}"
-                    Text="OCR" />
+                    Text="OCR"
+                    TextColor="{Binding Feature, Converter={StaticResource FeatureTextColorConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}"
+                    BackgroundColor="{Binding Feature, Converter={StaticResource FeatureBackgroundConverter}, ConverterParameter={x:Static module:VisionFeature.Ocr}}" />
         </Grid>
 
     </Grid>

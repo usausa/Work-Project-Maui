@@ -16,8 +16,6 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 {
     private readonly ISpeechService speech;
 
-    private readonly IChatClient chatClient;
-
     private readonly string model;
 
     private readonly List<AiMessage> history = [];
@@ -32,21 +30,25 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
 
-    public IObserveCommand SendCommand { get; }
-
     public IObserveCommand VoiceCommand { get; }
 
+    public IObserveCommand SendCommand { get; }
+
+    // 破棄は Disposables に任せる
+    private IChatClient ChatClient { get; }
+
     public SampleChatViewModel(
-        ISpeechService speech,
-        Settings settings)
+        Settings settings,
+        ISpeechService speech)
     {
         this.speech = speech;
 
-        chatClient = new OllamaApiClient(new Uri(settings.OllamaEndPoint), settings.OllamaModel);
+        ChatClient = new OllamaApiClient(new Uri(settings.OllamaEndPoint), settings.OllamaModel);
+        Disposables.Add(ChatClient);
         model = settings.OllamaModel;
 
-        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !String.IsNullOrWhiteSpace(InputText));
         VoiceCommand = MakeAsyncCommand(ToggleVoiceAsync);
+        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !String.IsNullOrWhiteSpace(InputText));
 
         Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
         {
@@ -66,23 +68,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             }
         }));
 
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(InputText))
-            {
-                SendCommand.RaiseCanExecuteChanged();
-            }
-        };
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            chatClient.Dispose();
-        }
-
-        base.Dispose(disposing);
+        SubscribeInputText(_ => SendCommand.RaiseCanExecuteChanged());
     }
 
     public override Task OnNavigatedToAsync(INavigationContext context)
@@ -103,6 +89,35 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    private async Task ToggleVoiceAsync()
+    {
+        if (IsListening)
+        {
+            await speech.RecognizeStopAsync();
+            return;
+        }
+
+        if (!await Permissions.RequestMicrophoneAsync())
+        {
+            return;
+        }
+
+        IsListening = true;
+        if (!await speech.RecognizeAsync(CultureInfo.CurrentCulture))
+        {
+            IsListening = false;
+        }
+    }
+
+    private async Task CancelVoiceAsync()
+    {
+        if (IsListening)
+        {
+            IsListening = false;
+            await speech.RecognizeCancelAsync();
+        }
+    }
 
     private async Task SendAsync()
     {
@@ -134,7 +149,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         var builder = new StringBuilder();
         try
         {
-            await foreach (var update in chatClient.GetStreamingResponseAsync(history).ConfigureAwait(true))
+            await foreach (var update in ChatClient.GetStreamingResponseAsync(history).ConfigureAwait(true))
             {
                 builder.Append(update.Text);
                 message.IsTyping = false;
@@ -148,35 +163,6 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             history.RemoveAt(history.Count - 1);
             message.IsTyping = false;
             message.Text = $"応答を取得できませんでした。\n{ex.Message}";
-        }
-    }
-
-    private async Task ToggleVoiceAsync()
-    {
-        if (IsListening)
-        {
-            await speech.RecognizeStopAsync();
-            return;
-        }
-
-        if (!await Permissions.RequestMicrophoneAsync())
-        {
-            return;
-        }
-
-        IsListening = true;
-        if (!await speech.RecognizeAsync(CultureInfo.CurrentCulture))
-        {
-            IsListening = false;
-        }
-    }
-
-    private async Task CancelVoiceAsync()
-    {
-        if (IsListening)
-        {
-            IsListening = false;
-            await speech.RecognizeCancelAsync();
         }
     }
 }

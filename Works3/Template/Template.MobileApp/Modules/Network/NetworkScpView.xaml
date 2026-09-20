@@ -14,7 +14,6 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- SCP 転送 (SSH.NET)。接続情報は設定画面の QR で投入し、ホスト鍵は配布指紋と照合する -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -99,9 +98,9 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="接続先"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Icon="{x:Static fonts:MaterialIcons.Dns}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+                               Title="接続先">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource ValueLabel}"
                            Text="{Binding HostDisplay}" />
@@ -114,10 +113,9 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="転送"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="80"
                                Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+                               Title="転送">
                 <VerticalStackLayout Spacing="10">
                     <Entry Style="{StaticResource RemoteEntry}"
                            IsEnabled="{Binding Configured}"
@@ -140,16 +138,15 @@
                                 Text="キャンセル" />
                     </Grid>
                     <Label Style="{StaticResource CaptionLabel}"
-                           Text="アップロードは FilePicker で選んだファイルをリモートのホームへ、ダウンロードは上のファイル名をキャッシュへ取得する" />
+                           Text="アップロードは FilePicker で選んだファイルをリモートのホームへ、ダウンロードは上のファイル名を公開フォルダへ取得する" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="ログ"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="160"
                                Icon="{x:Static fonts:MaterialIcons.Receipt_long}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
-                <VerticalStackLayout Spacing="4"
-                                     BindableLayout.ItemsSource="{Binding Logs}">
+                               Title="ログ">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Logs}"
+                                     Spacing="4">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
                             <Label Style="{StaticResource LogLabel}"
