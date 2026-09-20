@@ -46,13 +46,7 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         timer.Interval = TimeSpan.FromMinutes(1);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => CurrentTime = DateTime.Now.TimeOfDay));
 
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(SelectedDay))
-            {
-                UpdateEvents();
-            }
-        };
+        SubscribeSelectedDay(_ => UpdateEvents());
     }
 
     public override Task OnNavigatedToAsync(INavigationContext context)

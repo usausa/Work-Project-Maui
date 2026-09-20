@@ -87,30 +87,12 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         WidgetsEnabled = true;
         Controller.SetManagerEnabled(MapsuiWidgetManager.ManagerName, true);
 
-        PropertyChanged += (_, e) =>
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(WidgetsEnabled):
-                    Controller.SetManagerEnabled(MapsuiWidgetManager.ManagerName, WidgetsEnabled);
-                    break;
-                case nameof(SpotsEnabled):
-                    Controller.SetManagerEnabled(MapsuiSpotManager.ManagerName, SpotsEnabled);
-                    break;
-                case nameof(ShapesEnabled):
-                    Controller.SetManagerEnabled(MapsuiShapeManager.ManagerName, ShapesEnabled);
-                    break;
-                case nameof(GeoJsonEnabled):
-                    Controller.SetManagerEnabled(MapsuiGeoJsonManager.ManagerName, GeoJsonEnabled);
-                    break;
-                case nameof(ClusterEnabled):
-                    Controller.SetManagerEnabled(MapsuiClusterManager.ManagerName, ClusterEnabled);
-                    break;
-                case nameof(OverlayEnabled):
-                    Controller.SetOverlayRoute(OverlayEnabled ? RoutePoints : null);
-                    break;
-            }
-        };
+        SubscribeWidgetsEnabled(x => Controller.SetManagerEnabled(MapsuiWidgetManager.ManagerName, x));
+        SubscribeSpotsEnabled(x => Controller.SetManagerEnabled(MapsuiSpotManager.ManagerName, x));
+        SubscribeShapesEnabled(x => Controller.SetManagerEnabled(MapsuiShapeManager.ManagerName, x));
+        SubscribeGeoJsonEnabled(x => Controller.SetManagerEnabled(MapsuiGeoJsonManager.ManagerName, x));
+        SubscribeClusterEnabled(x => Controller.SetManagerEnabled(MapsuiClusterManager.ManagerName, x));
+        SubscribeOverlayEnabled(x => Controller.SetOverlayRoute(x ? RoutePoints : null));
     }
 
     public override async Task OnNavigatedToAsync(INavigationContext context)

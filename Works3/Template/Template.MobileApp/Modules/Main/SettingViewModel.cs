@@ -7,6 +7,8 @@ using Template.MobileApp.Services;
 
 public sealed partial class SettingViewModel : AppViewModelBase
 {
+    private static readonly TimeSpan DetectInterval = TimeSpan.FromSeconds(3);
+
     private readonly Settings settings;
 
     public BarcodeController Controller { get; } = new();
@@ -66,8 +68,10 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
-            if (x.Count > 0)
+            if ((x.Count > 0) && !Controller.PauseScanning)
             {
+                Controller.PauseScanning = true;
+
                 var barcode = x.First().DisplayValue;
                 try
                 {
@@ -109,7 +113,6 @@ public sealed partial class SettingViewModel : AppViewModelBase
                         OllamaModel = ollamaModel;
                     }
 
-                    // SCP (B-20)。キー名は Settings のプロパティ名に合わせる
                     if (parser.TryGetString(nameof(ScpHost), out var scpHost))
                     {
                         settings.ScpHost = scpHost;
@@ -135,6 +138,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
                 {
                     // Do nothing
                 }
+
+                await Task.Delay(DetectInterval);
+                Controller.PauseScanning = false;
             }
         });
     }
@@ -156,6 +162,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public override Task OnNavigatingFromAsync(INavigationContext context)
     {
         Controller.Enable = false;
+        Controller.PauseScanning = false;
         return Task.CompletedTask;
     }
 

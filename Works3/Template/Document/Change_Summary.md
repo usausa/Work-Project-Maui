@@ -1514,7 +1514,7 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | `Services/AiChatClientFactory.cs` | 削除 |
 | `Modules/Device/DeviceMiscViewModel.cs` + `DeviceMiscView.xaml` | 音声認識の `IsListening` を最終結果で終える(`RecognizeAsync` は認識の開始で戻る)。ボタンは Recognize / Stop のトグル |
 | `Messaging/CameraController.cs` / `Modules/Sample/SampleCvNet*ViewModel.cs` / `Modules/Device/DeviceCameraViewModel.cs` / `DeviceOcrViewModel.cs` | `CaptureWithTimeoutAsync`(5 秒で打ち切り)。撮影できなければ「撮影できませんでした。もう一度お試しください。」を出してプレビューのまま続行 |
-| `Modules/Sample/SampleCvNet*View.xaml` + `ViewModel.cs` | F4 の文言は `ActionText`(処理中は空で無効、解析が終わってから Retry) |
+| `Modules/Sample/SampleCvNet*View.xaml` + `ViewModel.cs` / `Modules/Sample/CaptureState.cs` / `Converters/MapToBoolConverter.cs`(新規) | VM は状態 `CaptureState`(Preview / Capturing / Analyzing / Result)だけを持ち、F2〜F4 の文言・有効とカメラ / 画像の表示は XAML のコンバーターで決める(`MapToBoolConverter` = `Smart.Maui` の `MapToObjectConverter<bool>` 派生、`s:MapToTextConverter`、`s:CompareToText`、`EqualsConverter`)。撮影中 / 解析中は F2〜F4 が空で無効、解析が終わってから Retry |
 | `State/Settings.cs` | 通信系の設定が投入済みかの判定を拡張メソッドに集約(`IsApiConfigured` / `IsGrpcConfigured` / `IsAIServiceConfiguredAsync` / `IsOllamaConfigured` / `IsScpConfigured`)。Network メニュー / Realtime / gRPC / SCP / CV Net メニュー / Sample メニュー / `MauiProgram` が使う |
 | `Usecase/ScpUsecase.cs`(新規)/ `Services/ScpService.cs`(削除)/ `Modules/Network/NetworkScpViewModel.cs` | SCP はファイル選択(FilePicker)/ 保存先(公開フォルダ)/ 接続情報(設定)の取り出しと SSH.NET の転送を `ScpUsecase` に。結果は `ScpUploadResult` / `ScpDownloadResult`(ファイル名 / サイズ / 転送結果 = 成否・例外メッセージ・指紋)で、文言は VM |
 | `Usecase/OnnxVisionUsecase.cs`(旧 `CognitiveUsecase.cs`)/ `Usecase/DetectResult.cs` | `AzureVisionUsecase` と対の名前に変更。共有の `DetectResult` は独立ファイル |

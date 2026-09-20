@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.Network;
 
-using Template.MobileApp.Services;
 using Template.MobileApp.Usecase;
 
 public sealed class NetworkMenuViewModel : AppViewModelBase

@@ -51,13 +51,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         PickImageCommand = MakeDelegateCommand(static () => { });
         PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);
         ScrollToLatestCommand = MakeDelegateCommand(() => ScrollToLast());
-        PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(InputText))
-            {
-                SendCommand.RaiseCanExecuteChanged();
-            }
-        };
+        SubscribeInputText(_ => SendCommand.RaiseCanExecuteChanged());
     }
 
     private void ScrollToLast(bool animate = true)
