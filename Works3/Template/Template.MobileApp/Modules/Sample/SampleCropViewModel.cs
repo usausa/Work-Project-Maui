@@ -6,8 +6,6 @@ using Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class SampleCropViewModel : AppViewModelBase
 {
-    private bool loaded;
-
     public CropDrawing Crop { get; } = new();
 
     [ObservableProperty]
@@ -27,11 +25,10 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
         ResetCommand = MakeDelegateCommand(Crop.Reset);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (!loaded)
+        if (!context.Attribute.IsRestore())
         {
-            loaded = true;
             await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", "mofusand.jpg"));
             Crop.SetImage(PlatformImage.FromStream(stream));
         }

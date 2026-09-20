@@ -13,33 +13,33 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     public BarcodeController Controller { get; } = new();
 
+    // 値は表示前 (OnNavigatingTo) にまとめて取得する。初期値の null からの反映ではハイライトしない
     [ObservableProperty]
-    public partial string ApiEndPoint { get; set; }
+    public partial string? ApiEndPoint { get; set; }
 
     [ObservableProperty]
-    public partial string GrpcEndPoint { get; set; }
+    public partial string? GrpcEndPoint { get; set; }
 
     [ObservableProperty]
-    public partial string OtelEndPoint { get; set; }
+    public partial string? OtelEndPoint { get; set; }
 
     [ObservableProperty]
-    public partial string AIServiceEndPoint { get; set; }
+    public partial string? AIServiceEndPoint { get; set; }
 
-    // SecureStorage から非同期に入るため初期値は null (初回の反映ではハイライトしない)
     [ObservableProperty]
     public partial string? AIServiceKey { get; set; }
 
     [ObservableProperty]
-    public partial string OllamaEndPoint { get; set; }
+    public partial string? OllamaEndPoint { get; set; }
 
     [ObservableProperty]
-    public partial string OllamaModel { get; set; }
+    public partial string? OllamaModel { get; set; }
 
     [ObservableProperty]
-    public partial string ScpHost { get; set; }
+    public partial string? ScpHost { get; set; }
 
     [ObservableProperty]
-    public partial string ScpUser { get; set; }
+    public partial string? ScpUser { get; set; }
 
     [ObservableProperty]
     public partial string? ScpPassword { get; set; }
@@ -55,15 +55,6 @@ public sealed partial class SettingViewModel : AppViewModelBase
         Controller.AimMode = true;
         Controller.VibrationOnDetect = true;
         Controller.CaptureNextFrame = false;
-
-        ApiEndPoint = settings.ApiEndPoint;
-        GrpcEndPoint = settings.GrpcEndPoint;
-        OtelEndPoint = settings.OtelEndPoint;
-        AIServiceEndPoint = settings.AIServiceEndPoint;
-        OllamaEndPoint = settings.OllamaEndPoint;
-        OllamaModel = settings.OllamaModel;
-        ScpHost = FormatScpHost(settings);
-        ScpUser = settings.ScpUser;
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
@@ -147,11 +138,22 @@ public sealed partial class SettingViewModel : AppViewModelBase
     private static string FormatScpHost(Settings settings) =>
         String.IsNullOrEmpty(settings.ScpHost) ? string.Empty : $"{settings.ScpHost}:{settings.ScpPort}";
 
+    public override async Task OnNavigatingToAsync(INavigationContext context)
+    {
+        ApiEndPoint = settings.ApiEndPoint;
+        GrpcEndPoint = settings.GrpcEndPoint;
+        OtelEndPoint = settings.OtelEndPoint;
+        AIServiceEndPoint = settings.AIServiceEndPoint;
+        AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
+        OllamaEndPoint = settings.OllamaEndPoint;
+        OllamaModel = settings.OllamaModel;
+        ScpHost = FormatScpHost(settings);
+        ScpUser = settings.ScpUser;
+        ScpPassword = await settings.GetScpPasswordAsync() ?? string.Empty;
+    }
+
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
-        ScpPassword = await settings.GetScpPasswordAsync() ?? string.Empty;
-
         if (await Permissions.RequestCameraAsync())
         {
             Controller.Enable = true;

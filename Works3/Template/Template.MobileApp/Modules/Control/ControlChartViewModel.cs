@@ -21,9 +21,12 @@ public sealed partial class ControlChartViewModel : AppViewModelBase
         SelectCommand = MakeDelegateCommand<ChartKind>(Show);
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        Show(Kind);
+        if (!context.Attribute.IsRestore())
+        {
+            Show(Kind);
+        }
         return Task.CompletedTask;
     }
 

@@ -92,9 +92,9 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         currentMonth = Today.Month;
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (MonthView is null)
+        if (!context.Attribute.IsRestore())
         {
             LoadMonth(currentYear, currentMonth);
         }

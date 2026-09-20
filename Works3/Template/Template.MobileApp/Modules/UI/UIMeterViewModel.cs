@@ -25,6 +25,8 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     private readonly AtomicBoolean buttonX = new();
     private readonly AtomicBoolean buttonY = new();
 
+    private readonly IDispatcher dispatcher;
+
     [ObservableProperty]
     public partial int Fps { get; set; }
 
@@ -65,6 +67,11 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
     {
         get => buttonY.Value;
         set => buttonY.Value = value;
+    }
+
+    public UIMeterViewModel(IDispatcher dispatcher)
+    {
+        this.dispatcher = dispatcher;
     }
 
     // スタック退避中もループが回り続けないよう、画面表示中のみ実行する
@@ -159,7 +166,7 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
                 var currentSpeed = (int)speed;
                 if ((currentSpeed != prevSpeed) || (a != prevAccel) || (b != prevBrake))
                 {
-                    MainThread.BeginInvokeOnMainThread(() => Speed = currentSpeed);
+                    await dispatcher.DispatchAsync(() => Speed = currentSpeed);
 
                     prevSpeed = currentSpeed;
                     prevAccel = a;
@@ -171,7 +178,7 @@ public sealed partial class UIMeterViewModel : AppViewModelBase
                 if (watch.ElapsedMilliseconds > 1000)
                 {
                     var f = fps;
-                    MainThread.BeginInvokeOnMainThread(() => Fps = f);
+                    await dispatcher.DispatchAsync(() => Fps = f);
 
                     fps = 0;
                     watch.Restart();

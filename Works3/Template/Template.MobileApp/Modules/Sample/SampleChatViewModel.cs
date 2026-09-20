@@ -1,6 +1,7 @@
 namespace Template.MobileApp.Modules.Sample;
 
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Text;
 
 using Microsoft.Extensions.AI;
@@ -16,11 +17,13 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 {
     private readonly ISpeechService speech;
 
+    private readonly IDispatcher dispatcher;
+
     private readonly string model;
 
     private readonly List<AiMessage> history = [];
 
-    private bool responding;
+    private Action? cancelResponse;
 
     [ObservableProperty]
     public partial string InputText { get; set; } = string.Empty;
@@ -28,27 +31,34 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsListening { get; private set; }
 
+    [ObservableProperty]
+    public partial bool IsResponding { get; private set; }
+
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
 
     public IObserveCommand VoiceCommand { get; }
 
     public IObserveCommand SendCommand { get; }
 
-    // 破棄は Disposables に任せる
+    public IObserveCommand CancelCommand { get; }
+
     private IChatClient ChatClient { get; }
 
     public SampleChatViewModel(
         Settings settings,
-        ISpeechService speech)
+        ISpeechService speech,
+        IDispatcher dispatcher)
     {
         this.speech = speech;
+        this.dispatcher = dispatcher;
 
         ChatClient = new OllamaApiClient(new Uri(settings.OllamaEndPoint), settings.OllamaModel);
         Disposables.Add(ChatClient);
         model = settings.OllamaModel;
 
         VoiceCommand = MakeAsyncCommand(ToggleVoiceAsync);
-        SendCommand = MakeAsyncCommand(SendAsync, () => !responding && !String.IsNullOrWhiteSpace(InputText));
+        SendCommand = MakeDelegateCommand(() => _ = SendAsync(), () => !IsResponding && !String.IsNullOrWhiteSpace(InputText));
+        CancelCommand = MakeDelegateCommand(() => cancelResponse?.Invoke(), () => IsResponding);
 
         Disposables.Add(speech.RecognizedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
         {
@@ -69,11 +79,16 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         }));
 
         SubscribeInputText(_ => SendCommand.RaiseCanExecuteChanged());
+        SubscribeIsResponding(_ =>
+        {
+            SendCommand.RaiseCanExecuteChanged();
+            CancelCommand.RaiseCanExecuteChanged();
+        });
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Messages.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             Messages.Add(new AiChatMessage
             {
@@ -84,7 +99,11 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    public override Task OnNavigatingFromAsync(INavigationContext context) => CancelVoiceAsync();
+    public override Task OnNavigatingFromAsync(INavigationContext context)
+    {
+        cancelResponse?.Invoke();
+        return CancelVoiceAsync();
+    }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
@@ -127,16 +146,14 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         InputText = string.Empty;
         Messages.Add(new AiChatMessage { Role = AiChatRole.User, Text = text });
 
-        responding = true;
-        SendCommand.RaiseCanExecuteChanged();
+        IsResponding = true;
         try
         {
             await RespondAsync(text);
         }
         finally
         {
-            responding = false;
-            SendCommand.RaiseCanExecuteChanged();
+            IsResponding = false;
         }
     }
 
@@ -147,22 +164,58 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
         history.Add(new AiMessage(ChatRole.User, text));
         var builder = new StringBuilder();
+        using var cts = new CancellationTokenSource();
+        var token = cts.Token;
+        cancelResponse = cts.Cancel;
         try
         {
-            await foreach (var update in ChatClient.GetStreamingResponseAsync(history).ConfigureAwait(true))
+            await Task.Run(async () =>
             {
-                builder.Append(update.Text);
+                await foreach (var update in ChatClient.GetStreamingResponseAsync(history, cancellationToken: token).ConfigureAwait(false))
+                {
+                    builder.Append(update.Text);
+                    var current = builder.ToString();
+                    await dispatcher.DispatchAsync(() =>
+                    {
+                        message.IsTyping = false;
+                        message.Text = current;
+                    }).ConfigureAwait(false);
+                }
+            }, token).ConfigureAwait(true);
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore
+        }
+        catch (Exception ex) when (ex is HttpRequestException or OllamaException or WebException or IOException)
+        {
+            if (!cts.IsCancellationRequested)
+            {
+                history.RemoveAt(history.Count - 1);
                 message.IsTyping = false;
-                message.Text = builder.ToString();
+                message.Text = $"応答を取得できませんでした。\n{ex.Message}";
+                return;
             }
+        }
+        finally
+        {
+            cancelResponse = null;
+        }
 
+        message.IsTyping = false;
+        if (!cts.IsCancellationRequested)
+        {
             history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
         }
-        catch (Exception ex) when (ex is HttpRequestException or OllamaException or OperationCanceledException)
+        else if (builder.Length > 0)
+        {
+            message.Text = $"{builder}\n(中断)";
+            history.Add(new AiMessage(ChatRole.Assistant, builder.ToString()));
+        }
+        else
         {
             history.RemoveAt(history.Count - 1);
-            message.IsTyping = false;
-            message.Text = $"応答を取得できませんでした。\n{ex.Message}";
+            message.Text = "中断しました。";
         }
     }
 }

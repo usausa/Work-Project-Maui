@@ -14,11 +14,13 @@
 
     <Grid Style="{StaticResource FillGrid}">
 
-        <controls:ChatView Messages="{Binding Messages}"
+        <controls:ChatView CancelCommand="{Binding CancelCommand}"
                            InputText="{Binding InputText, Mode=TwoWay}"
+                           IsListening="{Binding IsListening}"
+                           IsResponding="{Binding IsResponding}"
+                           Messages="{Binding Messages}"
                            SendCommand="{Binding SendCommand}"
-                           VoiceCommand="{Binding VoiceCommand}"
-                           IsListening="{Binding IsListening}" />
+                           VoiceCommand="{Binding VoiceCommand}" />
 
     </Grid>
 

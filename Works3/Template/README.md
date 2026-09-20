@@ -66,18 +66,18 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Device | Biometric |
-| Network | Offline sync |
-| Basic | Startup screen(progress / retry) |
-| Basic | App structure(feature profile / diagnostics / catalog / lazy init) |
 | Basic | .NET 10 API |
 | Diagnostics | Layout metrics |
 | Basic | Global xmlns |
 | View | StyleClass(font size x alignment) |
 | View | Material 3 |
 | Device | Background task(WorkManager) |
-| Device | Push(FCM) |
+| Basic | Startup screen(progress / retry) |
+| Basic | App structure(feature profile / diagnostics) |
 | Diagnostics | OpenTelemetry(crash report / telemetry) |
+| Device | Push(FCM) |
+| Device | Biometric |
+| Network | Offline sync |
 
 # Implement
 

@@ -55,7 +55,7 @@ public sealed partial class ViewEffectViewModel : AppViewModelBase
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (Amount <= 0)
+        if (!context.Attribute.IsRestore())
         {
             Amount = 24800;
         }

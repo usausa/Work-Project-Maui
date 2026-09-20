@@ -95,11 +95,14 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         SubscribeOverlayEnabled(x => Controller.SetOverlayRoute(x ? RoutePoints : null));
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        // GeoJSON アセット (EPSG:4326) を読み込む (マネージャ側で再投影)
-        using var reader = new StreamReader(await FileSystem.OpenAppPackageFileAsync(Path.Combine("Map", "tokyo.geojson")));
-        GeoJsonManager.SetGeoJson(await reader.ReadToEndAsync());
+        if (!context.Attribute.IsRestore())
+        {
+            // GeoJSON アセット (EPSG:4326) を読み込む (マネージャ側で再投影)
+            using var reader = new StreamReader(await FileSystem.OpenAppPackageFileAsync(Path.Combine("Map", "tokyo.geojson")));
+            GeoJsonManager.SetGeoJson(await reader.ReadToEndAsync());
+        }
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);

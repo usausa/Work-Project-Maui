@@ -39,7 +39,7 @@ public sealed partial class EditListViewModel : AppViewModelBase
         SelectedItems.CollectionChanged += (_, _) => BulkDeleteCommand.RaiseCanExecuteChanged();
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {

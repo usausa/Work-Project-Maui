@@ -18,9 +18,9 @@ public sealed partial class UIGraph2ViewModel : AppViewModelBase
         ToggleCommand = MakeDelegateCommand<TimelineRow>(static x => x.IsExpanded = !x.IsExpanded);
     }
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Rows.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             await LoadAsync().ConfigureAwait(true);
         }

@@ -59,7 +59,7 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
         CancelCommand.RaiseCanExecuteChanged();
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
         Configured = settings.IsScpConfigured();
         HostDisplay = Configured ? $"{settings.ScpUser}@{settings.ScpHost}:{settings.ScpPort}" : "未設定 (設定画面の QR で投入)";

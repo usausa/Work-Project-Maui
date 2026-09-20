@@ -49,9 +49,9 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         SubscribeSelectedDay(_ => UpdateEvents());
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Days.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
             Days = Enumerable.Range(0, 7).Select(x => new TimetableDay { Date = today.AddDays(x) }).ToList();
@@ -59,6 +59,11 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         }
 
         CurrentTime = DateTime.Now.TimeOfDay;
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
         timer.Start();
         return Task.CompletedTask;
     }

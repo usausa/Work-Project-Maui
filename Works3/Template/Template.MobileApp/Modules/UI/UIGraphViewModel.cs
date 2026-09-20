@@ -13,9 +13,12 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<GraphRow> Rows { get; private set; } = [];
 
-    public override async Task OnNavigatedToAsync(INavigationContext context)
+    public override async Task OnNavigatingToAsync(INavigationContext context)
     {
-        await LoadAsync().ConfigureAwait(true);
+        if (!context.Attribute.IsRestore())
+        {
+            await LoadAsync().ConfigureAwait(true);
+        }
     }
 
     private async Task LoadAsync()

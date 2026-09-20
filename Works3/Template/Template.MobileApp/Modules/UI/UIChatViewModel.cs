@@ -65,12 +65,17 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         dispatcher.Dispatch(() => Controller.ScrollRequest(Messages.Count - 1, position: ScrollToPosition.End, animate: animate));
     }
 
-    public override Task OnNavigatedToAsync(INavigationContext context)
+    public override Task OnNavigatingToAsync(INavigationContext context)
     {
-        if (Messages.Count == 0)
+        if (!context.Attribute.IsRestore())
         {
             LoadSampleMessages();
         }
+        return Task.CompletedTask;
+    }
+
+    public override Task OnNavigatedToAsync(INavigationContext context)
+    {
         ScrollToLast(animate: false);
         return Task.CompletedTask;
     }
