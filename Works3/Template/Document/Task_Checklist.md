@@ -80,7 +80,7 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | (server) `Hubs/MonitorHub.cs` / `Infrastructure/Monitor/DeviceRegistry.cs` / `DeviceEntry.cs` / `MonitorNotifier.cs` / `Models/Api/MonitorMessages.cs` / `Workers/ServerStatusWorker.cs` / `NotificationRelayWorker.cs` / `Application/ApplicationExtensions.cs` / `Program.cs` / `Application/Log.cs` | SignalR ハブと状態配信 / 通知 | 認証なし、KeepAlive 15 秒 / ClientTimeout 30 秒、`DeviceRegistry.Disconnect` |
 | (server) `Components/Pages/DevicesPage.razor(.cs)` / `Layout/NavMenu.razor` / `Pages/Home.razor(.cs)` / `wwwroot/css/app.css` | 管理画面の Devices(端末一覧、通知の送信、切断 = `HubCallerContext.Abort`)、Home の接続数 | 切断で端末が `Closed` → 新 ID で再接続 |
 
-- [ ] **0-3** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」参照)
+- [ ] **0-3** 上記(実機確認は `Change_Summary.md` の「ネットワーク実装」と「SignalR 接続維持の Mofucat.ReactiveHub 0.1.0 への置換」参照。パッケージ版も 2026-09-21 に Pixel 9a で再確認済み)
 
 ### 💬0-4 gRPC(チャット)
 
