@@ -3,7 +3,7 @@ namespace Template.MobileApp.Services;
 using Template.MobileApp.Helpers;
 
 // UIスレッドからの書き込みを通信スレッド(ApiDelegatingHandler)が読むため、参照の可視性をvolatileで保証する
-// 401 の再ログインは NetworkOperator が LoginId で行う (サーバーは Id のみで JWT を発行する契約)
+// 401 の再ログインは NetworkUsecase が LoginId で行う (サーバーは Id のみで JWT を発行する契約)
 public sealed class ApiContext
 {
     private volatile Uri? baseAddress;

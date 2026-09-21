@@ -2,6 +2,7 @@ namespace Template.MobileApp;
 
 using System.Net.Http.Headers;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
@@ -87,6 +88,9 @@ public static partial class MauiProgram
 #if DEBUG
         AppContext.SetSwitch("HybridWebView.InvokeJavaScriptThrowsExceptions", true);
         builder.Services.AddHybridWebViewDeveloperTools();
+
+        // Metrics
+        builder.Services.AddMetrics();
 
 #if false
         builder
@@ -189,7 +193,7 @@ public static partial class MauiProgram
         // Config Rest
         RestConfig.Default.UseJsonSerializer(static config =>
         {
-            config.PropertyNamingPolicy = null;
+            config.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             config.PropertyNameCaseInsensitive = true;
             config.Converters.Add(new Template.MobileApp.Helpers.Json.DateTimeConverter());
             config.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
@@ -357,8 +361,6 @@ public static partial class MauiProgram
         services.AddSingleton<ICalendarService, CalendarService>();
 
         // Usecase
-        services.AddSingleton<INetworkInteraction, DialogNetworkInteraction>();
-        services.AddSingleton<NetworkOperator>();
         services.AddSingleton<NetworkUsecase>();
         services.AddSingleton<OnnxVisionUsecase>();
         services.AddSingleton<AzureVisionUsecase>();

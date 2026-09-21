@@ -125,14 +125,14 @@ cd template-maui-server
 dotnet run --project src/Template.MobileServer.Web
 ```
 
-- ポート: 8080 = Web / API(HTTP/1.1)、9090 = gRPC(HTTP/2 h2c)。管理画面は `http://localhost:8080/`(初期アカウント admin / admin)
+- ポート: 8080 = Web / API(HTTP/1.1)、9090 = gRPC(HTTP/2 h2c)。管理画面は `http://localhost:8080/`(認証なし)
 - USB 接続の端末は `adb reverse tcp:8080 tcp:8080` と `adb reverse tcp:9090 tcp:9090` で端末側の `localhost` を PC へ転送する(LAN の端末は PC の IP で接続)
 - 端末の設定は管理画面の `/qr` が出す QR を Main > Setting の「Scan configuration QR」で読み取る(`ApiEndPoint` / `GrpcEndPoint` の既定値はサーバー自身の URL、AI サービス / Ollama / SCP の値はサーバーの `Setting` テーブル = `/qr` で編集した値から)
-- 開発環境(`appsettings.Development.json`)の JWT 有効期限は 5 分。期限切れ後の API 呼び出しは 401 になり、アプリ側が保存した Id で再ログインして再送する
+- 開発環境(`appsettings.Development.json`)の JWT 有効期限は 5 分。要認証 API(`/api/secret/message` だけ)の期限切れ後の呼び出しは 401 になり、アプリ側が保存した Id で再ログインして再送する
 
 ### サーバー側の機能(template-maui-server)
 
-- Web API(JWT Bearer、PascalCase JSON): サーバー時刻 / ログイン / Data CRUD(一覧は `offset` / `size` の範囲取得)/ テスト用のエラー・遅延
+- Web API(camelCase JSON): サーバー時刻 / ログイン(JWT 発行)/ 認証確認(JWT Bearer が要る唯一の API)/ Data CRUD(匿名。一覧は `offset` / `size` の範囲取得)/ テスト用のエラー・遅延
 - ストレージ API(簡易 FTP): 一覧 / ダウンロード / アップロード(生ボディ、gzip 展開)/ 削除
 - gRPC: チャット(双方向ストリーミング)/ サーバー時刻(単項 RPC)
 - SignalR(`/hubs/monitor`、認証なし): サーバー状態の配信(1 秒ごと)/ 端末状態の受信 / 通知の送信 / 管理画面からの切断

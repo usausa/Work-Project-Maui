@@ -11,13 +11,13 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 {
     private readonly IScreen screen;
 
-    private readonly StartupState startup;
-
     private readonly IDialog dialog;
 
     private readonly INotificationService notification;
 
     private bool destroying;
+
+    public StartupState Startup { get; }
 
     public INavigator Navigator { get; }
 
@@ -58,15 +58,15 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     public MainPageViewModel(
         ILogger<MainPageViewModel> log,
+        StartupState startup,
         INavigator navigator,
         IScreen screen,
         IDialog dialog,
-        StartupState startup,
         INotificationService notification)
     {
+        Startup = startup;
         Navigator = navigator;
         this.screen = screen;
-        this.startup = startup;
         this.dialog = dialog;
         this.notification = notification;
 
@@ -113,7 +113,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     {
         screen.EnableDetectScreenState(true);
 
-        await startup.Completed;
+        await Startup.Completed;
 
         // Guard for the case where the Activity is recreated while initialization is still in progress
         if (destroying)

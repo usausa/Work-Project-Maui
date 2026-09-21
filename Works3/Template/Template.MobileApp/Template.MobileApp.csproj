@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -13,7 +13,7 @@
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
 
     <!-- XA4301: BarcodeScanning.Native.Maui re-bundles libbarhopper_v3.so already provided by its MLKit dependency. Harmless duplicate, not fixable on the app side -->
-    <NoWarn>$(NoWarn);XA4301</NoWarn>
+    <NoWarn>$(NoWarn);XA1040;XA4301</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Template</ApplicationTitle>
@@ -26,13 +26,21 @@
     <ApplicationVersion>1</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+
+    <!--
+    <UseMaterial3>true</UseMaterial3>
+    -->
   </PropertyGroup>
 
-  <!--
+  <!-- Shiny requires the Mono runtime to be disabled for Android builds, but this is not yet supported in .NET 10
   <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
     <UseMonoRuntime>false</UseMonoRuntime>
   </PropertyGroup>
   -->
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <MetricsSupport>true</MetricsSupport>
+  </PropertyGroup>
 
   <!--
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -160,7 +168,7 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="QRCoder" Version="1.8.0" />
-    <PackageReference Include="Rester" Version="2.16.0" />
+    <PackageReference Include="Rester" Version="2.17.0" />
     <PackageReference Include="SSH.NET" Version="2026.0.0" />
     <PackageReference Include="Shiny.BluetoothLE" version="5.5.0" />
     <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="5.5.0" />
@@ -171,7 +179,7 @@
     <PackageReference Include="Usa.Smart.Core" Version="2.19.0" />
     <PackageReference Include="Usa.Smart.Data" Version="2.11.0" />
     <PackageReference Include="Usa.Smart.Data.Accessor" Version="3.0.0-beta11" />
-    <PackageReference Include="Usa.Smart.Mapper" Version="1.0.0-beta8" />
+    <PackageReference Include="Usa.Smart.Mapper" Version="1.0.0-beta9" />
     <PackageReference Include="Usa.Smart.Mvvm" Version="2.12.0" />
     <PackageReference Include="Usa.Smart.Navigation" Version="3.10.0" />
     <PackageReference Include="Usa.Smart.Navigation.Extensions.DependencyInjection" Version="3.10.0" />

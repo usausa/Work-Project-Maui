@@ -66,16 +66,11 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Diagnostics | Layout metrics |
-| Basic | Global xmlns |
-| View | StyleClass(font size x alignment) |
-| View | Material 3 |
-| Device | Background task(WorkManager) |
-| Basic | Startup screen(progress / retry) |
 | Diagnostics | OpenTelemetry(crash report / telemetry) |
+| Device | Background task(WorkManager) |
+| Network | Offline sync |
 | Device | Push(FCM) |
 | Device | Biometric |
-| Network | Offline sync |
 
 # Implement
 

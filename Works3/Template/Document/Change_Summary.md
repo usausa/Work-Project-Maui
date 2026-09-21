@@ -1622,18 +1622,71 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - `WebView` の Android 全画面動画(`allowfullscreen`)/ JavaScript 有効・無効の platform-specific は `WebView` を使う画面が無いため対象外(付録B)
 - ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a): Setting = 開くで日付 / 時刻 / 言語のダイアログが開き、選択で Summary に反映、クリアで「未設定」/ Refresh = Pull オフで引き下げてもインジケーターが出ず件数が変わらない、オンで更新 / Misc = 2.0x と 0.7x で読み上げ(TTS のディスパッチをログで確認)/ Web Basic = 生メッセージ両方向、`InvokeDotNet`(同期 / 非同期)、`local/info.json` の応答、F3 の 3 段(`Add(1, 2) = 3`、ページのログ更新、`JS error: InvokeJavaScript threw an exception: Error from JS`)、Web App は変化なし
 
+### 📐レイアウト計測を DiagnosticPanel に追加(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `Shell/LayoutMetrics.cs`(新規) | `MeterListener` で Meter `Microsoft.Maui` の `maui.layout.measure_count` / `arrange_count`(`Counter<int>`)を購読し、`Take()` で区間の回数を返す。パネル自身の要素(`ClassId` = `Diagnostic`)の計測と、パネルの表示更新直後 100 ms(親のレイアウトが走る)の計測は除く。所要時間(`measure_duration` / `arrange_duration`。`ActivitySource` の購読が要る)は表示しない |
+| `Shell/DiagnosticPanel.xaml` + `.xaml.cs` | Measure / Arrange の行(区間の回数。0 = 緑 / ≤ 500 = 橙 / それ以上 = 赤)。監視中だけ `LayoutMetrics.Start` / `Dispose`。生成時に自身と子孫の `ClassId` を `Diagnostic` にする |
+| `Template.MobileApp.csproj` | Debug だけ `MetricsSupport=true`(.NET for Android は `Microsoft.Android.Sdk.DefaultProperties.targets` で `Meter.IsSupported` を既定 false にしている) |
+| `MauiProgram.cs` | DEBUG で `builder.Services.AddMetrics()`(MAUI の `DiagnosticsManager` は `IMeterFactory` があるときだけ Meter を作る) |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a): 静止時は Measure / Arrange とも 0(緑)、メニュー遷移で 61〜217 回が 1 秒だけ出て 0 に戻る。パネルの幅は変わらない(値の列は Memory の値が最長)
+- Release は `MetricsSupport` 既定(false)のままで Meter は作られない(パネル自体が DEBUG 限定)
+
+### 🧱Material 3 の評価と見送り / StyleClass / global xmlns の見送り(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `<UseMaterial3>true</UseMaterial3>` をコメントアウトで置く(採用時に外す)。有効化して Pixel 9a で確認した差分は `Document/Material3_Setting.png` / `Material3_Controls.png`(左 = 現状、右 = Material 3): Entry は outlined の `TextInputLayout` になり画面側の `Border` と二重枠、Editor は filled で高さ増、SearchBar / Slider / Switch / RadioButton / CheckBox / DatePicker ダイアログは Material 3 の形と既定の紫、Button / メニューは変化なし。採用時は `colorPrimary` の定義と Entry / Editor の枠の統一が要る |
+| `StyleClass` | 共有 `Styles.xaml` の Label クラス(`LabelLeft` / `LabelCenter` / `LabelRight`、`LabelMicro` 12 / `LabelSmall` 14 / `LabelMedium` 18 / `LabelLarge` 24 / `LabelExtraLarge` 28 / `LabelHuge` 36、`LabelPrimary` … `LabelError`。Basic > Typography がカタログ)が付録A の方針(サイズ × 配置の直交する組み合わせ)そのものなので、新しいクラス体系は作らない。全画面への適用もしない |
+| XAML の global xmlns(`http://schemas.microsoft.com/dotnet/maui/global`) | 見送り(ReSharper が対応するまで)。調査結果: `GlobalXmlns.cs` に `XmlnsDefinition` でアプリの名前空間(`Shell` / `Behaviors` / `Controls` / `Converters` / `Markup` / `Models.*` / `Modules.*` の各サブ名前空間 / `Fonts` など)を登録し 1 画面(`MenuView.xaml`)を切り替えるとビルド(XAML SourceGen)は通る(`{ViewId …}` / `{x:Static AppIcons.…}` / `ShellProperty.Title` / `{x:Type MenuViewModel}` が接頭辞なしで解決)が、ReSharper の XAML 解析は global xmlns を解決できず 1 ファイルで 193 件(`Ambiguous reference` / `Unable to resolve symbol`)。全面適用するときの制約: `Modules` 直下(列挙 `ViewId`)と `Markup`(`ViewIdExtension`)は同じ名前 `ViewId` で解決されるので片方だけを global に入れる、`Graphics.Drawing` の `Line` / `Rectangle` は Shapes と衝突するので接頭辞のまま、`Behaviors.Border` は MAUI の `Border` と衝突するので改名が要る。試行のファイルは元に戻し、`GlobalXmlns.cs` は削除 |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件
+
+### 🚀起動オーバーレイ(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `State/StartupState.cs` | `IsCompleted`(`ObservableProperty`)を追加。`NotifyCompleted()` で `Completed` の完了と同時に true にする |
+| `MainPage.xaml` | 初期化の完了まで全体を覆う起動オーバーレイ(白背景 + `ActivityIndicator` + 「起動しています」。`Startup.IsCompleted` の反転をバインド)。Grid の最後に置いて最前面にする(view container より前に置くと隠れて見えない) |
+| `MainPageViewModel.cs` | `StartupState` を `Startup` プロパティで公開(`OnCreated` の完了待ちは従来どおり) |
+
+- 初期化の失敗時の扱いは従来どおり(ダイアログ + 終了)。再試行・段階の表示は持たない
+- 実機(Pixel 9a): 初期化の完了を 3 秒遅らせて表示を確認(スピナー + 文言 → Menu)。通常の起動は初期化が 0.7 秒ほどで、そのうち OnResume 後の glyph の準備(約 0.6 秒)は UI スレッドを占有するため、最初のフレームが出るのは完了の直前になり、オーバーレイはほとんど見えない(初期化が長くなったときの表示)
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件
+
+### 🌐通信処理の `NetworkUsecase` への統合と API 契約の整理(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `Usecase/NetworkInteraction.cs` / `NetworkOperator.cs` | 削除。共通処理を `NetworkUsecase` に統合 |
+| `Usecase/NetworkUsecase.cs` | API ごとの処理 + 共通処理(`ExecuteCoreAsync`: 未接続の確認 / 呼び出し側の中断 / 401 の再ログイン再送 / 404 は結果として返す / エラー種別ごとの通知と再試行の確認)。`ExecuteAsync<T>`(インジケーター付き)/ `ExecuteTransferAsync`(UI なし)の 2 系統で、通知と再試行は verbose、401 の再ログインは `authenticated`(要認証 API = Secure だけが true)の引数で切り替える。型(typed / plain)による分岐はしない。ログインは `LoginCoreAsync` に集約(`EnsureLoginAsync` / 401 の再ログイン)。未使用だった進捗ダイアログ版の Download / Upload(`data.txt`)を削除。分岐の説明コメントは英語 |
+| `Services/HttpService.cs` / `Template.MobileApp.csproj` | Rester 2.17.0 の `PutAsync` / `DeleteAsync` で更新 / 削除を呼ぶ(`HttpClient` 直接呼び出しの `SendAsync` と `System.Text.Json` の設定を削除) |
+| `MauiProgram.cs` | Rester の JSON を camelCase(`JsonNamingPolicy.CamelCase` + 大文字小文字を区別しない)にし、サーバーの出力と揃える |
+| `Services/Log.cs` | `InfoReLogin` / `WarnReLoginFailed` → `InfoLogin` / `WarnLoginFailed`(Id 付き) |
+| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | ログインカード(CRUD の 401 の確認用)を削除(CRUD は匿名になったため。Login / Logout / Secure はメニュー) |
+| `MauiProgram.cs` | `INetworkInteraction` / `NetworkOperator` の登録を削除 |
+| `Services/ChatRoomClient.cs` + `Protos/chat.proto` / `Modules/Network/NetworkGrpcViewModel.cs` | gRPC チャットの JWT 認証を廃止。`ConnectAsync(address, user)` でユーザー名(端末名 `IDeviceInfo.Name`)を受け取り各 `ChatMessage.User` で送る。`NetworkUsecase` の `EnsureLoginAsync` / `GetTokenAsync` を削除。proto の生成型は `Template.MobileApp.Services` 名前空間 |
+| `Models/Api/`(削除)→ `Services/HttpService.cs` / `Services/MonitorConnection.cs` の先頭 | 契約の型は使う処理と同じファイルの先頭に置く(専用フォルダ・1 型 1 ファイルにしない)。REST は `<対象><操作>Request` / `Response` + 一覧の要素 `<対象>ListEntry`、SignalR は `<内容>Message`(`DeviceStatusMessage` / `ServerStatusMessage` / `NotificationMessage`)。サーバー側(`Endpoints/*Endpoints.cs` / `Hubs/MonitorHub.cs` の先頭)と同じ形 |
+| (server) template-maui-server | 管理画面の Cookie 認証を削除(Account テーブル / パスワードプロバイダー / ログイン画面 / `Auth` 設定も削除、チャットの名前は入力欄)、Data の CRUD は匿名、要認証 API は `/api/secret/message` だけ、`/api/test/time` を削除(エラー / 遅延は残す)、gRPC チャットも認証なし(`ChatMessage.user` をそのまま使う。WPF サンプルは Server URL / login を撤去)、`Infrastructure/{Chat,Monitor,Notifications}` を `Services/` 直下へ移動(`Infrastructure` はアプリ固有でない機能だけ)、スキーマは `Assets/Data/Schema.sql` を起動時に `GenericAccessor.ExecuteSchemaAsync` で実行(各アクセッサーの `Create()` は削除)、並び順は `DataSort` 列挙 + `desc`(pos サーバーと同じ)、SQL の整形も pos に合わせた、`StorageEntry` は `Infrastructure.Storage` へ、Smart.Data.Accessor は 3.0.0-beta12、API の JSON は camelCase、契約 DTO は使う側のファイルの先頭(`Endpoints/*Endpoints.cs` は Models / Endpoints の区画、`Hubs/MonitorHub.cs`)、gRPC の生成型は `Handlers` 名前空間、proto は `Handlers/Protos/`、`RequestHelper`(並び順の列挙の解釈)、LIKE パターンは `Accessors/AccessorHelper`、サービスの設定は適用先の `*Options`(`Services/MonitorOptions` / `Workers/NotificationWorkerOptions`)、appsettings はパイプライン → サービスの順、`ApiRoutes`(`Prefix` 付き)は `Endpoints/`、`HubRoutes` は `Hubs/`。詳細は同リポジトリの README |
+
+- 実機(Pixel 9a): Get server time = 成功ダイアログ、Error(500)= 再試行の確認 2 回 → 3 回目は通知のみ、Delay = 完了(ダイアログなし)、未ログインの Secure = 401 で再試行の確認、Login → Secure = 成功、期限切れトークンの Secure = 401 → 保存した Id で再ログインして再送 → 成功、HTTP 画面の未ログインの作成 / 取得 / 更新(PUT)/ 削除(DELETE)= 成功、10 秒待つ API のキャンセル = 「遅延 キャンセル」、Storage のダウンロード / 削除 = 成功、gRPC チャット = 未ログインで接続・送信(表示名 `Pixel 9a`)
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。サーバーはビルド 0 警告、単体テスト 37 件成功
+
 ## 💡C. この区間のナレッジ
 
 - **Android の `HttpClient`(`AndroidMessageHandler`)のストリーミング応答を中断するとき**: `await foreach` を UI スレッドで回すと列挙の破棄(ストリームの Close)がメインスレッドで実行され `NetworkOnMainThreadException`(未観測のタスク例外としてクラッシュレポートに残る)。接続待ちの間に中断すると `OperationCanceledException` ではなく `WebException`(Socket closed)。OllamaSharp は中断で例外を出さず列挙が終わることもある。読み取りは `Task.Run` + `ConfigureAwait(false)` で行ない UI 更新だけ `MainThread.BeginInvokeOnMainThread`、中断後の例外は `IsCancellationRequested` で中断扱いにする
 - **Debug ビルドの APK は Fast Deployment のためアセンブリを含まない**(`adb install` しても古いコードのまま動く)。CLI からの配置は `dotnet build -t:Install -p:AdbTarget="-s <シリアル>"`。VS が `obj/Debug` をロックしているときは `-p:IntermediateOutputPath=obj\cli\net10.0-android\ -p:OutDir=bin\cli\net10.0-android\` で別ディレクトリにビルドできる(`Restart Manager` API でロック元を特定した)
 - **`dotnet run` の Android 実機指定は `--device <シリアル>`**(.NET 10 SDK)。`-p:AdbTarget=-d` は効かず、端末が複数(実機 + エミュレーター)あると候補一覧を出して止まる。起動後は logcat を流し続ける
 - **OllamaSharp の `OllamaApiClient` は `Microsoft.Extensions.AI.IChatClient` を実装する**(パッケージは推移参照で入る)。`Chat` ヘルパの代わりに履歴を呼び出し側で持ち `GetStreamingResponseAsync(history)` で送る。`ChatMessage` はアプリの `Models.Sample.Chat.ChatMessage` と衝突するので using エイリアスで避ける(SA1209: エイリアスは名前空間 using の後)
-- **Rester の JSON 既定は camelCase(`JsonCamelCaseNamingPolicy`、大文字小文字を区別する)**: PascalCase を返すサーバーとは一致せず、配列プロパティが null のまま(`Entries` の NRE)になる。`RestConfig.Default.UseJsonSerializer` で `PropertyNamingPolicy = null` + `PropertyNameCaseInsensitive = true` にして契約を PascalCase に揃える
+- **Rester の JSON 既定は camelCase(`JsonCamelCaseNamingPolicy`、大文字小文字を区別する)**: 命名が一致しないと配列プロパティが null のまま(`Entries` の NRE)になる。サーバーも camelCase(Minimal API 既定)にし、クライアントは `RestConfig.Default.UseJsonSerializer` で `JsonNamingPolicy.CamelCase` + `PropertyNameCaseInsensitive = true`
 - **BusyState のオーバーレイは非同期コマンドの実行中の入力を全て塞ぐ**ため、キャンセルボタン付きの長い処理(転送 / 遅延 API)は `MakeAsyncCommand` にせず、`MakeDelegateCommand` から `_ = RunAsync()` で起動して自前のフラグ(`Transferring` 等)で再入を防ぐ。`MakeDelegateCommand` の既定(`CommandBehavior.None`)は Busy 中の実行を黙って捨てるので、コマンドの有効 / 無効だけでは判断できない
 - **常時接続の再接続ループから呼ぶトークン取得に `NetworkOperator`(`IDialog.Indicator`)を通してはいけない**: バックグラウンドスレッドから UI を触って例外になり、`IsConnectionException` に該当しないためループが黙って死ぬ。`EnsureLoginAsync` は `HttpService` を直接呼ぶ
 - **`CollectionView` の `EmptyView` を `ScrollView` 内の固定高さ(`HeightRequest`)の CollectionView に置くと `EmptyViewContentView` が `requestLayout` を繰り返し(logcat の `requestLayout() improperly called`)、常時再描画になる**(uiautomator dump も `could not get idle state` で取れない)。空表示は `IsVisible` を束縛した Label に置き換える
 - **SignalR の接続維持は Rx で書ける**(`Helpers/ReactiveHubConnection.cs`): 接続試行 `Observable.FromAsync(StartAsync)` を `RetryWhen`(バックオフの `Timer` と復帰シグナルの `Amb`)で繰り返し、`Concat(closed.Take(1))` + `Repeat()` で `Closed` 後に初回接続からやり直す。購読 = 接続の寿命(破棄で `StopAsync`)なので、画面の VM は `OnNavigatedTo` で購読して `OnNavigatingFrom` で破棄するだけになる。`Reconnecting` / `Reconnected` / `Closed` は `Func<T, Task>` のイベントなので `Subject` で橋渡しする。後勝ち(新しい購読で前の購読を終える)は購読ごとの `TakeUntil(stop)` で `OnCompleted` を通常の通知と同じ直列化された経路から流し、前の接続の `StopAsync` / `DisposeAsync` の完了を `Task` で持って次の接続の `StartAsync` の前に待つ(同時に 2 本の接続を作らない)
 - **`adb reverse` の経路を消しても確立済みの接続は切れない**(`adb reverse --remove` の後も接続済みのまま送受信が続く)。接続中の切断は、経路を消してから `adb -s <シリアル> reconnect` でホスト側のトランスポートを蹴ると再現できる(端末側の reverse 設定は消えるので `adb reverse` をやり直す)
+- **MAUI 10 のレイアウト計測の計器は `Counter<int>` / `Histogram<int>`**(`MeterListener.SetMeasurementEventCallback<long>` / `<double>` では届かない)。Android は `MetricsSupport` が既定 false(`Meter.IsSupported` が false になり MAUI の `ConfigureMauiDiagnostics` が何も登録しない)、Meter は DI に `IMeterFactory`(`AddMetrics()`)があるときだけ作られ、所要時間(`Histogram<int>`、ns)は `ActivitySource` に `ActivityListener` があるときだけ記録される。`Microsoft.Maui.RuntimeFeature.EnableDiagnostics` は XAML 診断向けで無関係
 - **SignalR クライアントが `Closed` になる条件**: `WithAutomaticReconnect` を諦めないポリシーにすると、切断はまず `Reconnecting` になり `Closed` は来ない(サーバーのプロセス kill / 再起動はこちら)。`Closed` が来るのはサーバーが再接続不可の Close を送ったとき(`HubCallerContext.Abort()`、`OnConnectedAsync` の例外)。管理画面の「切断」がこれで、`Closed` → 初回接続のやり直しの経路を実機で確認できる
 - **SignalR の `DateTime` は Kind を失う**: サーバーの `GetLocalNow().DateTime`(Unspecified)を受けて `ToLocalTime()` すると UTC 扱いで +9 時間ずれる。時刻は `DateTimeOffset` で送り、クライアントは `.LocalDateTime` を使う
 - **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:9090")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8080)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る
@@ -1692,6 +1745,7 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
 - `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る
 - `uiautomator dump` は IME ウィンドウの下にあるノードを出力しない(フォーカス中の `EditText` が出なければキーボードに隠れている)。IME の表示状態は `dumpsys input_method` の `mInputShown`
+- **CoreCLR(`UseMonoRuntime=false`)では Shiny の `[Export]` ライフサイクルコールバック(`Shiny.Hosting.AndroidLifecycleExecutor.OnResume` / `OnPause`)で起動時にクラッシュする**(`A callback was made on a garbage collected delegate of type '__callback_factory__!callback_delegate__V::Invoke'`)。`Mono.Android.Export` が `[Export]` メソッド用に生成するデリゲートが JNI 登録後にルートされず、最初の `OnResume` までに GC が走ると落ちる(dotnet/android#10996。修正は .NET 11)。Mono では起きない。Android SDK 36.1.69 で 3 / 3 回再現、`[Export]` を使うのはアプリ内では Shiny.Core だけ(`MetadataLoadContext` で全アセンブリを走査)
 
 ---
 
@@ -1750,6 +1804,9 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
 - `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
+- Material 3(`UseMaterial3`)= 見送り(2026-09-21。csproj にコメントアウトで残置。Entry / Editor の枠と既定色の手当てが要るため)
+- XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 10 の記録)
+- `StyleClass` の新体系(`text-*` など)= 不要(2026-09-21。既存の Label クラスで方針を満たす)
 - Face(顔検出 / 顔識別、`Azure.AI.Vision.Face`)= 対象外(2026-09-19。Face API を持つ専用リソースが必要なため実装を撤去)
 - Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
 - ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)

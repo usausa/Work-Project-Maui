@@ -12,6 +12,10 @@ public partial class DiagnosticPanel
 
     private const int MemoryHistoryLength = 60;
 
+    private const string DiagnosticClassId = "Diagnostic";
+
+    private const int LayoutSuppressMilliseconds = 100;
+
     private readonly Stopwatch stopwatch = new();
 
     private readonly int processorCount = Environment.ProcessorCount;
@@ -22,9 +26,10 @@ public partial class DiagnosticPanel
 
     private Process? currentProcess;
 
+    private LayoutMetrics? layoutMetrics;
+
     private bool isMonitoring;
 
-    // StartTimerは次のtickまで停止できないため、世代番号で古いタイマーを打ち切る
     private int monitorGeneration;
 
     private double emaFps;
@@ -83,6 +88,12 @@ public partial class DiagnosticPanel
         display = ResolveProvider.Default.GetRequiredService<IDisplay>();
         MemoryChart.Drawable = memorySparkline;
 
+        ClassId = DiagnosticClassId;
+        foreach (var element in this.GetVisualTreeDescendants().OfType<Element>())
+        {
+            element.ClassId = DiagnosticClassId;
+        }
+
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
@@ -139,6 +150,7 @@ public partial class DiagnosticPanel
         cpuTimePrev = currentProcess.TotalProcessorTime;
         allocatedBytesPrev = GC.GetTotalAllocatedBytes();
         memorySparkline.Clear();
+        layoutMetrics = LayoutMetrics.Start(DiagnosticClassId);
 
         display.StartMonitor();
         stopwatch.Restart();
@@ -167,6 +179,8 @@ public partial class DiagnosticPanel
 
         display.StopMonitor();
         stopwatch.Stop();
+        layoutMetrics?.Dispose();
+        layoutMetrics = null;
 
         isMonitoring = false;
     }
@@ -283,6 +297,24 @@ public partial class DiagnosticPanel
         {
             <= 4.0f => safeColor,
             <= 8.0f => warningColor,
+            _ => criticalColor
+        };
+
+        // Layout
+        if (layoutMetrics is not null)
+        {
+            var (measures, arranges) = layoutMetrics.Take();
+            MeasureLabel.Text = $"{measures}";
+            MeasureLabel.TextColor = LayoutColor(measures);
+            ArrangeLabel.Text = $"{arranges}";
+            ArrangeLabel.TextColor = LayoutColor(arranges);
+            layoutMetrics.Suppress(LayoutSuppressMilliseconds);
+        }
+
+        Color LayoutColor(long count) => count switch
+        {
+            0 => safeColor,
+            <= 500 => warningColor,
             _ => criticalColor
         };
     }
