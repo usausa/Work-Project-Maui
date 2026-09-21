@@ -8,13 +8,12 @@
 | Category | Feature | 章 |
 | --- | --- | --- |
 | Review | 未コミット分の確認 | 0-1〜0-4 / 2-1 / 3-1 |
-| Basic | .NET 10 API(未適用 API の反映) | 1-1 |
-| Diagnostics | Layout metrics(レイアウト診断メトリクス) | 1-2 |
-| Basic | Global xmlns | 1-3 |
-| View | StyleClass(文字サイズ × 配置) | 1-4 |
-| View | Material 3(UseMaterial3) | 1-5 |
-| Device | Background task(WorkManager) | 1-6 |
-| Basic | Startup screen(初期化の進捗・失敗・再試行) | 1-7 |
+| Diagnostics | Layout metrics(レイアウト診断メトリクス) | 1-1 |
+| Basic | Global xmlns | 1-2 |
+| View | StyleClass(文字サイズ × 配置) | 1-3 |
+| View | Material 3(UseMaterial3) | 1-4 |
+| Device | Background task(WorkManager) | 1-5 |
+| Basic | Startup screen(初期化の進捗・失敗・再試行) | 1-6 |
 | Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み。低優先の中では最初) | 2-2 |
 | Device | Push(FCM。低優先) | 3-2 |
 | Device | Biometric(生体認証。低優先) | 4 |
@@ -97,29 +96,9 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 
 ## 🔗1. 取り込み候補(リンク集・小さな追加項目)
 
-`■MAUI.txd`(リンク集)は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。本節へ移した項目の元行は同書から削除している。本節は取り込む価値のあるトピックだけ。ファイルパスは `Template.MobileApp/` からの相対。章を分けるほどではない小さな追加項目(1-7)も本節に置く。
+`■MAUI.txd`(リンク集)は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。本節へ移した項目の元行は同書から削除している。本節は取り込む価値のあるトピックだけ。ファイルパスは `Template.MobileApp/` からの相対。章を分けるほどではない小さな追加項目(1-6)も本節に置く。
 
-### 🧩1-1 .NET 10 の未適用 API の反映
-
-参照: https://learn.microsoft.com/ja-jp/dotnet/maui/whats-new/dotnet-10?view=net-maui-10.0(要約: https://www.telerik.com/blogs/recap-whats-new-net-maui-net-10)
-適用済み: `MauiXamlInflator=SourceGen` / `UseMonoRuntime=false`(CoreCLR)/ `SafeAreaEdges` / Async 系アニメーション API(`TranslateToAsync` 等)/ `Switch.OffColor` / `SearchBar.SearchIconColor` / `SearchBar.ReturnType`(Basic > Setting)/ `Geolocation.IsEnabled`(Device > Location の空状態)/ `Vibration.IsSupported` / `HapticFeedback.IsSupported`(Device > Misc のボタン有効化)/ `dotnet run --device`(`Development.md`)。`ListView` / `TableView` / `MessagingCenter` / `DisplayAlert` / `Page.IsBusy` は未使用のため非推奨化の影響なし。`Shell.NavBarVisibilityAnimationEnabled` は Shell 不使用のため対象外。
-
-残りは UI の追加や共有ライブラリの変更を伴うもの。
-
-| API | 概要 | 現在のファイル名 | 変更 |
-| --- | --- | --- | --- |
-| `Picker` の Open / Close API、`DatePicker.Date` / `TimePicker.Time` の nullable 化 | プログラムからの開閉、未選択状態(null) | `Modules/Basic/BasicSettingView.xaml` + `BasicSettingViewModel.cs` | 未選択の表現(null)と開くボタン |
-| `RefreshView.IsRefreshEnabled` | `IsEnabled` と分離した引き下げ更新の有効 / 無効 | `Modules/Control/ControlRefreshView.xaml` + `ControlRefreshViewModel.cs` | 切替スイッチを追加 |
-| `SpeechOptions.Rate` | 読み上げ速度 | `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs`(Speech カード)、MauiComponents の `ISpeechService.SpeakAsync` | 速度の引数(共有ライブラリ側)と速度スライダー |
-| `HybridWebView.WebResourceRequested` / `InvokeJavaScriptAsync`(戻り値なし)/ `WebViewInitializing` / `WebViewInitialized` | リクエストの横取り(ローカル応答・ヘッダ変更)、初期化イベント、JS 例外の .NET 側再スロー | `Modules/Sample/SampleWebAppView.xaml` + `SampleWebAppViewModel.cs` | ローカル応答のデモ |
-| `WebView` の Android 全画面動画(`allowfullscreen`)/ JavaScript 有効・無効の platform-specific | Android 固有の WebView 設定 | `Modules/Sample/SampleWebBasicView.xaml` | 設定を追加 |
-
-- [ ] **1-1-1** Basic > Setting(Picker の Open / Close、DatePicker / TimePicker の null)
-- [ ] **1-1-2** Control > Refresh(`IsRefreshEnabled`)
-- [ ] **1-1-3** Device > Misc(`SpeechOptions.Rate`。MauiComponents 側の変更を含む)
-- [ ] **1-1-4** Sample > HybridWebView / Web view
-
-### 📐1-2 レイアウト診断メトリクス(DiagnosticPanel)
+### 📐1-1 レイアウト診断メトリクス(DiagnosticPanel)
 
 参照: https://learn.microsoft.com/ja-jp/dotnet/maui/whats-new/dotnet-10?view=net-maui-10.0(「Diagnostics」)、https://github.com/dotnet/maui/pull/31058 — `ActivitySource` / `Meter` 名 `"Microsoft.Maui"` で `IView.Measure` / `Arrange` の回数と所要時間(`maui.layout.measure_count` / `measure_duration` / `arrange_count` / `arrange_duration`)を記録する。`System.Diagnostics.Metrics.Meter.IsSupported` のフィーチャースイッチで AOT / トリミング時に無効化できる。
 
@@ -128,15 +107,15 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Shell/DiagnosticPanel.xaml` + `.xaml.cs` | メモリ推移のスパークライン(DEBUG 限定) | `MeterListener` で measure / arrange の回数・平均時間を購読し、メモリの横に表示 |
 | `Template.MobileApp.csproj` | ビルド設定 | Release で `Meter.IsSupported` が無効であることを確認(必要なら `RuntimeHostConfigurationOption` で false) |
 
-- [ ] **1-2** 上記。画面遷移で回数が増え、静止時は増えないことを確認
+- [ ] **1-1** 上記。画面遷移で回数が増え、静止時は増えないことを確認
 
-### 🏷️1-3 XAML の global xmlns 化
+### 🏷️1-2 XAML の global xmlns 化
 
 参照: https://learn.microsoft.com/ja-jp/dotnet/maui/whats-new/dotnet-10?view=net-maui-10.0(「Implicit and Global XML namespaces」)— `GlobalXmlns.cs` に `[assembly: XmlnsDefinition("http://schemas.microsoft.com/dotnet/maui/global", "Template.MobileApp.Controls")]` 等を並べ、XAML 側は `xmlns="http://schemas.microsoft.com/dotnet/maui/global"` の 1 行で `controls:` / `behaviors:` / `converters:` 等の接頭辞を省略できる。`XmlnsPrefix` で接頭辞を残す運用も可。ルートの `xmlns` / `xmlns:x` まで省く implicit 版は `MauiAllowImplicitXmlnsDeclaration` + `EnablePreviewFeatures` のプレビュー機能。
 
-- [ ] **1-3-0**⚖️【判断】適用範囲 — 案A `GlobalXmlns.cs` の追加のみ(既存 XAML は変更不要、新規画面から接頭辞を省略)/ 案B 全 XAML(約 120 ファイル)の接頭辞を一括で除去 / 見送り。implicit 版(プレビュー)は対象外
+- [ ] **1-2-0**⚖️【判断】適用範囲 — 案A `GlobalXmlns.cs` の追加のみ(既存 XAML は変更不要、新規画面から接頭辞を省略)/ 案B 全 XAML(約 120 ファイル)の接頭辞を一括で除去 / 見送り。implicit 版(プレビュー)は対象外
 
-### 🎨1-4 StyleClass の活用(文字サイズ × 配置)
+### 🎨1-3 StyleClass の活用(文字サイズ × 配置)
 
 方針(付録A): スタイルの基本は共有 `Styles.xaml` からの `BasedOn` 派生。`StyleClass` は複数指定できる利点を、文字サイズ × 配置のように**直交する属性の組み合わせ**にだけ使い、サイズ × 配置の数だけスタイルを用意しなくて済むようにする。色や余白などは Style 側に置き、同じプロパティを Style と StyleClass の両方で指定しない。Crosswind(https://github.com/sthewissen/Plugin.Maui.Crosswind)のような全面的なユーティリティクラスは採用しない。
 
@@ -145,13 +124,13 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Resources/Styles/StyleClasses.xaml` | — | 新規。`Label` 向けのクラス(`Class` 付き Style)を定義: サイズ `size-10` / `size-11` / `size-12` / `size-14` / `size-16` / `size-18` / `size-20` / `size-24` / `size-28` / `size-36` / `size-48`(付録A の許可値のうち使用中のもの)、水平配置 `align-start` / `align-center` / `align-end`、太字 `bold` |
 | `App.xaml` | リソース辞書のマージ | `StyleClasses.xaml` を追加(共有 `Styles.xaml` は変更しない) |
 | `Modules/Network/NetworkHttpView.xaml` / `NetworkStorageView.xaml` / `NetworkRealtimeView.xaml` / `NetworkGrpcView.xaml` / `NetworkScpView.xaml` | 第 1 弾の適用先 | 画面ローカルの `CaptionLabel` / `ValueLabel` / `LogLabel` 等のうち FontSize だけを持つものを `StyleClass="size-12"` 等に置き換え(色を持つものは BasedOn 派生に残しサイズだけクラスへ) |
-| `Document/Change_Summary.md` 付録A | 開発ポリシー | 上記の方針を追記(1-4-1 で実施) |
+| `Document/Change_Summary.md` 付録A | 開発ポリシー | 上記の方針を追記(1-3-1 で実施) |
 
-- [ ] **1-4-1** クラスの定義と `App.xaml` へのマージ、付録A への方針の追記
-- [ ] **1-4-2** Network の 5 画面へ適用し、表示が変わらないことを実機で確認
-- [ ] **1-4-3** 既存画面は触るときに適用する(一括変更はしない)。Style と StyleClass の同一プロパティ指定が無いことを inspectcode / 目視で確認
+- [ ] **1-3-1** クラスの定義と `App.xaml` へのマージ、付録A への方針の追記
+- [ ] **1-3-2** Network の 5 画面へ適用し、表示が変わらないことを実機で確認
+- [ ] **1-3-3** 既存画面は触るときに適用する(一括変更はしない)。Style と StyleClass の同一プロパティ指定が無いことを inspectcode / 目視で確認
 
-### 🧱1-5 Material 3(`UseMaterial3`)
+### 🧱1-4 Material 3(`UseMaterial3`)
 
 参照: https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/ — Android の Material 3(Material You)対応(2026-05)。`Microsoft.Maui.Controls` 10.0.60 以降(本プロジェクトは 10.0.100)で csproj に `<UseMaterial3>true</UseMaterial3>` を置くだけで有効(既定 false。Handler / `styles.xml` の変更は不要)。対象は Entry / Editor / SearchBar / RadioButton / ProgressBar / Slider / Picker / TimePicker / DatePicker / CheckBox / Switch / ImageButton / Button / Shell の既定外観(Entry / Editor は outlined の `TextInputLayout`、DatePicker はカレンダー ダイアログ)。XAML / C# で明示した色・スタイルは優先される。未対応: コントロール単位の opt-in、動的カラー トークンの API、NavigationPage / TabbedPage / FlyoutPage / CollectionView / Border の再スタイル。
 
@@ -161,9 +140,9 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Behaviors/EntryOption.android.cs` | Entry / Editor の NoBorder(`BackgroundTintList`)/ フォーカス枠 | outlined `TextInputLayout` 化との干渉を確認(枠線が二重になる場合は NoBorder の実装を Material 3 用に切替) |
 | `Resources/Styles/Styles.xaml` | 共有スタイル | 変更しない(明示指定が優先されるため差分は既定外観のみ) |
 
-- [ ] **1-5-0**⚖️【判断】採否 — 有効化は 1 行だが Android の入力系コントロールの既定外観が全画面で変わる(Basic / Setting / Kit 系の Entry・Switch・DatePicker が主な影響範囲)。採用時は全画面の目視確認と `Document/*.png` の撮り直しが必要
+- [ ] **1-4-0**⚖️【判断】採否 — 有効化は 1 行だが Android の入力系コントロールの既定外観が全画面で変わる(Basic / Setting / Kit 系の Entry・Switch・DatePicker が主な影響範囲)。採用時は全画面の目視確認と `Document/*.png` の撮り直しが必要
 
-### ⏰1-6 バックグラウンド定期タスク(WorkManager)
+### ⏰1-5 バックグラウンド定期タスク(WorkManager)
 
 参照: https://www.nuget.org/packages/Shaunebu.MAUI.BackgroundTaskManager — Android は `WorkManager`(最短 15 分間隔)、iOS は `BGTaskScheduler` を使い、CRON 式でフォアグラウンド / バックグラウンドのジョブを登録して `Preferences` に永続化する薄いラッパー(`RegisterJob<T>()` / `Schedule(jobId, cron, callback)` / `ScheduleInBackground(jobId, cron, jobType)`。2025-10、230 DL、リポジトリ公開なし)。採用はせず API の形(ジョブ登録 / CRON 近似 / 永続化)だけ参考にし、`AndroidX.Work` を直接使う。
 
@@ -176,9 +155,9 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs` | 雑多なデバイス機能(Device メニューは満杯) | `InfoCard` を追加(登録 / 取消 / 最終実行時刻) |
 | `MauiProgram.cs` | `ConfigureComponents` | DI 登録 |
 
-- [ ] **1-6-0**⚖️【判断】要否 — 再起動後も残る遅延処理(同期 / 送信キュー)の需要があるか。WorkManager は再起動後に自動で再スケジュールされるため `RECEIVE_BOOT_COMPLETED` は不要。常駐(前景サービス)は対象外
+- [ ] **1-5-0**⚖️【判断】要否 — 再起動後も残る遅延処理(同期 / 送信キュー)の需要があるか。WorkManager は再起動後に自動で再スケジュールされるため `RECEIVE_BOOT_COMPLETED` は不要。常駐(前景サービス)は対象外
 
-### 🚀1-7 起動状態と再試行画面
+### 🚀1-6 起動状態と再試行画面
 
 現状: `App.OnStart` がフォントの準備 → データベース初期化(`DataService.RebuildAsync`)→ `StartupState.NotifyCompleted()` の順に進め、`MainPageViewModel.OnCreated` は完了を待ってから Menu へ遷移する。初期化中は空の画面のままで、失敗時は「Failed to initialize database」のダイアログを出して終了するだけ(再試行の導線が無い)。
 
@@ -191,7 +170,7 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Modules/Main/StartupView.xaml` + `StartupViewModel.cs` / `Modules/ViewId.cs` | — | 案B: 新規。段階の一覧(済 / 実行中 / 失敗)と進捗インジケーター、失敗時はメッセージ + Retry / Exit。機能キーは無効 |
 
 - 段階ごとの所要時間を `StartupState` に記録して診断ログ(DEBUG)へ出す。起動時に行なうのはフォント準備(計測済み)と DB 初期化だけで、DI の生成は解決時まで遅延、地図 / カメラ / AI / SkiaSharp は画面ごとに初期化されるため、使うときまで遅らせる対象は現状無い(`UseXxx()` のハンドラー登録は遅延できない)。重い初期化が増えたときはこの計測で見つけて遅らせる
-- [ ] **1-7-0**⚖️【判断】採否と方式 — 進捗の段階はフォント / データベースの 2 つだけなので、案A(`MainPage` のオーバーレイ + Retry。新規画面なし)/ 案B(専用画面 `StartupView`。起動時にマスタ同期などの処理を足すならこちら)/ 見送り。確認は DEBUG のフォールト注入(データベース初期化で例外を投げる)で 失敗 → Retry → 成功 を見る
+- [ ] **1-6-0**⚖️【判断】採否と方式 — 進捗の段階はフォント / データベースの 2 つだけなので、案A(`MainPage` のオーバーレイ + Retry。新規画面なし)/ 案B(専用画面 `StartupView`。起動時にマスタ同期などの処理を足すならこちら)/ 見送り。確認は DEBUG のフォールト注入(データベース初期化で例外を投げる)で 失敗 → Retry → 成功 を見る
 
 ## 📈2. OpenTelemetry(クラッシュレポート / テレメトリ)
 

@@ -59,6 +59,12 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
+            <Style x:Key="RateLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ValueLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="ListeningIcon"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
@@ -196,6 +202,21 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
                 <VerticalStackLayout Style="{StaticResource ActionStack}">
+                    <!-- SpeechOptions.Rate (0.1〜2.0) -->
+                    <Grid Style="{StaticResource ActionRowGrid}"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource RateLabel}"
+                               Text="Rate" />
+                        <Slider Grid.Column="1"
+                                Minimum="0.5"
+                                Maximum="2.0"
+                                Value="{Binding SpeechRate}" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource RateLabel}"
+                               WidthRequest="40"
+                               Text="{Binding SpeechRate, StringFormat='{0:F1}x'}" />
+                    </Grid>
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"

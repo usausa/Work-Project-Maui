@@ -31,6 +31,10 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     public IObserveCommand ScreenshotCommand { get; }
 
+    // 読み上げ速度 (SpeechOptions.Rate: 0.1〜2.0)
+    [ObservableProperty]
+    public partial double SpeechRate { get; set; } = 1.0;
+
     public IObserveCommand SpeakCommand { get; }
     public IObserveCommand SpeakCancelCommand { get; }
 
@@ -89,7 +93,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         SpeakCommand = MakeDelegateCommand(() =>
         {
 #pragma warning disable CA2012
-            _ = speech.SpeakAsync("テストです");
+            _ = speech.SpeakAsync("テストです", rate: (float)SpeechRate);
 #pragma warning restore CA2012
         });
         SpeakCancelCommand = MakeDelegateCommand(speech.SpeakCancel);

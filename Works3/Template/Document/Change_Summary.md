@@ -1608,6 +1608,20 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 - ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a、`adb reverse tcp:8080` / `tcp:9090`)Network > Realtime: 接続済み(接続 ID / サーバー時刻 / 10 秒ごとの報告)、再接続 3 回は毎回新しい接続 ID で Connections は 1 のまま、経路を落とす(`adb reverse --remove tcp:8080` + `adb reconnect`)と「再接続中...」+ 'The remote party closed the WebSocket connection' → 経路を戻して 3 秒で接続済み、経路なしで開くと「接続中...」+ 'Connection failure' のバックオフ → 経路を戻して 7 秒で接続済み、離脱 / 再入で新しい接続 ID。クラッシュなし
 
+### 🧩.NET 10 の未適用 API の反映(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Basic/BasicSettingView.xaml` + `BasicSettingViewModel.cs` | `DatePicker.Date` / `TimePicker.Time` を nullable(`DateTime?` / `TimeSpan?`、初期値 null = 未設定。Summary は `TargetNullValue` で「未設定」)にし、各行に「開く」(`IsOpen` を TwoWay でバインドし true にすると選択 UI が開く。閉じると false が戻る)と「クリア」(null に戻す。null のときは無効)を追加。言語の `Picker` にも「開く」。`RowButton` スタイル(Disabled は灰色) |
+| `Modules/Control/ControlRefreshView.xaml` + `ControlRefreshViewModel.cs` | ヘッダに `Pull` スイッチ(`RefreshView.IsRefreshEnabled`)。オフでは引き下げても更新しない(一覧のスクロールはそのまま) |
+| `Modules/Device/DeviceMiscView.xaml` + `DeviceMiscViewModel.cs` / MauiComponents `Speech.cs` + `Speech.SpeechService.cs`(サブモジュール) | `ISpeechService.SpeakAsync` に `rate`(`SpeechOptions.Rate`、0.1〜2.0)を追加し、Speech カードに `Rate` スライダー(0.5〜2.0、既定 1.0) |
+| `Messaging/WebViewController.cs` | `WebResourceRequested` / `WebViewInitialized` を転送するイベント、戻り値なしの `InvokeJavaScriptAsync(methodName, paramValues, paramJsonTypeInfos)` |
+| `Modules/Sample/SampleWebBasicViewModel.cs` / `Models/Sample/WebLocalInfo.cs` / `SampleWebJsonContext.cs`(`string` / `WebLocalInfo` を追加) | ページからの `local/info.json` に `WebResourceRequested` でアプリ名 / バージョン / 端末 / 時刻の JSON を返す(同期で `SetResponse`)、`WebViewInitialized` で Android の UserAgent を表示、F3 = `Add`(戻り値あり)→ `UpdateStatus`(戻り値なし)→ `ThrowError`(JS の例外は .NET の例外。型 `HybridWebViewInvokeJavaScriptException` は internal なので名前で判定) |
+| `Resources/Raw/web-basic/index.html` / `other.html` | ブリッジは MAUI 10 が配信する `_framework/hybridwebview.js` を参照(同梱していた .NET 9 版 `scripts/HybridWebView.js` は `hybridWebViewHost` 未定義で生メッセージが両方向とも届かなかったため削除)。「Fetch local resource」ボタンと `ThrowError` を追加 |
+
+- `WebView` の Android 全画面動画(`allowfullscreen`)/ JavaScript 有効・無効の platform-specific は `WebView` を使う画面が無いため対象外(付録B)
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a): Setting = 開くで日付 / 時刻 / 言語のダイアログが開き、選択で Summary に反映、クリアで「未設定」/ Refresh = Pull オフで引き下げてもインジケーターが出ず件数が変わらない、オンで更新 / Misc = 2.0x と 0.7x で読み上げ(TTS のディスパッチをログで確認)/ Web Basic = 生メッセージ両方向、`InvokeDotNet`(同期 / 非同期)、`local/info.json` の応答、F3 の 3 段(`Add(1, 2) = 3`、ページのログ更新、`JS error: InvokeJavaScript threw an exception: Error from JS`)、Web App は変化なし
+
 ## 💡C. この区間のナレッジ
 
 - **Android の `HttpClient`(`AndroidMessageHandler`)のストリーミング応答を中断するとき**: `await foreach` を UI スレッドで回すと列挙の破棄(ストリームの Close)がメインスレッドで実行され `NetworkOnMainThreadException`(未観測のタスク例外としてクラッシュレポートに残る)。接続待ちの間に中断すると `OperationCanceledException` ではなく `WebException`(Socket closed)。OllamaSharp は中断で例外を出さず列挙が終わることもある。読み取りは `Task.Run` + `ConfigureAwait(false)` で行ない UI 更新だけ `MainThread.BeginInvokeOnMainThread`、中断後の例外は `IsCancellationRequested` で中断扱いにする
@@ -1735,6 +1749,7 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
 - SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
+- `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
 - Face(顔検出 / 顔識別、`Azure.AI.Vision.Face`)= 対象外(2026-09-19。Face API を持つ専用リソースが必要なため実装を撤去)
 - Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
 - ジェスチャナビゲーション時の左端スワイプによるドロワーの開閉 = システムの戻る操作が優先されるため保証しない(自作 `SideDrawer` は帯の上下中央 200dp だけ除外、`SfNavigationDrawer` は不可。ボタン / `IsOpen` で開く。2026-09-14)

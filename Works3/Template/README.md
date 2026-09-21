@@ -66,7 +66,6 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Basic | .NET 10 API |
 | Diagnostics | Layout metrics |
 | Basic | Global xmlns |
 | View | StyleClass(font size x alignment) |

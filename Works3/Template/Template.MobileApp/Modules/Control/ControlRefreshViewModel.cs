@@ -14,6 +14,9 @@ public sealed partial class ControlRefreshViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsRefreshing { get; set; }
 
+    [ObservableProperty]
+    public partial bool RefreshEnabled { get; set; } = true;
+
     public IObserveCommand RefreshCommand { get; }
 
     public ControlRefreshViewModel()
