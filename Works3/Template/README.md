@@ -110,6 +110,7 @@ Template project for MAUI.
 | [Rester](https://github.com/usausa/Rester) | HttpClient extensions |
 | [ClamGrid](https://github.com/usausa/clam-grid) | SkiaSharp grid view |
 | [ClamCalendar](https://github.com/usausa/clam-calendar) | SkiaSharp calendar view |
+| [Mofucat.ReactiveHub](https://github.com/usausa/mofucat-reactive-hub) | Reactive SignalR hub connection |
 | [BunnyTail.DependencyInjection](https://github.com/usausa/bunnytail-dependency-injection) | Source generator based DI |
 | [BunnyTail.EmbeddedBuildProperty](https://github.com/usausa/bunnytail-embedded-build-property) | Embedded build property generator |
 | [BunnyTail.MemberAccessor](https://github.com/usausa/bunnytail-member-accessor) | Member accessor generator |

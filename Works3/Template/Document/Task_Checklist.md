@@ -72,8 +72,8 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR(MonitorHub、認証なし) | 遷移時に `Connect()` を購読 / 離脱時に破棄(= 切断)、受信は `ServerStatus` / `Notifications` の購読、状態 / 接続 ID / サーバー時刻、サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、通知の一覧(前面 = トースト、バックグラウンド = ローカル通知)。F2 = Connect |
-| `Helpers/ReactiveHubConnection.cs`(旧 `ReactiveSignalR.cs`) | 汎用の SignalR 接続維持(`HubConnection` の生成・維持・破棄をクラスが持つ。`Connect(url, configure, resume)` = 購読で接続・破棄で切断・後勝ち、`On<T>()`、`InvokeAsync`(引数なし / 1 つ)、`IsConnected`。初回接続と自動再接続の間隔は ctor の `retryDelays`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` / 再購読は前の接続を止めてから新しい接続(同時に 2 本にならない)/ Dispose 後は `ObjectDisposedException`(後勝ち / 切断からの復帰 / 経路なしの初回接続 / 再入は 2026-09-21 に実機確認済み) |
-| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(ハブのパス / KeepAlive / ServerTimeout、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`、ログ) | 認証なし。接続の管理は `ReactiveHubConnection` |
+| (NuGet) `Mofucat.ReactiveHub` 0.1.0(旧 `Helpers/ReactiveHubConnection.cs`、`D:\GitHub\Mofucat-ReactiveHub`) | 汎用の SignalR 接続維持(`HubConnection` の生成・維持・破棄をクラスが持つ。`Connect(url, configure, build, resume)` = 購読で接続・破棄で切断・後勝ち、`On<T>()`、`TrySendAsync` / `TryInvokeAsync`(未接続は false)、`InvokeAsync<TResult>`、`Status` / `IsConnected` / `ConnectionId`、`DisposeAsync`。初回接続と自動再接続の間隔は ctor の `retryDelays`) | 初回接続のバックオフ再試行 / ネットワーク復帰で待ち打ち切り / 自動再接続 / `Closed` 後のやり直し / 破棄で `StopAsync` / 再購読は前の接続を止めてから新しい接続(同時に 2 本にならない)/ Dispose 後は `ObjectDisposedException`(ライブラリのテスト 17 件で確認。Template 側はパッケージ置換後の実機確認が未) |
+| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(ハブのパス / KeepAlive / ServerTimeout、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`、ログ) | 認証なし。接続の管理は `Mofucat.ReactiveHub` の `ReactiveHubConnection` |
 | `Models/Api/MonitorMessages.cs` | 契約 DTO | サーバー側と同じ形 |
 | `Extensions.cs` | `ConnectivityChangedAsObservable`(ネットワーク復帰で接続の待ちを打ち切る) | — |
 | `State/Session.cs` / `App.xaml.cs` | 前面かどうか(`IsForeground`)を Window の Resumed / Stopped で更新 | — |

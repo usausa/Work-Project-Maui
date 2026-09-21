@@ -251,6 +251,20 @@ A-9 の補足:
 | `NoWarn` | `NU1903` を **TODO 付きで暫定追加**(次区間で解消) |
 | ドキュメント | `Document/UI_Development_Log.md` / `Document/UI_Verification_Checklist.md` を新設 |
 
+### 📡SignalR 接続維持の Mofucat.ReactiveHub 0.1.0 への置換(2026-09-21)
+
+`Helpers/ReactiveHubConnection.cs` を NuGet の `Mofucat.ReactiveHub` 0.1.0(`D:\GitHub\Mofucat-ReactiveHub`、Mofucat.SerialIO と同じ構成、ライブラリ側にテスト 17 件と Example)へ置き換えた。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `Mofucat.ReactiveHub` 0.1.0 を追加(`Microsoft.AspNetCore.SignalR.Client` は `HubException` のため残す) |
+| `Helpers/ReactiveHubConnection.cs` | 削除(ライブラリの `ReactiveHubConnection` / `HubStatus` / `HubStatusKind` へ。ライブラリ側の追加 = ctor の `IScheduler`、`Connect` の `build`(`IHubConnectionBuilder`)、`Status`(最新値を再生するホット。`HubStatusKind.Disconnected` を追加)、`ConnectionId`、`TrySendAsync` / `TryInvokeAsync`(引数 0 / 1 / 配列、未接続は false)、`InvokeAsync<TResult>`(未接続は `InvalidOperationException`)、`IAsyncDisposable`) |
+| `Services/MonitorConnection.cs` | `using Mofucat.ReactiveHub`、`InvokeAsync` → `TryInvokeAsync`。ハブ固有の部分は変更なし |
+| `Modules/Network/NetworkRealtimeViewModel.cs` | `using Mofucat.ReactiveHub`(`HubStatus` / `HubStatusKind`)。`Disconnected` は既定の「停止」表示 |
+| `README.md` / `Document/Task_Checklist.md` | Libraries に Mofucat.ReactiveHub、0-3 の行を置換後の構成に |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機は未確認(Task_Checklist 0-3)
+
 ## 💡C. この区間のナレッジ
 
 - **正確な API 名**(発明注意): CountUp=`LabelOption.CountUpValue/CountUpFormat/CountUpDuration`、フォーカス枠=`Focus.FocusedStroke/FocusedThickness`(親 Border 必須)、Make* コマンドヘルパは canExecute 自動再評価(`.Observe()` は存在しない)、`s:NullToText` は Null/NonNull 置換のみ(値パススルー不可 → 空状態は 2 ラベル + `NullToBoolConverter`)
