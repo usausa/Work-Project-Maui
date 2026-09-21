@@ -119,12 +119,29 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 
 方針(付録A): スタイルの基本は共有 `Styles.xaml` からの `BasedOn` 派生。`StyleClass` は複数指定できる利点を、文字サイズ × 配置のように**直交する属性の組み合わせ**にだけ使い、サイズ × 配置の数だけスタイルを用意しなくて済むようにする。色や余白などは Style 側に置き、同じプロパティを Style と StyleClass の両方で指定しない。Crosswind(https://github.com/sthewissen/Plugin.Maui.Crosswind)のような全面的なユーティリティクラスは採用しない。
 
+クラス名は数値を含めず、サイズの段階名(`xs` / `sm` / `md` / `lg` / `xl` / `2xl` …)で表す。段階と実サイズの対応は `StyleClasses.xaml` の 1 か所で決める(サイズを変えたくなったときは対応表だけを変える)。役割名(`caption` / `title` など)は色や太さの意味を含み Style 側と重なるので使わない。
+
+| クラス | FontSize | 目安 |
+| --- | --- | --- |
+| `text-xs` | 10 | 注記・単位 |
+| `text-sm` | 12 | キャプション・ログ・補助の値 |
+| `text-md` | 14 | 本文(既定) |
+| `text-lg` | 16 | 強調する本文・値 |
+| `text-xl` | 18 | 小見出し |
+| `text-2xl` | 20 | 見出し |
+| `text-3xl` | 24 | 大見出し・強調する値 |
+| `text-4xl` | 28 | 画面タイトル級の値 |
+| `text-5xl` | 36 | ヘッダの大文字 |
+| `text-6xl` | 48 | 数値の主表示 |
+
+段階に無いサイズ(9 / 11 / 22 / 26 / 32。付録A の許可値のうち段階から外れるもの)は Style(`BasedOn` 派生)のまま置き、画面を触るときに隣の段階へ寄せるかを個別に判断する。配置は `align-start` / `align-center` / `align-end`、太字は `bold`。`StyleClass="text-sm, align-end"` のように組み合わせる。
+
 | 現在のファイル名 | 何用か | 変更 |
-| --- | --- | --- | 
-| `Resources/Styles/StyleClasses.xaml` | — | 新規。`Label` 向けのクラス(`Class` 付き Style)を定義: サイズ `size-10` / `size-11` / `size-12` / `size-14` / `size-16` / `size-18` / `size-20` / `size-24` / `size-28` / `size-36` / `size-48`(付録A の許可値のうち使用中のもの)、水平配置 `align-start` / `align-center` / `align-end`、太字 `bold` |
+| --- | --- | --- |
+| `Resources/Styles/StyleClasses.xaml` | — | 新規。`Label` 向けのクラス(`Class` 付き Style): 上の段階表 10 個、`align-start` / `align-center` / `align-end`、`bold` |
 | `App.xaml` | リソース辞書のマージ | `StyleClasses.xaml` を追加(共有 `Styles.xaml` は変更しない) |
-| `Modules/Network/NetworkHttpView.xaml` / `NetworkStorageView.xaml` / `NetworkRealtimeView.xaml` / `NetworkGrpcView.xaml` / `NetworkScpView.xaml` | 第 1 弾の適用先 | 画面ローカルの `CaptionLabel` / `ValueLabel` / `LogLabel` 等のうち FontSize だけを持つものを `StyleClass="size-12"` 等に置き換え(色を持つものは BasedOn 派生に残しサイズだけクラスへ) |
-| `Document/Change_Summary.md` 付録A | 開発ポリシー | 上記の方針を追記(1-3-1 で実施) |
+| `Modules/Network/NetworkHttpView.xaml` / `NetworkStorageView.xaml` / `NetworkRealtimeView.xaml` / `NetworkGrpcView.xaml` / `NetworkScpView.xaml` | 第 1 弾の適用先(FontSize は 11 / 12 / 14 / 18 を使用) | 画面ローカルの `CaptionLabel` / `ValueLabel` / `LogLabel` 等のうち FontSize だけを持つものを `StyleClass="text-sm"` 等に置き換え(色を持つものは BasedOn 派生に残しサイズだけクラスへ。11 は `text-sm` に寄せるか Style に残すかを画面ごとに判断) |
+| `Document/Change_Summary.md` 付録A | 開発ポリシー | 段階名の方針を追記(1-3-1 で実施) |
 
 - [ ] **1-3-1** クラスの定義と `App.xaml` へのマージ、付録A への方針の追記
 - [ ] **1-3-2** Network の 5 画面へ適用し、表示が変わらないことを実機で確認
@@ -132,15 +149,31 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 
 ### 🧱1-4 Material 3(`UseMaterial3`)
 
-参照: https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/ — Android の Material 3(Material You)対応(2026-05)。`Microsoft.Maui.Controls` 10.0.60 以降(本プロジェクトは 10.0.100)で csproj に `<UseMaterial3>true</UseMaterial3>` を置くだけで有効(既定 false。Handler / `styles.xml` の変更は不要)。対象は Entry / Editor / SearchBar / RadioButton / ProgressBar / Slider / Picker / TimePicker / DatePicker / CheckBox / Switch / ImageButton / Button / Shell の既定外観(Entry / Editor は outlined の `TextInputLayout`、DatePicker はカレンダー ダイアログ)。XAML / C# で明示した色・スタイルは優先される。未対応: コントロール単位の opt-in、動的カラー トークンの API、NavigationPage / TabbedPage / FlyoutPage / CollectionView / Border の再スタイル。
+参照: https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/ — Android の Material 3(Material You)対応(2026-05)。`Microsoft.Maui.Controls` 10.0.60 以降(本プロジェクトは 10.0.101)で csproj に `<UseMaterial3>true</UseMaterial3>` を置くだけで有効(既定 false。実体は `RuntimeHostConfigurationOption` の `Microsoft.Maui.RuntimeFeature.IsMaterial3Enabled`。Handler / `styles.xml` の変更は不要)。XAML / C# で明示した色・スタイルは優先される。未対応: コントロール単位の opt-in、動的カラー トークンの API、NavigationPage / TabbedPage / FlyoutPage / CollectionView / Border の再スタイル。
+
+有効化して Pixel 9a で確認した差分(2026-09-21。`Document/Material3_Setting.png` / `Material3_Controls.png` = 左が現状、右が Material 3):
+
+| コントロール | 変化 | 影響 |
+| --- | --- | --- |
+| Entry | outlined の `TextInputLayout`(角丸の枠 + 高さ増) | 画面側の `Border`(Setting / Validation の `FieldBorder`、Login のピル型)と二重枠になる。`behaviors:Focus.FocusedStroke` のフォーカス枠とも重なる |
+| Editor(UI 1 > Chat) | filled の `TextInputLayout`(灰色の下地 + 高さ増) | 入力欄の高さが増え送信行のレイアウトが崩れる |
+| SearchBar | filled(薄紫の下地) | 見た目のみ |
+| Slider / Switch / RadioButton / CheckBox | Material 3 の形(太いトラック + ストップ、大型スイッチ、紫のラジオ / チェック) | 色が Material 3 既定の紫(`colorPrimary`)になりアプリの青と合わない。明示している `OnColor` などは維持される |
+| DatePicker / TimePicker のダイアログ | Material 3 のダイアログ(紫、入力切替の鉛筆) | 見た目のみ |
+| ProgressBar | わずかに細く角丸 | 見た目のみ |
+| Button / ImageButton / メインメニュー / Kit > Setting | ほぼ変化なし(スタイルで色・角丸を明示しているため) | — |
+
+採用する場合に必要な作業: `Platforms/Android/Resources/values/colors.xml` に Material 3 の `colorPrimary` 等をアプリの青で定義、Entry / Editor を包む `Border` と `Focus.FocusedStroke` の扱い(`TextInputLayout` の枠に任せて `Border` を外すか、`EntryOption` の NoBorder を Material 3 用に切替)、Chat の入力行の高さ調整、全画面の目視確認と `Document/*.png` の撮り直し。
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
 | `Template.MobileApp.csproj` | ビルド設定 | `<UseMaterial3>true</UseMaterial3>` を追加 |
-| `Behaviors/EntryOption.android.cs` | Entry / Editor の NoBorder(`BackgroundTintList`)/ フォーカス枠 | outlined `TextInputLayout` 化との干渉を確認(枠線が二重になる場合は NoBorder の実装を Material 3 用に切替) |
+| `Platforms/Android/Resources/values/colors.xml` | Material 3 のカラー | `colorPrimary` / `colorSecondary` 等をアプリの青系で定義 |
+| `Behaviors/EntryOption.android.cs` / `Behaviors/Focus.cs` | Entry / Editor の NoBorder / フォーカス枠 | `TextInputLayout` の枠との二重化を解消(枠は片方だけにする) |
+| `Modules/Basic/BasicSettingView.xaml` / `BasicValidationView.xaml` / `UI/UILoginView.xaml` / `UI/UIChatView.xaml` ほか Entry / Editor を `Border` で包む画面 | 入力欄の枠 | `Border` を外すか Material 3 の枠を消す(どちらかに統一) |
 | `Resources/Styles/Styles.xaml` | 共有スタイル | 変更しない(明示指定が優先されるため差分は既定外観のみ) |
 
-- [ ] **1-4-0**⚖️【判断】採否 — 有効化は 1 行だが Android の入力系コントロールの既定外観が全画面で変わる(Basic / Setting / Kit 系の Entry・Switch・DatePicker が主な影響範囲)。採用時は全画面の目視確認と `Document/*.png` の撮り直しが必要
+- [ ] **1-4-0**⚖️【判断】採否 — 有効化は 1 行だが、上の表のとおり入力系コントロールの既定外観と色(紫)が全画面で変わり、Entry / Editor は画面側の枠と二重になる。採用するなら色の定義と枠の統一を先に行なう
 
 ### ⏰1-5 バックグラウンド定期タスク(WorkManager)
 
