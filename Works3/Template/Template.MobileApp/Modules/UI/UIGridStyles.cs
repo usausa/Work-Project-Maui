@@ -1,11 +1,11 @@
-namespace Template.MobileApp.Modules.Control;
+namespace Template.MobileApp.Modules.UI;
 
 using ClamGrid;
 
-using Template.MobileApp.Models.Control;
+using Template.MobileApp.Models.Sample;
 
 // ClamGrid の見た目 (XAML から x:Static で参照)。罫線は横だけ、見出しは白地。状態・フラグ・ランク・受付・金額・数量・納期は値に応じて色を付ける
-internal static class ControlGridStyles
+internal static class UIGridStyles
 {
     private static readonly Color HeaderText = Color.FromArgb("#607D8B");
 

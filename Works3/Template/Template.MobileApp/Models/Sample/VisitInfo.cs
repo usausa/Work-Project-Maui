@@ -1,4 +1,4 @@
-namespace Template.MobileApp.Models.Control;
+namespace Template.MobileApp.Models.Sample;
 
 public enum VisitStatus
 {

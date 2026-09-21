@@ -4,6 +4,7 @@ public enum ViewId
 {
     Menu,
     Setting,
+    Diagnostics,
 
     // Basic
     BasicMenu,
@@ -137,10 +138,6 @@ public enum ViewId
     ControlChart,
     ControlSfChart,
 
-    ControlGrid,
-    ControlGridColumn,
-    ControlCardList,
-
     ControlBottomSheet,
     ControlDrawer,
 
@@ -172,6 +169,9 @@ public enum ViewId
     UICharacter,
     UIChat,
     UICalendar,
+    UIGrid,
+    UIGridColumn,
+    UIVisit,
 
     UITimeline,
     UIMonster,

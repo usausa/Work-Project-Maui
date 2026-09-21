@@ -1,9 +1,9 @@
-namespace Template.MobileApp.Modules.Control;
+namespace Template.MobileApp.Modules.UI;
 
-using Template.MobileApp.Models.Control;
+using Template.MobileApp.Models.Sample;
 
-// CollectionView をカード一覧として使う例。行タップで選択、右端で展開、並替パネルで複数キーのソート
-public sealed partial class ControlCardListViewModel : AppViewModelBase
+// CollectionView による訪問先一覧。行タップで選択、右端で展開、並替パネルで複数キーのソート
+public sealed partial class UIVisitViewModel : AppViewModelBase
 {
     private const int VisitCount = 40;
 
@@ -71,7 +71,7 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
 
     public IObserveCommand ReloadCommand { get; }
 
-    public ControlCardListViewModel(IDialog dialog)
+    public UIVisitViewModel(IDialog dialog)
     {
         this.dialog = dialog;
 
@@ -102,7 +102,7 @@ public sealed partial class ControlCardListViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 

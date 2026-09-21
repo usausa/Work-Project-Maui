@@ -1,11 +1,17 @@
 namespace Template.MobileApp.Modules.UI;
 
+using ClamCalendar;
+
 using Template.MobileApp.Models.Sample.Calendar;
-using Template.MobileApp.Services.Calendar;
+using Template.MobileApp.Services;
 
 public sealed partial class UIScheduleViewModel : AppViewModelBase
 {
-    private readonly IScheduleEventProvider scheduleService;
+    private static readonly TimeSpan StartTime = TimeSpan.FromHours(8);
+
+    private static readonly TimeSpan EndTime = TimeSpan.FromHours(20);
+
+    private readonly ICalendarService calendarService;
 
     private readonly IDispatcherTimer timer;
 
@@ -34,11 +40,16 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string FreeTimeText { get; private set; } = string.Empty;
 
+    public IObserveCommand EventTappedCommand { get; }
+
     public UIScheduleViewModel(
         IDispatcher dispatcher,
-        IScheduleEventProvider scheduleService)
+        IDialog dialog,
+        ICalendarService calendarService)
     {
-        this.scheduleService = scheduleService;
+        this.calendarService = calendarService;
+
+        EventTappedCommand = MakeAsyncCommand<TimetableEvent>(x => dialog.Toast($"{x.Title} {x.Start:hh\\:mm} - {x.End:hh\\:mm}").AsTask());
 
         // 現在時刻ラインは 1 分毎に更新する
         CurrentTime = DateTime.Now.TimeOfDay;
@@ -86,14 +97,14 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         }
 
         // 日付単位のサンプルイベントへ決定論的に時間帯を割り当ててタイムテーブル化する
-        var source = scheduleService.GetEvents(day.Date, day.Date);
+        var source = calendarService.GetEvents(day.Date, day.Date);
         var events = new List<TimetableEvent>(source.Count);
         var index = 0;
         foreach (var ev in source)
         {
-            var startHour = 8 + ((StableHash(ev.Id) + (index * 3)) % 9);
+            var startHour = 8 + ((StableHash(ev.Key ?? ev.Title) + (index * 3)) % 9);
             var duration = 1 + (StableHash(ev.Title) % 2);
-            var color = ev.Style == ScheduleStyle.Filled ? ev.BackgroundColor : ev.TextColor;
+            var color = ev.Style == CalendarEventStyle.Filled ? ev.BackgroundColor : ev.TextColor;
             events.Add(new TimetableEvent
             {
                 Title = ev.Title,
@@ -114,10 +125,8 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         EventCount = Events.Count;
         TotalTimeText = TimetableCalculator.FormatDuration(TimeSpan.FromTicks(Events.Sum(static x => (x.End - x.Start).Ticks)));
 
-        // 空き時間は 8:00-20:00 のうちイベントで埋まっていない時間 (重複はマージして数える)
-        var busy = TimetableCalculator.MergeBusy(Events, TimeSpan.FromHours(8), TimeSpan.FromHours(20));
-        var busyTotal = TimeSpan.FromTicks(busy.Sum(static x => (x.End - x.Start).Ticks));
-        FreeTimeText = TimetableCalculator.FormatDuration(TimeSpan.FromHours(12) - busyTotal);
+        // 空き時間は表示範囲のうちイベントで埋まっていない時間
+        FreeTimeText = TimetableCalculator.FormatDuration(EndTime - StartTime - TimetableCalculator.GetBusyTotal(Events, StartTime, EndTime));
     }
 
     private static int StableHash(string value)

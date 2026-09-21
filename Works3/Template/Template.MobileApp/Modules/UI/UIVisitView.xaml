@@ -5,12 +5,12 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:font="clr-namespace:Fonts"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Control"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
-             x:Class="Template.MobileApp.Modules.Control.ControlCardListView"
-             x:DataType="{x:Type module:ControlCardListViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:ControlCardListViewModel}"
-             shell:ShellProperty.Title="Card List"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIVisitView"
+             x:DataType="{x:Type module:UIVisitViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIVisitViewModel}"
+             shell:ShellProperty.Title="Visit"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="並替"
              shell:ShellProperty.Function3Text="未訪問"
@@ -545,7 +545,7 @@
                         <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
                             <Border Style="{StaticResource SortKeyChip}">
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ControlCardListViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:ControlCardListViewModel}}"
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                                           CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
                                 <HorizontalStackLayout Spacing="6">
@@ -578,7 +578,7 @@
                 <DataTemplate x:DataType="{x:Type module:VisitCard}">
                     <Border Style="{StaticResource CardBorder}">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ControlCardListViewModel}}, Path=ToggleSelectCommand, x:DataType={x:Type module:ControlCardListViewModel}}"
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleSelectCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                                   CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="Auto,*,Auto"
@@ -661,7 +661,7 @@
 
                             <Button Grid.Row="0" Grid.Column="2"
                                     Style="{StaticResource ExpandButton}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:ControlCardListViewModel}}, Path=ToggleExpandCommand, x:DataType={x:Type module:ControlCardListViewModel}}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleExpandCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                     CommandParameter="{Binding .}"
                                     Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
                             <BoxView Grid.Row="1" Grid.ColumnSpan="3"

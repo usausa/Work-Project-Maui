@@ -1539,9 +1539,60 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 | `Modules/Main/SettingViewModel.cs` | 設定値は全て `OnNavigatingToAsync` でまとめて取得(SecureStorage の 2 つも同じタイミング)。初期値は null にして表示前の反映ではハイライトしない(ハイライトは QR で値が変わったときだけ) |
 | `Modules/Control/ControlChartViewModel.cs` / `ControlCollectionViewModel.cs` / `Navigation/Edit/EditListViewModel.cs` / `Network/NetworkGrpcViewModel.cs` / `NetworkHttpViewModel.cs` / `NetworkRealtimeViewModel.cs` / `NetworkScpViewModel.cs` / `Sample/SampleChatViewModel.cs` / `SampleCropViewModel.cs` / `SampleMap2ViewModel.cs` / `UI/UICalendarViewModel.cs` / `UIChatViewModel.cs` / `UIGraphViewModel.cs` / `UIGraph2ViewModel.cs` / `UIScheduleViewModel.cs` / `View/ViewEffectViewModel.cs` | ナビゲーションイベントの使い分けを揃えた(付録A): 表示前に済ませる処理(表示値・一覧・パラメータ)は `OnNavigatingToAsync`、表示が要る処理(権限 / 接続 / タイマー / スクロール / 表示後のアニメーション)は `OnNavigatedToAsync`。初回表示だけの処理は `Count == 0` やフラグでなく `context.Attribute.IsRestore()` で判定 |
 | `Modules/Network/NetworkGrpcViewModel.cs` / `Modules/Sample/SampleChatViewModel.cs` / `Modules/UI/UIMeterViewModel.cs` / `Controls/RadarScreen.cs` / `Graphics/Scene/SceneObject.cs` | `MainThread.BeginInvokeOnMainThread` を `IDispatcher`(VM は DI 注入、コントロールは `Dispatcher`)に統一。async メソッド内は `await DispatchAsync`、`SceneObject` の描画ループは `Stop` が UI スレッドで待つため待たない `Post`(`Dispatch`)にした |
+| `Modules/Main/DiagnosticsView.xaml(.cs)` + `DiagnosticsViewModel.cs`(新規)/ `Modules/ViewId.cs` / `Modules/Main/MenuView.xaml` / `Markup/AppIcons.cs` | 診断画面(メインメニューの Setting の上)。`InfoCard` の縦積み: Runtime(ワーキングセット / マネージドヒープ / スレッド数 / GC 回数 / プロセッサ数。先頭)、Application(名前 / バージョン / ビルド / パッケージ / flavor / 端末 / OS)、Startup(プロセス開始時刻 / 稼働時間 / 初期化時間)、Connection(API / gRPC / OTEL / AI / Ollama / SCP の設定有無、ログイン ID と有効期限、ネットワーク / 電池 = `DeviceState` を直接バインド)、Database(パス / サイズ(-wal 込み)/ 更新日時 / 各テーブルの件数)、Log(ファイル一覧、Warning 以上の直近 50 件、Share files / Clear recent)、Crash report(前回のレポート、Clear)。値は `OnNavigatingToAsync` で取得、F2 = Refresh。実行時情報(`Process.StartTime` / ワーキングセット / GC)とログ(ファイル一覧は `FileLoggerOptions.Directory`、共有は `IShare` の `ShareMultipleFilesRequest`、直近ログは `DiagnosticLogProvider`)は VM が直接扱う(ユースケースは置かない)。無効なボタンは文字と枠を薄くする(VisualState) |
+| `Components/DiagnosticLogProvider.cs`(新規)/ `MauiProgram.cs` | Warning 以上の直近 50 件を固定長のリングバッファーに保持する `ILoggerProvider`(`DiagnosticLogEntry` も同じファイル。カテゴリは末尾の型名だけ、例外は型名とメッセージを付ける。取り出しは新しい順の配列)。`ConfigureLogging` で singleton + `ILoggerProvider` として登録 |
+| `Services/DataService.cs` / `DataAccessor.cs` / `Services/DatabaseInfo.cs`(新規) | `DatabasePath`(`RebuildAsync` もこれを使う)、`GetDatabaseInfoAsync`(パス / サイズ(-wal 込み)/ 更新日時 / 各テーブルの件数 = `DatabaseInfo`)、`[Count]` の `CountDataAsync` / `CountWorkAsync` |
+| `Helpers/CrashReport.cs` | `GetReport` → `GetLastReport`(起動時に表示済みの `crash.old.log` を優先)、`ClearReport` を追加 |
+| `State/Settings.cs` / `State/StartupState.cs` | `IsOtelConfigured`、`CompletedAt`(初期化完了時刻) |
+| `Converters/ByteSizeConverter.cs` / `DurationConverter.cs`(新規) | バイト数を B / KB / MB / GB に、経過時間を 1 分未満は秒・1 日未満は時分秒・以上は日数付きに |
+| `Document/ClamCalendar_Plan.md`(新規。置換完了に伴い 2026-09-21 に削除) | カレンダー(月表示 / 日表示)を独立ライブラリ `ClamCalendar` 0.1.0(`D:\GitHub\Other-ClamCalendar`、ClamGrid と同じ構成)へ分離する実装プラン。リポジトリ構成 / ライブラリのファイル構成 / 公開 API(既存・変更・追加)/ `CalendarStyle` / テスト / Example / Template 側の置換 / 作業順 / 判断 P-1〜P-5。Task_Checklist 6 節 |
+| `Controls/DayTimetableView.cs` / `Models/Sample/Calendar/TimetableCalculator.cs` / `Modules/UI/UIScheduleView.xaml` + `UIScheduleViewModel.cs` | 日表示に `StartTime` / `EndTime`(高さは範囲から決める)、`TimeSlotInterval`(罫線の間隔。時刻の文字は正時だけ)、`FreeSlotHighlightVisible` / `MinimumFreeSlotForLabel`、`EventTappedCommand`(後のレーンを優先するヒットテスト)を追加。範囲外のイベントは範囲へクランプ、カード内の文字はクリップして所要時間ラベルの分だけタイトルを詰め、2 行入らない高さのカードでは時刻行を省く。`TimetableCalculator.GetBusyTotal` を追加し、UISchedule の空き時間はこれで計算。イベントのタップでトースト |
 | `Works3/AiSample` | ChatConsole を同じ構成に(`OllamaApiClient` を直接生成、未設定は終了、疑似応答と 4 ステップを削除し `VoiceInput` に)。`AiChatClientFactory.cs` のコピーは削除 |
 
+- 診断画面はエミュレーター(Android 15 x64)で確認: 全カードの値、Network > Get server time の失敗が Log の Recent に Warning として出る、Clear recent、Share files で共有シート、Refresh、無効ボタンの薄色。実機は未確認(Task_Checklist 0-5)
 - ビルド 0 エラー 0 警告(Debug)、AiSample 0 警告。実機: Chat = マイク → 「話しかけてください」→ 認識した文章が入力欄に入る → 送信で Ollama(Wi-Fi 経由 12321)がストリーミング応答、無音は自動で停止。CV Net Object = Detect 中は F4 が空、解析後に Retry。Device > Misc = Recognize → Stop → 無音で戻る。音声入力 = 連続 3 回の認識、途中の停止(途中結果が入力欄に残る)、無音の停止、停止直後の再開。CV Net = Detect(Object)→ Tag に切り替えるとプレビューに戻る → Detect でタグ(霧 91% ...)→ Retry でプレビュー。Network > Realtime = 接続 / 離脱で切断 / 再入で新しい接続 ID。HTTP の遅延キャンセル / Storage / WiFi / Audio の表示。Chat の中断 = 応答前(中断しました。)/ ストリーミング中(途中までの応答 + (中断))/ 中断せず完了 → 次の質問が文脈を引き継ぐ、いずれもクラッシュレポートなし。Setting = 画面を開いたときに ServiceKey / Password の行がハイライトしない。**SCP(sshd = 192.168.100.99、Task_Checklist 旧 1 節)**: QR で投入 → 接続先 `root@192.168.100.99:22` → アップロード 300 KB / 40 MB / 200 MB 完了(進捗バー、指紋 SHA256 表示)→ ダウンロード 300 KB / 200 MB 完了(公開フォルダ、md5 一致)→ 200 MB の転送中キャンセル(アップロード / ダウンロード)が「キャンセルしました」で戻り途中ファイルなし → 存在しないリモート名は「失敗: scp: ...: No such file or directory」。旧 1 節(1-1〜1-3)は削除し、2 節 → 1 節、3 節 → 2 節に繰り上げ
+
+### 📡SignalR の接続維持の後勝ちと Dispose ガード(2026-09-21)
+
+| 対象 | 内容 |
+|---|---|
+| `Helpers/ReactiveHubConnection.cs`(旧 `Helpers/ReactiveSignalR.cs`。`HubStatus` / `HubStatusKind` は同じファイル) | `ReactiveSignalR` を `ReactiveHubConnection` に改名。一度 `Connect()` を購読したら、初回接続の失敗でも接続後の切断でも、購読が破棄されるまで自動で接続し直し続ける汎用の接続維持部品(ハブ固有のパス / メッセージ名 / 型は持たない)。**後勝ち**: 新しく `Connect()` を購読すると前のセッション(`HubConnection`)を止めて破棄し、前の購読者は `OnCompleted` で終える(`On<T>` / `InvokeAsync` / `IsConnected` は新しい接続に追従、置き換えられた古い購読を後から Dispose しても何もしない)。新しい接続は前の接続の `StopAsync` / `DisposeAsync` の完了を待ってから始める(同時に 2 本の `HubConnection` を作らない)。**Dispose ガード**: `Dispose()` は動作中のセッションを止めて(購読者に `OnCompleted`)から内部の Subject を破棄し、その後の古い購読の Dispose は無視、`Connect()` / `On<T>()` / `InvokeAsync()` は `ObjectDisposedException`(`IsConnected` は false)。`Connect(Uri url, Action<HttpConnectionOptions>? configure = null, IObservable<Unit>? resume = null)` で `WithUrl(url, configure)` に `HttpConnectionOptions`(AccessTokenProvider / Headers / Transports など)を渡せる。`InvokeAsync(methodName, cancellationToken)` で引数なしのハブメソッドを(`[null]` を送らずに)呼べる(`InvokeAsync(methodName, argument, cancellationToken)` はそのまま)。初回接続の再試行と自動再接続の間隔は ctor の `retryDelays` で指定する(自動再接続の `IRetryPolicy` はこれから作る)。セッションの置き換えと Dispose は `Lock` で直列化(状態 / 受信の通知はバックグラウンドスレッドのまま) |
+| `Services/MonitorConnection.cs` | `ReactiveHubConnection` に追従(`Connect(url, resume: resume)`)。ハブ固有の部分は変更なし |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a、`adb reverse tcp:8080` / `tcp:9090`): Network > Realtime = 接続済み(接続 ID / サーバー時刻 / Connections 1)→ 再接続 5 回(続けて 2 回を含む)は毎回「Monitor stopped → 60〜100 ms 後に新 ID で connected」で Connections は 1 のまま(グラフに 2 の跳ねなし)→ 接続中に経路を落とす(`adb reverse --remove tcp:8080` + `adb reconnect`)と再接続中... + 'The remote party closed the WebSocket connection without completing the close handshake.' → 経路を戻して 11 秒後に新 ID で接続済み(自動再接続)→ 経路なしで画面を開くと接続中... + 'Connection failure'(0 / 2 / 5 秒のバックオフ)→ 経路を戻して 12 秒後に新 ID で接続済み → 離脱(Monitor stopped、VM の Dispose とリーク検出の回収)→ 再入で新 ID で接続済み → 前の購読を残したまま `Connect()` を再購読(後勝ち)5 回(続けて 2 回を含む)= 毎回、前の購読者が `OnCompleted`(Monitor stopped)→ 50〜115 ms 後に新 ID で接続済み、Connections は 1 のまま
+
+### 📅月表示カレンダーの ClamCalendar 0.1.0 への置換(2026-09-21)
+
+UI 1 > Calendar の月表示を自作の `Controls/CalendarView` から NuGet の `ClamCalendar` 0.1.0(`D:\\GitHub\\Other-ClamCalendar`、SkiaSharp 描画の月カレンダー)へ置き換えた。日表示(`Controls/DayTimetableView`)は Template のまま。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `ClamCalendar` 0.1.0 を追加 |
+| `Controls/CalendarView.xaml(.cs)` / `Models/Sample/Calendar/Views.cs` / `DayKind.cs` / `CalendarSelectionMode.cs` / `ScheduleEvent.cs` / `ScheduleStyle.cs` / `EventPlacement.cs` / `Stamp.cs` / `StampPosition.cs` / `MonthViewBuilder.cs` | 削除(ライブラリの `ClamCalendarView` / `CalendarEvent` / `CalendarStamp` / `CalendarSelectionMode` / `CalendarMonthBuilder` へ)。`Models/Sample/Calendar/` に残るのは日表示の `TimetableCalculator` / `TimetableDay` / `TimetableEvent` |
+| `Services/CalendarService.cs`(新規。`ICalendarService` + `CalendarService`) | 旧 `Services/Calendar/`(`IScheduleEventProvider` / `ScheduleService` / `HolidayService` / `SampleDataBoundary`)を 1 ファイルに統合(フォルダは削除)。`GetEvents` / `GetStamps` は `CalendarEvent` / `CalendarStamp` を返す(`Id` → `Key`、`Underline` は廃止、スタンプのサイズ / 不透明度は float)、`GetHolidays`、生成の下限判定は private |
+| `Modules/UI/UICalendarViewModel.cs` | `MonthViewBuilder` / 年月の保持 / Prev / Next をやめ、`DisplayDate`(TwoWay)と `DisplayDateChangedCommand`(表示範囲のイベント / スタンプ / 祝日を差し替え。ナビゲーション中に呼ばれるので `CommandBehavior.AllowBusyExecution`)に。`GoToTodayCommand` は `DisplayDate` を今日にする。`DayTappedCommand` / `EventTappedCommand` は `CalendarDayEventArgs` / `CalendarEventEventArgs`。`CommandBehavior` は `System.Data` と衝突するので using エイリアス |
+| `Modules/UI/UICalendarView.xaml` | `controls:CalendarView` → `clam:ClamCalendarView`(`DisplayDate` / `DisplayDateChangedCommand` / `Events` / `Stamps` / `Holidays` / `MonthIndicatorVisible` / 選択のバインド)。選択モードは `SingleDate` / `MultipleDates` / `DateRange`。ヘッダは年月 1 行(既定スタイル) |
+| `Modules/UI/UIScheduleViewModel.cs` | `ICalendarService.GetEvents` の `CalendarEvent`(`Key` / `CalendarEventStyle`)から日表示のイベントを組み立てる |
+| `MauiProgram.cs` | `AddSingleton<ICalendarService, CalendarService>()`(旧 2 登録を置換) |
+| `Document/UI_Calendar.png` / `README.md` / `Document/Task_Checklist.md` / `Document/ClamCalendar_Plan.md` | 画像を撮り直し、Implement の Control 行に Calendar(ClamCalendar)、Libraries に ClamCalendar、TODO と 6 節を削除、プラン文書は削除(ライブラリの仕様は `Other-ClamCalendar/Document/API.md`) |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a)UI 1 > Calendar: 9 月のイベント / スタンプ / 祝日 / 月番号の透かし、Single で日タップのトースト(`2026/09/24`)、イベントタップのトースト(`燃えるゴ`)、Range の帯(24〜26)、▶ で 10 月(イベントが差し替わる)、スワイプで戻る、11 月から Today で 9 月へ。UI 1 > Schedule は変更なし(英会話 / 週間報告 / 買い物)
+- 見た目の差: ヘッダが年 + 月の 2 段から `2026年9月` の 1 行(既定の `CalendarStyle`)、フォントが Noto Serif JP から端末の sans-serif
+
+### 🗂️Grid / Visit(旧 Card List)の UI 1 への移動(2026-09-21)
+
+Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の見本なので UI 1 へ移し、Card List は Visit に改名した。UI = 画面デザインの見本、Control = 部品の使い方の見本。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/UI/UIGridView.xaml` + `UIGridViewModel.cs` / `UIGridColumnView.xaml` + `UIGridColumnViewModel.cs` / `UIGridStyles.cs` | `Modules/Control/ControlGrid*` から移動・改名(`ViewId.UIGrid` / `UIGridColumn`、戻り先は UIMenu1) |
+| `Modules/UI/UIVisitView.xaml` + `UIVisitViewModel.cs` | `Modules/Control/ControlCardList*` から移動・改名(`ViewId.UIVisit`、タイトル Visit、戻り先は UIMenu1) |
+| `Models/Sample/OrderInfo.cs` / `VisitInfo.cs` / `ColumnOptionAccessors.cs` | `Models/Control/` から移動(名前空間 `Models.Sample`。フォルダは削除) |
+| `Modules/UI/UIMenu1View.xaml` | Row 3 = Grid \| Visit(`TableChart` / `ViewAgenda`)。Calendar \| Schedule 以降は 1 行ずつ下げ、9 段のまま(空きは TreeMap の右だけ) |
+| `Modules/Control/ControlMenuView.xaml` | Row 4 = Bottom Sheet \| Drawer に詰め、Row 5〜8 は空き |
+| `Document/UI_Grid.png` / `UI_Visit.png`(旧 `Control_Grid.png` / `Control_CardList.png`)/ `README.md` | 画像を改名、Implement の UI 1 行に Grid(ClamGrid)/ Visit / Calendar(ClamCalendar)、Control 行から削除 |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。実機(Pixel 9a): UI 1 の Grid / Visit から各画面へ遷移し Back で UI 1 へ戻る、Grid の見出し長押しで Grid Column(Cancel で戻る)、Control メニューの並び
 
 ## 💡C. この区間のナレッジ
 
@@ -1553,7 +1604,8 @@ Face API は Image Analysis と別の専用リソース(Face リソース、ま�
 - **BusyState のオーバーレイは非同期コマンドの実行中の入力を全て塞ぐ**ため、キャンセルボタン付きの長い処理(転送 / 遅延 API)は `MakeAsyncCommand` にせず、`MakeDelegateCommand` から `_ = RunAsync()` で起動して自前のフラグ(`Transferring` 等)で再入を防ぐ。`MakeDelegateCommand` の既定(`CommandBehavior.None`)は Busy 中の実行を黙って捨てるので、コマンドの有効 / 無効だけでは判断できない
 - **常時接続の再接続ループから呼ぶトークン取得に `NetworkOperator`(`IDialog.Indicator`)を通してはいけない**: バックグラウンドスレッドから UI を触って例外になり、`IsConnectionException` に該当しないためループが黙って死ぬ。`EnsureLoginAsync` は `HttpService` を直接呼ぶ
 - **`CollectionView` の `EmptyView` を `ScrollView` 内の固定高さ(`HeightRequest`)の CollectionView に置くと `EmptyViewContentView` が `requestLayout` を繰り返し(logcat の `requestLayout() improperly called`)、常時再描画になる**(uiautomator dump も `could not get idle state` で取れない)。空表示は `IsVisible` を束縛した Label に置き換える
-- **SignalR の接続維持は Rx で書ける**(`Helpers/ReactiveSignalR.cs`): 接続試行 `Observable.FromAsync(StartAsync)` を `RetryWhen`(バックオフの `Timer` と復帰シグナルの `Amb`)で繰り返し、`Concat(closed.Take(1))` + `Repeat()` で `Closed` 後に初回接続からやり直す。購読 = 接続の寿命(破棄で `StopAsync`)なので、画面の VM は `OnNavigatedTo` で購読して `OnNavigatingFrom` で破棄するだけになる。`Reconnecting` / `Reconnected` / `Closed` は `Func<T, Task>` のイベントなので `Subject` で橋渡しする
+- **SignalR の接続維持は Rx で書ける**(`Helpers/ReactiveHubConnection.cs`): 接続試行 `Observable.FromAsync(StartAsync)` を `RetryWhen`(バックオフの `Timer` と復帰シグナルの `Amb`)で繰り返し、`Concat(closed.Take(1))` + `Repeat()` で `Closed` 後に初回接続からやり直す。購読 = 接続の寿命(破棄で `StopAsync`)なので、画面の VM は `OnNavigatedTo` で購読して `OnNavigatingFrom` で破棄するだけになる。`Reconnecting` / `Reconnected` / `Closed` は `Func<T, Task>` のイベントなので `Subject` で橋渡しする。後勝ち(新しい購読で前の購読を終える)は購読ごとの `TakeUntil(stop)` で `OnCompleted` を通常の通知と同じ直列化された経路から流し、前の接続の `StopAsync` / `DisposeAsync` の完了を `Task` で持って次の接続の `StartAsync` の前に待つ(同時に 2 本の接続を作らない)
+- **`adb reverse` の経路を消しても確立済みの接続は切れない**(`adb reverse --remove` の後も接続済みのまま送受信が続く)。接続中の切断は、経路を消してから `adb -s <シリアル> reconnect` でホスト側のトランスポートを蹴ると再現できる(端末側の reverse 設定は消えるので `adb reverse` をやり直す)
 - **SignalR クライアントが `Closed` になる条件**: `WithAutomaticReconnect` を諦めないポリシーにすると、切断はまず `Reconnecting` になり `Closed` は来ない(サーバーのプロセス kill / 再起動はこちら)。`Closed` が来るのはサーバーが再接続不可の Close を送ったとき(`HubCallerContext.Abort()`、`OnConnectedAsync` の例外)。管理画面の「切断」がこれで、`Closed` → 初回接続のやり直しの経路を実機で確認できる
 - **SignalR の `DateTime` は Kind を失う**: サーバーの `GetLocalNow().DateTime`(Unspecified)を受けて `ToLocalTime()` すると UTC 扱いで +9 時間ずれる。時刻は `DateTimeOffset` で送り、クライアントは `.LocalDateTime` を使う
 - **gRPC(h2c)は Android でも `GrpcChannel.ForAddress("http://…:9090")` だけで繋がる**(`SocketsHttpHandler` の HTTP/2)。API(8080)とポートが違うため接続先は `GrpcEndPoint` として別に持つ。サーバー停止時は `RpcException(Unavailable)`、gzip 圧縮しない生ボディのアップロードは Content-Length が付くので進捗が出る

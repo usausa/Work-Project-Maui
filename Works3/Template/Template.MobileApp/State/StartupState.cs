@@ -6,5 +6,11 @@ public sealed class StartupState
 
     public Task Completed => completedSource.Task;
 
-    public void NotifyCompleted() => completedSource.TrySetResult();
+    public DateTime? CompletedAt { get; private set; }
+
+    public void NotifyCompleted()
+    {
+        CompletedAt = DateTime.Now;
+        completedSource.TrySetResult();
+    }
 }

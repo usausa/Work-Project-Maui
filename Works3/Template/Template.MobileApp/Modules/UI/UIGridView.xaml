@@ -5,11 +5,11 @@
              xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Control"
-             xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
-             x:Class="Template.MobileApp.Modules.Control.ControlGridView"
-             x:DataType="{x:Type module:ControlGridViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:ControlGridViewModel}"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
+             xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             x:Class="Template.MobileApp.Modules.UI.UIGridView"
+             x:DataType="{x:Type module:UIGridViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:UIGridViewModel}"
              shell:ShellProperty.Title="Grid"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function2Text="Clear"
@@ -21,7 +21,7 @@
              shell:ShellProperty.Function4Enabled="True">
 
     <!-- ClamGrid: 列は XAML で宣言し、値は OrderInfo.Accessors から Key で解決する。行・選択・ソートは GridDataView が持つ。
-         状態・目印・ランク・受付の絵文字は列の Converter、セルの色は ControlGridStyles -->
+         状態・目印・ランク・受付の絵文字は列の Converter、セルの色は UIGridStyles -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
@@ -144,7 +144,7 @@
                            ColumnOrders="{Binding ColumnOrders}"
                            SortOrders="{Binding SortOrders}"
                            SortCycle="AscendingDescendingNone"
-                           GridStyle="{x:Static module:ControlGridStyles.ListStyle}"
+                           GridStyle="{x:Static module:UIGridStyles.ListStyle}"
                            FrozenColumnCount="2"
                            SelectionMode="MultipleToggle"
                            SelectAllCommand="{Binding SelectAllCommand}"

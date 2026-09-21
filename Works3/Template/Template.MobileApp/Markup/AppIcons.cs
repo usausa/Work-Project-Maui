@@ -139,6 +139,7 @@ public static class AppIcons
     public static readonly FontImageSource ToggleOn = Create(MaterialIcons.Toggle_on, MenuSize, Colors.White);
     public static readonly FontImageSource TouchApp = Create(MaterialIcons.Touch_app, MenuSize, Colors.White);
     public static readonly FontImageSource Translate = Create(MaterialIcons.Translate, MenuSize, Colors.White);
+    public static readonly FontImageSource Troubleshoot = Create(MaterialIcons.Troubleshoot, MenuSize, Colors.White);
     public static readonly FontImageSource TableChart = Create(MaterialIcons.Table_chart, MenuSize, Colors.White);
     public static readonly FontImageSource Tune = Create(MaterialIcons.Tune, MenuSize, Colors.White);
     public static readonly FontImageSource Upload = Create(MaterialIcons.Upload, MenuSize, Colors.White);
@@ -178,6 +179,7 @@ public static class AppIcons
 
     public static readonly FontImageSource SmallBrightnessHigh = Create(MaterialIcons.Brightness_high, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallBrightnessLow = Create(MaterialIcons.Brightness_low, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallDelete = Create(MaterialIcons.Delete, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallDoNotDisturb = Create(MaterialIcons.Do_not_disturb, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOff = Create(MaterialIcons.Flashlight_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOn = Create(MaterialIcons.Flashlight_on, SmallSize, ResourceColor("BlueGrayDarken1"));
@@ -185,6 +187,7 @@ public static class AppIcons
     public static readonly FontImageSource SmallMic = Create(MaterialIcons.Mic, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallRecordVoiceOver = Create(MaterialIcons.Record_voice_over, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallScreenshot = Create(MaterialIcons.Screenshot, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallShare = Create(MaterialIcons.Share, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallNotifications = Create(MaterialIcons.Notifications, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallNotificationsOff = Create(MaterialIcons.Notifications_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallAlarm = Create(MaterialIcons.Alarm, SmallSize, ResourceColor("BlueGrayDarken1"));
@@ -238,6 +241,7 @@ public static class AppIcons
         Insights,
         Science,
         Apps,
+        Troubleshoot,
         Settings
     ];
 

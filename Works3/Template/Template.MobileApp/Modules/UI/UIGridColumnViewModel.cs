@@ -1,9 +1,9 @@
-namespace Template.MobileApp.Modules.Control;
+namespace Template.MobileApp.Modules.UI;
 
 using ClamGrid;
 
 // 列の表示 / 順序の設定。一覧画面から編集用のコピー (GridColumnEditSession) を受け取り、Apply で結果を返す
-public sealed partial class ControlGridColumnViewModel : AppViewModelBase
+public sealed partial class UIGridColumnViewModel : AppViewModelBase
 {
     private GridColumnEditSession session = default!;
 
@@ -21,7 +21,7 @@ public sealed partial class ControlGridColumnViewModel : AppViewModelBase
 
     public IObserveCommand RowMovedCommand { get; }
 
-    public ControlGridColumnViewModel()
+    public UIGridColumnViewModel()
     {
         CellValueChangedCommand = MakeDelegateCommand<GridCellValueEventArgs>(_ => UpdateMessage());
         RowMovedCommand = MakeDelegateCommand<GridRowMoveEventArgs>(x => Message = $"{x.OldIndex + 1} 行目を {x.NewIndex + 1} 行目へ移動");

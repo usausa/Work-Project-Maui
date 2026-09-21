@@ -1,10 +1,10 @@
-namespace Template.MobileApp.Modules.Control;
+namespace Template.MobileApp.Modules.UI;
 
 using ClamGrid;
 
-using Template.MobileApp.Models.Control;
+using Template.MobileApp.Models.Sample;
 
-public sealed partial class ControlGridViewModel : AppViewModelBase
+public sealed partial class UIGridViewModel : AppViewModelBase
 {
     private const int RowCount = 2000;
 
@@ -44,7 +44,7 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
 
     public IObserveCommand AdvanceCommand { get; }
 
-    public ControlGridViewModel(IDialog dialog)
+    public UIGridViewModel(IDialog dialog)
     {
         this.dialog = dialog;
 
@@ -65,7 +65,7 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
 
         SelectAllCommand = MakeDelegateCommand<bool>(x => Rows.UpdateSelection(row => x && (row.Status == OrderStatus.Open)));
         ColumnEditCommand = MakeAsyncCommand<GridColumnConfigurationEventArgs>(x =>
-            Navigator.PushAsync(ViewId.ControlGridColumn, Parameters.MakeColumnEditSession(x.CreateEditSession())));
+            Navigator.PushAsync(ViewId.UIGridColumn, Parameters.MakeColumnEditSession(x.CreateEditSession())));
         CellValueChangedCommand = MakeDelegateCommand<GridCellValueEventArgs>(x =>
             Message = $"確認: {((OrderInfo)x.Item).OrderNo} = {(x.NewValue ? "済" : "未")}");
         CommitCommand = MakeAsyncCommand(CommitAsync, () => SelectedCount > 0);
@@ -98,7 +98,7 @@ public sealed partial class ControlGridViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 

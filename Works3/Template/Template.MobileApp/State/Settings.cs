@@ -200,6 +200,10 @@ public static class SettingsExtensions
     public static bool IsGrpcConfigured(this Settings settings) =>
         Uri.TryCreate(settings.GrpcEndPoint, UriKind.Absolute, out _);
 
+    // OpenTelemetry
+    public static bool IsOtelConfigured(this Settings settings) =>
+        Uri.TryCreate(settings.OtelEndPoint, UriKind.Absolute, out _);
+
     // Azure AI Vision (キーは SecureStorage)
     public static async ValueTask<bool> IsAIServiceConfiguredAsync(this Settings settings) =>
         !String.IsNullOrEmpty(settings.AIServiceEndPoint) &&

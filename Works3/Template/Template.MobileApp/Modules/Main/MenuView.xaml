@@ -86,8 +86,10 @@
                     ImageSource="{x:Static markup:AppIcons.Apps}" />
             <Button Grid.Row="7" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
-                    IsEnabled="False"
-                    Text="" />
+                    Command="{Binding ForwardCommand}"
+                    CommandParameter="{markup:ViewId Diagnostics}"
+                    Text="Diagnostics"
+                    ImageSource="{x:Static markup:AppIcons.Troubleshoot}" />
             <Button Grid.Row="8" Grid.ColumnSpan="2"
                     Style="{StaticResource MenuIconButton}"
                     Command="{Binding ForwardCommand}"

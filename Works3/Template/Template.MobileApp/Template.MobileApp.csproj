@@ -122,6 +122,7 @@
     </PackageReference>
     <PackageReference Include="BunnyTail.MemberAccessor" Version="1.16.0" />
     <PackageReference Include="BunnyTail.XamlProperty.Maui" Version="1.2.0" />
+    <PackageReference Include="ClamCalendar" Version="0.1.0" />
     <PackageReference Include="ClamGrid" Version="1.1.0" />
     <PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="6.1.0" />

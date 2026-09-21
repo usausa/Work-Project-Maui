@@ -1,13 +1,13 @@
 # ✅残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 0 節 → 1 節 → 2 節 → 3 節 → 4 節 → 5 節 → 6 節。低優先の項目(3-2 OpenTelemetry の組み込み / 4-2 FCM / 5 節 生体認証 / 6 節 オフライン同期)の中では 3-2 を最初に行なう。小さな項目は 1 節にまとめ、大きな項目は章を分けている。
+優先順 = 0 節 → 1 節 → 2 節 → 3 節 → 4 節 → 5 節 → 6 節。低優先の項目(2-2 OpenTelemetry の組み込み / 3-2 FCM / 4 節 生体認証 / 5 節 オフライン同期)の中では 2-2 を最初に行なう。小さな項目は 1 節にまとめ、大きな項目は章を分けている。
 
 ## 📋サマリ
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Review | 未コミット分の確認 | 0-1〜0-4 / 3-1 / 4-1 |
+| Review | 未コミット分の確認 | 0-1〜0-4 / 2-1 / 3-1 |
 | Basic | .NET 10 API(未適用 API の反映) | 1-1 |
 | Diagnostics | Layout metrics(レイアウト診断メトリクス) | 1-2 |
 | Basic | Global xmlns | 1-3 |
@@ -15,11 +15,10 @@
 | View | Material 3(UseMaterial3) | 1-5 |
 | Device | Background task(WorkManager) | 1-6 |
 | Basic | Startup screen(初期化の進捗・失敗・再試行) | 1-7 |
-| Basic | App structure(機能プロファイル / 診断画面) | 2 |
-| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み。低優先の中では最初) | 3-2 |
-| Device | Push(FCM。低優先) | 4-2 |
-| Device | Biometric(生体認証。低優先) | 5 |
-| Network | Offline sync(未送信キュー・差分同期・競合解決。低優先) | 6 |
+| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み。低優先の中では最初) | 2-2 |
+| Device | Push(FCM。低優先) | 3-2 |
+| Device | Biometric(生体認証。低優先) | 4 |
+| Network | Offline sync(未送信キュー・差分同期・競合解決。低優先) | 5 |
 
 ## 📏運用ルール
 
@@ -27,7 +26,7 @@
 - **⚖️【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
-- `README.md` の TODO 表は本書のサマリ表(1〜6 節)と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
+- `README.md` の TODO 表は本書のサマリ表(1〜5 節)と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
 - 描画・性能の計測は **Release ビルド + 実機**(手順は `Development.md` の「Releaseビルドでの検証と計測」)
 
 ## 🧭前提(環境)
@@ -39,7 +38,7 @@
 
 ## 🔥0.【最優先】未コミット分の確認
 
-Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち、未確認のもの(確認済みの項目は削除済み)。ネットワーク系は機能ごとに分けている(0-1 REST / 0-2 UL・DL / 0-3 SignalR / 0-4 gRPC)。OpenTelemetry の組み込みサンプル(`Works3/OtelSample`)は 3-1、プッシュ通知の自前サンプル(`Works3/PushSample`)は 4-1。確認できたグループから順にコミットする(ビルド 0 警告 / inspectcode 0 件 / 実機確認は実施済み)。
+Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち、未確認のもの(確認済みの項目は削除済み)。ネットワーク系は機能ごとに分けている(0-1 REST / 0-2 UL・DL / 0-3 SignalR / 0-4 gRPC)。OpenTelemetry の組み込みサンプル(`Works3/OtelSample`)は 2-1、プッシュ通知の自前サンプル(`Works3/PushSample`)は 3-1。確認できたグループから順にコミットする(ビルド 0 警告 / inspectcode 0 件 / 実機確認は実施済み)。
 
 対向サーバーは `D:\GitHubTemplate\template-maui-server`(別リポジトリ、こちらも未コミット)。起動と端末の接続は `Document/Development.md`「サーバー処理」。サーバー側のパスは `template-maui-server/src/Template.MobileServer.Web/` からの相対((server) 印)。
 
@@ -73,8 +72,8 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
 | `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR(MonitorHub、認証なし) | 遷移時に `Connect()` を購読 / 離脱時に破棄(= 切断)、受信は `ServerStatus` / `Notifications` の購読、状態 / 接続 ID / サーバー時刻、サーバーの CPU / メモリ / 接続数のグラフ、端末の状態を 10 秒ごとに送信、通知の一覧(前面 = トースト、バックグラウンド = ローカル通知)。F2 = Connect |
-| `Helpers/ReactiveSignalR.cs`(Rx ベースで作り直し) | 汎用の SignalR 接続(`HubConnection` の生成・維持・破棄をクラスが持つ。`Connect(url)` = 購読で接続・破棄で切断、`On<T>()`、`InvokeAsync`、`IsConnected`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` |
-| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(ハブのパス / KeepAlive / ServerTimeout、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`、ログ) | 認証なし。接続の管理は `ReactiveSignalR` |
+| `Helpers/ReactiveHubConnection.cs`(旧 `ReactiveSignalR.cs`) | 汎用の SignalR 接続維持(`HubConnection` の生成・維持・破棄をクラスが持つ。`Connect(url, configure, resume)` = 購読で接続・破棄で切断・後勝ち、`On<T>()`、`InvokeAsync`(引数なし / 1 つ)、`IsConnected`。初回接続と自動再接続の間隔は ctor の `retryDelays`) | 初回接続のバックオフ再試行(`RetryWhen`)/ ネットワーク復帰で待ち打ち切り(`Amb`)/ 自動再接続 / `Closed` 後のやり直し(`Repeat`)/ 破棄で `StopAsync` / 再購読は前の接続を止めてから新しい接続(同時に 2 本にならない)/ Dispose 後は `ObjectDisposedException`(後勝ち / 切断からの復帰 / 経路なしの初回接続 / 再入は 2026-09-21 に実機確認済み) |
+| `Services/MonitorConnection.cs`(新規) | MonitorHub 固有(ハブのパス / KeepAlive / ServerTimeout、`Connect(baseAddress)`、`ServerStatus` / `Notifications`、`ReportDeviceStatusAsync`、ログ) | 認証なし。接続の管理は `ReactiveHubConnection` |
 | `Models/Api/MonitorMessages.cs` | 契約 DTO | サーバー側と同じ形 |
 | `Extensions.cs` | `ConnectivityChangedAsObservable`(ネットワーク復帰で接続の待ちを打ち切る) | — |
 | `State/Session.cs` / `App.xaml.cs` | 前面かどうか(`IsForeground`)を Window の Resumed / Stopped で更新 | — |
@@ -194,43 +193,31 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 - 段階ごとの所要時間を `StartupState` に記録して診断ログ(DEBUG)へ出す。起動時に行なうのはフォント準備(計測済み)と DB 初期化だけで、DI の生成は解決時まで遅延、地図 / カメラ / AI / SkiaSharp は画面ごとに初期化されるため、使うときまで遅らせる対象は現状無い(`UseXxx()` のハンドラー登録は遅延できない)。重い初期化が増えたときはこの計測で見つけて遅らせる
 - [ ] **1-7-0**⚖️【判断】採否と方式 — 進捗の段階はフォント / データベースの 2 つだけなので、案A(`MainPage` のオーバーレイ + Retry。新規画面なし)/ 案B(専用画面 `StartupView`。起動時にマスタ同期などの処理を足すならこちら)/ 見送り。確認は DEBUG のフォールト注入(データベース初期化で例外を投げる)で 失敗 → Retry → 成功 を見る
 
-## 🏗️2. アプリ構成
-
-テンプレートとしての構成に関わるため個別に採否を決める。ディープリンク(→ `Other_App_Candidates.md`)とアクセシビリティ・外観設定は対象外。
-
-### 🧬2-1 機能プロファイル
-
-- [ ] **2-1-0**⚖️【判断】採否 — 新規プロジェクト生成時に画面・権限・パッケージを選ぶ仕組み(`Development.md`「新規プロジェクト作成」の削除手順を選択式にする)
-
-### 🩺2-2 アプリ内診断画面
-
-- [ ] **2-2-0**⚖️【判断】採否 — DB / API / 端末情報 / 初期化時間 / 直近のエラーを 1 画面に集約する(現状は Device > Info と DEBUG 限定の `Shell/DiagnosticPanel`(メモリ推移)に分散)
-
-## 📈3. OpenTelemetry(クラッシュレポート / テレメトリ)
+## 📈2. OpenTelemetry(クラッシュレポート / テレメトリ)
 
 検討資料は `Document/Telemetry_Study.md`(現状 / 候補 A・B・C / 比較 / アプリ側の組み込み設計 / 論点)。候補 B(OTLP)の実証サンプルは `Works3/OtelSample`(同フォルダの README に完結)。
 
-### 🧪3-1 組み込みサンプル(`Works3/OtelSample`)の確認
+### 🧪2-1 組み込みサンプル(`Works3/OtelSample`)の確認
 
 本アプリのコードは無変更。構成 / 実行手順 / 送信の設計(OTLP/HTTP、ILogger の転送、ディスク退避と再送、クラッシュ、MAUI のレイアウト計測)/ サーバの画面 / 確認済みの動作 / 解析上の制約 / ナレッジはすべて `Works3/OtelSample/README.md`。`Document/Telemetry_Study.md` の候補 B の実証。サーバ(`OtelServer`)は 2026-09-19 に Blazor(MudBlazor)+ SQLite のダッシュボード(Dashboard / Logs / Traces / Metrics / Dummy Data)へ刷新し、OTLP/gRPC の受け口(4317)も追加。クライアントは HTTP / gRPC を切替可(未コミット。`App_Data/` は `.gitignore`)。
 
-- [ ] **3-1** `Works3/OtelSample`(README に沿って確認。クライアント = `EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用 / サーバ = Razor コンポーネントのための CA1515 抑止(`GlobalSuppressions.cs`)、MudBlazor 9.10.0 と Microsoft.Data.Sqlite 10.0.12 の採用、ダッシュボードの各画面(実機の Pixel 9a とダミーデータで確認済み))
+- [ ] **2-1** `Works3/OtelSample`(README に沿って確認。クライアント = `EventSourceSupport=true`、`AddMetrics`、`AddView` によるタグの集約、`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk` の採用 / サーバ = Razor コンポーネントのための CA1515 抑止(`GlobalSuppressions.cs`)、MudBlazor 9.10.0 と Microsoft.Data.Sqlite 10.0.12 の採用、ダッシュボードの各画面(実機の Pixel 9a とダミーデータで確認済み))
 
-### 🧩3-2 本アプリへの組み込み(低優先の中では最初)
+### 🧩2-2 本アプリへの組み込み(低優先の中では最初)
 
-- [ ] **3-2-0**⚖️【判断】方式と範囲 — `Telemetry_Study.md` 6 節の論点(方式 A / B / C または組み合わせ、収集する項目と粒度、端末の識別と個人情報、サーバーの配置と運用、ライブラリの形、本テンプレートでの見せ方)。組み込み点は同 5 節(`ITelemetry` の抽象化と Null 実装、`Settings` の接続先(`OtelEndPoint` は投入済み)、`CrashReport` / ナビゲーション / `DeviceState` / `NetworkOperator` / `DiagnosticPanel` からの収集、バックグラウンド移行でのフラッシュ)
+- [ ] **2-2-0**⚖️【判断】方式と範囲 — `Telemetry_Study.md` 6 節の論点(方式 A / B / C または組み合わせ、収集する項目と粒度、端末の識別と個人情報、サーバーの配置と運用、ライブラリの形、本テンプレートでの見せ方)。組み込み点は同 5 節(`ITelemetry` の抽象化と Null 実装、`Settings` の接続先(`OtelEndPoint` は投入済み)、`CrashReport` / ナビゲーション / `DeviceState` / `NetworkOperator` / `DiagnosticPanel` からの収集、バックグラウンド移行でのフラッシュ)
 
-## 🔔4. プッシュ通知
+## 🔔3. プッシュ通知
 
 ローカル通知は `Components/NotificationService.cs` + `.android.cs` で実装済み(即時 / スケジュール / アクションボタン / タップ時ペイロード。Device > Misc の Notification カード)。FCM を使わない自前配信(SignalR + 前景サービス)は `Works3/PushSample`(同フォルダの README に完結)。
 
-### 📦4-1 自前配信のサンプル(`Works3/PushSample`)の確認
+### 📦3-1 自前配信のサンプル(`Works3/PushSample`)の確認
 
 本アプリのコードは無変更。構成 / 実行手順 / 再接続の設計 / 確認済みの動作 / 解析上の制約はすべて `Works3/PushSample/README.md`。
 
-- [ ] **4-1** `Works3/PushSample`(README に沿って確認。`PushHub` の CA1812 抑止と `CommunityToolkit.Mvvm` の採用を含む)
+- [ ] **3-1** `Works3/PushSample`(README に沿って確認。`PushHub` の CA1812 抑止と `CommunityToolkit.Mvvm` の採用を含む)
 
-### ☁️4-2 FCM(低優先)
+### ☁️3-2 FCM(低優先)
 
 参照: `0_maui-samples/10.0/WebServices/PushNotificationsDemo`(`Xamarin.Firebase.Messaging` + 自前 `FirebaseMessagingService`)。
 
@@ -239,9 +226,9 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | 記事 | https://www.andreasnesheim.no/push-notifications-in-net-maui-with-firebase/ | FCM を `Plugin.Firebase` で扱う手順。Firebase Console 登録 → `google-services.json` 配置 → `MauiProgram` 初期化 → `CrossFirebaseCloudMessaging.Current.GetTokenAsync()` でトークン取得 → Console からテスト送信(2022-09) | 採用時の方式候補①(`Plugin.Firebase`)。方式候補②は上記 PushNotificationsDemo |
 | ライブラリ | https://github.com/Gekidoku/BetterFireBaseNotificationsPlugin | `CrossFirebasePlugin` の MAUI 移植。データ付き通知 / アクションボタン / サイレント通知 / アプリ終了時の受信に対応。NuGet 配布はなくプロジェクト参照前提(2026-01) | 実装範囲(データ / アクション / サイレント)のチェックリスト |
 
-- [ ] **4-2-0**⚖️【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログを Notification カードに追記する(低優先)
+- [ ] **3-2-0**⚖️【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログを Notification カードに追記する(低優先)
 
-## 🔐5. 生体認証(低優先)
+## 🔐4. 生体認証(低優先)
 
 画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。プラットフォーム実装は MauiComponents の `WiFi.cs` + `WiFi.WiFiManager.cs` / `.android.cs` と同じ構成(共通インターフェース + `*.android.cs`)に揃える。
 
@@ -252,7 +239,7 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | ライブラリ | https://github.com/oscoreio/Maui.Biometric | `Plugin.Fingerprint` の後継。`IBiometricAuthentication.CheckAvailabilityAsync` が `AvailabilityResult`(`AuthenticationAvailability`: NoSensor / NoBiometric / TemporaryUnavailable / NoPermission / NotSupported 等 + 検出した `BiometricSensor` の集合)を返し、`AuthenticateAsync(new AuthenticationRequest(title, reason) { Authenticators = Biometric \| DeviceCredential, ConfirmationRequired })` が `AuthenticationResult` を返す。Android 実装は `AndroidX.Biometric.BiometricPrompt`。`.UseBiometricAuthentication()` で DI 登録。v2.5.1(2026-03) | 案B の候補。可用性 3 区分は `NoSensor` / `NoBiometric` / `TemporaryUnavailable` が対応。`sample/MainViewModel.cs` が可用性表示 + 認証 + 結果表示の最小例 |
 | 公式 | https://developer.android.com/training/sign-in/biometric-auth?hl=ja | 「生体認証ダイアログを表示する」。`BiometricManager.canAuthenticate` による可用性判定(`BIOMETRIC_SUCCESS` / `ERROR_NO_HARDWARE` / `ERROR_NONE_ENROLLED` / `ERROR_HW_UNAVAILABLE`)、`BiometricPrompt.PromptInfo` の組み立て、認証コールバック、`CryptoObject` | 案A の一次資料。可用性 3 区分は `canAuthenticate` の戻り値をそのまま対応付ける |
 
-- [ ] **5-1-0**⚖️【判断】実装方式 — 案A `Components/Biometric.cs` + `.android.cs` を自作(`Xamarin.AndroidX.Biometric` を追加)/ 案B `Maui.Biometric` パッケージを参照
+- [ ] **4-1-0**⚖️【判断】実装方式 — 案A `Components/Biometric.cs` + `.android.cs` を自作(`Xamarin.AndroidX.Biometric` を追加)/ 案B `Maui.Biometric` パッケージを参照
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
@@ -265,12 +252,12 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 | `Platforms/Android/AndroidManifest.xml` | 権限 | `USE_BIOMETRIC` 追加 |
 | `Template.MobileApp.csproj` | パッケージ | 案A: `Xamarin.AndroidX.Biometric` 追加 |
 
-- [ ] **5-1** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
+- [ ] **4-1** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
   - 制約: `androidx.biometric` は `androidx.fragment` に依存する。csproj は `Xamarin.AndroidX.Fragment.Ktx` をピン止めしているため、追加後に `dotnet list package --include-transitive` で競合を確認する
   - `BiometricPrompt` が要求する `FragmentActivity` は `MainActivity`(`MauiAppCompatActivity` 派生)で満たしている。基底クラスの変更は不要
 
-## 🔄6. オフライン同期(低優先)
+## 🔄5. オフライン同期(低優先)
 
 ローカル DB に未送信の変更を保持し、接続回復後に差分同期する。競合解決の画面を含む。対向(template-maui-server)の API 追加も要る。
 
-- [ ] **6-1-0**⚖️【判断】採否 — 範囲: Network > HTTP(Data の CRUD)を対象に、未送信キュー(ローカル DB)/ `Connectivity` 復帰で送信 / サーバーの更新時刻による競合検出 / 競合一覧で端末側・サーバー側を選ぶ画面
+- [ ] **5-1-0**⚖️【判断】採否 — 範囲: Network > HTTP(Data の CRUD)を対象に、未送信キュー(ローカル DB)/ `Connectivity` 復帰で送信 / サーバーの更新時刻による競合検出 / 競合一覧で端末側・サーバー側を選ぶ画面

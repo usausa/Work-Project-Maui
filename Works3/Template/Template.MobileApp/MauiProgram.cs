@@ -46,7 +46,6 @@ using Template.MobileApp.Helpers;
 using Template.MobileApp.Modules;
 using Template.MobileApp.Providers;
 using Template.MobileApp.Services;
-using Template.MobileApp.Services.Calendar;
 using Template.MobileApp.Usecase;
 
 public static partial class MauiProgram
@@ -122,6 +121,11 @@ public static partial class MauiProgram
 #if ANDROID
         builder.Logging.AddAndroidLogger(static options => options.ShortCategory = true);
 #endif
+
+        // Diagnostic
+        builder.Services.AddSingleton<DiagnosticLogProvider>();
+        builder.Services.AddSingleton<ILoggerProvider>(static p => p.GetRequiredService<DiagnosticLogProvider>());
+
         // File
         builder.Logging.AddFileLogger(static options =>
             {
@@ -350,9 +354,7 @@ public static partial class MauiProgram
         services.AddSingleton<MonitorConnection>();
         services.AddSingleton<ChatRoomClient>();
 
-        // サンプルデータ生成器 (VMからのnew直生成を避けDI注入の見本とする)
-        services.AddSingleton<IScheduleEventProvider, ScheduleService>();
-        services.AddSingleton<HolidayService>();
+        services.AddSingleton<ICalendarService, CalendarService>();
 
         // Usecase
         services.AddSingleton<INetworkInteraction, DialogNetworkInteraction>();

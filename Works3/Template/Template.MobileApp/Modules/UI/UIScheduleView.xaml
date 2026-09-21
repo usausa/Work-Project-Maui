@@ -168,7 +168,8 @@
         <ScrollView Grid.Row="2">
             <controls:DayTimetableView Events="{Binding Events}"
                                        CurrentTime="{Binding CurrentTime}"
-                                       ShowCurrentTime="{Binding ShowCurrentTime}" />
+                                       ShowCurrentTime="{Binding ShowCurrentTime}"
+                                       EventTappedCommand="{Binding EventTappedCommand}" />
         </ScrollView>
 
     </Grid>

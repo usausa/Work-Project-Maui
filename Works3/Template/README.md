@@ -53,8 +53,8 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Character.png" />
 <img width="25%" src="Document/UI_Social.png" />
 
-<img width="25%" src="Document/Control_Grid.png" />
-<img width="25%" src="Document/Control_CardList.png" />
+<img width="25%" src="Document/UI_Grid.png" />
+<img width="25%" src="Document/UI_Visit.png" />
 <img width="25%" src="Document/Device_WiFi.png" />
 
 <img width="25%" src="Document/Control_BottomSheet.png" />
@@ -73,7 +73,6 @@ Template project for MAUI.
 | View | Material 3 |
 | Device | Background task(WorkManager) |
 | Basic | Startup screen(progress / retry) |
-| Basic | App structure(feature profile / diagnostics) |
 | Diagnostics | OpenTelemetry(crash report / telemetry) |
 | Device | Push(FCM) |
 | Device | Biometric |
@@ -89,8 +88,29 @@ Template project for MAUI.
 | Data | SQLite |
 | Network | Web API(JWT, Data CRUD) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
-| Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Grid(ClamGrid) / Card list / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
+| Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Sudoku |
-| UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Schedule / Calendar / Timeline / Mail / Chat / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
+| Diagnostics | Application, Startup, Connection, Database, Log(recent warnings, share files), Crash report, Runtime |
+| UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
 | UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |
+
+# My Libraries
+
+| Library | Description |
+| --- | --- |
+| [Usa.Smart.Mvvm](https://github.com/usausa/Smart-Net-Mvvm) | MVVM |
+| [Usa.Smart.Reactive](https://github.com/usausa/Smart-Net-Reactive) | Reactive Extensions helpers |
+| [Usa.Smart.Results](https://github.com/usausa/Smart-Net-Results) | Result pattern |
+| [Usa.Smart.Navigation](https://github.com/usausa/Smart-Net-Navigation) | Navigation |
+| [Usa.Smart.Maui](https://github.com/usausa/Smart-Net-Maui) | MAUI MVVM helpers |
+| [Usa.Smart.Data.Accessor](https://github.com/usausa/Smart-Net-Data-Accessor) | Source generator based data accessor |
+| [Usa.Smart.Mapper](https://github.com/usausa/Smart-Net-Mapper) | Object mapper |
+| [Components.Maui](https://github.com/usausa/MauiComponents) | MAUI components(dialog, popup, screen, etc.) |
+| [Rester](https://github.com/usausa/Rester) | HttpClient extensions |
+| [ClamGrid](https://github.com/usausa/clam-grid) | SkiaSharp grid view |
+| [ClamCalendar](https://github.com/usausa/clam-calendar) | SkiaSharp calendar view |
+| [BunnyTail.DependencyInjection](https://github.com/usausa/bunnytail-dependency-injection) | Source generator based DI |
+| [BunnyTail.EmbeddedBuildProperty](https://github.com/usausa/bunnytail-embedded-build-property) | Embedded build property generator |
+| [BunnyTail.MemberAccessor](https://github.com/usausa/bunnytail-member-accessor) | Member accessor generator |
+| [BunnyTail.XamlProperty.Maui](https://github.com/usausa/bunnytail-xaml-property) | BindableProperty generator |
