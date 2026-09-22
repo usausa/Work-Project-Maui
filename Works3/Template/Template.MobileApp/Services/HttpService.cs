@@ -152,16 +152,16 @@ public sealed class HttpService
         return client.PostAsync<DataCreateResponse>("api/data", request, cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<object>> PutDataAsync(long id, DataUpdateRequest request, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> PutDataAsync(long id, DataUpdateRequest request, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.PutAsync<object>($"api/data/{id}", request, cancel: cancellationToken);
+        return client.PutAsync($"api/data/{id}", request, cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<object>> DeleteDataAsync(long id, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> DeleteDataAsync(long id, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.DeleteAsync<object>($"api/data/{id}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Delete, $"api/data/{id}", cancel: cancellationToken);
     }
 
     //--------------------------------------------------------------------------------
@@ -184,10 +184,10 @@ public sealed class HttpService
         return client.GetAsync<StorageListResponse>($"api/storage/{path}", cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<object>> DeleteStorageAsync(string path, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> DeleteStorageAsync(string path, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.DeleteAsync<object>($"api/storage/{path}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Delete, $"api/storage/{path}", cancel: cancellationToken);
     }
 
     public ValueTask<IRestResponse> DownloadAsync(string path, string filename, Action<double> action, CancellationToken cancellationToken = default)
@@ -255,15 +255,15 @@ public sealed class HttpService
     // Test
     //--------------------------------------------------------------------------------
 
-    public ValueTask<IRestResponse<object>> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> GetTestErrorAsync(int code, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<object>($"api/test/error/{code}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Get, $"api/test/error/{code}", cancel: cancellationToken);
     }
 
-    public ValueTask<IRestResponse<object>> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
+    public ValueTask<IRestResponse> GetTestDelayAsync(int timeout, CancellationToken cancellationToken = default)
     {
         var client = httpClientFactory.CreateClient(ApiNames.Default);
-        return client.GetAsync<object>($"api/test/delay/{timeout}", cancel: cancellationToken);
+        return client.SendAsync(HttpMethod.Get, $"api/test/delay/{timeout}", cancel: cancellationToken);
     }
 }

@@ -43,9 +43,11 @@ Control メニュー新設以降(2026-09-13〜20)の未コミット分のうち�
 
 | 現在のファイル名 | 何用か | 確認観点 |
 | --- | --- | --- |
-| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | Web API(Data の CRUD、匿名) | 一覧(20 件ずつ追加読み込み)、行選択で詳細、作成 / 更新 / 削除 / クリア、重複は 409、10 秒待つ API とキャンセル、ログ。F2 = Reload |
-| `Services/HttpService.cs` / `ApiContext.cs` | API 呼び出し、認証状態(`LoginId` / `TokenExpires`) | 更新 / 削除は Rester 2.17.0 の `PutAsync` / `DeleteAsync` |
-| `Usecase/NetworkUsecase.cs` | 通信の共通処理(未接続 / インジケーター / 401 の再ログイン再送 / エラー種別ごとの通知と再試行)と API ごとの処理 | 再ログインは `authenticated: true` の呼び出し(Secure)だけ・1 回だけ。Error(500)は再試行の確認 2 回 → 3 回目は通知のみ |
+| `Modules/Network/NetworkMenuView.xaml` + `NetworkMenuViewModel.cs` | 通信のメニュー | 時刻取得(ダイアログ表示の直接呼び出し)だけを残し、あとは画面遷移(HTTP (Data) / HTTP (Auth) / Storage / Realtime / gRPC / SCP)。未設定時は無効 |
+| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | HTTP (Data): Web API(Data の CRUD、匿名) | 一覧(20 件ずつ追加読み込み)、行選択で詳細、作成 / 更新 / 削除 / クリア、重複は 409、全件を Work テーブルへ保存、テスト API(エラー 500 = 再試行の確認 2 回 → 通知、遅延 5 秒 = インジケーター、10 秒待つ API とキャンセル)、ログ。F2 = Reload |
+| `Modules/Network/NetworkAuthView.xaml` + `.xaml.cs` + `NetworkAuthViewModel.cs`(新規) | HTTP (Auth): 認証 API | ID だけでログイン(既定 `user`)/ ログアウト / 状態(ログイン ID・トークン期限)、Secure(JWT 必須 API。未ログインは 401 の通知)、トークンを無効化 → Secure で再ログイン再送(`NetworkUsecase.InvalidateToken`) |
+| `Services/HttpService.cs` / `ApiContext.cs` | API 呼び出し、認証状態(`LoginId` / `TokenExpires`) | 更新は Rester 2.17.0 の `PutAsync`、削除と本文の無い GET は `SendAsync(HttpMethod.Delete / Get)` |
+| `Usecase/NetworkUsecase.cs` | 通信の共通処理(未接続 / インジケーター / 401 の再ログイン再送 / エラー種別ごとの通知と再試行)と API ごとの処理。戻り値は `NetworkResult` / `NetworkResult<T>`(`Type` + `StatusCode` + `Value`) | 再ログインは `authenticated: true` の呼び出し(Secure)だけ・1 回だけ。Error(500)は再試行の確認 2 回 → 3 回目は通知のみ |
 | `Services/HttpService.cs`(先頭の契約 DTO: `DataListResponse` + `DataListEntry` / `DataResponse` / `DataCreateRequest` / `DataCreateResponse` / `DataUpdateRequest`)| 契約 DTO | サーバー側 `Endpoints/DataEndpoints.cs` の先頭と同じ形 |
 | `Helpers/JwtHelper.cs`(新規) | JWT の有効期限の取り出し | — |
 | (server) `Endpoints/DataEndpoints.cs`(先頭に契約 DTO)/ `Core/Services/DataService.cs` / `Core/Models/RangeResult.cs` | 一覧の範囲取得(`offset` / `size`、`Total`) | 省略時は全件 |

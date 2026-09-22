@@ -6,12 +6,6 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
 {
     public IObserveCommand ForwardCommand { get; }
     public IObserveCommand ServerTimeCommand { get; }
-    public IObserveCommand DataListCommand { get; }
-    public IObserveCommand SecureCommand { get; }
-    public IObserveCommand LoginCommand { get; }
-    public IObserveCommand LogoutCommand { get; }
-    public IObserveCommand TestErrorCommand { get; }
-    public IObserveCommand TestDelayCommand { get; }
 
     public NetworkMenuViewModel(
         Settings settings,
@@ -21,12 +15,6 @@ public sealed class NetworkMenuViewModel : AppViewModelBase
 
         ForwardCommand = MakeAsyncCommand<ViewId>(x => Navigator.ForwardAsync(x));
         ServerTimeCommand = MakeAsyncCommand(async () => await networkUsecase.GetServerTimeAsync(), () => configured);
-        DataListCommand = MakeAsyncCommand(async () => await networkUsecase.GetDataListAsync(), () => configured);
-        SecureCommand = MakeAsyncCommand(async () => await networkUsecase.GetSecretMessageAsync(), () => configured);
-        LoginCommand = MakeAsyncCommand(async () => await networkUsecase.PostAccountLoginAsync("user"), () => configured);
-        LogoutCommand = MakeDelegateCommand(networkUsecase.AccountLogout, () => configured);
-        TestErrorCommand = MakeAsyncCommand<int>(async x => await networkUsecase.GetTestErrorAsync(x), _ => configured);
-        TestDelayCommand = MakeAsyncCommand<int>(async x => await networkUsecase.GetTestDelayAsync(x), _ => configured);
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);

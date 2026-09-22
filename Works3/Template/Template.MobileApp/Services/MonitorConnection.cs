@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.SignalR;
 
 using Mofucat.ReactiveHub;
 
+//--------------------------------------------------------------------------------
+// Models
+//--------------------------------------------------------------------------------
+
 // Client -> Server
 public sealed class DeviceStatusMessage
 {
@@ -43,6 +47,10 @@ public sealed class NotificationMessage
 
     public DateTimeOffset SentAt { get; set; }
 }
+
+//--------------------------------------------------------------------------------
+// Connection
+//--------------------------------------------------------------------------------
 
 public sealed class MonitorConnection : IDisposable
 {

@@ -1674,6 +1674,32 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - 実機(Pixel 9a): Get server time = 成功ダイアログ、Error(500)= 再試行の確認 2 回 → 3 回目は通知のみ、Delay = 完了(ダイアログなし)、未ログインの Secure = 401 で再試行の確認、Login → Secure = 成功、期限切れトークンの Secure = 401 → 保存した Id で再ログインして再送 → 成功、HTTP 画面の未ログインの作成 / 取得 / 更新(PUT)/ 削除(DELETE)= 成功、10 秒待つ API のキャンセル = 「遅延 キャンセル」、Storage のダウンロード / 削除 = 成功、gRPC チャット = 未ログインで接続・送信(表示名 `Pixel 9a`)
 - ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件。サーバーはビルド 0 警告、単体テスト 37 件成功
 
+### 📦`NetworkUsecase` の戻り値を `NetworkResult` に統一(2026-09-22)
+
+| 対象 | 内容 |
+|---|---|
+| `Usecase/NetworkUsecase.cs` | 先頭の `// Result` 区画に `NetworkResultType`(Success / Disconnected / Canceled / NotFound / HttpError / Unknown)、`NetworkResult`(`Type` + `StatusCode` + `IsSuccess`)、`NetworkResult<T>`(+ `Value`)を定義。`NetworkOperationResult` / `NetworkErrorKind` / `NetworkError` record(`Smart.Results` の `Error` 派生)は削除。使用側に見せる情報はこの 3 型だけ |
+| `Usecase/NetworkUsecase.cs` | 型付き API は `NetworkResult<T>`、本文の無い API(更新 / 削除 / テスト)と転送は `NetworkResult` を返す。`Classify` が `NetworkResultType` を直接返し、未接続は `Disconnected`。内部の分類と外に見せる種別が 1:1 なので内部専用の列挙は置かない |
+| `Services/HttpService.cs` | 本文の無い API(`PutDataAsync` / `DeleteDataAsync` / `DeleteStorageAsync` / `GetTestErrorAsync` / `GetTestDelayAsync`)の戻りを `IRestResponse` に(Rester の `SendAsync(HttpMethod.Delete / Get, path)`。型なしの `GetAsync` / `DeleteAsync` は `HttpClient` のインスタンスメソッドに隠れるため Rester には無い) |
+| `Modules/Network/NetworkHttpViewModel.cs` / `NetworkStorageViewModel.cs` | `FormatError(NetworkResult)` で `Type` と `StatusCode` を表示文字列にする(`NetworkError` へのキャストや `Error.Message` の参照は無し)。遅延 / 転送の switch も同じ列挙に |
+
+- `Smart.Results` は `ExpressionCalculator` / `CropDrawing` / `AzureVisionUsecase`(値かメッセージ)でそのまま使う
+- 実機(Pixel 9a): HTTP = 重複の作成 → 「名前が重複 (409)」、更新成功、サーバー側で削除した行の更新 / 削除 → 「見つからない (404)」、10 秒待つ API のキャンセル → 「遅延 キャンセル」。Storage = ダウンロード成功、サーバー側で削除後のダウンロード → 「転送失敗: 見つからない (404)」、削除 → 「削除失敗: … 見つからない (404)」。メニューの Error(500)= 再試行の確認 2 回 → 3 回目は通知のみ
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 🧭Network メニューの再構成と HTTP (Auth) 画面(2026-09-22)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Network/NetworkMenuView.xaml` + `NetworkMenuViewModel.cs` | メニューは時刻取得(直接呼び出し)と画面遷移(HTTP (Data) / HTTP (Auth) / Storage / Realtime / gRPC / SCP)だけに(1 列 7 行、残り 2 行は無効ボタン)。Data list / Secure / Login / Logout / Error / Delay のコマンドを削除 |
+| `Modules/Network/NetworkHttpView.xaml` + `NetworkHttpViewModel.cs` | 題名を HTTP (Data) に。一覧カードに「全件を Work テーブルへ保存」、「遅延」カードを「テスト API」カード(エラー 500 / 遅延 5 秒 / 10 秒待つ API + キャンセル)に。結果はログへ(`エラー 500: HTTP エラー (500)` / `遅延 5 秒 完了`) |
+| `Modules/Network/NetworkAuthView.xaml` + `.xaml.cs` + `NetworkAuthViewModel.cs`(新規)/ `Modules/ViewId.cs` | HTTP (Auth) 画面(`ViewId.NetworkAuth`): ログイン ID の入力(既定 `user`)/ ログイン / ログアウト / 状態表示(`ApiContext` のログイン ID とトークン期限)、Secure を呼ぶ / トークンを無効化 |
+| `Usecase/NetworkUsecase.cs` | `InvalidateToken()`(ログイン ID は保持したままトークンを不正な値にする。次の認証付き呼び出しで再ログイン再送を確認するためのテスト用)。`DefaultLoginId` は削除(ダミー ID は VM 側) |
+| `Markup/AppIcons.cs` | メニューで使わなくなった `ErrorOutline` / `HourglassEmpty` / `ListAlt` / `Logout` を削除 |
+
+- 実機(Pixel 9a): メニュー 7 項目、Server time = 成功ダイアログ。HTTP (Auth) = 未ログインの Secure → 401 の再試行確認、ログイン → 期限表示、無効化 → 期限 `-`、Secure → 再ログインして「Hello user」(期限が更新)、ログアウト → 未ログイン。HTTP (Data) = エラー 500 の再試行確認 2 回 → 通知、遅延 5 秒 完了、全件を Work テーブルへ保存(47 件)
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
 - **Android の `HttpClient`(`AndroidMessageHandler`)のストリーミング応答を中断するとき**: `await foreach` を UI スレッドで回すと列挙の破棄(ストリームの Close)がメインスレッドで実行され `NetworkOnMainThreadException`(未観測のタスク例外としてクラッシュレポートに残る)。接続待ちの間に中断すると `OperationCanceledException` ではなく `WebException`(Socket closed)。OllamaSharp は中断で例外を出さず列挙が終わることもある。読み取りは `Task.Run` + `ConfigureAwait(false)` で行ない UI 更新だけ `MainThread.BeginInvokeOnMainThread`、中断後の例外は `IsCancellationRequested` で中断扱いにする

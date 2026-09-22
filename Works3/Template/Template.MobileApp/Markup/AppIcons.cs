@@ -67,7 +67,6 @@ public static class AppIcons
     public static readonly FontImageSource Download = Create(MaterialIcons.Download, MenuSize, Colors.White);
     public static readonly FontImageSource DragIndicator = Create(MaterialIcons.Drag_indicator, MenuSize, Colors.White);
     public static readonly FontImageSource Draw = Create(MaterialIcons.Draw, MenuSize, Colors.White);
-    public static readonly FontImageSource ErrorOutline = Create(MaterialIcons.Error_outline, MenuSize, Colors.White);
     public static readonly FontImageSource Explore = Create(MaterialIcons.Explore, MenuSize, Colors.White);
     public static readonly FontImageSource Extension = Create(MaterialIcons.Extension, MenuSize, Colors.White);
     public static readonly FontImageSource Face = Create(MaterialIcons.Face, MenuSize, Colors.White);
@@ -84,7 +83,6 @@ public static class AppIcons
     public static readonly FontImageSource GridView = Create(MaterialIcons.Grid_view, MenuSize, Colors.White);
     public static readonly FontImageSource Handyman = Create(MaterialIcons.Handyman, MenuSize, Colors.White);
     public static readonly FontImageSource Hearing = Create(MaterialIcons.Hearing, MenuSize, Colors.White);
-    public static readonly FontImageSource HourglassEmpty = Create(MaterialIcons.Hourglass_empty, MenuSize, Colors.White);
     public static readonly FontImageSource Image = Create(MaterialIcons.Image, MenuSize, Colors.White);
     public static readonly FontImageSource Info = Create(MaterialIcons.Info, MenuSize, Colors.White);
     public static readonly FontImageSource InsertChart = Create(MaterialIcons.Insert_chart, MenuSize, Colors.White);
@@ -93,12 +91,10 @@ public static class AppIcons
     public static readonly FontImageSource Hub = Create(MaterialIcons.Hub, MenuSize, Colors.White);
     public static readonly FontImageSource Language = Create(MaterialIcons.Language, MenuSize, Colors.White);
     public static readonly FontImageSource Layers = Create(MaterialIcons.Layers, MenuSize, Colors.White);
-    public static readonly FontImageSource ListAlt = Create(MaterialIcons.List_alt, MenuSize, Colors.White);
     public static readonly FontImageSource LiveTv = Create(MaterialIcons.Live_tv, MenuSize, Colors.White);
     public static readonly FontImageSource LocationOn = Create(MaterialIcons.Location_on, MenuSize, Colors.White);
     public static readonly FontImageSource Lock = Create(MaterialIcons.Lock, MenuSize, Colors.White);
     public static readonly FontImageSource Login = Create(MaterialIcons.Login, MenuSize, Colors.White);
-    public static readonly FontImageSource Logout = Create(MaterialIcons.Logout, MenuSize, Colors.White);
     public static readonly FontImageSource Mail = Create(MaterialIcons.Mail, MenuSize, Colors.White);
     public static readonly FontImageSource Map = Create(MaterialIcons.Map, MenuSize, Colors.White);
     public static readonly FontImageSource Memory = Create(MaterialIcons.Memory, MenuSize, Colors.White);

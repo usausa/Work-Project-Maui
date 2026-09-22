@@ -80,7 +80,7 @@ Template project for MAUI.
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
-| Network | Web API(JWT, Data CRUD) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
+| Network | Web API(Data CRUD / JWT 認証) / Storage / Realtime(SignalR) / gRPC(Chat) / SCP |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
 | Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
