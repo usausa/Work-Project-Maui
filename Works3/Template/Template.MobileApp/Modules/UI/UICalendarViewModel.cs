@@ -46,6 +46,10 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
     public IObserveCommand EventTappedCommand { get; }
     public IObserveCommand SelectModeCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UICalendarViewModel(
         IDialog dialog,
         ICalendarService calendarService)
@@ -59,6 +63,18 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         EventTappedCommand = MakeAsyncCommand<CalendarEventEventArgs>(x => dialog.Toast(x.Event.Title).AsTask());
         SelectModeCommand = MakeDelegateCommand<CalendarSelectionMode>(OnSelectMode);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Load(CalendarDisplayDateChangedEventArgs e)
     {
@@ -77,8 +93,4 @@ public sealed partial class UICalendarViewModel : AppViewModelBase
         SelectedStartDate = null;
         SelectedEndDate = null;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

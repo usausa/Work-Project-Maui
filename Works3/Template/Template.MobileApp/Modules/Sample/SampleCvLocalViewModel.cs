@@ -20,6 +20,10 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
 
     public SKBitmapImageSource Image { get; } = new();
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleCvLocalViewModel(
         OnnxVisionUsecase onnxVisionUsecase)
     {
@@ -27,6 +31,10 @@ public sealed partial class SampleCvLocalViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
         Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

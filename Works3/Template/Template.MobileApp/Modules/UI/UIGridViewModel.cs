@@ -44,6 +44,10 @@ public sealed partial class UIGridViewModel : AppViewModelBase
 
     public IObserveCommand AdvanceCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIGridViewModel(IDialog dialog)
     {
         this.dialog = dialog;
@@ -76,6 +80,10 @@ public sealed partial class UIGridViewModel : AppViewModelBase
             .Subscribe(_ => SelectedCount = Rows.SelectedCount));
         Disposables.Add(Rows);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -116,6 +124,10 @@ public sealed partial class UIGridViewModel : AppViewModelBase
         Load();
         return Task.CompletedTask;
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Load()
     {

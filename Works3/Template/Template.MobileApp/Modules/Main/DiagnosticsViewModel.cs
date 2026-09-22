@@ -16,20 +16,19 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     private readonly IShare share;
 
-    private readonly Settings settings;
+    private readonly DiagnosticLogProvider logProvider;
 
     private readonly ApiContext apiContext;
 
-    private readonly StartupState startup;
-
     private readonly DataService dataService;
 
-    private readonly DiagnosticLogProvider logProvider;
+    private readonly StartupState startup;
+
+    private readonly Settings settings;
 
     private readonly string logDirectory;
 
     // Runtime
-
     [ObservableProperty]
     public partial long WorkingSet { get; private set; }
 
@@ -122,7 +121,6 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     public partial IReadOnlyList<DiagnosticLogEntry> RecentLogs { get; private set; } = [];
 
     // Crash
-
     [ObservableProperty]
     public partial string? LastCrashReport { get; private set; }
 
@@ -132,26 +130,30 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
 
     public IObserveCommand ClearCrashReportCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DiagnosticsViewModel(
         IDialog dialog,
         IShare share,
         IAppInfo appInfo,
         IDeviceInfo deviceInfo,
-        DiagnosticLogProvider logProvider,
         IOptions<FileLoggerOptions> loggerOptions,
-        Settings settings,
+        DiagnosticLogProvider logProvider,
         ApiContext apiContext,
+        DataService dataService,
         StartupState startup,
-        DeviceState deviceState,
-        DataService dataService)
+        Settings settings,
+        DeviceState deviceState)
     {
         this.dialog = dialog;
         this.share = share;
         this.logProvider = logProvider;
-        this.settings = settings;
         this.apiContext = apiContext;
-        this.startup = startup;
         this.dataService = dataService;
+        this.startup = startup;
+        this.settings = settings;
         logDirectory = loggerOptions.Value.Directory ?? string.Empty;
 
         ApplicationName = appInfo.Name;
@@ -168,6 +170,10 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
         ClearCrashReportCommand = MakeAsyncCommand(ClearCrashReportAsync, () => LastCrashReport is not null);
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatingToAsync(INavigationContext context) => LoadAsync();
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
@@ -175,6 +181,10 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     protected override Task OnNotifyFunction2() => LoadAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task LoadAsync()
     {

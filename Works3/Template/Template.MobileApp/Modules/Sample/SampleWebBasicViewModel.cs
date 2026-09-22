@@ -14,6 +14,10 @@ public sealed partial class SampleWebBasicViewModel : AppViewModelBase
     [ObservableProperty]
     public partial string? Result { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleWebBasicViewModel(
         IAppInfo appInfo,
         IDeviceInfo deviceInfo)
@@ -26,6 +30,10 @@ public sealed partial class SampleWebBasicViewModel : AppViewModelBase
         Controller.WebViewInitialized += OnWebViewInitialized;
         Disposables.Add(Controller.RawMessageReceivedAsObservable().Subscribe(x => Result = x.Message));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
@@ -66,6 +74,27 @@ public sealed partial class SampleWebBasicViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+#pragma warning disable CA1822
+    public int Calc(int x, int y) => x + y;
+#pragma warning restore CA1822
+
+    public async Task<DataEntity> ExecuteAsync(int id, string name)
+    {
+        using (BusyState.Begin())
+        {
+            await Task.Delay(1000);
+            return new DataEntity { Id = id, Name = name };
+        }
+    }
+
+    //--------------------------------------------------------------------------------
+    // Event
+    //--------------------------------------------------------------------------------
+
     private void OnWebResourceRequested(object? sender, WebViewWebResourceRequestedEventArgs e)
     {
         if (!e.Uri.AbsolutePath.EndsWith("/local/info.json", StringComparison.Ordinal))
@@ -87,18 +116,5 @@ public sealed partial class SampleWebBasicViewModel : AppViewModelBase
 #else
         Result = "Initialized";
 #endif
-    }
-
-#pragma warning disable CA1822
-    public int Calc(int x, int y) => x + y;
-#pragma warning restore CA1822
-
-    public async Task<DataEntity> ExecuteAsync(int id, string name)
-    {
-        using (BusyState.Begin())
-        {
-            await Task.Delay(1000);
-            return new DataEntity { Id = id, Name = name };
-        }
     }
 }

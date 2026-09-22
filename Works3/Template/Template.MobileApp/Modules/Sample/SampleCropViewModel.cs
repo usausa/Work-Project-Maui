@@ -17,6 +17,10 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
     public IObserveCommand ExportCommand { get; }
     public IObserveCommand ResetCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleCropViewModel()
     {
         Disposables.Add(Crop);
@@ -24,6 +28,10 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
         ExportCommand = MakeDelegateCommand(Export);
         ResetCommand = MakeDelegateCommand(Crop.Reset);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -33,6 +41,14 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
             Crop.SetImage(PlatformImage.FromStream(stream));
         }
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Export()
     {
@@ -46,8 +62,4 @@ public sealed partial class SampleCropViewModel : AppViewModelBase
         CroppedImage = ImageSource.FromStream(() => new MemoryStream(bytes));
         ResultText = $"{size.Width} x {size.Height} px / {bytes.Length:N0} bytes";
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

@@ -30,6 +30,10 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
 
     public IObserveCommand SelectFeatureCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleCvNetViewModel(
         IDialog dialog,
         AzureVisionUsecase visionUsecase)
@@ -42,6 +46,10 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
         Disposables.Add(Controller.AsObservable(nameof(Controller.Selected)).Subscribe(_ => Controller.SelectMinimumResolution()));
         Disposables.Add(new DelegateDisposable(() => ImageHelper.ReplaceBitmap(Image, null)));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -84,6 +92,10 @@ public sealed partial class SampleCvNetViewModel : AppViewModelBase
             _ => Task.CompletedTask
         };
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private Task SelectFeatureAsync(VisionFeature feature)
     {

@@ -5,7 +5,6 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
     private const double InitialLatitude = 139.767052;
     private const double InitialLongitude = 35.681167;
 
-    // スポット (Pin + Callout)
     private static readonly MapsuiSpot[] Spots =
     [
         new("皇居", "千代田区千代田", 139.752800, 35.685175),
@@ -14,7 +13,6 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         new("浅草寺", "台東区浅草", 139.796655, 35.714765)
     ];
 
-    // 経路 (Polyline / オーバーレイ共用) とエリア (Polygon)
     private static readonly (double Lon, double Lat)[] RoutePoints =
     [
         (139.752800, 35.685175),
@@ -31,7 +29,6 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         (139.742630, 35.679670)
     ];
 
-    // 各マネージャは Disposables 経由で破棄される (フィールドではなくプロパティにして所有を明示)
     private MapsuiSpotManager SpotManager { get; } = new(Spots);
 
     private MapsuiShapeManager ShapeManager { get; } = new(RoutePoints, AreaPoints);
@@ -66,13 +63,16 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
 
     public ICommand HomeCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public SampleMap2ViewModel()
     {
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
         HomeCommand = MakeDelegateCommand(() => Controller.MoveTo(InitialLatitude, InitialLongitude));
 
-        // 機能グループ別マネージャを辞書へ登録し、トグルで個別に有効化する
         Disposables.Add(SpotManager);
         Disposables.Add(ShapeManager);
         Disposables.Add(GeoJsonManager);
@@ -95,11 +95,14 @@ public sealed partial class SampleMap2ViewModel : AppViewModelBase
         SubscribeOverlayEnabled(x => Controller.SetOverlayRoute(x ? RoutePoints : null));
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
         {
-            // GeoJSON アセット (EPSG:4326) を読み込む (マネージャ側で再投影)
             using var reader = new StreamReader(await FileSystem.OpenAppPackageFileAsync(Path.Combine("Map", "tokyo.geojson")));
             GeoJsonManager.SetGeoJson(await reader.ReadToEndAsync());
         }

@@ -13,7 +13,6 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     public BarcodeController Controller { get; } = new();
 
-    // 値は表示前 (OnNavigatingTo) にまとめて取得する。初期値の null からの反映ではハイライトしない
     [ObservableProperty]
     public partial string? ApiEndPoint { get; set; }
 
@@ -45,6 +44,10 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public partial string? ScpPassword { get; set; }
 
     public IObserveCommand DetectCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public SettingViewModel(
         ApiContext apiContext,
@@ -135,8 +138,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
         });
     }
 
-    private static string FormatScpHost(Settings settings) =>
-        String.IsNullOrEmpty(settings.ScpHost) ? string.Empty : $"{settings.ScpHost}:{settings.ScpPort}";
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -170,4 +174,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private static string FormatScpHost(Settings settings) =>
+        String.IsNullOrEmpty(settings.ScpHost) ? string.Empty : $"{settings.ScpHost}:{settings.ScpPort}";
 }

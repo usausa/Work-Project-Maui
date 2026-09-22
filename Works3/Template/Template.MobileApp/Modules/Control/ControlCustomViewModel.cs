@@ -63,6 +63,10 @@ public sealed partial class ControlCustomViewModel : AppViewModelBase
 
     public IObserveCommand RemoveAvatarCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlCustomViewModel()
     {
         AddAvatarCommand = MakeDelegateCommand(() =>
@@ -80,6 +84,10 @@ public sealed partial class ControlCustomViewModel : AppViewModelBase
             }
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 

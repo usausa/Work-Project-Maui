@@ -63,6 +63,10 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
 
     public CornerRadius CornerRadius => new(CornerRadiusTopLeft, CornerRadiusTopRight, CornerRadiusBottomLeft, CornerRadiusBottomRight);
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ViewBorderViewModel(ResourceDictionary resources)
     {
 #pragma warning disable IDE0028
@@ -77,9 +81,17 @@ public sealed partial class ViewBorderViewModel : AppViewModelBase
         SubscribeStrokeDashLength2(_ => UpdateStrokeDashArray());
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ViewMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateStrokeDashArray()
     {

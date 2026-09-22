@@ -68,6 +68,10 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
     public IObserveCommand OpenSettingsCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceWiFiViewModel(IWiFiManager wifiManager)
     {
         this.wifiManager = wifiManager;
@@ -78,6 +82,10 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
 
         Disposables.Add(wifiManager.StateChangedAsObservable().ObserveOnCurrentContext().Subscribe(_ => Update()));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
@@ -109,6 +117,10 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         wifiManager.OpenSettings();
         return Task.CompletedTask;
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     // 表示中は未検出のアクセスポイントを猶予を過ぎたら消し、結果が途絶えたら自前でスキャンする
     private void StartTimers()

@@ -14,12 +14,20 @@ public sealed partial class ControlChartViewModel : AppViewModelBase
 
     public ICommand SelectCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlChartViewModel()
     {
         Disposables.Add(Drawing);
 
         SelectCommand = MakeDelegateCommand<ChartKind>(Show);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -29,6 +37,14 @@ public sealed partial class ControlChartViewModel : AppViewModelBase
         }
         return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Show(ChartKind kind)
     {
@@ -94,9 +110,5 @@ public sealed partial class ControlChartViewModel : AppViewModelBase
         }
         return candles;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }
 #pragma warning restore CA5394

@@ -19,6 +19,10 @@ public sealed partial class ControlRefreshViewModel : AppViewModelBase
 
     public IObserveCommand RefreshCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlRefreshViewModel()
     {
         RefreshCommand = MakeAsyncCommand(async () =>
@@ -39,6 +43,10 @@ public sealed partial class ControlRefreshViewModel : AppViewModelBase
         });
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
         IsRefreshing = true;
@@ -53,6 +61,14 @@ public sealed partial class ControlRefreshViewModel : AppViewModelBase
 
         IsRefreshing = false;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private NewsItem NewItem()
     {
@@ -88,9 +104,5 @@ public sealed partial class ControlRefreshViewModel : AppViewModelBase
         }
         return item;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }
 #pragma warning restore CA5394

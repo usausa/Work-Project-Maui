@@ -15,6 +15,10 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
 
     public IObserveCommand LoadMoreCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlCollectionViewModel(
         IDialog dialog)
     {
@@ -33,6 +37,10 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
         });
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
@@ -49,6 +57,14 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     // RemainingItemsThresholdReached で末尾に達する前に追加ページを読み込む
     private void LoadMore()
     {
@@ -61,6 +77,10 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
         List.Add(CreateGroup($"追{extraIndex}", [$"追加 家臣 {extraIndex}-1", $"追加 家臣 {extraIndex}-2", $"追加 家臣 {extraIndex}-3"]));
     }
 
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
 #pragma warning disable IDE0028
     private static AddressGroup CreateGroup(string key, IEnumerable<string> names) =>
         new(key, names.Select(static (x, i) => new AddressRow(new AddressItem
@@ -72,8 +92,4 @@ public sealed class ControlCollectionViewModel : AppViewModelBase
             })
             { IsEven = i % 2 == 0 }));
 #pragma warning restore IDE0028
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

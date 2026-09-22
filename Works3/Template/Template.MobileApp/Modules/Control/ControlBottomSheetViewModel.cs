@@ -1,6 +1,5 @@
 namespace Template.MobileApp.Modules.Control;
 
-// Syncfusion の SfBottomSheet と自作の BottomSheetView (Controls/BottomSheetView.cs) を同じ内容で比べる
 public sealed partial class ControlBottomSheetViewModel : AppViewModelBase
 {
     // 閉じるアニメーションを待ってから次のシートを開く
@@ -25,6 +24,10 @@ public sealed partial class ControlBottomSheetViewModel : AppViewModelBase
 
     public IObserveCommand SelectCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlBottomSheetViewModel()
     {
         OpenSfSheetCommand = MakeDelegateCommand(() => IsSfSheetOpen = true);
@@ -37,6 +40,10 @@ public sealed partial class ControlBottomSheetViewModel : AppViewModelBase
         });
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -45,7 +52,10 @@ public sealed partial class ControlBottomSheetViewModel : AppViewModelBase
 
     protected override Task OnNotifyFunction3() => ToggleSheetAsync(false);
 
-    // 同じシートが開いていれば閉じる。別のシートが開いていれば閉じ終わってから開く
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private async Task ToggleSheetAsync(bool sf)
     {
         if (sf ? IsSfSheetOpen : IsCustomSheetOpen)

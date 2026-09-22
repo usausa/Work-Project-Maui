@@ -26,9 +26,9 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
 
     private const int ErrorStatusCode = 500;
 
-    private readonly NetworkUsecase networkUsecase;
-
     private readonly IDialog dialog;
+
+    private readonly NetworkUsecase networkUsecase;
 
     private Action? cancelDelay;
 
@@ -37,6 +37,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial string Name { get; set; } = string.Empty;
+
     [ObservableProperty]
     public partial string Value { get; set; } = "0";
 
@@ -57,33 +58,31 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     public ObservableCollection<string> Logs { get; } = [];
 
     public IObserveCommand ReloadCommand { get; }
-
     public IObserveCommand LoadMoreCommand { get; }
 
     public IObserveCommand CreateCommand { get; }
-
     public IObserveCommand UpdateCommand { get; }
-
     public IObserveCommand DeleteCommand { get; }
-
     public IObserveCommand ClearCommand { get; }
 
     public IObserveCommand SaveToWorkCommand { get; }
 
     public IObserveCommand TestErrorCommand { get; }
-
     public IObserveCommand TestDelayCommand { get; }
 
     public IObserveCommand DelayCommand { get; }
-
     public IObserveCommand CancelCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NetworkHttpViewModel(
-        NetworkUsecase networkUsecase,
-        IDialog dialog)
+        IDialog dialog,
+        NetworkUsecase networkUsecase)
     {
-        this.networkUsecase = networkUsecase;
         this.dialog = dialog;
+        this.networkUsecase = networkUsecase;
 
         ReloadCommand = MakeAsyncCommand(ReloadAsync, () => !Loading);
         LoadMoreCommand = MakeAsyncCommand(LoadMoreAsync, () => !Loading);
@@ -100,6 +99,10 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
 
         SubscribeSelectedItem(x => _ = SelectAsync());
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context) => ReloadAsync();
 

@@ -16,6 +16,10 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
     // 初期表示は東京駅周辺(測位後に現在地へ移動)
     public MapController Controller { get; } = new(35.681236, 139.767125, 3);
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceLocationViewModel(
         ILocationService locationService,
         IGeolocation geolocation)
@@ -30,26 +34,24 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
         }));
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (!await Permissions.RequestLocationAsync())
+        if (await Permissions.RequestLocationAsync())
         {
-            return;
+            ServiceDisabled = !geolocation.IsEnabled;
+
+            Location = await locationService.GetLastLocationAsync();
+            if (Location is not null)
+            {
+                Controller.MoveTo(Location.Latitude, Location.Longitude);
+            }
+
+            locationService.Start();
         }
-
-        ServiceDisabled = !geolocation.IsEnabled;
-
-        Location = await locationService.GetLastLocationAsync();
-        if (Location is not null)
-        {
-            Controller.MoveTo(Location.Latitude, Location.Longitude);
-        }
-
-        locationService.Start();
     }
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
@@ -57,4 +59,8 @@ public sealed partial class DeviceLocationViewModel : AppViewModelBase
         locationService.Stop();
         return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

@@ -55,6 +55,10 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
 
     public IObserveCommand OpenLanguageCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicSettingViewModel()
     {
         SearchCommand = MakeDelegateCommand(() => LastSearch = SearchText);
@@ -64,6 +68,10 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
         ClearBackupTimeCommand = MakeDelegateCommand(() => BackupTime = null, () => BackupTime is not null);
         OpenLanguageCommand = MakeDelegateCommand(() => LanguageOpen = true);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
 

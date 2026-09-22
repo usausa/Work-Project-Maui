@@ -13,6 +13,7 @@ public sealed partial class UIPosViewModel : AppViewModelBase
 
     public int InnerTax => (int)(Total * 8d / 108d);
 
+
     public int Deposit { get; } = 888;
 
     public int Change => Math.Max(0, Deposit - Total);
@@ -20,8 +21,11 @@ public sealed partial class UIPosViewModel : AppViewModelBase
     public bool HasChange => Change > 0;
 
     public ICommand QuantityUpCommand { get; }
-
     public ICommand QuantityDownCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public UIPosViewModel()
     {
@@ -30,6 +34,10 @@ public sealed partial class UIPosViewModel : AppViewModelBase
         QuantityUpCommand = MakeDelegateCommand(() => Quantity = Math.Min(9, Quantity + 1));
         QuantityDownCommand = MakeDelegateCommand(() => Quantity = Math.Max(1, Quantity - 1));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
 

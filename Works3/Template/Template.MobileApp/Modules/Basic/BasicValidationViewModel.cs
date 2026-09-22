@@ -31,6 +31,10 @@ public sealed partial class BasicValidationViewModel : AppViewModelBase
     public IObserveCommand ClearCommand { get; }
     public IObserveCommand FocusCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public BasicValidationViewModel()
     {
         ErrorCommand = MakeDelegateCommand(() =>
@@ -54,13 +58,21 @@ public sealed partial class BasicValidationViewModel : AppViewModelBase
         });
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
     private void ValidateConfirm()
     {
         Errors.ClearErrors(nameof(Confirm));
         Validate(nameof(Confirm));
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

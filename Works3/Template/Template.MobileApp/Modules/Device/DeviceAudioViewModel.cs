@@ -35,6 +35,10 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     public IObserveCommand StopCommand { get; }
     public IObserveCommand SeekCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceAudioViewModel(
         IFileSystem fileSystem,
         IAudioManager audioManager)
@@ -49,6 +53,10 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
 
         Disposables.Add(Polling);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -78,6 +86,10 @@ public sealed partial class DeviceAudioViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.DeviceMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateState()
     {

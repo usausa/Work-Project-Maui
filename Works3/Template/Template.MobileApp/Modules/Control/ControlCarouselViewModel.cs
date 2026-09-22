@@ -6,6 +6,10 @@ public sealed class ControlCarouselViewModel : AppViewModelBase
 
     public IObserveCommand CurrentChangedCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlCarouselViewModel()
     {
         Items =
@@ -26,6 +30,10 @@ public sealed class ControlCarouselViewModel : AppViewModelBase
             }
         });
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 

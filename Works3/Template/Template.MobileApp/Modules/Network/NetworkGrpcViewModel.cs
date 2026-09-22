@@ -4,16 +4,15 @@ using Grpc.Core;
 
 using Template.MobileApp.Services;
 
-// gRPC チャット (双方向ストリーミング、認証なし。ユーザー名は端末名) と単項 RPC (サーバー時刻)
 public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 {
-    private readonly ChatRoomClient chatClient;
-
-    private readonly Settings settings;
-
     private readonly IDeviceInfo deviceInfo;
 
     private readonly IDispatcher dispatcher;
+
+    private readonly ChatRoomClient chatClient;
+
+    private readonly Settings settings;
 
     private Uri? address;
 
@@ -49,20 +48,28 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 
     public IObserveCommand ServerTimeCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NetworkGrpcViewModel(
-        ChatRoomClient chatClient,
-        Settings settings,
         IDeviceInfo deviceInfo,
-        IDispatcher dispatcher)
+        IDispatcher dispatcher,
+        ChatRoomClient chatClient,
+        Settings settings)
     {
-        this.chatClient = chatClient;
-        this.settings = settings;
         this.deviceInfo = deviceInfo;
         this.dispatcher = dispatcher;
+        this.chatClient = chatClient;
+        this.settings = settings;
 
         SendCommand = MakeAsyncCommand(SendAsync, () => Configured && !String.IsNullOrWhiteSpace(Input));
         ServerTimeCommand = MakeAsyncCommand(GetServerTimeAsync, () => Configured);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -74,7 +81,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
         }
         else
         {
-            AddressDisplay = "未設定 (設定画面の QR で投入)";
+            AddressDisplay = "未設定";
         }
 
         return Task.CompletedTask;
@@ -82,30 +89,28 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {
-        if (address is null)
+        if (address is not null)
         {
-            return Task.CompletedTask;
+            active = true;
+            chatClient.StateChanged += OnStateChanged;
+            chatClient.MessageReceived += OnMessageReceived;
+            return chatClient.ConnectAsync(address, deviceInfo.Name);
         }
 
-        active = true;
-        chatClient.StateChanged += OnStateChanged;
-        chatClient.MessageReceived += OnMessageReceived;
-        return chatClient.ConnectAsync(address, deviceInfo.Name);
+        return Task.CompletedTask;
     }
 
     public override async Task OnNavigatingFromAsync(INavigationContext context)
     {
-        if (!active)
+        if (active)
         {
-            return;
+            active = false;
+            chatClient.StateChanged -= OnStateChanged;
+            chatClient.MessageReceived -= OnMessageReceived;
+            await chatClient.DisconnectAsync();
+            Messages.Clear();
+            IsEmpty = true;
         }
-
-        active = false;
-        chatClient.StateChanged -= OnStateChanged;
-        chatClient.MessageReceived -= OnMessageReceived;
-        await chatClient.DisconnectAsync();
-        Messages.Clear();
-        IsEmpty = true;
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);

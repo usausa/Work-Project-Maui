@@ -64,6 +64,10 @@ public sealed class ControlSfChartViewModel : AppViewModelBase
         new("西日本", "広島", 14)
     ];
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

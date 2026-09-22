@@ -7,9 +7,9 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
 {
     private const string DummyLoginId = "user";
 
-    private readonly NetworkUsecase networkUsecase;
-
     private readonly ApiContext apiContext;
+
+    private readonly NetworkUsecase networkUsecase;
 
     [ObservableProperty]
     public partial string LoginId { get; set; } = DummyLoginId;
@@ -29,18 +29,26 @@ public sealed partial class NetworkAuthViewModel : AppViewModelBase
     public IObserveCommand SecureCommand { get; }
     public IObserveCommand InvalidateCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NetworkAuthViewModel(
-        NetworkUsecase networkUsecase,
-        ApiContext apiContext)
+        ApiContext apiContext,
+        NetworkUsecase networkUsecase)
     {
-        this.networkUsecase = networkUsecase;
         this.apiContext = apiContext;
+        this.networkUsecase = networkUsecase;
 
         LoginCommand = MakeAsyncCommand(LoginAsync, () => LoginId.Trim().Length > 0);
         LogoutCommand = MakeDelegateCommand(Logout, () => IsAuthenticated);
         SecureCommand = MakeAsyncCommand(SecureAsync);
         InvalidateCommand = MakeDelegateCommand(Invalidate, () => IsAuthenticated);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatedToAsync(INavigationContext context)
     {

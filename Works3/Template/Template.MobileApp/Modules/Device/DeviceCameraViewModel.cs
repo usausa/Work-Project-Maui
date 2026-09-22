@@ -14,6 +14,10 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
     public IObserveCommand ZoomOutCommand { get; }
     public IObserveCommand ZoomInCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceCameraViewModel(
         IDialog dialog)
     {
@@ -24,6 +28,10 @@ public sealed partial class DeviceCameraViewModel : AppViewModelBase
         ZoomOutCommand = MakeDelegateCommand(Controller.ZoomOut);
         ZoomInCommand = MakeDelegateCommand(Controller.ZoomIn);
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

@@ -36,18 +36,22 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
 
     public ObservableCollection<AiChatMessage> Messages { get; } = [];
 
+    private IChatClient ChatClient { get; }
+
     public IObserveCommand VoiceCommand { get; }
 
     public IObserveCommand SendCommand { get; }
 
     public IObserveCommand CancelCommand { get; }
 
-    private IChatClient ChatClient { get; }
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public SampleChatViewModel(
-        Settings settings,
         ISpeechService speech,
-        IDispatcher dispatcher)
+        IDispatcher dispatcher,
+        Settings settings)
     {
         this.speech = speech;
         this.dispatcher = dispatcher;
@@ -79,6 +83,10 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
         }));
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         if (!context.Attribute.IsRestore())
@@ -101,6 +109,10 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private async Task ToggleVoiceAsync()
     {

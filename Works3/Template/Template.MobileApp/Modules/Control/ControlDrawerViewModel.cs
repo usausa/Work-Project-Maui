@@ -41,6 +41,10 @@ public sealed partial class ControlDrawerViewModel : AppViewModelBase
 
     public IObserveCommand SelectCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public ControlDrawerViewModel()
     {
         OpenCommand = MakeDelegateCommand(Toggle);
@@ -60,6 +64,10 @@ public sealed partial class ControlDrawerViewModel : AppViewModelBase
         }));
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
@@ -69,6 +77,10 @@ public sealed partial class ControlDrawerViewModel : AppViewModelBase
         Toggle();
         return Task.CompletedTask;
     }
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void Toggle()
     {

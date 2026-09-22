@@ -12,6 +12,18 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     private readonly ISpeechService speech;
 
+    [ObservableProperty]
+    public partial double SpeechRate { get; set; } = 1.0;
+
+    [ObservableProperty]
+    public partial string RecognizeText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool IsListening { get; set; }
+
+    [ObservableProperty]
+    public partial string NotificationText { get; set; } = string.Empty;
+
     public IObserveCommand KeepScreenOnCommand { get; }
     public IObserveCommand KeepScreenOffCommand { get; }
 
@@ -31,10 +43,6 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
 
     public IObserveCommand ScreenshotCommand { get; }
 
-    // 読み上げ速度 (SpeechOptions.Rate: 0.1〜2.0)
-    [ObservableProperty]
-    public partial double SpeechRate { get; set; } = 1.0;
-
     public IObserveCommand SpeakCommand { get; }
     public IObserveCommand SpeakCancelCommand { get; }
 
@@ -45,22 +53,17 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
     public IObserveCommand NotifyCancelCommand { get; }
     public IObserveCommand NotifyExactSettingCommand { get; }
 
-    [ObservableProperty]
-    public partial string RecognizeText { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial bool IsListening { get; set; }
-
-    [ObservableProperty]
-    public partial string NotificationText { get; set; } = string.Empty;
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public DeviceMiscViewModel(
         IScreen screen,
-        IStorageManager storage,
         ISpeechService speech,
         IVibration vibration,
         IHapticFeedback feedback,
         IFlashlight flashlight,
+        IStorageManager storage,
         INotificationService notification)
     {
         this.screen = screen;
@@ -157,6 +160,10 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
         Disposables.Add(notification.TappedAsObservable().ObserveOnCurrentContext().Subscribe(x =>
             NotificationText = x.Action is null ? $"タップ: {x.Payload}" : $"ボタン [{x.Action}]: {x.Payload}"));
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatingFromAsync(INavigationContext context)
     {

@@ -56,9 +56,7 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
     public partial string SortText { get; set; } = string.Empty;
 
     public IObserveCommand ToggleSelectCommand { get; }
-
     public IObserveCommand ToggleExpandCommand { get; }
-
     public IObserveCommand ToggleSortPanelCommand { get; }
 
     public IObserveCommand SelectSortKeyCommand { get; }
@@ -70,6 +68,10 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
     public IObserveCommand ToggleExpandAllCommand { get; }
 
     public IObserveCommand ReloadCommand { get; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public UIVisitViewModel(IDialog dialog)
     {
@@ -91,6 +93,10 @@ public sealed partial class UIVisitViewModel : AppViewModelBase
         activeKeys.Add(SortKeys[0]);
         UpdateSortKeys();
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {

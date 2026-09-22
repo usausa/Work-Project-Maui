@@ -3,13 +3,41 @@ namespace Template.MobileApp.Modules.Network;
 using Template.MobileApp.Components;
 using Template.MobileApp.Usecase;
 
+public sealed class StorageEntryItem
+{
+    public string Name { get; }
+
+    public bool IsDirectory { get; }
+
+    public string SizeText { get; }
+
+    public string LastModifiedText { get; }
+
+    public string Icon => IsDirectory ? "📁" : "📄";
+
+    public StorageEntryItem(string name, bool isDirectory, long? size, DateTime lastModified)
+    {
+        Name = name;
+        IsDirectory = isDirectory;
+        SizeText = isDirectory ? string.Empty : FormatSize(size ?? 0);
+        LastModifiedText = lastModified.ToString("yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture);
+    }
+
+    private static string FormatSize(long size) => size switch
+    {
+        < 1024 => $"{size} B",
+        < 1024 * 1024 => $"{size / 1024d:F1} KB",
+        _ => $"{size / (1024d * 1024d):F1} MB"
+    };
+}
+
 public sealed partial class NetworkStorageViewModel : AppViewModelBase
 {
     private readonly IDialog dialog;
 
-    private readonly NetworkUsecase networkUsecase;
-
     private readonly IStorageManager storageManager;
+
+    private readonly NetworkUsecase networkUsecase;
 
     private Action? cancel;
 
@@ -38,18 +66,18 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     public ObservableCollection<string> Logs { get; } = [];
 
     public IObserveCommand ReloadCommand { get; }
-
     public IObserveCommand UpCommand { get; }
 
     public IObserveCommand UploadFileCommand { get; }
-
     public IObserveCommand UploadPhotoCommand { get; }
-
     public IObserveCommand DownloadCommand { get; }
+    public IObserveCommand CancelCommand { get; }
 
     public IObserveCommand DeleteCommand { get; }
 
-    public IObserveCommand CancelCommand { get; }
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public NetworkStorageViewModel(
         IDialog dialog,
@@ -72,6 +100,10 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
         SubscribeSelectedEntry(x => _ = OpenSelectedAsync());
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatedToAsync(INavigationContext context) => ReloadAsync();
 
     public override Task OnNavigatingFromAsync(INavigationContext context)
@@ -79,6 +111,12 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
         cancel?.Invoke();
         return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction2() => (Loading || Transferring) ? Task.CompletedTask : ReloadAsync();
 
     //--------------------------------------------------------------------------------
     // List
@@ -132,7 +170,6 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     // Transfer
     //--------------------------------------------------------------------------------
 
-    // FilePicker で選んだファイルを現在のディレクトリへ
     private async Task UploadFileAsync()
     {
         var file = await FilePicker.Default.PickAsync();
@@ -145,7 +182,6 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
         await UploadAsync(file.FileName, stream);
     }
 
-    // MediaPicker で選んだ写真を現在のディレクトリへ
     private async Task UploadPhotoAsync()
     {
         var files = await MediaPicker.Default.PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 });
@@ -183,9 +219,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
 
         var path = $"{CurrentPath}{entry.Name}";
         var filename = Path.Combine(storageManager.PublicFolder, entry.Name);
-        var result = await TransferAsync(
-            $"ダウンロード開始: {path}",
-            t => networkUsecase.DownloadStorageAsync(path, filename, x => Progress = x / 100, t));
+        var result = await TransferAsync($"ダウンロード開始: {path}", t => networkUsecase.DownloadStorageAsync(path, filename, x => Progress = x / 100, t));
         if (result.IsSuccess)
         {
             AddLog($"保存先: {filename}");
@@ -272,39 +306,4 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
             Logs.RemoveAt(Logs.Count - 1);
         }
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    protected override Task OnNotifyFunction2() => (Loading || Transferring) ? Task.CompletedTask : ReloadAsync();
-}
-
-// 一覧の行
-public sealed class StorageEntryItem
-{
-    public string Name { get; }
-
-    public bool IsDirectory { get; }
-
-    public string SizeText { get; }
-
-    public string LastModifiedText { get; }
-
-    public string Icon => IsDirectory ? "📁" : "📄";
-
-    public StorageEntryItem(string name, bool isDirectory, long? size, DateTime lastModified)
-    {
-        Name = name;
-        IsDirectory = isDirectory;
-        SizeText = isDirectory ? string.Empty : FormatSize(size ?? 0);
-        LastModifiedText = lastModified.ToString("yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture);
-    }
-
-    private static string FormatSize(long size) => size switch
-    {
-        < 1024 => $"{size} B",
-        < 1024 * 1024 => $"{size / 1024d:F1} KB",
-        _ => $"{size / (1024d * 1024d):F1} MB"
-    };
 }

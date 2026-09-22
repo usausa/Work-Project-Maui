@@ -21,11 +21,19 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
 
     public IObserveCommand RowMovedCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIGridColumnViewModel()
     {
         CellValueChangedCommand = MakeDelegateCommand<GridCellValueEventArgs>(_ => UpdateMessage());
         RowMovedCommand = MakeDelegateCommand<GridRowMoveEventArgs>(x => Message = $"{x.OldIndex + 1} 行目を {x.NewIndex + 1} 行目へ移動");
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -45,6 +53,10 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     protected override Task OnNotifyFunction4() => Navigator.PopAsync(Parameters.MakeColumnOrders(session.Export()));
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateMessage() =>
         Message = $"表示 {session.Columns.Count(static x => x.IsVisible)} / {session.Columns.Count} 列。チェックで表示を切り替え、左端をドラッグして順序を変更";

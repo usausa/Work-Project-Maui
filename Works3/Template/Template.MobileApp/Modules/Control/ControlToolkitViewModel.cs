@@ -18,6 +18,10 @@ public sealed partial class ControlToolkitViewModel : AppViewModelBase
 
     public IReadOnlyList<string> Chips { get; } = ["MAUI", "Skia", "Blazor", "gRPC"];
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.ControlMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();

@@ -19,6 +19,10 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsCameraEnabled { get; set; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public DeviceOcrViewModel(
         IDialog dialog,
         IOcrReader ocrReader)
@@ -28,6 +32,10 @@ public sealed partial class DeviceOcrViewModel : AppViewModelBase
 
         RecognizedText = string.Empty;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {

@@ -11,9 +11,9 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     private static readonly TimeSpan EndTime = TimeSpan.FromHours(20);
 
-    private readonly ICalendarService calendarService;
-
     private readonly IDispatcherTimer timer;
+
+    private readonly ICalendarService calendarService;
 
     [ObservableProperty]
     public partial IReadOnlyList<TimetableDay> Days { get; private set; } = [];
@@ -42,6 +42,10 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
     public IObserveCommand EventTappedCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public UIScheduleViewModel(
         IDispatcher dispatcher,
         IDialog dialog,
@@ -59,6 +63,10 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
 
         SubscribeSelectedDay(_ => UpdateEvents());
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
 
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
@@ -84,6 +92,14 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         timer.Stop();
         return Task.CompletedTask;
     }
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+
+    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private void UpdateEvents()
     {
@@ -129,6 +145,10 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         FreeTimeText = TimetableCalculator.FormatDuration(EndTime - StartTime - TimetableCalculator.GetBusyTotal(Events, StartTime, EndTime));
     }
 
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
     private static int StableHash(string value)
     {
         var hash = 0;
@@ -138,8 +158,4 @@ public sealed partial class UIScheduleViewModel : AppViewModelBase
         }
         return hash;
     }
-
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
-
-    protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 }

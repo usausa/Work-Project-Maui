@@ -36,6 +36,10 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
 
     public IObserveCommand CancelCommand { get; }
 
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
     public NetworkScpViewModel(
         Settings settings,
         ScpUsecase scpUsecase)
@@ -48,10 +52,14 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
         CancelCommand = MakeDelegateCommand(() => cancel?.Invoke(), () => Busy);
     }
 
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
     public override Task OnNavigatingToAsync(INavigationContext context)
     {
         Configured = settings.IsScpConfigured();
-        HostDisplay = Configured ? $"{settings.ScpUser}@{settings.ScpHost}:{settings.ScpPort}" : "未設定 (設定画面の QR で投入)";
+        HostDisplay = Configured ? $"{settings.ScpUser}@{settings.ScpHost}:{settings.ScpPort}" : "未設定";
         return Task.CompletedTask;
     }
 
@@ -64,6 +72,10 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.NetworkMenu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
 
     private Task ExecuteUploadAsync() =>
         ExecuteTransferAsync(async token =>
@@ -126,6 +138,10 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
             ServerFingerprint = result.ServerFingerprint;
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
 
     private void AddLog(string message)
     {

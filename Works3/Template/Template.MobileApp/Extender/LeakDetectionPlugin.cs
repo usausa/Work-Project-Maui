@@ -4,6 +4,7 @@ using Smart.Mvvm.Resolver;
 using Smart.Navigation.Plugins;
 
 // DEBUG 限定。閉じたビューと ViewModel が一定時間後に GC で回収されているかを確認し、残っていればリーク疑いとして警告する
+// 既知の誤検知: Entry にスペルチェック対象の単語が入っていた画面は、Android のスペルチェッカーが EditText をしばらく参照するため 5 秒では残る (30 秒程度で回収される)
 public sealed class LeakDetectionPlugin : PluginBase
 {
     private static readonly TimeSpan CheckDelay = TimeSpan.FromSeconds(5);
