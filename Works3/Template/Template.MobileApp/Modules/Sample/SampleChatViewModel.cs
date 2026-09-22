@@ -77,13 +77,6 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
                 IsListening = false;
             }
         }));
-
-        SubscribeInputText(_ => SendCommand.RaiseCanExecuteChanged());
-        SubscribeIsResponding(_ =>
-        {
-            SendCommand.RaiseCanExecuteChanged();
-            CancelCommand.RaiseCanExecuteChanged();
-        });
     }
 
     public override Task OnNavigatingToAsync(INavigationContext context)

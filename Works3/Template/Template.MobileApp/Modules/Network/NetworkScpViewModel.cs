@@ -46,17 +46,6 @@ public sealed partial class NetworkScpViewModel : AppViewModelBase
         UploadCommand = MakeDelegateCommand(() => _ = ExecuteUploadAsync(), () => !Busy && Configured);
         DownloadCommand = MakeDelegateCommand(() => _ = ExecuteDownloadAsync(), () => !Busy && Configured && !String.IsNullOrEmpty(RemoteFileName));
         CancelCommand = MakeDelegateCommand(() => cancel?.Invoke(), () => Busy);
-
-        SubscribeBusy(_ => RaiseCommandStates());
-        SubscribeConfigured(_ => RaiseCommandStates());
-        SubscribeRemoteFileName(_ => RaiseCommandStates());
-    }
-
-    private void RaiseCommandStates()
-    {
-        UploadCommand.RaiseCanExecuteChanged();
-        DownloadCommand.RaiseCanExecuteChanged();
-        CancelCommand.RaiseCanExecuteChanged();
     }
 
     public override Task OnNavigatingToAsync(INavigationContext context)

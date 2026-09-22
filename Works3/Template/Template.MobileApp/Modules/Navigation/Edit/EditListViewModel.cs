@@ -36,7 +36,7 @@ public sealed partial class EditListViewModel : AppViewModelBase
         SelectAllCommand = MakeDelegateCommand(SelectAll);
         BulkDeleteCommand = MakeAsyncCommand(BulkDeleteAsync, () => SelectedItems.Count > 0);
 
-        SelectedItems.CollectionChanged += (_, _) => BulkDeleteCommand.RaiseCanExecuteChanged();
+        Observe(SelectedItems.AsObservable(nameof(SelectedItems.Count)), BulkDeleteCommand);
     }
 
     public override async Task OnNavigatingToAsync(INavigationContext context)

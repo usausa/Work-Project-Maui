@@ -96,12 +96,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     private IObserveCommand CreateFunctionCommand(FunctionState function, ShellEvent shellEvent)
     {
         var command = MakeAsyncCommand(() => Navigator.NotifyAsync(shellEvent), () => function.Enabled.Value);
-
-        // EnabledはVMと別のオブジェクトのため、CanExecuteの再評価を明示的に接続する
-        Disposables.Add(function.Enabled.AsObservable(nameof(NotificationValue<>.Value))
-            .Subscribe(_ => command.RaiseCanExecuteChanged()));
-
-        return command;
+        return Observe(function.Enabled.AsObservable(nameof(NotificationValue<>.Value)), command);
     }
 
     //--------------------------------------------------------------------------------

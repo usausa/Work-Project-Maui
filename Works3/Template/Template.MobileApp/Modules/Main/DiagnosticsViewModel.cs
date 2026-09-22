@@ -166,10 +166,6 @@ public sealed partial class DiagnosticsViewModel : AppViewModelBase
         ShareLogsCommand = MakeAsyncCommand(ShareLogsAsync, () => LogFiles.Count > 0);
         ClearLogsCommand = MakeDelegateCommand(ClearLogs, () => RecentLogs.Count > 0);
         ClearCrashReportCommand = MakeAsyncCommand(ClearCrashReportAsync, () => LastCrashReport is not null);
-
-        SubscribeLogFiles(_ => ShareLogsCommand.RaiseCanExecuteChanged());
-        SubscribeRecentLogs(_ => ClearLogsCommand.RaiseCanExecuteChanged());
-        SubscribeLastCrashReport(_ => ClearCrashReportCommand.RaiseCanExecuteChanged());
     }
 
     public override Task OnNavigatingToAsync(INavigationContext context) => LoadAsync();

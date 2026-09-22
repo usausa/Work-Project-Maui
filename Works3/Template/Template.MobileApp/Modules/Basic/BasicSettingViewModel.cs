@@ -63,9 +63,6 @@ public sealed partial class BasicSettingViewModel : AppViewModelBase
         OpenBackupTimeCommand = MakeDelegateCommand(() => BackupTimeOpen = true);
         ClearBackupTimeCommand = MakeDelegateCommand(() => BackupTime = null, () => BackupTime is not null);
         OpenLanguageCommand = MakeDelegateCommand(() => LanguageOpen = true);
-
-        SubscribeBackupDate(_ => ClearBackupDateCommand.RaiseCanExecuteChanged());
-        SubscribeBackupTime(_ => ClearBackupTimeCommand.RaiseCanExecuteChanged());
     }
 
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.BasicMenu);

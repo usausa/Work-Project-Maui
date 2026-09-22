@@ -71,15 +71,9 @@ public sealed partial class UIGridViewModel : AppViewModelBase
         CommitCommand = MakeAsyncCommand(CommitAsync, () => SelectedCount > 0);
         AdvanceCommand = MakeDelegateCommand(Advance, () => SelectedCount > 0);
 
-        // 選択数と件数の変化でコマンドの可否を更新する
         Disposables.Add(Rows.PropertyChangedAsObservable()
             .Where(x => x.PropertyName is nameof(Rows.SelectedCount) or nameof(Rows.Count))
-            .Subscribe(_ =>
-            {
-                SelectedCount = Rows.SelectedCount;
-                CommitCommand.RaiseCanExecuteChanged();
-                AdvanceCommand.RaiseCanExecuteChanged();
-            }));
+            .Subscribe(_ => SelectedCount = Rows.SelectedCount));
         Disposables.Add(Rows);
     }
 
