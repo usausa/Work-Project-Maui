@@ -7,7 +7,7 @@
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み) | 1-2 |
+| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み) | 1-2-1〜1-4 |
 | Device | Background task(WorkManager) | 2-1 |
 | Network | Offline sync(未送信キュー・差分同期・競合解決) | 2-2 |
 | Device | Push(FCM) | 3-2 |
@@ -34,11 +34,13 @@
 
 ## 📈1. OpenTelemetry(クラッシュレポート / テレメトリ)
 
-検討資料は `Document/Telemetry_Study.md`(現状 / 候補 A・B・C / 比較 / アプリ側の組み込み設計 / 論点)。候補 B(OTLP)の実証サンプルは `Works3/OtelSample`(同フォルダの README に完結)。
+端末のログ・トレース・メトリクスを OTLP/gRPC(4317)で template-maui-server へ送り、サーバーで保存・表示する。方式・決定事項・送る内容・構成・各段階の変更ファイルと確認は `Document/Telemetry_Plan.md`(検討資料は `Telemetry_Study.md`)。1-1(サーバーの受信口)は完了(`Change_Summary.md` の区間 17)。
 
-### 🧩1-2 本アプリへの組み込み
-
-- [ ] **1-2-0**⚖️【判断】方式と範囲 — `Telemetry_Study.md` 6 節の論点(方式 A / B / C または組み合わせ、収集する項目と粒度、端末の識別と個人情報、サーバーの配置と運用、ライブラリの形、本テンプレートでの見せ方)。組み込み点は同 5 節(`ITelemetry` の抽象化と Null 実装、`Settings` の接続先(`OtelEndPoint` は投入済み)、`CrashReport` / ナビゲーション / `DeviceState` / `NetworkOperator` / `DiagnosticPanel` からの収集、バックグラウンド移行でのフラッシュ)
+- [ ] **1-2-1** 端末: 収集の移設(`Diagnostics` 名前空間。パネルは今の場所のまま表示だけにする)
+- [ ] **1-2-2** 端末: 起動・停止と再起動の制御
+- [ ] **1-2-3** 端末: OTEL の送信
+- [ ] **1-3** サーバー: 保存
+- [ ] **1-4** サーバー: 一覧と詳細の画面
 
 ## ⏰2. バックグラウンドタスク(WorkManager / オフライン同期)
 

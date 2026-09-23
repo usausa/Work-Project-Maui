@@ -1974,7 +1974,33 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 # 🚧17. Fix8 以降(次のタグまでの変更)
 
-まだ無い。
+## 🧱B. 画面以外の変更
+
+### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
+
+`Telemetry_Plan.md` の 1-1。template-maui-server に OTLP/gRPC の受信口を追加した(受信内容はログに出すだけ)。本リポジトリのコードの変更は無い。パスは `template-maui-server/src/Template.MobileServer.Web/` からの相対。
+
+| 対象 | 内容 |
+|---|---|
+| `Telemetry/Protos/opentelemetry/proto/**`(新規) | opentelemetry-proto v1.11.0 の common / resource / logs / trace / metrics と collector の 3 サービス。生成型の名前空間は上流の `OpenTelemetry.Proto.*` |
+| `Template.MobileServer.Web.csproj` | `<Protobuf Include="Telemetry\Protos\**\*.proto" ProtoRoot="Telemetry\Protos" GrpcServices="None" />` と、collector の proto だけ `Update` で `GrpcServices="Server"` |
+| `Telemetry/OtlpTraceHandler.cs` / `OtlpMetricsHandler.cs` / `OtlpLogsHandler.cs`(新規) | `Export` を受け、リソースごとにサービス名・端末(`device.id`、無ければ `app.installation.id`)・件数(スパン / 計器と点 / ログレコード)を Information、リソースの属性と 1 件ごとの内容を Debug で出し、空の応答を返す |
+| `Telemetry/OtlpHelper.cs`(新規) | リソースの属性の取り出し、ID の 16 進、時刻と期間、計器の点の数と temporality、属性と点の整形 |
+| `Telemetry/TelemetryReceiverOption.cs` / `Log.cs`(新規)、`appsettings.json` | 受信上限 `TelemetryReceiver:MaxReceiveMessageSize`(既定 16 MiB、1〜16 MiB)、LoggerMessage |
+| `Application/ApplicationExtensions.cs` | 3 サービスの受信上限(`AddServiceOptions`)、`MapGrpcService<Otlp*Handler>().RequirePort(4317)`、ASP.NET Core のトレースから `/opentelemetry.proto.collector.` を除外、オプションの登録 |
+| `Components/Pages/QrPage.razor.cs` | QR の `OtelEndPoint` を同じホストの `Kestrel:Endpoints:Otel:Url` のポート(4317)に |
+| テスト | `Telemetry/OtlpHandlerTests.cs`(3 件)/ `OtlpHelperTests.cs`(8 件)を追加、`QrPageTests` の構成に Kestrel の gRPC / OTEL の URL を入れ、期待値をポート付きに(計 39 件) |
+| `README.md` | 機能一覧・構成・API 一覧・ポート構成・「テレメトリの受信(OTLP/gRPC)」・QR の形式(`ClientSettingKeys` の場所も直した) |
+
+- サーバー: ビルド 0 エラー 0 警告(Debug / Release)、テスト 39 件成功、inspectcode 0 件
+- 実機(Pixel 9a、`adb reverse tcp:4317`): OtelSample のクライアントを gRPC の `http://localhost:4317/` に向け、メトリクス(5 秒ごと、26 計器 44 点)、ログ(Info / Warning / Error。Error は `exception.*` の属性)、トレース(`Work` → `Compute` / `GET`。同じトレース ID で、`Work failed` のログにも同じトレース ID とスパン ID)がサーバーのログに出ることを確認。9090 への OTLP の呼び出しは `Unimplemented`、4317 へのサーバー情報の呼び出しは 404
+
+## 💡C. この区間のナレッジ
+
+- **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
+- **.NET 10 のアナライザー CA1873**: ログのメソッド(`LoggerMessage` 生成を含む)の引数でメソッドを呼ぶと、ログが無効でも評価されるとして警告になる。`logger.IsEnabled(level)` の中で呼ぶ
+- **gRPC の単項の呼び出しは Kestrel の `MaxRequestBodySize`(既定 30 MB)も受ける**(grpc-dotnet が上限を外すのはクライアントストリーミング / 双方向だけ)。`MaxReceiveMessageSize` を上げるときはこれより小さくする
+- `AddServiceOptions<TService>` はグローバルの設定(受信上限・圧縮など)を写してからサービスごとの設定を適用する。インターセプターは写さないので、グローバルのインターセプターが二重に付くことはない
 
 ---
 

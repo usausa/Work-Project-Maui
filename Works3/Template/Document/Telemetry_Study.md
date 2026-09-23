@@ -1,5 +1,7 @@
 # 📈クラッシュレポート / テレメトリ基盤 検討資料
 
+採用した方式(候補 B)の実装計画は `Telemetry_Plan.md`。
+
 MAUI アプリ(本テンプレート)からクラッシュレポート・ログ・メトリクスをサーバーへ送る基盤を検討するための初期資料。検討の候補は「DeviceManager 型のサーバー + 端末向けライブラリ」「OpenTelemetry(OTLP)で汎用の収集基盤へ送る」「外部サービス」。本書は現状・候補・論点をまとめたもので、方式の決定と設計は別途行なう。
 
 ## 🧭1. 現状
@@ -20,7 +22,7 @@ MAUI アプリ(本テンプレート)からクラッシュレポート・ログ�
 
 | 資産 | 内容 | 位置 |
 | --- | --- | --- |
-| template-maui-server | 本テンプレートの対向サーバー。Serilog(ファイル)、OpenTelemetry(OTLP エクスポーター / Prometheus)、ヘルスチェック、SignalR ハブ(端末の状態と通知)。テレメトリの受信機能は無い | `D:\GitHubTemplate\template-maui-server` |
+| template-maui-server | 本テンプレートの対向サーバー。Serilog(ファイル)、OpenTelemetry(OTLP エクスポーター / Prometheus)、ヘルスチェック、SignalR ハブ(端末の状態と通知)。テレメトリは OTLP/gRPC の受信口(4317)で受け、受信内容をログに出す(保存と画面は `Telemetry_Plan.md` の 1-3 / 1-4) | `D:\GitHubTemplate\template-maui-server` |
 | DeviceManager | MAUI 端末の管理サーバー(Blazor Server + Minimal API + SignalR + gRPC)。メトリクス(ダッシュボード)/ ログ / エラーレポート / ストレージ / メッセージ / モック Function / 設定配信。端末向け SDK(`DeviceManager.Client`)と WPF テストクライアント付き | `D:\GitHubTemplate\DeviceManager`(`README.md`、`docs/features.md`、`docs/sdk.md`) |
 
 DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
@@ -40,7 +42,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 | 送信の制御 | バッチ化とフラッシュ間隔、バックグラウンド移行時のフラッシュ、通信量と電池への影響、Wi-Fi 限定などの条件 |
 | 識別と属性 | 端末 ID(`Settings.UniqueId`)、アプリのバージョン、OS、機種、ユーザー(ログイン ID)、環境(dev / prod)。個人情報の扱いと同意 |
 | 認証と接続先 | API キー / JWT、TLS、接続先の配布(設定 QR)。テレメトリ用の接続先は API と分けられるようにする |
-| アプリ側の組み込み口 | `Extender/` のプラグイン(画面遷移の計測)、`ILoggerProvider`(ログ転送)、`CrashReport`(クラッシュ送信)、`DeviceState`(端末状態)、`NetworkOperator`(通信結果) |
+| アプリ側の組み込み口 | `Extender/` のプラグイン(画面遷移の計測)、`ILoggerProvider`(ログ転送)、`CrashReport`(クラッシュ送信)、`DeviceState`(端末状態)、`NetworkUsecase`(通信結果) |
 | 抽象化 | アプリは送信先に依存しない薄い抽象(例: `ITelemetry`)に依存し、DeviceManager / OTLP / 外部サービス / 無効(Null)を DI で差し替える |
 | サーバーの運用 | 自前(DeviceManager 型)か既製の収集基盤(OTel Collector + Grafana 等)か外部サービスか。保持期間、ダッシュボード、アラート |
 | ビルド | トリミング / AOT との相性(リフレクションを使うライブラリ)、Debug と Release で送信先や有効無効を切り替える |
@@ -88,10 +90,12 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 
 - `ITelemetry`(例: `TrackEvent` / `TrackMetric` / `ReportCrash` / `Flush`)を `Components` または `Services` に置き、実装(DeviceManager / OTLP / Null)を `MauiProgram.cs` で切り替える。ログは `ILoggerProvider` として差し込む
 - 接続先とキーは `Settings`(QR キー: 例 `TelemetryEndPoint` / `TelemetryKey`)。未設定なら Null 実装で動く
-- 収集点: `CrashReport`(保存済みレポートの送信)、`Extender/` のナビゲーションプラグイン(画面遷移)、`DeviceState`(電池 / ネットワーク)、`NetworkOperator`(通信の成否・所要時間・ステータス)、`DiagnosticPanel` の数値(メモリ)
+- 収集点: `CrashReport`(保存済みレポートの送信)、`Extender/` のナビゲーションプラグイン(画面遷移)、`DeviceState`(電池 / ネットワーク)、`NetworkUsecase`(通信の成否・所要時間・ステータス)、`DiagnosticPanel` の数値(メモリ)
 - 送信の制御: バックグラウンド移行(`Window.Stopped`)でフラッシュ、Wi-Fi 限定などの条件は `DeviceState.NetworkProfile` で判定
 
-## ❓6. 検討の論点(次の作業で決めること)
+## ❓6. 検討の論点
+
+方式は B(OTLP/gRPC で template-maui-server へ送る)。1〜6 の決定は `Telemetry_Plan.md` の「決定事項」「送る内容」「構成」。
 
 1. 方式: A / B / C のどれか、または A のサーバーに OTLP の受け口を足す・B の永続キューを自前で足すといった組み合わせ
 2. 収集する項目と粒度(クラッシュのみから始めるか、ログ / メトリクスまで含めるか)
