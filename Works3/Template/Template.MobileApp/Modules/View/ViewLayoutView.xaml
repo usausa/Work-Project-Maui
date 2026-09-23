@@ -21,17 +21,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
             <Style x:Key="DockPane"
                    TargetType="Border">
                 <Setter Property="StrokeThickness" Value="0" />
@@ -45,6 +34,12 @@
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="DockFillLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource DockPaneLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
             <Style x:Key="UniformCell"
@@ -165,12 +160,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="NoteLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -182,7 +171,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="子要素を上下左右へドッキングし、最後の要素が残りを埋める" />
                     <mct:DockLayout HeightRequest="240"
                                     HorizontalSpacing="4"
@@ -218,8 +207,7 @@
                         </Border>
                         <Border Style="{StaticResource DockPane}"
                                 BackgroundColor="{StaticResource GrayLighten2}">
-                            <Label Style="{StaticResource DockPaneLabel}"
-                                   TextColor="{StaticResource GrayDarken3}"
+                            <Label Style="{StaticResource DockFillLabel}"
                                    Text="Fill (コンテンツ)" />
                         </Border>
                     </mct:DockLayout>
@@ -231,7 +219,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="全セルが同じサイズになる (MaxColumns=4)" />
                     <mct:UniformItemsLayout MaxColumns="4">
                         <Border Style="{StaticResource UniformCell}">
@@ -267,7 +255,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
                     <Grid HeightRequest="240">
                         <controls:CircularLayout>
@@ -299,7 +287,7 @@
                                VerticalOptions="Center"
                                Text="WEEK" />
                     </Grid>
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="StartAngle / SweepAngle で円弧配置 (半円: 180°→360°)。FitToArc で弧の外接矩形にサイズを詰める" />
                     <controls:CircularLayout Radius="88"
                                              StartAngle="180"
@@ -330,7 +318,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="左: RotateItems で子を接線方向へ回転した扇。右: 添付 Orbit で中心 (0) と 2 つのリング (1 / 2) へ振り分け" />
                     <Grid ColumnDefinitions="*,*">
                         <controls:CircularLayout Grid.Column="0"
@@ -382,7 +370,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="列を交互に半セルずらして上から埋める (Columns=3、Spacing=6)。7 個で中央 1 + 周囲 6 の花形。タップで選択 (枠 + バッジ)" />
                     <controls:HoneycombLayout Columns="3"
                                               Spacing="6"
@@ -437,7 +425,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="400">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
                     <controls:StaggeredGrid Columns="3"
                                            Spacing="6">
@@ -474,7 +462,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="480">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="ColumnSpan / RowSpan で占有セル数を指定し、空きセルは先頭から埋め戻す (Columns=3、RowHeight=56)" />
                     <controls:VariableSizeWrapPanel Columns="3"
                                                     RowHeight="56"
@@ -509,7 +497,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="560">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="子を OffsetX / OffsetY でずらして重ねる (左)。ReverseZIndex=True で先頭が最前面になる (右=重ねアバターの土台)" />
                     <Grid ColumnDefinitions="*,*">
                         <controls:OverlapPanel Grid.Column="0"
@@ -546,7 +534,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="640">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />
                     <controls:CascadeStackLayout HorizontalOptions="Start">
                         <Border Style="{StaticResource DockPane}" BackgroundColor="{StaticResource BlueDefault}" WidthRequest="200" HeightRequest="72">

@@ -20,20 +20,25 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
+            <Style x:Key="CountdownButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="84" />
+                <Setter Property="HeightRequest" Value="84" />
+                <Setter Property="CornerRadius" Value="42" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
             </Style>
 
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="CardContentStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="10" />
+            <Style x:Key="CountdownDoneLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="CanvasBorder"
@@ -49,31 +54,6 @@
             <Style x:Key="CountChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
-
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
-                <Setter Property="RowSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="NoteLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
         </ResourceDictionary>
@@ -96,29 +76,29 @@
                                          Icon="{x:Static fonts:MaterialIcons.Palette}"
                                          Text="{Binding ShapeCount, StringFormat='{0} shapes'}" />
 
-                    <Grid Style="{StaticResource ActionRowGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*"
                           RowDefinitions="Auto,Auto">
                         <Button Grid.Row="0" Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding AddLineCommand}"
                                 Text="Add line" />
                         <Button Grid.Row="0" Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding AddCircleCommand}"
                                 Text="Add circle" />
                         <Button Grid.Row="1" Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding AddRectCommand}"
                                 Text="Add rect" />
                         <Button Grid.Row="1" Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}"
                                 Command="{Binding ClearCommand}"
                                 Text="Clear" />
                     </Grid>
 
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Shapes are added to a DrawingControl and redrawn with Invalidate()" />
 
                 </VerticalStackLayout>
@@ -139,18 +119,18 @@
                                          Icon="{x:Static fonts:MaterialIcons.Gesture}"
                                          Text="{Binding SketchCount, StringFormat='{0} strokes'}" />
 
-                    <Grid Style="{StaticResource ActionRowGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding UndoSketchCommand}"
                                 Text="Undo" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ClearSketchCommand}"
                                 Text="Clear" />
                         <Button Grid.Column="2"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ExportSketchCommand}"
                                 Text="PNG出力" />
                     </Grid>
@@ -163,7 +143,7 @@
                                behaviors:AnimationOption.FadeInTrigger="{Binding ExportedImage}" />
                     </Border>
 
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="指でなぞって描く (IInteractiveDrawing)。PNG 出力は表示と同じ OnDraw を BitmapExportContext へ流して生成し、下の Image に表示する" />
 
                 </VerticalStackLayout>
@@ -180,7 +160,7 @@
                         <drawing:DrawingControl Drawing="{Binding Pulse}" />
                     </Border>
 
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="アイコン周囲に波紋リングを広げる演出。単発アニメーションを完了時に再開始してループさせている" />
 
                 </VerticalStackLayout>
@@ -198,15 +178,7 @@
                                                 HorizontalOptions="Center"
                                                 VerticalOptions="Center"
                                                 Drawing="{Binding Countdown}" />
-                        <Button WidthRequest="84"
-                                HeightRequest="84"
-                                CornerRadius="42"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                FontSize="18"
-                                BackgroundColor="{StaticResource BlueDefault}"
-                                TextColor="White"
-                                behaviors:ButtonOption.PressEffect="True"
+                        <Button Style="{StaticResource CountdownButton}"
                                 Command="{Binding StartCountdownCommand}"
                                 Text="GO">
                             <Button.Triggers>
@@ -220,15 +192,12 @@
                         </Button>
                     </Grid>
 
-                    <Label FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource GreenDefault}"
-                           HorizontalTextAlignment="Center"
+                    <Label Style="{StaticResource CountdownDoneLabel}"
                            IsVisible="{Binding CountdownDone}"
                            Text="DONE!"
                            behaviors:AnimationOption.BounceTrigger="{Binding CountdownDone}" />
 
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="ボタン背面のリングが 5 秒で減り、完走時のみ DONE が出る (画面離脱で中断=通知なし)" />
 
                 </VerticalStackLayout>

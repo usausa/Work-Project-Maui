@@ -16,6 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ListNoteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
             <s:BoolToTextConverter x:Key="BoolToExpandImageConverter"
                                    TrueValue="{x:Static font:MaterialIcons.Expand_less}"
                                    FalseValue="{x:Static font:MaterialIcons.Expand_more}" />
@@ -200,10 +207,7 @@
             </DataTemplate>
         </CollectionView.ItemTemplate>
         <CollectionView.Footer>
-            <Label Padding="16,12"
-                   FontSize="12"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{StaticResource SecondaryTextColor}"
+            <Label Style="{StaticResource ListNoteLabel}"
                    Text="{Binding List.Count, StringFormat='{0} グループ読み込み済み (最下部で追加読み込み)'}" />
         </CollectionView.Footer>
     </CollectionView>

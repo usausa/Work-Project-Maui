@@ -16,7 +16,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid" TargetType="Grid">
+            <Style x:Key="TimelineGrid" TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="RowSpacing" Value="12" />
@@ -67,7 +67,7 @@
                 <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
-            <Style x:Key="TimeLabel" TargetType="Label">
+            <Style x:Key="EventTimeLabel" TargetType="Label">
                 <Setter Property="WidthRequest" Value="50" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -181,7 +181,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource TimelineGrid}"
           RowDefinitions="Auto,*">
 
         <!-- Header -->
@@ -213,7 +213,7 @@
 
                         <!-- Time -->
                         <Label Grid.Column="0"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource EventTimeLabel}"
                                Text="{Binding Time}" />
 
                         <!-- Dot + line (done: check / current: halo / upcoming: hollow) -->

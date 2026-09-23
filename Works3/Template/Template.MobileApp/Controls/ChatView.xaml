@@ -12,6 +12,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ChatRootGrid"
+                   TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
             <Style x:Key="MessageCardBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12,6" />
@@ -197,8 +202,8 @@
     <!-- ReSharper restore Xaml.RedundantResource -->
 
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-    <Grid RowDefinitions="*,Auto"
-          BackgroundColor="{StaticResource GrayLighten4}">
+    <Grid Style="{StaticResource ChatRootGrid}"
+          RowDefinitions="*,Auto">
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
@@ -210,7 +215,8 @@
               ColumnDefinitions="*,Auto,Auto">
             <Border Grid.Column="0"
                     Style="{StaticResource InputBorder}">
-                <Entry Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}"
+                <Entry Style="{StaticResource BasicFieldEntry}"
+                       Text="{Binding Source={x:Reference Root}, Path=InputText, Mode=TwoWay, x:DataType={x:Type controls:ChatView}}"
                        Placeholder="メッセージを入力">
                     <Entry.Triggers>
                         <DataTrigger TargetType="Entry"

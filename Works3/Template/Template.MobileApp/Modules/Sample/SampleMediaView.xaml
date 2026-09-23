@@ -39,7 +39,7 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
-            <Style x:Key="TimeLabel"
+            <Style x:Key="ControlBarTimeLabel"
                    TargetType="Label">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="12" />
@@ -63,8 +63,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
-          BackgroundColor="Black">
+    <Grid Style="{StaticResource MediaRootGrid}">
 
         <toolkit:MediaElement x:Name="Player"
                               behaviors:MediaBind.Controller="{Binding Controller}"
@@ -106,7 +105,7 @@
                 </ImageButton>
 
                 <Label Grid.Column="1"
-                       Style="{StaticResource TimeLabel}"
+                       Style="{StaticResource ControlBarTimeLabel}"
                        Text="{Binding Source={x:Reference Player}, Path=Position, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
 
                 <Slider Grid.Column="2"
@@ -116,7 +115,7 @@
                         Maximum="{Binding Source={x:Reference Player}, Path=Duration, Converter={StaticResource DurationToSecondsConverter}, x:DataType={x:Type toolkit:MediaElement}}" />
 
                 <Label Grid.Column="3"
-                       Style="{StaticResource TimeLabel}"
+                       Style="{StaticResource ControlBarTimeLabel}"
                        Text="{Binding Source={x:Reference Player}, Path=Duration, StringFormat='{0:mm\\:ss}', x:DataType={x:Type toolkit:MediaElement}}" />
             </Grid>
             <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->

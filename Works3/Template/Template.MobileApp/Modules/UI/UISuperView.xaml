@@ -86,7 +86,7 @@
                 <Setter Property="TextColor" Value="#CCFFFFFF" />
             </Style>
 
-            <Style x:Key="SectionLabel"
+            <Style x:Key="SuperSectionLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="20,20,20,8" />
                 <Setter Property="FontSize" Value="14" />
@@ -217,7 +217,7 @@
                            IndicatorSize="8" />
 
             <!-- ミニアプリ -->
-            <Label Style="{StaticResource SectionLabel}"
+            <Label Style="{StaticResource SuperSectionLabel}"
                    Text="サービス" />
             <FlexLayout Margin="8,0"
                         Wrap="Wrap"
@@ -240,7 +240,7 @@
             </FlexLayout>
 
             <!-- クーポン -->
-            <Label Style="{StaticResource SectionLabel}"
+            <Label Style="{StaticResource SuperSectionLabel}"
                    Text="クーポン・キャンペーン" />
             <CollectionView Margin="16,0,0,0"
                             HeightRequest="128"

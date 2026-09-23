@@ -15,7 +15,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid" TargetType="Grid">
+            <Style x:Key="OnboardGrid" TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Padding" Value="0,32,0,16" />
             </Style>
@@ -63,7 +63,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource OnboardGrid}"
           RowDefinitions="*,Auto,Auto">
 
         <CarouselView x:Name="OnboardCarousel"

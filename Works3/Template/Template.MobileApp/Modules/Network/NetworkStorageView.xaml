@@ -7,50 +7,68 @@
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
-             x:Class="Template.MobileApp.Modules.Network.NetworkHttpView"
-             x:DataType="{x:Type module:NetworkHttpViewModel}"
-             s:BindingContextResolver.Type="{x:Type module:NetworkHttpViewModel}"
-             shell:ShellProperty.Title="HTTP (Data)"
+             x:Class="Template.MobileApp.Modules.Network.NetworkStorageView"
+             x:DataType="{x:Type module:NetworkStorageViewModel}"
+             s:BindingContextResolver.Type="{x:Type module:NetworkStorageViewModel}"
+             shell:ShellProperty.Title="Storage"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Text="Reload"
              shell:ShellProperty.Function2Enabled="True">
 
-    <!-- Web API。Data の CRUD (匿名)、一覧の追加読み込み、Work テーブルへの保存、テスト API (エラーの再試行 / 遅延 / キャンセル) -->
+    <!-- サーバーのストレージ (簡易 FTP API)。一覧 / アップロード (ファイル・写真) / ダウンロード / 削除 -->
 
     <!-- ReSharper disable Xaml.RedundantResource -->
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="PathLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="LineBreakMode" Value="MiddleTruncation" />
+            </Style>
+
             <Style x:Key="ListCollection"
                    TargetType="CollectionView">
-                <Setter Property="HeightRequest" Value="240" />
+                <Setter Property="HeightRequest" Value="280" />
                 <Setter Property="SelectionMode" Value="Single" />
             </Style>
 
             <Style x:Key="ListRowGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="48" />
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="RowIdLabel"
+            <Style x:Key="RowIconLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
+                <Setter Property="FontSize" Value="18" />
                 <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="WidthRequest" Value="48" />
             </Style>
 
             <Style x:Key="RowNameLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="RowInfoLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="TransferProgressBar"
+                   TargetType="ProgressBar">
+                <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
         </ResourceDictionary>
@@ -60,25 +78,32 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Data"
-                               Icon="{x:Static fonts:MaterialIcons.Table_rows}"
+            <controls:InfoCard Title="ファイル"
+                               Icon="{x:Static fonts:MaterialIcons.Folder}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
                 <VerticalStackLayout Spacing="8">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding Total, StringFormat='全 {0} 件 (20 件ずつ追加読み込み)。行を選ぶと詳細を取得'}" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource PathLabel}"
+                               Text="{Binding PathDisplay}" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding UpCommand}"
+                                Text="上へ" />
+                    </Grid>
                     <Label Style="{StaticResource BasicCaptionLabel}"
                            IsVisible="{Binding IsEmpty}"
-                           Text="データなし (作成で追加)" />
+                           Text="空のディレクトリ" />
                     <CollectionView Style="{StaticResource ListCollection}"
-                                    ItemsSource="{Binding Items}"
-                                    SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                                    RemainingItemsThreshold="5"
-                                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                                    ItemsSource="{Binding Entries}"
+                                    SelectedItem="{Binding SelectedEntry, Mode=TwoWay}">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type module:DataListItem}">
+                            <DataTemplate x:DataType="{x:Type module:StorageEntryItem}">
                                 <Grid x:Name="RowGrid"
                                       Style="{StaticResource ListRowGrid}"
-                                      ColumnDefinitions="Auto,*">
+                                      RowDefinitions="*,*"
+                                      ColumnDefinitions="Auto,*,Auto">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroupList>
                                             <VisualStateGroup x:Name="CommonStates">
@@ -91,86 +116,65 @@
                                             </VisualStateGroup>
                                         </VisualStateGroupList>
                                     </VisualStateManager.VisualStateGroups>
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource RowIdLabel}"
-                                           Text="{Binding Id}" />
-                                    <Label Grid.Column="1"
+                                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                           Style="{StaticResource RowIconLabel}"
+                                           Text="{Binding Icon}" />
+                                    <Label Grid.Row="0" Grid.Column="1"
                                            Style="{StaticResource RowNameLabel}"
                                            Text="{Binding Name}" />
-                                    <BoxView Grid.Column="0" Grid.ColumnSpan="2"
+                                    <Label Grid.Row="1" Grid.Column="1"
+                                           Style="{StaticResource RowInfoLabel}"
+                                           Text="{Binding LastModifiedText}" />
+                                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                                           Style="{StaticResource RowInfoLabel}"
+                                           VerticalOptions="Center"
+                                           Text="{Binding SizeText}" />
+                                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                                              Style="{StaticResource CardRowDivider}" />
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="2*,*">
-                        <Entry Grid.Column="0"
-                               Style="{StaticResource BasicEntry}"
-                               Placeholder="名前"
-                               Text="{Binding Name}" />
-                        <Entry Grid.Column="1"
-                               Style="{StaticResource BasicEntry}"
-                               Placeholder="数値"
-                               Keyboard="Numeric"
-                               Text="{Binding Value}" />
-                    </Grid>
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*,*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding CreateCommand}"
-                                Text="作成" />
-                        <Button Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding UpdateCommand}"
-                                Text="更新" />
-                        <Button Grid.Column="2"
-                                Style="{StaticResource BasicOutlinedCancelButton}"
-                                Command="{Binding DeleteCommand}"
-                                Text="削除" />
-                        <Button Grid.Column="3"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding ClearCommand}"
-                                Text="クリア" />
-                    </Grid>
-                    <Button Style="{StaticResource BasicOutlinedButton}"
-                            Command="{Binding SaveToWorkCommand}"
-                            Text="全件を Work テーブルへ保存 (Navigation > Edit で表示)" />
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="ディレクトリの行を選ぶと下の階層へ。ファイルの行を選ぶとダウンロード / 削除の対象" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="テスト API"
-                               Icon="{x:Static fonts:MaterialIcons.Bug_report}"
+            <controls:InfoCard Title="転送"
+                               Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80">
-                <VerticalStackLayout Spacing="8">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="エラーは再試行の確認 (3 回目は通知のみ)、遅延はインジケーター付き。10 秒待つ API は途中でキャンセルできる" />
+                <VerticalStackLayout Spacing="10">
+                    <ProgressBar Style="{StaticResource TransferProgressBar}"
+                                 Progress="{Binding Progress}" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*">
+                          ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding TestErrorCommand}"
-                                Text="エラー (500)" />
+                                Command="{Binding UploadFileCommand}"
+                                Text="ファイル" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding TestDelayCommand}"
-                                Text="遅延 (5 秒)" />
-                    </Grid>
-                    <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*">
-                        <Button Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
-                                Command="{Binding DelayCommand}"
-                                Text="10 秒待つ API" />
-                        <Button Grid.Column="1"
+                                Command="{Binding UploadPhotoCommand}"
+                                Text="写真" />
+                        <Button Grid.Column="2"
                                 Style="{StaticResource BasicOutlinedCancelButton}"
                                 Command="{Binding CancelCommand}"
                                 Text="キャンセル" />
                     </Grid>
-                    <ActivityIndicator IsRunning="{Binding Delaying}"
-                                       IsVisible="{Binding Delaying}" />
+                    <Grid Style="{StaticResource BasicButtonGrid}"
+                          ColumnDefinitions="*,*">
+                        <Button Grid.Column="0"
+                                Style="{StaticResource BasicOutlinedButton}"
+                                Command="{Binding DownloadCommand}"
+                                Text="ダウンロード" />
+                        <Button Grid.Column="1"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
+                                Command="{Binding DeleteCommand}"
+                                Text="削除" />
+                    </Grid>
+                    <Label Style="{StaticResource BasicCaptionLabel}"
+                           Text="アップロードは現在のディレクトリへ (ファイル名のまま)。ダウンロードは公開フォルダへ保存" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -188,7 +192,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="まだ呼び出していません" />
+                               Text="まだ操作していません" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

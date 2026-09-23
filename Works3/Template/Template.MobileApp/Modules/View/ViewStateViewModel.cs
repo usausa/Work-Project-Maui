@@ -2,9 +2,8 @@ namespace Template.MobileApp.Modules.View;
 
 public sealed partial class ViewStateViewModel : AppViewModelBase
 {
-    // StateContainer の状態キー (空文字は既定コンテンツ = Success 表示)
     [ObservableProperty]
-    public partial string CurrentState { get; set; } = string.Empty;
+    public partial string? CurrentState { get; set; }
 
     [ObservableProperty]
     public partial bool PanelRequested { get; set; }

@@ -7,7 +7,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="HeaderGrid"
+            <Style x:Key="InfoCardHeaderGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
@@ -25,7 +25,7 @@
                 <Grid RowDefinitions="Auto,1,Auto">
 
                     <Grid Grid.Row="0"
-                          Style="{StaticResource HeaderGrid}"
+                          Style="{StaticResource InfoCardHeaderGrid}"
                           Padding="12,10"
                           ColumnDefinitions="Auto,*">
                         <Label Grid.Column="0"

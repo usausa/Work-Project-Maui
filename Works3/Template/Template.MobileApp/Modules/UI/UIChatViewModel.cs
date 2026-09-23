@@ -138,7 +138,8 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         AddReceive(yesterday.AddHours(14), "悪いスライム", AvatarCarol, "定例始めます。");
         AddSend(yesterday.AddHours(14).AddMinutes(1), "入ります。", isRead: true);
         AddReceive(yesterday.AddHours(16), "M･I･O", AvatarAlice, "資料 PDF 共有しますね。");
-        AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true, reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]); AddReceive(yesterday.AddHours(18).AddMinutes(30), "†聖天使†", AvatarDave, "お疲れさまでした！");
+        AddSend(yesterday.AddHours(16).AddMinutes(5), "確認しました！", isRead: true, reactions: [new MessageReaction { Emoji = "🙏", Count = 1 }]);
+        AddReceive(yesterday.AddHours(18).AddMinutes(30), "†聖天使†", AvatarDave, "お疲れさまでした！");
 
         AddSystem(today);
 

@@ -31,12 +31,6 @@
             <s:BoolToColorConverter x:Key="SecondaryTextColorConverter"
                                     TrueValue="{StaticResource BlueLighten5}"
                                     FalseValue="{StaticResource GrayDarken1}" />
-            <s:BoolToTextConverter x:Key="ExpandGlyphConverter"
-                                   TrueValue="{x:Static font:MaterialIcons.Expand_less}"
-                                   FalseValue="{x:Static font:MaterialIcons.Expand_more}" />
-            <s:BoolToTextConverter x:Key="ExpandAllGlyphConverter"
-                                   TrueValue="{x:Static font:MaterialIcons.Unfold_less}"
-                                   FalseValue="{x:Static font:MaterialIcons.Unfold_more}" />
             <s:BoolToTextConverter x:Key="DirectionGlyphConverter"
                                    TrueValue="{x:Static font:MaterialIcons.Arrow_downward}"
                                    FalseValue="{x:Static font:MaterialIcons.Arrow_upward}" />
@@ -362,7 +356,7 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="NameLabel"
+            <Style x:Key="CardNameLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -596,7 +590,7 @@
                                     <Label Style="{StaticResource CodeLabel}"
                                            TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}"
                                            Text="{Binding Code}" />
-                                    <Label Style="{StaticResource NameLabel}"
+                                    <Label Style="{StaticResource CardNameLabel}"
                                            TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
                                            Text="{Binding Name}" />
                                 </HorizontalStackLayout>

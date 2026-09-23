@@ -17,7 +17,7 @@
         <ResourceDictionary>
 
             <!-- Backdrop -->
-            <Style x:Key="RootGrid"
+            <Style x:Key="ItemDetailGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
@@ -252,7 +252,7 @@
     </ContentView.Resources>
 
     <!-- Rows 0-1: product backdrop / rows 1-2: bottom sheet. The shared 40px row makes the sheet overlap the backdrop -->
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource ItemDetailGrid}"
           RowDefinitions="*,40,Auto">
 
         <Grid Grid.Row="0" Grid.RowSpan="2">

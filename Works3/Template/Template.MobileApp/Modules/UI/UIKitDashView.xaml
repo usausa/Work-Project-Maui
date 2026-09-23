@@ -18,7 +18,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll" TargetType="ScrollView">
+            <Style x:Key="KitDashScroll" TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
 
@@ -217,7 +217,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource KitDashScroll}">
         <VerticalStackLayout>
             <Grid Style="{StaticResource KitDashHeaderGrid}"
                   ColumnDefinitions="*,Auto,Auto">

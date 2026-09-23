@@ -45,9 +45,10 @@
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
             </Style>
 
-            <Style x:Key="RootGrid"
+            <Style x:Key="CalendarGrid"
                    TargetType="Grid">
                 <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
             <Style x:Key="ModeBarGrid"
@@ -59,9 +60,8 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource RootGrid}"
-          RowDefinitions="*,Auto,Auto"
-          BackgroundColor="White">
+    <Grid Style="{StaticResource CalendarGrid}"
+          RowDefinitions="*,Auto,Auto">
 
         <!-- ClamCalendar: 表示範囲が変わるたびに DisplayDateChangedCommand で範囲のイベント・スタンプ・祝日を渡す -->
         <clam:ClamCalendarView Grid.Row="0"

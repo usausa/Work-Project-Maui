@@ -18,7 +18,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
+            <Style x:Key="StreamDetailScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
@@ -295,7 +295,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource StreamDetailScroll}">
         <VerticalStackLayout>
 
             <Grid Style="{StaticResource PlayerGrid}">

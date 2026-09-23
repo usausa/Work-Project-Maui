@@ -1700,8 +1700,94 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - 実機(Pixel 9a): メニュー 7 項目、Server time = 成功ダイアログ。HTTP (Auth) = 未ログインの Secure → 401 の再試行確認、ログイン → 期限表示、無効化 → 期限 `-`、Secure → 再ログインして「Hello user」(期限が更新)、ログアウト → 未ログイン。HTTP (Data) = エラー 500 の再試行確認 2 回 → 通知、遅延 5 秒 完了、全件を Work テーブルへ保存(47 件)
 - ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
 
+### 🎨サンプル画面のスタイル統一(`Basic*` 共有スタイル)(2026-09-22)
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | ページ枠の `RootGrid` / `RootScroll`(GrayLighten5 の背景。Margin / Padding / Spacing は既定値でも明示して 0)を `Layout` 区画の末尾に追加。末尾に `Basic` 区画(InfoCard で組むサンプル画面の部品。画面側はこれを選ぶだけにして、差分は要素の属性で上書きする)を追加。Page: `BasicPageStack`、Card: `BasicCardStack` / `BasicCardContentStack` / `BasicCardDivider` / `BasicCenterCardBorder` / `BasicEmptyStack` / `BasicIconCircleBorder` / `BasicIconCircleLabel`、Field: `BasicFieldGroupStack` / `BasicTextGroupStack` / `BasicFieldBorder` / `BasicFieldEntry`、Action: `BasicActionStack` / `BasicButtonGrid`、Row: `BasicRowGrid` / `BasicRowStack` / `BasicInfoGrid`、Text: `BasicCaptionLabel`(12)/ `BasicFieldCaptionLabel`(14)/ `BasicBodyLabel` / `BasicRowLabel` / `BasicAccentLabel` / `BasicMonoLabel` / `BasicLogLabel` / `BasicSubtitleLabel`(16 Bold)/ `BasicCenterTitleLabel` / `BasicCenterHintLabel`(18)、Button: `BasicOutlinedButton`(Disabled の VisualState 付き)/ `BasicOutlinedCancelButton` / `BasicIconOutlinedButton` / `BasicFilledButton` / `BasicFilledSecondaryButton`(44 / 角丸 8 / 14 / PressEffect)。`Input*Button` にも PressEffect を追加 |
+| `Resources/Styles/Styles.xaml`(コンバーター) | 画面ごとに定義していた標準コンバーターを共有に: `EmptyConverter` / `AllConverter` / `AnyConverter` / `ToUpperConverter` / `ToLowerConverter`(Basic 区画)、`BadgeCountConverter` / `ExpandGlyphConverter` / `ExpandAllGlyphConverter`(Application 区画)。UIChat の `NullToBoolConverter` / `NullToReverseBoolConverter` は共有の `NotEmptyConverter` / `EmptyConverter` に |
+| `Modules/Basic`(Behavior / Converter / Dialog / Font / Locale / Setting / Style / Validation)、`Data`、`Control`(BottomSheet / Custom / Toolkit / Drawer / SfChart)、`Device`(Info / Location / Misc / Audio / BleHost / Bluetooth / Biometric / BleScan / Nfc / QrDisplay / Ocr / WiFi / Communication)、`Navigation`(Wizard 1 / 2 / Result、Edit List / Detail、Shared Input / Main 1 / 2、Stack 1〜3、Cancel / Initialize、Effect Demo / Dialog、Input Number)、`Main`(Diagnostics / Setting)、`Network`(Auth / Http / Storage / Realtime / Grpc / Scp)、`View`(Animation / DragDrop / Drawing / Graphics / Lottie / Svg / Easing / Effect)、`UI`(Chat / Visit / Money) | ローカルの `PageStack` / `CaptionLabel` / `FieldCaptionLabel` / `FieldBorder` / `ActionStack` / `ActionRowGrid` / `ButtonGrid` / `InfoRowGrid` / `CardDivider` / `CenterCardBorder` / `IconCircle*` / `Empty*` / `LogLabel` / `TimeLabel` / `NoteLabel` / `HintLabel` などを削除して `Basic*` に置換。共有スタイルを `BasedOn` したローカルスタイル(`ItemNameLabel` / `SectionHeaderLabel` / `Pad*Button` / `PrintButton` / `OpenButton` / `DrawerFooterLabel` / `SparkCaptionLabel` / `TaskLabel` / `ColumnHeaderLabel` など)は共有スタイル + 要素の属性に。色違い(Stack 2 / 3、Effect、Cancel、NFC、Not implemented の灰色など)は `BackgroundColor` / `TextColor` の属性で指定 |
+| 名称変更 | 画面固有で残す `RootGrid` は意味のある名前に: Network gRPC `PageGrid`、QR Display `QrLayoutGrid`、Effect Dialog `OverlayGrid`、Easing `EasingBoardGrid`。HTTP / Storage の行の `RowGrid` は `ListRowGrid`。カメラ画面(OCR / Setting)は `RootGrid` + `BackgroundColor="Black"` |
+| `Modules/UI`(Calendar / Cart / GridColumn / Grid / Item / KitDash / KitNotify / KitOnboard / KitSetting / KitTracking / Login / Profile / Shop / StreamDetail / Stream / Super / Timeline / Visit)、`App`(Calc)、`Sample`(Crop / Media) | 共有キーと同名 / 汎用名のローカルスタイルを画面固有の名前に: `RootGrid` / `RootScroll` / `RootStack` / `RootList` → `CartGrid` / `KitDashScroll` / `ProfileStack` / `NotifyList` など、`SectionLabel` → `KitSettingSectionLabel` / `StreamSectionLabel` / `SuperSectionLabel`、`TimeLabel` → `NotifyTimeLabel` / `EventTimeLabel` / `ControlBarTimeLabel`、`MessageLabel` → `GridMessageLabel` / `ColumnMessageLabel` / `WelcomeLabel`(+ `WelcomeSubLabel`)、`CaptionLabel` → `ColumnCaptionLabel`、`RowGrid` → `KitSettingRowGrid`、UIVisit `NameLabel` → `CardNameLabel`、AppCalc `ResultLabel` → `CalcResultLabel`。共有を `BasedOn` していた UIGrid の `ActionButton` / `SubActionButton`(定義が同じ)は `BasicFilledButton` / `BasicFilledSecondaryButton`、UIStream の `TopIconButton` は `HeaderIconButton` + 属性、SampleCrop の `ResultLabel`(定義が同じ)は `BasicFieldCaptionLabel` |
+| サイズの微調整 | Converter のチェック項目 16 → 14(`BasicRowLabel`)、Setting の節見出し 15 → 16(`BasicSubtitleLabel`)、Effect Demo / Dialog のボタン 48 → 44 角丸 8 と項目表を `BasicInfoGrid`(2*,3* 列)に、Locale の resx / 書式の表も `BasicInfoGrid`(行間 2 → 8)、NFC の案内 14 → 18(`BasicCenterHintLabel`)、QR Display の入力見出し 18 Bold → 14(`BasicFieldCaptionLabel`)、BLE Host の UserId は等幅 18 |
+
+- 残すローカルスタイル: 色付き / Grid / List 系と画面固有の部品(Locale の `ResourceTagLabel` / `CurrentChip*`、Setting の `RowButton`、Style の `SegmentRowGrid`、Validation の `Invalid/ValidEntry`、Data の `CountValueLabel`、Shared Main の `NumberCircleLabel` / `NoValueLabel`、WiFi の `InfoLabel`、Media の `TimeLabel` など)。UI 1 / UI 2 / App / Sample は固有デザインのため名前の整理だけ(上記の 3 件以外は Basic* を使わない)
+- 実機(Pixel 9a): Basic 8 画面、Data、Control 5 画面、Device 12 画面、Navigation 15 画面、Diagnostics / Setting、Network 6 画面、View 7 画面、UI(Grid / Stream / Visit / Login / Timeline)/ Sample Crop を目視確認(表示崩れなし)。Biometric はメニューが無効のため未確認
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### ⌨️枠付き入力欄の下線を消す(2026-09-22)
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | 入力欄のスタイルを枠の有無で分けた。`BasicEntry`(下線のまま。`Border` で囲まない画面用)と、`BasicFieldEntry`(`BasedOn` = `BasicEntry` + `behaviors:EntryOption.NoBorder`。`BasicFieldBorder` の中に置く用)。同じ理由で `BasicFieldPicker`(14 + `NoBorder`)を追加 |
+| `Modules/Basic`(Behavior 4 / Setting 1 / Validation 6)、`Device/DeviceQrDisplayView`、`Navigation`(EditDetail / SharedInput / WizardInput1 / WizardInput2)、`View/ViewEffectView` 2、`Controls/ChatView` | 枠の中のスタイル無しだった `Entry` 19 箇所に `BasicFieldEntry` を適用 |
+| `Modules/Network`(Auth / Grpc / Http 2 / Scp) | 枠で囲んでいない 5 箇所は `BasicEntry` に(下線が入力欄の目印なのでそのまま) |
+| `Modules/UI/UIChatView`(`MessageInputEditor`)/ `UIShopView`(`SearchEntry`) | 画面固有スタイルに `NoBorder` の Setter を追加(`ButtonOption.PressEffect` と同じ扱い)|
+| `Controls/ChatView`(入力 `Entry`)/ `Modules/UI/UIShopView`(`SearchEntry`) | フォーカス表示が無かったので `Focus.FocusedStroke`(`BlueDefault`)+ `FocusedThickness`(2)を追加。ChatView は要素属性、`SearchEntry` は Setter。枠線 0 の角丸でもフォーカス時だけ青い枠が出る(`FocusBorderBehavior` が通常時の枠を初回フォーカス時に取り込む)|
+| `Modules/Basic/BasicSettingView`(言語 Picker)/ `Behaviors/EntryOption.android.cs` | 枠の中の `Picker` に `BasicFieldPicker` を適用。`NoBorder` は `Entry` / `Editor` だけだったので `PickerHandler` にも登録(`BehaviorOptions.NoBorder` の判定は共通) |
+
+- 枠なしの `SearchBar`(Basic Setting)、`DatePicker` / `TimePicker`(同)、`Picker`(View Border / Shadow)は下線のまま
+- 下線が写っていた `Document/UI_Chat.png` / `UI_Shop.png` / `Sample_Chat.png` を撮り直し(他の画像は値が同じスタイルへの置換のみで見た目が変わらないためそのまま)
+- 実機(Pixel 9a): Basic Validation / Setting(Entry・Picker)、QR Display、Network HTTP(下線あり)、Sample Chat、UI Chat、UI Shop を確認。フォーカス時は親 `Border` の枠色が変わる(`Focus.FocusedStroke`)
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 🏷️見た目の属性をスタイルへ(セマンティックなスタイル分け)(2026-09-22)
+
+要素に `HorizontalTextAlignment` / `VerticalTextAlignment` / `MinimumHeightRequest` / `LineHeight` / `FontAttributes` / `FontFamily` / `Padding` / `Margin` などを個別に書かず、役割ごとのスタイルで表す。役割として共通化できないものはその画面固有の要素とみなし、画面ローカルのスタイルにする。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml`(既存スタイルへの追加) | `BasicFieldEntry` / `BasicFieldPicker` に `Focus.FocusedStroke`(Blue)+ `FocusedThickness`(2.5)、`BasicBodyLabel` に `LineHeight` 1.4、`BasicRowGrid` に `MinimumHeightRequest` 44 |
+| `Resources/Styles/Styles.xaml`(新しい役割) | `BasicItemNameLabel` / `BasicItemValueLabel`(カード内の項目行。縦中央)、`BasicStrongValueLabel`(強調値。Bold)、`BasicRowAccentLabel` / `BasicRowValueLabel`(行の値。縦中央 / 右寄せ)、`BasicCenterCaptionLabel` / `BasicHeaderCaptionLabel`(中央 / 見出し)、`BasicCenterFieldCaptionLabel`(中央の項目名)、`BasicRowDivider`(行の区切り線)、`BasicEmptyIconBorder` / `BasicEmptyIconLabel`(空状態の灰色アイコン)、`InputIconButton`(テンキーのアイコンボタン) |
+| 画面ローカルのスタイル(画面固有) | Basic Behavior / View Effect `GreenFocusEntry`、Basic Setting `StepperValueLabel`、Control BottomSheet `SheetCloseButton`、Control Collection `ListNoteLabel`、Control Drawer `DrawerFooterLabel`、Control Toolkit `ExpanderHeaderLabel` / `ExpanderContentLabel` / `AccordionHeaderLabel` / `AccordionContentLabel`、Data `CountUnitLabel`、Device Audio `VolumeValueLabel`、BLE Host `UserIdValueLabel`、Bluetooth `PrintButton`、Misc `SpeechRateLabel`、QR Display `QrCardBorder` / `QrEmptyStack`、Sensor `UnitLabel`、WiFi `PermissionHintLabel` / `ConnectionDivider` / `DetailDivider`、Diagnostics `PathLabel` / `EmptyNoteLabel` / `ActionRowGrid` / `SectionNameLabel`、Setting `PanelDivider`、Effect Dialog `DialogCardBorder`、Navigate Initialize `SkeletonStack`、Network gRPC `ChatEmptyLabel`、View DragDrop `TaskLabel`、View Drawing `PreviewEmptyStack` / `PreviewEmptyIconLabel` / `PreviewEmptyHintLabel` |
+
+- 要素の属性に残すのは、内容(`Text` / `ImageSource` / `Command` / バインド)、グリッド位置(`Grid.Row` / `Grid.Column` と各 Definitions)、画面のアクセント色(`TextColor` / `BackgroundColor`)
+- 見た目そのものがサンプルの内容である画面(Basic Font のフォント一覧、View Layout / Effect のデモなど)は対象外
+- 実機(Pixel 9a): Basic Setting / Validation / Locale / Behavior、Control Toolkit(Expander / Accordion)/ SfChart / BottomSheet / Drawer、Device Misc / Audio / BLE Host / WiFi / QR Display、Navigation Effect / Initialize、View DragDrop / Drawing、Network gRPC、Data、Setting、Diagnostics を確認
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 🎨色の属性をスタイルへ(2026-09-23)
+
+要素に書いていた `TextColor` / `BackgroundColor` を、セマンティックな共有スタイルか画面ローカルのスタイルへ移した。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | `MediaRootGrid`(Layout 区画。`RootGrid` + Black = カメラ・映像の画面)、`BasicPrimaryValueLabel`(`ValueLabel` + PrimaryTextColor = 主要な値)、`BasicWarningIconBorder` / `Label`(Amber = 確認・注意)、`BasicSuccessIconBorder` / `Label`(Green = 完了)。状態アイコン円は 空(`BasicEmptyIcon*`)/ 注意 / 完了 の 3 種類 |
+| 共有スタイルの適用 | Locale / Wizard Result / Device Misc の値 → `BasicPrimaryValueLabel`、Navigate Cancel / Effect Dialog → `BasicWarningIcon*`、Navigate Initialize → `BasicSuccessIcon*`、Device OCR / Setting / Sample Media → `MediaRootGrid`、Device Sensor の説明文 → `BasicFieldCaptionLabel` |
+| 画面ローカルのスタイル | Stack 2 / 3 `LevelIconBorder` / `LevelIconLabel` / `LevelStepIndicator`(Stack 1 は `StepIndicator` の既定色なので指定を削除)、Effect Demo `EffectRootGrid` / `EffectIcon*`、Shared Main 1 / 2 `NumberCircleBorder`、NFC `NfcIcon*` / `NfcTitleLabel` / `NfcHintLabel`、QR Display `QrPlaceholderIconLabel` / `QrPlaceholderHintLabel`、QR Scan `ScanPlaceholderLabel`、Sensor `AxisX/Y/Z/WBadgeBorder` / `AxisX/Y/Z/WBar`(軸の色。`ProgressColor` も)、Locale `CurrentValueLabel`、Control Custom `MarqueeTextLabel` / `NoticeMarqueeBorder` / `NoticeMarqueeLabel`、View State `Empty` / `Error` / `SuccessStateIconLabel`、View State Panel `ReadyPanelBorder` / `ReadyContentStack` / `ReadyIconLabel` / `ReadyTextStack`、View Graphics `CountdownButton` / `CountdownDoneLabel`、View Easing `PlayIconLabel`(背景色は `EasingBoardGrid` へ)、View Layout `DockFillLabel`、Basic Font `MaterialIconSampleLabel` / `FluentIconSampleLabel`、Controls/ChatView `ChatRootGrid`、App Calc `CalcRootGrid`、App Game(`CellLabel` へ移動)、UI Calendar(`CalendarGrid` へ移動)、UI Chat `ChatPageGrid`、UI Profile `ProfileBodyStack`、UI Stream `TopIconButton` |
+| `Modules/View/ViewEffectView.xaml` | 直書きだった見た目(色・`FontSize`・`Padding`・`Margin`・`StrokeShape` など)をすべて画面ローカルのスタイルへ(`EffectPageScroll` / `EffectPageStack` / `EffectValueLabel` / `RippleButtonBorder` / `WaveDot` / `PulseDot` / `DarkPreviewBorder` / `TouchCardBorder` / `TintSampleImage` など) |
+
+- 要素の属性に残る色は、データ連動(バインド / コンバーター。Diagnostics の設定状態、UI Visit の選択状態など 30 箇所)と、デモの内容である View Layout の領域の色分け、Control Toolkit の AvatarView の人ごとの色だけ
+- 実機(Pixel 9a): Navigation(Stack 1〜3 / Shared Main 1 / Cancel / Initialize / Effect Demo / Dialog)、Device(NFC / QR Display / QR Scan / Sensor / OCR / Misc)、Basic(Locale / Font)、Control Custom、Setting、View(State / Graphics / Easing / Layout / Effect)、Sample(Chat / Media)、App(Calculator / Sudoku)、UI(Calendar / Chat / Profile / Stream)を確認。見た目の変化なし
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 🐞View State の既定コンテンツが表示されない不具合の修正(2026-09-23)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/View/ViewStateViewModel.cs` | `CurrentState` の初期値を `string.Empty` から `null`(`string?`)に。CommunityToolkit.Maui 15.0.1 の `StateContainer.CurrentState` は既定値が `null` で、値が変わると空文字なら `SwitchToContent()`(子を消して「元のコンテンツ」を戻す)を呼ぶが、「元のコンテンツ」は状態ビューへ切り替えるとき(`SwitchToState`)に初めて保存される。初期値が空文字だと初回のバインド(`null` → `""`)で空の一覧が戻されて既定コンテンツが消え、以降の Success でも戻らなかった |
+
+- 実機(Pixel 9a): 初期表示で既定コンテンツ(読み込み完了)、Loading / Empty / Error → Success のいずれでも既定コンテンツに戻る
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 🗂️共通部品の区画分け(`Basic` / `Card`)(2026-09-23)
+
+`Styles.xaml` の `Basic` 区画を、カードの外でも使う共通部品(`Basic`)とカードの中で使う部品(`Card`)に分けた。使っている場所(InfoCard / 中央カードの中か外か)で分類し、派生スタイルは基底と同じ区画に置く。
+
+| 区画 | スタイル |
+|---|---|
+| `Layout`(ページ枠) | `BasicPageStack` → `PageStack`(`Margin` 0 を明示) |
+| `Basic`(カードの外でも使う) | Icon: `BasicEmptyStack` / `BasicIconCircleBorder` / `Label` / `BasicEmpty` / `Warning` / `SuccessIcon*`、Field: `BasicTextGroupStack` / `BasicEntry` / `BasicFieldEntry`、Action: `BasicButtonGrid`、Text: `BasicCaptionLabel` / `BasicCenterCaptionLabel` / `BasicHeaderCaptionLabel` / `BasicFieldCaptionLabel` / `BasicCenterFieldCaptionLabel` / `BasicBodyLabel` / `BasicItemNameLabel` / `BasicItemValueLabel` / `BasicMonoLabel` / `BasicSubtitleLabel` / `BasicCenterTitleLabel` / `BasicCenterHintLabel`、Button: `BasicOutlinedButton` / `BasicOutlinedCancelButton` / `BasicIconOutlinedButton` / `BasicFilledButton` / `BasicFilledSecondaryButton` |
+| `Card`(カードの中で使う) | Frame: `CardCenterBorder`(旧 `BasicCenterCardBorder`)/ `CardStack` / `CardContentStack` / `CardDivider` / `CardRowDivider`、Field: `CardFieldGroupStack` / `CardFieldBorder` / `CardFieldPicker`、Action: `CardActionStack`、Row: `CardRowGrid` / `CardRowStack` / `CardInfoGrid`、Text: `CardRowLabel` / `CardAccentLabel` / `CardRowAccentLabel` / `CardRowValueLabel` / `CardPrimaryValueLabel` / `CardStrongValueLabel` / `CardLogLabel`(いずれも旧 `Basic*`) |
+| 画面側 | 53 ファイルの参照を改名。カードの外で使っている区切り線(Setting `PanelDivider`、WiFi `ConnectionDivider` / `DetailDivider`)は `CardDivider` を `BasedOn` せず単独のローカルスタイルに。`Controls/InfoCard.xaml` のローカル `HeaderGrid`(共有の `HeaderGrid` と同名)は `InfoCardHeaderGrid` に |
+
+- 実機(Pixel 9a): Basic Setting / Validation / Locale、Control Toolkit、Device Info / WiFi、Navigation Stack / Wizard、Network HTTP、View DragDrop、Data、Setting を確認(表示の変化なし)
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
+- **CommunityToolkit.Maui の `StateContainer` は `CurrentState` の初期値を `null` にする**: 空文字で始めると初回のバインドで `SwitchToContent()` が走り、まだ保存されていない「元のコンテンツ」(空)で子が置き換わって既定コンテンツが消える
+- **ローカルの `ResourceDictionary` で `BasedOn` / `StaticResource` が後ろに定義されたキーを参照すると、ReSharper が `Xaml.StaticResourceNotResolved` を出す**(Pixel 9a では表示は崩れなかったが、定義順に依存する)。画面ローカルで派生スタイルを作るときは基底スタイルの直後に置く
 - **Android の `HttpClient`(`AndroidMessageHandler`)のストリーミング応答を中断するとき**: `await foreach` を UI スレッドで回すと列挙の破棄(ストリームの Close)がメインスレッドで実行され `NetworkOnMainThreadException`(未観測のタスク例外としてクラッシュレポートに残る)。接続待ちの間に中断すると `OperationCanceledException` ではなく `WebException`(Socket closed)。OllamaSharp は中断で例外を出さず列挙が終わることもある。読み取りは `Task.Run` + `ConfigureAwait(false)` で行ない UI 更新だけ `MainThread.BeginInvokeOnMainThread`、中断後の例外は `IsCancellationRequested` で中断扱いにする
 - **Debug ビルドの APK は Fast Deployment のためアセンブリを含まない**(`adb install` しても古いコードのまま動く)。CLI からの配置は `dotnet build -t:Install -p:AdbTarget="-s <シリアル>"`。VS が `obj/Debug` をロックしているときは `-p:IntermediateOutputPath=obj\cli\net10.0-android\ -p:OutDir=bin\cli\net10.0-android\` で別ディレクトリにビルドできる(`Restart Manager` API でロック元を特定した)
 - **`dotnet run` の Android 実機指定は `--device <シリアル>`**(.NET 10 SDK)。`-p:AdbTarget=-d` は効かず、端末が複数(実機 + エミュレーター)あると候補一覧を出して止まる。起動後は logcat を流し続ける
@@ -1779,8 +1865,8 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 ## 📏付録A. 開発ポリシー(恒常・実装時は常に遵守)
 
-- 共有 `Styles.xaml` は変更しない(**BasedOn 派生 or 新規リソース辞書**で対応)
-- **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は BasedOn 派生。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
+- 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `MediaRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
+- **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は共有スタイル + 要素の属性。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
 - フォントサイズは許可値のみ: `6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72, 96, 160`

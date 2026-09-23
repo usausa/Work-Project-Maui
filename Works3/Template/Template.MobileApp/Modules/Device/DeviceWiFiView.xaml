@@ -23,6 +23,27 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="PermissionHintLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken1}" />
+                <Setter Property="LineBreakMode" Value="WordWrap" />
+            </Style>
+
+            <Style x:Key="ConnectionDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="Margin" Value="-12,8,-12,-10" />
+            </Style>
+
+            <Style x:Key="DetailDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="Margin" Value="-8,0,0,0" />
+            </Style>
+
             <converters:WiFiSignalIconConverter x:Key="SignalIconConverter"
                                                 Off="{x:Static fonts:MaterialIcons.Signal_wifi_off}"
                                                 Level0="{x:Static fonts:MaterialIcons.Signal_wifi_0_bar}"
@@ -53,16 +74,6 @@
                     <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa3}" Value="🔒 WPA3" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
-            <s:BoolToTextConverter x:Key="ExpandGlyphConverter"
-                                   TrueValue="{x:Static fonts:MaterialIcons.Expand_less}"
-                                   FalseValue="{x:Static fonts:MaterialIcons.Expand_more}" />
-
-            <Style x:Key="RootGrid"
-                   TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-                <Setter Property="RowSpacing" Value="0" />
-            </Style>
-
             <!-- 接続中 (上部のブロック。角丸にせず区切り線で仕切る) -->
             <Style x:Key="ConnectionBorder"
                    TargetType="Border">
@@ -78,12 +89,6 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
                     </DataTrigger>
                 </Style.Triggers>
-            </Style>
-
-            <Style x:Key="RowSeparator"
-                   TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
             <!-- 信号レベルの色は SignalColorConverter (未接続は既定の灰色) -->
@@ -178,13 +183,6 @@
                    BasedOn="{StaticResource InfoLabel}">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
                 <Setter Property="FontSize" Value="12" />
-            </Style>
-
-            <Style x:Key="HintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource RedDarken1}" />
-                <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
             <Style x:Key="ExpandButton"
@@ -414,7 +412,7 @@
                                    Text="{Binding Connection.Dns, StringFormat='🔎 {0}'}" />
                         </FlexLayout>
                         <!-- ReSharper restore Xaml.PossibleNullReferenceException -->
-                        <Label Style="{StaticResource HintLabel}"
+                        <Label Style="{StaticResource PermissionHintLabel}"
                                IsVisible="{Binding HasPermission, Converter={StaticResource ReverseConverter}}"
                                Text="位置情報 / 付近の Wi-Fi 機器の権限が無いため SSID とスキャン結果は取得できません" />
                     </VerticalStackLayout>
@@ -424,8 +422,7 @@
                         Command="{Binding ToggleDetailCommand}"
                         Text="{Binding IsDetailOpen, Converter={StaticResource ExpandGlyphConverter}}" />
                 <BoxView Grid.Row="1" Grid.ColumnSpan="3"
-                         Margin="-12,8,-12,-10"
-                         Style="{StaticResource RowSeparator}" />
+                         Style="{StaticResource ConnectionDivider}" />
             </Grid>
         </Border>
 
@@ -542,8 +539,7 @@
                                     CommandParameter="{Binding .}"
                                     Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
                             <BoxView Grid.Row="1" Grid.ColumnSpan="3"
-                                     Margin="-8,0,0,0"
-                                     Style="{StaticResource RowSeparator}" />
+                                     Style="{StaticResource DetailDivider}" />
                         </Grid>
                     </Border>
                 </DataTemplate>

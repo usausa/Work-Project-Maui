@@ -24,10 +24,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <s:NullToBoolConverter x:Key="EmptyConverter"
-                                   HandleEmptyString="True"
-                                   NullValue="True"
-                                   NonNullValue="False" />
+            <Style x:Key="ScanPlaceholderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource ResultLabel}">
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
@@ -54,8 +55,7 @@
             <Label Style="{StaticResource ResultLabel}"
                    IsVisible="{Binding Barcode, Converter={StaticResource NotEmptyConverter}}"
                    Text="{Binding Barcode}" />
-            <Label Style="{StaticResource ResultLabel}"
-                   TextColor="{StaticResource GrayLighten1}"
+            <Label Style="{StaticResource ScanPlaceholderLabel}"
                    IsVisible="{Binding Barcode, Converter={StaticResource EmptyConverter}}"
                    Text="Scan a code..." />
         </Grid>

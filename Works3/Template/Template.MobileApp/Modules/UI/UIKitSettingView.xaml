@@ -16,11 +16,11 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll" TargetType="ScrollView">
+            <Style x:Key="KitSettingScroll" TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten5}" />
             </Style>
 
-            <Style x:Key="SectionLabel" TargetType="Label">
+            <Style x:Key="KitSettingSectionLabel" TargetType="Label">
                 <Setter Property="Margin" Value="16,16,16,4" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -34,7 +34,7 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="RowGrid" TargetType="Grid">
+            <Style x:Key="KitSettingRowGrid" TargetType="Grid">
                 <Setter Property="Padding" Value="14,12" />
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
@@ -62,10 +62,10 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource KitSettingScroll}">
         <VerticalStackLayout>
 
-            <Label Style="{StaticResource SectionLabel}" Text="アカウント"
+            <Label Style="{StaticResource KitSettingSectionLabel}" Text="アカウント"
                    behaviors:AnimationOption.EnterAnimation="FadeUp" />
             <Border Style="{StaticResource GroupBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
@@ -73,7 +73,7 @@
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding AccountItems}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="module:UIKitSettingItem">
-                            <Grid Style="{StaticResource RowGrid}"
+                            <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
                                 <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
                                 <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />
@@ -84,7 +84,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Label Style="{StaticResource SectionLabel}" Text="環境設定"
+            <Label Style="{StaticResource KitSettingSectionLabel}" Text="環境設定"
                    behaviors:AnimationOption.EnterAnimation="FadeUp"
                    behaviors:AnimationOption.EnterDelay="160" />
             <Border Style="{StaticResource GroupBorder}"
@@ -93,7 +93,7 @@
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreferenceItems}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="module:UIKitSettingItem">
-                            <Grid Style="{StaticResource RowGrid}"
+                            <Grid Style="{StaticResource KitSettingRowGrid}"
                                   ColumnDefinitions="Auto,*,Auto">
                                 <Label Grid.Column="0" Style="{StaticResource RowIcon}" Text="{Binding Icon}" />
                                 <Label Grid.Column="1" Style="{StaticResource RowTitle}" Text="{Binding Title}" />

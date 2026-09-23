@@ -16,49 +16,19 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="{Binding Name, Converter={StaticResource NotEmptyConverter}}">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
-
-            <s:NullToBoolConverter x:Key="EmptyConverter"
-                                   HandleEmptyString="True"
-                                   NullValue="True"
-                                   NonNullValue="False" />
-
-            <Style x:Key="FieldCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
-            <Style x:Key="FieldBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Work item"
                                Icon="{x:Static fonts:MaterialIcons.Edit}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource FieldCaptionLabel}"
+                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Name (required)" />
-                    <Border Style="{StaticResource FieldBorder}">
-                        <Entry Placeholder="Name"
-                               Text="{Binding Name}"
-                               behaviors:Focus.FocusedStroke="{StaticResource BlueDefault}"
-                               behaviors:Focus.FocusedThickness="2.5" />
+                    <Border Style="{StaticResource CardFieldBorder}">
+                        <Entry Style="{StaticResource BasicFieldEntry}"
+                               Placeholder="Name"
+                               Text="{Binding Name}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
                            IsVisible="{Binding Name, Converter={StaticResource EmptyConverter}}"

@@ -24,13 +24,32 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="SectionNameLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource NameLabel}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
+            <Style x:Key="PathLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicCaptionLabel}">
+                <Setter Property="LineBreakMode" Value="CharacterWrap" />
+            </Style>
+
+            <Style x:Key="EmptyNoteLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicFieldCaptionLabel}">
+                <Setter Property="Margin" Value="0,4" />
+            </Style>
+
+            <Style x:Key="ActionRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource BasicButtonGrid}">
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
-
-            <s:NullToBoolConverter x:Key="EmptyConverter"
-                                   HandleEmptyString="True"
-                                   NullValue="True"
-                                   NonNullValue="False" />
 
             <!-- 設定済み / ログイン済み -->
             <s:BoolToTextConverter x:Key="ConfiguredTextConverter"
@@ -48,62 +67,7 @@
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
-            <Style x:Key="InfoRowGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="Padding" Value="0,4" />
-            </Style>
-
-            <Style x:Key="PathLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="LineBreakMode" Value="CharacterWrap" />
-            </Style>
-
-            <Style x:Key="StateLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="FontAttributes" Value="Bold" />
-            </Style>
-
-            <Style x:Key="ActionRowGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="0,8,0,0" />
-                <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
             <!-- 無効時は文字と枠を薄くする -->
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="ContentLayout" Value="Left,8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-                <Setter Property="VisualStateManager.VisualStateGroups">
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                                    <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Disabled">
-                                <VisualState.Setters>
-                                    <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-                                    <Setter Property="BorderColor" Value="{StaticResource GrayLighten3}" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </Setter>
-            </Style>
-
             <Style x:Key="EntryStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="4" />
@@ -145,13 +109,6 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
             </Style>
 
-            <Style x:Key="EmptyLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource ValueLabel}">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="Margin" Value="0,4" />
-            </Style>
-
             <Style x:Key="ReportLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -164,15 +121,14 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <!-- Runtime -->
             <controls:InfoCard Title="Runtime"
                                Icon="{x:Static fonts:MaterialIcons.Memory}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -222,7 +178,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Apps}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="60">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -275,7 +231,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Rocket_launch}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="120">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -304,49 +260,49 @@
                                Icon="{x:Static fonts:MaterialIcons.Lan}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="180">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="API" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding ApiConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding ApiConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="1" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="gRPC" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding GrpcConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding GrpcConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="2" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="OTEL" />
                     <Label Grid.Row="2" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding OtelConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding OtelConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="3" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="AI Service" />
                     <Label Grid.Row="3" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding AIServiceConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="4" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Ollama" />
                     <Label Grid.Row="4" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding OllamaConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding OllamaConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="5" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="SCP" />
                     <Label Grid.Row="5" Grid.Column="1"
-                           Style="{StaticResource StateLabel}"
+                           Style="{StaticResource CardStrongValueLabel}"
                            Text="{Binding ScpConfigured, Converter={StaticResource ConfiguredTextConverter}}"
                            TextColor="{Binding ScpConfigured, Converter={StaticResource ConfiguredColorConverter}}" />
                     <Label Grid.Row="6" Grid.Column="0"
@@ -392,7 +348,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Storage}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -442,7 +398,7 @@
                 <VerticalStackLayout Style="{StaticResource EntryStack}">
                     <Label Style="{StaticResource NameLabel}"
                            Text="Files" />
-                    <Label Style="{StaticResource EmptyLabel}"
+                    <Label Style="{StaticResource EmptyNoteLabel}"
                            Text="None"
                            IsVisible="{Binding LogFiles.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding LogFiles}">
@@ -463,10 +419,9 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
-                    <Label Style="{StaticResource NameLabel}"
-                           Margin="0,8,0,0"
+                    <Label Style="{StaticResource SectionNameLabel}"
                            Text="Recent" />
-                    <Label Style="{StaticResource EmptyLabel}"
+                    <Label Style="{StaticResource EmptyNoteLabel}"
                            Text="No warnings or errors"
                            IsVisible="{Binding RecentLogs.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentLogs}">
@@ -501,12 +456,12 @@
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 ImageSource="{x:Static markup:AppIcons.SmallShare}"
                                 Command="{Binding ShareLogsCommand}"
                                 Text="Share files" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 ImageSource="{x:Static markup:AppIcons.SmallDelete}"
                                 Command="{Binding ClearLogsCommand}"
                                 Text="Clear recent" />
@@ -520,7 +475,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="360">
                 <VerticalStackLayout Style="{StaticResource EntryStack}">
-                    <Label Style="{StaticResource EmptyLabel}"
+                    <Label Style="{StaticResource EmptyNoteLabel}"
                            Text="None"
                            IsVisible="{Binding LastCrashReport, Converter={StaticResource EmptyConverter}}" />
                     <Label Style="{StaticResource ReportLabel}"
@@ -528,7 +483,7 @@
                            IsVisible="{Binding LastCrashReport, Converter={StaticResource NotEmptyConverter}}" />
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*">
-                        <Button Style="{StaticResource ActionButton}"
+                        <Button Style="{StaticResource BasicIconOutlinedButton}"
                                 ImageSource="{x:Static markup:AppIcons.SmallDelete}"
                                 Command="{Binding ClearCrashReportCommand}"
                                 Text="Clear" />

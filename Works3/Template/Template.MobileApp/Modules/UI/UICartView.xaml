@@ -17,12 +17,12 @@
         <ResourceDictionary>
 
             <!-- Root -->
-            <Style x:Key="RootGrid"
+            <Style x:Key="CartGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <Style x:Key="RootStack"
+            <Style x:Key="CartStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,0,0,16" />
                 <Setter Property="Spacing" Value="12" />
@@ -283,11 +283,11 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource CartGrid}"
           RowDefinitions="*,Auto">
 
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout Style="{StaticResource RootStack}">
+            <VerticalStackLayout Style="{StaticResource CartStack}">
 
             <!-- Header banner -->
             <Border Style="{StaticResource BannerBorder}">

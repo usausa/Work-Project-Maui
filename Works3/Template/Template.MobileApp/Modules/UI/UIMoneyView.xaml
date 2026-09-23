@@ -5,7 +5,6 @@
              xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -24,8 +23,6 @@
                                        Expression="{x:Static s:CompareExpressions.Equal}"
                                        TrueValue="{StaticResource PinkAccent3}"
                                        FalseValue="{StaticResource GrayDefault}" />
-
-            <converters:BadgeCountConverter x:Key="BadgeCountConverter" />
 
             <!-- Background -->
             <Style x:Key="BackgroundGrid"

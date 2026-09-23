@@ -20,7 +20,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="CaptionLabel"
+            <Style x:Key="ColumnCaptionLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="12,10" />
                 <Setter Property="FontSize" Value="14" />
@@ -29,7 +29,7 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
-            <Style x:Key="MessageLabel"
+            <Style x:Key="ColumnMessageLabel"
                    TargetType="Label">
                 <Setter Property="Padding" Value="12,6" />
                 <Setter Property="FontSize" Value="12" />
@@ -45,7 +45,7 @@
           RowDefinitions="Auto,*,Auto">
 
         <Label Grid.Row="0"
-               Style="{StaticResource CaptionLabel}"
+               Style="{StaticResource ColumnCaptionLabel}"
                Text="一覧の表示項目" />
 
         <clam:ClamGridView Grid.Row="1"
@@ -73,7 +73,7 @@
         </clam:ClamGridView>
 
         <Label Grid.Row="2"
-               Style="{StaticResource MessageLabel}"
+               Style="{StaticResource ColumnMessageLabel}"
                Text="{Binding Message}" />
     </Grid>
 

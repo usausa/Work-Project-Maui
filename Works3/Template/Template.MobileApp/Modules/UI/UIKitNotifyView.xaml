@@ -14,7 +14,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootList"
+            <Style x:Key="NotifyList"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
@@ -60,7 +60,7 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
-            <Style x:Key="TimeLabel"
+            <Style x:Key="NotifyTimeLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="11" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
@@ -75,7 +75,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <CollectionView Style="{StaticResource RootList}"
+    <CollectionView Style="{StaticResource NotifyList}"
                     ItemsSource="{Binding Notifications}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="module:UIKitNotifyItem">
@@ -124,7 +124,7 @@
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="3"
                                              Spacing="6">
-                            <Label Style="{StaticResource TimeLabel}"
+                            <Label Style="{StaticResource NotifyTimeLabel}"
                                    Text="{Binding Time}" />
                             <BoxView WidthRequest="8" HeightRequest="8"
                                      HorizontalOptions="End"

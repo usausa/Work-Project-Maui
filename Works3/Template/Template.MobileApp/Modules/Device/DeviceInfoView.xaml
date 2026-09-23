@@ -14,28 +14,13 @@
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 
-    <!-- ReSharper disable Xaml.RedundantResource -->
-    <ContentView.Resources>
-        <ResourceDictionary>
-
-            <Style x:Key="InfoRowGrid"
-                   TargetType="Grid">
-                <Setter Property="RowSpacing" Value="8" />
-                <Setter Property="Padding" Value="0,4" />
-            </Style>
-
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
-        <VerticalStackLayout Padding="12"
-                             Spacing="12">
+    <ScrollView Style="{StaticResource RootScroll}">
+        <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard Title="Device"
                                Icon="{x:Static fonts:MaterialIcons.Smartphone}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -65,7 +50,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Apps}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"
@@ -102,7 +87,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}"
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="200">
-                <Grid Style="{StaticResource InfoRowGrid}"
+                <Grid Style="{StaticResource CardInfoGrid}"
                       ColumnDefinitions="2*,3*"
                       RowDefinitions="Auto,Auto,Auto">
                     <Label Grid.Row="0" Grid.Column="0"

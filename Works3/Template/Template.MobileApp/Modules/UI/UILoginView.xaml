@@ -51,14 +51,14 @@
             </Style>
 
             <!-- Message -->
-            <Style x:Key="MessageLabel"
+            <Style x:Key="WelcomeLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="28" />
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
-            <Style x:Key="SubMessageLabel"
+            <Style x:Key="WelcomeSubLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="18" />
@@ -194,12 +194,12 @@
               RowDefinitions="2*,Auto,8,Auto,40,Auto,16,Auto,40,Auto,40,Auto,40,Auto,3*">
 
             <Label Grid.Row="1"
-                   Style="{StaticResource MessageLabel}"
+                   Style="{StaticResource WelcomeLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="80"
                    Text="ようこそ" />
 
             <Label Grid.Row="3"
-                   Style="{StaticResource SubMessageLabel}"
+                   Style="{StaticResource WelcomeSubLabel}"
                    behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="160"
                    Text="ログインして続けてください" />
 

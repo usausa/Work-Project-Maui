@@ -19,11 +19,19 @@ Template project for MAUI.
 
 <img width="25%" src="Document/UI_Calendar.png" />
 <img width="25%" src="Document/UI_Schedule.png" />
-<img width="25%" src="Document/UI_Timeline.png" />
+<img width="25%" src="Document/UI_Graph.png" />
 
 <img width="25%" src="Document/UI_Mail.png" />
 <img width="25%" src="Document/UI_Chat.png" />
-<img width="25%" src="Document/UI_Graph.png" />
+<img width="25%" src="Document/UI_Timeline.png" />
+
+<img width="25%" src="Document/UI_Grid.png" />
+<img width="25%" src="Document/UI_Visit.png" />
+<img width="25%" src="Document/Device_WiFi.png" />
+
+<img width="25%" src="Document/Device_NFC.png" />
+<img width="25%" src="Document/Device_BLE.png" />
+<img width="25%" src="Document/Device_Activity.png" />
 
 <img width="25%" src="Document/UI_Stream.png" />
 <img width="25%" src="Document/UI_Deck.png" />
@@ -32,10 +40,6 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Meter.png" />
 <img width="25%" src="Document/UI_Load.png" />
 <img width="25%" src="Document/UI_Mixier.png" />
-
-<img width="25%" src="Document/Device_Activity.png" />
-<img width="25%" src="Document/Device_BLE.png" />
-<img width="25%" src="Document/Device_NFC.png" />
 
 <img width="25%" src="Document/Sample_CV.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
@@ -52,25 +56,7 @@ Template project for MAUI.
 <img width="25%" src="Document/UI_Monster.png" />
 <img width="25%" src="Document/UI_Character.png" />
 <img width="25%" src="Document/UI_Social.png" />
-
-<img width="25%" src="Document/UI_Grid.png" />
-<img width="25%" src="Document/UI_Visit.png" />
-<img width="25%" src="Document/Device_WiFi.png" />
-
-<img width="25%" src="Document/Control_BottomSheet.png" />
-<img width="25%" src="Document/Control_Drawer.png" />
-<img width="25%" src="Document/Sample_CvNet_Tag.png" />
 </p>
-
-# TODO
-
-| Category | Feature |
-| --- | --- |
-| Diagnostics | OpenTelemetry(crash report / telemetry) |
-| Device | Background task(WorkManager) |
-| Network | Offline sync |
-| Device | Push(FCM) |
-| Device | Biometric |
 
 # Implement
 
@@ -88,6 +74,23 @@ Template project for MAUI.
 | Diagnostics | Application, Startup, Connection, Database, Log(recent warnings, share files), Crash report, Runtime |
 | UI 1 | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap |
 | UI 2 | Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |
+
+# TODO
+
+| Category | Feature |
+| --- | --- |
+| Diagnostics | OpenTelemetry(crash report / telemetry) |
+| Device | Background task(WorkManager) |
+| Network | Offline sync |
+| Device | Push(FCM) |
+| Device | Biometric |
+
+## Pending
+
+| Item | Waiting for |
+| --- | --- |
+| Global xmlns (`http://schemas.microsoft.com/dotnet/maui/global`) for XAML | ReSharper support (build passes, inspectcode cannot resolve) |
+| CoreCLR runtime (`UseMonoRuntime=false`) | .NET 11 (Shiny `[Export]` startup crash: dotnet/android#10996) |
 
 # My Libraries
 

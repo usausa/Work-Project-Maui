@@ -22,12 +22,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootGrid"
-                   TargetType="Grid"
-                   BasedOn="{StaticResource FillGrid}">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
             <Style x:Key="FrameBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="12" />
@@ -49,18 +43,6 @@
             <Style x:Key="PlayerStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="8" />
-            </Style>
-
-            <Style x:Key="SeekStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="2" />
-            </Style>
-
-            <Style x:Key="TimeLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
             <Style x:Key="TransportRow"
@@ -97,12 +79,6 @@
             <Style x:Key="ScrubStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="6" />
-            </Style>
-
-            <Style x:Key="ScrubCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
             </Style>
 
             <Style x:Key="ScrubTrackBorder"
@@ -159,24 +135,24 @@
                 Style="{StaticResource PlayerPanelBorder}">
             <VerticalStackLayout Style="{StaticResource PlayerStack}">
 
-                <VerticalStackLayout Style="{StaticResource SeekStack}">
+                <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                     <Slider Minimum="0"
                             Maximum="{Binding DurationSeconds}"
                             Value="{Binding ProgressSeconds, Mode=OneWay}"
                             behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}" />
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource BasicMonoLabel}"
                                Text="{Binding Progress, StringFormat='{0:mm\\:ss\\.f}'}" />
                         <Label Grid.Column="1"
-                               Style="{StaticResource TimeLabel}"
+                               Style="{StaticResource BasicMonoLabel}"
                                Text="{Binding Duration, StringFormat='{0:mm\\:ss\\.f}'}" />
                     </Grid>
                 </VerticalStackLayout>
 
                 <!-- スクロール連動 / 長押し進行 -->
                 <VerticalStackLayout Style="{StaticResource ScrubStack}">
-                    <Label Style="{StaticResource ScrubCaptionLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
                     <ScrollView Orientation="Horizontal"
                                 HorizontalScrollBarVisibility="Never"

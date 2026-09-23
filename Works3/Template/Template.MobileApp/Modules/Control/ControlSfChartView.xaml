@@ -23,30 +23,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="NoteLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
-            <Style x:Key="SparkCaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
             <Style x:Key="FunnelGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="8" />
@@ -151,13 +127,13 @@
                     <spark:SfSparkWinLossChart Grid.Row="0" Grid.Column="2"
                                             ItemsSource="{Binding WinLoss}" />
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource SparkCaptionLabel}"
+                           Style="{StaticResource BasicCenterCaptionLabel}"
                            Text="Line" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource SparkCaptionLabel}"
+                           Style="{StaticResource BasicCenterCaptionLabel}"
                            Text="Column" />
                     <Label Grid.Row="1" Grid.Column="2"
-                           Style="{StaticResource SparkCaptionLabel}"
+                           Style="{StaticResource BasicCenterCaptionLabel}"
                            Text="WinLoss" />
                 </Grid>
             </controls:InfoCard>
@@ -167,7 +143,7 @@
                                behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="300">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource NoteLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="地域 → 都市の 2 階層構成比" />
                     <sunburst:SfSunburstChart HeightRequest="260"
                                         ItemsSource="{Binding Regions}"

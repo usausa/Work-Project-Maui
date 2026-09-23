@@ -36,12 +36,6 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
-            <Style x:Key="ResultLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
             <Style x:Key="CropButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="16,0" />
@@ -89,7 +83,7 @@
                 <VerticalStackLayout Grid.Column="1"
                                      VerticalOptions="Center"
                                      Spacing="8">
-                    <Label Style="{StaticResource ResultLabel}"
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="{Binding ResultText}" />
                     <HorizontalStackLayout Spacing="8">
                         <Button Style="{StaticResource CropButtonPrimary}"

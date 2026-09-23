@@ -16,7 +16,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll" TargetType="ScrollView">
+            <Style x:Key="KitTrackingScroll" TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
@@ -105,7 +105,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <ScrollView Style="{StaticResource RootScroll}">
+    <ScrollView Style="{StaticResource KitTrackingScroll}">
         <VerticalStackLayout>
             <Border Style="{StaticResource HeaderBorder}">
                 <VerticalStackLayout>

@@ -18,7 +18,7 @@
         <ResourceDictionary>
 
             <!-- Root -->
-            <Style x:Key="RootGrid"
+            <Style x:Key="ShopGrid"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="RowSpacing" Value="12" />
@@ -97,6 +97,9 @@
 
             <Style x:Key="SearchEntry"
                    TargetType="Entry">
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:Focus.FocusedThickness" Value="2" />
                 <Setter Property="Placeholder" Value="Search" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -222,7 +225,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}"
+    <Grid Style="{StaticResource ShopGrid}"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
 
         <!-- Header -->

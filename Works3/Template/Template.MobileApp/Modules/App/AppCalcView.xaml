@@ -18,6 +18,12 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="CalcRootGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="#1B222C" />
+            </Style>
+
             <Style x:Key="ExpressionSpan"
                    TargetType="Span">
                 <Setter Property="FontSize" Value="24" />
@@ -30,7 +36,7 @@
                 <Setter Property="TextColor" Value="#4FC3F7" />
             </Style>
 
-            <Style x:Key="ResultLabel"
+            <Style x:Key="CalcResultLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="36" />
@@ -107,10 +113,9 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid RowDefinitions="*,56,56,76,76,76,76,76"
-          ColumnDefinitions="*,*,*,*,*"
-          Padding="6"
-          BackgroundColor="#1B222C">
+    <Grid Style="{StaticResource CalcRootGrid}"
+          RowDefinitions="*,56,56,76,76,76,76,76"
+          ColumnDefinitions="*,*,*,*,*">
 
         <!-- Display -->
         <Grid Grid.Row="0" Grid.ColumnSpan="5"
@@ -140,7 +145,7 @@
                        Style="{StaticResource EqualsSignLabel}"
                        Text="=" />
                 <Label Grid.Column="1"
-                       Style="{StaticResource ResultLabel}"
+                       Style="{StaticResource CalcResultLabel}"
                        Text="{Binding Result}" />
             </Grid>
             <Label Grid.Row="2"

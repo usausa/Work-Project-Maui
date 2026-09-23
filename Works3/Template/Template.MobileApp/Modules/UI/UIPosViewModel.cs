@@ -13,7 +13,6 @@ public sealed partial class UIPosViewModel : AppViewModelBase
 
     public int InnerTax => (int)(Total * 8d / 108d);
 
-
     public int Deposit { get; } = 888;
 
     public int Change => Math.Max(0, Deposit - Total);

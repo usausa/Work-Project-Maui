@@ -16,8 +16,13 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="ProfileBodyStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
+            </Style>
+
             <!-- Root -->
-            <Style x:Key="RootScroll"
+            <Style x:Key="ProfileScroll"
                    TargetType="ScrollView">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
@@ -243,7 +248,7 @@
             </Style>
 
             <!-- Root layout -->
-            <Style x:Key="RootStack"
+            <Style x:Key="ProfileStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Padding" Value="0,0,0,12" />
             </Style>
@@ -252,9 +257,9 @@
     </ContentView.Resources>
 
     <!-- カバーはスクロールでパララックス(旧 Profile から移植) -->
-    <ScrollView Style="{StaticResource RootScroll}"
+    <ScrollView Style="{StaticResource ProfileScroll}"
                 behaviors:Scroll.ParallaxTarget="{x:Reference CoverImage}">
-        <VerticalStackLayout Style="{StaticResource RootStack}">
+        <VerticalStackLayout Style="{StaticResource ProfileStack}">
 
             <!-- Cover -->
             <Grid HeightRequest="140">
@@ -264,7 +269,7 @@
             </Grid>
 
             <!-- カバーより下は不透明ブロック(パララックスしたカバーが透けないように) -->
-            <VerticalStackLayout BackgroundColor="{StaticResource GrayLighten4}">
+            <VerticalStackLayout Style="{StaticResource ProfileBodyStack}">
 
                 <!-- Avatar (overlaps cover) -->
                 <Border Style="{StaticResource AvatarBorder}">

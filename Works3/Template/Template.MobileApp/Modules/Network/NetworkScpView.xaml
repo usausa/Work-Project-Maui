@@ -18,29 +18,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="RootScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="CaptionLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
-            <Style x:Key="ValueLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
-            </Style>
-
             <Style x:Key="FingerprintLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="11" />
@@ -49,46 +26,9 @@
                 <Setter Property="LineBreakMode" Value="CharacterWrap" />
             </Style>
 
-            <Style x:Key="RemoteEntry"
-                   TargetType="Entry">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="Placeholder" Value="リモートファイル名" />
-            </Style>
-
-            <Style x:Key="ActionButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
-            </Style>
-
-            <Style x:Key="CancelButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource ActionButton}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
             <Style x:Key="TransferProgressBar"
                    TargetType="ProgressBar">
                 <Setter Property="ProgressColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="LogLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken1}" />
-            </Style>
-
-            <Style x:Key="TransferButtonGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
         </ResourceDictionary>
@@ -102,9 +42,9 @@
                                Icon="{x:Static fonts:MaterialIcons.Dns}"
                                Title="接続先">
                 <VerticalStackLayout Spacing="6">
-                    <Label Style="{StaticResource ValueLabel}"
+                    <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding HostDisplay}" />
-                    <Label Style="{StaticResource CaptionLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
                            Text="サーバのホスト鍵指紋 (参考表示)" />
                     <Label Style="{StaticResource FingerprintLabel}"
@@ -117,27 +57,28 @@
                                Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
                                Title="転送">
                 <VerticalStackLayout Spacing="10">
-                    <Entry Style="{StaticResource RemoteEntry}"
+                    <Entry Style="{StaticResource BasicEntry}"
+                           Placeholder="リモートファイル名"
                            IsEnabled="{Binding Configured}"
                            Text="{Binding RemoteFileName}" />
                     <ProgressBar Style="{StaticResource TransferProgressBar}"
                                  Progress="{Binding Progress}" />
-                    <Grid Style="{StaticResource TransferButtonGrid}"
+                    <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding UploadCommand}"
                                 Text="アップロード" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource ActionButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding DownloadCommand}"
                                 Text="ダウンロード" />
                         <Button Grid.Column="2"
-                                Style="{StaticResource CancelButton}"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
                                 Command="{Binding CancelCommand}"
                                 Text="キャンセル" />
                     </Grid>
-                    <Label Style="{StaticResource CaptionLabel}"
+                    <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="アップロードは FilePicker で選んだファイルをリモートのホームへ、ダウンロードは上のファイル名を公開フォルダへ取得する" />
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -149,12 +90,12 @@
                                      Spacing="4">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
-                            <Label Style="{StaticResource LogLabel}"
+                            <Label Style="{StaticResource CardLogLabel}"
                                    Text="{Binding .}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
-                        <Label Style="{StaticResource CaptionLabel}"
+                        <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="まだ転送していません" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>

@@ -47,6 +47,8 @@
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="FontAttributes" Value="None" />
             </Style>
 
             <Style x:Key="PadButton"
@@ -82,7 +84,7 @@
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <ScrollView BackgroundColor="{StaticResource GrayLighten5}">
+    <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Padding="12"
                              Spacing="8">
 
@@ -117,8 +119,6 @@
                                 </Border.GestureRecognizers>
                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                 <Label Style="{StaticResource CellLabel}"
-                                       TextColor="{StaticResource BlueDefault}"
-                                       FontAttributes="None"
                                        Text="{Binding Text}">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label"

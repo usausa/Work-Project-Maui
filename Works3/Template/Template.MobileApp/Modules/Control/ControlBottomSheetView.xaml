@@ -24,35 +24,10 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="PageScroll"
-                   TargetType="ScrollView">
-                <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
-            </Style>
-
-            <Style x:Key="PageStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Padding" Value="12" />
-                <Setter Property="Spacing" Value="12" />
-            </Style>
-
-            <Style x:Key="NoteLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-            </Style>
-
-            <Style x:Key="MessageLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="OpenButton"
+            <Style x:Key="SheetCloseButton"
                    TargetType="Button"
-                   BasedOn="{StaticResource PrimaryButton}">
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="FontSize" Value="14" />
+                   BasedOn="{StaticResource BasicFilledSecondaryButton}">
+                <Setter Property="Margin" Value="0,12,0,0" />
             </Style>
 
             <!-- シートの中身 (両方で共通の見た目) -->
@@ -97,15 +72,6 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-            <Style x:Key="CloseButton"
-                   TargetType="Button"
-                   BasedOn="{StaticResource SecondaryButton}">
-                <Setter Property="Margin" Value="0,12,0,0" />
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -142,24 +108,22 @@
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Button Style="{StaticResource CloseButton}"
-                            behaviors:ButtonOption.PressEffect="True"
+                    <Button Style="{StaticResource SheetCloseButton}"
                             Command="{Binding CloseCommand}"
                             Text="閉じる" />
                 </VerticalStackLayout>
             </sf:SfBottomSheet.BottomSheetContent>
 
-            <ScrollView Style="{StaticResource PageScroll}">
+            <ScrollView Style="{StaticResource RootScroll}">
                 <VerticalStackLayout Style="{StaticResource PageStack}">
 
                     <controls:InfoCard Title="SfBottomSheet"
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}"
                                        behaviors:AnimationOption.EnterAnimation="FadeUp">
                         <VerticalStackLayout Spacing="8">
-                            <Label Style="{StaticResource NoteLabel}"
+                            <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Syncfusion.Maui.Toolkit。ページ全体を包み、グラバーのドラッグで 半開 ⇔ 全開。モーダルのためオーバーレイのタップで閉じる" />
-                            <Button Style="{StaticResource OpenButton}"
-                                    behaviors:ButtonOption.PressEffect="True"
+                            <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenSfSheetCommand}"
                                     Text="Sf のシートを開く (F2)" />
                         </VerticalStackLayout>
@@ -170,10 +134,9 @@
                                        behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="100">
                         <VerticalStackLayout Spacing="8">
-                            <Label Style="{StaticResource NoteLabel}"
+                            <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Controls/BottomSheetView.cs (Grid 派生、依存なし)。最前面に重ねて IsOpen で表示。シートのドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景のタップで閉じる" />
-                            <Button Style="{StaticResource OpenButton}"
-                                    behaviors:ButtonOption.PressEffect="True"
+                            <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenCustomSheetCommand}"
                                     Text="自作のシートを開く (F3)" />
                         </VerticalStackLayout>
@@ -183,7 +146,7 @@
                                        Icon="{x:Static fonts:MaterialIcons.Check_circle}"
                                        behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="200">
-                        <Label Style="{StaticResource MessageLabel}"
+                        <Label Style="{StaticResource CardAccentLabel}"
                                Text="{Binding Message}" />
                     </controls:InfoCard>
 
@@ -220,8 +183,7 @@
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Button Style="{StaticResource CloseButton}"
-                            behaviors:ButtonOption.PressEffect="True"
+                    <Button Style="{StaticResource SheetCloseButton}"
                             Command="{Binding CloseCommand}"
                             Text="閉じる" />
                 </VerticalStackLayout>
