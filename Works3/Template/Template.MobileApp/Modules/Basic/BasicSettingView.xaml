@@ -60,8 +60,8 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Icon="{x:Static fonts:MaterialIcons.Person}"
-                               Title="Account">
+                               Title="Account"
+                               Icon="{x:Static fonts:MaterialIcons.Person}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="User name (Entry)" />
@@ -74,10 +74,11 @@
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Search (SearchBar)" />
                     <SearchBar Text="{Binding SearchText}"
-                               Placeholder="設定を検索" ReturnType="Search"
+                               Placeholder="設定を検索"
+                               ToolTipProperties.Text="検索ボタンで確定します"
+                               ReturnType="Search"
                                SearchCommand="{Binding SearchCommand}"
-                               SearchIconColor="{StaticResource BlueDefault}"
-                               ToolTipProperties.Text="検索ボタンで確定します" />
+                               SearchIconColor="{StaticResource BlueDefault}" />
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding LastSearch}"
                            IsVisible="{Binding LastSearch, Converter={StaticResource NotEmptyConverter}}"
@@ -85,9 +86,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="60"
-                               Icon="{x:Static fonts:MaterialIcons.Tune}"
-                               Title="Display &amp; Sound">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60"
+                               Title="Display &amp; Sound"
+                               Icon="{x:Static fonts:MaterialIcons.Tune}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="*,Auto,Auto">
@@ -100,7 +102,8 @@
                         <Stepper Grid.Column="2"
                                  Value="{Binding CacheSize}"
                                  Minimum="1" Maximum="8"
-                                 Increment="1" ToolTipProperties.Text="ローカルキャッシュの上限サイズ" />
+                                 ToolTipProperties.Text="ローカルキャッシュの上限サイズ"
+                                 Increment="1" />
                     </Grid>
 
                     <Grid Style="{StaticResource CardRowGrid}"
@@ -124,15 +127,16 @@
                                Text="通知 (Switch)" />
                         <Switch Grid.Column="1"
                                 IsToggled="{Binding NotificationEnabled}"
-                                OffColor="{StaticResource GrayLighten1}"
-                                ToolTipProperties.Text="プッシュ通知の有効/無効" />
+                                ToolTipProperties.Text="プッシュ通知の有効/無効"
+                                OffColor="{StaticResource GrayLighten1}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="120"
-                               Icon="{x:Static fonts:MaterialIcons.Event}"
-                               Title="Backup Schedule">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120"
+                               Title="Backup Schedule"
+                               Icon="{x:Static fonts:MaterialIcons.Event}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="*,Auto,Auto,Auto">
@@ -140,9 +144,9 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="日付 (DatePicker)" />
                         <DatePicker Grid.Column="1"
-                                    Date="{Binding BackupDate}"
                                     IsOpen="{Binding BackupDateOpen}"
-                                    ToolTipProperties.Text="次回バックアップ日" />
+                                    ToolTipProperties.Text="次回バックアップ日"
+                                    Date="{Binding BackupDate}" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding OpenBackupDateCommand}"
@@ -159,8 +163,8 @@
                                Text="時刻 (TimePicker)" />
                         <TimePicker Grid.Column="1"
                                     IsOpen="{Binding BackupTimeOpen}"
-                                    Time="{Binding BackupTime}"
-                                    ToolTipProperties.Text="次回バックアップ時刻" />
+                                    ToolTipProperties.Text="次回バックアップ時刻"
+                                    Time="{Binding BackupTime}" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding OpenBackupTimeCommand}"
@@ -173,15 +177,16 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="180"
-                               Icon="{x:Static fonts:MaterialIcons.Language}"
-                               Title="Quality &amp; Language">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180"
+                               Title="Quality &amp; Language"
+                               Icon="{x:Static fonts:MaterialIcons.Language}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="画質 (RadioButton)" />
-                    <HorizontalStackLayout RadioButtonGroup.GroupName="Quality"
-                                           RadioButtonGroup.SelectedValue="{Binding Quality, Mode=TwoWay}"
-                                           Spacing="8">
+                    <HorizontalStackLayout Style="{StaticResource CardRowStack}"
+                                           RadioButtonGroup.GroupName="Quality"
+                                           RadioButtonGroup.SelectedValue="{Binding Quality, Mode=TwoWay}">
                         <RadioButton Value="low"
                                      Content="低" />
                         <RadioButton Value="middle"
@@ -198,8 +203,8 @@
                                 Style="{StaticResource CardFieldBorder}">
                             <Picker Style="{StaticResource CardFieldPicker}"
                                     ItemsSource="{Binding Languages}"
-                                    IsOpen="{Binding LanguageOpen}"
                                     SelectedItem="{Binding Language}"
+                                    IsOpen="{Binding LanguageOpen}"
                                     ToolTipProperties.Text="表示言語を選択します" />
                         </Border>
                         <Button Grid.Column="1"
@@ -210,9 +215,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="240"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               Title="Summary">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Summary"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding UserName, StringFormat='ユーザー: {0}'}" />

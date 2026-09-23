@@ -29,6 +29,18 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
+            <Style x:Key="SkeletonMediumBar"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource SkeletonBar}">
+                <Setter Property="Margin" Value="24,0" />
+            </Style>
+
+            <Style x:Key="SkeletonShortBar"
+                   TargetType="BoxView"
+                   BasedOn="{StaticResource SkeletonBar}">
+                <Setter Property="Margin" Value="48,0" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -45,16 +57,14 @@
             <Label Style="{StaticResource BasicCenterTitleLabel}"
                    Text="Initializing..." />
             <BoxView Style="{StaticResource SkeletonBar}" />
-            <BoxView Style="{StaticResource SkeletonBar}"
-                     Margin="24,0" />
-            <BoxView Style="{StaticResource SkeletonBar}"
-                     Margin="48,0" />
+            <BoxView Style="{StaticResource SkeletonMediumBar}" />
+            <BoxView Style="{StaticResource SkeletonShortBar}" />
         </VerticalStackLayout>
 
         <!-- 初期化完了 -->
         <Border Style="{StaticResource CardCenterBorder}"
-                IsVisible="{Binding Initialized}"
-                behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}">
+                behaviors:AnimationOption.FadeInTrigger="{Binding Initialized}"
+                IsVisible="{Binding Initialized}">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
                 <Border Style="{StaticResource BasicSuccessIconBorder}">

@@ -76,9 +76,8 @@
 
             <GraphicsView x:Name="MemoryChart"
                           Grid.Row="11" Grid.ColumnSpan="3"
-                          Margin="0,4,0,0"
-                          WidthRequest="160"
-                          HeightRequest="48" />
+                          WidthRequest="160" HeightRequest="48"
+                          Margin="0,4,0,0" />
 
             <BoxView Grid.Row="12" Grid.ColumnSpan="3"
                      Style="{StaticResource DiagnosticSeparatorBoxView}" />

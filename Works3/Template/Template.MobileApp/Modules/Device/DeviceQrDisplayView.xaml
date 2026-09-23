@@ -107,8 +107,8 @@
                                Text="Content" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
-                                   Placeholder="Text to encode"
-                                   Text="{Binding Text}" />
+                                   Text="{Binding Text}"
+                                   Placeholder="Text to encode" />
                         </Border>
                     </VerticalStackLayout>
 

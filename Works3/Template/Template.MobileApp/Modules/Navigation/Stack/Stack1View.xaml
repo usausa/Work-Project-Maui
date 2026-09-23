@@ -30,8 +30,7 @@
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="Stack Level 1" />
 
-                <controls:StepIndicator CurrentStep="1"
-                                        TotalSteps="3" />
+                <controls:StepIndicator CurrentStep="1" TotalSteps="3" />
 
                 <BoxView Style="{StaticResource CardDivider}" />
 

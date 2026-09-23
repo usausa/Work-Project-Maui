@@ -77,7 +77,9 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 24" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.08" Radius="8" />
+                            Brush="Black"
+                            Opacity="0.08"
+                            Radius="8" />
                 </Setter>
             </Style>
 
@@ -116,7 +118,9 @@
                 <Setter Property="FontSize" Value="22" />
                 <Setter Property="Shadow">
                     <Shadow Offset="0,2"
-                            Brush="Black" Opacity="0.15" Radius="6" />
+                            Brush="Black"
+                            Opacity="0.15"
+                            Radius="6" />
                 </Setter>
             </Style>
 
@@ -282,9 +286,9 @@
 
         <CollectionView Grid.Row="3"
                         Style="{StaticResource PopularCollection}"
-                        ItemsSource="{Binding Popular}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="200">
+                        behaviors:AnimationOption.EnterDelay="200"
+                        ItemsSource="{Binding Popular}">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal"
                                    ItemSpacing="10" />
@@ -327,11 +331,12 @@
 
         <CollectionView Grid.Row="5"
                         Style="{StaticResource ItemsCollection}"
-                        ItemsSource="{Binding Items}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
-                        behaviors:AnimationOption.EnterDelay="280">
+                        behaviors:AnimationOption.EnterDelay="280"
+                        ItemsSource="{Binding Items}">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="2" />
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="module:UIShopItem">

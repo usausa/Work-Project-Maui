@@ -159,9 +159,9 @@
                            Text="EndPoint" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ApiEndPoint}"
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ApiEndPoint}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ApiEndPoint}" />
+                           Text="{Binding ApiEndPoint}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding ApiEndPoint, Converter={StaticResource EmptyConverter}}" />
@@ -174,9 +174,9 @@
                            Text="gRPC" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding GrpcEndPoint}"
                            IsVisible="{Binding GrpcEndPoint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding GrpcEndPoint}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding GrpcEndPoint}" />
+                           Text="{Binding GrpcEndPoint}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding GrpcEndPoint, Converter={StaticResource EmptyConverter}}" />
@@ -189,9 +189,9 @@
                            Text="OTEL" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OtelEndPoint}"
                            IsVisible="{Binding OtelEndPoint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding OtelEndPoint}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding OtelEndPoint}" />
+                           Text="{Binding OtelEndPoint}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding OtelEndPoint, Converter={StaticResource EmptyConverter}}" />
@@ -216,9 +216,9 @@
                            Text="EndPoint" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceEndPoint}"
                            IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding AIServiceEndPoint}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceEndPoint}" />
+                           Text="{Binding AIServiceEndPoint}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding AIServiceEndPoint, Converter={StaticResource EmptyConverter}}" />
@@ -231,8 +231,8 @@
                            Text="ServiceKey" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
-                           Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}" />
+                           behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}"
+                           Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}" />
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
@@ -242,9 +242,9 @@
                            Text="Ollama" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaEndPoint}"
                            IsVisible="{Binding OllamaEndPoint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding OllamaEndPoint}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaEndPoint}" />
+                           Text="{Binding OllamaEndPoint}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding OllamaEndPoint, Converter={StaticResource EmptyConverter}}" />
@@ -257,9 +257,9 @@
                            Text="Model" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaModel}"
                            IsVisible="{Binding OllamaModel, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding OllamaModel}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding OllamaModel}" />
+                           Text="{Binding OllamaModel}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding OllamaModel, Converter={StaticResource EmptyConverter}}" />
@@ -284,9 +284,9 @@
                            Text="Host" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpHost}"
                            IsVisible="{Binding ScpHost, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ScpHost}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpHost}" />
+                           Text="{Binding ScpHost}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding ScpHost, Converter={StaticResource EmptyConverter}}" />
@@ -299,9 +299,9 @@
                            Text="User" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpUser}"
                            IsVisible="{Binding ScpUser, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding ScpUser}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpUser}" />
+                           Text="{Binding ScpUser}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingEmptyLabel}"
                            IsVisible="{Binding ScpUser, Converter={StaticResource EmptyConverter}}" />
@@ -314,8 +314,8 @@
                            Text="Password" />
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
-                           Text="{Binding ScpPassword, Converter={StaticResource MaskTextConverter}}"
-                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpPassword}" />
+                           behaviors:AnimationOption.HighlightTrigger="{Binding ScpPassword}"
+                           Text="{Binding ScpPassword, Converter={StaticResource MaskTextConverter}}" />
                 </Grid>
 
             </VerticalStackLayout>

@@ -212,9 +212,9 @@
                        Text="￥" />
                 <Label Grid.Column="1"
                        Style="{StaticResource BalanceLabel}"
-                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}"
+                       behaviors:LabelOption.CountUpDuration="600"
                        behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
-                       behaviors:LabelOption.CountUpDuration="600" />
+                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}" />
             </Grid>
         </Grid>
 

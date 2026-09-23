@@ -20,27 +20,25 @@
             <Border Padding="0"
                     BackgroundColor="White"
                     Stroke="{StaticResource GrayLighten1}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 8">
+                    StrokeThickness="1" StrokeShape="RoundRectangle 8">
                 <Grid RowDefinitions="Auto,1,Auto">
 
                     <Grid Grid.Row="0"
                           Style="{StaticResource InfoCardHeaderGrid}"
-                          Padding="12,10"
-                          ColumnDefinitions="Auto,*">
+                          ColumnDefinitions="Auto,*"
+                          Padding="12,10">
                         <Label Grid.Column="0"
+                               VerticalOptions="Center"
+                               IsVisible="{TemplateBinding Icon, Converter={StaticResource NotEmptyConverter}}"
+                               Text="{TemplateBinding Icon}"
                                FontFamily="{x:Static fonts:MaterialIcons.FontFamily}"
                                FontSize="24"
-                               VerticalOptions="Center"
-                               TextColor="{TemplateBinding IconColor}"
-                               Text="{TemplateBinding Icon}"
-                               IsVisible="{TemplateBinding Icon, Converter={StaticResource NotEmptyConverter}}" />
+                               TextColor="{TemplateBinding IconColor}" />
                         <Label Grid.Column="1"
-                               FontSize="20"
-                               FontAttributes="Bold"
                                VerticalOptions="Center"
-                               TextColor="{StaticResource BlueGrayDarken2}"
-                               Text="{TemplateBinding Title}" />
+                               Text="{TemplateBinding Title}"
+                               FontSize="20" FontAttributes="Bold"
+                               TextColor="{StaticResource BlueGrayDarken2}" />
                     </Grid>
 
                     <BoxView Grid.Row="1"

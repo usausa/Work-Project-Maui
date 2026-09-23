@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="Template.MobileApp.Modules.View.ViewDrawingView"
              x:DataType="{x:Type module:ViewDrawingViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewDrawingViewModel}"
@@ -201,9 +201,9 @@
         <toolkit:DrawingView Grid.Row="0"
                              Style="{StaticResource CanvasView}"
                              behaviors:DrawingBind.Controller="{Binding Controller}"
+                             IsMultiLineModeEnabled="True"
                              LineColor="{Binding LineColor}"
-                             LineWidth="{Binding LineWidth}"
-                             IsMultiLineModeEnabled="True" />
+                             LineWidth="{Binding LineWidth}" />
 
         <!-- パレット -->
         <Border Grid.Row="1"
@@ -255,9 +255,8 @@
                            Style="{StaticResource WidthIcon}"
                            Text="{x:Static fonts:MaterialIcons.Edit}" />
                     <Slider Grid.Column="1"
-                            Minimum="1"
-                            Maximum="24"
-                            Value="{Binding LineWidth}" />
+                            Value="{Binding LineWidth}"
+                            Minimum="1" Maximum="24" />
                     <Label Grid.Column="2"
                            Style="{StaticResource WidthValueLabel}"
                            Text="{Binding LineWidth, StringFormat='{0:F0}'}" />
@@ -277,8 +276,8 @@
                     Style="{StaticResource PreviewBorder}">
                 <Grid>
                     <Image Source="{Binding Image}"
-                           Aspect="AspectFit"
-                           IsVisible="{Binding HasImage}" />
+                           IsVisible="{Binding HasImage}"
+                           Aspect="AspectFit" />
                     <VerticalStackLayout Style="{StaticResource PreviewEmptyStack}"
                                          IsVisible="{Binding HasImage, Converter={StaticResource ReverseConverter}}">
                         <Label Style="{StaticResource PreviewEmptyIconLabel}"

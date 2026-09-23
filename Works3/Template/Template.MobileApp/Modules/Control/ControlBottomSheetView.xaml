@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Control"
+             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.Control.ControlBottomSheetView"
              x:DataType="{x:Type module:ControlBottomSheetViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ControlBottomSheetViewModel}"
@@ -79,9 +79,8 @@
     <Grid>
 
         <sf:SfBottomSheet IsOpen="{Binding IsSfSheetOpen}"
-                          HalfExpandedRatio="0.45"
                           CornerRadius="16"
-                          IsModal="True">
+                          HalfExpandedRatio="0.45" IsModal="True">
 
             <sf:SfBottomSheet.BottomSheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
@@ -117,10 +116,10 @@
             <ScrollView Style="{StaticResource RootScroll}">
                 <VerticalStackLayout Style="{StaticResource PageStack}">
 
-                    <controls:InfoCard Title="SfBottomSheet"
-                                       Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}"
-                                       behaviors:AnimationOption.EnterAnimation="FadeUp">
-                        <VerticalStackLayout Spacing="8">
+                    <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                       Title="SfBottomSheet"
+                                       Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}">
+                        <VerticalStackLayout Style="{StaticResource CardContentStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Syncfusion.Maui.Toolkit。ページ全体を包み、グラバーのドラッグで 半開 ⇔ 全開。モーダルのためオーバーレイのタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
@@ -129,11 +128,11 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
-                    <controls:InfoCard Title="BottomSheet (自作)"
-                                       Icon="{x:Static fonts:MaterialIcons.Vertical_align_bottom}"
-                                       behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                       behaviors:AnimationOption.EnterDelay="100">
-                        <VerticalStackLayout Spacing="8">
+                    <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                       behaviors:AnimationOption.EnterDelay="100"
+                                       Title="BottomSheet (自作)"
+                                       Icon="{x:Static fonts:MaterialIcons.Vertical_align_bottom}">
+                        <VerticalStackLayout Style="{StaticResource CardContentStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Controls/BottomSheetView.cs (Grid 派生、依存なし)。最前面に重ねて IsOpen で表示。シートのドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景のタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
@@ -142,10 +141,10 @@
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
-                    <controls:InfoCard Title="結果"
-                                       Icon="{x:Static fonts:MaterialIcons.Check_circle}"
-                                       behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                       behaviors:AnimationOption.EnterDelay="200">
+                    <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                       behaviors:AnimationOption.EnterDelay="200"
+                                       Title="結果"
+                                       Icon="{x:Static fonts:MaterialIcons.Check_circle}">
                         <Label Style="{StaticResource CardAccentLabel}"
                                Text="{Binding Message}" />
                     </controls:InfoCard>
@@ -156,8 +155,8 @@
         </sf:SfBottomSheet>
 
         <controls:BottomSheetView IsOpen="{Binding IsCustomSheetOpen}"
-                                  HalfExpandedRatio="0.45"
-                                  CornerRadius="16">
+                                  CornerRadius="16"
+                                  HalfExpandedRatio="0.45">
             <controls:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
                     <Label Style="{StaticResource SheetTitleLabel}"

@@ -41,10 +41,10 @@
 
             <!-- ReSharper disable MarkupAttributeTypo -->
 
-            <controls:InfoCard Title="Default"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Default"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="+(1234567890.) ABCDEF 金額履歴"
                            FontSize="12" />
                     <Label Text="+(1234567890.) ABCDEF 金額履歴"
@@ -54,11 +54,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="OpenSansRegular"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="60">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60"
+                               Title="OpenSansRegular"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="+(1234567890.) ABCDEF"
                            FontFamily="OpenSansRegular" FontSize="12" />
                     <Label Text="+(1234567890.) ABCDEF"
@@ -68,11 +68,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="OxaniumRegular"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="120">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120"
+                               Title="OxaniumRegular"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="+(1234567890.) ABCDEF"
                            FontFamily="OxaniumRegular" FontSize="12" />
                     <Label Text="+(1234567890.) ABCDEF"
@@ -82,11 +82,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Gkktt"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="180">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180"
+                               Title="Gkktt"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="+(1234567890.) ABCDEF"
                            FontFamily="Gkktt" FontSize="12" />
                     <Label Text="+(1234567890.) ABCDEF"
@@ -96,11 +96,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="DSEG7"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="DSEG7"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="1234567890."
                            FontFamily="DSEG7" FontSize="12" />
                     <Label Text="1234567890."
@@ -110,11 +110,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="JetBrainsMono"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="JetBrainsMono"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="+(1234567890.) ABCDEF =&gt; {}"
                            FontFamily="JetBrainsMono" FontSize="12" />
                     <Label Text="+(1234567890.) ABCDEF =&gt; {}"
@@ -124,11 +124,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="NotoSerifJP"
-                               Icon="{x:Static fonts:MaterialIcons.Font_download}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
-                <VerticalStackLayout Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="NotoSerifJP"
+                               Icon="{x:Static fonts:MaterialIcons.Font_download}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Text="金額履歴 あいうえお 1234567890"
                            FontFamily="NotoSerifJP" FontSize="12" />
                     <Label Text="金額履歴 あいうえお 1234567890"
@@ -138,10 +138,10 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="MaterialIcons"
-                               Icon="{x:Static fonts:MaterialIcons.Palette}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="MaterialIcons"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}">
                 <HorizontalStackLayout Style="{StaticResource CardRowStack}">
                     <Label Style="{StaticResource MaterialIconSampleLabel}"
                            Text="{x:Static fonts:MaterialIcons.Stay_current_portrait}" />
@@ -166,10 +166,10 @@
                 </HorizontalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="FluentUI"
-                               Icon="{x:Static fonts:MaterialIcons.Palette}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="FluentUI"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}">
                 <HorizontalStackLayout Style="{StaticResource CardRowStack}">
                     <Label Style="{StaticResource FluentIconSampleLabel}"
                            Text="{x:Static fonts:FluentUI.add_circle_28_regular}" />
@@ -188,10 +188,10 @@
                 </HorizontalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="ImageSource"
-                               Icon="{x:Static fonts:MaterialIcons.Palette}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="ImageSource"
+                               Icon="{x:Static fonts:MaterialIcons.Palette}">
                 <HorizontalStackLayout Style="{StaticResource CardRowStack}">
                     <Image>
                         <Image.Source>

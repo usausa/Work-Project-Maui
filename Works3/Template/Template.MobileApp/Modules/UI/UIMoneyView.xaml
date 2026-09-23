@@ -145,7 +145,8 @@
                 <Setter Property="Stroke" Value="{StaticResource RedLighten3}" />
                 <Setter Property="Shadow">
                     <Shadow Brush="{StaticResource RedLighten1}"
-                            Opacity="0.5" Radius="12" />
+                            Opacity="0.5"
+                            Radius="12" />
                 </Setter>
             </Style>
             <Style x:Key="RankEffect"
@@ -468,7 +469,8 @@
                 <!-- Rank -->
                 <Border Grid.Row="1"
                         Style="{StaticResource RankBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="100">
                     <toolkit:SfEffectsView Style="{StaticResource RankEffect}">
                         <Grid ColumnDefinitions="36,*,36">
                             <Border Grid.Column="0"
@@ -489,7 +491,8 @@
                 <!-- Menu -->
                 <Border Grid.Row="2"
                         Style="{StaticResource MoneyMenuBorder}"
-                        behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200">
+                        behaviors:AnimationOption.EnterAnimation="FadeUp"
+                        behaviors:AnimationOption.EnterDelay="200">
                     <Grid Style="{StaticResource MoneyMenuGrid}"
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*,*,*">
@@ -685,8 +688,8 @@
                             behaviors:AnimationOption.EnterTrigger="{Binding NotificationCount}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border"
-                                         Value="0"
-                                         Binding="{Binding NotificationCount}">
+                                         Binding="{Binding NotificationCount}"
+                                         Value="0">
                                 <Setter Property="IsVisible" Value="False" />
                             </DataTrigger>
                         </Border.Triggers>

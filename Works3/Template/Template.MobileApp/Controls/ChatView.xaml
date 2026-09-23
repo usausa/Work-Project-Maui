@@ -27,7 +27,9 @@
                 <Setter Property="Shadow">
                     <Setter.Value>
                         <Shadow Offset="0,2"
-                                Brush="Black" Opacity="0.08" Radius="6" />
+                                Brush="Black"
+                                Opacity="0.08"
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -37,6 +39,11 @@
                    BasedOn="{StaticResource MessageCardBorder}">
                 <Setter Property="Margin" Value="48,6,12,6" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+            </Style>
+
+            <Style x:Key="RoleHeaderStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
             <Style x:Key="RoleIconBorder"
@@ -154,8 +161,8 @@
             <DataTemplate x:Key="AssistantTemplate"
                           x:DataType="{x:Type models:AiChatMessage}">
                 <Border Style="{StaticResource MessageCardBorder}">
-                    <VerticalStackLayout Spacing="0">
-                        <HorizontalStackLayout Spacing="8">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource RoleHeaderStack}">
                             <Border Style="{StaticResource RoleIconBorder}">
                                 <Label Style="{StaticResource RoleIconLabel}"
                                        Text="{x:Static fonts:MaterialIcons.Smart_toy}" />
@@ -169,9 +176,11 @@
                             <Ellipse Style="{StaticResource TypingDot}"
                                      behaviors:AnimationOption.Wave="True" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="180" />
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="180" />
                             <Ellipse Style="{StaticResource TypingDot}"
-                                     behaviors:AnimationOption.Wave="True" behaviors:AnimationOption.WaveDelay="360" />
+                                     behaviors:AnimationOption.Wave="True"
+                                     behaviors:AnimationOption.WaveDelay="360" />
                         </HorizontalStackLayout>
                         <Label Style="{StaticResource MessageTextLabel}"
                                IsVisible="{Binding IsTyping, Converter={StaticResource ReverseConverter}}"
@@ -184,7 +193,7 @@
             <DataTemplate x:Key="UserTemplate"
                           x:DataType="{x:Type models:AiChatMessage}">
                 <Border Style="{StaticResource UserCardBorder}">
-                    <VerticalStackLayout Spacing="0">
+                    <VerticalStackLayout>
                         <Label Style="{StaticResource RoleNameLabel}"
                                Text="You" />
                         <Label Style="{StaticResource MessageTextLabel}"
@@ -207,8 +216,9 @@
 
         <CollectionView Grid.Row="0"
                         ItemsSource="{Binding Source={x:Reference Root}, Path=Messages, x:DataType={x:Type controls:ChatView}}"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default" />
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}" />
 
         <Grid Grid.Row="1"
               Style="{StaticResource InputBarGrid}"
@@ -230,10 +240,10 @@
             <!-- 音声入力 (VoiceCommand が設定されたときだけ表示。認識中は停止ボタン) -->
             <Button Grid.Column="1"
                     Style="{StaticResource VoiceButton}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}"
+                    behaviors:AnimationOption.Pulse="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
                     Command="{Binding Source={x:Reference Root}, Path=VoiceCommand, x:DataType={x:Type controls:ChatView}}"
-                    Text="{x:Static fonts:MaterialIcons.Mic}"
-                    behaviors:AnimationOption.Pulse="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}">
+                    IsVisible="{Binding Source={x:Reference Root}, Path=VoiceCommand, Converter={StaticResource NotEmptyConverter}, x:DataType={x:Type controls:ChatView}}"
+                    Text="{x:Static fonts:MaterialIcons.Mic}">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button"
                                  Binding="{Binding Source={x:Reference Root}, Path=IsListening, x:DataType={x:Type controls:ChatView}}"
@@ -247,13 +257,13 @@
             <!-- 送信 (応答中は中断ボタンに入れ替わる) -->
             <Button Grid.Column="2"
                     Style="{StaticResource SendButton}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, Converter={StaticResource ReverseConverter}, x:DataType={x:Type controls:ChatView}}"
                     Command="{Binding Source={x:Reference Root}, Path=SendCommand, x:DataType={x:Type controls:ChatView}}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, Converter={StaticResource ReverseConverter}, x:DataType={x:Type controls:ChatView}}"
                     Text="{x:Static fonts:MaterialIcons.Send}" />
             <Button Grid.Column="2"
                     Style="{StaticResource CancelButton}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, x:DataType={x:Type controls:ChatView}}"
                     Command="{Binding Source={x:Reference Root}, Path=CancelCommand, x:DataType={x:Type controls:ChatView}}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=IsResponding, x:DataType={x:Type controls:ChatView}}"
                     Text="{x:Static fonts:MaterialIcons.Stop}" />
         </Grid>
 

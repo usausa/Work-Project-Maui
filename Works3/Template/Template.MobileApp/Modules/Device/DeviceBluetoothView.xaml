@@ -83,8 +83,8 @@
                 </controls:StatusChip>
 
                 <Label Style="{StaticResource BasicCenterHintLabel}"
-                       Text="{Binding Detail}"
-                       behaviors:AnimationOption.FadeInTrigger="{Binding Detail}" />
+                       behaviors:AnimationOption.FadeInTrigger="{Binding Detail}"
+                       Text="{Binding Detail}" />
 
                 <Button Style="{StaticResource PrintButton}"
                         Command="{Binding PrintCommand}"

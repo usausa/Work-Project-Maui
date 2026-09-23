@@ -32,10 +32,10 @@
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
+                        <Shadow Offset="0,3"
+                                Brush="Black"
                                 Opacity="0.15"
-                                Radius="8"
-                                Offset="0,3" />
+                                Radius="8" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -93,9 +93,9 @@
                       Grid.Row="1"
                       Style="{StaticResource CarouselView}"
                       ItemsSource="{Binding Items}"
-                      IndicatorView="{x:Reference Indicator}"
                       CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
-                      CurrentItemChangedCommandParameter="{Binding Source={x:Reference PhotoCarousel}, Path=CurrentItem, x:DataType=CarouselView}">
+                      CurrentItemChangedCommandParameter="{Binding Source={x:Reference PhotoCarousel}, Path=CurrentItem, x:DataType=CarouselView}"
+                      IndicatorView="{x:Reference Indicator}">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:PhotoItem}">
                     <Border Style="{StaticResource CarouselBorder}">

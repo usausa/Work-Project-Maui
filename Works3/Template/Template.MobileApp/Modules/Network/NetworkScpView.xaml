@@ -39,9 +39,9 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Icon="{x:Static fonts:MaterialIcons.Dns}"
-                               Title="接続先">
-                <VerticalStackLayout Spacing="6">
+                               Title="接続先"
+                               Icon="{x:Static fonts:MaterialIcons.Dns}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding HostDisplay}" />
                     <Label Style="{StaticResource BasicCaptionLabel}"
@@ -53,14 +53,15 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="80"
-                               Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
-                               Title="転送">
-                <VerticalStackLayout Spacing="10">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="転送"
+                               Icon="{x:Static fonts:MaterialIcons.Sync_alt}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Entry Style="{StaticResource BasicEntry}"
-                           Placeholder="リモートファイル名"
                            IsEnabled="{Binding Configured}"
-                           Text="{Binding RemoteFileName}" />
+                           Text="{Binding RemoteFileName}"
+                           Placeholder="リモートファイル名" />
                     <ProgressBar Style="{StaticResource TransferProgressBar}"
                                  Progress="{Binding Progress}" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -83,11 +84,12 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="160"
-                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}"
-                               Title="ログ">
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Logs}"
-                                     Spacing="4">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="ログ"
+                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
+                                     BindableLayout.ItemsSource="{Binding Logs}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">
                             <Label Style="{StaticResource CardLogLabel}"

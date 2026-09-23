@@ -323,9 +323,9 @@
                                    IsVisible="{Binding StampSource, Converter={StaticResource NotEmptyConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource SendReactionList}"
-                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
-                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
@@ -368,9 +368,9 @@
                                    Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource ReceiveReactionList}"
-                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}"
+                                               BindableLayout.ItemsSource="{Binding Reactions}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
-                                               BindableLayout.ItemsSource="{Binding Reactions}" />
+                                               IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
@@ -405,8 +405,9 @@
         <CollectionView Grid.Row="0"
                         behaviors:Scroll.ShowOnAwayFromLastTarget="{x:Reference JumpToLatest}"
                         ItemsSource="{Binding Messages}"
-                        ItemTemplate="{StaticResource MessageTemplateSelector}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView" VerticalScrollBarVisibility="Default">
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        VerticalScrollBarVisibility="Default"
+                        ItemTemplate="{StaticResource MessageTemplateSelector}">
             <CollectionView.Behaviors>
                 <s:CollectionControlBehavior Controller="{Binding Controller}" />
             </CollectionView.Behaviors>
@@ -450,8 +451,8 @@
                          Command="{Binding SendCommand}">
                 <ImageButton.Triggers>
                     <DataTrigger TargetType="ImageButton"
-                                 Value="False"
-                                 Binding="{Binding InputText, Converter={StaticResource NotEmptyConverter}}">
+                                 Binding="{Binding InputText, Converter={StaticResource NotEmptyConverter}}"
+                                 Value="False">
                         <Setter Property="Opacity" Value="0.3" />
                     </DataTrigger>
                 </ImageButton.Triggers>

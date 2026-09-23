@@ -80,10 +80,10 @@
         <!-- 再生開始・バッファリング中のローディング表示 -->
         <ActivityIndicator WidthRequest="48" HeightRequest="48"
                            HorizontalOptions="Center" VerticalOptions="Center"
+                           IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
-                           Color="White"
                            InputTransparent="True"
-                           IsRunning="{Binding IsLoading}" />
+                           Color="White" />
 
         <Border Style="{StaticResource ControlBarBorder}"
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsControlBarVisible}"
@@ -97,8 +97,8 @@
                              Command="{Binding TogglePlayCommand}">
                     <ImageButton.Triggers>
                         <DataTrigger TargetType="ImageButton"
-                                     Value="True"
-                                     Binding="{Binding IsPlaying}">
+                                     Binding="{Binding IsPlaying}"
+                                     Value="True">
                             <Setter Property="Source" Value="{x:Static markup:AppIcons.MoneyPause}" />
                         </DataTrigger>
                     </ImageButton.Triggers>

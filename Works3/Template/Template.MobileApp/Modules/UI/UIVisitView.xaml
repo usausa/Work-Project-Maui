@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
-             xmlns:font="clr-namespace:Fonts"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:font="clr-namespace:Fonts"
              x:Class="Template.MobileApp.Modules.UI.UIVisitView"
              x:DataType="{x:Type module:UIVisitViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIVisitViewModel}"
@@ -42,60 +42,83 @@
             <!-- 状態の文言と色 (バッジ / 左端の帯 / 行の背景) -->
             <s:MapToTextConverter x:Key="StatusTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Planned}" Value="⏳ 未訪問" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Visited}" Value="✅ 訪問済" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Revisit}" Value="🔁 再訪問" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Absent}" Value="🚫 不在" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Planned}"
+                                      Value="⏳ 未訪問" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Visited}"
+                                      Value="✅ 訪問済" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                      Value="🔁 再訪問" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitStatus.Absent}"
+                                      Value="🚫 不在" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="StatusChipColorConverter"
                                    DefaultValue="{StaticResource BlueGrayDefault}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}" Value="{StaticResource GreenDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}" Value="{StaticResource OrangeDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}" Value="{StaticResource RedDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="StatusStripColorConverter"
                                    DefaultValue="{StaticResource BlueGrayLighten2}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}" Value="{StaticResource GreenDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}" Value="{StaticResource OrangeDefault}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}" Value="{StaticResource RedDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="StatusRowColorConverter"
                                    DefaultValue="White">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}" Value="{StaticResource GreenLighten5}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}" Value="{StaticResource AmberLighten5}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}" Value="{StaticResource RedLighten5}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Visited}"
+                                       Value="{StaticResource GreenLighten5}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Revisit}"
+                                       Value="{StaticResource AmberLighten5}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitStatus.Absent}"
+                                       Value="{StaticResource RedLighten5}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
             <!-- 区分の文言と色 (バッジの背景 / 文字) -->
             <s:MapToTextConverter x:Key="CategoryTextConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Regular}" Value="🗓 定期" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.New}" Value="✨ 新規" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Inspection}" Value="🔧 点検" />
-                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Collection}" Value="💰 集金" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Regular}"
+                                      Value="🗓 定期" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.New}"
+                                      Value="✨ 新規" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                      Value="🔧 点検" />
+                    <s:MapToTextEntry Key="{x:Static models:VisitCategory.Collection}"
+                                      Value="💰 集金" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <s:MapToColorConverter x:Key="CategoryChipColorConverter"
                                    DefaultValue="{StaticResource LightBlueLighten4}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}" Value="{StaticResource PurpleLighten4}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}" Value="{StaticResource TealLighten4}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}" Value="{StaticResource AmberLighten4}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                                       Value="{StaticResource PurpleLighten4}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                       Value="{StaticResource TealLighten4}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                                       Value="{StaticResource AmberLighten4}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <s:MapToColorConverter x:Key="CategoryTextColorConverter"
                                    DefaultValue="{StaticResource LightBlueDarken2}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}" Value="{StaticResource PurpleDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}" Value="{StaticResource TealDarken2}" />
-                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}" Value="{StaticResource AmberDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.New}"
+                                       Value="{StaticResource PurpleDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Inspection}"
+                                       Value="{StaticResource TealDarken2}" />
+                    <s:MapToColorEntry Key="{x:Static models:VisitCategory.Collection}"
+                                       Value="{StaticResource AmberDarken2}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
@@ -103,10 +126,14 @@
             <s:MapToColorConverter x:Key="StaffColorConverter"
                                    DefaultValue="{StaticResource BlueGrayDefault}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="佐藤" Value="{StaticResource IndigoDefault}" />
-                    <s:MapToColorEntry Key="鈴木" Value="{StaticResource TealDefault}" />
-                    <s:MapToColorEntry Key="高橋" Value="{StaticResource DeepPurpleDefault}" />
-                    <s:MapToColorEntry Key="田中" Value="{StaticResource CyanDarken1}" />
+                    <s:MapToColorEntry Key="佐藤"
+                                       Value="{StaticResource IndigoDefault}" />
+                    <s:MapToColorEntry Key="鈴木"
+                                       Value="{StaticResource TealDefault}" />
+                    <s:MapToColorEntry Key="高橋"
+                                       Value="{StaticResource DeepPurpleDefault}" />
+                    <s:MapToColorEntry Key="田中"
+                                       Value="{StaticResource CyanDarken1}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
@@ -209,6 +236,11 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
             </Style>
 
+            <Style x:Key="SortPanelGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
             <Style x:Key="SortPanelLabel"
                    TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
@@ -248,6 +280,11 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
                     </DataTrigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style x:Key="SortKeyStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="6" />
             </Style>
 
             <Style x:Key="SortKeyBadge"
@@ -446,6 +483,11 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
             <Style x:Key="DetailSeparator"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -522,8 +564,8 @@
                 Style="{StaticResource SortPanelBorder}"
                 IsVisible="{Binding IsSortPanelOpen}">
             <VerticalStackLayout>
-                <Grid ColumnDefinitions="*,Auto"
-                      ColumnSpacing="8">
+                <Grid Style="{StaticResource SortPanelGrid}"
+                      ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource SortPanelLabel}"
                            Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
@@ -542,11 +584,10 @@
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                                           CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
-                                <HorizontalStackLayout Spacing="6">
-                                    <Border StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 9"
-                                            VerticalOptions="Center"
-                                            IsVisible="{Binding IsActive}">
+                                <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
+                                    <Border VerticalOptions="Center"
+                                            IsVisible="{Binding IsActive}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 9">
                                         <Label Style="{StaticResource SortKeyBadge}"
                                                Text="{Binding Priority}" />
                                     </Border>
@@ -575,8 +616,8 @@
                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=ToggleSelectCommand, x:DataType={x:Type module:UIVisitViewModel}}"
                                                   CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="Auto,*,Auto"
-                              RowDefinitions="*,Auto">
+                        <Grid RowDefinitions="*,Auto"
+                              ColumnDefinitions="Auto,*,Auto">
                             <BoxView Grid.Row="0" Grid.Column="0"
                                      Style="{StaticResource StatusStrip}" />
 
@@ -588,11 +629,11 @@
                                                Text="{Binding Staff, Converter={StaticResource InitialConverter}}" />
                                     </Border>
                                     <Label Style="{StaticResource CodeLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}"
-                                           Text="{Binding Code}" />
+                                           Text="{Binding Code}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
                                     <Label Style="{StaticResource CardNameLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
-                                           Text="{Binding Name}" />
+                                           Text="{Binding Name}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
                                 </HorizontalStackLayout>
 
                                 <FlexLayout Style="{StaticResource ChipRow}">
@@ -623,33 +664,33 @@
 
                                 <FlexLayout Style="{StaticResource InfoRow}">
                                     <Label Style="{StaticResource DetailLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}"
-                                           Text="{Binding Address, StringFormat='📍 {0}'}" />
+                                           Text="{Binding Address, StringFormat='📍 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
                                     <Label Style="{StaticResource DetailLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}"
-                                           Text="{Binding Staff, StringFormat='👤 {0}'}" />
+                                           Text="{Binding Staff, StringFormat='👤 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
                                     <Label Style="{StaticResource DetailLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}"
-                                           Text="{Binding ScheduledAt, StringFormat='🕒 {0:MM/dd (ddd) HH:mm}'}" />
+                                           Text="{Binding ScheduledAt, StringFormat='🕒 {0:MM/dd (ddd) HH:mm}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource SecondaryTextColorConverter}}" />
                                 </FlexLayout>
 
                                 <!-- 展開部分 -->
-                                <VerticalStackLayout Spacing="4"
+                                <VerticalStackLayout Style="{StaticResource DetailStack}"
                                                      IsVisible="{Binding IsExpanded}">
                                     <BoxView Style="{StaticResource DetailSeparator}" />
                                     <FlexLayout Style="{StaticResource InfoRow}">
                                         <Label Style="{StaticResource DetailLabel}"
-                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
-                                               Text="{Binding Phone, StringFormat='📞 {0}'}" />
+                                               Text="{Binding Phone, StringFormat='📞 {0}'}"
+                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
                                         <Label Style="{StaticResource DetailLabel}"
-                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
-                                               Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}" />
+                                               Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
+                                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
                                     </FlexLayout>
                                     <Label Style="{StaticResource DetailLabel}"
-                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
                                            IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
-                                           LineBreakMode="WordWrap"
-                                           Text="{Binding Note, StringFormat='📝 {0}'}" />
+                                           Text="{Binding Note, StringFormat='📝 {0}'}"
+                                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}"
+                                           LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
 

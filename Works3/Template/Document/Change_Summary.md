@@ -1784,8 +1784,54 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - 実機(Pixel 9a): Basic Setting / Validation / Locale、Control Toolkit、Device Info / WiFi、Navigation Stack / Wizard、Network HTTP、View DragDrop、Data、Setting を確認(表示の変化なし)
 - ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
 
+### 🧹XAML Styler の適用(2026-09-23)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp` の XAML 全 149 ファイル | XAML Styler コンソール版(`xstyler` 3.2501.8)で `Settings.XamlStyler` を適用(`xstyler -d Template.MobileApp -r -c Settings.XamlStyler`)。属性の並び替えと改行の整理のみで、全ファイルが書式チェック(`-p`)を通過 |
+| `Settings.XamlStyler` | 並び順のグループに無い属性は末尾の `*` / `*:*` に入って 1 行にまとめられるため、よく使う属性をグループに追加: `Spacing, RowSpacing, ColumnSpacing`(`Margin, Padding` の後)、`BindableLayout.ItemsSource` / `BindableLayout.ItemTemplate` / `SelectedItem` / `SelectionMode` / `ItemsUpdatingScrollMode` / `HorizontalScrollBarVisibility, VerticalScrollBarVisibility`(`ItemsSource` の後)、`IsToggled` / `IsChecked` / `IsOpen` / `IsRunning` / `IsPassword`(`IsEnabled` の後)、`InputTransparent`(`IsVisible` の後)、`Binding`(`Value` の前。DataTrigger は `Binding` → `Value` の順)、`Title` / `Icon, IconColor`(`Text` の前。InfoCard などの見出しとアイコンは `Text` と同じ内容の属性)、`Placeholder` / `ImageSource`(`Glyph` の後)、`behaviors:AnimationOption.EnterAnimation` / `EnterDelay` / `Wave` / `WaveDelay` と `behaviors:LabelOption.CountUpDuration` / `CountUpFormat` / `CountUpValue`(`behaviors:*` の前。リテラル値の添付プロパティを 1 行にまとめないよう個別のグループ)、`Brush` / `Fill` / `Opacity` / `Stroke, StrokeThickness, StrokeShape` / `BorderColor, BorderWidth, CornerRadius` / `Radius`(`Color, TextColor, BackgroundColor` の後。`Opacity` は色・ブラシの後)、対で 1 行にする `CurrentStep, TotalSteps` / `MinimumValue, MaximumValue` / `OffsetX, OffsetY` / `TranslateX, TranslateY` / `XBindingPath, YBindingPath` / `Text1, Text2` と `ToolTipProperties.Text`(`*` の前)。`NoNewLineMarkupExtensions` に `TemplateBinding` |
+
+- XAML Styler が属性の間で改行するのは、グループが変わるとき・`MaxAttributesPerLine` / `MaxAttributeCharactersPerLine` を超えるとき・値がマークアップ拡張のときだけ。`behaviors:*` のようなワイルドカードに当たる属性は同じグループになるため、行を分けたい属性は個別のグループとして並べる(名前の完全一致がワイルドカードより優先)
+- `xstyler` は書き換えたファイルに UTF-8 の BOM を付けるため、`.editorconfig`(`charset = utf-8`)に合わせて外した。改行コード(CRLF)は変わらない
+- 設定の並び順では `Slider` / `Stepper` の `Value` が `Minimum` / `Maximum` より前になる。該当する `Value` はすべてバインドで、バインドは要素がツリーに入ってから適用されるので範囲に丸められない(リテラルの `Value` は範囲の設定前に丸められるので書かない)
+- 実機(Pixel 9a): Device Audio / Misc / Sensor / QR Scan、View Drawing / Lottie / Layout、Sample PDF / Crop、Basic Setting、Control Toolkit / Chart、App Calculator、UI Visit / Kit / TreeMap / Wheel を確認(スライダーやステッパーの初期値を含め、表示の変化なし)
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 📏余白(Spacing)のスタイル化(S / M / L)(2026-09-23)
+
+要素に書いていた `Spacing` / `RowSpacing` / `ColumnSpacing`(97 箇所)をスタイルへ移した。カードの本文の間隔は S / M / L の 3 段の共有スタイルに揃え、画面固有の並びは画面ローカルのスタイルにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml`(`Card` 区画) | `CardSmallContentStack`(S = 4)/ `CardContentStack`(M = 8。`Padding` 0,4 を外し、間隔 10 → 8)/ `CardLargeContentStack`(L = 12) |
+| 共有スタイルへの置き換え | InfoCard の本文 50 箇所: 間隔 4 → S(Basic Font のフォント見本 7 枚、View DragDrop の並べ替え)、6 / 8 / 10 → M、12 → L(Control Toolkit の AvatarView / RatingView)。Network のログ(HTTP / Realtime / SCP / Storage)→ S。入れ子: Basic Locale の一覧 → M / L、Control Toolkit の RatingView と View DragDrop の TODO / DONE 列 → S。横並び: Basic Setting のラジオボタン、Device Sensor の気圧 → `CardRowStack` |
+| 画面ローカルのスタイル | Controls/ChatView `RoleHeaderStack`(ChatView は元からローカルのスタイルを持つ)、App Sudoku `GamePageStack`(`PageStack` の間隔 8 版)、Basic Locale `CultureNameStack`、Control Toolkit `AvatarRowStack`、Device Sensor `SensorTextStack`(`BasicTextGroupStack` + 縦中央)、WiFi `ConnectionGrid` / `DetailStack` / `AccessPointStack`、Sample Crop `ExportResultStack` / `CropButtonStack`、Map / Map2 `MapFabStack`、Web Basic `StatusContentStack`、UI Kit Notify `NotifyMetaStack`、Kit Tracking `StepTextStack`、Radar `StatusRowStack`、Schedule `DayChipStack` / `SummaryItemStack`、Super `CouponTextStack`、Visit `SortPanelGrid` / `SortKeyStack` / `DetailStack`、View Easing `RunStateStack`、View Layout `HexLayout` / `StaggeredLayout` / `TileLayout`、View Shadow `NeumorphRowStack` / `NeumorphItemStack` |
+| 削除 | 既定値と同じ `Spacing="0"`(Controls/ChatView 2 箇所、Sample Map2) |
+
+- 同じ要素に書いていた `Margin` / `Padding` / `HorizontalOptions` / `VerticalOptions` も同じスタイルへ移した(Sample Map / Map2 の FAB 列、UI Radar のステータス行など)
+- `Controls/StatusChip` は Style を使わないコントロールなので `Spacing` 6 を属性のまま残す
+- 間隔が変わるのは、M に揃えたカード(6 → 8 が 13 枚、10 → 8 が 2 枚)と Basic Locale の一覧(10 → 8)、`CardContentStack` を使っていた 11 枚(上下の `Padding` 4 が無くなり、間隔 10 → 8)、`CardRowStack` にした Basic Setting のラジオボタン行(上下に 4)
+- 実機(Pixel 9a): Basic(Converter / Font / Locale / Setting / Behavior)、Control(Toolkit の入力・表示タブ / Custom / Sf Chart / Bottom Sheet / Drawer)、Device(Sensor / WiFi(展開を含む)/ Location / BLE Host / Status)、Network(HTTP (Data) / HTTP (Auth) / Storage / Realtime / gRPC / SCP)、View(Layout / Shadow / Easing / Graphics / DragDrop / State)、Sample(Web Basic / Map / Map2 / Crop / Chat)、App Sudoku、Data、Navigation Shared1、UI(Super / Visit(並べ替えパネル・展開を含む)/ Schedule / Kit の Dashboard・Notifications・Tracking / Radar)を確認。クラッシュなし
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
+### 📐Margin / Padding のスタイル化(2026-09-23)
+
+要素に書いていた `Margin`(49 箇所)と残っていた `Padding`(7 箇所)を、共有スタイルか画面ローカルのスタイルへ移した。`Controls/` と `Shell/DiagnosticPanel` は Style を使わない部品なので属性のまま。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | `BasicStepIndicator`(`Basic` 区画の Step。Wizard 3 画面の StepIndicator の上余白 8。`xmlns:controls` を追加)、`CenterSelectButton` / `RightSelectButton` に `Margin` -1,0,0,0(左隣のボタンの枠線に重ねる。使うのは Basic Style だけ) |
+| 画面ローカルのスタイル(新規) | App Calculator `CalcDisplayGrid` / `ExpressionLabel` / `CalcResultGrid`、Control Chart `ChartDrawing`、Device WiFi `AccessPointChip`(`CountChip` + 右 6。アクセスポイント行のチップ 5 種の基底)、Navigate Initialize `SkeletonMediumBar` / `SkeletonShortBar`、UI Kit Onboard `OnboardIndicator`、Meter `MeterGauge`、Mixer `ScaleGrid`、Stream Detail `RelatedCollection`、Wheel `WheelDrawing`、Super `SuperPageStack` / `BannerCarouselView` / `BannerIndicatorView` / `AppFlex` / `AppItemStack` / `CouponCollection`、View Layout `CircleCell` / `ArcCell` / `StaggeredCell`(`UniformCell` の余白 3 を 0 にしてカスタムレイアウトに置くセル) |
+| 既存のローカルスタイルへ追加 | App Calculator `ErrorLabel`、Control Chart `SegmentGrid`、Device WiFi `AccessPointSsidLabel`、Sample Map2 `TogglePanelBorder`(幅・配置も)、UI Super `SearchRowGrid`。`Padding`: Device Sensor `SensorRowGrid`、UI Calendar `ModeBarGrid`、View Easing `EasingBoardGrid` |
+
+- 同じ要素に書いていた配置・サイズ・色(IndicatorView の色とサイズ、SpeedGauge の色、FlexLayout の `JustifyContent` / `Wrap`、`FlexLayout.Basis` など)も同じスタイルへ移した。View Layout の StaggeredGrid のセルごとの高さと色はデモの内容なので要素に残す
+- 要素に残る `Margin` / `Padding` / `Spacing` は `Controls/` と `Shell/DiagnosticPanel` だけ
+- 実機(Pixel 9a): App Calculator、Basic Style(分割ボタン)、Control Chart、Device WiFi / Sensor、Navigate Initialize(スケルトン)、Wizard、Sample Map2、UI Calendar / Super / Mixer / Meter / Wheel / Kit Onboard / Stream Detail(More Like This)、View Easing / Layout を確認。見た目の変化なし、クラッシュなし
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
+- **XAML Styler コンソール版(`xstyler`)は書き換えたファイルに UTF-8 の BOM を付ける**。このリポジトリは `.editorconfig` が `charset = utf-8`(BOM なし)なので、実行後に外す。改行コード(CRLF)は保たれる
 - **CommunityToolkit.Maui の `StateContainer` は `CurrentState` の初期値を `null` にする**: 空文字で始めると初回のバインドで `SwitchToContent()` が走り、まだ保存されていない「元のコンテンツ」(空)で子が置き換わって既定コンテンツが消える
 - **ローカルの `ResourceDictionary` で `BasedOn` / `StaticResource` が後ろに定義されたキーを参照すると、ReSharper が `Xaml.StaticResourceNotResolved` を出す**(Pixel 9a では表示は崩れなかったが、定義順に依存する)。画面ローカルで派生スタイルを作るときは基底スタイルの直後に置く
 - **Android の `HttpClient`(`AndroidMessageHandler`)のストリーミング応答を中断するとき**: `await foreach` を UI スレッドで回すと列挙の破棄(ストリームの Close)がメインスレッドで実行され `NetworkOnMainThreadException`(未観測のタスク例外としてクラッシュレポートに残る)。接続待ちの間に中断すると `OperationCanceledException` ではなく `WebException`(Socket closed)。OllamaSharp は中断で例外を出さず列挙が終わることもある。読み取りは `Task.Run` + `ConfigureAwait(false)` で行ない UI 更新だけ `MainThread.BeginInvokeOnMainThread`、中断後の例外は `IsCancellationRequested` で中断扱いにする
@@ -1865,7 +1911,7 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 ## 📏付録A. 開発ポリシー(恒常・実装時は常に遵守)
 
-- 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `MediaRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
+- 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `MediaRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。カードの本文の間隔は `CardSmallContentStack`(4)/ `CardContentStack`(8)/ `CardLargeContentStack`(12)から選ぶ。`Controls/` のコントロールは Style を使わず要素の属性で書く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
 - **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は共有スタイル + 要素の属性。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)

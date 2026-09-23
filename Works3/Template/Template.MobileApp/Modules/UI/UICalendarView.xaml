@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamCalendar;assembly=ClamCalendar"
              x:Class="Template.MobileApp.Modules.UI.UICalendarView"
              x:DataType="{x:Type module:UICalendarViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UICalendarViewModel}"
@@ -53,6 +53,7 @@
 
             <Style x:Key="ModeBarGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="12,8" />
                 <Setter Property="ColumnSpacing" Value="4" />
             </Style>
 
@@ -65,6 +66,7 @@
 
         <!-- ClamCalendar: 表示範囲が変わるたびに DisplayDateChangedCommand で範囲のイベント・スタンプ・祝日を渡す -->
         <clam:ClamCalendarView Grid.Row="0"
+                               SelectionMode="{Binding SelectionMode}"
                                DayTappedCommand="{Binding DayTappedCommand}"
                                DisplayDate="{Binding DisplayDate, Mode=TwoWay}"
                                DisplayDateChangedCommand="{Binding DisplayDateChangedCommand}"
@@ -76,7 +78,6 @@
                                SelectedDates="{Binding SelectedDates}"
                                SelectedEndDate="{Binding SelectedEndDate, Mode=TwoWay}"
                                SelectedStartDate="{Binding SelectedStartDate, Mode=TwoWay}"
-                               SelectionMode="{Binding SelectionMode}"
                                Stamps="{Binding Stamps}" />
 
         <BoxView Grid.Row="1"
@@ -85,7 +86,6 @@
         <!-- 選択モード切替+今日へ -->
         <Grid Grid.Row="2"
               Style="{StaticResource ModeBarGrid}"
-              Padding="12,8"
               ColumnDefinitions="*,*,*,*,8,Auto">
             <Button Grid.Column="0"
                     Style="{StaticResource ModeButton}"

@@ -17,12 +17,12 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Device"
-                               Icon="{x:Static fonts:MaterialIcons.Smartphone}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Device"
+                               Icon="{x:Static fonts:MaterialIcons.Smartphone}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Version" />
@@ -46,13 +46,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Application"
-                               Icon="{x:Static fonts:MaterialIcons.Apps}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Application"
+                               Icon="{x:Static fonts:MaterialIcons.Apps}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Name" />
@@ -83,13 +83,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Display"
-                               Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="200">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200"
+                               Title="Display"
+                               Icon="{x:Static fonts:MaterialIcons.Aspect_ratio}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Width" />

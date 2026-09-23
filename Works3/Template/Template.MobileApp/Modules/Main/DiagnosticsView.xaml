@@ -8,9 +8,8 @@
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
-             xmlns:components="clr-namespace:Template.MobileApp.Components"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Main"
+             xmlns:components="clr-namespace:Template.MobileApp.Components" xmlns:logging="clr-namespace:Microsoft.Extensions.Logging;assembly=Microsoft.Extensions.Logging.Abstractions"
              x:Class="Template.MobileApp.Modules.Main.DiagnosticsView"
              x:DataType="{x:Type module:DiagnosticsViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DiagnosticsViewModel}"
@@ -63,7 +62,8 @@
             <s:MapToColorConverter x:Key="LogLevelColorConverter"
                                    DefaultValue="{StaticResource RedDefault}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{x:Static logging:LogLevel.Warning}" Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{x:Static logging:LogLevel.Warning}"
+                                       Value="{StaticResource OrangeDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
 
@@ -125,12 +125,12 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <!-- Runtime -->
-            <controls:InfoCard Title="Runtime"
-                               Icon="{x:Static fonts:MaterialIcons.Memory}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Runtime"
+                               Icon="{x:Static fonts:MaterialIcons.Memory}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Working set" />
@@ -174,13 +174,13 @@
             </controls:InfoCard>
 
             <!-- Application -->
-            <controls:InfoCard Title="Application"
-                               Icon="{x:Static fonts:MaterialIcons.Apps}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="60">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="60"
+                               Title="Application"
+                               Icon="{x:Static fonts:MaterialIcons.Apps}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Name" />
@@ -227,13 +227,13 @@
             </controls:InfoCard>
 
             <!-- Startup -->
-            <controls:InfoCard Title="Startup"
-                               Icon="{x:Static fonts:MaterialIcons.Rocket_launch}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="120">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="120"
+                               Title="Startup"
+                               Icon="{x:Static fonts:MaterialIcons.Rocket_launch}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Started" />
@@ -256,13 +256,13 @@
             </controls:InfoCard>
 
             <!-- Connection -->
-            <controls:InfoCard Title="Connection"
-                               Icon="{x:Static fonts:MaterialIcons.Lan}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="180">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="180"
+                               Title="Connection"
+                               Icon="{x:Static fonts:MaterialIcons.Lan}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="API" />
@@ -310,12 +310,12 @@
                            Text="Login" />
                     <Label Grid.Row="6" Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="{Binding LoginId}"
-                           IsVisible="{Binding IsAuthenticated}" />
+                           IsVisible="{Binding IsAuthenticated}"
+                           Text="{Binding LoginId}" />
                     <Label Grid.Row="6" Grid.Column="1"
                            Style="{StaticResource ValueLabel}"
-                           Text="Not logged in"
-                           IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}" />
+                           IsVisible="{Binding IsAuthenticated, Converter={StaticResource ReverseConverter}}"
+                           Text="Not logged in" />
                     <Label Grid.Row="7" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Token expires" />
@@ -344,13 +344,13 @@
             </controls:InfoCard>
 
             <!-- Database -->
-            <controls:InfoCard Title="Database"
-                               Icon="{x:Static fonts:MaterialIcons.Storage}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Database"
+                               Icon="{x:Static fonts:MaterialIcons.Storage}">
                 <Grid Style="{StaticResource CardInfoGrid}"
-                      ColumnDefinitions="2*,3*"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="2*,3*">
                     <Label Grid.Row="0" Grid.Column="0"
                            Style="{StaticResource NameLabel}"
                            Text="Path" />
@@ -391,16 +391,16 @@
             </controls:InfoCard>
 
             <!-- Log -->
-            <controls:InfoCard Title="Log"
-                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="300">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="300"
+                               Title="Log"
+                               Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
                 <VerticalStackLayout Style="{StaticResource EntryStack}">
                     <Label Style="{StaticResource NameLabel}"
                            Text="Files" />
                     <Label Style="{StaticResource EmptyNoteLabel}"
-                           Text="None"
-                           IsVisible="{Binding LogFiles.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}" />
+                           IsVisible="{Binding LogFiles.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}"
+                           Text="None" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding LogFiles}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="{x:Type module:LogFileInfo}">
@@ -422,14 +422,14 @@
                     <Label Style="{StaticResource SectionNameLabel}"
                            Text="Recent" />
                     <Label Style="{StaticResource EmptyNoteLabel}"
-                           Text="No warnings or errors"
-                           IsVisible="{Binding RecentLogs.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}" />
+                           IsVisible="{Binding RecentLogs.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 Value=0}}"
+                           Text="No warnings or errors" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentLogs}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="{x:Type components:DiagnosticLogEntry}">
                                 <Grid Style="{StaticResource EntryGrid}"
-                                      ColumnDefinitions="Auto,*"
-                                      RowDefinitions="Auto,Auto">
+                                      RowDefinitions="Auto,Auto"
+                                      ColumnDefinitions="Auto,*">
                                     <Label Grid.Row="0" Grid.Column="0"
                                            Style="{StaticResource LogLevelLabel}"
                                            Text="{Binding Level}"
@@ -457,36 +457,36 @@
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallShare}"
                                 Command="{Binding ShareLogsCommand}"
-                                Text="Share files" />
+                                Text="Share files"
+                                ImageSource="{x:Static markup:AppIcons.SmallShare}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicIconOutlinedButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}"
                                 Command="{Binding ClearLogsCommand}"
-                                Text="Clear recent" />
+                                Text="Clear recent"
+                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <!-- Crash -->
-            <controls:InfoCard Title="Crash report"
-                               Icon="{x:Static fonts:MaterialIcons.Bug_report}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="360">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="360"
+                               Title="Crash report"
+                               Icon="{x:Static fonts:MaterialIcons.Bug_report}">
                 <VerticalStackLayout Style="{StaticResource EntryStack}">
                     <Label Style="{StaticResource EmptyNoteLabel}"
-                           Text="None"
-                           IsVisible="{Binding LastCrashReport, Converter={StaticResource EmptyConverter}}" />
+                           IsVisible="{Binding LastCrashReport, Converter={StaticResource EmptyConverter}}"
+                           Text="None" />
                     <Label Style="{StaticResource ReportLabel}"
-                           Text="{Binding LastCrashReport}"
-                           IsVisible="{Binding LastCrashReport, Converter={StaticResource NotEmptyConverter}}" />
+                           IsVisible="{Binding LastCrashReport, Converter={StaticResource NotEmptyConverter}}"
+                           Text="{Binding LastCrashReport}" />
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*">
                         <Button Style="{StaticResource BasicIconOutlinedButton}"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}"
                                 Command="{Binding ClearCrashReportCommand}"
-                                Text="Clear" />
+                                Text="Clear"
+                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

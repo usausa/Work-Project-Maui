@@ -19,15 +19,14 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:StepIndicator Margin="0,8,0,0"
-                                    CurrentStep="3"
-                                    TotalSteps="3"
-                                    behaviors:AnimationOption.EnterAnimation="FadeUp" />
+            <controls:StepIndicator Style="{StaticResource BasicStepIndicator}"
+                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                    CurrentStep="3" TotalSteps="3" />
 
-            <controls:InfoCard Title="Summary"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Summary"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
@@ -45,11 +44,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Done"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Done"
                                Icon="{x:Static fonts:MaterialIcons.Check_circle}"
-                               IconColor="{StaticResource GreenDefault}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
+                               IconColor="{StaticResource GreenDefault}">
                 <Label Style="{StaticResource BasicFieldCaptionLabel}"
                        Text="Press ✔️ to finish the wizard and return to the menu" />
             </controls:InfoCard>

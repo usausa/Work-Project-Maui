@@ -4,9 +4,9 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:components="clr-namespace:MauiComponents;assembly=MauiComponents"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
+             xmlns:components="clr-namespace:MauiComponents;assembly=MauiComponents"
              x:Class="Template.MobileApp.Modules.Device.DeviceWiFiView"
              x:DataType="{x:Type module:DeviceWiFiViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceWiFiViewModel}"
@@ -16,8 +16,10 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="True">
 
-    <!-- 接続中の Wi-Fi (上のカード) と検出したアクセスポイントの一覧 (CollectionView)。変化は NetworkCallback / スキャン結果の通知で追従し、表示中は一定間隔で自動スキャン。
-         更新で検出されなかった行は薄く表示して猶予の後に消す -->
+    <!--
+        接続中の Wi-Fi (上のカード) と検出したアクセスポイントの一覧 (CollectionView)。変化は NetworkCallback / スキャン結果の通知で追従し、表示中は一定間隔で自動スキャン。
+        更新で検出されなかった行は薄く表示して猶予の後に消す
+    -->
     <!-- ReSharper disable Xaml.RedundantResource -->
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <ContentView.Resources>
@@ -45,20 +47,25 @@
             </Style>
 
             <converters:WiFiSignalIconConverter x:Key="SignalIconConverter"
-                                                Off="{x:Static fonts:MaterialIcons.Signal_wifi_off}"
                                                 Level0="{x:Static fonts:MaterialIcons.Signal_wifi_0_bar}"
                                                 Level1="{x:Static fonts:MaterialIcons.Network_wifi_1_bar}"
                                                 Level2="{x:Static fonts:MaterialIcons.Network_wifi_2_bar}"
                                                 Level3="{x:Static fonts:MaterialIcons.Network_wifi_3_bar}"
-                                                Level4="{x:Static fonts:MaterialIcons.Signal_wifi_4_bar}" />
+                                                Level4="{x:Static fonts:MaterialIcons.Signal_wifi_4_bar}"
+                                                Off="{x:Static fonts:MaterialIcons.Signal_wifi_off}" />
             <s:MapToColorConverter x:Key="SignalColorConverter"
                                    DefaultValue="{StaticResource GrayDefault}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="{s:Int32 0}" Value="{StaticResource RedDefault}" />
-                    <s:MapToColorEntry Key="{s:Int32 1}" Value="{StaticResource OrangeDefault}" />
-                    <s:MapToColorEntry Key="{s:Int32 2}" Value="{StaticResource AmberDefault}" />
-                    <s:MapToColorEntry Key="{s:Int32 3}" Value="{StaticResource LightGreenDefault}" />
-                    <s:MapToColorEntry Key="{s:Int32 4}" Value="{StaticResource GreenDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 0}"
+                                       Value="{StaticResource RedDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 1}"
+                                       Value="{StaticResource OrangeDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 2}"
+                                       Value="{StaticResource AmberDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 3}"
+                                       Value="{StaticResource LightGreenDefault}" />
+                    <s:MapToColorEntry Key="{s:Int32 4}"
+                                       Value="{StaticResource GreenDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
             <converters:WiFiBandConverter x:Key="BandConverter" />
@@ -67,11 +74,16 @@
             <s:MapToTextConverter x:Key="SecurityTextConverter"
                                   DefaultValue="🔒 Enterprise">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Open}" Value="🔓 オープン" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wep}" Value="🔒 WEP" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa}" Value="🔒 WPA" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa2}" Value="🔒 WPA2" />
-                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa3}" Value="🔒 WPA3" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Open}"
+                                      Value="🔓 オープン" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wep}"
+                                      Value="🔒 WEP" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa}"
+                                      Value="🔒 WPA" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa2}"
+                                      Value="🔒 WPA2" />
+                    <s:MapToTextEntry Key="{x:Static components:WiFiSecurity.Wpa3}"
+                                      Value="🔒 WPA3" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <!-- 接続中 (上部のブロック。角丸にせず区切り線で仕切る) -->
@@ -89,6 +101,11 @@
                         <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten5}" />
                     </DataTrigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ConnectionGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
             <!-- 信号レベルの色は SignalColorConverter (未接続は既定の灰色) -->
@@ -198,6 +215,11 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
 
+            <Style x:Key="DetailStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
             <Style x:Key="DetailSeparator"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -279,6 +301,12 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
+            <Style x:Key="AccessPointStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
             <Style x:Key="AccessPointSignalIcon"
                    TargetType="Label"
                    BasedOn="{StaticResource SignalIconBase}">
@@ -290,13 +318,20 @@
             <Style x:Key="AccessPointSsidLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource SsidLabel}">
+                <Setter Property="Margin" Value="0,0,8,0" />
                 <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
 
-            <Style x:Key="ConnectedChip"
+            <Style x:Key="AccessPointChip"
                    TargetType="Border"
                    BasedOn="{StaticResource CountChip}">
+                <Setter Property="Margin" Value="0,0,6,0" />
+            </Style>
+
+            <Style x:Key="ConnectedChip"
+                   TargetType="Border"
+                   BasedOn="{StaticResource AccessPointChip}">
                 <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
@@ -308,19 +343,19 @@
 
             <Style x:Key="StaleChip"
                    TargetType="Border"
-                   BasedOn="{StaticResource CountChip}">
+                   BasedOn="{StaticResource AccessPointChip}">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
             </Style>
 
             <Style x:Key="BandChip"
                    TargetType="Border"
-                   BasedOn="{StaticResource CountChip}">
+                   BasedOn="{StaticResource AccessPointChip}">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayLighten4}" />
             </Style>
 
             <Style x:Key="SecurityChip"
                    TargetType="Border"
-                   BasedOn="{StaticResource CountChip}">
+                   BasedOn="{StaticResource AccessPointChip}">
                 <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
                 <Style.Triggers>
                     <DataTrigger TargetType="Border"
@@ -333,7 +368,7 @@
 
             <Style x:Key="StandardChip"
                    TargetType="Border"
-                   BasedOn="{StaticResource CountChip}">
+                   BasedOn="{StaticResource AccessPointChip}">
                 <Setter Property="BackgroundColor" Value="{StaticResource PurpleLighten5}" />
             </Style>
 
@@ -357,9 +392,9 @@
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ToggleDetailCommand}" />
             </Border.GestureRecognizers>
-            <Grid ColumnDefinitions="Auto,*,Auto"
+            <Grid Style="{StaticResource ConnectionGrid}"
                   RowDefinitions="*,Auto"
-                  ColumnSpacing="10">
+                  ColumnDefinitions="Auto,*,Auto">
                 <Label Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource ConnectionSignalIcon}"
                        Text="{Binding Connection.SignalLevel, Converter={StaticResource SignalIconConverter}, FallbackValue={x:Static fonts:MaterialIcons.Signal_wifi_off}}" />
@@ -386,7 +421,7 @@
                         <Label Style="{StaticResource InfoLabel}"
                                Text="{Binding Connection.IpAddress, StringFormat='🌐 {0}'}" />
                     </FlexLayout>
-                    <VerticalStackLayout Spacing="2"
+                    <VerticalStackLayout Style="{StaticResource DetailStack}"
                                          IsVisible="{Binding IsDetailOpen}">
                         <BoxView Style="{StaticResource DetailSeparator}" />
                         <FlexLayout Style="{StaticResource InfoRow}">
@@ -466,42 +501,35 @@
                                                   CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
                         <Grid Style="{StaticResource AccessPointGrid}"
-                              ColumnDefinitions="Auto,*,Auto"
-                              RowDefinitions="*,Auto">
+                              RowDefinitions="*,Auto"
+                              ColumnDefinitions="Auto,*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Style="{StaticResource AccessPointSignalIcon}"
                                    Text="{Binding AccessPoint.SignalLevel, Converter={StaticResource SignalIconConverter}}" />
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                                                 Spacing="4"
-                                                 Margin="0,0,0,8">
+                                                 Style="{StaticResource AccessPointStack}">
                                 <FlexLayout Style="{StaticResource InfoRow}">
                                     <Label Style="{StaticResource AccessPointSsidLabel}"
-                                           Margin="0,0,8,0"
                                            Text="{Binding AccessPoint.Ssid, Converter={StaticResource SsidConverter}, ConverterParameter='(非公開)'}" />
                                     <Border Style="{StaticResource ConnectedChip}"
-                                            Margin="0,0,6,0"
                                             IsVisible="{Binding IsConnected}">
                                         <Label Style="{StaticResource ConnectedChipLabel}"
                                                Text="接続中" />
                                     </Border>
                                     <Border Style="{StaticResource StaleChip}"
-                                            Margin="0,0,6,0"
                                             IsVisible="{Binding IsStale}">
                                         <Label Style="{StaticResource ChipLabel}"
                                                Text="未検出" />
                                     </Border>
-                                    <Border Style="{StaticResource BandChip}"
-                                            Margin="0,0,6,0">
+                                    <Border Style="{StaticResource BandChip}">
                                         <Label Style="{StaticResource ChipLabel}"
                                                Text="{Binding AccessPoint.Frequency, Converter={StaticResource BandConverter}}" />
                                     </Border>
-                                    <Border Style="{StaticResource SecurityChip}"
-                                            Margin="0,0,6,0">
+                                    <Border Style="{StaticResource SecurityChip}">
                                         <Label Style="{StaticResource ChipLabel}"
                                                Text="{Binding AccessPoint.Security, Converter={StaticResource SecurityTextConverter}}" />
                                     </Border>
                                     <Border Style="{StaticResource StandardChip}"
-                                            Margin="0,0,6,0"
                                             IsVisible="{Binding AccessPoint.Standard, Converter={StaticResource NotEmptyConverter}}">
                                         <Label Style="{StaticResource StandardChipLabel}"
                                                Text="{Binding AccessPoint.Standard}" />
@@ -522,7 +550,7 @@
                                            IsVisible="{Binding AccessPoint.ChannelWidth, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
                                            Text="{Binding AccessPoint.ChannelWidth, StringFormat='↔ {0} MHz'}" />
                                 </FlexLayout>
-                                <VerticalStackLayout Spacing="2"
+                                <VerticalStackLayout Style="{StaticResource DetailStack}"
                                                      IsVisible="{Binding IsExpanded}">
                                     <BoxView Style="{StaticResource DetailSeparator}" />
                                     <FlexLayout Style="{StaticResource InfoRow}">

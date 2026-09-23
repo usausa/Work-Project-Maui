@@ -12,8 +12,8 @@
              s:BindingContextResolver.Type="{x:Type module:NetworkRealtimeViewModel}"
              shell:ShellProperty.Title="Realtime"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Text="Connect"
+             shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
     <!-- SignalR (MonitorHub) の常時接続。サーバーの状態を 1 秒ごとに受信し、端末の状態を 10 秒ごとに報告する -->
@@ -49,10 +49,10 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="接続"
-                               Icon="{x:Static fonts:MaterialIcons.Sync}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <VerticalStackLayout Spacing="6">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="接続"
+                               Icon="{x:Static fonts:MaterialIcons.Sync}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicBodyLabel}"
                            Text="{Binding StateText, StringFormat='状態: {0}'}" />
                     <Label Style="{StaticResource BasicCaptionLabel}"
@@ -93,9 +93,7 @@
                 <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding MemoryLoadSet}"
                                       GraphColor="{StaticResource GreenDefault}"
-                                      Label="Server memory"
-                                      Unit="MB"
-                                      MaxValue="512" />
+                                      Label="Server memory" MaxValue="512" Unit="MB" />
             </Border>
 
             <Border Style="{StaticResource StatBorder}"
@@ -104,16 +102,14 @@
                 <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding ConnectionSet}"
                                       GraphColor="{StaticResource OrangeDefault}"
-                                      Label="Connections"
-                                      Unit=""
-                                      MaxValue="10" />
+                                      Label="Connections" MaxValue="10" Unit="" />
             </Border>
 
-            <controls:InfoCard Title="通知"
-                               Icon="{x:Static fonts:MaterialIcons.Notifications}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="320">
-                <VerticalStackLayout Spacing="4"
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320"
+                               Title="通知"
+                               Icon="{x:Static fonts:MaterialIcons.Notifications}">
+                <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
                                      BindableLayout.ItemsSource="{Binding Notifications}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type x:String}">

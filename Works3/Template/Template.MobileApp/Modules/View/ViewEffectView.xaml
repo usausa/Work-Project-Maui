@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
+             xmlns:extended="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              x:Class="Template.MobileApp.Modules.View.ViewEffectView"
              x:DataType="{x:Type module:ViewEffectViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewEffectViewModel}"
@@ -42,10 +42,10 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 12" />
                 <Setter Property="Shadow">
                     <Setter.Value>
-                        <Shadow Brush="Black"
+                        <Shadow Offset="0,2"
+                                Brush="Black"
                                 Opacity="0.12"
-                                Radius="6"
-                                Offset="0,2" />
+                                Radius="6" />
                     </Setter.Value>
                 </Setter>
             </Style>
@@ -427,8 +427,8 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
                            Style="{StaticResource AmountLabel}"
-                           behaviors:LabelOption.CountUpValue="{Binding Amount}"
-                           behaviors:LabelOption.CountUpFormat="{}¥{0:N0}" />
+                           behaviors:LabelOption.CountUpFormat="{}¥{0:N0}"
+                           behaviors:LabelOption.CountUpValue="{Binding Amount}" />
                     <Button Grid.Column="1"
                             Style="{StaticResource SmallActionButton}"
                             Command="{Binding AmountCommand}"
@@ -505,13 +505,13 @@
                           ColumnDefinitions="Auto,*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource HeartIconLabel}"
-                               Text="{x:Static fonts:MaterialIcons.Favorite}"
-                               behaviors:AnimationOption.BounceTrigger="{Binding FeedbackCount}" />
+                               behaviors:AnimationOption.BounceTrigger="{Binding FeedbackCount}"
+                               Text="{x:Static fonts:MaterialIcons.Favorite}" />
                         <Label Grid.Column="1"
                                Style="{StaticResource FeedbackTextLabel}"
-                               Text="Bounce / Highlight / Flash を同時に発火"
+                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding FeedbackCount}"
-                               behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}" />
+                               Text="Bounce / Highlight / Flash を同時に発火" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource SmallActionButton}"
                                 Command="{Binding FeedbackCommand}"
@@ -551,17 +551,16 @@
                         <Border Grid.Column="0"
                                 Style="{StaticResource TouchCardBorder}">
                             <Border.Behaviors>
-                                <mct:TouchBehavior PressedScale="0.95"
-                                                   PressedOpacity="0.6"
-                                                   LongPressCommand="{Binding LongPressCommand}" />
+                                <mct:TouchBehavior LongPressCommand="{Binding LongPressCommand}"
+                                                   PressedOpacity="0.6" PressedScale="0.95" />
                             </Border.Behaviors>
                             <Label Style="{StaticResource TouchHintLabel}"
                                    Text="TouchBehavior: 押すと縮む / 長押しでカウント" />
                         </Border>
                         <Label Grid.Column="1"
                                Style="{StaticResource EffectValueLabel}"
-                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}"
-                               behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}" />
+                               behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}"
+                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}" />
                     </Grid>
                     <HorizontalStackLayout Style="{StaticResource TintSampleStack}">
                         <Image Style="{StaticResource TintSampleImage}"

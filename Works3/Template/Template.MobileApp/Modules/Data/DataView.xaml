@@ -40,12 +40,12 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="CRUD"
-                               Icon="{x:Static fonts:MaterialIcons.Storage}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="CRUD"
+                               Icon="{x:Static fonts:MaterialIcons.Storage}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding InsertCommand}"
@@ -65,23 +65,23 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Bulk"
-                               Icon="{x:Static fonts:MaterialIcons.Dns}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Bulk"
+                               Icon="{x:Static fonts:MaterialIcons.Dns}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
 
                     <HorizontalStackLayout Style="{StaticResource CardRowStack}">
                         <Label Style="{StaticResource CountValueLabel}"
-                               behaviors:LabelOption.CountUpValue="{Binding BulkDataCount}"
-                               behaviors:LabelOption.CountUpDuration="500" />
+                               behaviors:LabelOption.CountUpDuration="500"
+                               behaviors:LabelOption.CountUpValue="{Binding BulkDataCount}" />
                         <Label Style="{StaticResource CountUnitLabel}"
                                Text="rows" />
                     </HorizontalStackLayout>
 
                     <Grid Style="{StaticResource BasicButtonGrid}"
-                          ColumnDefinitions="*,*"
-                          RowDefinitions="Auto,Auto">
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,*">
                         <Button Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding BulkInsertCommand}"

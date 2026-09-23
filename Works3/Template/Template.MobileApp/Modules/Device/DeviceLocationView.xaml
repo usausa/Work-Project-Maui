@@ -71,8 +71,8 @@
             <VerticalStackLayout Style="{StaticResource PageStack}">
 
                 <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                   Icon="{x:Static fonts:MaterialIcons.My_location}"
-                                   Title="Position">
+                                   Title="Position"
+                                   Icon="{x:Static fonts:MaterialIcons.My_location}">
                     <VerticalStackLayout Style="{StaticResource CardContentStack}">
                         <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
                             <Label Style="{StaticResource BasicFieldCaptionLabel}"
@@ -103,9 +103,10 @@
                     </VerticalStackLayout>
                 </controls:InfoCard>
 
-                <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100"
-                                   Icon="{x:Static fonts:MaterialIcons.Directions_run}"
-                                   Title="Motion">
+                <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                   behaviors:AnimationOption.EnterDelay="100"
+                                   Title="Motion"
+                                   Icon="{x:Static fonts:MaterialIcons.Directions_run}">
                     <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto,Auto,Auto"
                           ColumnDefinitions="2*,3*">

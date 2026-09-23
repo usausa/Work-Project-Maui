@@ -19,9 +19,9 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Icon="{x:Static fonts:MaterialIcons.Rule}"
-                               Title="Boolean">
-                <VerticalStackLayout Spacing="8">
+                               Title="Boolean"
+                               Icon="{x:Static fonts:MaterialIcons.Rule}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
@@ -53,10 +53,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="100"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               Title="Multi">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Multi"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*">
                         <CheckBox Grid.Column="0"
@@ -105,10 +106,11 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp" behaviors:AnimationOption.EnterDelay="200"
-                               Icon="{x:Static fonts:MaterialIcons.Text_format}"
-                               Title="Text">
-                <VerticalStackLayout Spacing="8">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200"
+                               Title="Text"
+                               Icon="{x:Static fonts:MaterialIcons.Text_format}">
+                <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Button Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding SwitchTextCommand}"
                             Text="Switch Text"

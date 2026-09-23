@@ -19,16 +19,16 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Work item"
-                               Icon="{x:Static fonts:MaterialIcons.Edit}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Work item"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Name (required)" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
-                               Placeholder="Name"
-                               Text="{Binding Name}" />
+                               Text="{Binding Name}"
+                               Placeholder="Name" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
                            IsVisible="{Binding Name, Converter={StaticResource EmptyConverter}}"

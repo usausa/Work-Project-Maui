@@ -228,32 +228,44 @@
             <Grid Style="{StaticResource TopBar}"
                   ColumnDefinitions="*,Auto,Auto"
                   behaviors:AnimationOption.EnterAnimation="FadeUp">
-                <Label Grid.Column="0" Style="{StaticResource LogoLabel}" Text="STREAM" />
-                <Button Grid.Column="1" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Search}"
-                        behaviors:ButtonOption.PressEffect="True" />
-                <Button Grid.Column="2" Style="{StaticResource TopIconButton}" Text="{x:Static fonts:MaterialIcons.Notifications}"
-                        behaviors:ButtonOption.PressEffect="True" />
+                <Label Grid.Column="0"
+                       Style="{StaticResource LogoLabel}"
+                       Text="STREAM" />
+                <Button Grid.Column="1"
+                        Style="{StaticResource TopIconButton}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        Text="{x:Static fonts:MaterialIcons.Search}" />
+                <Button Grid.Column="2"
+                        Style="{StaticResource TopIconButton}"
+                        behaviors:ButtonOption.PressEffect="True"
+                        Text="{x:Static fonts:MaterialIcons.Notifications}" />
             </Grid>
 
             <Grid Style="{StaticResource HeroGrid}">
-                <Image Style="{StaticResource HeroImage}" Source="stream_hero.jpg" />
+                <Image Style="{StaticResource HeroImage}"
+                       Source="stream_hero.jpg" />
                 <BoxView Style="{StaticResource HeroOverlay}" />
                 <Border Style="{StaticResource HeroRatingBorder}"
                         behaviors:AnimationOption.EnterAnimation="Pop"
                         behaviors:AnimationOption.EnterDelay="200">
                     <VerticalStackLayout>
-                        <Label Style="{StaticResource HeroRatingLabel}" Text="{Binding HeroRating}" />
-                        <Label Style="{StaticResource HeroRatingSubLabel}" Text="{Binding HeroRatingSub}" />
+                        <Label Style="{StaticResource HeroRatingLabel}"
+                               Text="{Binding HeroRating}" />
+                        <Label Style="{StaticResource HeroRatingSubLabel}"
+                               Text="{Binding HeroRatingSub}" />
                     </VerticalStackLayout>
                 </Border>
                 <VerticalStackLayout Style="{StaticResource HeroInfo}"
                                      behaviors:AnimationOption.EnterAnimation="FadeUp"
                                      behaviors:AnimationOption.EnterDelay="80">
                     <Border Style="{StaticResource HeroBadgeBorder}">
-                        <Label Style="{StaticResource HeroBadgeLabel}" Text="{Binding HeroBadge}" />
+                        <Label Style="{StaticResource HeroBadgeLabel}"
+                               Text="{Binding HeroBadge}" />
                     </Border>
-                    <Label Style="{StaticResource HeroTitleLabel}" Text="{Binding HeroTitle}" />
-                    <Label Style="{StaticResource HeroMetaLabel}" Text="{Binding HeroMeta}" />
+                    <Label Style="{StaticResource HeroTitleLabel}"
+                           Text="{Binding HeroTitle}" />
+                    <Label Style="{StaticResource HeroMetaLabel}"
+                           Text="{Binding HeroMeta}" />
                     <HorizontalStackLayout Style="{StaticResource HeroButtonsRow}">
                         <Button Style="{StaticResource HeroPlayButton}"
                                 behaviors:ButtonOption.PressEffect="True"
@@ -282,8 +294,12 @@
                                              behaviors:AnimationOption.EnterDelay="{Binding Delay}">
                             <Grid Style="{StaticResource SectionHeaderGrid}"
                                   ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0" Style="{StaticResource StreamSectionLabel}" Text="{Binding Title}" />
-                                <Label Grid.Column="1" Style="{StaticResource SeeAllLabel}" Text="See all ›" />
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource StreamSectionLabel}"
+                                       Text="{Binding Title}" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource SeeAllLabel}"
+                                       Text="See all ›" />
                             </Grid>
                             <CollectionView Style="{StaticResource RowCollection}"
                                             ItemsSource="{Binding Items}"
@@ -298,14 +314,17 @@
                                                 </toolkit:SfEffectsView.GestureRecognizers>
                                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                                 <Grid>
-                                                    <Image Style="{StaticResource PosterImage}" Source="{Binding Image}" />
+                                                    <Image Style="{StaticResource PosterImage}"
+                                                           Source="{Binding Image}" />
                                                     <Border Style="{StaticResource PosterBadgeBorder}"
                                                             IsVisible="{Binding HasBadge}">
-                                                        <Label Style="{StaticResource PosterBadgeLabel}" Text="{Binding Badge}" />
+                                                        <Label Style="{StaticResource PosterBadgeLabel}"
+                                                               Text="{Binding Badge}" />
                                                     </Border>
                                                     <Border Style="{StaticResource PosterDurationBorder}"
                                                             IsVisible="{Binding HasDuration}">
-                                                        <Label Style="{StaticResource PosterDurationLabel}" Text="{Binding Duration}" />
+                                                        <Label Style="{StaticResource PosterDurationLabel}"
+                                                               Text="{Binding Duration}" />
                                                     </Border>
                                                 </Grid>
                                             </toolkit:SfEffectsView>

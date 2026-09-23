@@ -90,9 +90,9 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Click animation (Button)"
-                               Icon="{x:Static fonts:MaterialIcons.Touch_app}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Click animation (Button)"
+                               Icon="{x:Static fonts:MaterialIcons.Touch_app}">
                 <Grid Style="{StaticResource ClickGrid}"
                       RowDefinitions="Auto,Auto"
                       ColumnDefinitions="*,*">
@@ -149,10 +149,14 @@
                             <s:EventActionBehavior EventName="Clicked">
                                 <s:BeginAnimationAction>
                                     <s:SequentialAnimation>
-                                        <s:TranslateToAnimation Duration="60" TranslateX="8" />
-                                        <s:TranslateToAnimation Duration="60" TranslateX="-8" />
-                                        <s:TranslateToAnimation Duration="60" TranslateX="4" />
-                                        <s:TranslateToAnimation Duration="60" TranslateX="0" />
+                                        <s:TranslateToAnimation Duration="60"
+                                                                TranslateX="8" />
+                                        <s:TranslateToAnimation Duration="60"
+                                                                TranslateX="-8" />
+                                        <s:TranslateToAnimation Duration="60"
+                                                                TranslateX="4" />
+                                        <s:TranslateToAnimation Duration="60"
+                                                                TranslateX="0" />
                                     </s:SequentialAnimation>
                                 </s:BeginAnimationAction>
                             </s:EventActionBehavior>
@@ -162,10 +166,10 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Tap animation (Border)"
-                               Icon="{x:Static fonts:MaterialIcons.Play_arrow}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Tap animation (Border)"
+                               Icon="{x:Static fonts:MaterialIcons.Play_arrow}">
                 <VerticalStackLayout Style="{StaticResource TapStack}">
 
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
@@ -207,16 +211,15 @@
 
                     <Grid Style="{StaticResource SequenceAreaGrid}">
                         <Border Style="{StaticResource PurpleTile}"
-                                HorizontalOptions="Start"
-                                VerticalOptions="End">
+                                HorizontalOptions="Start" VerticalOptions="End">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>
                                         <s:SequentialAnimation>
                                             <s:ParallelAnimation>
                                                 <s:TranslateToAnimation Duration="600"
-                                                                        Easing="{x:Static Easing.SinInOut}"
-                                                                        TranslateX="90" TranslateY="-30" />
+                                                                        TranslateX="90" TranslateY="-30"
+                                                                        Easing="{x:Static Easing.SinInOut}" />
                                                 <s:RotateToAnimation Duration="600"
                                                                      Easing="{x:Static Easing.CubicInOut}"
                                                                      Rotation="270" />

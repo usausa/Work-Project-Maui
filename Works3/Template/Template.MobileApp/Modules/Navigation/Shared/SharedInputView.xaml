@@ -20,10 +20,10 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <!-- 呼び出し元の系統バッジ -->
-            <controls:StatusChip HorizontalOptions="Center"
+            <controls:StatusChip behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                 HorizontalOptions="Center"
                                  Icon="{x:Static fonts:MaterialIcons.Input}"
-                                 Text="{Binding NextName, StringFormat='Return to {0}'}"
-                                 behaviors:AnimationOption.EnterAnimation="FadeUp">
+                                 Text="{Binding NextName, StringFormat='Return to {0}'}">
                 <controls:StatusChip.Triggers>
                     <DataTrigger TargetType="controls:StatusChip"
                                  Binding="{Binding NextName}"
@@ -42,20 +42,20 @@
                 </controls:StatusChip.Triggers>
             </controls:StatusChip>
 
-            <controls:InfoCard Title="Shared Input"
-                               Icon="{x:Static fonts:MaterialIcons.Edit}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Shared Input"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="No" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
-                               Placeholder="No"
-                               Text="{Binding No}" />
+                               Text="{Binding No}"
+                               Placeholder="No" />
                     </Border>
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="{Binding NextName, StringFormat='This screen is shared — ▶️ returns the value to {0}'}" />
+                           Text="{Binding NextName, StringFormat='This screen is shared - ▶️ returns the value to {0}'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

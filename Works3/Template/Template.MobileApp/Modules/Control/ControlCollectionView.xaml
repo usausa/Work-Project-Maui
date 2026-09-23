@@ -135,8 +135,7 @@
     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
     <!-- RemainingItemsThreshold: 残り 3 グループまでスクロールしたら追加読み込み -->
     <CollectionView ItemsSource="{Binding List}"
-                    IsGrouped="True"
-                    RemainingItemsThreshold="3"
+                    IsGrouped="True" RemainingItemsThreshold="3"
                     RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
         <CollectionView.GroupHeaderTemplate>
             <DataTemplate x:DataType="{x:Type models:AddressGroup}">

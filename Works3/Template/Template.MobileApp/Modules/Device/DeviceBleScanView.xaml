@@ -123,8 +123,8 @@
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="🌡" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
-                                       Text="{Binding Temperature, StringFormat='{0:F1}'}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding Temperature}" />
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Temperature}"
+                                       Text="{Binding Temperature, StringFormat='{0:F1}'}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="°C" />
                             </HorizontalStackLayout>
@@ -134,8 +134,8 @@
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💧" />
                                 <Label Style="{StaticResource BleScanValueLabel}"
-                                       Text="{Binding Humidity}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding Humidity}" />
+                                       behaviors:AnimationOption.BounceTrigger="{Binding Humidity}"
+                                       Text="{Binding Humidity}" />
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="%" />
                             </HorizontalStackLayout>
@@ -149,13 +149,13 @@
                                  IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}" />
 
                         <HorizontalStackLayout Style="{StaticResource BleScanValueHorizontalStack}"
-                                               IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}"
-                                               HorizontalOptions="Center">
+                                               HorizontalOptions="Center"
+                                               IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource IconLabel}"
                                    Text="💨" />
                             <Label Style="{StaticResource BleScanValueLabel}"
-                                   Text="{Binding Co2}"
-                                   behaviors:AnimationOption.BounceTrigger="{Binding Co2}" />
+                                   behaviors:AnimationOption.BounceTrigger="{Binding Co2}"
+                                   Text="{Binding Co2}" />
                             <Label Style="{StaticResource UnitLabel}"
                                    Text="ppm" />
                         </HorizontalStackLayout>

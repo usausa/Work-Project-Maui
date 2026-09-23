@@ -56,8 +56,7 @@
                        Text="Stack Level 3" />
 
                 <controls:StepIndicator Style="{StaticResource LevelStepIndicator}"
-                                        CurrentStep="3"
-                                        TotalSteps="3" />
+                                        CurrentStep="3" TotalSteps="3" />
 
                 <BoxView Style="{StaticResource CardDivider}" />
 

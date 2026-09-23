@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:clam="clr-namespace:ClamGrid;assembly=ClamGrid"
              x:Class="Template.MobileApp.Modules.UI.UIGridColumnView"
              x:DataType="{x:Type module:UIGridColumnViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGridColumnViewModel}"
@@ -50,26 +50,19 @@
 
         <clam:ClamGridView Grid.Row="1"
                            ItemsSource="{Binding Rows}"
-                           ValueAccessors="{x:Static models:ColumnOptionAccessors.Option}"
-                           GridStyle="{x:Static module:UIGridStyles.SettingsStyle}"
-                           RowMover="{Binding RowMover}"
-                           AllowRowDragging="True"
-                           AllowColumnResizing="False"
-                           AllowColumnConfiguration="False"
-                           IsReadOnly="False"
+                           AllowColumnConfiguration="False" AllowColumnResizing="False" AllowRowDragging="True"
                            CellValueChangedCommand="{Binding CellValueChangedCommand}"
-                           RowMovedCommand="{Binding RowMovedCommand}">
+                           GridStyle="{x:Static module:UIGridStyles.SettingsStyle}"
+                           IsReadOnly="False"
+                           RowMovedCommand="{Binding RowMovedCommand}"
+                           RowMover="{Binding RowMover}"
+                           ValueAccessors="{x:Static models:ColumnOptionAccessors.Option}">
             <clam:GridColumn Key="IsVisible"
-                             Header="表示"
                              Width="72"
-                             IsBoolean="True"
-                             Alignment="Center"
-                             AllowSorting="False" />
+                             Alignment="Center" AllowSorting="False" Header="表示" IsBoolean="True" />
             <clam:GridColumn Key="Header"
-                             Header="項目"
-                             Width="*"
-                             MinWidth="120"
-                             AllowSorting="False" />
+                             Width="*" MinWidth="120"
+                             AllowSorting="False" Header="項目" />
         </clam:ClamGridView>
 
         <Label Grid.Row="2"

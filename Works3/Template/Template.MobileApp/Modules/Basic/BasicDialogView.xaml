@@ -17,9 +17,9 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Notification"
-                               Icon="{x:Static fonts:MaterialIcons.Info}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Notification"
+                               Icon="{x:Static fonts:MaterialIcons.Info}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"
@@ -29,13 +29,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Confirm / Select / Input"
-                               Icon="{x:Static fonts:MaterialIcons.Question_answer}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Confirm / Select / Input"
+                               Icon="{x:Static fonts:MaterialIcons.Question_answer}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding ConfirmCommand}"
@@ -55,13 +55,13 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Progress"
-                               Icon="{x:Static fonts:MaterialIcons.Schedule}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="160"
+                               Title="Progress"
+                               Icon="{x:Static fonts:MaterialIcons.Schedule}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*"
-                      RowDefinitions="Auto,Auto">
+                      RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="*,*">
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding IndicatorCommand}"
@@ -81,10 +81,10 @@
                 </Grid>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Feedback"
-                               Icon="{x:Static fonts:MaterialIcons.Speaker_notes}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="240">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="240"
+                               Title="Feedback"
+                               Icon="{x:Static fonts:MaterialIcons.Speaker_notes}">
                 <Grid Style="{StaticResource BasicButtonGrid}"
                       ColumnDefinitions="*,*">
                     <Button Grid.Column="0"

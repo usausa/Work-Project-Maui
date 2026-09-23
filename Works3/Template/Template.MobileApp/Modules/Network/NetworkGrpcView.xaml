@@ -6,15 +6,15 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:services="clr-namespace:Template.MobileApp.Services"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
+             xmlns:services="clr-namespace:Template.MobileApp.Services"
              x:Class="Template.MobileApp.Modules.Network.NetworkGrpcView"
              x:DataType="{x:Type module:NetworkGrpcViewModel}"
              s:BindingContextResolver.Type="{x:Type module:NetworkGrpcViewModel}"
              shell:ShellProperty.Title="gRPC"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Text="Connect"
+             shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function2Enabled="True">
 
     <!-- gRPC チャット (双方向ストリーミング、管理画面 /chat と相互) と単項 RPC -->
@@ -78,10 +78,10 @@
           RowDefinitions="Auto,*,Auto">
 
         <controls:InfoCard Grid.Row="0"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
                            Title="接続"
-                           Icon="{x:Static fonts:MaterialIcons.Hub}"
-                           behaviors:AnimationOption.EnterAnimation="FadeUp">
-            <VerticalStackLayout Spacing="6">
+                           Icon="{x:Static fonts:MaterialIcons.Hub}">
+            <VerticalStackLayout Style="{StaticResource CardContentStack}">
                 <Label Style="{StaticResource BasicCaptionLabel}"
                        Text="{Binding AddressDisplay}" />
                 <Label Style="{StaticResource BasicBodyLabel}"
@@ -114,25 +114,25 @@
                        Text="接続すると直近 50 件の履歴を受信する。管理画面の /chat と相互に表示" />
                 <CollectionView Style="{StaticResource ChatCollection}"
                                 ItemsSource="{Binding Messages}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type services:ChatMessageEntry}">
-                        <Grid Style="{StaticResource MessageGrid}"
-                              RowDefinitions="Auto,Auto">
-                            <Label Grid.Row="0"
-                                   Style="{StaticResource MessageHeaderLabel}">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="{}{0} - {1:HH:mm:ss}">
-                                        <Binding Path="User" />
-                                        <Binding Path="Timestamp" />
-                                    </MultiBinding>
-                                </Label.Text>
-                            </Label>
-                            <Label Grid.Row="1"
-                                   Style="{StaticResource BasicBodyLabel}"
-                                   Text="{Binding Text}" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type services:ChatMessageEntry}">
+                            <Grid Style="{StaticResource MessageGrid}"
+                                  RowDefinitions="Auto,Auto">
+                                <Label Grid.Row="0"
+                                       Style="{StaticResource MessageHeaderLabel}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1:HH:mm:ss}">
+                                            <Binding Path="User" />
+                                            <Binding Path="Timestamp" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                                <Label Grid.Row="1"
+                                       Style="{StaticResource BasicBodyLabel}"
+                                       Text="{Binding Text}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
                 </CollectionView>
             </Grid>
         </Border>
@@ -142,10 +142,10 @@
               ColumnDefinitions="*,Auto">
             <Entry Grid.Column="0"
                    Style="{StaticResource BasicEntry}"
+                   Text="{Binding Input}"
                    Placeholder="メッセージ"
-                   ReturnType="Send"
                    ReturnCommand="{Binding SendCommand}"
-                   Text="{Binding Input}" />
+                   ReturnType="Send" />
             <Button Grid.Column="1"
                     Style="{StaticResource BasicOutlinedButton}"
                     Command="{Binding SendCommand}"

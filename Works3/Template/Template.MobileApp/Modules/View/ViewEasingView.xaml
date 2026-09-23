@@ -20,6 +20,12 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="RunStateStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="PlayIconLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
@@ -67,6 +73,7 @@
 
             <Style x:Key="EasingBoardGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="12" />
                 <Setter Property="RowSpacing" Value="8" />
                 <Setter Property="ColumnSpacing" Value="8" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
@@ -77,8 +84,7 @@
 
     <Grid Style="{StaticResource EasingBoardGrid}"
           RowDefinitions="*,*,*,*"
-          ColumnDefinitions="*,*,*"
-          Padding="12">
+          ColumnDefinitions="*,*,*">
 
         <Border Grid.Row="0" Grid.Column="0"
                 Style="{StaticResource EasingCardBorder}">
@@ -347,8 +353,7 @@
         <!-- 実行状態 -->
         <Border Grid.Row="3" Grid.Column="2"
                 Style="{StaticResource EasingCardBorder}">
-            <VerticalStackLayout VerticalOptions="Center"
-                                 Spacing="4">
+            <VerticalStackLayout Style="{StaticResource RunStateStack}">
                 <Label Style="{StaticResource PlayIconLabel}"
                        Text="{x:Static fonts:MaterialIcons.Play_arrow}">
                     <Label.Triggers>

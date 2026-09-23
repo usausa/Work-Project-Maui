@@ -2,12 +2,12 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Basic"
              x:Class="Template.MobileApp.Modules.Basic.BasicValidationView"
              x:DataType="{x:Type module:BasicValidationViewModel}"
@@ -41,79 +41,79 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:InfoCard Title="Validate on Unfocused"
-                               Icon="{x:Static fonts:MaterialIcons.Fact_check}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               Title="Validate on Unfocused"
+                               Icon="{x:Static fonts:MaterialIcons.Fact_check}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Text1 (clears error on focus, validates on unfocused)" />
                     <Border Style="{StaticResource CardFieldBorder}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text1]}"
-                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
-                        <Entry Style="{StaticResource BasicFieldEntry}"
-                               s:Behavior.Key="Text1"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text1]}">
+                        <Entry s:Behavior.Key="Text1"
                                s:ValidationProperty.ClearErrorOnFocus="True" s:ValidationProperty.ValidateOnUnfocused="True"
+                               Style="{StaticResource BasicFieldEntry}"
                                Text="{Binding Text1}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text1]}"
                            IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Text1]}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text1]}" />
+                           Text="{Binding Errors[Text1]}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Manual Validation"
-                               Icon="{x:Static fonts:MaterialIcons.Rule}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="100">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="100"
+                               Title="Manual Validation"
+                               Icon="{x:Static fonts:MaterialIcons.Rule}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Text2" />
                     <Border Style="{StaticResource CardFieldBorder}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text2]}"
-                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
-                        <Entry Style="{StaticResource BasicFieldEntry}"
-                               s:Behavior.Key="Text2"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Text2]}">
+                        <Entry s:Behavior.Key="Text2"
+                               Style="{StaticResource BasicFieldEntry}"
                                Text="{Binding Text2}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text2]}"
                            IsVisible="{Binding Errors[Text2], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Text2]}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text2]}" />
+                           Text="{Binding Errors[Text2]}" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicOutlinedButton}"
-                                ImageSource="{x:Static markup:AppIcons.ValidationError}"
                                 Command="{Binding ErrorCommand}"
-                                Text="Error" />
+                                Text="Error"
+                                ImageSource="{x:Static markup:AppIcons.ValidationError}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedButton}"
-                                ImageSource="{x:Static markup:AppIcons.ValidationCheck}"
                                 Command="{Binding ClearCommand}"
-                                Text="Clear" />
+                                Text="Clear"
+                                ImageSource="{x:Static markup:AppIcons.ValidationCheck}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Focus Request"
-                               Icon="{x:Static fonts:MaterialIcons.Input}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="200">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="200"
+                               Title="Focus Request"
+                               Icon="{x:Static fonts:MaterialIcons.Input}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Moves focus to the first field with an error" />
                     <Button Style="{StaticResource BasicOutlinedButton}"
-                            ImageSource="{x:Static markup:AppIcons.SmallInput}"
                             Command="{Binding FocusCommand}"
-                            Text="Focus" />
+                            Text="Focus"
+                            ImageSource="{x:Static markup:AppIcons.SmallInput}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Correlation (Compare)"
-                               Icon="{x:Static fonts:MaterialIcons.Link}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="260">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="260"
+                               Title="Correlation (Compare)"
+                               Icon="{x:Static fonts:MaterialIcons.Link}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Password" />
@@ -125,31 +125,31 @@
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Confirm ([Compare] で Password との一致を入力の度に検証。Password 変更時も再検証)" />
                     <Border Style="{StaticResource CardFieldBorder}"
-                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}"
-                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}">
-                        <Entry Style="{StaticResource BasicFieldEntry}"
-                               s:Behavior.Key="Confirm"
+                            behaviors:AnimationOption.HighlightColor="{StaticResource RedLighten4}"
+                            behaviors:AnimationOption.HighlightTrigger="{Binding Errors[Confirm]}">
+                        <Entry s:Behavior.Key="Confirm"
+                               Style="{StaticResource BasicFieldEntry}"
                                IsPassword="True"
                                Text="{Binding Confirm}" />
                     </Border>
                     <Label Style="{StaticResource ErrorMessageLabel}"
+                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Confirm]}"
                            IsVisible="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Errors[Confirm]}"
-                           behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Confirm]}" />
+                           Text="{Binding Errors[Confirm]}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard Title="Toolkit Validation Behaviors"
-                               Icon="{x:Static fonts:MaterialIcons.Extension}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="320">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="320"
+                               Title="Toolkit Validation Behaviors"
+                               Icon="{x:Static fonts:MaterialIcons.Extension}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="EmailValidationBehavior (入力の度に検証し文字色が変わる)" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
-                               Keyboard="Email"
-                               Text="{Binding Email}">
+                               Text="{Binding Email}"
+                               Keyboard="Email">
                             <Entry.Behaviors>
                                 <mct:EmailValidationBehavior Flags="ValidateOnValueChanged"
                                                              InvalidStyle="{StaticResource InvalidEntry}"
@@ -161,12 +161,11 @@
                            Text="NumericValidationBehavior (1〜100 の数値のみ)" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
-                               Keyboard="Numeric"
-                               Text="{Binding Quantity}">
+                               Text="{Binding Quantity}"
+                               Keyboard="Numeric">
                             <Entry.Behaviors>
-                                <mct:NumericValidationBehavior Flags="ValidateOnValueChanged"
-                                                               MinimumValue="1"
-                                                               MaximumValue="100"
+                                <mct:NumericValidationBehavior MinimumValue="1" MaximumValue="100"
+                                                               Flags="ValidateOnValueChanged"
                                                                InvalidStyle="{StaticResource InvalidEntry}"
                                                                ValidStyle="{StaticResource ValidEntry}" />
                             </Entry.Behaviors>

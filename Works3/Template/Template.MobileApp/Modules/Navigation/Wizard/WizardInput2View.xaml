@@ -19,22 +19,21 @@
     <ScrollView Style="{StaticResource RootScroll}">
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
-            <controls:StepIndicator Margin="0,8,0,0"
-                                    CurrentStep="2"
-                                    TotalSteps="3"
-                                    behaviors:AnimationOption.EnterAnimation="FadeUp" />
+            <controls:StepIndicator Style="{StaticResource BasicStepIndicator}"
+                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                    CurrentStep="2" TotalSteps="3" />
 
-            <controls:InfoCard Title="Step 2 — Data2"
-                               Icon="{x:Static fonts:MaterialIcons.Edit}"
-                               behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80">
+            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
+                               behaviors:AnimationOption.EnterDelay="80"
+                               Title="Step 2 - Data2"
+                               Icon="{x:Static fonts:MaterialIcons.Edit}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Data2 (required)" />
                     <Border Style="{StaticResource CardFieldBorder}">
                         <Entry Style="{StaticResource BasicFieldEntry}"
-                               Placeholder="Data2"
-                               Text="{Binding Context.Data2}" />
+                               Text="{Binding Context.Data2}"
+                               Placeholder="Data2" />
                     </Border>
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Next (▶️) is enabled once this field is filled" />

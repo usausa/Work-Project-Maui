@@ -89,10 +89,9 @@
                        Text="Sample.mp3" />
 
                 <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
-                    <Slider Minimum="0"
-                            Maximum="1"
+                    <Slider behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}"
                             Value="{Binding PositionRatio, Mode=OneWay}"
-                            behaviors:SliderOption.DragCompletedCommand="{Binding SeekCommand}" />
+                            Minimum="0" Maximum="1" />
                     <Grid ColumnDefinitions="*,Auto">
                         <Label Grid.Column="0"
                                Style="{StaticResource BasicMonoLabel}"
@@ -131,9 +130,8 @@
                            Text="{x:Static fonts:MaterialIcons.Volume_up}" />
                     <Slider x:Name="VolumeSlider"
                             Grid.Column="1"
-                            Minimum="0"
-                            Maximum="1"
-                            Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}" />
+                            Value="{Binding AudioPlayer.Volume, FallbackValue=0.5}"
+                            Minimum="0" Maximum="1" />
                     <Label Grid.Column="2"
                            Style="{StaticResource VolumeValueLabel}"
                            Text="{Binding Source={x:Reference VolumeSlider}, Path=Value, StringFormat='{0:P0}', x:DataType=Slider}" />
