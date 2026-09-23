@@ -1,4 +1,4 @@
-# 📝変更内容まとめ (uibase → fix3)
+# 📝変更内容まとめ (uibase → Fix8)
 
 `Works3/Template` 配下の変更を、git タグの区間ごとに **画面単位** でまとめたドキュメント。
 **Git の差分を確認しながら「何を行なったのか」を確認するための参考資料**とすることを目的とする。
@@ -17,6 +17,13 @@
 | [🐛7. baseup1 → fix2](#7-baseup1--fix2--resharper-全件対応と-scene-描画の重大バグ修正) | 2026-09-05 | 1 | 66 | +459 / -333 | **ReSharper 全件対応**(254 件)と **Scene 描画の重大バグ修正**(かくつき・ANR・SIGSEGV) |
 | [🔙8. fix2 → back](#8-fix2--back--back初期化方式の刷新白画面対策-b-1-の方式変更) | 2026-09-05 → 09-06 | 4 | 15 | +276 / -233 | **BACK/初期化方式の刷新**(白画面対策 B-1 を StartupState 方式へ・ApplicationInitializer 廃止) |
 | [📅9. back → fix3](#9-back--fix3--calendar--location-の手直し) | 2026-09-06 | 2 | 4 | +15 / -36 | **Calendar / Location の手直し**(Debug 計測撤去・未取得表示の空状態化) |
+| [🗓️10. fix3 → calendar](#10-fix3--calendar--旧-calendarview-の廃止) | 2026-09-06 | 2 | 7 | +751 / -2,143 | **旧 CalendarView の廃止**(CalendarView2 を CalendarView へ改名) |
+| [📦11. calendar → Fix4](#11-calendar--fix4--パッケージ更新と-readme-の画面キャプチャ) | 2026-09-06 | 6 | 38 | +149 / -553 | **パッケージ更新と README の画面キャプチャ**(Smart / BunnyTail の更新、キャプチャ 31 枚) |
+| [🗄️12. Fix4 → smart1](#12-fix4--smart1--smart-ライブラリの採用と遷移効果デモ) | 2026-09-07 | 4 | 53 | +1,228 / -319 | **Smart ライブラリの採用**(Data.Accessor / Mapper / Results)と遷移効果デモ |
+| [🔣13. smart1 → Fix5](#13-smart1--fix5--アイコン自作レイアウト画像アセット) | 2026-09-07 → 09-13 | 7 | 190 | +3,350 / -1,788 | **アイコン・自作レイアウト・画像アセット**(アイコン集約・メニューのアイコン化・自作レイアウト・画像の刷新・UI メニュー再配置) |
+| [📱14. Fix5 → Fix6](#14-fix5--fix6--ステータスバー追従と-securestorage-の復旧) | 2026-09-13 | 6 | 26 | +759 / -671 | **ステータスバー追従と SecureStorage の復旧**(CompareSlider 撤去・CircularLayout の回転 / リング・Edge-to-Edge の確認) |
+| [🎮15. Fix6 → Fix7](#15-fix6--fix7--app--入力検証--dragdrop-の手直し) | 2026-09-13 | 4 | 69 | +847 / -207 | **App / 入力検証 / DragDrop の手直し**(Sudoku・Calculator・Wheel・MaskedBehavior・相関検証・ドロップ先表示) |
+| [🌐16. Fix7 → Fix8](#16-fix7--fix8--control-メニューネットワークaiスタイル統一) | 2026-09-15 → 09-23 | 37 | 439 | +18,477 / -10,605 | **Control メニュー・ネットワーク・AI・スタイル統一**(Control 新設・WiFi・通信 4 種・Vision / Ollama / 音声・通知・ClamGrid / ClamCalendar / ReactiveHub・スタイル統一) |
 
 - 関連ドキュメント: 残作業(SCP 実テスト / 移管課題 / 参照サンプルからの追加機能)は `Task_Checklist.md`(**2026-09-03 に `UI_Verification_Checklist.md` + `Implementation_Checklist.md` + 旧 `UI_Task_Checklist.md` + `Image_Asset_Expansion_Plan.md` を統合**)。
   - `Fix_Checklist.md`(区間2で作成)と `Reference_Summary.md` / `Reference_Analysis.md`(区間3で作成)は**区間5で削除**され、内容は本書と上記へ統合された。
@@ -879,7 +886,35 @@ ScpPassword=********
 
 ---
 
-# 🚧10. fix3 以降(次のタグまでの変更)
+# 🗓️10. fix3 → calendar — 旧 CalendarView の廃止
+
+旧 CalendarView(XAML 版)を削除し、CalendarView2 を CalendarView に改名した区間(2026-09-06)。
+
+### 📅旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
+
+- **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)
+- `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
+- `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
+
+---
+
+# 📦11. calendar → Fix4 — パッケージ更新と README の画面キャプチャ
+
+パッケージの更新と、README の画面キャプチャの追加の区間(2026-09-06)。
+
+### 📦パッケージ更新と README の画面キャプチャ(2026-09-06)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | 追加: `Usa.Smart.Data.Accessor` 3.0.0-beta8 / `Usa.Smart.Results` 2.2.0 / `BunnyTail.XamlProperty.Maui` 1.2.0。更新: `Usa.Smart.Mapper` 0.9.0 → 1.0.0-beta8、`Usa.Smart.Mvvm` 2.11.0 → 2.12.0、`Usa.Smart.Navigation`(`.Extensions.DependencyInjection` / `.Maui` も)3.8.0 → 3.9.0、`BunnyTail.DependencyInjection` 0.5.0 → 0.6.0、`BunnyTail.EmbeddedBuildProperty` 1.18.0 → 1.19.0、`BunnyTail.MemberAccessor` 1.15.0 → 1.16.0、`Rester` 2.15.0 → 2.16.0、`Syncfusion.Maui.Toolkit` 1.0.10 → 1.0.11 |
+| `MauiProgram.cs` / `GeneratedFactory.cs` | BunnyTail.DependencyInjection 0.6.0 に合わせて `ConfigureComponents()` → `UseGeneratedServiceProvider()`、`ConfigureContainer` → `ConfigureComponents` に改名。`GeneratedFactory.cs` に `Shiny.ShinyMauiInitializationService` のファクトリを追加 |
+| `README.md` / `README-ja.md` / `Document/*.png` | 画面キャプチャ 31 枚(App / Sample / UI)を追加し、ギャラリーの並びを整理 |
+
+---
+
+# 🗄️12. Fix4 → smart1 — Smart ライブラリの採用と遷移効果デモ
+
+Smart ライブラリ(Data.Accessor / Mapper / Results)の採用と、遷移効果(Effect)デモの追加の区間(2026-09-07)。
 
 ### 🗄️`Usa.Smart.Data.Accessor` への移行(2026-09-07)
 
@@ -966,11 +1001,17 @@ ScpPassword=********
 - `Services/ScpService.cs` の `ScpTransferResult` は対応不要(`ServerFingerprint` を成功・失敗の両方で返す構造のため `Result<T>` に嵌まらない)。現状の record のまま維持する
 - ビルド 0 エラー 0 警告。**実機確認済み**: 電卓の成功(`2+3×4`→`14`)/ 失敗(「式が不完全です」)、Crop 書き出し(`143 x 134 px`)、Network の失敗経路(タイムアウト → エラーダイアログ)と成功経路(ローカル起動した `WorkMauiServer` + `adb reverse` で「Get success. time=[...]」。2026-09-07 確認)
 
-### 📅旧 CalendarView の廃止と CalendarView2 のリネーム(C-14+D19 の実施。2026-09-06)
+## 💡C. この区間のナレッジ
 
-- **旧 XAML 版 `Controls/CalendarView.xaml(.cs)`(未参照 1,490 行)を削除**し、**Skia 自前描画版 `CalendarView2` を `CalendarView` へリネーム**(git mv。クラス名 / `x:Class` / `typeof` 参照など 70 箇所を置換)
-- `UICalendarView.xaml`: タグを `controls:CalendarView` へ変更し、「タグ名を変えるだけで従来版へ切り替えられる(未決定)」の切替コメントを実態(一本化済み)へ合わせた
-- `CalendarSelectionMode` 等の共有型は独立ファイルのため影響なし。ビルド警告ゼロ・実機で表示 / 月送り / イベント / 選択モードバーの動作確認済み
+- **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
+- ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
+- 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
+
+---
+
+# 🔣13. smart1 → Fix5 — アイコン・自作レイアウト・画像アセット
+
+Grid の Spacing の Style 化、アイコンの定義集約とメニューのアイコン化、自作レイアウトの追加、画像アセットの刷新、UI 1 / UI 2 メニューの再配置の区間(2026-09-07 → 09-13)。
 
 ### 🎨Grid の Spacing を Style へ集約(2026-09-07)
 
@@ -1171,6 +1212,27 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - inspectcode(Release)0 件、Debug ビルド 0 警告。Release ビルドに残る 10 件の警告は Android SDK 側(`BluetoothGattServerCallback.OnServiceAdded` の動的登録 ×8、registered dynamically ×2)
 
+## 💡C. この区間のナレッジ
+
+- **`pm clear` は Debug ビルドのアプリを起動不能にする**。Fast Deployment のアセンブリは `/data/user/0/<pkg>/files/.__override__/<abi>` に置かれるため、データ消去で一緒に消えて `No assemblies found in ...__override__` で abort する(APK 内にはアセンブリが無い)。**再デプロイ(`-t:Install`)で復旧**する。併せて実行時パーミッションも全て取り消されるので `pm grant` で戻す
+- **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
+- **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
+- 自作 `Layout` の重なり順は Arrange 順では決まらない。子の `ZIndex` を `Layout.OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で設定する(`ZIndex` の変更はハンドラ側の並べ替えだけで再レイアウトは起きない)
+- `BindableLayout` はレイアウトの子を全て管理するため、静的な子と `ItemsSource` の子は同居できない。種別毎のモデル + `BindableLayout.ItemTemplateSelector` で 1 本にする。テンプレート毎の入場遅延はモデルのプロパティ(`EnterDelay`)にバインドする
+- `HeightRequest` を持つ子は `Fill` でもセルいっぱいに広がらない(`ComputeFrame` が明示サイズを優先する)。タイル用のスタイルには `HeightRequest` を持たせない
+- `GraphicsView` はタッチを消費する。親のジェスチャで受けたい重ね表示では `InputTransparent="True"` にする
+- Avalonia の `Panel`(`MeasureOverride` / `ArrangeOverride` / `StyledProperty` / `AttachedProperty`)は MAUI の `Layout` + `ILayoutManager` / `BindableProperty(.CreateAttached)` に対応する。配置を `DesiredSize` から決定的に再計算する形にすると `Measure` / `ArrangeChildren` で同じ詰め込みを共有できる
+- Foundry `gpt-image-2` の `images/generations` は JSON のみ(multipart は 400)、参照画像を渡す `images/edits` は multipart(`image[]`)。生成サイズは 1024x1024 / 1536x1024 / 1024x1536 のみで、目標サイズは生成後に切り出し・縮小する。既存作品に似た語や特徴(pocket monster 等)は安全フィルタで `moderation_blocked` になる
+- VS Code の Markdown プレビューはワークスペース外(`../`)の画像を表示しない。ドキュメントから参照する確認用サムネイルは `Document/` 配下に置く
+- `Border` の内容は Border の枠ではなく内容要素の枠でクリップされる(Android の `ContentViewGroup`)。内容の端にある要素を Scale で大きくする(Bounce 等)場合は、Padding を Border ではなく内側のレイアウトに持たせる
+- `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
+
+---
+
+# 📱14. Fix5 → Fix6 — ステータスバー追従と SecureStorage の復旧
+
+CompareSlider の撤去、CircularLayout の回転 / リング、ステータスバーの画面追従、Edge-to-Edge / キーボードの確認、SecureStorage の復旧の区間(2026-09-13)。
+
 ### 🐛CompareSlider の撤去と `ReplaceBitmap` の修正(2026-09-13)
 
 | 対象 | 内容 |
@@ -1230,6 +1292,24 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - 実機確認: ①`shared_prefs/template.mobileapp.microsoft.maui.essentials.preferences.xml` の keyset を `0800`(空の Keyset として解釈される値)に書き換えて Main > Setting を開くと、変更前は `Java.Security.GeneralSecurityException: empty keyset` でクラッシュ、変更後は画面が開いて値は未設定表示・保存領域は再生成される ②ローカルの WorkServer(`api/test/delay/5000`)に対し 2 秒で中断するトークンを渡すと、インジケータが約 2 秒で閉じ、「Canceled. Retry ?」も出ない(通常の Get server time は成功)
 - ビルド 0 エラー 0 警告(Debug)
+
+## 💡C. この区間のナレッジ
+
+- 予測型バック(D25 で現状維持): 自前の `OnBackPressedCallback` が有効なあいだはシステムのアニメーション(back-to-home / cross-activity)は出ない。`OnBackPressedDispatcher`(AndroidX Activity 1.9)が API 34+ で `OnBackAnimationCallback` を登録するため、最上位の有効なコールバックに `HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled` が届く。進捗はスワイプ 800px で約 0.7。**ボタン操作(3 ボタンナビ / `KEYCODE_BACK`)でも Android 17 では `Started` が `SwipeEdge = 2`(エッジなし)で来て、直後に `Pressed`、`Progressed` は来ない**
+- ジェスチャーの検証: ナビゲーションモードは `adb shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural`(戻すときは `...navbar.threebutton`。`settings get secure navigation_mode` で 2 = ジェスチャー / 0 = 3 ボタン)。途中で止める・戻す操作は `input motionevent DOWN 3 y` → `MOVE x y` を刻む → `UP`(`input swipe` は一気に完了する)。縮小量はスクショの要素端の位置から算出できる
+- `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
+- `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
+- **MAUI 10 の Android `SecureStorage` は `Remove` / `RemoveAll` も `EncryptedSharedPreferences` の生成を通る**ため、復号できない状態では `GetAsync` と同じ例外になる(`RemoveAll` は復旧手段にならない)。MAUI 側が捕捉するのは `AEADBadTagException`(キー単位)と `InvalidProtocolBufferException`(keyset 破損)だけで、Tink が keyset の復号に失敗して平文として読み直した結果の `GeneralSecurityException`(`empty keyset` 等)は素通りする。復旧は `Application.Context.GetSharedPreferences(alias).Edit().Clear()` で実体を消す
+- SecureStorage の破損は `run-as <pkg>` で `shared_prefs/<pkg>.microsoft.maui.essentials.preferences.xml` の `__androidx_security_crypto_encrypted_prefs_key_keyset__` / `_value_keyset__` を `0800` にすると再現できる(`120a…` のような不正 protobuf は MAUI が捕捉するため再現にならない)
+- MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
+- `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る
+- `uiautomator dump` は IME ウィンドウの下にあるノードを出力しない(フォーカス中の `EditText` が出なければキーボードに隠れている)。IME の表示状態は `dumpsys input_method` の `mInputShown`
+
+---
+
+# 🎮15. Fix6 → Fix7 — App / 入力検証 / DragDrop の手直し
+
+Sudoku / Calculator / Wheel、MaskedBehavior と相関検証、DragDrop のドロップ先表示、UISocial の背景、メール日時の変換の手直しの区間(2026-09-13)。
 
 ### 🎮Sudoku の盤面線と Calculator のボタン(2026-09-13)
 
@@ -1292,6 +1372,20 @@ Microsoft Foundry の `gpt-image-2` で画像を生成し、`Resources/Images/` 
 
 - 他の一方向コンバーター 18 件は `NotSupportedException` のまま
 - ビルド 0 エラー 0 警告(Debug)。実機で UIMail の日時表示を確認
+
+## 💡C. この区間のナレッジ
+
+- **ドロップ成功で元の行を作り直すと `DragGestureRecognizer.DropCompleted` は届かない**(BindableLayout がリストの Remove / Insert で行の View を再生成し、`ActionDragEnded` を受け取る元 View が消えるため)。ドラッグ状態の解除は DropCompleted だけに頼らず、各ドロップ処理の末尾でも行う。対象外へ落とした場合(元の View が残る)は DropCompleted が届く
+- CommunityToolkit の `MaskedBehavior` は **`UnmaskedCharacter`(既定 `X`)の位置だけが入力欄**。数字を `0` で表したマスク(`000-0000-0000`)は `UnmaskedCharacter="0"` を付けないと全て固定文字になり何も入力できない
+- `AppViewModelBase.Validate(name)` は失敗時に `AddError` するだけで成功時に消さない。入力の度に検証するときは `Errors.ClearErrors(name)` → `Validate(name)` の順に呼ぶ(Smart.Maui の `ValidateOnTextChanged` 添付プロパティも同じ理由でそのままでは消えない)
+- **Microsoft.Maui.Graphics(Android)で `SetFillPaint` のグラデーションは `FillColor` を設定しても解除されない**(`FillPaintWithAlpha` は色を設定するがシェーダは残るため、以降の塗りが全てグラデーション色になる)。グラデーションで塗る区間は `SaveState` / `RestoreState` で囲む(状態の複製が破棄されるので元の Paint に残らない)
+- **`UniformItemsLayout`(CommunityToolkit)はセルサイズを先頭の子の DesiredSize だけで決め、各子を `Measure(セル幅, セル高)` → `Arrange` する**。子ごとに Margin を変えて罫線を作ると、明示 HeightRequest とセル高の食い違いで 1dp の隙間が行によって消える。罫線が要る格子は `Grid` の Spacing とスペーサ行・列で作る(位置は同じ星サイズから決まるため、丸めで隙間が 0 にならない)
+
+---
+
+# 🌐16. Fix7 → Fix8 — Control メニュー・ネットワーク・AI・スタイル統一
+
+Control メニューの新設(Grid / Bottom sheet / Drawer)、WiFi、診断パネル、AI(Vision / Ollama / 音声入力)、ローカル通知、ネットワーク(REST / UL・DL / SignalR / gRPC)、ClamGrid / ClamCalendar / Mofucat.ReactiveHub への置換、起動オーバーレイ、サンプル画面のスタイル統一の区間(2026-09-15 → 09-23。各項目の日付は作業日)。
 
 ### 📋Control メニューの新設(2026-09-13)
 
@@ -1874,36 +1968,13 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - **`SfSegmentedControl` の文言切れ**: 既定の `SegmentWidth`(100)で切れる。`VisibleSegmentsCount` を指定すると幅を等分して全表示できる
 - **Style 内の DataTrigger と x:DataType**: ページの `x:DataType` が VM のとき、DataTemplate 用 Style の `DataTrigger` の Binding は VM の型で解決されて MAUIG2045(反射バインド)になる。`Binding="{Binding IsSelected, x:DataType={x:Type module:VisitCard}}"` のようにバインド側で型を指定する
 - **CollectionView のカード選択**: `SelectionMode=None` にして選択状態は項目側(`IsSelected`)で持ち、`TapGestureRecognizer` から VM のコマンドへ `CommandParameter="{Binding .}"` で渡す。複数条件の背景色(状態 → 選択)は `DataTrigger` を並べ、後に書いたものが勝つ性質で選択を最後に置く
-- **Debug ビルドの APK からフォントが消えてアイコンが全て豆腐になる**ことがある(`FontManager: Font asset not found MaterialIcons-Regular.ttf`)。`obj/Debug/net10.0-android/resizetizer/` のフォント出力(`f/*.ttf`)と `assets/*.ttf` が無いのに `mauifont.stamp` が残っている状態で、インクリメンタルビルドがフォント処理を省略している。**`mauifont.stamp` と `resizetizer` フォルダを削除して再ビルド**すると復旧する。Button や Style の問題ではないので、アイコンが豆腐になったらまず APK 内の `assets/*.ttf` を確認する
-- **`pm clear` は Debug ビルドのアプリを起動不能にする**。Fast Deployment のアセンブリは `/data/user/0/<pkg>/files/.__override__/<abi>` に置かれるため、データ消去で一緒に消えて `No assemblies found in ...__override__` で abort する(APK 内にはアセンブリが無い)。**再デプロイ(`-t:Install`)で復旧**する。併せて実行時パーミッションも全て取り消されるので `pm grant` で戻す
-- **遷移の体感速度は「タップしたボタンが遷移後も生存するか」で変わる**。ページ内のボタンはページごと破棄されるためリップルが遷移と同時に止まるが、シェル側(`MainPage.xaml` のフッター等)のボタンは残るので、遅れて始まったリップルが新しい画面の上で再生され続ける。計測は `atrace --async_start gfx view input res` を取り、RenderThread の `CircleOp` の出現範囲を見る(リップルの描画オペ)。フレームの発生範囲は `dumpsys gfxinfo <pkg> framestats` の `IntendedVsync` / `FrameCompleted` を `/proc/uptime` と突き合わせてタップ基準に変換する
-- **インクリメンタルビルドの残骸で起動直後にクラッシュを繰り返す**ことがある(`java.lang.IllegalArgumentException: No view found for id 0x… (template.mobileapp:id/labeled) for fragment NavigationRootManager_ElementBasedFragment`)。マネージドコードに入る前の `FragmentActivity.onStart` で落ちるためログにアプリの出力が残らない。**アンインストール、再インストール、端末再起動では直らず、`obj/Debug` と `bin/Debug` を削除してのクリアビルドで復旧**する。リソース ID の不整合なのでコード側を疑う前にビルド成果物を捨てる
-- ソースジェネレータが生成するコンストラクタ(`[DataAccessor]` の `DataAccessor(IDbProvider)` 等)は同じコンパイル内の他のジェネレータ(BunnyTail の生成ファクトリ)からは見えない。`AddSingleton<T>()` の型登録だと CS7036 になる。生成コンストラクタは `[EditorBrowsable(Never)] internal` のためリフレクション系のフォールバック(`ActivatorUtilities` は public ctor のみ)でも解決できない。登録はアクセサ側のジェネレータが生成する `[DataAccessorRegistration]` メソッド(ファクトリ登録)で行う。BunnyTail からは生成された本体が見えないので型登録は生成されず、実行時はファクトリ記述子として扱われ、フォールバック報告にも出ない
-- 予測型バック(D25 で現状維持): 自前の `OnBackPressedCallback` が有効なあいだはシステムのアニメーション(back-to-home / cross-activity)は出ない。`OnBackPressedDispatcher`(AndroidX Activity 1.9)が API 34+ で `OnBackAnimationCallback` を登録するため、最上位の有効なコールバックに `HandleOnBackStarted` / `HandleOnBackProgressed(BackEventCompat)` / `HandleOnBackCancelled` が届く。進捗はスワイプ 800px で約 0.7。**ボタン操作(3 ボタンナビ / `KEYCODE_BACK`)でも Android 17 では `Started` が `SwipeEdge = 2`(エッジなし)で来て、直後に `Pressed`、`Progressed` は来ない**
-- ジェスチャーの検証: ナビゲーションモードは `adb shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural`(戻すときは `...navbar.threebutton`。`settings get secure navigation_mode` で 2 = ジェスチャー / 0 = 3 ボタン)。途中で止める・戻す操作は `input motionevent DOWN 3 y` → `MOVE x y` を刻む → `UP`(`input swipe` は一気に完了する)。縮小量はスクショの要素端の位置から算出できる
-- 型引数なしの `AddSingleton(p => new DelegateDbProvider(...))` はラムダの戻り値型(`DelegateDbProvider`)で登録される。インターフェイスで解決させる登録は `AddSingleton<IDbProvider>(p => ...)` と型引数を明示する(漏れると起動時に `Unable to resolve service for type 'Smart.Data.IDbProvider'`)
-- 自作 `Layout` の重なり順は Arrange 順では決まらない。子の `ZIndex` を `Layout.OnAdd` / `OnInsert` / `OnRemove` / `OnUpdate` で設定する(`ZIndex` の変更はハンドラ側の並べ替えだけで再レイアウトは起きない)
-- `BindableLayout` はレイアウトの子を全て管理するため、静的な子と `ItemsSource` の子は同居できない。種別毎のモデル + `BindableLayout.ItemTemplateSelector` で 1 本にする。テンプレート毎の入場遅延はモデルのプロパティ(`EnterDelay`)にバインドする
-- `HeightRequest` を持つ子は `Fill` でもセルいっぱいに広がらない(`ComputeFrame` が明示サイズを優先する)。タイル用のスタイルには `HeightRequest` を持たせない
-- `GraphicsView` はタッチを消費する。親のジェスチャで受けたい重ね表示では `InputTransparent="True"` にする
-- Avalonia の `Panel`(`MeasureOverride` / `ArrangeOverride` / `StyledProperty` / `AttachedProperty`)は MAUI の `Layout` + `ILayoutManager` / `BindableProperty(.CreateAttached)` に対応する。配置を `DesiredSize` から決定的に再計算する形にすると `Measure` / `ArrangeChildren` で同じ詰め込みを共有できる
-- Foundry `gpt-image-2` の `images/generations` は JSON のみ(multipart は 400)、参照画像を渡す `images/edits` は multipart(`image[]`)。生成サイズは 1024x1024 / 1536x1024 / 1024x1536 のみで、目標サイズは生成後に切り出し・縮小する。既存作品に似た語や特徴(pocket monster 等)は安全フィルタで `moderation_blocked` になる
-- VS Code の Markdown プレビューはワークスペース外(`../`)の画像を表示しない。ドキュメントから参照する確認用サムネイルは `Document/` 配下に置く
-- `Border` の内容は Border の枠ではなく内容要素の枠でクリップされる(Android の `ContentViewGroup`)。内容の端にある要素を Scale で大きくする(Bounce 等)場合は、Padding を Border ではなく内側のレイアウトに持たせる
-- `AspectFill` の商品画像はスロットの比率が合わないと被写体が欠ける。白背景の物撮りは `AspectFit` + Margin の余白付き中央表示にする
-- `uiautomator dump` は常時アニメーションのある画面(Kit Dashboard / Social 等)で古い階層を返す。実機操作の画面判定は logcat の `Navigated: [from]->[to]` 行で行う。Onboarding の Back はフェード完了まで 2〜3 秒かかる
-- `-t:Run` は adb サーバが落ちていると XAFD7000(接続拒否)で失敗する。`adb devices` でサーバを起動してから再実行する
-- **ドロップ成功で元の行を作り直すと `DragGestureRecognizer.DropCompleted` は届かない**(BindableLayout がリストの Remove / Insert で行の View を再生成し、`ActionDragEnded` を受け取る元 View が消えるため)。ドラッグ状態の解除は DropCompleted だけに頼らず、各ドロップ処理の末尾でも行う。対象外へ落とした場合(元の View が残る)は DropCompleted が届く
-- CommunityToolkit の `MaskedBehavior` は **`UnmaskedCharacter`(既定 `X`)の位置だけが入力欄**。数字を `0` で表したマスク(`000-0000-0000`)は `UnmaskedCharacter="0"` を付けないと全て固定文字になり何も入力できない
-- `AppViewModelBase.Validate(name)` は失敗時に `AddError` するだけで成功時に消さない。入力の度に検証するときは `Errors.ClearErrors(name)` → `Validate(name)` の順に呼ぶ(Smart.Maui の `ValidateOnTextChanged` 添付プロパティも同じ理由でそのままでは消えない)
-- **Microsoft.Maui.Graphics(Android)で `SetFillPaint` のグラデーションは `FillColor` を設定しても解除されない**(`FillPaintWithAlpha` は色を設定するがシェーダは残るため、以降の塗りが全てグラデーション色になる)。グラデーションで塗る区間は `SaveState` / `RestoreState` で囲む(状態の複製が破棄されるので元の Paint に残らない)
-- **MAUI 10 の Android `SecureStorage` は `Remove` / `RemoveAll` も `EncryptedSharedPreferences` の生成を通る**ため、復号できない状態では `GetAsync` と同じ例外になる(`RemoveAll` は復旧手段にならない)。MAUI 側が捕捉するのは `AEADBadTagException`(キー単位)と `InvalidProtocolBufferException`(keyset 破損)だけで、Tink が keyset の復号に失敗して平文として読み直した結果の `GeneralSecurityException`(`empty keyset` 等)は素通りする。復旧は `Application.Context.GetSharedPreferences(alias).Edit().Clear()` で実体を消す
-- **`UniformItemsLayout`(CommunityToolkit)はセルサイズを先頭の子の DesiredSize だけで決め、各子を `Measure(セル幅, セル高)` → `Arrange` する**。子ごとに Margin を変えて罫線を作ると、明示 HeightRequest とセル高の食い違いで 1dp の隙間が行によって消える。罫線が要る格子は `Grid` の Spacing とスペーサ行・列で作る(位置は同じ星サイズから決まるため、丸めで隙間が 0 にならない)
-- SecureStorage の破損は `run-as <pkg>` で `shared_prefs/<pkg>.microsoft.maui.essentials.preferences.xml` の `__androidx_security_crypto_encrypted_prefs_key_keyset__` / `_value_keyset__` を `0800` にすると再現できる(`120a…` のような不正 protobuf は MAUI が捕捉するため再現にならない)
-- MAUI 10.0.100 / Android のウィンドウは既定で `adjust=pan`(`dumpsys window windows` の `sim={adjust=...}`)。`App` のコンストラクタでの `Application.SetWindowSoftInputModeAdjust` は効かず、`MainActivity.OnCreate` の `base.OnCreate` 後の `Window.SetSoftInputMode` で切り替わる。ただし edge-to-edge(`SetDecorFitsSystemWindows(false)`)のため `AdjustResize` でもウィンドウは縮まず、IME の高さは `WindowInsets`(logcat の `WindowInsets changed ... ime:[0,0,0,1065]`)としてしか届かない。受け手が無いとフォーカス中の `Entry` はキーボードに隠れる
-- `SafeAreaEdges` のインセット処理(`GlobalWindowInsetListener` / `SafeAreaExtensions.ApplyAdjustedSafeAreaInsetsPx`)は `adjust=pan` 中は `ContentPage`(`Default`)で消費される(`AdjustPan && bottom == 0 → Consumed`)ため、下位の `SafeAreaEdges="SoftInput"` やページの `All` は効かない。`AdjustResize` にすると `SoftInput` を付けた要素に画面上の重なり分だけ Padding が付くが、Padding では `onSizeChanged` が起きないので `ScrollView` はフォーカス要素へスクロールしない(`ScrollToAsync(MakeVisible)` もネイティブの Padding を知らない)。Toolkit の `StatusBarBehavior` が重ねる色 View はパンに追従して画面外へ出る
-- `uiautomator dump` は IME ウィンドウの下にあるノードを出力しない(フォーカス中の `EditText` が出なければキーボードに隠れている)。IME の表示状態は `dumpsys input_method` の `mInputShown`
 - **CoreCLR(`UseMonoRuntime=false`)では Shiny の `[Export]` ライフサイクルコールバック(`Shiny.Hosting.AndroidLifecycleExecutor.OnResume` / `OnPause`)で起動時にクラッシュする**(`A callback was made on a garbage collected delegate of type '__callback_factory__!callback_delegate__V::Invoke'`)。`Mono.Android.Export` が `[Export]` メソッド用に生成するデリゲートが JNI 登録後にルートされず、最初の `OnResume` までに GC が走ると落ちる(dotnet/android#10996。修正は .NET 11)。Mono では起きない。Android SDK 36.1.69 で 3 / 3 回再現、`[Export]` を使うのはアプリ内では Shiny.Core だけ(`MetadataLoadContext` で全アセンブリを走査)
+
+---
+
+# 🚧17. Fix8 以降(次のタグまでの変更)
+
+まだ無い。
 
 ---
 
@@ -1963,7 +2034,7 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
 - `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
 - Material 3(`UseMaterial3`)= 見送り(2026-09-21。csproj にコメントアウトで残置。Entry / Editor の枠と既定色の手当てが要るため)
-- XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 10 の記録)
+- XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 16 の記録)
 - `StyleClass` の新体系(`text-*` など)= 不要(2026-09-21。既存の Label クラスで方針を満たす)
 - Face(顔検出 / 顔識別、`Azure.AI.Vision.Face`)= 対象外(2026-09-19。Face API を持つ専用リソースが必要なため実装を撤去)
 - Aspire 統合 / クラッシュレポート・テレメトリ基盤(旧 Task_Checklist 3-8 / 3-9)= チェックリストから分離し `Telemetry_Study.md` で検討(2026-09-15)
@@ -2029,9 +2100,9 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 | D21 | SCP のみ (SFTP / コマンド実行は対象外) |
 | D22 | 設定投入は設定画面の QR に統一 (全項目)。D22-a = パスワード認証のみ / D22-b = **指紋設定は撤去し参考表示のみ** (2026-09-02 変更。当初の QR 配布指紋照合は撤去) |
 | D23 | 第2弾 (`Reference_Nova_Nalu.md`) N1 は OverlapPanel + AvatarGroup / CircularLayout の円弧 / VariableSizeWrapPanel の 3 件を採用確定。**CompareSlider は撤去** (2026-09-13) |
-| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は 6-1 = 区間 10「ステータスバーの画面追従」/ D25 / D26 で完了、`Reference_Nova_Nalu.md` は削除 |
+| D24 | 第2弾 N3 は Gravatar / Scratcher / Watermark / SegmentedSlider / TimelinePanel / ResponsivePanel / ToggleTemplate / ExpanderBox / DurationWheel を**不採用** (2026-09-13)。N3-6 は Radial / Orbit を `CircularLayout` の拡張 (RotateItems / Orbit) として採用、Bubble / Loop は不採用 (Hex は `HoneycombLayout` として実装済み)。N3-11 (タッチ横取り抑止 / 色パレット) は不採用。残る N2 (chrome / プラットフォーム 4 件) は 6-1 = 区間 14「ステータスバーの画面追従」/ D25 / D26 で完了、`Reference_Nova_Nalu.md` は削除 |
 | D25 | 予測型バック (第2弾 6-4) は**現状維持で確定** (2026-09-13)。エッジスワイプ / BACK ボタン / フッタの Back は同じ経路 (`ShellEvent.Back` → `OnNotifyBackAsync`。フッタは `OnNotifyFunction1` から同じメソッドへ) で遷移し、スワイプ進捗に連動する縮小表現は入れない |
-| D26 | Edge-to-Edge (第2弾 6-2) とキーボード (6-3) は**現状維持で確定** (2026-09-13)。`MainPage` は `SafeAreaEdges="Default"`、ウィンドウは既定の `adjust=pan` のまま、`IKeyboardState` は追加しない (確認結果は区間 10「Edge-to-Edge / キーボードの確認」) |
+| D26 | Edge-to-Edge (第2弾 6-2) とキーボード (6-3) は**現状維持で確定** (2026-09-13)。`MainPage` は `SafeAreaEdges="Default"`、ウィンドウは既定の `adjust=pan` のまま、`IKeyboardState` は追加しない (確認結果は区間 14「Edge-to-Edge / キーボードの確認」) |
 
 ### 🚫不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 

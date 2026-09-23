@@ -84,6 +84,8 @@ Template project for MAUI.
 | Network | Offline sync |
 | Device | Push(FCM) |
 | Device | Biometric |
+| UI | Remaining visual attributes to styles |
+| Decision | Pending decisions (guard for unconfigured endpoints / CoreCLR runtime) |
 
 ## Pending
 
