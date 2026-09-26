@@ -7,7 +7,7 @@
 
 | Category | Feature | 章 |
 | --- | --- | --- |
-| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み) | 1-2-1〜1-4 |
+| Diagnostics | OpenTelemetry(クラッシュレポート / テレメトリ基盤の組み込み) | 1-3〜1-4 |
 | Device | Background task(WorkManager) | 2-1 |
 | Network | Offline sync(未送信キュー・差分同期・競合解決) | 2-2 |
 | Device | Push(FCM) | 3-2 |
@@ -28,17 +28,14 @@
 ## 🧭前提(環境)
 
 - **環境制約 (不具合ではない)**: ①地図タイルは Google Maps API キー未設定だと非表示 (ピン・カメラ移動は動作) ②Sample > CV Net は AI エンドポイント未設定だと画面に入れない ③CommunityToolkit CameraView の `CaptureAsync` がまれに未完了になる(5 秒で打ち切って「撮影できませんでした」を出し、プレビューのまま続行できる)
-- 現在実機に入っているのは **Debug ビルド**(2026-09-23 デプロイ。CoreCLR の起動クラッシュを避けるため `-p:UseMonoRuntime=true` の Mono ビルド。性能・描画の確認時は Release へ入れ替える)
+- 現在実機に入っているのは **Debug ビルド**(2026-09-23 デプロイ。Mono ランタイム。性能・描画の確認時は Release へ入れ替える)
 
 ---
 
 ## 📈1. OpenTelemetry(クラッシュレポート / テレメトリ)
 
-端末のログ・トレース・メトリクスを OTLP/gRPC(4317)で template-maui-server へ送り、サーバーで保存・表示する。方式・決定事項・送る内容・構成・各段階の変更ファイルと確認は `Document/Telemetry_Plan.md`(検討資料は `Telemetry_Study.md`)。1-1(サーバーの受信口)は完了(`Change_Summary.md` の区間 17)。
+端末のログ・トレース・メトリクスを OTLP/HTTP(4318)で template-maui-server へ送り、サーバーで保存・表示する。方式・決定事項・送る内容・構成・各段階の変更ファイルと確認は `Document/Telemetry_Plan.md`(検討資料は `Telemetry_Study.md`)。1-1(サーバーの受信口)、1-2-1(収集の移設)、1-2-2(起動・停止の制御)、1-2-3(送信)は完了(`Change_Summary.md` の区間 17)。
 
-- [ ] **1-2-1** 端末: 収集の移設(`Diagnostics` 名前空間。パネルは今の場所のまま表示だけにする)
-- [ ] **1-2-2** 端末: 起動・停止と再起動の制御
-- [ ] **1-2-3** 端末: OTEL の送信
 - [ ] **1-3** サーバー: 保存
 - [ ] **1-4** サーバー: 一覧と詳細の画面
 
@@ -139,14 +136,15 @@
 
 ### 📡6-1 通信設定が未設定のときの止め方
 
-判定は `State/Settings.cs` の拡張メソッド(`IsApiConfigured` / `IsGrpcConfigured` / `IsScpConfigured` / `IsAIServiceConfiguredAsync` / `IsOllamaConfigured`)に集約済みで、止め方が画面によって違う。
+判定は `State/Settings.cs` の拡張メソッド(`IsApiConfigured` / `IsGrpcConfigured` / `IsSshConfigured` / `IsAIServiceConfiguredAsync` / `IsOllamaConfigured`)に集約済みで、止め方が画面によって違う。
 
 | 画面 | 現状 |
 | --- | --- |
 | Sample > CV Net / Chat | メニューでダイアログを出し、画面に入らない |
-| Network > Realtime / gRPC / SCP | 画面に入り「未設定」を表示し、操作を無効にする |
+| Network > Realtime / gRPC / SFTP | 画面に入り「未設定」を表示し、操作を無効にする |
 | Network メニューの時刻取得 | ボタンを無効にする(理由の表示なし) |
 | Network > HTTP (Data) / HTTP (Auth) / Storage | 止めない(通信して失敗する) |
+| Network > Telemetry | 止めない(送信先が無ければ送らない。Network のボタンは通信して失敗する) |
 
 - [ ] **6-1-0**⚖️【判断】案A: すべてメニューで止める(ダイアログを出して画面に入らない。画面側の `Configured` 分岐が不要になる)/ 案B: すべて画面に入って「未設定」を表示し、操作を無効にする
 

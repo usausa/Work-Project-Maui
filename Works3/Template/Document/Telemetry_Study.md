@@ -11,8 +11,8 @@ MAUI アプリ(本テンプレート)からクラッシュレポート・ログ�
 | 項目 | 現状 | 位置 |
 | --- | --- | --- |
 | ログ | `Microsoft.Extensions.Logging` + `LoggerMessage`(`Log.cs` = 起動 / データ / 診断、`Services/Log.cs` = 通信系)。出力先は Debug(DEBUG 時)/ Android logcat / ファイル(`AddFileLogger`、外部ファイル領域の `log/`、7 日保持)。サーバーへは送らない | `MauiProgram.cs`(`ConfigureLogging`)、`Log.cs`、`Services/Log.cs` |
-| クラッシュ | `TaskScheduler.UnobservedTaskException` と `AndroidEnvironment.UnhandledExceptionRaiser` で例外をファイルに保存し、次回起動時にダイアログで表示する(サーバー送信なし) | `Helpers/CrashReport.cs` + `.android.cs`、`App.xaml.cs`(`OnStart` の `ShowReport`) |
-| メトリクス | 診断パネル(DEBUG 限定)にワーキングセットの推移、`Extender/LeakDetectionPlugin` でビューのリーク検出。収集・送信の仕組みは無い | `Shell/DiagnosticPanel`、`Extender/` |
+| クラッシュ | `TaskScheduler.UnobservedTaskException` / `AppDomain.UnhandledException` / `AndroidEnvironment.UnhandledExceptionRaiser` で例外をアプリと端末の情報付きで `crash.json` に保存し、次回起動時にダイアログで表示する(サーバー送信なし) | `Diagnostics/CrashReport.cs` + `.android.cs`、`App.xaml.cs`(`OnStart` の `ShowReport`) |
+| メトリクス | 診断パネル(DEBUG 限定)にワーキングセットの推移(値の計算は `Shell/DiagnosticSampler`)、`Extender/LeakDetectionPlugin` でビューのリーク検出。送信の仕組みは無い | `Shell/DiagnosticSampler.cs`、`Shell/DiagnosticPanel`、`Extender/` |
 | 端末の状態 | SignalR(`MonitorHub`)へ電池 / ネットワーク / 機種を 10 秒ごとに報告(Network > Realtime の画面にいる間だけ) | `Services/MonitorConnection.cs`、`Modules/Network/NetworkRealtimeViewModel.cs` |
 | 識別子 | 端末 ID = `Settings.UniqueId`(初回起動時の GUID)。機種 / OS は `IDeviceInfo`、アプリのバージョンは `AppInfo` | `State/Settings.cs` |
 | 設定の配布 | 接続先やキーは設定画面の QR(サーバーの `/qr`)で投入する | `Modules/Main/SettingViewModel.cs` |
@@ -61,7 +61,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 - OpenTelemetry .NET(`OpenTelemetry` / `OpenTelemetry.Exporter.OpenTelemetryProtocol`)は MAUI(Android)でも動く。ログは `ILoggingBuilder.AddOpenTelemetry` + OTLP エクスポーター、メトリクスは `Meter` / `MeterProvider`、トレースは `ActivitySource` / `TracerProvider`。.NET 10 の MAUI 自体が `Microsoft.Maui` の `ActivitySource` / `Meter`(レイアウトの measure / arrange 回数と所要時間)を持つ
 - OTLP は HTTP/protobuf(`http://…:4318`)が端末向き(h2c のポート分離が不要)。受け口は OTel Collector、Aspire ダッシュボード(開発時)、Grafana(Tempo / Loki / Mimir)、Seq、Azure Monitor(Azure Monitor OpenTelemetry Exporter)など。既存の template-maui-server も OTLP エクスポーターを持つため、同じ収集基盤にサーバーと端末の両方を送れる
 - 例外は Logs のレコード(`exception.type` / `exception.message` / `exception.stacktrace` の属性)として送る。クラッシュは未処理例外のフック(`AndroidEnvironment.UnhandledExceptionRaiser`)で Critical ログを記録して `ForceFlush` すれば落ちる前に届く(接続先が落ちていれば下記の退避で次回起動時に届く)
-- オフライン: OTLP エクスポーターの実験的機能 `OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk`(+ `..._DISK_RETRY_DIRECTORY_PATH`)で、送信に失敗したバッチをディスクに退避し 60 秒ごとに再送できる(退避されるのは失敗したバッチだけで、キューの未送信分ではない)。端末管理・ダッシュボードは収集基盤側に依存する。トリミング / AOT の警告に注意
+- オフライン: OTLP エクスポーターの実験的機能 `OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk`(+ `..._DISK_RETRY_DIRECTORY_PATH`)で、送信に失敗したバッチをディスクに退避し 60 秒ごとに再送できる(退避されるのは失敗したバッチだけで、キューの未送信分ではない。gRPC では接続できない失敗(応答の状態が無い失敗)は退避されず、HTTP では退避される)。端末管理・ダッシュボードは収集基盤側に依存する。トリミング / AOT の警告に注意
 - 実証: `Works3/OtelSample`(同フォルダの README)。OTLP/HTTP の自前受信サーバ + MAUI クライアントで、ログ / スパン(HttpClient 計装を含む)/ メトリクス(ランタイム / MAUI レイアウト / 電池)/ クラッシュ / ディスク退避と再送を Pixel 9a で確認済み。組み込み時の注意(`EventSourceSupport`、`AddMetrics`、`AddView` でのタグ集約、`Stop` のブロック)も README に記載
 - Aspire との関係: .NET 10 の「MAUI 用 Aspire service defaults」は開発時の仕組み(AppHost がサーバーを起動し、MAUI アプリにサービスディスカバリと OTLP の接続先(Aspire ダッシュボード)を渡す)で、エミュレーター専用ではないが本番の基盤ではない。本番は Collector 等の OTLP 受け口を設定 QR で配る形になるため、Aspire はこの候補の「開発時の受け口」として扱う
 
@@ -95,7 +95,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 
 ## ❓6. 検討の論点
 
-方式は B(OTLP/gRPC で template-maui-server へ送る)。1〜6 の決定は `Telemetry_Plan.md` の「決定事項」「送る内容」「構成」。
+方式は B(OTLP で template-maui-server へ送る。端末は OTLP/HTTP(protobuf)で送り、サーバーは HTTP と gRPC の両方で受ける)。1〜6 の決定は `Telemetry_Plan.md` の「決定事項」「送る内容」「構成」。
 
 1. 方式: A / B / C のどれか、または A のサーバーに OTLP の受け口を足す・B の永続キューを自前で足すといった組み合わせ
 2. 収集する項目と粒度(クラッシュのみから始めるか、ログ / メトリクスまで含めるか)

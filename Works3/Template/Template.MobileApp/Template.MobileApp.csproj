@@ -38,8 +38,10 @@
   </PropertyGroup>
   -->
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <!-- OpenTelemetry: Meter (metrics) and EventSource (SDK self-diagnostics) are disabled by default on Android -->
+  <PropertyGroup>
     <MetricsSupport>true</MetricsSupport>
+    <EventSourceSupport>true</EventSourceSupport>
   </PropertyGroup>
 
   <!--
@@ -157,6 +159,8 @@
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.30.0" />
     <PackageReference Include="Mofucat.ReactiveHub" Version="1.0.0" />
     <PackageReference Include="OllamaSharp" Version="5.4.30" />
+    <PackageReference Include="OpenTelemetry" Version="1.19.1" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.1" />
     <PackageReference Include="SkiaSharp" Version="4.152.1" />
     <PackageReference Include="SkiaSharp.Extended" Version="3.0.0" />
     <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="3.0.0" />

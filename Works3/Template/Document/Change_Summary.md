@@ -1974,6 +1974,44 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 # 🚧17. Fix8 以降(次のタグまでの変更)
 
+## 🖼️A. 画面単位の変更
+
+### 📁SCP のサンプルを SFTP に(2026-09-24)
+
+Network の SCP の画面を SFTP の送受信に変えた。接続先の設定と Usecase は SSH の名前にし、SFTP の名前は機能の画面(と転送の結果)だけに使う。(server) は `template-maui-server/src/Template.MobileServer.Web/` からの相対。
+
+| 対象 | 内容 |
+|---|---|
+| `Usecase/SshUsecase.cs`(`ScpUsecase.cs` から) | 設定の SSH の接続先を使う処理。SSH.NET の `SftpClient` で送受信する(進捗は `UploadFile` / `DownloadFile` のコールバック、ダウンロードの大きさは `GetAttributes`)。結果は `SftpTransferResult` / `SftpUploadResult` / `SftpDownloadResult` |
+| `Modules/Network/NetworkSftpView.xaml(.cs)` + `NetworkSftpViewModel.cs`(`NetworkScp*` から)/ `Modules/ViewId.cs` / `NetworkMenuView.xaml` | 画面・メニュー・タイトルを SFTP に(`ViewId.NetworkSftp`) |
+| `State/Settings.cs` | 接続先を SSH の設定に(`SshHost` / `SshPort` / `SshUser`、パスワードは SecureStorage の `SshPassword`、`IsSshConfigured()`) |
+| `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | 設定画面の見出しを SSH に。QR のキーを `SshHost` / `SshPort` / `SshUser` / `SshPassword` に |
+| `MauiProgram.cs` | `SshUsecase` の登録 |
+| (server) `Components/Pages/QrPage.razor.cs` / `README.md` | QR のキー(`ClientSettingKeys`)を `SshHost` / `SshPort` / `SshUser` / `SshPassword` に |
+
+- ビルド 0 エラー 0 警告、inspectcode 0 件。サーバーはビルド 0 警告、テスト 44 件成功
+- 実機(Pixel 9a): Network のメニューが SFTP、SFTP の画面は SSH の値が無いので「未設定」で操作が無効、設定画面の見出しが SSH。送受信は SSH の値を入れてから確かめる(未確認)
+- 保存済みの SCP の値(端末の `ScpHost` など、サーバーの `Setting` テーブルの `ScpHost` などの行)は引き継がない。サーバーの `/qr` で SSH の値を入れ直して読み取る
+
+### 🐰名前の表示を「うさうささん」に(2026-09-24)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Control/ControlDrawerView.xaml` | 「うさうさうさん」(2 か所) |
+| `Modules/UI/UIKitDashViewModel.cs` / `UIKitNotifyViewModel.cs` / `UIKitSettingViewModel.cs` | 「うさうさうさん」 |
+| `Modules/UI/UIShopViewModel.cs` | 「こんにちは、アンナさん」 |
+
+- 実機: Shop の「こんにちは、うさうささん」、Kit の Dashboard の「うさうささん」が 1 行に収まる
+
+### 🩺診断画面の整理(2026-09-25)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Main/DiagnosticsView.xaml` + `DiagnosticsViewModel.cs` | カードを Device(Name / OS / Processors / Device ID)/ Application(Installation)/ Startup / Database / Connection(Login / Token expires / Network / Profile)/ Telemetry(Status / Last send = 直近の送信の成否・時刻・失敗の理由 / Resend = 再送を待っている件数 / Crash)/ Log / Crash report にした。Uptime と Telemetry の Status / Last send / Resend は表示中に 1 秒ごとに読み直し、ほかは画面を開いたときに読む。Runtime(Working set / Managed heap / Threads / GC)、Connection の Battery と接続先の設定の有無(API / gRPC / OTEL / AI Service / Ollama / SSH。設定画面と重なる)、Application の Name / Version / Build / Package / Flavor(メニューに出ている)、Refresh(F2)は外した。Log の Clear recent(Recent の一覧を消すだけ)は Delete files にした(確認のうえ、書き込み中の今日のファイル以外のログファイルと Recent の一覧を消す。今日のファイルを消すと、その日の残りのログが失われる) |
+
+- ビルド 0 エラー 0 警告(Debug)。Release は C# の警告 0。inspectcode 0 件
+- 実機(Pixel 9a): カードの順、F キーは F1 の Back だけ、Uptime と Last send / Resend が表示中に変わる。Delete files は確認のダイアログまで確かめた(Cancel で 7 ファイルとも残る。削除の実行は未確認)
+
 ## 🧱B. 画面以外の変更
 
 ### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
@@ -1982,8 +2020,8 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 | 対象 | 内容 |
 |---|---|
-| `Telemetry/Protos/opentelemetry/proto/**`(新規) | opentelemetry-proto v1.11.0 の common / resource / logs / trace / metrics と collector の 3 サービス。生成型の名前空間は上流の `OpenTelemetry.Proto.*` |
-| `Template.MobileServer.Web.csproj` | `<Protobuf Include="Telemetry\Protos\**\*.proto" ProtoRoot="Telemetry\Protos" GrpcServices="None" />` と、collector の proto だけ `Update` で `GrpcServices="Server"` |
+| `Telemetry/Protos/*.proto`(新規) | opentelemetry-proto v1.11.0 の common / resource / logs / trace / metrics と collector の 3 サービス(`*_service.proto`)。上流の `opentelemetry/proto/<種類>/v1/` の階層は使わずに直下に置き、`import` をファイル名だけに書き換えた。生成型の名前空間は上流の `OpenTelemetry.Proto.*` |
+| `Template.MobileServer.Web.csproj` | `<Protobuf Include="Telemetry\Protos\*.proto" ProtoRoot="Telemetry\Protos" GrpcServices="None" />` と、`*_service.proto` だけ `Update` で `GrpcServices="Server"` |
 | `Telemetry/OtlpTraceHandler.cs` / `OtlpMetricsHandler.cs` / `OtlpLogsHandler.cs`(新規) | `Export` を受け、リソースごとにサービス名・端末(`device.id`、無ければ `app.installation.id`)・件数(スパン / 計器と点 / ログレコード)を Information、リソースの属性と 1 件ごとの内容を Debug で出し、空の応答を返す |
 | `Telemetry/OtlpHelper.cs`(新規) | リソースの属性の取り出し、ID の 16 進、時刻と期間、計器の点の数と temporality、属性と点の整形 |
 | `Telemetry/TelemetryReceiverOption.cs` / `Log.cs`(新規)、`appsettings.json` | 受信上限 `TelemetryReceiver:MaxReceiveMessageSize`(既定 16 MiB、1〜16 MiB)、LoggerMessage |
@@ -1994,6 +2032,104 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 
 - サーバー: ビルド 0 エラー 0 警告(Debug / Release)、テスト 39 件成功、inspectcode 0 件
 - 実機(Pixel 9a、`adb reverse tcp:4317`): OtelSample のクライアントを gRPC の `http://localhost:4317/` に向け、メトリクス(5 秒ごと、26 計器 44 点)、ログ(Info / Warning / Error。Error は `exception.*` の属性)、トレース(`Work` → `Compute` / `GET`。同じトレース ID で、`Work failed` のログにも同じトレース ID とスパン ID)がサーバーのログに出ることを確認。9090 への OTLP の呼び出しは `Unimplemented`、4317 へのサーバー情報の呼び出しは 404
+- PC から: 組み立てた OTLP のログ(`service.name` / `device.id` / 本文)を 4317 へ送り、サーバーのログに受信と本文が出ることを確認
+
+### 📊テレメトリ 1-2-1: 収集の移設(`Diagnostics` 名前空間)(2026-09-23)
+
+`Telemetry_Plan.md` の 1-2-1。診断パネルの計算を `Shell/DiagnosticSampler` に分け、パネルはスナップショットを表示するだけにした。クラッシュレポート・診断ログを `Diagnostics` 名前空間へ移し、端末の識別子を追加した。
+
+| 対象 | 内容 |
+|---|---|
+| `Shell/DiagnosticSampler.cs`(新規) | パネル用(DEBUG 前提)。1 秒ごとに FPS / CPU / スレッド / メモリ(推移 60 点)/ GC の累計と差分 / 割り当て速度 / Measure・Arrange の回数 / 現在のマネージドメモリ / 電池残量 / 無線 LAN の信号強度を求め、判定(Safe / Warning / Critical)付きの `DiagnosticSnapshot` を更新する(更新の通知は `Sampled`。スナップショットは 1 つを使い回して書き換え、推移は `RingBuffer` に入れる。どちらも UI スレッドで読む)。取得の軽い値は `DeviceInformation` から読み、FPS(`IDisplay` のフレーム)と `GC.GetTotalMemory` は自身で計測する。Measure・Arrange は `Microsoft.Maui` の Meter を `MeterListener` で購読して数える(`Shell/LayoutMetrics` を統合して削除。`ExcludeLayout(Element)` で登録した要素と子孫(`Id` を覚え、計測のタグ `element.id` で見分ける)と、表示の更新直後 100 ms は数えない)。`Start` のたびに GC 回数・FPS・メモリの推移の基準を取り直す |
+| `Diagnostics/TelemetrySendHandler.cs`(新規) | エクスポーターの `HttpClient` に挟む `DelegatingHandler`(3 種類で 1 つを共有。クラッシュ用は別で、取っておかずに数えるだけ)。成功した送信を数え、送れなかった中身(本文を写す。エクスポーターはバッファーを使い回すため)を `RingBuffer` に取っておき、どれかの送信が成功したときに古い順に 5 件まで送り直す(送り直しは同時に 1 つだけ。取っておくのは通信の例外と 429 / 502 / 503 / 504 の応答)。成否を `TelemetryService` に知らせ、再送を待っている件数(`WaitingCount`)を返す |
+| `Helpers/RingBuffer.cs`(新規) | 固定長のリングバッファー(満杯なら最も古い値を上書き。添字は古い順)。メモリの推移(60 点)に使う |
+| `Diagnostics/DiagnosticLogProvider.cs`(移動) | `Components/` から。名前空間だけ変更 |
+| `Diagnostics/CrashReport.cs` + `.android.cs`(移動) | `Helpers/` から。`AppDomain.UnhandledException` も捕捉し、同じ例外は 1 回だけ保存する。保存先は `crash.json`(ID / 時刻 / アプリの版 / 端末 / 例外の型・メッセージ・全文と、表示済み `Shown`)。起動時のダイアログは未表示のときだけ出して表示済みにする(従来の `crash.log` / `crash.old.log` は読まない) |
+| `Components/DeviceInformation.cs` + `.android.cs`(新規) | 端末とプロセスの情報の取得(内容は「📱端末情報の取得」。アプリの情報は `Settings` がマスタ)。テレメトリ、画面、SignalR の端末状態で使うので `Components` に置く |
+| `Shell/DiagnosticPanel.xaml.cs` + `MainPage.xaml` | タイマー・`IDisplay`・計算を削除し、`Sampled` のたびにスナップショットを表示する(メモリの推移は `RingBuffer` を添字で読み、最小・最大もループで求める)(判定を `SafeColor` / `WarningColor` / `CriticalColor` に対応させる)。サンプラーは `Sampler` プロパティで受け取り(`MainPageViewModel.DiagnosticSampler` をバインド)、表示ツリーにあるあいだだけ購読する。自身のレイアウトは受け取ったサンプラーの `ExcludeLayout(this)` で計測値から除く |
+| `MainPageViewModel.cs` | パネルを表示していて前面にあるあいだだけサンプラーを動かす(背面・非表示・ウィンドウの破棄で停止)。開始・停止は Debug でログに出す |
+| `Modules/Main/DiagnosticsViewModel.cs` + `DiagnosticsView.xaml` | クラッシュレポートは `ToReport()` の文字列。`DiagnosticLogEntry` の名前空間 |
+| `Modules/Network/NetworkRealtimeViewModel.cs` | SignalR の端末状態の `DeviceId` を `ANDROID_ID` に |
+| `MauiProgram.cs` / `App.xaml.cs` | `DiagnosticSampler` / `DeviceInformation` の登録、using |
+
+- ビルド 0 エラー 0 警告(Debug)。Release は C# の警告 0(Android SDK のマーシャルメソッドの警告 10 件は Shiny の BLE ホスティングの `BluetoothGattServerCallback.OnServiceAdded` のもの)。inspectcode 0 件
+- 実機(Pixel 9a): パネルを表示した直後から FPS 59.9 / GC 0 で、メモリ(428.1 → 429.8 MB)とスレッド数(38 → 40)が毎秒更新される。診断画面の Refresh で CPU 3.8 % / GC0 1 / 割り当て 3.7 MB/s / Measure 38 / Arrange 49 が出て、次の秒は 0 に戻る。HOME から復帰するとメモリの推移を消して計測をやり直す。Realtime の端末状態の送信で、サーバーの `/devices` に `4db55dc544d5fec3`(`ANDROID_ID`)が出る。`adb shell am crash` で落とすと `crash.json` に保存され、次の起動でダイアログ(時刻 / 版 / 端末 / 例外)が 1 回だけ出て、診断画面の Crash report にも出る
+- 実機(Pixel 9a、09-24): パネルの値が `/proc/<pid>/status` と一致する(スレッド 51 = 51、メモリ 429.6 MB に対し VmRSS 430.3 MB)。画面を移るとメモリ・スレッド数・GC 回数が更新される(開いたままの `/proc/self/stat` から毎回今の値が読める)。診断画面に Working set / Managed heap / Threads / GC が出る
+- 実機(09-25): パネルを 67 秒出したままでも、メモリの推移が 60 点の全幅で古い順につながって描かれる(リングバッファーが一周した後)
+
+### 🔁テレメトリ 1-2-2: 起動・停止の制御(2026-09-23)
+
+`Telemetry_Plan.md` の 1-2-2。テレメトリ(1-2-3 の送信)の開始・停止を `Diagnostics/TelemetryService` に集め、入力(中断・再開 / 送信先)が変わるたびに望ましい状態を求めて差分だけを実行する。テレメトリの有効 / 無効を設定画面に追加した。
+
+| 対象 | 内容 |
+|---|---|
+| `Diagnostics/TelemetryService.cs`(新規) | 実体は 1 つで、使う側は役割ごとの interface で受け取る(DI では 2 つとも同じインスタンスに解決する。破棄は登録の数だけ呼ばれるので 2 回目以降は何もしない): `ITelemetryControl`(`Suspend`(既定は中断)/ `InstallationId`(`Settings.UniqueId` を起動処理が渡す)/ `EndPoint`(null = 送らない)/ `Flush`)、`ITelemetryStatus`(`IsActive` / `InstallationId` / `EndPoint` / `LastSend` / `ResendWaitingCount` / `IsCrashPending()`)。入力はプロパティ(`SetXxx` のメソッドにしない)で、画面の都合(前面 / 背面)の語を出さない。`Suspend` の既定値はコンストラクターで設定する。送信先の変化は Information でログに出す |
+| `State/Settings.cs` | `TelemetryEnabled`(既定 false)と、有効かつ送信先が設定済みのときだけ送信先を返す `GetTelemetryEndPoint()` |
+| `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | Network の OTEL の下に Telemetry のスイッチ(ローカルスタイル `SettingSwitch`)。切り替えたときと QR で `OtelEndPoint` が変わったときに `ITelemetryControl.EndPoint` へ送信先を渡す |
+| `MainPageViewModel.cs` | `IAppLifecycle` の再開(`OnCreated` / `OnResumed`)と中断(`OnStopped` / `OnDestroying`)を `ITelemetryControl` へ渡す |
+| `MauiProgram.cs` / `Log.cs` | `ConfigureDiagnostics()`(`ConfigureLogging()` の前)で `TelemetryService` と 2 つの interface を登録、起動時のインストールの識別子と送信先(`ApiContext` と同じく起動処理が設定値を渡す)、ログのメッセージ |
+
+- ビルド 0 エラー 0 警告(Debug)、inspectcode 0 件
+- 実機(Pixel 9a): パネルの表示・非表示でサンプラーが開始・停止する。テレメトリが有効のまま再起動すると起動時に送信先が設定されるが、パネルを表示しなければサンプラーは動かない(前面で操作しないときの UI スレッドの CPU 時間は 4 ms/s)。HOME で停止、パネルを表示したまま復帰すると開始
+
+### 📤テレメトリ 1-2-3: OTEL の送信(2026-09-23)
+
+`Telemetry_Plan.md` の 1-2-3。端末からログ・トレース・メトリクスを OTLP/HTTP(protobuf)で送る(送信先は QR の `OtelEndPoint` = 4318)。template-maui-server に OTLP/HTTP の受信口を足し、受信の処理を gRPC と共通にした。送信のデモ(Network メニュー)と、診断画面の Telemetry のカードを追加した。(server) は `template-maui-server/src/Template.MobileServer.Web/` からの相対。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `OpenTelemetry` / `OpenTelemetry.Exporter.OpenTelemetryProtocol` 1.19.1。`MetricsSupport` を全構成で true(Debug だけの指定を置き換え)、`EventSourceSupport=true` |
+| `Diagnostics/TelemetryService.cs` + `.android.cs`(送信) | Tracer / Meter / Logger のプロバイダーを送信先ごとに作り直す(バックグラウンドで 1 つずつ)。Resource は `service.*` / `device.id` / `app.installation.id` / `device.manufacturer` / `device.model.identifier` / `os.*`。エクスポーターは OTLP/HTTP(送信先 + `v1/traces` など、タイムアウト 10 秒)。ディスクには退避せず、送れなかった中身はメモリのリングバッファー(全種類で共有、60 件)に取っておき、どれかの送信が成功したときに古い順に 5 件まで送り直す(`TelemetrySendHandler`)。メトリクスは 30 秒ごとの Delta で、`System.Runtime` の 3 計器(GC 回数・割り当て量・例外数)と `System.Net.Http` の `http.client.request.duration`(要求 1 回ごと)以外を View で落とす(`Microsoft.Maui` の Meter は送らない)。エクスポーターの `HttpClient` は `AndroidMessageHandler` を直接使い(`TelemetryService.android.cs`)、エクスポーター自身の送信を HTTP のメトリクスに入れない。クラッシュのログ(イベント名 `exception`、FATAL、`app.crash.id` と `exception.*`)は専用のエクスポーター(`SimpleLogRecordExportProcessor`、タイムアウト 2 秒)で同期で送り、届いたか(`TelemetrySendHandler` が数えた成功)を返す(`SendCrash`)。`ShutdownLogs` |
+| `Diagnostics/DiagnosticsInstrumentation.cs`(新規) | アプリの `ActivitySource` / `Meter`(名前はアセンブリ名)。`DeviceInformation` の値を送るゲージ: `process.cpu.utilization`(前回の計測からの平均。前回と同じ読み取りなら値を返さない)/ `process.memory.usage` / `process.thread.count` / `application.gc.last_collection.heap.size`(直前の GC 時点のヒープ)。電池残量 `hw.battery.charge`(0〜1、属性 `hw.id` = `battery`)と無線 LAN の信号強度 `application.wifi.signal_strength`(dBm。接続していなければ送らない)は `DeviceInformation` が通知で保持した値。サンプラーは使わない(中断中も送る) |
+| `Diagnostics/SdkEventListener.cs`(新規) | SDK の EventSource(`OpenTelemetry*`、Warning 以上。`MetricInstrumentIgnored` は除く)をカテゴリ `OpenTelemetry.Sdk` のログへ(転送しない) |
+| `Diagnostics/TelemetryLoggerProvider.cs`(新規) | アプリのログを `TelemetryService` へ渡すだけの `ILoggerProvider`。アプリのカテゴリの Warning 以上を送信中のあいだだけ送る判断と送信は `TelemetryService`(`IsLogEnabled` / `WriteLog` / `BeginLogScope`)。`ILoggerFactory` を作るときに要るため依存を持たず、`TelemetryService` が生成時に自身を登録する(`TelemetryService` は `ILoggerFactory` を使うので、コンストラクターで受け取ると DI が循環する) |
+| `Diagnostics/TelemetryService.cs`(制御) | 送信先の変化で送信を開始・停止・作り直し、開始時に未送信のクラッシュを送る、中断で Flush(3 秒。完了は待たない)、クラッシュ時に FATAL を送り、届いたときだけ、送れたクラッシュの ID を `telemetry-crash-sent.txt`(アプリのデータ領域)に記録する(プロセスが終了するときは溜まっているログも送るため、ログのプロバイダーを `Shutdown` して最大 1 秒待つ)。`crash.json` の最後のクラッシュが記録した ID と違えば未送信(`IsCrashPending()`。診断画面の Crash)。直近の送信の結果(`LastSend` = `TelemetrySendResult`。時刻・成否・失敗の理由)と再送を待っている件数(`ResendWaitingCount`)。送信の失敗は、失敗し始めたとき(Warning)と復旧したとき(Information)だけログに出す(SDK の送信失敗のイベントはログに出さない。`SdkEventArgs.Name` で見分ける) |
+| `Diagnostics/CrashReport.cs` + `.android.cs` | `Crashed` の引数にプロセスが終了するか(`IsTerminating`。`AppDomain` の `IsTerminating`、Android の `!Handled` から。未観測のタスクの例外は false)。送信の状態(`Sent` / `MarkSent`)は持たない |
+| `Extender/NavigationTelemetryPlugin.cs`(新規) | 画面遷移のスパン `Navigate`(遷移の開始から表示まで。`app.screen.name` / `application.navigation.from` / `application.navigation.attribute`) |
+| `Usecase/NetworkUsecase.cs` | 実行の補助メソッド(`ExecuteVerboseAsync` / `ExecuteAsync` / `ExecuteTransferAsync`)の `CancellationToken` を最後の省略可能な引数にした(呼び出し側は名前付き引数) |
+| `Modules/Network/NetworkTelemetryView.xaml(.cs)` + `NetworkTelemetryViewModel.cs`(新規)/ `NetworkMenuView.xaml` | 送信のデモ(Network メニューの 8 段目 Telemetry、`ViewId.NetworkTelemetry`)。Warning / Error(例外付き)/ Span(親子)/ Network(`GetServerTime`)/ Flush / Crash(確認のうえ UI スレッドで例外) |
+| `Modules/Main/DiagnosticsView.xaml` + `DiagnosticsViewModel.cs` | Telemetry のカード(内容は「🩺診断画面の整理」) |
+| `MauiProgram.cs` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` / `Log.cs` | 診断の登録を `ConfigureDiagnostics()` にまとめる(`AddMetrics()` を DEBUG の外へ、Release では MAUI のレイアウトの計測(`IDiagnosticsManager`)の登録を外す、`DiagnosticsInstrumentation`、`TelemetryService` と 2 つの interface。サンプラーは Shell として `ConfigureComponents` で登録)、`TelemetryLoggerProvider`(`ILoggerProvider`)とプラグインの登録、画面 ID、アイコン 6 個、ログのメッセージ |
+| (server) `Telemetry/OtlpReceiver.cs`(新規)/ `Otlp*Handler.cs` | 受信の処理(リソースごとの Information と 1 件ごとの Debug、空の応答)を gRPC と HTTP で共通にした。gRPC のハンドラーは呼ぶだけ |
+| (server) `Telemetry/OtlpHttpEndpoints.cs`(新規) | `POST /v1/traces` / `/v1/metrics` / `/v1/logs`(4318 に限定、OpenAPI から除外)。`application/x-protobuf` だけ(ほかは 415)、`Content-Encoding: gzip` を展開、上限(展開後)を超えたら 413、壊れた本文は 400、応答は protobuf の `Export*ServiceResponse` |
+| (server) `Application/ApplicationExtensions.cs` / `appsettings.json` | Kestrel の `OtelHttp`(`http://*:4318`、HTTP/1.1)、`OtlpReceiver` の登録と `MapOtlpHttpEndpoints`、ASP.NET Core のトレースから `/v1` を除外 |
+| (server) `Components/Pages/QrPage.razor.cs` | QR の `OtelEndPoint` を `Kestrel:Endpoints:OtelHttp:Url` のポート(4318)に(`MakeGrpcEndPoint` → `MakeEndPoint`) |
+| (server) テスト | `OtlpHandlerTests` → `OtlpReceiverTests`、`OtlpHttpEndpointsTests`(protobuf / gzip / 415 / 413 / 400)を追加、`QrPageTests` の期待値を 4318 に(計 44 件) |
+| (server) `README.md` | 機能一覧・構成・API 一覧・ポート構成・「テレメトリの受信(OTLP)」・QR の形式 |
+
+- ビルド 0 エラー 0 警告(Debug)。Release は C# の警告 0(Android SDK のマーシャルメソッドの警告は Shiny のもの)。inspectcode 0 件。サーバーはビルド 0 警告、テスト 44 件成功、inspectcode 0 件
+- 実機(Pixel 9a、`adb reverse tcp:4318`、`OtelEndPoint` = `http://localhost:4318/`): 起動直後の `Navigate` のスパン、30 秒ごとのメトリクス(アプリの 4 計器と `System.Runtime` の 3 計器)、送信のデモの Warning / Error(`exception.type` / `exception.message` / `exception.stacktrace`)/ Span(`TelemetryTest` → `Compute`、同じトレース ID のログ)/ Network(`http.client.request.duration` に GET 200 / localhost:8080 の 1 点。同じ間隔のエクスポーター自身の送信(4318)は入らない)がサーバーに届く。Resource は `device.id` = `ANDROID_ID`、`app.installation.id`、機種、OS
+- サーバー停止中(実機 09-25): 送信の失敗で Warning(`Telemetry send failed.`)が 1 回だけ出て(SDK の送信失敗のイベントはログに出ない)。停止中に出したログ 1 件とメトリクス 3 回分は、サーバーの起動後に最初に成功したメトリクスの送信に続けて古い順に届き(今回の送信を含めて 5 件が 0.15 秒)、復旧の Information が 1 回出る。送り直したメトリクスはそれぞれ自分の区間(30 秒)の値だけを持つ。送信の失敗 1 回ごとに、エクスポーターの中の例外(IOException 4 件・WebException 6 件)が `dotnet.exceptions` に数えられる
+- 送信のデモと電池残量(実機 09-25): Network メニューの Telemetry から開いて Back で戻る。Flush でサーバーに `hw.battery.charge` が `{hw.id=battery}=0.79` で届く(30 秒ごと)。受信の登録は起動時に 1 回 2.5 ms、受信 1 回の処理は 0.08〜0.43 ms(UI スレッド)で、USB 充電中の 2 分半に受信は 2 回
+- クラッシュ(実機 09-25): サーバーの起動中は終了前に FATAL が届き(例外から終了まで約 0.1 秒)、`telemetry-crash-sent.txt` がその ID になって、次の起動では送らない。次の起動のダイアログを閉じると `crash.json` は `Shown` = true、診断画面の Crash は None。サーバーの停止中は ID が更新されないまま終了し(例外から終了まで約 2 秒)、次にテレメトリを開始したときに送って ID を記録する(どちらも同じ `app.crash.id` は 1 件だけ。クラッシュの時刻は属性の `time`)。テレメトリを無効にしていたときのクラッシュは、有効にした時点で送られる。記録のファイルが無い端末では、最後のクラッシュを 1 回送り直す
+- テレメトリを無効にしているあいだはサーバーに何も届かない。HOME で背面に移ると 1 秒以内にメトリクスが届く(30 秒の周期の外)。送信先の変更(QR の読み取り)での作り直しは実機では未確認
+- 実機(09-24): 届くメトリクスは `process.cpu.utilization`(0.001〜0.02)/ `process.memory.usage` / `process.thread.count` / `application.gc.last_collection.heap.size`(8〜18 MB)と `System.Runtime` の 3 計器だけ。背面でも 30 秒ごとに届く
+- `MetricsSupport` を Release でも true にした影響: Release の APK(Mono、arm64 / x64)は 167,388,028 バイトで、false の 167,310,204 バイトより 77,824 バイト(約 76 KB)大きい。起動時間は未計測(Release は署名が違い、実機の Debug 版を消さないと入れられない)
+
+### 📱端末情報の取得(`Components/DeviceInformation`)(2026-09-25)
+
+`DeviceInformation_Plan.md` の段階 1〜4。電池・通信・無線 LAN の状態を Android の通知から取得して保持し、変化をイベントで知らせる。プロセスの値の読み取り(`StatisticsReader`)を統合した。診断パネルのスナップショットは `Shell` で管理し、`Diagnostics` 名前空間は OTEL の送信と計器・クラッシュ・直近のログだけにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Components/DeviceInformation.cs` + `.android.cs` | 1 つのクラス(Android の部分だけ partial)を機能ごとに区切る。Control(`Start` / `Stop`。起動処理で開始)/ Identity(`DeviceId`)/ Battery(`ACTION_BATTERY_CHANGED` の受信。Intent の残量・状態・電源から `BatteryStatus` を作り `BatteryChanged`)/ Network(`NetworkCallback`。インターネットに使うネットワークごとの `NetworkCapabilities` から接続の状態と種類(`NetworkStatus`。変わったときだけ `NetworkChanged`)と、無線 LAN の信号強度とリンク速度(`WiFiStatus`。変わったときだけ `WiFiChanged`))/ Process(`StartTime`、`ReadProcessStatistics()`、`ReadHeapSize()`。読むたびに取得)。スレッドは扱わない(通知は受けたスレッドで出す) |
+| `State/DeviceState.cs` | `IBattery` / `IConnectivity` をやめ、`DeviceInformation` のイベントを受けて(値は通知の時点で取り、UI スレッドへ移す)画面用の値を持つ。無線 LAN の信号強度 `WiFiSignalStrength`(dBm。無線 LAN に接続していなければ null)を追加 |
+| `Services/MonitorConnection.cs` | 再接続のきっかけを `NetworkChanged`(インターネットに接続できたとき)に |
+| `Diagnostics/DiagnosticsInstrumentation.cs` | プロセスの値を `DeviceInformation` から読む(同じ集計の計器で 1 回の読み取りを共有する 500 ms のキャッシュをロックで持つ。ヒープは GC 回数が変わったときだけ読む)。無線 LAN の信号強度 `application.wifi.signal_strength`(dBm)を追加 |
+| `Shell/DiagnosticSampler.cs` | プロセスの値を `DeviceInformation` から読む。FPS は MauiComponents の `IDisplay` を直接使う。電池残量(`BatteryCharge`。50 % より上 Safe / 20 % より上 Warning / それ以下 Critical)と無線 LAN の信号強度(`WiFiSignalStrength`。-67 dBm 以上 Safe / -80 dBm 以上 Warning / それ未満 Critical、接続していなければ Warning)を、`DeviceInformation` の保持値から毎秒読む |
+| `Shell/DiagnosticPanel.xaml(.cs)` | 最下段に Battery(`79 %`)と WiFi(`-49 dBm`)の行。値が無いときは `-` |
+| `Modules/Main/DiagnosticsViewModel.cs` | 起動時刻を `DeviceInformation.StartTime` から読む |
+| `Diagnostics/StatisticsReader.cs` + `.android.cs` | 削除(`DeviceInformation` へ統合) |
+| `Extensions.cs` | `DeviceInformation` の `BatteryChangedAsObservable` / `NetworkChangedAsObservable` / `WiFiChangedAsObservable`。`IConnectivity` のものは削除 |
+| `MauiProgram.cs` | `StatisticsReader` の登録を外し、起動処理で `DeviceInformation.Start()` |
+
+- ビルド 0 エラー 0 警告(Debug)。Release は C# の警告 0。inspectcode 0 件
+- 実機(Pixel 9a): サーバーに `process.*` / `application.gc.last_collection.heap.size` / `hw.battery.charge`(0.79)/ `application.wifi.signal_strength`(-43 dBm)が届く。診断画面の Connection は Network = Internet、Profile = WiFi。Device の Status は 79%・Charging・Usb、ConnectedHighSpeed・WiFi・Internet。Realtime はハブに接続し、端末の状態を 10 秒ごとに送る。通信の変化での再接続は未確認(端末の通信の設定を変えないと試せない)
+- 接続の種類は、アプリの通信に使える(前面の)ネットワークだけになった。Wi-Fi の接続中に裏で待機しているモバイル回線は `NetworkCallback` に届かない(MAUI は `GetAllNetworks()` で待機中の回線も数え、「Cellular, WiFi」と出ていた)
+- 通知 1 回の処理(実機、4 分間): 電池は自前 0.09〜0.72 ms / MAUI の読み直し 3.1〜14.0 ms(どちらも UI スレッド)、通信は自前 0.6〜1.3 ms(通信のスレッド)/ MAUI の読み直し 4.8〜23.1 ms(UI スレッド)。登録は電池 2.5 ms、`NetworkCallback` 0.8 ms
+- 実機(段階 3〜4): パネルを表示すると FPS 60.0 / CPU 1.2 % / スレッド 48 / メモリ 447.8 → 448.4 MB(VmRSS 460 MB)が毎秒更新され、Measure / Arrange は 0(パネル自身は数えない)。HOME で停止、復帰で開始、パネルを閉じると停止する(Debug のログ `Diagnostic sampler changed.`)。パネルを表示した直後の集計では、パネル自身の Measure / Arrange 108 件を除き、ほかの要素の 3 / 3 件だけを数える(除く要素は 29 個)
+- `DeviceState.WiFiSignalStrength`(実機): 診断画面を開いたときに -46 dBm(システムの RSSI は -44 dBm)。端末を動かさなかった 2 分間は信号強度の変化の通知は無かった
+- 診断パネル(実機): 最下段に Battery 79 %(`dumpsys battery` の level 79)と WiFi -49 dBm(システムの RSSI -49〜-50 dBm)が Safe の色で出る。行を足しても Measure / Arrange は 0
 
 ## 💡C. この区間のナレッジ
 
@@ -2001,6 +2137,34 @@ Control の Grid(受注一覧)と Card List(訪問先一覧)は業務画面の�
 - **.NET 10 のアナライザー CA1873**: ログのメソッド(`LoggerMessage` 生成を含む)の引数でメソッドを呼ぶと、ログが無効でも評価されるとして警告になる。`logger.IsEnabled(level)` の中で呼ぶ
 - **gRPC の単項の呼び出しは Kestrel の `MaxRequestBodySize`(既定 30 MB)も受ける**(grpc-dotnet が上限を外すのはクライアントストリーミング / 双方向だけ)。`MaxReceiveMessageSize` を上げるときはこれより小さくする
 - `AddServiceOptions<TService>` はグローバルの設定(受信上限・圧縮など)を写してからサービスごとの設定を適用する。インターセプターは写さないので、グローバルのインターセプターが二重に付くことはない
+- **`Process` の `WorkingSet64` / `Threads` などは最初に読んだ値が保持され、`Refresh()` を呼ぶまで更新されない**。Android(Linux)では読み直すたびに全スレッドの `/proc/self/task/*/stat` を読むため 1 回 1.4〜1.6 ms・約 60 KB かかる(スレッド 51。`Refresh()` 自体と `TotalProcessorTime` は軽い)。スレッド数と常駐メモリは `/proc/self/stat` の 20 番目と 24 番目(ページ数)で同じ値が取れる
+- `/proc/self/stat` は開いたまま `RandomAccess.Read(handle, buffer, 0)` で先頭から読み直すと毎回今の値が返る(1 回 4.8 µs、割り当てなし)
+- CA1003: `EventHandler<T>` の `T` が `EventArgs` の派生でないと警告になる。record は `EventArgs` を継承できないので、`EventHandler` で更新を通知して値はプロパティから読む
+- **MAUI Android の Release を相対パスの `-p:IntermediateOutputPath=obj/xxx/` でビルドすると ILLink が `linked\Java.Interop.dll` を書けずに失敗する(IL1011)**。絶対パスにすると参照プロジェクト(MauiComponents)も同じ obj を使って壊れる。Release は既定の obj でビルドする
+- `adb shell am crash <パッケージ>` で Java の例外によるクラッシュを起こせる(保存される型は `Android.Util.AndroidRuntimeException`)
+- **OTLP エクスポーター(.NET 1.19.1)のディスク再送は、gRPC だと接続できない失敗(gRPC の状態が無い失敗)を保存しない**。HTTP は接続の失敗も保存する
+- ディスク再送の動き: 60 秒ごとに 10 バッチまで再送し、再送中は `*.blob@<期限>.lock` に改名する(期限 = 送信のタイムアウト)。再送に失敗したバッチは `FileBlobProvider` の 2 分ごとの保守で `*.blob` に戻る。上限 50 MiB、保持 2 日。**これらはすべて SDK の固定値で変えられない**(`OtlpExporterPersistentStorageTransmissionHandler` の定数とループ、`FileBlobProvider` への固定の引数)。再送は新しい順で、1 バッチ取り出すたびにディレクトリ全体を並べ替える
+- 退避の設定(`OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY`)はプロバイダーの `IConfiguration`(既定は環境変数)から読まれる(`ExperimentalOptions`)
+- **メトリクスの差分(Delta)の基準は、送信の成否に関係なく集計のたびに進む**(`MetricPoint.TakeSnapshot` と `StartTimeExclusive = EndTimeInclusive`)。送れなかった区間は捨てられ、次の送信には次の区間だけが入る
+- OTLP/HTTP の送信は Android では `HttpClient.SendAsync(...).GetAwaiter().GetResult()`(同期の `Send` は使われない)。本文は使い回しのバッファーの上の `ReadOnlyMemoryContent` なので、後で送り直すには写しを取る
+- `BaseExporter<T>.ParentProvider` の設定は internal なので、エクスポーターを包むと中のエクスポーターに Resource が渡らない。結果を知りたいときは `HttpClient` に `DelegatingHandler` を挟む
+- **送信の失敗でエクスポーターの中で出た例外も `dotnet.exceptions` に数えられる**(`System.Runtime` は初回の例外(first chance)をすべて数える。Mono の `AndroidMessageHandler` で、接続できない送信 1 回あたり IOException 4 件・WebException 6 件)。どこで出た例外かでは分けられない
+- **`AddOpenTelemetry` を登録した DI コンテナのログのエクスポーターは、`LoggerProvider` が最初に解決されるまで作られない**
+- **OpenTelemetry .NET のメトリクスは `SuppressInstrumentationScope` を見ない**ので、組み込みの `System.Net.Http` Meter を送るとエクスポーター自身の送信も `http.client.request.duration` に入る。モバイルの `HttpClientHandler` はネイティブのハンドラー(`AndroidMessageHandler`)を `MetricsHandler` / `DiagnosticsHandler` で包むため、エクスポーターには `OtlpExporterOptions.HttpClientFactory` で `AndroidMessageHandler` を直接渡す
+- **Mono では `System.Runtime` の `dotnet.gc.last_collection.heap.size` が常に 0**。直前の GC 時点のヒープは `GC.GetGCMemoryInfo().HeapSizeBytes` で取れる(0.3 µs。GC の時点の値なので GC 回数が変わらなければ読み直さなくてよい)。`GC.GetTotalMemory(false)` は Mono ではヒープを数えるので 1 回 101 µs かかる
+- 観測可能なゲージを別の周期で計測した値から返すと、送信の値はその周期の直近の値になる。CPU 使用率は観測のコールバックで前回の観測からの差分を取り、送信の間隔の平均にする(規約の `process.cpu.utilization` の定義)
+- 観測可能な計器は観測 1 回ごとに .NET が配列(`Func<T>` のとき)と列挙子を作る(`ObservableInstrument<T>.Observe` が `IEnumerable<Measurement<T>>` を `foreach` する)。観測 1 回の割り当ては 80 B(Pixel 9a、Debug)。`IEnumerable` を返す形で入れ物を使い回すと減るが、返した結果を .NET が観測の中で使い終えることや、同じ計器を同時に観測しないことは約束されていない
+- **`MetricsSupport=true`(Meter を有効)にすると MAUI のレイアウトの計測が常に動く**。`IView.Measure` / `Arrange` のたびに要素のタグ 7 個を 2 回作り(Guid と Rect のボックス化)、文字列の連結と DI の検索をする(購読がなくても 1 回約 400 B)。公開の設定は無く、`Microsoft.Maui.Diagnostics.IDiagnosticsManager`(internal)の登録を外すと止まる
+- Choreographer の `PostFrameCallback` を毎フレーム繰り返す FPS の監視は、操作していなくても UI スレッドで約 47 ms/s かかる(Pixel 9a、Debug)
+- **`ForceFlush` はバッチを取り出した時点で true を返すことがある**(1 秒ごとに取り出し済みの件数を確認し、取り出しは送信の直前)。送信の完了を待つには `Shutdown`(エクスポーターのスレッドの終了を待つ)を使う
+- Android の既定の HttpClient の接続失敗は `System.Net.WebException: unexpected end of stream on com.android.okhttp...`。`adb reverse` の先にサーバーが無いと、失敗までに約 2 秒かかる
+- **XAML のコンパイル済みバインド(`MauiXamlInflator=SourceGen`)では、経路の途中が null のとき、末端の値型は既定値で表示される**(`LastSend` が null で `LastSend.Succeeded` が false、`LastSend.Time` が 00:00:00)。`FallbackValue` は使われない。途中が null になりうるときは、その値(`LastSend`)が null かどうかで表示を切り替える。inspectcode の `Xaml.PossibleNullReferenceException` は `FallbackValue` を付けると消える
+- **MAUI の `IBattery.ChargeLevel` は読むたびに `RegisterReceiver(null, ACTION_BATTERY_CHANGED)` でシステムへ問い合わせる**(0.4〜1.9 ms、冷えていると 6.8〜10.7 ms)。`BatteryInfoChanged` も受信した Intent を使わず、残量・状態・電源の 3 つを問い合わせ直す(値が変わったときだけ通知)。残量は `ACTION_BATTERY_CHANGED` の Intent(`EXTRA_LEVEL` / `EXTRA_SCALE`)にあるので、自前の受信で保持すれば読むのに問い合わせは要らない
+- **MAUI の `IConnectivity`(Android)は `NetworkCallback` で届いた能力を使わず、通知のたびにアプリ内へブロードキャストを送り、受信側(UI スレッド)で `NetworkAccess` と `ConnectionProfiles` を読む**。どちらも読むたびに `GetAllNetworks()` とネットワークごとの `GetNetworkCapabilities()` を呼ぶ(実機で 1 回 4.8〜23.1 ms)。無線 LAN の信号の変化でも通知される
+- `registerNetworkCallback`(既定の要求)には、Wi-Fi の接続中に裏で待機しているモバイル回線(`FOREGROUND` が無い)は届かない。`GetAllNetworks()` には含まれる
+- 無線 LAN の信号強度とリンク速度は、位置情報の権限と `IncludeLocationInfo` なしでも `NetworkCapabilities.TransportInfo`(`WifiInfo`)から読める
+- MAUI のレイアウトの計測(`maui.layout.measure_count` / `maui.layout.arrange_count`)のタグは `element.type` / `element.id` / `element.automation_id` / `element.class_id` / `element.style_id` / `element.class` / `element.frame`。`element.id` は要素の `Id`(`Guid`)
+- **C# 14 の `field` を使うプロパティに初期値を付ける(`} = true;`)と StyleCop の SA1500 が出る**。名前付きのフィールドで持つと、そのプロパティでしか使わないフィールドとして IDE0032(`field` を使う形への変換)が出る(getter が `!field` のような式でも出る)。どちらも出さないには、初期値をコンストラクターで設定する
 
 ---
 
