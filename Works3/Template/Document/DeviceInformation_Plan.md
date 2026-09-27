@@ -40,7 +40,7 @@ Pixel 9a、USB 充電中、4 分間。自前 = 通知に含まれる値を読む
 | `State/DeviceState.cs` | 画面の表示用に残す。`DeviceInformation` のイベントを受けて(値は通知の時点で取り、UI スレッドへ移す)値を持つ(電池、接続の状態と種類、無線 LAN の信号強度 `WiFiSignalStrength`) |
 | `Services/MonitorConnection.cs` | インターネットに接続できたこと(`NetworkChanged`)を再接続のきっかけにする |
 | `Diagnostics/DiagnosticsInstrumentation.cs` | プロセスの値を `DeviceInformation` から読む(同じ集計の計器で 1 回の読み取りを共有する 500 ms のキャッシュをロックで持つ)。電池と無線 LAN は `DeviceInformation` の値 |
-| `Shell/DiagnosticSampler.cs` | 診断パネルのスナップショット。プロセスの値、電池残量、無線 LAN の信号強度を `DeviceInformation` から読み、FPS(`IDisplay` のフレーム)と Measure / Arrange の回数は自身で計測する。パネルを表示していて前面にあるあいだだけ `MainPageViewModel` が動かす |
+| `Shell/DiagnosticSampler.cs` | 診断パネルのスナップショット。プロセスの値、電池残量、無線 LAN の信号強度を `DeviceInformation` から読み、FPS(`IDisplay` のフレーム)と Measure / Arrange の回数は自身で計測する。最初の表示で `MainPageViewModel` が開始し、以後はメモリの推移を続ける(FPS・レイアウトの回数・スナップショットは表示中かつ前面のときだけ) |
 | `Modules/Main/DiagnosticsViewModel.cs` | 起動時刻を `DeviceInformation.StartTime` から読む |
 
 - 接続の種類は、アプリの通信に使える(前面の)ネットワークだけ。Wi-Fi の接続中に裏で待機しているモバイル回線(`FOREGROUND` が無い)は `NetworkCallback` に届かない

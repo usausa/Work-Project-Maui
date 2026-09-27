@@ -21,7 +21,7 @@
 | 転送 | 端末は HTTP/protobuf(4318。送信先にシグナルごとの `v1/traces` / `v1/metrics` / `v1/logs` を付ける)。サーバーは HTTP(4318)と gRPC(4317、h2c)の両方で受ける。gzip。受信上限はオプションで指定(既定 16 MiB。HTTP は展開後の本文に適用。gRPC の既定は 4 MB。gRPC の単項の呼び出しは Kestrel の `MaxRequestBodySize`(30 MB)も受けるため 16 MiB まで)。不正な項目は `partial_success` の件数で返し、再送してよい失敗(保存の失敗など)は HTTP = 503、gRPC = `UNAVAILABLE` で返す |
 | SDK | `OpenTelemetry` / `OpenTelemetry.Exporter.OpenTelemetryProtocol` 1.19.1 |
 | セマンティック規約 | 1.44.0 |
-| 送信の失敗 | ディスクには退避しない(送れなかった分は欠けてよい)。送れなかった送信の中身はメモリのリングバッファー(全種類で共有、60 件。メトリクスだけなら 30 分で埋まる)に取っておき、どれかの送信が成功したときに古い順に 5 件まで送り直す(送り直しは同時に 1 つだけ。上限を超えた古い分とプロセスの終了で失われる)。メトリクスの差分は集計(30 秒)ごとに基準が進むので、送れなかった区間が次の送信に足されることはない。送信の失敗は、失敗し始めたときと復旧したときだけログに出す |
+| 送信の失敗 | ディスクには退避しない(送れなかった分は欠けてよい)。送れなかった送信の中身は、メモリのリングバッファーに種類(トレース / メトリクス / ログ)ごとに取っておく(上限は `TelemetryOptions` で設定。このアプリはメトリクス 2400 件 = 20 時間・約 5 MB、トレースとログは 600 件)。どれかの送信が成功したら、全種類を通して古い順に、失敗するまで続けて送り直す(裏で 1 つずつ。エクスポーターの送信は待たせない。上限を超えた古い分とプロセスの終了で失われる)。メトリクスの差分は集計(30 秒)ごとに基準が進むので、送れなかった区間が次の送信に足されることはない。送信の失敗は、失敗し始めたときと復旧したときだけログに出す |
 
 ## ⚖️決定事項
 
@@ -118,9 +118,10 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 
 | ファイル | 役割 |
 | --- | --- |
-| `Shell/DiagnosticSampler.cs` | パネル用(DEBUG 前提。パネルを表示していて前面にあるあいだだけ `MainPageViewModel` が動かす)。1 秒ごとに CPU / スレッド / メモリ / GC 回数の差分 / 割り当て速度 / 電池残量 / 無線 LAN の信号強度を `DeviceInformation` の値から求め、FPS(MauiComponents の `IDisplay` のフレーム)/ Measure・Arrange の回数(`Microsoft.Maui` の Meter を購読。`ExcludeLayout(Element)` で登録した要素と子孫は数えない)/ 現在のマネージドメモリを自身で計測して、スナップショット(しきい値の判定 Safe / Warning / Critical を含む)とメモリの推移(60 点)を更新する。スナップショットは 1 つを使い回し、推移は `Helpers/RingBuffer` に入れる |
+| `Shell/DiagnosticSampler.cs` | パネル用(DEBUG 前提。最初にパネルを表示したときに `MainPageViewModel` が開始し、以後は止めない。FPS・Measure / Arrange の回数・スナップショットは、パネルを表示していて前面にあるあいだ(`Visible`)だけ。見えていないあいだはメモリの推移だけを続ける)。1 秒ごとに CPU / スレッド / メモリ / GC 回数の差分 / 割り当て速度 / 電池残量 / 無線 LAN の信号強度を `DeviceInformation` の値から求め、FPS(MauiComponents の `IDisplay` のフレーム)/ Measure・Arrange の回数(`Microsoft.Maui` の Meter を購読。`ExcludeLayout(Element)` で登録した要素と子孫は数えない)/ 現在のマネージドメモリを自身で計測して、スナップショット(しきい値の判定 Safe / Warning / Critical を含む)とメモリの推移(60 点)を更新する。スナップショットは 1 つを使い回し、推移は `Helpers/RingBuffer` に入れる |
 | `Helpers/RingBuffer.cs` | 固定長のリングバッファー(満杯なら最も古い値を上書き。添字は古い順)。メモリの推移に使う |
-| `Diagnostics/TelemetrySendHandler.cs` | エクスポーターの `HttpClient` に挟む中継(3 種類で 1 つを共有。クラッシュ用は別で、取っておかずに数えるだけ)。成功した送信を数え、送れなかった中身を `RingBuffer` に取っておいて、どれかの送信が成功したときに古い順に送り直す。成否を `TelemetryService` に知らせる(ログは状態が変わったときだけ)。再送を待っている件数を返す |
+| `Diagnostics/TelemetrySendHandler.cs` | エクスポーターの `HttpClient` に挟む中継(3 種類で 1 つを共有。クラッシュ用は別で、取っておかずに数えるだけ)。成功した送信を数え、送れなかった中身を種類(送信先のパス)ごとの `RingBuffer` に取っておいて、どれかの送信が成功したときに、全種類を通して古い順に、失敗するまで続けて送り直す(裏で 1 つずつ)。成否を `TelemetryService` に知らせる(ログは状態が変わったときだけ)。再送を待っている件数(全種類の合計)を返す |
+| `Diagnostics/TelemetryOptions.cs` | 送り直しのために取っておく件数の上限(トレース / メトリクス / ログ。既定は 60 件。このアプリは `MauiProgram.ConfigureDiagnostics()` でメトリクス 2400 / トレース 600 / ログ 600)|
 | `Diagnostics/CrashReport.cs` + `.android.cs` | 未処理の例外の捕捉と保存、次の起動でのダイアログ(`Helpers/` から移動)。送信の状態は持たない |
 | `Diagnostics/DiagnosticLogProvider.cs` | 診断画面の直近のログ(`Components/` から移動)|
 | `Components/DeviceInformation.cs` + `.android.cs` | 端末とプロセスの情報の取得(`DeviceInformation_Plan.md`)。識別(`ANDROID_ID`。テレメトリの `device.id` と SignalR の端末状態)、電池・通信・無線 LAN(通知で保持し、変化をイベントで知らせる)、プロセスの値(CPU 時間、スレッド数と常駐メモリ(`/proc/self/stat`)、GC 回数、割り当て量、直前の GC 時点のヒープ)。アプリの情報は持たない |
@@ -157,15 +158,15 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 | テレメトリの有効 / 無効 | `Settings.TelemetryEnabled`(新規、既定 false。設定画面で切り替え)|
 | 送信先 | `Settings.OtelEndPoint`(QR で投入)|
 | インストールの識別子 | `Settings.UniqueId`(起動処理が `ITelemetryControl.InstallationId` へ渡す。送信の開始時に Resource へ入る)|
-| 中断 / 再開 | `MainPageViewModel` の `IAppLifecycle` → `ITelemetryControl.Suspend`(既定は中断。`OnCreated` / `OnResumed` = 再開、`OnStopped` / `OnDestroying` = 中断。背面と破棄ではサンプラーも止める)|
+| 中断 / 再開 | `MainPageViewModel` の `IAppLifecycle` → `ITelemetryControl.Suspend`(既定は中断。`OnCreated` / `OnResumed` = 再開、`OnStopped` / `OnDestroying` = 中断。背面と破棄ではサンプラーの詳細の計測も止める)|
 
 | 状態 | 条件 |
 | --- | --- |
-| サンプラーが動く | パネルの表示中、かつ前面(`MainPageViewModel` が開始・停止する。送信はサンプラーを使わない)|
+| サンプラーが動く | 最初にパネルを表示してから(以後は止めない)。FPS・レイアウトの回数・スナップショットはパネルの表示中かつ前面のときだけ(`MainPageViewModel` が `Visible` を切り替える。送信はサンプラーを使わない)|
 | テレメトリが動作中 | 有効、かつ送信先が設定済み(`Settings.GetTelemetryEndPoint()` が null でない)|
 
 - 入力が変わるたびに望ましい状態を求め、差分だけを実行する(開始 / 停止 / 送信先が変わったときの作り直し)。実行はバックグラウンドで 1 つずつ(プロバイダーの破棄は最大 5 秒かかるので UI スレッドで待たない)
-- 中断するときは完了を待たずに `ForceFlush` する。サンプラーは開始のたびに基準値を取り直す(背面から戻ったときも)
+- 中断するときは完了を待たずに `ForceFlush` する。サンプラーは詳細の計測を始めるたびに FPS とレイアウトの回数を数え直す(メモリの推移と CPU などの基準は続けて更新する)
 - Settings はサービスへ注入しない。画面と起動処理が `ITelemetryControl` へ値を渡す(`ApiContext` と同じ)
 - クラッシュ: テレメトリが動作中なら、クラッシュのログ(FATAL)を専用のエクスポーター(`SimpleLogRecordExportProcessor`)で同期で送り(最大 2 秒)、届いたとき(HTTP の成功)だけ、送れたクラッシュの ID をテレメトリ側のファイル(アプリのデータ領域の `telemetry-crash-sent.txt`。キャッシュは消されることがあるので使わない)に記録する。プロセスが終了する(`CrashEventArgs.IsTerminating`)ときは、溜まっているログも送るためにログのプロバイダーを `Shutdown` する(最大 1 秒。`ForceFlush` はバッチを取り出した時点で戻ることがある)。`crash.json` の最後のクラッシュが記録した ID と違えば、次にテレメトリを開始したときに送る。`CrashInfo` は送信の状態を持たない(持つのは表示済みの `Shown` だけ)
 
@@ -223,12 +224,12 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 
 | ファイル | 変更 |
 | --- | --- |
-| `Shell/DiagnosticSampler.cs` | 新規(「構成」のとおり。スナップショットの `DiagnosticSnapshot` と判定の `DiagnosticLevel` はサンプラーと同じファイル)。`Start` のたびに GC 回数・FPS などの基準値を取り直す |
+| `Shell/DiagnosticSampler.cs` | 新規(「構成」のとおり。スナップショットの `DiagnosticSnapshot` と判定の `DiagnosticLevel` はサンプラーと同じファイル)。最初の `Start` で基準値を取り、以後はメモリの推移を続ける |
 | `Shell/LayoutMetrics.cs` | 削除(Measure・Arrange の数え方は `DiagnosticSampler` に統合)|
 | `Helpers/CrashReport.cs(.android.cs)` / `Components/DiagnosticLogProvider.cs` → `Diagnostics/` | 移動。`CrashReport` は `AppDomain.UnhandledException` も捕捉し(同じ例外は 1 回だけ保存)、アプリと端末の情報を付けて `crash.json` に保存する。表示済み(`Shown`)の印を持つ |
 | `Components/DeviceInformation.cs` + `.android.cs` | 新規。端末の情報(`ANDROID_ID`)|
 | `Shell/DiagnosticPanel.xaml(.cs)` | スナップショットを表示するだけにする(サンプラーは `MainPageViewModel.DiagnosticSampler` から `Sampler` プロパティで受け取り、自身のレイアウトはサンプラーの `ExcludeLayout(this)` で除く)|
-| `MainPageViewModel.cs` | パネルの表示中かつ前面のあいだだけサンプラーを動かす |
+| `MainPageViewModel.cs` | 最初の表示でサンプラーを開始し、表示中かつ前面のあいだだけ詳細を計測させる |
 | `Modules/Main/DiagnosticsViewModel.cs` + `DiagnosticsView.xaml` | `DiagnosticLogEntry` の名前空間 |
 | `Modules/Network/NetworkRealtimeViewModel.cs` | SignalR の端末状態の `DeviceId` を `device.id` に |
 | `MauiProgram.cs` / `App.xaml.cs` | サンプラーと `DeviceInformation` の登録、名前空間 |
@@ -245,7 +246,7 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 | `State/Settings.cs` | `TelemetryEnabled` と、有効かつ設定済みのときの送信先を返す `GetTelemetryEndPoint()` |
 | `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | Network の OTEL の下にテレメトリの有効 / 無効のスイッチ。切り替えたときと QR で `OtelEndPoint` が変わったときに `ITelemetryControl.EndPoint` へ送信先を渡す |
 | `MainPageViewModel.cs` | 中断・再開を `ITelemetryControl` へ渡す |
-| `MauiProgram.cs` / `Log.cs` | `ConfigureDiagnostics()` で `TelemetryService` と 2 つの interface を登録、起動時の送信先。送信先の変化(Information)とサンプラーの開始・停止(Debug)のログ |
+| `MauiProgram.cs` / `Log.cs` | `ConfigureDiagnostics()` で `TelemetryService` と 2 つの interface を登録、起動時の送信先。送信先の変化(Information)のログ |
 
 確認: パネルの表示・非表示とテレメトリの有効・無効の組み合わせでのサンプラーの動作、中断での停止と再開での開始。
 

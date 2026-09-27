@@ -190,19 +190,15 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     private void UpdateSampler()
     {
-        var running = DiagnosticSampler.IsRunning;
-        if (DiagnosticVisible && foreground)
+        var visible = DiagnosticVisible && foreground;
+        if (visible)
         {
             DiagnosticSampler.Start();
         }
-        else
-        {
-            DiagnosticSampler.Stop();
-        }
 
-        if (running != DiagnosticSampler.IsRunning)
+        if (DiagnosticSampler.Visible != visible)
         {
-            log.DebugSamplerChanged(DiagnosticSampler.IsRunning);
+            DiagnosticSampler.Visible = visible;
         }
     }
 }
