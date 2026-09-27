@@ -73,7 +73,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | --- | --- | --- |
 | 登録 | 名前、グループ、メモ、有効、登録日時 | 起動時に `data.db` から / 自動登録と管理の操作 |
 | 端末の情報 | `DeviceInfo`(機種、OS、アプリの版、初回・最終受信)| 起動時に全ファイルから / 受信のたび |
-| 最新値 | 電池、無線 LAN の信号強度、CPU、メモリ(値と時刻)| 起動時は各系列の最後の点 / 受信した点(時刻の新しいほう)|
+| 最新値 | 電池、無線 LAN の信号強度、CPU、メモリ、アプリケーション固有値の値 1・2(`application.custom.value1` / `value2`)(値と時刻)| 起動時は各系列の最後の点 / 受信した点(時刻の新しいほう)|
 | 件数(24 時間)| エラー(重大度 ERROR 以上)とクラッシュ(FATAL)を 1 時間ごとに数えた 24 個 | 起動時は `Logs` を集計 / 受信したログ |
 | 直近のエラー | 全端末を通して新しい 20 件(端末、時刻、本文の 1 行目)| 同上 |
 | 受信の推移 | 全端末の 1 分ごとの件数(点・スパン・ログ)60 個 | サーバーの起動から(保存しない)|
@@ -117,7 +117,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | --- | --- |
 | サマリ | アイコン付きのカード: 端末(受信中 / 有効と、受信中・途絶・受信なしの内訳の帯)、エラー(24 時間。ERROR 以上なのでクラッシュを含む)、クラッシュ(24 時間)、電池の少ない端末(残量 20% 未満)、受信(直前の 1 分の件数と直近 60 分のスパークライン)。無効の端末は数えない。件数が 1 以上なら色を付ける |
 | ツールバー | 検索(端末 ID・名前・グループの部分一致)、端末の追加 |
-| 端末一覧 | 状態(受信中 = 緑 / 途絶 = 橙 / 受信なし = 枠だけのバッジ。下に最終受信からの経過、ホバーで日時)、名前(下に端末 ID・グループ、ホバーでメモ)、機種(下に OS とアプリの版)、電池と CPU(横棒と %)、無線 LAN(電波のアイコン)、メモリ、エラー・クラッシュ(1 以上は色付きのバッジ)、操作(編集・削除)。最新値はホバーで値と測った時刻を出す。無効の端末は薄く表示する。行を選ぶとテレメトリ画面へ |
+| 端末一覧 | 状態(受信中 = 緑 / 途絶 = 橙 / 受信なし = 枠だけのバッジ。下に最終受信からの経過、ホバーで日時)、名前(下に端末 ID・グループ、ホバーでメモ)、機種(下に OS とアプリの版)、電池と CPU(横棒と %)、無線 LAN(電波のアイコン)、メモリ、値 1・2(アプリケーション固有値。0〜100 の横棒と値。良し悪しの色は付けない)、エラー・クラッシュ(1 以上は色付きのバッジ)、操作(編集・削除)。最新値はホバーで値と測った時刻を出す。無効の端末は薄く表示する。行を選ぶとテレメトリ画面へ |
 | 直近のエラー | 新しい 10 件(時刻、端末、重大度、本文の 1 行目)。行を選ぶとその端末のログへ |
 
 | 値の色 | 緑 | 橙 | 赤 |
@@ -155,6 +155,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | `dotnet.gc.heap.total_allocated` | 割り当て(MB / 分)|
 | `dotnet.exceptions` | 例外(件 / 分、種類ごと)|
 | `http.client.request.duration` | HTTP(平均 ms と回数。属性の組み合わせごと)|
+| `application.custom.value{N}` | 値 N(アプリケーション固有値。既知の計器の後に番号の順。ほかの計器は名前のまま最後)|
 
 ### 🧵ウォーターフォール
 
@@ -179,7 +180,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | (server) `Components/Telemetry/AttributeTable.razor(.cs)` | 属性の JSON をキーと値の表に(値は折り返す。別に出すキーは除ける)|
 | (server) `Components/Telemetry/MetricChartModel.cs` / `WaterfallModel.cs` | 表示用の計算(束の値・通知の点の追加・範囲から外れた束の削除・既知の計器の名前と単位と線の名前にする属性、木の順と開閉)|
 | (server) `Components/Telemetry/TelemetryFormat.cs` | 時刻・経過時間・所要時間・割合・信号強度・状態・重大度の表示と、値の良し悪し(`TelemetryLevel`)の色。`_Imports.razor` で static インポート |
-| (server) `Components/Telemetry/MetricCell.razor(.cs)` | 最新値のセル(電池と CPU は横棒と %、無線 LAN は電波のアイコン、メモリは MB。ホバーで値と測った時刻)|
+| (server) `Components/Telemetry/MetricCell.razor(.cs)` | 最新値のセル(電池と CPU は横棒と %、無線 LAN は電波のアイコン、メモリは MB、アプリケーション固有値は 0〜100 の横棒と値。ホバーで値と測った時刻)|
 | (server) `Components/Telemetry/CountBadge.razor(.cs)` | 件数(1 以上は色付きのバッジ、0 は薄く)|
 | (server) `Components/Dialogs/DeviceEditDialog.razor(.cs)` / `DeviceDialogExtensions.cs` | 端末の追加・編集(`DataEditDialog` と同じ作り。入力の検証は FluentValidation、端末 ID は受信と同じ文字の制限)|
 | (server) `Components/RefreshTimer.cs` | バスの通知をまとめて描画する(「バス」)|

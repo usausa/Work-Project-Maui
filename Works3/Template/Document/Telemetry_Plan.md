@@ -61,6 +61,7 @@
 | `process.thread.count` | 現在値 / `{thread}` | スレッド数(`/proc/self/stat`)|
 | `application.gc.last_collection.heap.size` | 現在値 / `By` | 直前の GC 時点のマネージドヒープ(`GC.GetGCMemoryInfo`。組み込みの `dotnet.gc.last_collection.heap.size` は Mono で常に 0)|
 | `hw.battery.charge` | ゲージ / `1` | 電池残量(0〜1。規約の hardware の計器)。属性 `hw.id` = `battery`(規約で必須)。`ACTION_BATTERY_CHANGED` の受信で保持した値(`DeviceInformation`)|
+| `application.custom.value1` 〜 `value4` | ゲージ / なし | アプリケーション固有値(`State/ApplicationMetrics` の `Value1`〜`Value4`。範囲は 0〜100。メモリだけに持つ)。計器の名前と値を読むコールバックは `ApplicationMetricsExtensions.AddApplicationMetrics` が決めて `DiagnosticsInstrumentation.AddCustomMetrics` に渡す(`DiagnosticsInstrumentation` は個数も名前も持たない)。Network > Telemetry 画面のスライダー(1 刻み)で変える |
 | `application.wifi.signal_strength` | ゲージ / `dBm` | 接続中の無線 LAN の信号強度(`DeviceInformation` が `NetworkCallback` の `WifiInfo` から保持)。接続していなければ送らない |
 | `dotnet.gc.collections` / `dotnet.gc.heap.total_allocated` / `dotnet.exceptions` | Delta | 組み込みの `System.Runtime` Meter(この 3 つ以外は View で落とす)。`dotnet.exceptions` には送信の失敗でエクスポーターの中で出た例外も入る |
 | `http.client.request.duration` | Delta のヒストグラム / `s` | 組み込みの `System.Net.Http` Meter(要求 1 回ごと。属性は `http.request.method` / `http.response.status_code` / `error.type` / `server.address` / `server.port` / `url.scheme` / `network.protocol.version`。ほかの計器は View で落とす)|

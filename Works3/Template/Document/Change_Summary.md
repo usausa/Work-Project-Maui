@@ -2378,6 +2378,25 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 | `Document/TelemetryServer_Plan.md` | 決定事項に「GC の計器」 |
 | `Document/Task_Checklist.md` / `README.md` | 1 節(OpenTelemetry)を完了として削除、TODO の Diagnostics の行を削除(Implement の Network に Telemetry(OpenTelemetry)) |
 
+### 🎚️テレメトリ: アプリケーション固有値(2026-09-27)
+
+アプリが決める値(アプリケーション固有値)をメトリクスで送り、サーバーの一覧に値 1・2 を出す。
+
+| 対象 | 内容 |
+|---|---|
+| `State/ApplicationMetrics.cs`(新規) | `ApplicationMetrics` = `Value1`〜`Value4`(範囲は 0〜100。送信の計測(別スレッド)から読むので `Volatile` で読み書きする。メモリだけに持つ)。`ApplicationMetricsExtensions.AddApplicationMetrics` が計器の名前(`application.custom.value1`〜`value4`)と値を読むコールバックを決める |
+| `Diagnostics/DiagnosticsInstrumentation.cs` | `AddCustomMetrics(params (Name, Observe)[])`: 呼び出し側が決めた名前とコールバックでゲージを作る(個数も名前も持たない) |
+| `MauiProgram.cs` | `ApplicationMetrics` を State の区画に登録。起動の処理で `instrumentation.AddApplicationMetrics(...)` |
+| `Behaviors/SliderOption.cs` | `Step`: 値を刻みの倍数にそろえる(0 はそろえない) |
+| `Modules/Network/NetworkTelemetryView.xaml` / `NetworkTelemetryViewModel.cs` | 「Custom value」のカードにスライダー 4 本(0〜100、1 刻み、右に値)。VM は `ApplicationMetrics` を注入し、値の変更を書く。表示前に今の値を読む |
+| (server) `Telemetry/TelemetryDeviceRegistry.cs` / `TelemetryDeviceSummary.cs` | 最新値に値 1・2(`CustomValue1` / `CustomValue2`)を足す |
+| (server) `Components/Pages/DashboardPage.razor`、`Components/Telemetry/MetricCell.razor.cs` / `TelemetryFormat.cs`、`wwwroot/css/app.css` | 端末の一覧に「値 1」「値 2」の列(0〜100 の横棒と値。`MetricDisplay.CustomValue`、塗りは `meter-none` = 主色) |
+| (server) `Components/Telemetry/MetricChartModel.cs` | メトリクスのタブで `application.custom.value{N}` を「値 N」にして既知の計器の後に番号の順に並べる(ほかの計器は名前のまま最後。並びの順は `long`) |
+| (server) テスト | `MetricCellTests`(固有値の横棒)、`MetricChartModelTests`(値 N の名前と順)、`TelemetryDeviceRegistryTests` / `DashboardPageTests`(値 1 の最新値と横棒) |
+
+- 実機(Pixel 9a): スライダーを半端な位置でタップしても保存された値は整数(38 / 52 / 13 / 87)。値を 26 / 78 / 59 / 12 にして Flush → ダッシュボードの値 1 = 26、値 2 = 78 の横棒、メトリクスのタブに「値 1」〜「値 4」
+- ビルド 0 警告(端末 Debug / Mono、サーバー)、サーバーのテスト 124 件成功、inspectcode 0 件(端末 / サーバー)
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -2436,6 +2455,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - **MAUI 10 は明示のスタイルを付けた要素にも暗黙のスタイル(`x:Key` の無いスタイル)を適用する**(`MergedStyle` が暗黙のスタイルを優先度 128、明示のスタイルを 256 で重ねる)。明示のスタイルには変えるプロパティだけを書けばよい(Label の文字色 = 暗黙のスタイルの `SecondaryTextColor` はそのまま効く)
 - Syncfusion の `ChartSeries`(`ColumnSeries` / `PolarAreaSeries` など)は `Element` の派生で Style を持てない。`SwipeItem` は `StyleableElement` の派生なので Style を使える
 - MAUI のレイアウトは、幅・高さを明示した要素の `Fill` を `Center` として置く(`LayoutExtensions.AlignHorizontal` / `AlignVertical`)。明示サイズの要素では `Center` と既定の `Fill` が同じ位置になる
+- **Slider の `ValueChanged` で値をそろえても、TwoWay のバインドの元にはそろえる前の値が先に届く**(`BindableObject.SetValueActual` はバインドへの反映の後に変更の通知を出し、通知の中で設定した値は後回しの列に入る)。直後にそろえた値が届く
 
 ---
 
@@ -2493,6 +2513,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
 - SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
+- オフライン同期(未送信キュー・差分同期・競合解決、旧 Task_Checklist 2-2)= 実装しない(2026-09-27。代わりにサーバーから端末への独自プッシュ = Task_Checklist 3-1)
 - `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
 - Material 3(`UseMaterial3`)= 見送り(2026-09-21。csproj にコメントアウトで残置。Entry / Editor の枠と既定色の手当てが要るため)
 - XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 16 の記録)

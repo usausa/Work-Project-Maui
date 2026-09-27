@@ -370,6 +370,7 @@ public static partial class MauiProgram
         services.AddSingleton<DeviceState>();
         services.AddSingleton<Session>();
         services.AddSingleton<Settings>();
+        services.AddSingleton<ApplicationMetrics>();
 
         // HttpClient
         services
@@ -497,7 +498,8 @@ public static partial class MauiProgram
         services.GetRequiredService<DeviceInformation>().Start();
 
         // Prepare instrument
-        services.GetRequiredService<DiagnosticsInstrumentation>();
+        var instrumentation = services.GetRequiredService<DiagnosticsInstrumentation>();
+        instrumentation.AddApplicationMetrics(services.GetRequiredService<ApplicationMetrics>());
 
         // Prepare telemetry
         var telemetryControl = services.GetRequiredService<ITelemetryControl>();

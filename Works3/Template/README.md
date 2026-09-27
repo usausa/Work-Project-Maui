@@ -78,7 +78,7 @@ Template project for MAUI.
 | Category | Feature |
 | --- | --- |
 | Device | Background task(WorkManager) |
-| Network | Offline sync |
+| Network | Push(SignalR) |
 | Device | Push(FCM) |
 | Device | Biometric |
 | Decision | Pending decisions (CoreCLR runtime) |
