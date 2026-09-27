@@ -1,7 +1,7 @@
 # ✅残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 2 節(バックグラウンドタスク / オフライン同期)→ 3 節(プッシュ通知)→ 4 節(生体認証)→ 5 節(見た目の属性の残り)。6 節(保留中の判断)はユーザーの決定待ち。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
+優先順 = 2 節(バックグラウンドタスク / オフライン同期)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
 
 ## 📋サマリ
 
@@ -11,12 +11,11 @@
 | Network | Offline sync(未送信キュー・差分同期・競合解決) | 2-2 |
 | Device | Push(FCM) | 3-2 |
 | Device | Biometric(生体認証) | 4 |
-| UI | 見た目の属性の残り(配置・サイズ・色・文字)をスタイルへ | 5 |
 | Decision | 保留中の判断(CoreCLR の扱い) | 6 |
 
 ## 📏運用ルール
 
-- 作業はこの番号で指示・進行する(例:「5-1 を実施」)。完了した項目は本書から削除し、内容は `Change_Summary.md` に記録する
+- 作業はこの番号で指示・進行する(例:「2-1 を実施」)。完了した項目は本書から削除し、内容は `Change_Summary.md` に記録する
 - **⚖️【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
@@ -105,24 +104,6 @@
 - [ ] **4-1** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
   - 制約: `androidx.biometric` は `androidx.fragment` に依存する。csproj は `Xamarin.AndroidX.Fragment.Ktx` をピン止めしているため、追加後に `dotnet list package --include-transitive` で競合を確認する
   - `BiometricPrompt` が要求する `FragmentActivity` は `MainActivity`(`MauiAppCompatActivity` 派生)で満たしている。基底クラスの変更は不要
-
-## 🎨5. 見た目の属性の残りの整理
-
-要素に書いた配置・サイズ・色・文字の属性を、共有スタイル(`Styles.xaml` の `Basic` / `Card`)か画面ローカルのスタイルへ移す(`Margin` / `Padding` / `Spacing` は移行済み)。対象外 = `Controls/` と `Shell/DiagnosticPanel`(Style を使わない部品)、デモの内容そのもの(Basic Font のフォント見本、View Layout の領域の色分けとセルの大きさ、Control Toolkit の AvatarView の人ごとの色)、ブラシ・影・`FontImageSource` の中身、バインドの値。ファイルパスは `Template.MobileApp/Modules/` からの相対。
-
-| 分類 | 現在のファイル名 | 残っている属性 |
-| --- | --- | --- |
-| 背景色 | `Control/ControlChartView.xaml` / `ControlCarouselView.xaml`、`Device/DeviceActivityView.xaml`、`Sample/SampleCvLocalView.xaml` / `SampleCvNetView.xaml` / `SampleWebAppView.xaml`、`UI/UILoadView.xaml` / `UIMeterView.xaml` / `UIRadarView.xaml` / `UIScheduleView.xaml` / `UITreeMapView.xaml` / `UIWheelView.xaml` / `UIPosView.xaml` / `UIMailView.xaml`(SwipeItem) | `BackgroundColor` |
-| 文字 | `UI/UIMeterView.xaml`(速度・単位)/ `UIMoneyView.xaml`(金額)/ `UIPosView.xaml`、`Device/DeviceCameraView.xaml` / `DeviceQrScanView.xaml`、`Main/DiagnosticsView.xaml` | `FontSize` / `FontFamily` / `TextColor` / `HorizontalTextAlignment` / `FontAttributes` |
-| 固定サイズ | `Control/ControlSfChartView.xaml`(チャートの高さ)/ `ControlCustomView.xaml`、`View/ViewGraphicsView.xaml` / `ViewStateView.xaml`、`Device/DeviceSensorView.xaml`、`Sample/SampleMediaView.xaml` / `SampleWebAppView.xaml`(ActivityIndicator)、`UI/UIGraphView.xaml` / `UIProfileView.xaml` / `UIScheduleView.xaml` / `UITimelineView.xaml` / `UIKitNotifyView.xaml`(未読ドット) | `WidthRequest` / `HeightRequest`(同じ要素の配置・色も) |
-| 配置 | `Control/ControlDrawerView.xaml` / `ControlRefreshView.xaml`、`UI/UIKitOnboardView.xaml` / `UIGraph2View.xaml` / `UITimelineView.xaml` / `UIMoneyView.xaml`、`Sample/SamplePdfView.xaml`、`Network/NetworkStorageView.xaml`、`View/ViewLottieView.xaml` / `ViewAnimationView.xaml`、`Device/DeviceBleScanView.xaml`、`Navigation/Shared/SharedInputView.xaml`、`App/AppCalcView.xaml` | `HorizontalOptions` / `VerticalOptions` |
-| 形・枠 | `Control/ControlBottomSheetView.xaml`(シートの角丸)/ `ControlSfChartView.xaml`(系列の線色)、`UI/UICharacterView.xaml` / `UIVisitView.xaml` / `UIChatView.xaml` | `CornerRadius` / `StrokeShape` / `StrokeThickness` / `Stroke` / `Color` |
-
-- [ ] **5-0**⚖️【判断】対象の範囲 — 次を内容として要素に残すか: Device NFC の処理段階の色(`ProcessColor`)、アニメーションの引数(`FadeToAnimation` の `Opacity`)、フラッシュ用 `BoxView` の初期値(`Color` / `Opacity`)、タッチを受ける透明な `BoxView`、`Popup` の幅(`x:Static`)
-- [ ] **5-1** 背景色
-- [ ] **5-2** 文字
-- [ ] **5-3** 固定サイズ
-- [ ] **5-4** 配置と形・枠
 
 ## ⏸️6. 保留中の判断
 

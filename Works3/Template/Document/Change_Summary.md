@@ -2044,6 +2044,24 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 - ビルド 0 警告、inspectcode 0 件
 - 実機(Pixel 9a): SSH が未設定なので SFTP は `SSH is not configured.` を出して画面に入らない。gRPC と Realtime は画面に入り(Realtime は接続済み)、時刻取得は `Get success.`
 
+### 🏷️見た目の属性の残りをスタイルへ(2026-09-27)
+
+`Task_Checklist.md` の 5 節。要素に残っていた配置・サイズ・色・文字の属性を、共有スタイルか画面ローカルのスタイルへ移した。役割でまとめられるのは Device Camera / QR Scan の状態表示と読み込み中の表示だけで、ほかは画面ローカル。
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | `MediaRootGrid` を `DarkRootGrid` に改名(Layout 区画。黒い下地のページ枠 = Device OCR / Setting / Sample Media)。`Basic` 区画に `BasicStatusLabel`(Text。プレビューの下の状態表示 = Device Camera / QR Scan)、`BasicLoadingIndicator` / `BasicLightLoadingIndicator`(Loading。48 × 48・中央・タッチを通す。青 = 起動画面・Sample Web App・View State、白 = Device OCR・Sample Media) |
+| 共有スタイルへの置き換え | Control Carousel のルート → `RootGrid`(`FillGrid` + 薄い灰色と同じ)。起動画面(`MainPage.xaml`)のローカルの `StartupIndicator` を削除して `BasicLoadingIndicator` |
+| 画面ローカルのスタイル(新規) | App Calculator `ExpressionScroll`、Control Bottom Sheet `SfSheet` / `CustomSheet`、Custom `ColorSwatchBoxView` / `MemberAvatarGroup`、Drawer `DrawerProfileStack`、Refresh `SkeletonShimmer`、Sf Chart `ColumnChart` / `DoughnutChart` / `PolarChart` / `FunnelChart` / `PyramidChart` / `SunburstChart`、Device QR Scan `DetectFlashBoxView`、Sensor `SensorDialDrawing`、Diagnostics `LogTimeLabel` / `LogCategorySpan`、Navigation Shared の Input `ReturnChip`、Network Storage `RowSizeLabel`、Sample CV Local `CaptureImage`、CV Net `CaptureImage` / `ShutterFlashBoxView`、PDF `PrevPageEdgeButton` / `NextPageEdgeButton`、Web App `LoadingOverlayGrid`、UI Chat `InputDividerBoxView`、Kit Notify `UnreadBarBoxView` / `NotifyTextStack` / `UnreadDotBoxView`、Kit Onboard `OnboardPageStack`、Load `LoadRootGrid`、Login `TitleShadowPath`、Mail `DeleteSwipeItem` / `ArchiveSwipeItem`、Meter `MeterRootGrid` / `SpeedStack` / `SpeedValueLabel` / `SpeedUnitLabel` / `FpsLabel` / `VignetteBorder`、POS `GroupRowGrid` / `QuantityValueLabel`、Profile `CoverGrid`、Radar `RadarRootGrid`、Schedule `DayChipCollection`、Timeline `DateStack` / `TimelineDotGrid`、TreeMap `CaptureImage` / `ShutterFlashBoxView`、Visit `SortKeyBadgeBorder` / `DetailNoteLabel`、View Graphics `LargeCanvasBorder` / `SmallCanvasBorder` / `CountdownGrid` / `CountdownDrawing`、View State `StateContainerStack` |
+| 既存のローカルスタイルへ追加 | UI Character `DetailLikeButton`(文字色)、Graph `GraphRowGrid`(高さ 26)、Graph2 `CommitInfoGrid`(縦中央)、Kit Onboard `SkipButton`(左寄せ)、View Animation `PurpleTile`(左下)、Lottie `TransportButton`(縦中央)、View State `StatePanelStack`(高さ 180)。UI Money は使っていなかった `MoneyHeaderAmount*` の 3 個を残高の並び・金額・単位のスタイル(`MoneyHeaderAmountStack` / `MoneyHeaderAmountValueLabel` / `MoneyHeaderAmountUnitLabel`)にした |
+| 削除 | 書かなくても同じ見た目になる属性: Control Chart / Device Activity / UI Schedule / UI Wheel のルートの白(ビューの表示枠が白。Chart と Activity は描画も白で塗る)、UI Graph の行の描画の `VerticalOptions="Fill"`(既定値)、Device BLE Scan の CO2 の行の `HorizontalOptions="Center"`(スタイルと同じ値) |
+
+- 要素に残したもの: 内容として扱う値(Device NFC の処理段階の色の表、View Animation のアニメーションの引数、Sample Media のタップ領域と Control Refresh のスケルトンの中の透明な `BoxView`、Input Number の Popup の幅(`x:Static`))と、Control Sf Chart の系列の色(`ChartSeries` は Style を持てない)。Sf Chart の直書きの色はパレットの色(`BlueDefault` / `GreenDefault`)に置き換えた
+- 見た目が変わるのは Sample Web App の読み込み中の表示の色だけ(`BlueAccent2` → `BlueDefault`)
+- 機械チェック(スクリプト): 全 XAML の `StaticResource` が解決すること、変更の前後で各要素の実効値(暗黙のスタイル + 明示のスタイル + 属性)が上の削除と共有化の分を除いて同じこと
+- 実機(Pixel 9a): 変更した 42 画面(Control Chart / Carousel / Custom / Drawer / Refresh / Sf Chart / Bottom Sheet、Device Activity / BLE Scan / Camera / QR Scan / OCR / Sensor、Network Storage、Sample CV Local / Media / PDF / Web App、UI Chat / Graph / Graph2 / Login / Mail / Money / POS / Profile / Schedule / Timeline / TreeMap / Visit / Character / Load / Meter / Radar / Wheel、View Animation / Graphics / Lottie / State、App Calculator、Diagnostics、Setting)を変更の前後で撮影して画素で比較。差が出たのは乱数・時刻・計測値・センサー・アニメーションの部分と Sample Web App のインジケーターの色だけ。View State の Loading と診断画面のログの行も表示して確認。クラッシュなし
+- ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件、XAML Styler の書き換えなし
+
 ## 🧱B. 画面以外の変更
 
 ### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
@@ -2415,6 +2433,9 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - SQLite の部分索引(`WHERE TraceId <> ''`)は、条件が引数(`TraceId = ?`)だけだと使われない。照会にも `AND TraceId <> ''` を書く
 - MudBlazor の固定見出しの表(`FixedHeader`)は `.mud-table-sticky-header .mud-table-container { max-height: 100% }` を持つので、高さの上限は詳細度を上げて書く(`.mud-table.trace-list .mud-table-container`)
 - bUnit で `[SupplyParameterFromQuery]` に値を渡すには、`NavigationManager.NavigateTo` でクエリ付きの URL へ移ってから描画する(パラメーターとして渡すと例外)
+- **MAUI 10 は明示のスタイルを付けた要素にも暗黙のスタイル(`x:Key` の無いスタイル)を適用する**(`MergedStyle` が暗黙のスタイルを優先度 128、明示のスタイルを 256 で重ねる)。明示のスタイルには変えるプロパティだけを書けばよい(Label の文字色 = 暗黙のスタイルの `SecondaryTextColor` はそのまま効く)
+- Syncfusion の `ChartSeries`(`ColumnSeries` / `PolarAreaSeries` など)は `Element` の派生で Style を持てない。`SwipeItem` は `StyleableElement` の派生なので Style を使える
+- MAUI のレイアウトは、幅・高さを明示した要素の `Fill` を `Center` として置く(`LayoutExtensions.AlignHorizontal` / `AlignVertical`)。明示サイズの要素では `Center` と既定の `Fill` が同じ位置になる
 
 ---
 
@@ -2422,7 +2443,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 
 ## 📏付録A. 開発ポリシー(恒常・実装時は常に遵守)
 
-- 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `MediaRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。カードの本文の間隔は `CardSmallContentStack`(4)/ `CardContentStack`(8)/ `CardLargeContentStack`(12)から選ぶ。`Controls/` のコントロールは Style を使わず要素の属性で書く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
+- 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `DarkRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。カードの本文の間隔は `CardSmallContentStack`(4)/ `CardContentStack`(8)/ `CardLargeContentStack`(12)から選ぶ。`Controls/` のコントロールは Style を使わず要素の属性で書く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
 - **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は共有スタイル + 要素の属性。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
