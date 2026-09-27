@@ -8,10 +8,10 @@
 | 1-2-1 | 端末 | 収集の移設(`Diagnostics` 名前空間。パネルは表示だけ)|
 | 1-2-2 | 端末 | 起動・停止と再起動の制御 |
 | 1-2-3 | 端末 | OTEL の送信(サーバーに OTLP/HTTP の受信口を足す)|
-| 1-3 | サーバー | 保存 |
-| 1-4 | サーバー | 一覧と詳細の画面 |
+| 1-3 | サーバー | 保存(1-3-1〜1-3-3)|
+| 1-4 | サーバー | ダッシュボードとテレメトリ画面(1-4-1〜1-4-4)|
 
-ファイルパスは `Template.MobileApp/` からの相対。(server) は `template-maui-server/src/Template.MobileServer.Web/`、(core) は `template-maui-server/src/Template.MobileServer.Core/` からの相対。検討資料は `Telemetry_Study.md`、実証サンプルは `Works3/OtelSample`(同フォルダの README に完結)。
+ファイルパスは `Template.MobileApp/` からの相対。(server) は `template-maui-server/src/Template.MobileServer.Web/`、(core) は `template-maui-server/src/Template.MobileServer.Core/` からの相対。サーバーの保存と画面(1-3 / 1-4)は `TelemetryServer_Plan.md`、検討資料は `Telemetry_Study.md`、実証サンプルは `Works3/OtelSample`(同フォルダの README に完結)。
 
 ## 📐方式と版
 
@@ -30,10 +30,10 @@
 | 受信口の置き場 | (server) Web プロジェクト直下の `Telemetry/`(名前空間 `Template.MobileServer.Web.Telemetry`)。サーバー自身の計測の `Application/Telemetry` とは別 |
 | 端末側の置き場 | 送信・計器・制御を `Diagnostics/`(名前空間 `Template.MobileApp.Diagnostics`)に置く(ほかはクラッシュレポートと直近のログだけ)。画面は `TelemetryService` を役割ごとの interface(`ITelemetryControl` / `ITelemetryStatus`)で使う。診断パネル(`Shell/DiagnosticPanel`)とスナップショット(`Shell/DiagnosticSampler`)は `Shell` で管理する(サンプラーの開始・停止は `MainPageViewModel`)。端末とプロセスの情報の取得(`DeviceInformation`)は、画面・テレメトリ・SignalR の端末状態で使うので `Components/` に置く(`DeviceInformation_Plan.md`) |
 | 端末の識別 | Resource に `device.id`(Android の `ANDROID_ID`。再インストールで変わらない。規約では業務端末向けの Opt-In)と `app.installation.id`(`Settings.UniqueId`。インストールごと)を載せる。メトリクスの属性には入れない(サーバーは Resource の `device.id` で端末を分ける)。SignalR の端末状態(`DeviceStatusMessage.DeviceId`)も `device.id` に揃える |
-| 保存先 | 別ファイル `telemetry.db`(WAL)。業務データの `data.db` とは別の `IDbProvider` を使う |
+| 保存先 | 端末ごとの SQLite ファイル(`telemetry/<端末 ID>.db`、WAL)。端末の登録は業務データの `data.db`(`TelemetryServer_Plan.md`)|
 | 受信口の認証 | なし(他の API と同じ)|
 | メトリクス | 現在値(ゲージ)を基本にする。回数・時間の計器(カウンター / ヒストグラム)は Delta で送り、各点がその送信間隔の値になるようにする |
-| 保持期間 | ログ・トレース 7 日、メトリクス 30 日(オプションで変更できる)|
+| 保持期間 | ログ・トレース 7 日、メトリクス 30 日。最後の受信から 30 日を過ぎた端末はテレメトリのファイルを削除する(登録は残る。オプションで変更できる)|
 | HTTP の計測 | 組み込みの `System.Net.Http` の `http.client.request.duration` だけ(要求 1 回ごとなのでリトライは別の点になる。属性に URL のパスを含まない)。エクスポーター自身の送信は含めない。HTTP のスパンは送らない(URL のパスに ID を含むため)|
 | パネルの表示 | DEBUG 前提(ヘッダーボタンで一時的に表示)。パネル用の値は取得が重くてもよいが、通常の送信には取得の軽い値だけを使う(「取得のコスト」)|
 | 計測の分担 | パネル(`Shell/DiagnosticSampler`)と送信(`DiagnosticsInstrumentation`)は別にする。両方で使う取得の軽い値は `DeviceInformation` から読む(読むたびに取得する。送信は同じ集計の計器で 1 回の読み取りを共有する 500 ms のキャッシュを持つ)。割合や差分は使う側が自分の前回の値から求める |
@@ -121,7 +121,7 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 | `Shell/DiagnosticSampler.cs` | パネル用(DEBUG 前提。最初にパネルを表示したときに `MainPageViewModel` が開始し、以後は止めない。FPS・Measure / Arrange の回数・スナップショットは、パネルを表示していて前面にあるあいだ(`Visible`)だけ。見えていないあいだはメモリの推移だけを続ける)。1 秒ごとに CPU / スレッド / メモリ / GC 回数の差分 / 割り当て速度 / 電池残量 / 無線 LAN の信号強度を `DeviceInformation` の値から求め、FPS(MauiComponents の `IDisplay` のフレーム)/ Measure・Arrange の回数(`Microsoft.Maui` の Meter を購読。`ExcludeLayout(Element)` で登録した要素と子孫は数えない)/ 現在のマネージドメモリを自身で計測して、スナップショット(しきい値の判定 Safe / Warning / Critical を含む)とメモリの推移(60 点)を更新する。スナップショットは 1 つを使い回し、推移は `Helpers/RingBuffer` に入れる |
 | `Helpers/RingBuffer.cs` | 固定長のリングバッファー(満杯なら最も古い値を上書き。添字は古い順)。メモリの推移に使う |
 | `Diagnostics/TelemetrySendHandler.cs` | エクスポーターの `HttpClient` に挟む中継(3 種類で 1 つを共有。クラッシュ用は別で、取っておかずに数えるだけ)。成功した送信を数え、送れなかった中身を種類(送信先のパス)ごとの `RingBuffer` に取っておいて、どれかの送信が成功したときに、全種類を通して古い順に、失敗するまで続けて送り直す(裏で 1 つずつ)。成否を `TelemetryService` に知らせる(ログは状態が変わったときだけ)。再送を待っている件数(全種類の合計)を返す |
-| `Diagnostics/TelemetryOptions.cs` | 送り直しのために取っておく件数の上限(トレース / メトリクス / ログ。既定は 60 件。このアプリは `MauiProgram.ConfigureDiagnostics()` でメトリクス 2400 / トレース 600 / ログ 600)|
+| `Diagnostics/TelemetryOptions.cs` | 送り直しのために取っておく件数の上限(トレース / メトリクス / ログ。既定は 120 件。このアプリは `MauiProgram.ConfigureDiagnostics()` でメトリクス 2400 / トレース 600 / ログ 600)|
 | `Diagnostics/CrashReport.cs` + `.android.cs` | 未処理の例外の捕捉と保存、次の起動でのダイアログ(`Helpers/` から移動)。送信の状態は持たない |
 | `Diagnostics/DiagnosticLogProvider.cs` | 診断画面の直近のログ(`Components/` から移動)|
 | `Components/DeviceInformation.cs` + `.android.cs` | 端末とプロセスの情報の取得(`DeviceInformation_Plan.md`)。識別(`ANDROID_ID`。テレメトリの `device.id` と SignalR の端末状態)、電池・通信・無線 LAN(通知で保持し、変化をイベントで知らせる)、プロセスの値(CPU 時間、スレッド数と常駐メモリ(`/proc/self/stat`)、GC 回数、割り当て量、直前の GC 時点のヒープ)。アプリの情報は持たない |
@@ -143,12 +143,8 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 | (server) `Telemetry/OtlpHttpEndpoints.cs` | HTTP の受信口(`POST /v1/traces` / `/v1/metrics` / `/v1/logs`、4318 に限定。protobuf だけ、gzip を展開)|
 | (server) `Telemetry/OtlpTraceHandler.cs` / `OtlpMetricsHandler.cs` / `OtlpLogsHandler.cs` | gRPC の受信口(4317 に限定)|
 | (server) `Telemetry/OtlpHelper.cs` | リソースの属性(`service.name`、`device.id` → 無ければ `app.installation.id`)、ID の 16 進、時刻、計器の点の数と temporality、ログ用の整形 |
-| (server) `Telemetry/OtlpMapper.cs` | OTLP → エンティティ |
 | (server) `Telemetry/TelemetryReceiverOption.cs` / `Telemetry/Log.cs` | 受信の設定(セクション `TelemetryReceiver`)と LoggerMessage |
-| (server) `Telemetry/TelemetryNotifier.cs` | 保存の通知(画面の更新用。間引く)|
-| (core) `Models/Entity/Telemetry*Entity.cs` / `Accessors/TelemetryAccessor.cs` + `Accessors/Sql/TelemetryAccessor.*.sql` / `Services/TelemetryService.cs` | 保存と照会 |
-| (server) `Workers/TelemetryRetentionWorker.cs` + `TelemetryRetentionOption.cs` | 保持期間を過ぎた行の削除 |
-| (server) `Components/Pages/Telemetry*Page.razor(.cs)` / `Components/Common/*` | 画面と SVG 部品 |
+| (server) / (core) の保存・キャッシュ・バス・画面 | `TelemetryServer_Plan.md` の「構成」|
 
 ## 🔁端末の起動・停止
 
@@ -170,38 +166,17 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 - Settings はサービスへ注入しない。画面と起動処理が `ITelemetryControl` へ値を渡す(`ApiContext` と同じ)
 - クラッシュ: テレメトリが動作中なら、クラッシュのログ(FATAL)を専用のエクスポーター(`SimpleLogRecordExportProcessor`)で同期で送り(最大 2 秒)、届いたとき(HTTP の成功)だけ、送れたクラッシュの ID をテレメトリ側のファイル(アプリのデータ領域の `telemetry-crash-sent.txt`。キャッシュは消されることがあるので使わない)に記録する。プロセスが終了する(`CrashEventArgs.IsTerminating`)ときは、溜まっているログも送るためにログのプロバイダーを `Shutdown` する(最大 1 秒。`ForceFlush` はバッチを取り出した時点で戻ることがある)。`crash.json` の最後のクラッシュが記録した ID と違えば、次にテレメトリを開始したときに送る。`CrashInfo` は送信の状態を持たない(持つのは表示済みの `Shown` だけ)
 
-## 🗄️サーバーのデータ(`telemetry.db`)
+## 🗄️サーバーの保存と画面
 
-| テーブル | 主な列 | 索引・制約 |
-| --- | --- | --- |
-| `TelemetryDevice` | DeviceId(`device.id`。無ければ `app.installation.id`)、InstallationId、ServiceName、ServiceVersion、Manufacturer、Model、OsName、OsVersion、ResourceJson、FirstSeenAt、LastSeenAt | 主キー DeviceId |
-| `TelemetryLog` | DeviceId、ServiceInstanceId、ScopeName、TimeUnixNano、ObservedTimeUnixNano、SeverityNumber、SeverityText、EventName、Body、TraceId、SpanId、AttributesJson、ReceivedAt | (DeviceId, TimeUnixNano)、(TraceId)、(SeverityNumber, TimeUnixNano) |
-| `TelemetrySpan` | DeviceId、TraceId、SpanId、ParentSpanId、Name、Kind、StartTimeUnixNano、EndTimeUnixNano、StatusCode、StatusMessage、ScopeName、AttributesJson、EventsJson、LinksJson、ReceivedAt | 一意 (TraceId, SpanId)、(DeviceId, StartTimeUnixNano)、(TraceId) |
-| `TelemetryMetricPoint` | DeviceId、MetricName、Unit、Type、Temporality、IsMonotonic、StartTimeUnixNano、TimeUnixNano、Value、Count、Sum、Min、Max、BucketsJson、AttributesJson、SeriesKey(属性を正規化した文字列)、ReceivedAt | 一意 (DeviceId, MetricName, SeriesKey, TimeUnixNano)、(DeviceId, MetricName, TimeUnixNano) |
-
-- イベントの時刻は UTC の Unix ナノ秒(OTLP のまま)、受信時刻はサービスコンテキストの時刻
-- 1 回の `Export` を 1 トランザクションで保存する。一意制約で再送の重複を捨てる
-- AnyValue(配列・キー値リスト・バイト列を含む)は JSON、ID は 16 進。ヒストグラムのバケット、指数ヒストグラム、サマリーの分位は BucketsJson
-- 削除は `TelemetryRetentionWorker` が 1 時間ごとに少しずつ行う
-
-## 🖥️画面
-
-| 画面 | 内容 |
-| --- | --- |
-| `/telemetry` | 概要(稼働端末数、エラー・クラッシュの件数、受信件数の推移)、端末一覧(端末 / 機種 / OS / アプリの版 / 最終受信 / エラー数。`MudDataGrid` のサーバーページング)、直近のエラー |
-| `/telemetry/devices/{id}` | 端末の Resource と、ログ(重大度・本文・期間・trace id で絞り込み)/ トレース(一覧)/ メトリクス(計器の一覧 → 時系列グラフ)のタブ。ログの詳細はダイアログ(属性、例外のスタックトレース)|
-| `/telemetry/traces/{traceId}` | スパンのガント、スパンの属性とイベント、同じトレースのログ |
-
-- グラフとガントは OtelSample の SVG 部品(`SpanGantt` / `TimeSeriesChart` / `Sparkline` / `AttributeList`)を Smart.Blazor(`Condition` / `ListItem`)と CSP の範囲で作り直す
-- 保存の通知で画面を更新する(間引く)。メニューに追加する
+端末ごとの SQLite ファイル、端末の登録と管理、ダッシュボード用のキャッシュ、受信を画面へ知らせるバス、ダッシュボードとテレメトリ画面(メトリクスのグラフ、トレースのウォーターフォール、ログ)は `TelemetryServer_Plan.md`。
 
 ## ♻️既存資産の扱い
 
 | 資産 | 使うもの | 直すもの |
 | --- | --- | --- |
 | OtelSample のクライアント | `TelemetryHost`(プロバイダーの手動構築、作り直せるログ転送、`AddView`、ディスク再送、クラッシュのフック)、`SdkEventListener`、csproj の `EventSourceSupport=true`、`AddMetrics()` | エクスポーター自身の送信がトレース・メトリクスに混ざる、MAUI のレイアウトのスパンでトレースが埋まる、Resource の属性名(`device.model` → `device.manufacturer` / `device.model.identifier`、`os.type` の追加)、独自の計器の名前と単位、クラッシュの Flush が UI スレッドを待つ |
-| OtelSample のサーバー | proto と csproj の `<Protobuf>` 定義、`OtlpGrpcServices`、`TelemetryMapper`、SVG 部品、`DummyDataGenerator` | メトリクスの系列に端末が入っていない、累積値をそのまま保存する、スパンのイベント・リンク・バケット・temporality を捨てる、重複を排除しない、`partial_success` を返さない、DB の失敗が再送されない、単一のロックでの同期 I/O |
-| DeviceManager | 退避と再送の考え方(送る前に保存、成功した分だけ削除、上限付きのバックオフ)、保持期間の掃除 | 通信は独自の gRPC 契約なので使わない |
+| OtelSample のサーバー | proto と csproj の `<Protobuf>` 定義、`OtlpGrpcServices`、`TelemetryMapper`、SVG 部品(`TimeSeriesChart` / `Sparkline` / `SpanGantt` / `AttributeList`)| メトリクスの系列に端末が入っていない、スパンのイベント・リンク・バケット・temporality を捨てる、重複を排除しない、`partial_success` を返さない、DB の失敗が再送されない、単一のロックでの同期 I/O、ガントが木の順でなく開閉と詳細が無い、変更の通知が内容を持たず間引かれない(画面が全部を読み直す)|
+| DeviceManager | 退避と再送の考え方(送る前に保存、成功した分だけ削除、上限付きのバックオフ)、保持期間の掃除、ダッシュボード(サマリのカードと端末一覧)、端末のイベントのバス(`DeviceEventBus`)| 通信は独自の gRPC 契約なので使わない。通知のたびに DB を読み直す(ダッシュボードはキャッシュを読む)|
 
 ## 🪜段階ごとの作業
 
@@ -273,39 +248,17 @@ Pixel 9a(Debug、Mono、スレッド 51)で 1 回の取得を測った値。パ�
 
 完了(2026-09-23)。結果は `Change_Summary.md` の区間 17。
 
-### 🗄️1-3 サーバー: 保存
+### 🗄️1-3 サーバー: 保存 / 🖥️1-4 サーバー: 画面
 
-| ファイル | 変更 |
-| --- | --- |
-| (server) `Assets/Data/TelemetrySchema.sql` | 新規。「サーバーのデータ」のテーブルと索引 |
-| (server) `Application/ApplicationExtensions.cs` / `appsettings.json` | `telemetry.db` の接続(WAL)と `IDbProvider`、起動時のスキーマ適用 |
-| (core) `Models/Entity/Telemetry*Entity.cs` / `Accessors/TelemetryAccessor.cs` + `Sql/*.sql` / `Services/TelemetryService.cs` | 新規。保存(1 トランザクション)、照会、期間での削除 |
-| (server) `Telemetry/OtlpMapper.cs` | 新規 |
-| (server) `Telemetry/OtlpReceiver.cs` / `OtlpHttpEndpoints.cs` / `Otlp*Handler.cs` | ログ出力から保存へ。不正な項目は `partial_success`、保存の失敗は HTTP = 503 / gRPC = `UNAVAILABLE` |
-| (server) `Workers/TelemetryRetentionWorker.cs` + `TelemetryRetentionOption.cs` | 新規 |
-| (server) テスト | Mapper の単体テスト、インメモリ SQLite での保存・照会・削除 |
-
-確認: ダミーデータの投入と端末からの実データ、再送の重複が入らないこと、保持期間での削除。
-
-### 🖥️1-4 サーバー: 一覧と詳細の画面
-
-| ファイル | 変更 |
-| --- | --- |
-| (server) `Components/Pages/TelemetryPage.razor(.cs)` / `TelemetryDevicePage.razor(.cs)` / `TelemetryTracePage.razor(.cs)` | 新規(「画面」のとおり)|
-| (server) `Components/Common/*` | SVG 部品 |
-| (server) `Telemetry/TelemetryNotifier.cs` | 新規 |
-| (server) `Components/Layout/NavMenu.razor` + `NavMenuTests` | メニューに追加(テストの件数 6 → 7)|
-
-確認: bUnit のテストと実データでの各画面。
+`TelemetryServer_Plan.md` の「段階ごとの作業」(1-3-1 保存、1-3-2 端末の登録とキャッシュとバス、1-3-3 保持期間、1-4-1 ダッシュボードと端末の管理、1-4-2〜1-4-4 テレメトリ画面のメトリクス・トレース・ログ)。
 
 ## 🔍着手前に確かめること
 
 | 項目 | 内容 | 段階 |
 | --- | --- | --- |
-| Smart.Data.Accessor の名前付きプロバイダー | `[Provider]` で `telemetry.db` 用の `IDbProvider` を選べるか。選べなければ、アクセサーに渡す `IDbProvider` を DI で分ける | 1-3 |
 | `ANDROID_ID` | 同じ署名のアプリなら再インストールで変わらないこと、Debug と Release(署名が違う)で値が変わること | 1-2-1 |
 | `MetricsSupport` を Release でも有効にしたときの影響 | 起動時間(Release の実機で。サイズは `Change_Summary.md` の区間 17)| 1-2-3 |
 
 ## 📝記録
 
-各段階の完了時に `Change_Summary.md`、`Task_Checklist.md`(完了した番号を削除)、サーバーの `README.md`(受信口のポートと Telemetry)、`Telemetry_Study.md`(方式の決定、`NetworkOperator` などの古い記述)を更新する。
+各段階の完了時に `Change_Summary.md`、`Task_Checklist.md`(完了した番号を削除)、`TelemetryServer_Plan.md`(1-3 / 1-4 の段階)、サーバーの `README.md`(受信口のポートと Telemetry)、`Telemetry_Study.md`(方式の決定、`NetworkOperator` などの古い記述)を更新する。

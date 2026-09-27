@@ -10,8 +10,6 @@ using Template.MobileApp.Shell;
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
 public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellControl, IAppLifecycle
 {
-    private readonly ILogger<MainPageViewModel> log;
-
     private readonly IScreen screen;
 
     private readonly IDialog dialog;
@@ -73,7 +71,6 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         ITelemetryControl telemetryControl,
         DiagnosticSampler diagnosticSampler)
     {
-        this.log = log;
         Startup = startup;
         Navigator = navigator;
         this.screen = screen;

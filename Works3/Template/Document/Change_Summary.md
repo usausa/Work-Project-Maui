@@ -2017,7 +2017,7 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 | 対象 | 内容 |
 |---|---|
 | `Shell/DiagnosticSampler.cs` | `Visible`(パネルが見えているか)を追加。`Start` は最初の 1 回だけ基準を取り、以後はメモリの推移と CPU などの基準を毎秒更新し続ける。見えていないあいだは FPS の監視(`IDisplay`)とレイアウトの購読(`MeterListener`)を止め、スナップショットの計算と `Sampled` を省く |
-| `MainPageViewModel.cs` / `Log.cs` | 最初の表示で `Start`、表示中かつ前面を `Visible` に渡す。サンプラーの切り替えのログ(`DebugSamplerChanged`)は削除 |
+| `MainPageViewModel.cs` / `Log.cs` | 最初の表示で `Start`、表示中かつ前面を `Visible` に渡す。サンプラーの切り替えのログ(`DebugSamplerChanged`)と、使わなくなったロガーのフィールドは削除 |
 
 - ビルド 0 エラー 0 警告(Debug)。Release は C# の警告 0。inspectcode 0 件
 - 実機(Pixel 9a): パネルを 15 秒表示 → 20 秒隠す → 再表示で、メモリの推移が最初の表示の分から途切れずにつながる。背面(HOME)で FPS の監視などが止まり、復帰で再開する
@@ -2099,7 +2099,7 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 |---|---|
 | `Template.MobileApp.csproj` | `OpenTelemetry` / `OpenTelemetry.Exporter.OpenTelemetryProtocol` 1.19.1。`MetricsSupport` を全構成で true(Debug だけの指定を置き換え)、`EventSourceSupport=true` |
 | `Diagnostics/TelemetryService.cs` + `.android.cs`(送信) | Tracer / Meter / Logger のプロバイダーを送信先ごとに作り直す(バックグラウンドで 1 つずつ)。Resource は `service.*` / `device.id` / `app.installation.id` / `device.manufacturer` / `device.model.identifier` / `os.*`。エクスポーターは OTLP/HTTP(送信先 + `v1/traces` など、タイムアウト 10 秒)。ディスクには退避せず、送れなかった中身はメモリのリングバッファーに種類ごとに取っておき(上限は `TelemetryOptions`)、どれかの送信が成功したら全種類を通して古い順に、失敗するまで続けて送り直す(`TelemetrySendHandler`)。メトリクスは 30 秒ごとの Delta で、`System.Runtime` の 3 計器(GC 回数・割り当て量・例外数)と `System.Net.Http` の `http.client.request.duration`(要求 1 回ごと)以外を View で落とす(`Microsoft.Maui` の Meter は送らない)。エクスポーターの `HttpClient` は `AndroidMessageHandler` を直接使い(`TelemetryService.android.cs`)、エクスポーター自身の送信を HTTP のメトリクスに入れない。クラッシュのログ(イベント名 `exception`、FATAL、`app.crash.id` と `exception.*`)は専用のエクスポーター(`SimpleLogRecordExportProcessor`、タイムアウト 2 秒)で同期で送り、届いたか(`TelemetrySendHandler` が数えた成功)を返す(`SendCrash`)。`ShutdownLogs` |
-| `Diagnostics/TelemetryOptions.cs`(新規) | 送り直しのために取っておく件数の上限(`TraceResendCapacity` / `MetricResendCapacity` / `LogResendCapacity`。単位は送信 1 回分。既定は 60) |
+| `Diagnostics/TelemetryOptions.cs`(新規) | 送り直しのために取っておく件数の上限(`TraceResendCapacity` / `MetricResendCapacity` / `LogResendCapacity`。単位は送信 1 回分。既定は 120) |
 | `Diagnostics/DiagnosticsInstrumentation.cs`(新規) | アプリの `ActivitySource` / `Meter`(名前はアセンブリ名)。`DeviceInformation` の値を送るゲージ: `process.cpu.utilization`(前回の計測からの平均。前回と同じ読み取りなら値を返さない)/ `process.memory.usage` / `process.thread.count` / `application.gc.last_collection.heap.size`(直前の GC 時点のヒープ)。電池残量 `hw.battery.charge`(0〜1、属性 `hw.id` = `battery`)と無線 LAN の信号強度 `application.wifi.signal_strength`(dBm。接続していなければ送らない)は `DeviceInformation` が通知で保持した値。サンプラーは使わない(中断中も送る) |
 | `Diagnostics/SdkEventListener.cs`(新規) | SDK の EventSource(`OpenTelemetry*`、Warning 以上。`MetricInstrumentIgnored` は除く)をカテゴリ `OpenTelemetry.Sdk` のログへ(転送しない) |
 | `Diagnostics/TelemetryLoggerProvider.cs`(新規) | アプリのログを `TelemetryService` へ渡すだけの `ILoggerProvider`。アプリのカテゴリの Warning 以上を送信中のあいだだけ送る判断と送信は `TelemetryService`(`IsLogEnabled` / `WriteLog` / `BeginLogScope`)。`ILoggerFactory` を作るときに要るため依存を持たず、`TelemetryService` が生成時に自身を登録する(`TelemetryService` は `ILoggerFactory` を使うので、コンストラクターで受け取ると DI が循環する) |
