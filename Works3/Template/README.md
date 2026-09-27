@@ -77,13 +77,12 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Diagnostics | OpenTelemetry(crash report / telemetry) |
 | Device | Background task(WorkManager) |
 | Network | Offline sync |
 | Device | Push(FCM) |
 | Device | Biometric |
 | UI | Remaining visual attributes to styles |
-| Decision | Pending decisions (guard for unconfigured endpoints / CoreCLR runtime) |
+| Decision | Pending decisions (CoreCLR runtime) |
 
 ## Pending
 

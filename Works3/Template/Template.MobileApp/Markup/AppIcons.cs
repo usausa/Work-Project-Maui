@@ -22,6 +22,7 @@ public static class AppIcons
     public static readonly FontImageSource AccountCircle = Create(MaterialIcons.Account_circle, MenuSize, Colors.White);
     public static readonly FontImageSource AccountTree = Create(MaterialIcons.Account_tree, MenuSize, Colors.White);
     public static readonly FontImageSource Animation = Create(MaterialIcons.Animation, MenuSize, Colors.White);
+    public static readonly FontImageSource AppRegistration = Create(MaterialIcons.App_registration, MenuSize, Colors.White);
     public static readonly FontImageSource Apps = Create(MaterialIcons.Apps, MenuSize, Colors.White);
     public static readonly FontImageSource Archive = Create(MaterialIcons.Archive, MenuSize, Colors.White);
     public static readonly FontImageSource ArrowBack = Create(MaterialIcons.Arrow_back, MenuSize, Colors.White);

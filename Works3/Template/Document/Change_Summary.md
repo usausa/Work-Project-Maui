@@ -2031,6 +2031,19 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 - 実機(Pixel 9a): 起動時に紺の背景の中央にマークが出る(円で切り取られない)
 
+### 🚦通信設定が未設定のときはメニューで止める(2026-09-27)
+
+`Task_Checklist.md` の 6-1(案A)。通信設定が未設定のときの止め方を、Sample メニュー(CV Net / Chat)と同じ「メニューでダイアログを出して画面に入らない」にそろえた。
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Network/NetworkMenuViewModel.cs` | 画面へ進むボタンは、画面が使う通信設定が未設定ならダイアログを出して画面に入らない(API = HTTP (Data) / HTTP (Auth) / Storage / Realtime、gRPC、SSH = SFTP、テレメトリの送信先 = Telemetry)。時刻取得と端末の登録は無効にせず、押したときに API の設定を確かめる |
+| `Modules/Network/NetworkRealtimeViewModel.cs` / `NetworkGrpcViewModel.cs` / `NetworkSftpViewModel.cs` + `NetworkSftpView.xaml` | 画面の「未設定」の表示と操作の無効化(`Configured`)を削除。gRPC の接続先はコンストラクターで決める |
+| `Document/Task_Checklist.md` / `README.md` | 6-1 を削除、TODO の Decision を CoreCLR だけに |
+
+- ビルド 0 警告、inspectcode 0 件
+- 実機(Pixel 9a): SSH が未設定なので SFTP は `SSH is not configured.` を出して画面に入らない。gRPC と Realtime は画面に入り(Realtime は接続済み)、時刻取得は `Get success.`
+
 ## 🧱B. 画面以外の変更
 
 ### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
@@ -2186,6 +2199,167 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 - 実機(Pixel 9a、サーバー停止中): メトリクス 7・トレース 7・ログ 2 の 16 件を取っておき(診断画面の Resend 16)、サーバーの起動後に最初に成功した送信に続けて、16 件が 0.4 秒で種類を混ぜたまま古い順に届いた(Resend 0)
 - 送信 1 回分の大きさ(実機): メトリクス 1.7〜2.0 KB、画面遷移のスパン 1 件のトレース 0.7 KB
 
+### 🗄️テレメトリ 1-3-1: 保存(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-3-1。受信したテレメトリを端末ごとの SQLite ファイルに保存する。本リポジトリのコードの変更は無い。パスは (server) = `template-maui-server/src/Template.MobileServer.Web/`、(core) = `template-maui-server/src/Template.MobileServer.Core/` からの相対。Accessor と SQL の書き方は example-maui-pos(`.claude/rules/accessor.md` / `sql.md`)に合わせた。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Assets/Data/TelemetrySchema.sql`(新規) | 端末ごとのファイルのスキーマ(`DeviceInfo` / `Resources` / `MetricSeries` / `MetricPoints` / `Spans` / `Traces` / `Logs`、`journal_mode = WAL`、`user_version = 1`) |
+| (server) `Telemetry/SqliteTelemetryDbProvider.cs` + `TelemetryStorageOption.cs`(新規) | `telemetry/<端末 ID>.db` の接続(プロセスで最初に開くときに `user_version` を見てスキーマを入れ、開くたびに `synchronous = NORMAL` と `cache_size`)、端末の一覧、削除(プールを空けてから `-wal` / `-shm` も)。照会用の接続はファイルを作らない。オプション `TelemetryStorage`(`Root` = `telemetry`、`CacheSize` = 256 KiB) |
+| (server) `Telemetry/OtlpMapper.cs`(新規) | OTLP → 保存用のまとまり(`TelemetryBatch`)。属性は型を残した JSON(系列と Resource はキー順)、ID は小文字の 16 進、ヒストグラムの境界と件数・指数ヒストグラム・サマリーの分位は JSON、ログの重複を見分けるハッシュ(LogRecord のバイト列の SHA-256 の先頭 8 バイト)。ID の長さが違うスパン、時刻の無い点とログ、値の無い数値の点を数えて保存しない(`NO_RECORDED_VALUE` の点は数えずに捨てる) |
+| (server) `Telemetry/OtlpReceiver.cs` / `OtlpHttpEndpoints.cs` / `Otlp*Handler.cs` / `OtlpHelper.cs` / `Log.cs` | 受信を非同期にして保存へ。端末を識別できない(形式が違う)リソースと不正な項目は `partial_success` の件数と理由、保存の失敗(DB・I/O)は HTTP = 503 / gRPC = `UNAVAILABLE`。OTLP/HTTP にも `ServiceContextEndpointFilter`。1 回ごとの受信のログは Debug(受けた件数と保存した件数)、拒否は Warning、保存の失敗は Error。受信内容を 1 件ずつ出す Debug のログはやめた |
+| (core) `Services/TelemetryService.cs`(新規) | 1 回の Export の 1 端末分を 1 トランザクションで保存する(端末ごとのロック、Resource と系列の Id はメモリに持ってコミットの後に足す、`Traces` をそのトレースのスパンから集計し直す、`DeviceInfo` を更新)。新しく入った分を `TelemetrySaveResult`(同じファイルの先頭)で返す |
+| (core) `Accessors/TelemetryAccessor.cs` + `Sql/TelemetryAccessor.*.sql`(新規) | 接続・トランザクションを引数で受け取る。送り直しの重複は `ON CONFLICT ... DO NOTHING`、トレースの取得は `[SelectSingle]`、列挙型を含む INSERT は列ごとの引数 |
+| (core) `Accessors/GenericAccessor.cs` + SQL | `QueryUserVersionAsync` / `ExecuteTelemetryPragmaAsync` |
+| (core) `Accessors/DataProfile.cs` / `Infrastructure/Data/EnumTextConverter.cs`(新規) | 列挙型を名前の文字列で保存する(`[ExecuteConfig(typeof(DataProfile))]`) |
+| (core) `Models/Entity/Telemetry*Entity.cs` / `Models/Enums/Telemetry*.cs` / `Models/Parameters/TelemetryBatch.cs` + `TelemetryMetric.cs` / `Infrastructure/Telemetry/ITelemetryDbProvider.cs` / `Domain/DeviceIdFormat.cs`(新規)、`Domain/Length.cs` | エンティティ(テーブル名は `[Name]`、キーは `[Key]`)、列挙型、保存のまとまり、端末ごとの接続の interface、端末 ID の形式(英数字・`-`・`_` の 64 文字以内)、長さの定数(`DeviceId` / `Note`) |
+| (core) `GlobalUsing.cs` / (server) `GlobalUsing.cs` | `Models.Enums`。core は `KeyAttribute` を Smart.Data.Accessor の `[Key]` の別名に |
+| (server) `Application/ApplicationExtensions.cs` / `appsettings.json` | プロバイダーとオプションの登録、起動時にフォルダーを作る |
+| テスト | `Telemetry/OtlpMapperTests.cs`(4 件)/ `Services/TelemetryServiceTests.cs`(3 件)と、一時フォルダーに DB を作る `Telemetry/TelemetryTestStorage.cs` を追加。`OtlpReceiverTests`(保存・拒否・保存の失敗の 4 件)を書き直し、`OtlpHttpEndpointsTests` に 503 を追加(計 53 件) |
+| (server) `README.md` | 機能一覧・構成・テレメトリの受信(保存) |
+
+- サーバー: ビルド 0 警告、テスト 53 件成功、inspectcode 0 件
+- 実機(Pixel 9a、`adb reverse tcp:4318`): サーバーの停止中に端末が溜めていたメトリクスが送り直しで順に届き、`telemetry/4db55dc544d5fec3.db` に系列 12・点 2,463・画面遷移のトレース 19 件が入る。Telemetry デモの Span でトレース `TelemetryTest`(子の `Compute` と 2 スパン、RootName = `TelemetryTest`)、Warning / Error(`exception.*` の属性)/ スパンの中の警告(トレース ID とスパン ID 付き)のログが入る。系列の種類などは名前の文字列(`Gauge` / `Delta` / `Internal`)
+- `process.memory.usage` / `process.thread.count` / `application.gc.last_collection.heap.size` は Sum の Cumulative(単調でない)で届く(グラフでは 1 分あたりにせず今の値として扱う)
+
+### 🔔テレメトリ 1-3-2: 端末の登録とキャッシュとバス(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-3-2。端末の登録(`data.db`)と、ダッシュボード用のキャッシュ、受信を画面へ知らせるバスを追加した。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Assets/Data/Schema.sql` | `Devices`(DeviceId、Name、GroupName、Note、IsEnabled、RegisteredAt) |
+| (core) `Models/Entity/DeviceEntity.cs` / `Accessors/DeviceAccessor.cs` + SQL / `Services/DeviceService.cs`(新規) | 登録の照会・追加(`ON CONFLICT DO NOTHING`。登録済みなら Duplicate)・更新(`RETURNING *` で更新後の行)・削除(`[Delete]`)。登録日時はサービスコンテキストの時刻 |
+| (core) `Infrastructure/Data/DateTimeTextConverter.cs`(新規)/ `Accessors/DataProfile.cs` | 日時を UTC の文字列で保存する(example-maui-pos と同じ) |
+| (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL | 端末の一覧(ファイル)、要約の照会(端末の情報、計器の名前で絞った系列ごとの最後の点、1 時間ごとのエラーとクラッシュ、直近のエラー)、端末のファイルの削除(書き込みと同じロック) |
+| (core) `Models/Views/Telemetry*View.cs` / `Domain/TelemetrySeverity.cs`(新規)/ `GlobalUsing.cs` | 要約の結果、重大度の区切り(WARN = 13、ERROR = 17、FATAL = 21)、`Models.Views` |
+| (server) `Telemetry/TelemetryDeviceRegistry.cs` + `TelemetryDeviceSummary.cs`(新規) | 端末ごとの登録と要約(最新値 = 電池・無線 LAN・CPU・メモリ、1 時間ごとのエラーとクラッシュ)、全端末の直近のエラー 20 件、1 分ごとの受信件数 60 個。起動時に登録と全端末のファイルから作り(登録の無いファイルは登録する)、受信で更新する。自動登録(名前の既定は機種)、無効の判定、管理の操作(追加・更新・削除)。受信中 = 最後の受信から 2 分以内 |
+| (server) `Telemetry/TelemetryBus.cs`(新規) | `Received`(保存で新しく入った分)と `DeviceChanged`(端末 ID)。受け手ごとに呼び、例外はログに出して次の受け手へ進む |
+| (server) `Telemetry/OtlpReceiver.cs` / `Log.cs` | 保存の前に登録を確かめ(無効の端末は保存せず `partial_success`、Debug のログ)、保存の後にキャッシュを更新してバスに通知する。登録・読み込み・受け手の失敗のログ |
+| (server) `Components/RefreshTimer.cs`(新規) | バスの通知をまとめて描画する(1 秒ごとに予約を確かめ、予約が無くても指定の間隔で反映する) |
+| (server) `Application/ApplicationExtensions.cs` / `GlobalUsing.cs` | バスとキャッシュの登録、起動時のキャッシュの読み込み |
+| テスト | `Services/DeviceServiceTests.cs`(2 件)/ `Telemetry/TelemetryDeviceRegistryTests.cs`(4 件)/ `TelemetryBusTests.cs`(1 件)/ `Components/RefreshTimerTests.cs`(2 件)を追加、`OtlpReceiverTests` に無効の端末を追加し登録とバスを通す形に。`TelemetryTestStorage` にメモリ上の `data.db`(共有キャッシュ)を足した(計 63 件) |
+
+- サーバー: ビルド 0 警告、テスト 63 件成功、inspectcode 0 件
+- 実機(Pixel 9a): 起動時に、登録の無かった端末のファイルが `Pixel 9a` として登録される(ログ `Device registered`、登録日時は UTC の文字列)。登録を無効にして起動すると、端末のメトリクスは届くが保存されない(点の数が変わらない、`Telemetry of disabled device` のログ)。有効に戻して起動し直すと保存が再開し、登録は増えない
+
+### 🧹テレメトリ 1-3-3: 保持期間(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-3-3。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Workers/TelemetryRetentionWorker.cs` + `TelemetryRetentionWorkerOption.cs`(新規)/ `Workers/Log.cs` | 起動の直後と一定の間隔で、端末ごとに期限を過ぎた行を削除する。最後の受信から保持期間を過ぎた端末は、テレメトリのファイルを削除してキャッシュの要約を消す(登録は残す)。1 台の失敗はログに出して次の端末へ進む。削除した行の数とファイルの削除は Information |
+| (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL | 期限での削除(`DeleteLogsBeforeAsync` / `DeleteSpansBeforeAsync` / `DeleteTracesBeforeAsync` / `DeleteMetricPointsBeforeAsync`。端末のロックの中で 1 トランザクション。スパンはトレースの開始で判定)と、ファイルごとの削除(接続を閉じてから)。結果は `TelemetryDeleteResult` |
+| (server) `Application/ApplicationExtensions.cs` / `appsettings.json` | `TelemetryRetention`(`Enable`、`IntervalMinutes` = 60、`LogDays` = 7、`TraceDays` = 7、`MetricDays` = 30、`DeviceDays` = 30) |
+| テスト | `TelemetryServiceTests`(期限での削除、ファイルごとの削除の 2 件)、`Workers/TelemetryRetentionWorkerTests.cs`(起動の直後のファイルの削除と登録の維持)を追加(計 66 件) |
+
+- サーバー: ビルド 0 警告、テスト 66 件成功、inspectcode 0 件
+- 実機: 起動でワーカーが始まり、今日のデータは消さない(点は受信で増え続ける)。期限を過ぎたデータの削除は、時刻をずらしたテストデータで確認
+
+### 📲テレメトリ 1-3-4: 端末からの登録(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-3-4。端末が自分をサーバーに登録する API と、Network メニューからの登録を追加した。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Endpoints/DeviceEndpoints.cs`(新規)/ `ApiRoutes.cs` / `Application/ApplicationExtensions.cs` | `PUT /api/device/{deviceId}`(本文は名前。匿名)。未登録なら登録して 201(`Location` 付き)、登録済みなら名前を更新して 200。応答は端末 ID・名前・グループ・有効・登録日時。端末 ID は受信と同じ形式、名前は必須で 50 文字以内(違反は 400) |
+| (core) `Domain/DeviceIdFormat.cs` | 入力検証用の正規表現 `Pattern`(`IsValid` と同じ判定) |
+| (core) `Services/DeviceService.cs` / `Accessors/DeviceAccessor.cs` + `UpdateNameAsync.sql` | 名前だけの更新(`RETURNING *` で更新後の行) |
+| (server) `Telemetry/TelemetryDeviceRegistry.cs` | `RegisterAsync`(登録または名前の更新をキャッシュに反映して `DeviceChanged` を通知) |
+| `Services/HttpService.cs` / `Usecase/NetworkUsecase.cs` | `PutDeviceAsync`(`DeviceRegisterRequest` / `DeviceRegisterResponse`)、`RegisterDeviceAsync`(結果をダイアログで出す。201 は `Register success.`、200 は `Update success.` と名前・グループ・有効 / 無効) |
+| `Modules/Network/NetworkMenuView.xaml` + `NetworkMenuViewModel.cs` / `Markup/AppIcons.cs` | Network メニューの最後(9 段目)に Device registration(`AppRegistration`)。専用の画面は作らず、端末 ID と端末の名前で登録する(API が未設定なら無効) |
+| テスト | `Domain/DeviceIdFormatTests.cs`(`IsValid` と正規表現が同じ判定、長さ)を追加、`TelemetryDeviceRegistryTests` に登録と名前の更新を追加(計 75 件) |
+| (server) `README.md` | API の一覧と、テレメトリの受信(端末の登録) |
+
+- 端末: ビルド 0 警告、inspectcode 0 件
+- サーバー: ビルド 0 警告、テスト 75 件成功、inspectcode 0 件
+- 実機(Pixel 9a): Network メニューの Device registration で、受信で自動登録された端末は 200 になり名前が更新される(`Update success.`、`data.db` の `Devices` の Name が変わり、登録日時は変わらない)
+- API: 新しい端末 ID は 201 と `Location`、同じ端末 ID の 2 回目は 200。空白を含む端末 ID と空の名前は 400
+
+### 📋テレメトリ 1-4-1: ダッシュボード(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-4-1。管理画面に `/dashboard` を追加した。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Components/Pages/DashboardPage.razor(.cs)`(新規) | サマリのカード(アイコン付き。端末 = 受信中 / 有効と、受信中・途絶・受信なしの内訳の帯、エラーとクラッシュ = 24 時間、電池の少ない端末 = 残量 20% 未満、受信 = 直前の 1 分の件数と 60 分のスパークライン。無効の端末は数えない)、検索と追加、端末の一覧(状態のバッジと経過、名前と端末 ID・グループ、機種と OS・アプリの版、電池・無線 LAN・CPU・メモリ、エラーとクラッシュのバッジ、編集・削除。無効の端末は薄く)、直近のエラー 10 件。キャッシュだけを読み、バスの通知(1 秒ごとにまとめる)と 10 秒ごとに読み直す |
+| (server) `Components/Telemetry/MetricCell.razor(.cs)` / `CountBadge.razor(.cs)` / `Sparkline.razor(.cs)` / `TelemetryFormat.cs`(新規) | 最新値のセル(電池と CPU = 横棒と %、無線 LAN = 電波のアイコン 4 段、メモリ = MB。色は良し悪し、ホバーで値と測った時刻)、件数のバッジ(0 は薄く)、小さな折れ線、値・経過時間・状態・重大度の表示と色 |
+| (server) `Components/Dialogs/DeviceEditDialog.razor(.cs)` / `DeviceDialogExtensions.cs`(新規) | 端末の追加・編集(端末 ID は追加のときだけ入力し、受信と同じ形式を FluentValidation で検証。グループとメモは空なら null) |
+| (server) `Telemetry/TelemetryDeviceSummary.cs` / `TelemetryDeviceRegistry.cs` | 端末の状態 `TelemetryDeviceState`(受信なし / 受信中 / 途絶)と `GetState` |
+| (core) `Domain/TelemetrySeverity.cs` | TRACE = 1、DEBUG = 5、INFO = 9 |
+| (server) `Components/_Imports.razor` / `Components/Layout/NavMenu.razor` / `wwwroot/css/app.css` | `Components.Telemetry` と `TelemetryFormat` の static インポート、Home の次に Dashboard、ダッシュボード・状態の帯・横棒・スパークラインのクラス(表のセルは折り返さない) |
+| テスト | `Components/Pages/DashboardPageTests.cs`(表示・検索・通知での読み直し)/ `Components/Dialogs/DeviceFormValidatorTests.cs` / `Components/Telemetry/TelemetryFormatTests.cs`(色と段の区切り、経過時間)/ `MetricCellTests.cs` を追加、`NavMenuTests` のリンクの数を 7 に(計 103 件) |
+| (server) `README.md` | 管理画面一覧と構成 |
+
+| 値の色 | 緑 | 橙 | 赤 |
+|---|---|---|---|
+| 電池 | 50% 以上 | 20% 以上 | 20% 未満 |
+| CPU | 50% 未満 | 80% 未満 | 80% 以上 |
+| 無線 LAN | -67 dBm 以上 | -80 dBm 以上 | -80 dBm 未満 |
+
+- サーバー: ビルド 0 警告、テスト 103 件成功、inspectcode 0 件
+- 実機(Pixel 9a)とブラウザ: 端末の実データ(電池 79%、無線 LAN -46 dBm、CPU 0.1%、メモリ 446 MB、エラー 2・クラッシュ 1)が出る。追加(不正な端末 ID は入力欄にエラー)・編集・削除、無効にすると行が薄くなりサマリから外れ、端末からの登録の結果は `status=[Disabled]` になり、受信は保存されない。端末からの名前の変更は表示中のダッシュボードに再読み込みなしで反映される。端末のアプリを止めると 2 分で途絶に変わる
+
+### 📈テレメトリ 1-4-2: テレメトリ画面のメトリクス(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-4-2。管理画面に `/telemetry/{DeviceId?}` を追加した。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Components/Pages/TelemetryPage.razor(.cs)`(新規) | 端末の選択(状態の色の印と無効の印)、範囲(15 分〜30 日)、端末の見出し(状態・名前・グループ・メモ、機種・OS・アプリの版・最終受信、電池・無線 LAN・CPU・メモリの最新値)、メトリクスのタブ。タブと範囲は URL のクエリ(`tab` / `range`)で、切り替えは `NavigateTo(..., replace: true)` で履歴を増やさない(端末の切り替えは履歴に残す)。表示中の端末の受信の通知を溜めて 1 秒ごとにまとめて足し、10 秒ごとに時間軸を進める。読み込みは連番で古い結果を捨てる |
+| (server) `Components/Telemetry/MetricChartModel.cs`(新規) | 計器ごとのグラフと属性の組み合わせごとの線。束の値(ゲージ・単調でない合計 = 平均、単調な Delta = 1 分あたり(区間の長さで割る)、ヒストグラム = 平均と最大と回数)、既知の 10 計器の名前・単位・倍率と線の名前にする属性、通知の点の追加(読み込んだ集計の最後の点より後だけ)、範囲から外れた束の削除 |
+| (server) `Components/Telemetry/TimeSeriesChart.razor(.cs)` / `TelemetryRange.cs`(新規) | SVG の折れ線(区切りのよい目盛り、24 時間以上は日付付き、欠けた区間で線を切り前後が欠けた点は丸、点が 150 以下ならホバーで時刻と値、凡例に最新値)、範囲と束ねる間隔 |
+| (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + `QueryMetricBucketListAsync.sql` / `Models/Views/TelemetryMetricHistoryView.cs` / `TelemetryMetricBucketView.cs`(新規) | `QueryMetricHistoryAsync`(全系列と、範囲の点を系列ごと・間隔ごとに SQL で束ねた集計。ファイルが無ければ空) |
+| (server) `Components/Telemetry/TelemetryFormat.cs` / `Components/Layout/NavMenu.razor` / `Components/Pages/DashboardPage.razor(.cs)` / `wwwroot/css/app.css` | グラフの値の表示、Dashboard の次に Telemetry、ダッシュボードの端末の名前からテレメトリ画面へ、テレメトリ画面とグラフのクラス |
+| テスト | `Components/Telemetry/MetricChartModelTests.cs`(種類ごとの値と単位、通知の点の追加、範囲外の削除)/ `Components/Pages/TelemetryPageTests.cs`(表示、未登録の端末、通知での追加)を追加、`TelemetryServiceTests` に束ねの集計、`NavMenuTests` のリンクの数を 8 に(計 110 件) |
+| (server) `README.md` | 管理画面一覧 |
+
+- サーバー: ビルド 0 警告、テスト 110 件成功、inspectcode 0 件
+- 実機(Pixel 9a)とブラウザ: ダッシュボードの端末の名前から移動し、10 計器のグラフが出る(HTTP は `PUT 200 localhost 21.2 ms・5 回`)。表示中に受信した点が足され、範囲から外れた点が消える(15 分の範囲で最後の点 15:39:25 → 15:39:55、最初の点 15:24:55 → 15:25:25)。範囲の切り替えで URL の `range` が変わり、履歴は増えない。24 時間は 5 分の束で日付付きの目盛り。アプリを止めた区間で線が切れる
+
+### 🧵テレメトリ 1-4-3: テレメトリ画面のトレース(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-4-3。テレメトリ画面にトレースのタブを追加した。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Components/Pages/TelemetryPage.razor(.cs)` | トレースのタブ。一覧(開始・ルートスパン・所要時間・スパン数・エラーのバッジ。エラーだけ・ルートスパンの名前で絞り込み、新しい順に 200 件まで)、選んだトレース(URL の `trace`、履歴に残す)の見出し・ウォーターフォール・スパンの詳細・トレースのログ。表示中のタブだけ読み込み(タブごとに範囲と絞り込みの鍵を持つ)、受信で集計し直したトレースを一覧に反映し、表示中のトレースは読み直す |
+| (server) `Components/Telemetry/WaterfallModel.cs` / `TraceWaterfall.razor(.cs)`(新規) | 親子の木の順(兄弟は開始の順、親が届いていないスパンは最上位、親の循環も最上位)、閉じた行の子孫を隠す(読み直しで引き継ぐ)、バー(幅は最低 2 px、エラーは赤)とイベントの印(例外は赤)、区切りのよい目盛り |
+| (server) `Components/Telemetry/SpanDetail.razor(.cs)` / `AttributeTable.razor(.cs)`(新規) | 種類・状態とメッセージ・開始(トレースの開始から)・所要時間・ID・スコープ、属性、イベント(例外のスタックトレースは表の外に)、リンク、Resource。属性の JSON をキーと値の表に |
+| (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + `QueryTraceListAsync.sql` / `QuerySpanListByTraceAsync.sql` / `QueryLogListByTraceAsync.sql` / `QueryResourceListAsync.sql` / `Models/Views/TelemetryTraceDetailView.cs`(新規) | `QueryTraceListAsync`(範囲・エラーだけ・名前の `LIKE`。`IDialect` を受け取る)、`QueryTraceDetailAsync`(読み取りのトランザクションで同じ時点のトレース・スパン・ログ・Resource)。トレースのログはトレース ID の部分索引を使うように `TraceId <> ''` を付ける |
+| (server) `Components/Telemetry/TelemetryFormat.cs` / `wwwroot/css/app.css` | 所要時間(0 / µs / ms / s)、トレースの一覧(高さ 320 px で送る)・ウォーターフォール・詳細のクラス |
+| テスト | `Components/Telemetry/WaterfallModelTests.cs`(木の順、開閉、イベント)を追加、`TelemetryServiceTests`(絞り込みと詳細)・`TelemetryPageTests`(URL のクエリで開くトレース)・`TelemetryFormatTests`(所要時間)に追加、`TelemetryTestStorage` に `IDialect`(計 119 件) |
+
+- サーバー: ビルド 0 警告、テスト 119 件成功、inspectcode 0 件
+- 実機(Pixel 9a)とブラウザ: 直近 1 時間のトレース(画面遷移の Navigate)が一覧に出る。端末の Telemetry デモの Span で、表示中の一覧に `TelemetryTest`(スパン 2)が入り、選ぶと `TelemetryTest` の下に `Compute` のウォーターフォール(目盛り 0 / 50 ms / 100 ms)、ルートスパンの詳細と Resource、トレースのログ(WARN の `Telemetry test span completed.`)が出る。開閉、`Compute` の選択(開始 +180.9 µs、親の ID)、エラーだけ(0 件)と名前(`tele` で 1 件)の絞り込み
+
+### 📜テレメトリ 1-4-4: テレメトリ画面のログ(template-maui-server)(2026-09-27)
+
+`TelemetryServer_Plan.md` の 1-4-4。テレメトリ画面にログのタブを追加し、ダッシュボードの直近のエラーから移れるようにした。本リポジトリのコードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Components/Pages/TelemetryPage.razor(.cs)` | ログのタブ。重大度(以上。URL の `level`、履歴を増やさない)・本文(部分一致)・トレース(URL の `trace` のチップ。外せる)で絞り込み、新しい順に 100 件ずつ(さらに読み込む)。行を開くと詳細(Resource は開いたときに読む)、トレースのあるログはトレースのタブへのリンク。受信したログは絞り込みに合えば新しい順の位置に足し、範囲から外れたものを消す |
+| (server) `Components/Telemetry/LogDetail.razor(.cs)` / `TelemetryLogLevel.cs` / `TelemetryLinks.cs`(新規)/ `TelemetryRange.cs` | ログの詳細(本文の全体、重大度・イベント・観測時刻・スコープ・ID、属性、例外のスタックトレース、Resource)、重大度の選択肢(すべて / INFO / WARN / ERROR 以上 / FATAL)、テレメトリ画面の URL とタブの値、経過時間を含むいちばん短い範囲(`Covering`) |
+| (server) `Components/Pages/DashboardPage.razor(.cs)` / `wwwroot/css/app.css` | 直近のエラーの行を選ぶと、その端末のログ(ERROR 以上、エラーの時刻を含む範囲)へ。ログの行と詳細のクラス |
+| (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + `QueryLogListAsync.sql` / `Models/Parameters/TelemetryLogQuery.cs`(新規) | `QueryLogListAsync`(時刻以降・重大度以上・本文の `LIKE`・トレース、続きは `(時刻, Id)` より前)、`QueryResourceAsync` |
+| テスト | `TelemetryServiceTests`(絞り込みと続きの読み込み)、`TelemetryPageTests`(URL の `level`、行を開く、受信の追加)、`DashboardPageTests`(エラーからの移動)に追加(計 122 件) |
+| (server) `README.md` | 管理画面一覧(テレメトリにログ) |
+
+- サーバー: ビルド 0 警告、テスト 122 件成功、inspectcode 0 件
+- 実機(Pixel 9a)とブラウザ: ダッシュボードの直近のエラー(クラッシュ)から `?tab=logs&range=6h&level=error` に移り、FATAL と ERROR の 2 件が出る。クラッシュのログを開くと `exception.stacktrace` がスタックトレースに、属性と Resource が出る。端末の Telemetry デモの Warning と Error が表示中の一覧の先頭に入る。トレースのあるログのリンクでトレースのタブ(ウォーターフォール)へ移り、ログのタブへ戻るとトレースのチップで 1 件に絞られ、チップを外すと 7 件
+
+### ⚖️テレメトリ 1-5: GC の計器の扱い(2026-09-27)
+
+Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` の差分が負になる件(理由は「C. この区間のナレッジ」)は、端末の標準の計器を届いたまま表示する(補正も置き換えもしない)。端末は将来 CoreCLR になる前提で、CoreCLR では正しい値になる。コードの変更は無い。
+
+| 対象 | 内容 |
+|---|---|
+| `Document/TelemetryServer_Plan.md` | 決定事項に「GC の計器」 |
+| `Document/Task_Checklist.md` / `README.md` | 1 節(OpenTelemetry)を完了として削除、TODO の Diagnostics の行を削除(Implement の Network に Telemetry(OpenTelemetry)) |
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -2226,6 +2400,21 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 - `EventSourceSupport=true` は起動時間に影響しない(実測。true / false ともアプリのコードの開始まで約 460 ms)
 - エクスポーターの送信の中で送り直しを待つと、エクスポーターが止まる(メトリクスの集計・バッチの送信が遅れる)。溜めた分の送り直しは裏で行う
 - **C# 14 の `field` を使うプロパティに初期値を付ける(`} = true;`)と StyleCop の SA1500 が出る**。名前付きのフィールドで持つと、そのプロパティでしか使わないフィールドとして IDE0032(`field` を使う形への変換)が出る(getter が `!field` のような式でも出る)。どちらも出さないには、初期値をコンストラクターで設定する
+- **Smart.Data.Accessor の `[Key]` は DataAnnotations の `KeyAttribute` と名前がぶつかる**(両方をグローバル using すると CS0104)。`global using KeyAttribute = Smart.Data.Accessor.Attributes.KeyAttribute;` で別名にする(example-maui-pos と同じ)
+- Smart.Data.Accessor の 2-way SQL の `/*@ entity.Prop */` には型の変換(`[TypeHandler]`)が効かない。列挙型を名前の文字列で保存する列は、メソッドの引数で列ごとに渡す
+- SQLite の `INSERT ... ON CONFLICT ... DO NOTHING RETURNING Id` は、重複で入れなかったときに行を返さない(`[ExecuteScalar]` の `long?` が null)
+- **xunit v3(Microsoft.Testing.Platform)のテストは、.NET 10 SDK の `dotnet test`(VSTest)では動かない**(MSB のエラー)。ビルドしたテストの exe を直接実行する
+- プロパティの getter の中でだけ読むフィールドに、ほかのメソッドから代入(null で無効にするなど)していても、IDE0032(`field` を使う自動プロパティへの変換)が出る
+- ASP.NET Core 10 の Minimal API の検証(`AddValidation`)は、本文の型だけでなくルートの引数の属性(`[RegularExpression]` など)も検証し、400 の ProblemDetails を返す(`errors` のキーは引数名)
+- **Mono(Android)では `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` の Delta が負になる**(実機で gen0 = -31、割り当て = -887,160 B。サーバーは届いた値のまま表示する)。gen0 は .NET の `System.Runtime` の Meter が `GC.CollectionCount(0) - GC.CollectionCount(1)` で出す(CoreCLR では上の世代の GC も `CollectionCount(0)` に数えるので、ちょうど gen0 だけの回数になる)。Mono の SGen の `CollectionCount(0)` はナーサリーの回数(`collect_nursery` でだけ増える)で、`GC.Collect()` のような直列のメジャー GC では増えない(`GC.MaxGeneration` は 1)。そのため gen0 = マイナー − メジャーになり、メジャーが続くと減る。実機では負の 11 区間のすべてが gen1(メジャー)の増えた区間で、gen0 ≒ マイナー − メジャー。DEBUG の `LeakDetectionPlugin` が閉じた画面ごとに `GC.Collect()` を 2 回呼ぶので、画面遷移が続くとメジャーが増える(30 秒で 34 回)
+- Mono の `GC.GetTotalAllocatedBytes()`(precise = false)は、スレッドごとの割り当てを GC のときにだけ集計し直した値(`bytes_allocated_attached`)と、終わったスレッドの分(`bytes_allocated_detached`)の和。スレッドが終わるとその分を後者に足すが、前者からは次の GC まで引かれないので二重に数え、次の GC で減る。値は GC とスレッドの終了のときにしか動かない
+- Blazor の `NavigationManager.NavigateTo(uri, replace: true)` で同じページのクエリだけを変えると、コンポーネントは作り直されず `[SupplyParameterFromQuery]` の値が変わって `OnParametersSet` が呼ばれ、履歴も増えない
+- MudBlazor 9 の `MudToggleGroup` の `ValueChanged` は `T?` を渡す(受け取る引数を非 null にすると ReSharper が CS8622 を出す)。`MudTabs` に `PanelClass` は無い(MUD0002)
+- Blazor の SVG の中に `ListItem` などのコンポーネントを置いて `<line>` / `<path>` / `<circle>` を出しても、SVG の要素として描画される
+- **Smart.Data.Accessor は同じ名前のメソッドを引数違いで置けない**(`[SelectSingle]` の生成するビルダーが同じ名前になり CS0111)。接続とトランザクションの両方で使う照会は、読み取りもトランザクションの中で行って 1 つにする
+- SQLite の部分索引(`WHERE TraceId <> ''`)は、条件が引数(`TraceId = ?`)だけだと使われない。照会にも `AND TraceId <> ''` を書く
+- MudBlazor の固定見出しの表(`FixedHeader`)は `.mud-table-sticky-header .mud-table-container { max-height: 100% }` を持つので、高さの上限は詳細度を上げて書く(`.mud-table.trace-list .mud-table-container`)
+- bUnit で `[SupplyParameterFromQuery]` に値を渡すには、`NavigationManager.NavigateTo` でクエリ付きの URL へ移ってから描画する(パラメーターとして渡すと例外)
 
 ---
 
