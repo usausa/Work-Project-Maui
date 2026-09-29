@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Core;
 using Template.MobileApp.Components;
 using Template.MobileApp.Diagnostics;
 using Template.MobileApp.Modules;
+using Template.MobileApp.Services;
 using Template.MobileApp.Shell;
 
 [ObservableGeneratorOption(Reactive = true, ViewModel = true)]
@@ -17,6 +18,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     private readonly INotificationService notification;
 
     private readonly ITelemetryControl telemetryControl;
+
+    private readonly Settings settings;
+
+    private readonly PushService pushService;
 
     private bool destroying;
 
@@ -49,7 +54,11 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     public IObserveCommand Function4Command { get; }
 
     [ObservableProperty]
+    public partial PushStatus PushStatus { get; set; }
+
+    [ObservableProperty]
     public partial bool DiagnosticEnabled { get; set; }
+
     [ObservableProperty]
     public partial bool DiagnosticVisible { get; set; }
 
@@ -68,8 +77,11 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         IScreen screen,
         IDialog dialog,
         INotificationService notification,
+        PushConnection pushConnection,
         ITelemetryControl telemetryControl,
-        DiagnosticSampler diagnosticSampler)
+        DiagnosticSampler diagnosticSampler,
+        Settings settings,
+        PushService pushService)
     {
         Startup = startup;
         Navigator = navigator;
@@ -78,6 +90,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         this.notification = notification;
         this.telemetryControl = telemetryControl;
         DiagnosticSampler = diagnosticSampler;
+        this.settings = settings;
+        this.pushService = pushService;
 
         Function1Command = CreateFunctionCommand(Functions[0], ShellEvent.Function1);
         Function2Command = CreateFunctionCommand(Functions[1], ShellEvent.Function2);
@@ -100,6 +114,9 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
             }
         }));
         // ReSharper restore AsyncVoidLambda
+
+        // Push connection state
+        Disposables.Add(pushConnection.Status.ObserveOnCurrentContext().Subscribe(x => PushStatus = x));
     }
 
     private IObserveCommand CreateFunctionCommand(FunctionState function, ShellEvent shellEvent)
@@ -138,6 +155,9 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         {
             await dialog.Toast(FormatNotificationTap(pending), true);
         }
+
+        // サーバーからの通知はアプリを開いている間だけ受け取る
+        ConnectPush();
     }
 
     private static string FormatNotificationTap(NotificationTappedEventArgs args) =>
@@ -155,6 +175,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     {
         telemetryControl.Suspend = true;
         foreground = false;
+        pushService.Disconnect();
         UpdateSampler();
     }
 
@@ -162,6 +183,7 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
     {
         telemetryControl.Suspend = false;
         foreground = true;
+        ConnectPush();
         UpdateSampler();
     }
 
@@ -171,8 +193,21 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         foreground = false;
         UpdateSampler();
         telemetryControl.Suspend = true;
+        pushService.Disconnect();
 
         destroying = true;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Push
+    //--------------------------------------------------------------------------------
+
+    private void ConnectPush()
+    {
+        if (settings.PushEnabled)
+        {
+            pushService.Connect();
+        }
     }
 
     //--------------------------------------------------------------------------------

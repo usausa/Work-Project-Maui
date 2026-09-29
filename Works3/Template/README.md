@@ -66,7 +66,7 @@ Template project for MAUI.
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
-| Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
+| Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
 | Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
@@ -78,10 +78,13 @@ Template project for MAUI.
 | Category | Feature |
 | --- | --- |
 | Device | Background task(WorkManager) |
-| Network | Push(SignalR) |
+| Network | Tanking send |
 | Device | Push(FCM) |
 | Device | Biometric |
 | Decision | Pending decisions (CoreCLR runtime) |
+| App | Timer / ToDo / 2048 / Minesweeper |
+| UI | Weather (dummy data, pending decision) |
+| Control | Tab (SfTabView, custom) with news (dummy data, pending decision) |
 
 ## Pending
 

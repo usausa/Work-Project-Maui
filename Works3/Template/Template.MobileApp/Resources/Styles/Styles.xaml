@@ -173,6 +173,16 @@
         <Setter Property="FontSize" Value="28" />
     </Style>
 
+    <Style x:Key="HeaderIconLabel"
+           TargetType="Label">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+
     <!-- ================================================================================ -->
     <!-- Footer -->
     <!-- ================================================================================ -->

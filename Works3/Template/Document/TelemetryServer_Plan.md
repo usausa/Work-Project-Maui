@@ -19,12 +19,12 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 
 | 項目 | 決定 |
 | --- | --- |
-| 保存先 | テレメトリは端末ごとの SQLite ファイル `telemetry/<端末 ID>.db`(フォルダーはオプション `TelemetryStorage:Root`、実行フォルダーからの相対)。端末の登録は業務データの `data.db` の `Devices` |
+| 保存先 | テレメトリは端末ごとの SQLite ファイル `telemetry/<端末 ID>.db`(フォルダーはオプション `TelemetryStorage:Root`、実行フォルダーからの相対)。端末の登録は業務データの `data.db` の `Device` |
 | 端末の識別 | Resource の `device.id`、無ければ `app.installation.id`。ファイル名に使うので英数字・`-`・`_` の 64 文字以内に限る(`Domain/DeviceIdFormat`。このアプリの `ANDROID_ID` と GUID は該当)。識別できないリソースは保存せず、`partial_success` の拒否件数と理由で返す |
 | 端末の登録 | 名前・グループ・メモ・有効を持つ。受信した端末が未登録なら自動で登録する(名前の既定は機種、無ければ端末 ID)。端末からも API で登録できる(名前を送る。登録済みなら名前を更新する)。ダッシュボードで検索・追加・編集・削除する。削除は登録とテレメトリのファイルを消す(送信が続けば自動で登録し直される。止めるときは無効にする)|
 | 無効の端末 | 受信しても保存しない(`partial_success` の拒否件数と理由で返すので、端末は送り直さない)。ダッシュボードでは薄く表示し、サマリの件数に含めない。保存済みのテレメトリは見られる |
 | 接続 | Microsoft.Data.Sqlite の接続プール(接続文字列は端末ごと。`Cache=Shared` は付けない)。プロセスで最初に開くときに `user_version` を見て、0 ならスキーマ(WAL を含む)を入れる。開くたびに `synchronous=NORMAL` と `cache_size`(256 KiB。オプション)。PRAGMA とスキーマの実行は `GenericAccessor`。画面からの照会ではファイルを作らない |
-| 書き込み | 端末ごとに 1 つずつ(プロセス内の端末ごとのロック。保持期間の削除と端末の削除も同じロック)。1 回の Export の 1 端末分を 1 トランザクション。画面の読み取りはロックを取らない(WAL)|
+| 書き込み | 端末ごとに 1 つずつ(server の `TelemetryStore` が端末ごとのロックと保存済みの Id を持つ。保持期間の削除と端末の削除も同じロック。core の `TelemetryService` は状態を持たない)。1 回の Export の 1 端末分を 1 トランザクション。画面の読み取りはロックを取らない(WAL)|
 | 重複 | 送り直しで同じ内容が届いても 1 件にする。スパン = (TraceId, SpanId)、メトリクスの点 = (系列, 時刻)、ログ = (時刻, 内容のハッシュ)の一意キーで `ON CONFLICT ... DO NOTHING` |
 | 列挙型 | 系列の種類と Temporality、スパンの種類と状態は `Models/Enums` の列挙型にし、DB には名前の文字列で保存する(`Accessors/DataProfile` の `EnumTextConverter`。列挙型を含む INSERT は列ごとの引数で渡す)|
 | 時刻 | テレメトリの時刻は UTC の Unix ナノ秒(INTEGER)。表示の範囲と保持期間は端末が付けた時刻で判定する。最終受信と登録日時はサービスコンテキストの時刻(OTLP/HTTP の受信口にも `ServiceContextEndpointFilter` を付ける。起動時の読み込みと保持期間の削除はスコープを明示して始める)。登録日時は UTC の文字列(`DateTimeTextConverter`)|
@@ -42,7 +42,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 
 | テーブル | 主な列 | キー |
 | --- | --- | --- |
-| `Devices` | DeviceId、Name、GroupName、Note、IsEnabled、RegisteredAt | 主キー DeviceId |
+| `Device` | DeviceId、Name、GroupName、Note、IsEnabled、RegisteredAt | 主キー DeviceId |
 
 スキーマは既存の `Assets/Data/Schema.sql` に足す。
 
@@ -51,12 +51,12 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | テーブル | 主な列 | キー・索引 |
 | --- | --- | --- |
 | `DeviceInfo` | DeviceId、InstallationId、Manufacturer、Model、OsName、OsVersion、ServiceName、ServiceVersion、FirstReceivedAt、LastReceivedAt | 1 行だけ(受信した Resource から。受信のたびに更新)|
-| `Resources` | Id、Hash、ServiceInstanceId、ServiceVersion、AttributesJson、FirstSeenAt | 一意 Hash(属性をキー順に並べた JSON の SHA-256)|
+| `Resource` | Id、Hash、ServiceInstanceId、ServiceVersion、AttributesJson、FirstSeenAt | 一意 Hash(属性をキー順に並べた JSON の SHA-256)|
 | `MetricSeries` | Id、Name、ScopeName、Unit、Kind(Gauge / Sum / Histogram / ExponentialHistogram / Summary)、Temporality、IsMonotonic、AttributesJson(キー順)| 一意 (Name, ScopeName, AttributesJson) |
-| `MetricPoints` | SeriesId、TimeUnixNano、StartTimeUnixNano、Value(ゲージ・合計)、Count、Sum、Min、Max、Detail(ヒストグラムの境界と件数、指数ヒストグラム、サマリーの分位の JSON)| 主キー (SeriesId, TimeUnixNano)(WITHOUT ROWID)、(TimeUnixNano) |
-| `Spans` | TraceId、SpanId、ParentSpanId、Name、Kind、StartTimeUnixNano、EndTimeUnixNano、StatusCode、StatusMessage、ScopeName、ResourceId、AttributesJson、EventsJson、LinksJson | 主キー (TraceId, SpanId)(WITHOUT ROWID)、(StartTimeUnixNano) |
-| `Traces` | TraceId、RootName、StartTimeUnixNano、EndTimeUnixNano、SpanCount、ErrorCount | 主キー TraceId、(StartTimeUnixNano)。スパンを保存したトランザクションで、そのトレースのスパンから集計し直す |
-| `Logs` | Id、TimeUnixNano、ObservedTimeUnixNano、SeverityNumber、SeverityText、EventName、Body、TraceId、SpanId、ScopeName、ResourceId、AttributesJson、Hash | 一意 (TimeUnixNano, Hash)(時刻の索引を兼ねる)、(TraceId)(空を除く部分索引)|
+| `MetricPoint` | SeriesId、TimeUnixNano、StartTimeUnixNano、Value(ゲージ・合計)、Count、Sum、Min、Max、Detail(ヒストグラムの境界と件数、指数ヒストグラム、サマリーの分位の JSON)| 主キー (SeriesId, TimeUnixNano)(WITHOUT ROWID)、(TimeUnixNano) |
+| `Span` | TraceId、SpanId、ParentSpanId、Name、Kind、StartTimeUnixNano、EndTimeUnixNano、StatusCode、StatusMessage、ScopeName、ResourceId、AttributesJson、EventsJson、LinksJson | 主キー (TraceId, SpanId)(WITHOUT ROWID)、(StartTimeUnixNano) |
+| `Trace` | TraceId、RootName、StartTimeUnixNano、EndTimeUnixNano、SpanCount、ErrorCount | 主キー TraceId、(StartTimeUnixNano)。スパンを保存したトランザクションで、そのトレースのスパンから集計し直す |
+| `Log` | Id、TimeUnixNano、ObservedTimeUnixNano、SeverityNumber、SeverityText、EventName、Body、TraceId、SpanId、ScopeName、ResourceId、AttributesJson、Hash | 一意 (TimeUnixNano, Hash)(時刻の索引を兼ねる)、(TraceId)(空を除く部分索引)|
 
 - 属性は型を残した JSON(`{"キー": 値}`。配列・キー値リスト・バイト列(16 進)を含む)。ID は小文字の 16 進(無ければ空文字)
 - ログの時刻は `time_unix_nano`、無ければ `observed_time_unix_nano`。本文は文字列ならそのまま、それ以外は JSON。Hash は LogRecord のバイト列の SHA-256 の先頭 8 バイト
@@ -74,7 +74,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | 登録 | 名前、グループ、メモ、有効、登録日時 | 起動時に `data.db` から / 自動登録と管理の操作 |
 | 端末の情報 | `DeviceInfo`(機種、OS、アプリの版、初回・最終受信)| 起動時に全ファイルから / 受信のたび |
 | 最新値 | 電池、無線 LAN の信号強度、CPU、メモリ、アプリケーション固有値の値 1・2(`application.custom.value1` / `value2`)(値と時刻)| 起動時は各系列の最後の点 / 受信した点(時刻の新しいほう)|
-| 件数(24 時間)| エラー(重大度 ERROR 以上)とクラッシュ(FATAL)を 1 時間ごとに数えた 24 個 | 起動時は `Logs` を集計 / 受信したログ |
+| 件数(24 時間)| エラー(重大度 ERROR 以上)とクラッシュ(FATAL)を 1 時間ごとに数えた 24 個 | 起動時は `Log` を集計 / 受信したログ |
 | 直近のエラー | 全端末を通して新しい 20 件(端末、時刻、本文の 1 行目)| 同上 |
 | 受信の推移 | 全端末の 1 分ごとの件数(点・スパン・ログ)60 個 | サーバーの起動から(保存しない)|
 
@@ -105,19 +105,19 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 1. 受信口(HTTP / gRPC)が本文を読み、`OtlpReceiver.ReceiveAsync` へ渡す
 2. リソースごとに端末を決め(識別できなければ拒否件数に足す)、`TelemetryDeviceRegistry` で登録を確かめる(未登録なら自動で登録、無効なら拒否件数に足す)
 3. `OtlpMapper` で保存用のまとまり(`TelemetryBatch`)へ変換する(不正な項目は拒否件数に足す)
-4. `TelemetryService.SaveAsync`(core)が端末のロックの中で 1 トランザクションで保存する(Resource・系列を足し、点・スパン・ログを `ON CONFLICT ... DO NOTHING` で入れ、`Traces` を集計し直し、`DeviceInfo` を更新)。新しく入った分を `TelemetrySaveResult` で返す
+4. `TelemetryStore`(server)が端末のロックを取り、保存済みの Id(最初の保存でファイルから読む)を渡して、`TelemetryService.SaveAsync`(core)が 1 トランザクションで保存する(Resource・系列を足し、点・スパン・ログを `ON CONFLICT ... DO NOTHING` で入れ、`Trace` を集計し直し、`DeviceInfo` を更新)。新しく入った分を `TelemetrySaveResult` で返し、新しく足した Resource と系列の Id は `TelemetryStore` が保存済みの Id に足す
 5. `TelemetryDeviceRegistry` の要約を更新し、`TelemetryBus` に通知する
 6. 拒否があれば `partial_success`(件数と理由)を返す。保存の失敗は 503 / `UNAVAILABLE`
 
 ## 🖥️画面
 
-### 📋ダッシュボード(`/dashboard`)
+### 📋ダッシュボード(`/`)
 
 | 部分 | 内容 |
 | --- | --- |
 | サマリ | アイコン付きのカード: 端末(受信中 / 有効と、受信中・途絶・受信なしの内訳の帯)、エラー(24 時間。ERROR 以上なのでクラッシュを含む)、クラッシュ(24 時間)、電池の少ない端末(残量 20% 未満)、受信(直前の 1 分の件数と直近 60 分のスパークライン)。無効の端末は数えない。件数が 1 以上なら色を付ける |
 | ツールバー | 検索(端末 ID・名前・グループの部分一致)、端末の追加 |
-| 端末一覧 | 状態(受信中 = 緑 / 途絶 = 橙 / 受信なし = 枠だけのバッジ。下に最終受信からの経過、ホバーで日時)、名前(下に端末 ID・グループ、ホバーでメモ)、機種(下に OS とアプリの版)、電池と CPU(横棒と %)、無線 LAN(電波のアイコン)、メモリ、値 1・2(アプリケーション固有値。0〜100 の横棒と値。良し悪しの色は付けない)、エラー・クラッシュ(1 以上は色付きのバッジ)、操作(編集・削除)。最新値はホバーで値と測った時刻を出す。無効の端末は薄く表示する。行を選ぶとテレメトリ画面へ |
+| 端末一覧 | 状態(受信中 = 緑 / 途絶 = 橙 / 受信なし = 枠だけのバッジ。下に最終受信からの経過、ホバーで日時)、名前(下に端末 ID・グループ、ホバーでメモ)、機種(下に OS とアプリの版)、電池(残量の段階のアイコン)、無線 LAN(電波のアイコン)、CPU(横棒と %)、メモリ、値 1・2(アプリケーション固有値。0〜100 の横棒と値。良し悪しの色は付けない)、エラー・クラッシュ(1 以上は色付きのバッジ)、操作(編集・削除)。最新値はホバーで値と測った時刻を出す。無効の端末は薄く表示する。行を選ぶとテレメトリ画面へ |
 | 直近のエラー | 新しい 10 件(時刻、端末、重大度、本文の 1 行目)。行を選ぶとその端末のログへ |
 
 | 値の色 | 緑 | 橙 | 赤 |
@@ -179,8 +179,8 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | (server) `Components/Telemetry/TraceWaterfall.razor(.cs)` / `SpanDetail.razor(.cs)` | ウォーターフォールとスパンの詳細 |
 | (server) `Components/Telemetry/AttributeTable.razor(.cs)` | 属性の JSON をキーと値の表に(値は折り返す。別に出すキーは除ける)|
 | (server) `Components/Telemetry/MetricChartModel.cs` / `WaterfallModel.cs` | 表示用の計算(束の値・通知の点の追加・範囲から外れた束の削除・既知の計器の名前と単位と線の名前にする属性、木の順と開閉)|
-| (server) `Components/Telemetry/TelemetryFormat.cs` | 時刻・経過時間・所要時間・割合・信号強度・状態・重大度の表示と、値の良し悪し(`TelemetryLevel`)の色。`_Imports.razor` で static インポート |
-| (server) `Components/Telemetry/MetricCell.razor(.cs)` | 最新値のセル(電池と CPU は横棒と %、無線 LAN は電波のアイコン、メモリは MB、アプリケーション固有値は 0〜100 の横棒と値。ホバーで値と測った時刻)|
+| (server) `Components/ViewHelper.cs` | 時刻・経過時間・所要時間・割合・信号強度・状態・重大度の表示と、値の良し悪し(`TelemetryLevel`)の色。`_Imports.razor` で static インポート |
+| (server) `Components/Telemetry/MetricCell.razor(.cs)` | 最新値のセル(電池は残量の段階のアイコン、無線 LAN は電波のアイコン、CPU は横棒と %、メモリは MB、アプリケーション固有値は 0〜100 の横棒と値。ホバーで値と測った時刻)|
 | (server) `Components/Telemetry/CountBadge.razor(.cs)` | 件数(1 以上は色付きのバッジ、0 は薄く)|
 | (server) `Components/Dialogs/DeviceEditDialog.razor(.cs)` / `DeviceDialogExtensions.cs` | 端末の追加・編集(`DataEditDialog` と同じ作り。入力の検証は FluentValidation、端末 ID は受信と同じ文字の制限)|
 | (server) `Components/RefreshTimer.cs` | バスの通知をまとめて描画する(「バス」)|
@@ -205,14 +205,15 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | (server) `Telemetry/OtlpReceiver.cs` | 受信の処理(非同期。リソースごとに端末を決め、登録の確認・変換・保存・要約の更新・通知)|
 | (server) `Telemetry/OtlpMapper.cs` | OTLP → 保存用のまとまり(`TelemetryBatch`)|
 | (server) `Telemetry/SqliteTelemetryDbProvider.cs` + `TelemetryStorageOption.cs` | 端末ごとのファイルの接続(スキーマの確認と PRAGMA)、端末の一覧(ファイル名)、削除(プールを空けてから `-wal` / `-shm` も)|
+| (server) `Telemetry/TelemetryStore.cs` | 端末ごとの書き込み(保存・保持期間の削除・ファイルの削除)のロックと保存済みの Id(ファイルを削除したら捨てる)、テレメトリのファイルがある端末の一覧 |
 | (server) `Telemetry/TelemetryDeviceRegistry.cs` | 端末の登録とテレメトリの要約(ダッシュボード用のキャッシュ)、自動登録と管理の操作 |
 | (server) `Telemetry/TelemetryBus.cs` + `TelemetryReceivedEventArgs.cs` | 受信と登録の変更の通知 |
-| (server) `Assets/Data/TelemetrySchema.sql` / `Assets/Data/Schema.sql` | 端末ごとのファイルのスキーマ / `data.db` の `Devices` |
+| (server) `Assets/Data/TelemetrySchema.sql` / `Assets/Data/Schema.sql` | 端末ごとのファイルのスキーマ / `data.db` の `Device` |
 | (server) `Endpoints/DeviceEndpoints.cs` | 端末からの登録の API |
 | (server) `Workers/TelemetryRetentionWorker.cs` + `TelemetryRetentionWorkerOption.cs` | 保持期間の削除 |
 | (server) `Components/Pages/DashboardPage.razor(.cs)` / `TelemetryPage.razor(.cs)` | 画面 |
 | (server) `Components/Telemetry/*` / `Components/Dialogs/DeviceEditDialog.*` / `Components/RefreshTimer.cs` | 部品 |
-| (core) `Services/TelemetryService.cs` | テレメトリの保存・照会・削除(端末ごとのロック、系列と Resource の Id)。結果の `TelemetrySaveResult` は同じファイルの先頭 |
+| (core) `Services/TelemetryService.cs` | テレメトリの保存・照会・保持期間の削除(状態を持たない)。保存済みの Id(Resource = Hash、系列 = `TelemetrySeriesKey`)は呼び出し側から受け取り、新しく足した Resource と系列を結果で返す。保存済みの Id の照会(`QueryIdsAsync`。結果は `Models/Views/TelemetryIdView.cs`)。結果の `TelemetrySaveResult` と `TelemetrySeriesKey` は同じファイルの先頭 |
 | (core) `Services/DeviceService.cs` | 端末の登録の照会・追加・更新・削除、自動登録、端末からの登録(`DataService` と同じ作り。結果は `DataWriteStatus`)|
 | (core) `Accessors/TelemetryAccessor.cs` / `DeviceAccessor.cs` + `Accessors/Sql/*.sql` | SQL(テレメトリは接続・トランザクションを引数で受け取る。登録は既定の `IDbProvider`)。`[ExecuteConfig(typeof(DataProfile))]` |
 | (core) `Accessors/GenericAccessor.cs` | スキーマの実行、`user_version` の読み取り、テレメトリの DB の PRAGMA |
@@ -236,7 +237,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | (server) `Telemetry/OtlpMapper.cs` | 新規 |
 | (server) `Telemetry/OtlpReceiver.cs` / `OtlpHttpEndpoints.cs` / `Otlp*Handler.cs` / `OtlpHelper.cs` / `Log.cs` | 非同期にして保存へ。拒否は `partial_success`、保存の失敗は 503 / `UNAVAILABLE`。OTLP/HTTP にサービスコンテキストのフィルター |
 | (server) `Application/ApplicationExtensions.cs` / `appsettings.json` / `GlobalUsing.cs` | プロバイダーとオプション(`TelemetryStorage`)の登録、起動時にフォルダーを作る |
-| (test) `Telemetry/OtlpMapperTests.cs` / `Services/TelemetryServiceTests.cs` / `Telemetry/TelemetryTestStorage.cs`(一時フォルダーの DB)/ `Telemetry/OtlpReceiverTests.cs` / `OtlpHttpEndpointsTests.cs` | 変換、保存と重複、拒否と 503 |
+| (test) `Telemetry/OtlpMapperTests.cs` / `Services/TelemetryServiceTests.cs` / `Telemetry/TelemetryStoreTests.cs` / `TelemetryTestStorage.cs`(一時フォルダーの DB)/ `OtlpReceiverTests.cs` / `OtlpHttpEndpointsTests.cs` | 変換、保存と重複、保存済みの Id(同じ Resource と系列を足さない、ファイルの削除で捨てる)、拒否と 503 |
 
 確認: 端末の実データ(メトリクス、Telemetry デモのスパンとログ)がファイルに入る、同じ内容の送り直しで増えない、識別できないリソースの拒否、保存できないときの 503。
 
@@ -246,7 +247,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 
 | ファイル | 変更 |
 | --- | --- |
-| (server) `Assets/Data/Schema.sql` / (core) `Models/Entity/DeviceEntity.cs` / `Accessors/DeviceAccessor.cs` + SQL / `Services/DeviceService.cs` | `Devices` のテーブルと、登録の照会・追加(登録済みなら Duplicate)・更新(更新後の行)・削除 |
+| (server) `Assets/Data/Schema.sql` / (core) `Models/Entity/DeviceEntity.cs` / `Accessors/DeviceAccessor.cs` + SQL / `Services/DeviceService.cs` | `Device` のテーブルと、登録の照会・追加(登録済みなら Duplicate)・更新(更新後の行)・削除 |
 | (core) `Infrastructure/Data/DateTimeTextConverter.cs` / `Accessors/DataProfile.cs` | 日時を UTC の文字列で保存する |
 | (core) `Models/Views/TelemetryDeviceSummaryView.cs` / `TelemetryLatestValueView.cs` / `TelemetryLogSummaryView.cs` / `Domain/TelemetrySeverity.cs` / `GlobalUsing.cs` | 端末の要約、重大度の区切り(ERROR = 17、FATAL = 21)|
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL | 端末の一覧(ファイル)、要約の照会(端末の情報、系列ごとの最後の点、1 時間ごとのエラーとクラッシュ、直近のエラー)、端末のファイルの削除 |
@@ -296,12 +297,13 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | --- | --- |
 | (server) `Components/Pages/DashboardPage.razor(.cs)` | 新規(「ダッシュボード」。行の選択とエラーからの移動は 1-4-2 / 1-4-4)|
 | (server) `Components/Dialogs/DeviceEditDialog.razor(.cs)` / `DeviceDialogExtensions.cs` | 新規(`DeviceFormValidator` の端末 ID は受信と同じ形式)|
-| (server) `Components/Telemetry/TelemetryFormat.cs` / `Sparkline.razor(.cs)` / `MetricCell.razor(.cs)` / `CountBadge.razor(.cs)` | 新規 |
+| (server) `Components/Telemetry/Sparkline.razor(.cs)` / `MetricCell.razor(.cs)` / `CountBadge.razor(.cs)` | 新規 |
+| (server) `Components/ViewHelper.cs` | テレメトリの表示と色 |
 | (server) `Telemetry/TelemetryDeviceSummary.cs` / `TelemetryDeviceRegistry.cs` | 端末の状態(`TelemetryDeviceState`、`GetState`)|
 | (core) `Domain/TelemetrySeverity.cs` | TRACE / DEBUG / INFO の区切り |
-| (server) `Components/_Imports.razor` / `Components/Layout/NavMenu.razor` | `Components.Telemetry` と `TelemetryFormat` の static インポート、Home の次に Dashboard |
+| (server) `Components/_Imports.razor` / `Components/Layout/NavMenu.razor` | `Components.Telemetry` のインポート、Dashboard を先頭(`/`)、Server(`/server`)を最後 |
 | (server) `wwwroot/css/app.css` | ダッシュボード・状態の帯・横棒・スパークラインのクラス |
-| (test) `Components/Pages/DashboardPageTests.cs` / `Components/Dialogs/DeviceFormValidatorTests.cs` / `Components/Telemetry/TelemetryFormatTests.cs` / `MetricCellTests.cs` / `Components/Layout/NavMenuTests.cs` | 表示・検索・通知での読み直し、入力の検証、色と段の区切り、セルの表示、リンクの数(6 → 7)|
+| (test) `Components/Pages/DashboardPageTests.cs` / `Components/Dialogs/DeviceFormValidatorTests.cs` / `Components/ViewHelperTests.cs` / `Components/Telemetry/MetricCellTests.cs` / `Components/Layout/NavMenuTests.cs` | 表示・検索・通知での読み直し、入力の検証、色と段の区切り、セルの表示、リンクの数(6 → 7)|
 
 確認: 端末の実データ、端末の送信を止めると途絶に変わる、エラー・クラッシュの件数、追加・編集・無効・削除(端末からの登録の結果にも反映される)、端末からの名前の変更が表示中の画面に反映される。
 
@@ -313,7 +315,7 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | --- | --- |
 | (server) `Components/Pages/TelemetryPage.razor(.cs)` | 新規(見出し・タブ・メトリクス)|
 | (server) `Components/Telemetry/TimeSeriesChart.razor(.cs)` / `MetricChartModel.cs` / `TelemetryRange.cs` | 新規 |
-| (server) `Components/Telemetry/TelemetryFormat.cs` | グラフの値の表示(桁に合わせて小数を減らす)|
+| (server) `Components/ViewHelper.cs` | グラフの値の表示(桁に合わせて小数を減らす)|
 | (server) `Components/Layout/NavMenu.razor` / `Components/Pages/DashboardPage.razor(.cs)` | Dashboard の次に Telemetry(リンク 7 → 8)、ダッシュボードの端末の名前からテレメトリ画面へ |
 | (server) `wwwroot/css/app.css` | テレメトリ画面とグラフのクラス |
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL / `Models/Views/TelemetryMetricHistoryView.cs` / `TelemetryMetricBucketView.cs` | 全系列と、範囲の点を系列ごと・間隔ごとに束ねた集計(`QueryMetricHistoryAsync` / `QueryMetricBucketListAsync`)|
@@ -328,10 +330,10 @@ template-maui-server で OTLP の受信内容を端末ごとの SQLite ファイ
 | ファイル | 変更 |
 | --- | --- |
 | (server) `Components/Telemetry/TraceWaterfall.razor(.cs)` / `WaterfallModel.cs` / `SpanDetail.razor(.cs)` / `AttributeTable.razor(.cs)` | 新規 |
-| (server) `Components/Telemetry/TelemetryFormat.cs` / `wwwroot/css/app.css` | 所要時間の表示、トレースの一覧・ウォーターフォール・詳細のクラス |
+| (server) `Components/ViewHelper.cs` / `wwwroot/css/app.css` | 所要時間の表示、トレースの一覧・ウォーターフォール・詳細のクラス |
 | (server) `Components/Pages/TelemetryPage.razor(.cs)` | トレースのタブ(表示中のタブだけ読み込む形に)|
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL / `Models/Views/TelemetryTraceDetailView.cs` | トレースの一覧(`QueryTraceListAsync`。部分一致は `IDialect` の `Match`)、詳細(`QueryTraceDetailAsync`。読み取りのトランザクションでトレース・スパン・ログ・Resource)|
-| (test) `Components/Telemetry/WaterfallModelTests.cs` / `Services/TelemetryServiceTests.cs` / `Components/Pages/TelemetryPageTests.cs` / `Components/Telemetry/TelemetryFormatTests.cs` / `Telemetry/TelemetryTestStorage.cs` | 木の順、親の欠け、開閉、イベント、絞り込みと詳細、URL のクエリで開くトレース、所要時間の表示 |
+| (test) `Components/Telemetry/WaterfallModelTests.cs` / `Services/TelemetryServiceTests.cs` / `Components/Pages/TelemetryPageTests.cs` / `Components/ViewHelperTests.cs` / `Telemetry/TelemetryTestStorage.cs` | 木の順、親の欠け、開閉、イベント、絞り込みと詳細、URL のクエリで開くトレース、所要時間の表示 |
 
 確認: 端末の Telemetry デモのスパン(親子)とログ、表示中に新しいトレースが一覧に出る、開閉とスパンの選択、エラーだけ・名前の絞り込み。
 

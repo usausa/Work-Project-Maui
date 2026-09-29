@@ -2223,11 +2223,11 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 | 対象 | 内容 |
 |---|---|
-| (server) `Assets/Data/TelemetrySchema.sql`(新規) | 端末ごとのファイルのスキーマ(`DeviceInfo` / `Resources` / `MetricSeries` / `MetricPoints` / `Spans` / `Traces` / `Logs`、`journal_mode = WAL`、`user_version = 1`) |
+| (server) `Assets/Data/TelemetrySchema.sql`(新規) | 端末ごとのファイルのスキーマ(`DeviceInfo` / `Resource` / `MetricSeries` / `MetricPoint` / `Span` / `Trace` / `Log`、`journal_mode = WAL`、`user_version = 1`) |
 | (server) `Telemetry/SqliteTelemetryDbProvider.cs` + `TelemetryStorageOption.cs`(新規) | `telemetry/<端末 ID>.db` の接続(プロセスで最初に開くときに `user_version` を見てスキーマを入れ、開くたびに `synchronous = NORMAL` と `cache_size`)、端末の一覧、削除(プールを空けてから `-wal` / `-shm` も)。照会用の接続はファイルを作らない。オプション `TelemetryStorage`(`Root` = `telemetry`、`CacheSize` = 256 KiB) |
 | (server) `Telemetry/OtlpMapper.cs`(新規) | OTLP → 保存用のまとまり(`TelemetryBatch`)。属性は型を残した JSON(系列と Resource はキー順)、ID は小文字の 16 進、ヒストグラムの境界と件数・指数ヒストグラム・サマリーの分位は JSON、ログの重複を見分けるハッシュ(LogRecord のバイト列の SHA-256 の先頭 8 バイト)。ID の長さが違うスパン、時刻の無い点とログ、値の無い数値の点を数えて保存しない(`NO_RECORDED_VALUE` の点は数えずに捨てる) |
 | (server) `Telemetry/OtlpReceiver.cs` / `OtlpHttpEndpoints.cs` / `Otlp*Handler.cs` / `OtlpHelper.cs` / `Log.cs` | 受信を非同期にして保存へ。端末を識別できない(形式が違う)リソースと不正な項目は `partial_success` の件数と理由、保存の失敗(DB・I/O)は HTTP = 503 / gRPC = `UNAVAILABLE`。OTLP/HTTP にも `ServiceContextEndpointFilter`。1 回ごとの受信のログは Debug(受けた件数と保存した件数)、拒否は Warning、保存の失敗は Error。受信内容を 1 件ずつ出す Debug のログはやめた |
-| (core) `Services/TelemetryService.cs`(新規) | 1 回の Export の 1 端末分を 1 トランザクションで保存する(端末ごとのロック、Resource と系列の Id はメモリに持ってコミットの後に足す、`Traces` をそのトレースのスパンから集計し直す、`DeviceInfo` を更新)。新しく入った分を `TelemetrySaveResult`(同じファイルの先頭)で返す |
+| (core) `Services/TelemetryService.cs`(新規) | 1 回の Export の 1 端末分を 1 トランザクションで保存する(Resource と系列の Id は呼び出し側(server の `TelemetryStore`)が持ち、新しく足した分は結果で返す、`Trace` をそのトレースのスパンから集計し直す、`DeviceInfo` を更新)。新しく入った分を `TelemetrySaveResult`(同じファイルの先頭)で返す |
 | (core) `Accessors/TelemetryAccessor.cs` + `Sql/TelemetryAccessor.*.sql`(新規) | 接続・トランザクションを引数で受け取る。送り直しの重複は `ON CONFLICT ... DO NOTHING`、トレースの取得は `[SelectSingle]`、列挙型を含む INSERT は列ごとの引数 |
 | (core) `Accessors/GenericAccessor.cs` + SQL | `QueryUserVersionAsync` / `ExecuteTelemetryPragmaAsync` |
 | (core) `Accessors/DataProfile.cs` / `Infrastructure/Data/EnumTextConverter.cs`(新規) | 列挙型を名前の文字列で保存する(`[ExecuteConfig(typeof(DataProfile))]`) |
@@ -2247,7 +2247,7 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 | 対象 | 内容 |
 |---|---|
-| (server) `Assets/Data/Schema.sql` | `Devices`(DeviceId、Name、GroupName、Note、IsEnabled、RegisteredAt) |
+| (server) `Assets/Data/Schema.sql` | `Device`(DeviceId、Name、GroupName、Note、IsEnabled、RegisteredAt) |
 | (core) `Models/Entity/DeviceEntity.cs` / `Accessors/DeviceAccessor.cs` + SQL / `Services/DeviceService.cs`(新規) | 登録の照会・追加(`ON CONFLICT DO NOTHING`。登録済みなら Duplicate)・更新(`RETURNING *` で更新後の行)・削除(`[Delete]`)。登録日時はサービスコンテキストの時刻 |
 | (core) `Infrastructure/Data/DateTimeTextConverter.cs`(新規)/ `Accessors/DataProfile.cs` | 日時を UTC の文字列で保存する(example-maui-pos と同じ) |
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + SQL | 端末の一覧(ファイル)、要約の照会(端末の情報、計器の名前で絞った系列ごとの最後の点、1 時間ごとのエラーとクラッシュ、直近のエラー)、端末のファイルの削除(書き込みと同じロック) |
@@ -2293,7 +2293,7 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 - 端末: ビルド 0 警告、inspectcode 0 件
 - サーバー: ビルド 0 警告、テスト 75 件成功、inspectcode 0 件
-- 実機(Pixel 9a): Network メニューの Device registration で、受信で自動登録された端末は 200 になり名前が更新される(`Update success.`、`data.db` の `Devices` の Name が変わり、登録日時は変わらない)
+- 実機(Pixel 9a): Network メニューの Device registration で、受信で自動登録された端末は 200 になり名前が更新される(`Update success.`、`data.db` の `Device` の Name が変わり、登録日時は変わらない)
 - API: 新しい端末 ID は 201 と `Location`、同じ端末 ID の 2 回目は 200。空白を含む端末 ID と空の名前は 400
 
 ### 📋テレメトリ 1-4-1: ダッシュボード(template-maui-server)(2026-09-27)
@@ -2303,12 +2303,12 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 | 対象 | 内容 |
 |---|---|
 | (server) `Components/Pages/DashboardPage.razor(.cs)`(新規) | サマリのカード(アイコン付き。端末 = 受信中 / 有効と、受信中・途絶・受信なしの内訳の帯、エラーとクラッシュ = 24 時間、電池の少ない端末 = 残量 20% 未満、受信 = 直前の 1 分の件数と 60 分のスパークライン。無効の端末は数えない)、検索と追加、端末の一覧(状態のバッジと経過、名前と端末 ID・グループ、機種と OS・アプリの版、電池・無線 LAN・CPU・メモリ、エラーとクラッシュのバッジ、編集・削除。無効の端末は薄く)、直近のエラー 10 件。キャッシュだけを読み、バスの通知(1 秒ごとにまとめる)と 10 秒ごとに読み直す |
-| (server) `Components/Telemetry/MetricCell.razor(.cs)` / `CountBadge.razor(.cs)` / `Sparkline.razor(.cs)` / `TelemetryFormat.cs`(新規) | 最新値のセル(電池と CPU = 横棒と %、無線 LAN = 電波のアイコン 4 段、メモリ = MB。色は良し悪し、ホバーで値と測った時刻)、件数のバッジ(0 は薄く)、小さな折れ線、値・経過時間・状態・重大度の表示と色 |
+| (server) `Components/Telemetry/MetricCell.razor(.cs)` / `CountBadge.razor(.cs)` / `Sparkline.razor(.cs)`(新規)、`Components/ViewHelper.cs` | 最新値のセル(電池と CPU = 横棒と %、無線 LAN = 電波のアイコン 4 段、メモリ = MB。色は良し悪し、ホバーで値と測った時刻)、件数のバッジ(0 は薄く)、小さな折れ線、値・経過時間・状態・重大度の表示と色 |
 | (server) `Components/Dialogs/DeviceEditDialog.razor(.cs)` / `DeviceDialogExtensions.cs`(新規) | 端末の追加・編集(端末 ID は追加のときだけ入力し、受信と同じ形式を FluentValidation で検証。グループとメモは空なら null) |
 | (server) `Telemetry/TelemetryDeviceSummary.cs` / `TelemetryDeviceRegistry.cs` | 端末の状態 `TelemetryDeviceState`(受信なし / 受信中 / 途絶)と `GetState` |
 | (core) `Domain/TelemetrySeverity.cs` | TRACE = 1、DEBUG = 5、INFO = 9 |
-| (server) `Components/_Imports.razor` / `Components/Layout/NavMenu.razor` / `wwwroot/css/app.css` | `Components.Telemetry` と `TelemetryFormat` の static インポート、Home の次に Dashboard、ダッシュボード・状態の帯・横棒・スパークラインのクラス(表のセルは折り返さない) |
-| テスト | `Components/Pages/DashboardPageTests.cs`(表示・検索・通知での読み直し)/ `Components/Dialogs/DeviceFormValidatorTests.cs` / `Components/Telemetry/TelemetryFormatTests.cs`(色と段の区切り、経過時間)/ `MetricCellTests.cs` を追加、`NavMenuTests` のリンクの数を 7 に(計 103 件) |
+| (server) `Components/_Imports.razor` / `Components/Layout/NavMenu.razor` / `wwwroot/css/app.css` | `Components.Telemetry` のインポート、Dashboard を先頭(`/`)、ダッシュボード・状態の帯・横棒・スパークラインのクラス(表のセルは折り返さない) |
+| テスト | `Components/Pages/DashboardPageTests.cs`(表示・検索・通知での読み直し)/ `Components/Dialogs/DeviceFormValidatorTests.cs` / `Components/ViewHelperTests.cs`(色と段の区切り、経過時間)/ `MetricCellTests.cs` を追加、`NavMenuTests` のリンクの数を 7 に(計 103 件) |
 | (server) `README.md` | 管理画面一覧と構成 |
 
 | 値の色 | 緑 | 橙 | 赤 |
@@ -2330,7 +2330,7 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 | (server) `Components/Telemetry/MetricChartModel.cs`(新規) | 計器ごとのグラフと属性の組み合わせごとの線。束の値(ゲージ・単調でない合計 = 平均、単調な Delta = 1 分あたり(区間の長さで割る)、ヒストグラム = 平均と最大と回数)、既知の 10 計器の名前・単位・倍率と線の名前にする属性、通知の点の追加(読み込んだ集計の最後の点より後だけ)、範囲から外れた束の削除 |
 | (server) `Components/Telemetry/TimeSeriesChart.razor(.cs)` / `TelemetryRange.cs`(新規) | SVG の折れ線(区切りのよい目盛り、24 時間以上は日付付き、欠けた区間で線を切り前後が欠けた点は丸、点が 150 以下ならホバーで時刻と値、凡例に最新値)、範囲と束ねる間隔 |
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + `QueryMetricBucketListAsync.sql` / `Models/Views/TelemetryMetricHistoryView.cs` / `TelemetryMetricBucketView.cs`(新規) | `QueryMetricHistoryAsync`(全系列と、範囲の点を系列ごと・間隔ごとに SQL で束ねた集計。ファイルが無ければ空) |
-| (server) `Components/Telemetry/TelemetryFormat.cs` / `Components/Layout/NavMenu.razor` / `Components/Pages/DashboardPage.razor(.cs)` / `wwwroot/css/app.css` | グラフの値の表示、Dashboard の次に Telemetry、ダッシュボードの端末の名前からテレメトリ画面へ、テレメトリ画面とグラフのクラス |
+| (server) `Components/ViewHelper.cs` / `Components/Layout/NavMenu.razor` / `Components/Pages/DashboardPage.razor(.cs)` / `wwwroot/css/app.css` | グラフの値の表示、Dashboard の次に Telemetry、ダッシュボードの端末の名前からテレメトリ画面へ、テレメトリ画面とグラフのクラス |
 | テスト | `Components/Telemetry/MetricChartModelTests.cs`(種類ごとの値と単位、通知の点の追加、範囲外の削除)/ `Components/Pages/TelemetryPageTests.cs`(表示、未登録の端末、通知での追加)を追加、`TelemetryServiceTests` に束ねの集計、`NavMenuTests` のリンクの数を 8 に(計 110 件) |
 | (server) `README.md` | 管理画面一覧 |
 
@@ -2347,8 +2347,8 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 | (server) `Components/Telemetry/WaterfallModel.cs` / `TraceWaterfall.razor(.cs)`(新規) | 親子の木の順(兄弟は開始の順、親が届いていないスパンは最上位、親の循環も最上位)、閉じた行の子孫を隠す(読み直しで引き継ぐ)、バー(幅は最低 2 px、エラーは赤)とイベントの印(例外は赤)、区切りのよい目盛り |
 | (server) `Components/Telemetry/SpanDetail.razor(.cs)` / `AttributeTable.razor(.cs)`(新規) | 種類・状態とメッセージ・開始(トレースの開始から)・所要時間・ID・スコープ、属性、イベント(例外のスタックトレースは表の外に)、リンク、Resource。属性の JSON をキーと値の表に |
 | (core) `Services/TelemetryService.cs` / `Accessors/TelemetryAccessor.cs` + `QueryTraceListAsync.sql` / `QuerySpanListByTraceAsync.sql` / `QueryLogListByTraceAsync.sql` / `QueryResourceListAsync.sql` / `Models/Views/TelemetryTraceDetailView.cs`(新規) | `QueryTraceListAsync`(範囲・エラーだけ・名前の `LIKE`。`IDialect` を受け取る)、`QueryTraceDetailAsync`(読み取りのトランザクションで同じ時点のトレース・スパン・ログ・Resource)。トレースのログはトレース ID の部分索引を使うように `TraceId <> ''` を付ける |
-| (server) `Components/Telemetry/TelemetryFormat.cs` / `wwwroot/css/app.css` | 所要時間(0 / µs / ms / s)、トレースの一覧(高さ 320 px で送る)・ウォーターフォール・詳細のクラス |
-| テスト | `Components/Telemetry/WaterfallModelTests.cs`(木の順、開閉、イベント)を追加、`TelemetryServiceTests`(絞り込みと詳細)・`TelemetryPageTests`(URL のクエリで開くトレース)・`TelemetryFormatTests`(所要時間)に追加、`TelemetryTestStorage` に `IDialect`(計 119 件) |
+| (server) `Components/ViewHelper.cs` / `wwwroot/css/app.css` | 所要時間(0 / µs / ms / s)、トレースの一覧(高さ 320 px で送る)・ウォーターフォール・詳細のクラス |
+| テスト | `Components/Telemetry/WaterfallModelTests.cs`(木の順、開閉、イベント)を追加、`TelemetryServiceTests`(絞り込みと詳細)・`TelemetryPageTests`(URL のクエリで開くトレース)・`ViewHelperTests`(所要時間)に追加、`TelemetryTestStorage` に `IDialect`(計 119 件) |
 
 - サーバー: ビルド 0 警告、テスト 119 件成功、inspectcode 0 件
 - 実機(Pixel 9a)とブラウザ: 直近 1 時間のトレース(画面遷移の Navigate)が一覧に出る。端末の Telemetry デモの Span で、表示中の一覧に `TelemetryTest`(スパン 2)が入り、選ぶと `TelemetryTest` の下に `Compute` のウォーターフォール(目盛り 0 / 50 ms / 100 ms)、ルートスパンの詳細と Resource、トレースのログ(WARN の `Telemetry test span completed.`)が出る。開閉、`Compute` の選択(開始 +180.9 µs、親の ID)、エラーだけ(0 件)と名前(`tele` で 1 件)の絞り込み
@@ -2390,12 +2390,129 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 | `Behaviors/SliderOption.cs` | `Step`: 値を刻みの倍数にそろえる(0 はそろえない) |
 | `Modules/Network/NetworkTelemetryView.xaml` / `NetworkTelemetryViewModel.cs` | 「Custom value」のカードにスライダー 4 本(0〜100、1 刻み、右に値)。VM は `ApplicationMetrics` を注入し、値の変更を書く。表示前に今の値を読む |
 | (server) `Telemetry/TelemetryDeviceRegistry.cs` / `TelemetryDeviceSummary.cs` | 最新値に値 1・2(`CustomValue1` / `CustomValue2`)を足す |
-| (server) `Components/Pages/DashboardPage.razor`、`Components/Telemetry/MetricCell.razor.cs` / `TelemetryFormat.cs`、`wwwroot/css/app.css` | 端末の一覧に「値 1」「値 2」の列(0〜100 の横棒と値。`MetricDisplay.CustomValue`、塗りは `meter-none` = 主色) |
+| (server) `Components/Pages/DashboardPage.razor`、`Components/Telemetry/MetricCell.razor.cs` / `Components/ViewHelper.cs`、`wwwroot/css/app.css` | 端末の一覧に「値 1」「値 2」の列(0〜100 の横棒と値。`MetricDisplay.CustomValue`、塗りは `meter-none` = 主色) |
 | (server) `Components/Telemetry/MetricChartModel.cs` | メトリクスのタブで `application.custom.value{N}` を「値 N」にして既知の計器の後に番号の順に並べる(ほかの計器は名前のまま最後。並びの順は `long`) |
 | (server) テスト | `MetricCellTests`(固有値の横棒)、`MetricChartModelTests`(値 N の名前と順)、`TelemetryDeviceRegistryTests` / `DashboardPageTests`(値 1 の最新値と横棒) |
 
 - 実機(Pixel 9a): スライダーを半端な位置でタップしても保存された値は整数(38 / 52 / 13 / 87)。値を 26 / 78 / 59 / 12 にして Flush → ダッシュボードの値 1 = 26、値 2 = 78 の横棒、メトリクスのタブに「値 1」〜「値 4」
 - ビルド 0 警告(端末 Debug / Mono、サーバー)、サーバーのテスト 124 件成功、inspectcode 0 件(端末 / サーバー)
+
+### 🧹テレメトリのサーバーの見直し(template-maui-server)(2026-09-28)
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Assets/Data/Schema.sql` / `TelemetrySchema.sql`、(core) `Accessors/Sql/*.sql` / `Models/Entity/*` | テーブル名を単数形に(`Device` / `Resource` / `MetricPoint` / `Span` / `Trace` / `Log`。索引の名前も)。`DeviceInfo` は端末ごとのファイルの 1 行のテーブルのまま(受信のたびに更新するので `data.db` に置かない) |
+| (core) `Services/TelemetryService.cs` + `Models/Views/TelemetryIdView.cs` | 状態を持たない(端末ごとのロックと保存済みの Id を外した)。保存済みの Id(Resource = Hash、系列 = 名前・スコープ・属性の `TelemetrySeriesKey`)は呼び出し側から受け取り、新しく足した Resource と系列を結果(`AddedResources` / `AddedSeries`)で返す。保存済みの Id の照会 `QueryIdsAsync`。端末の一覧とファイルの削除は server へ |
+| (server) `Telemetry/TelemetryStore.cs`(新規)、(test) `Telemetry/TelemetryStoreTests.cs`(新規) | 端末ごとの書き込み(保存・保持期間の削除・ファイルの削除)のロックと保存済みの Id(最初の保存でファイルから読み、新しく足した分を足す。ファイルを削除したら捨てる)、テレメトリのファイルがある端末の一覧。`OtlpReceiver` / `TelemetryDeviceRegistry` / `TelemetryRetentionWorker` が使う |
+| (server) `Components/Pages/DashboardPage.razor` / `ServerPage.razor(.cs)`(旧 `Home`)/ `Components/Layout/NavMenu.razor` | ダッシュボードを `/` に。簡易ステータス(サーバー時刻・ストレージ使用量・Data 件数・接続中の端末と画面)は `/server`(Server)。メニューは Dashboard を先頭、Server を最後 |
+| (server) `wwwroot/css/app.css` | 検索と追加の行の幅を表と同じ上限(1280px)にして、追加ボタンを表の右端にそろえる |
+| (server) `Components/Telemetry/MetricCell.razor.cs` / `Components/ViewHelper.cs` | 電池を残量の段階のアイコン(8 段。色は良し悪し)にし、値はホバーで出す |
+| (server) `Components/ViewHelper.cs` / `Components/_Imports.razor`、(test) `Components/ViewHelperTests.cs` | テレメトリの表示(時刻・値・良し悪しの色・状態・重大度、`TelemetryLevel`)を `ViewHelper` にまとめた |
+
+- 表の名前が違う既存の DB(`data.db` の `Devices`、端末ごとのファイルの複数形の表)は、表と索引の名前を変える(`ALTER TABLE ... RENAME TO`。スキーマの版は 1 のまま)
+- ブラウザ: 幅 1900px で表と追加ボタンの右端が同じ位置(1536px)、電池はアイコン、`/server` に簡易ステータス。実機の受信が名前を変えた表に入る。保存済みの Id を server に移した後も実機の受信が入り、ダッシュボードとテレメトリ画面(メトリクス・トレース・ログ)の表示は同じ
+- ビルド 0 警告、テスト 125 件成功、inspectcode 0 件
+
+### 🔔独自プッシュ 3-1-1: 保存と配信(template-maui-server)(2026-09-28)
+
+`Push_Plan.md` の 3-1-1。サーバーから端末へ SignalR で通知を送り、未接続の端末宛ては `data.db` に溜めて接続したときに届ける。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Assets/Data/Schema.sql`、(core) `Models/Entity/PushMessageEntity.cs`(新規) | `PushMessage`(`Id` / `DeviceId` / `Title` / `Body` / `CreatedAt` / `DeliveredAt`。宛先の端末ごとに 1 行、未達は `DeliveredAt` が NULL)。`Id` は `AUTOINCREMENT`、未達の行だけの索引 `IX_PushMessage_DeviceId` と期限の削除用の `IX_PushMessage_CreatedAt` |
+| (core) `Accessors/PushAccessor.cs` + SQL / `Services/PushService.cs`(新規) | 行の作成(`INSERT ... SELECT ... FROM Device ... RETURNING *` で、宛先(省略で全端末)の登録済みで有効な端末ごとに 1 行を作って返す)、未達の照会(古い順)、受け取りの記録(未達で宛先が同じ端末のときだけ)、期限の削除 |
+| (core) `Services/DeviceService.cs` / `Domain/Length.cs` | 端末の登録の削除で、その端末宛ての通知も削除する。件名 100 文字・本文 500 文字(`Title` / `Body`) |
+| (server) `Hubs/PushHub.cs`(新規)/ `HubRoutes.cs` / `Log.cs` | `/hubs/push`(認証なし)。接続の URL のクエリ `deviceId` の端末 ID を確かめ(形式が違えば切る)、接続を端末 ID のグループに入れてから未達を古い順に `Receive(PushMessage)` で送る。`Acknowledge(id)` で届いた日時を記録する。接続・切断・拒否のログ |
+| (server) `Services/PushNotifier.cs`(新規)/ `Log.cs` | 送信。行を作ってから、宛先の端末のグループへすぐに送る(未接続なら次の接続で届く) |
+| (server) `Endpoints/PushEndpoints.cs`(新規)/ `ApiRoutes.cs` | `POST /api/push`(匿名。本文は `deviceId`(省略で全端末)・`title`(必須)・`body`)。送った件数 `count` を返し、宛先の端末が無い(未登録か無効)なら 404 |
+| (server) `Workers/PushRetentionWorker.cs` + `PushRetentionWorkerOption.cs`(新規)/ `Log.cs` / `appsettings.json` | 保持期間(`PushRetention`: 起動の直後と 60 分ごと、送ってから 7 日を過ぎた行を届いた / 届いていないにかかわらず削除) |
+| (server) `Application/ApplicationExtensions.cs` | `PushNotifier` と保持期間の登録、`MapPushEndpoints`、`MapHub<PushHub>` |
+| (test) `Services/PushServiceTests.cs` / `PushNotifierTests.cs`、`Hubs/PushHubTests.cs`、`Workers/PushRetentionWorkerTests.cs`(新規)、`Services/DeviceServiceTests.cs` / `Telemetry/TelemetryTestStorage.cs` | 宛先(登録済みで有効な端末だけ)、未達と応答、期限の削除、接続での未達の送信と形式の違う端末 ID の切断、グループへの送信、端末の削除で通知も消える |
+| (server) `README.md` | 機能・構成・API の一覧、「端末への通知(SignalR)」 |
+| `Document/Push_Plan.md` | データ・配信の流れ・構成を実装に合わせ、3-1-1 を完了に |
+| `Document/Task_Checklist.md` | 3-1-1 を完了として削除 |
+
+- PC の SignalR クライアント(実機の端末 ID)で確認: 接続中の端末にはすぐ届き、応答で `DeliveredAt` が入る。未接続の間に全端末へ送った通知は接続したときに届き、応答しないで切ると次の接続で同じ `Id` が届き直す。形式の違う端末 ID の接続は切られる(サーバーのログに Warning)
+- API: 件名が空・101 文字・端末 ID の形式違いは 400、未登録の端末 ID と空の端末 ID は 404
+- ビルド 0 警告、テスト 134 件成功、inspectcode 0 件
+
+### 🖥️独自プッシュ 3-1-2: 送信の画面(template-maui-server)(2026-09-28)
+
+`Push_Plan.md` の 3-1-2。ダッシュボードから端末 / 全端末へ通知を送り、端末ごとの未達の件数を出す。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Components/Pages/DashboardPage.razor(.cs)` | 端末の行に送信のボタン(無効の端末は押せない)、検索と追加の行に「全端末へ通知」(有効な端末が無ければ押せない)、表に「未達」の列(`CountBadge`)。結果はスナックバー(「送信しました。」/「N 台へ送信しました。」、宛先の端末が無ければ「送信先の端末がありません。」)。未達の件数は `data.db` から読み、`PushNotifier.Changed` と一定の間隔(10 秒)で読み直す |
+| (server) `Components/Dialogs/PushSendDialog.razor(.cs)` + `PushDialogExtensions.cs`(新規) | 件名(必須、100 文字)と本文(500 文字)の入力(FluentValidation)。未接続の端末には次の接続で届くことを添える |
+| (server) `Services/PushNotifier.cs` / `Hubs/PushHub.cs` | `Changed`(行を作ったときと届いた日時を記録したとき)。受け取りの記録は `PushNotifier.AcknowledgeAsync`(ハブの `Acknowledge` から呼ぶ) |
+| (core) `Services/PushService.cs` / `Accessors/PushAccessor.cs` + `QueryPendingSummaryAsync.sql` / `Models/Views/PushPendingSummaryView.cs`(新規) | 端末ごとの未達の件数(未達の無い端末は含まない) |
+| (server) `wwwroot/css/app.css` | 表と検索・追加の行の上限幅を 1280px から 1360px に(未達の列と送信のボタンで広がった分) |
+| テスト | `Components/Dialogs/PushFormValidatorTests.cs`(新規)、`DashboardPageTests`(未達の件数と応答での読み直し、無効の端末の送信のボタン)、`PushNotifierTests`(`Changed`)、`PushHubTests`(ハブの引数) |
+| (server) `README.md` | 管理画面の一覧(ダッシュボード)、「端末への通知(SignalR)」 |
+| `Document/Push_Plan.md` / `Task_Checklist.md` | 3-1-2 を完了に / 削除 |
+
+- ブラウザ(幅 1600px): 端末の行からのダイアログは件名が空なら「件名を入力してください。」、送ると「送信しました。」と未達 1。「全端末へ通知」で「1 台へ送信しました。」と未達 2。PC の SignalR クライアントを端末として繋ぐと 2 件が古い順に届き、応答で画面の未達が読み込み直さずに 0 になる。表は横にはみ出さず、追加のボタンが表の右端にそろう
+- ビルド 0 警告、テスト 140 件成功、inspectcode 0 件
+
+### 📱独自プッシュ 3-1-3: 端末の受信と表示(2026-09-28)
+
+`Push_Plan.md` の 3-1-3。アプリを開いている間だけサーバーからの通知を受け取り、トーストで出す。3-1(独自プッシュ)はこれで完了。端末側は `Services/` に置く。
+
+| 対象 | 内容 |
+|---|---|
+| `Services/PushConnection.cs`(新規)/ `Log.cs` | 接続(`Mofucat.ReactiveHub`。`hubs/push?deviceId=` に `DeviceInformation.DeviceId`、切れても繋ぎ直し、通信が戻ったら待たずに繋ぎ直す。`Connect` は破棄で切る `IDisposable`)、受信(`Receive` の `PushMessage`)、接続の状態 `PushStatus`(`Stopped` / `Connecting` / `Connected` / `Retrying` = 前回の接続に失敗して繋ぎ直している。`HubStatus` から作る)、出した Id の記憶(直近 64 件)、応答(`Acknowledge` を `TrySendAsync`)。独自プッシュのログ |
+| `Services/PushService.cs`(新規) | 繋ぐ(接続先が変わっていれば繋ぎ直す。接続先が無ければ繋がない)・切る。受信は繋ぐときの `ObserveOnCurrentContext` で UI スレッドに移し、トースト(「件名: 本文」)で出して応答を返す。送り直された通知は出さずに応答だけ返す |
+| `MainPageViewModel.cs` | Push のスイッチがオンなら、起動の完了(`OnCreated`)と前面に戻ったとき(`OnResumed`)に繋ぎ、背面に回ったとき(`OnStopped`)と破棄のとき(`OnDestroying`)に切る |
+| `State/Settings.cs` / `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | `PushEnabled`。Network の Telemetry の下に Push のスイッチ。切り替えですぐに繋ぐ / 切る(表示で設定の値を入れたときは何もしない)。QR で接続先が変わると繋ぎ直す |
+| `MauiProgram.cs` | `ConfigureComponents` の `Service` の区画で `PushConnection` / `PushService` を登録 |
+| `Document/Push_Plan.md` / `Task_Checklist.md` / `README.md` | 3-1-3 を完了に / 3-1 の節とサマリの行を削除 / TODO から Push(SignalR)を削除し、Implement の Network に追加 |
+
+- 実機(Pixel 9a、Android 17): 起動すると繋がり(`Push service started` → `Push connected`)、前面で送るとトースト。ホームへ戻すと切れ(`Push service stopped`)、その間に送った通知は出ない(アプリからの通知も出ない)。アプリに戻ると繋ぎ直し、溜まっていた通知がトーストで出る。スイッチのオフで切れ、オンで繋ぐ
+- ビルド 0 警告(端末 Debug / Mono)、inspectcode 0 件
+
+### ↔️独自プッシュ: ヘッダーの接続の状態(2026-09-28)
+
+通知の接続の状態を、ヘッダーの Diagnostic(📈)の左に出す。
+
+| 対象 | 内容 |
+|---|---|
+| `MainPage.xaml` / `MainPageViewModel.cs` | ヘッダーの列を `96,*,48,48` にして、Diagnostic の左に接続の状態(↔️ 接続中 / 🔄 接続の途中 / ⛔ 失敗して繋ぎ直している。止まっている間は出さない)。VM は `PushConnection.Status`(`PushStatus`)を写すだけで、絵文字は `s:MapToTextConverter`、表示の切り替えは `s:CompareToBool`(`Stopped` 以外)で XAML が決める |
+| `Resources/Styles/Styles.xaml` | `HeaderIconLabel`(ヘッダーの絵文字のラベル。文字色は白) |
+| `Document/Push_Plan.md` | 決定事項・端末・構成にヘッダーの表示 |
+
+- 実機: 繋がると ↔️、サーバーを止めると ⛔(`Push reconnecting`)、スイッチをオフにすると消える
+- ビルド 0 警告、inspectcode 0 件
+
+### 🔐生体認証の計画(2026-09-28)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Biometric_Plan.md`(新規) | 本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)の計画。`AndroidX.Biometric` の `BiometricPrompt` を直接使う |
+| `Document/Task_Checklist.md` | 4 節を計画への参照と 4-1 / 4-2 に |
+
+### 📦タンキング送信を予定に(2026-09-28)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Task_Checklist.md` / `README.md` | 2-2 タンキング送信(端末で作ったデータを溜めておき、通信できるときにまとめて送る。差分同期・競合解決は扱わない)と、範囲の判断 2-2-0。TODO に Tanking send |
+| `Document/Change_Summary.md` | 付録 B のオフライン同期を「差分同期・競合解決は実装しない。溜めて送る部分は 2-2」に |
+
+### 🧩App のミニアプリの計画(2026-09-29)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/App_Plan.md`(新規) | App のミニアプリ(タイマー・ToDo・2048・マインスイーパー)と、ダミーのデータで既存の分類を強化する天気(UI)とニュース(Control のタブ)の計画 |
+| `Document/Task_Checklist.md` / `README.md` | 7 節(7-1〜7-6、採用の判断 7-5-0 / 7-6-0)とサマリの行 / TODO に App・UI・Control の行 |
+
+### 📝AndroidManifest の権限(2026-09-29)
+
+| 対象 | 内容 |
+|---|---|
+| `Platforms/Android/AndroidManifest.xml` | 権限・端末の機能(`uses-feature`)・開く先のアプリの宣言(`queries`)・平文の HTTP(`usesCleartextTraffic`)に、使う機能(画面)のコメントを付けた。Device > Misc の Light で使う `FLASHLIGHT` を追加し、使う機能の無い `BATTERY_STATS`(MAUI の `IBattery` 用。電池の状態は `DeviceInformation` が `ACTION_BATTERY_CHANGED` から読む)を削除 |
+
+- ビルド 0 警告。マージ後のマニフェストの権限は 24(`FLASHLIGHT` が入り `BATTERY_STATS` が無い)、`queries` は 3
+- 実機: Device > Misc の Light on / off で LED が点いて消える(`CameraService` の `Torch ... turned on / off`)。音声認識(`SpeechToText`)と読み上げは `queries`(`RecognitionService` / `TTS_SERVICE`)の宣言なしで動く(読み上げのエンジン `com.google.android.tts` はすべてのアプリから見える)
+- `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` / `MEDIA_CONTENT_CONTROL` は CommunityToolkit.Maui.MediaElement(ライブラリの属性)から入る
 
 ## 💡C. この区間のナレッジ
 
@@ -2456,6 +2573,12 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - Syncfusion の `ChartSeries`(`ColumnSeries` / `PolarAreaSeries` など)は `Element` の派生で Style を持てない。`SwipeItem` は `StyleableElement` の派生なので Style を使える
 - MAUI のレイアウトは、幅・高さを明示した要素の `Fill` を `Center` として置く(`LayoutExtensions.AlignHorizontal` / `AlignVertical`)。明示サイズの要素では `Center` と既定の `Fill` が同じ位置になる
 - **Slider の `ValueChanged` で値をそろえても、TwoWay のバインドの元にはそろえる前の値が先に届く**(`BindableObject.SetValueActual` はバインドへの反映の後に変更の通知を出し、通知の中で設定した値は後回しの列に入る)。直後にそろえた値が届く
+- **前景サービスを `START_STICKY` で再起動したプロセスには MAUI の Window が無い**(`App.OnStart` も呼ばれない。`Window.Resumed` / `Stopped` で更新する前面の状態は既定値のまま)。サービスで前面かどうかを見るときは `Application.Current.Windows` の有無も見る
+- **`StartForegroundService` で始めたサービスを `StartForeground` の前に止めると、Android がアプリを落とす**(`Context.startForegroundService() did not then call Service.startForeground()`)。開始の条件が揃わず止めるときも、先に前景化してから止める
+- **Android では Label の文字色の透明度が絵文字にも掛かる**(既定の Label の文字色は `SecondaryTextColor` = 60% の黒)。絵文字だけのラベルは不透明の文字色を指定する
+- CA1822 は partial メソッドの実装(インターフェースの実装に当たるもの)にも出る。Android 側の片割れでアプリのコンテキストをフィールドに持って使えば、抑制なしで消える
+- **MAUI の `Flashlight` は `CAMERA` と `FLASHLIGHT` がマニフェストに宣言されているかを確かめ、無いと `PermissionException`(未処理ならアプリが落ちる)**。`FLASHLIGHT` は通常の権限でインストール時に付与される
+- **CA2213 は、IDisposable の型(Android の `Service` など)が DI から取った(`GetRequiredService`)IDisposable をフィールドに持つと出る**(メソッドの戻り値を新しく作ったものと見なし、private メソッドの引数を経由しても追う)。所有しないものはフィールドに持たず、使うメソッドの引数やラムダで受け取る
 
 ---
 
@@ -2513,7 +2636,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - ディープリンク(App Links / カスタムスキーム、旧 Task_Checklist 3-1)= 本サンプル対象外(2026-09-15。別アプリケーションでの導入情報は `Other_App_Candidates.md`)
 - SocialControls の TODO 整理 / TimeProvider の MAUI 方式 / Analyzers.ruleset の正典差分(旧 `tmpl-plan-maui.md` 3-9 / 3-10 / 3-12)= 対応不要(2026-09-17)
 - 画面録画(`Plugin.Maui.ScreenRecording`)= 対象外(2026-09-19。実装を撤去)
-- オフライン同期(未送信キュー・差分同期・競合解決、旧 Task_Checklist 2-2)= 実装しない(2026-09-27。代わりにサーバーから端末への独自プッシュ = Task_Checklist 3-1)
+- オフライン同期の差分同期・競合解決 = 実装しない(2026-09-27)。端末で溜めて送る部分は Task_Checklist 2-2(タンキング送信)
 - `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
 - Material 3(`UseMaterial3`)= 見送り(2026-09-21。csproj にコメントアウトで残置。Entry / Editor の枠と既定色の手当てが要るため)
 - XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 16 の記録)

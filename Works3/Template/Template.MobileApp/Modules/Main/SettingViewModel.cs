@@ -12,6 +12,8 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     private readonly Settings settings;
 
+    private readonly PushService pushService;
+
     public BarcodeController Controller { get; } = new();
 
     [ObservableProperty]
@@ -25,6 +27,9 @@ public sealed partial class SettingViewModel : AppViewModelBase
 
     [ObservableProperty]
     public partial bool TelemetryEnabled { get; set; }
+
+    [ObservableProperty]
+    public partial bool PushEnabled { get; set; }
 
     [ObservableProperty]
     public partial string? AIServiceEndPoint { get; set; }
@@ -56,9 +61,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
     public SettingViewModel(
         ApiContext apiContext,
         ITelemetryControl telemetryControl,
-        Settings settings)
+        Settings settings,
+        PushService pushService)
     {
         this.settings = settings;
+        this.pushService = pushService;
 
         Controller.AimMode = true;
         Controller.VibrationOnDetect = true;
@@ -69,6 +76,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
             settings.TelemetryEnabled = x;
             telemetryControl.EndPoint = settings.GetTelemetryEndPoint();
         });
+        SubscribePushEnabled(ChangePush);
 
         DetectCommand = MakeAsyncCommand<IReadOnlySet<BarcodeResult>>(async x =>
         {
@@ -85,6 +93,11 @@ public sealed partial class SettingViewModel : AppViewModelBase
                         settings.ApiEndPoint = apiEndPoint;
                         apiContext.BaseAddress = new Uri(apiEndPoint);
                         ApiEndPoint = apiEndPoint;
+                        // 受け取り中なら新しい接続先へ繋ぎ直す
+                        if (settings.PushEnabled)
+                        {
+                            pushService.Connect();
+                        }
                     }
                     if (parser.TryGetString(nameof(GrpcEndPoint), out var grpcEndPoint))
                     {
@@ -162,6 +175,7 @@ public sealed partial class SettingViewModel : AppViewModelBase
             GrpcEndPoint = settings.GrpcEndPoint;
             OtelEndPoint = settings.OtelEndPoint;
             TelemetryEnabled = settings.TelemetryEnabled;
+            PushEnabled = settings.PushEnabled;
             AIServiceEndPoint = settings.AIServiceEndPoint;
             AIServiceKey = await settings.GetAIServiceKeyAsync() ?? string.Empty;
             OllamaEndPoint = settings.OllamaEndPoint;
@@ -190,6 +204,27 @@ public sealed partial class SettingViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.Menu);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    //--------------------------------------------------------------------------------
+    // Operation
+    //--------------------------------------------------------------------------------
+
+    // 受け取りの切り替え (表示で設定の値を入れたときは何もしない)
+    private void ChangePush(bool enabled)
+    {
+        if (settings.PushEnabled != enabled)
+        {
+            settings.PushEnabled = enabled;
+            if (enabled)
+            {
+                pushService.Connect();
+            }
+            else
+            {
+                pushService.Disconnect();
+            }
+        }
+    }
 
     //--------------------------------------------------------------------------------
     // Helper

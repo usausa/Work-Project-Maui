@@ -1,17 +1,20 @@
 # ✅残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 2 節(バックグラウンドタスク)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
+優先順 = 2 節(バックグラウンドタスク / タンキング送信)→ 3 節(プッシュ通知)→ 4 節(生体認証)→ 7 節(App のミニアプリ)。6 節(保留中の判断)はユーザーの決定待ち。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
 
 ## 📋サマリ
 
 | Category | Feature | 章 |
 | --- | --- | --- |
 | Device | Background task(WorkManager) | 2-1 |
-| Network | Push(独自。SignalR、未接続の端末宛てはサーバーで保持) | 3-1 |
+| Network | Tanking send(端末で溜めて、通信できるときにまとめて送る) | 2-2 |
 | Device | Push(FCM) | 3-2 |
 | Device | Biometric(生体認証) | 4 |
 | Decision | 保留中の判断(CoreCLR の扱い) | 6 |
+| App | Timer / ToDo / 2048 / Minesweeper | 7-1〜7-4 |
+| UI | Weather(ダミーのデータ。採用は判断待ち) | 7-5 |
+| Control | Tab(ニュースのダミーのデータ。採用は判断待ち) | 7-6 |
 
 ## 📏運用ルール
 
@@ -19,7 +22,7 @@
 - **⚖️【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
-- `README.md` の TODO 表は本書のサマリ表(2〜6 節)と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
+- `README.md` の TODO 表は本書のサマリ表(2〜7 節)と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
 - リンク集 `■MAUI.txd` は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。🟩 の項目は本書へ移し、元行は同書から削除する
 - 描画・性能の計測は **Release ビルド + 実機**(手順は `Development.md` の「Releaseビルドでの検証と計測」)
 
@@ -30,9 +33,9 @@
 
 ---
 
-## ⏰2. バックグラウンドタスク(WorkManager)
+## ⏰2. バックグラウンドタスク(WorkManager / タンキング送信)
 
-遅延可で再起動後も残る処理を `WorkManager` に載せる(2-1)。ファイルパスは `Template.MobileApp/` からの相対。
+遅延可で再起動後も残る処理を `WorkManager` に載せる(2-1)。端末で作ったデータを溜めておき、通信できるときにまとめてサーバーへ送る(2-2)。ファイルパスは `Template.MobileApp/` からの相対。
 
 ### ⏰2-1 バックグラウンド定期タスク(WorkManager)
 
@@ -49,17 +52,15 @@
 
 - [ ] **2-1-0**⚖️【判断】要否 — 再起動後も残る遅延処理(同期 / 送信キュー)の需要があるか。WorkManager は再起動後に自動で再スケジュールされるため `RECEIVE_BOOT_COMPLETED` は不要。常駐(前景サービス)は対象外
 
+### 📦2-2 タンキング送信
+
+端末で作ったデータを端末の DB に溜めておき、通信できるときにまとめてサーバーへ送る(圏外でも記録を続けられる)。対向(template-maui-server)の受け口も要る。差分同期・競合解決は扱わない。
+
+- [ ] **2-2-0**⚖️【判断】範囲 — 送るデータ(サンプルの記録の形)、送るきっかけ(通信の回復 / 手動 / 2-1 の WorkManager のネットワーク条件付きワーク)、再送で重複させない仕組み(端末が Id を決め、サーバーは同じ Id を受け流す)、送った分の扱い(削除 / 送信済みとして残す)、未送信の件数の見せ方
+
 ## 🔔3. プッシュ通知
 
-ローカル通知は `Components/NotificationService.cs` + `.android.cs` で実装済み(即時 / スケジュール / アクションボタン / タップ時ペイロード。Device > Misc の Notification カード)。サーバーからの通知は、FCM を使わない独自の仕組み(3-1。`Works3/PushSample` を参考)と FCM(3-2)。
-
-### 📨3-1 独自プッシュ(サーバーから端末への通知)
-
-サーバーから端末へ SignalR で通知を送り、端末は前面ではトースト、背面ではローカル通知で出す(常駐は前景サービス。設定画面のスイッチで始める)。未接続の端末宛てはサーバーが溜めておき、接続したときに届ける。計画は `Push_Plan.md`(参考 = `Works3/PushSample`)。
-
-- [ ] **3-1-1** サーバー: 保存と配信(テーブル・ハブ・送信の API)
-- [ ] **3-1-2** サーバー: 送信の画面(ダッシュボード)
-- [ ] **3-1-3** 端末: 受信と表示(前景サービス・設定画面のスイッチ・トーストとローカル通知・受け取りの応答)
+ローカル通知は `Components/NotificationService.cs` + `.android.cs` で実装済み(即時 / スケジュール / アクションボタン / タップ時ペイロード。Device > Misc の Notification カード)。サーバーからの通知は、FCM を使わない独自の仕組み(SignalR。アプリを開いている間に受け取る。`Push_Plan.md`)を実装済みで、残りは FCM(3-2)。
 
 ### ☁️3-2 FCM
 
@@ -81,31 +82,10 @@
 
 ## 🔐4. 生体認証
 
-画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。プラットフォーム実装は MauiComponents の `WiFi.cs` + `WiFi.WiFiManager.cs` / `.android.cs` と同じ構成(共通インターフェース + `*.android.cs`)に揃える。
+画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)を作る。計画は `Biometric_Plan.md`。
 
-参照: `Bio`(`Maui.Biometric-main` / `MauiBiometricPluginSample-main` / `NET-MAUI-FingerPrint-main`)
-
-| 種別 | URL | 概要 | 適用先 |
-| --- | --- | --- | --- |
-| ライブラリ | https://github.com/oscoreio/Maui.Biometric | `Plugin.Fingerprint` の後継。`IBiometricAuthentication.CheckAvailabilityAsync` が `AvailabilityResult`(`AuthenticationAvailability`: NoSensor / NoBiometric / TemporaryUnavailable / NoPermission / NotSupported 等 + 検出した `BiometricSensor` の集合)を返し、`AuthenticateAsync(new AuthenticationRequest(title, reason) { Authenticators = Biometric \| DeviceCredential, ConfirmationRequired })` が `AuthenticationResult` を返す。Android 実装は `AndroidX.Biometric.BiometricPrompt`。`.UseBiometricAuthentication()` で DI 登録。v2.5.1(2026-03) | 案B の候補。可用性 3 区分は `NoSensor` / `NoBiometric` / `TemporaryUnavailable` が対応。`sample/MainViewModel.cs` が可用性表示 + 認証 + 結果表示の最小例 |
-| 公式 | https://developer.android.com/training/sign-in/biometric-auth?hl=ja | 「生体認証ダイアログを表示する」。`BiometricManager.canAuthenticate` による可用性判定(`BIOMETRIC_SUCCESS` / `ERROR_NO_HARDWARE` / `ERROR_NONE_ENROLLED` / `ERROR_HW_UNAVAILABLE`)、`BiometricPrompt.PromptInfo` の組み立て、認証コールバック、`CryptoObject` | 案A の一次資料。可用性 3 区分は `canAuthenticate` の戻り値をそのまま対応付ける |
-
-- [ ] **4-1-0**⚖️【判断】実装方式 — 案A `Components/Biometric.cs` + `.android.cs` を自作(`Xamarin.AndroidX.Biometric` を追加)/ 案B `Maui.Biometric` パッケージを参照
-
-| 現在のファイル名 | 何用か | 変更 |
-| --- | --- | --- |
-| `Components/Biometric.cs` | — | 新規。`IBiometricAuthenticator`(可用性判定 / 認証 / 結果種別) |
-| `Components/Biometric.android.cs` | — | 新規。`AndroidX.Biometric.BiometricPrompt` 実装 |
-| `Modules/Device/DeviceBiometricViewModel.cs` | 空スタブ | 実装 |
-| `Modules/Device/DeviceBiometricView.xaml` | 空状態表示 | 可用性表示 + 認証ボタン + 結果表示 |
-| `Modules/Device/DeviceMenuView.xaml` | `Grid.Row="7" Grid.Column="1"` | `IsEnabled="False"` を削除 |
-| `MauiProgram.cs` | `ConfigureComponents` | DI 登録 |
-| `Platforms/Android/AndroidManifest.xml` | 権限 | `USE_BIOMETRIC` 追加 |
-| `Template.MobileApp.csproj` | パッケージ | 案A: `Xamarin.AndroidX.Biometric` 追加 |
-
-- [ ] **4-1** 可用性は「ハードウェア無し / 未登録 / 一時利用不可」を区別して表示する。範囲は認証成否の表示まで(鍵の解錠に使う `CryptoObject` は対象外)
-  - 制約: `androidx.biometric` は `androidx.fragment` に依存する。csproj は `Xamarin.AndroidX.Fragment.Ktx` をピン止めしているため、追加後に `dotnet list package --include-transitive` で競合を確認する
-  - `BiometricPrompt` が要求する `FragmentActivity` は `MainActivity`(`MauiAppCompatActivity` 派生)で満たしている。基底クラスの変更は不要
+- [ ] **4-1** 本人確認(使えるかどうかの 3 区分の表示・認証・結果の表示)
+- [ ] **4-2** 生体認証で守る秘密(鍵の作成・暗号化して保存・生体認証で復号して表示・削除・鍵が使えなくなったときの作り直し)
 
 ## ⏸️6. 保留中の判断
 
@@ -114,3 +94,16 @@
 csproj は `UseMonoRuntime=false`(CoreCLR)。Shiny の `[Export]` ライフサイクルコールバックで起動時にクラッシュする(dotnet/android#10996、.NET 11 で修正)。「外部待ち」の表と README の Pending に記載。
 
 - [ ] **6-2-0**⚖️【判断】.NET 11 まで CoreCLR のままにする(実機検証は `-p:UseMonoRuntime=true` の Mono ビルド)か、csproj を Mono に戻すか
+
+## 🧩7. App のミニアプリ
+
+App のメニューに、アプリ・画面・モデルの実装の見本になる小さなアプリを足す。あわせて、ダミーのデータで既存の分類を強化する天気(UI)とニュース(Control のタブ)を検討する。計画は `App_Plan.md`。
+
+- [ ] **7-1** タイマー(ストップウォッチとカウントダウン。背面やアプリの終了をまたいでも合う時間、終了の通知)
+- [ ] **7-2** ToDo(一覧と、Push / Pop で開くダイアログ的な編集。SQLite(既存の `data.db`)への保存)
+- [ ] **7-3** 2048(スワイプ、モデルの結果から作るタイルのアニメーション、途中の盤面の保存)
+- [ ] **7-4** マインスイーパー(描画で作る盤面、長押しで旗、最初の 1 手を安全にする配置)
+- [ ] **7-5-0**⚖️【判断】天気(UI)の採用 — ダミーのデータで、横の一覧をまたぐ気温の折れ線、週の範囲に合わせたバー、日の出・日の入りの弧を見せる画面(UI 2 のメニューの空き)
+- [ ] **7-5** 天気(UI)
+- [ ] **7-6-0**⚖️【判断】ニュース(Control のタブ)の採用 — ダミーのニュースで、`SfTabView` と自作のタブ(見出し + `CarouselView`)を比べる画面と、詳細から戻ったときのタブと一覧の位置の保持(Control のメニューの Refresh の隣)
+- [ ] **7-6** ニュース(Control のタブ)

@@ -402,6 +402,8 @@ public static partial class MauiProgram
         services.AddSingleton<HttpService>();
         services.AddSingleton<MonitorConnection>();
         services.AddSingleton<ChatRoomClient>();
+        services.AddSingleton<PushConnection>();
+        services.AddSingleton<PushService>();
 
         services.AddSingleton<ICalendarService, CalendarService>();
 
