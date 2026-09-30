@@ -66,12 +66,14 @@ public static class AppIcons
     public static readonly FontImageSource FactCheck = Create(MaterialIcons.Fact_check, MenuSize, Colors.White);
     public static readonly FontImageSource FilterList = Create(MaterialIcons.Filter_list, MenuSize, Colors.White);
     public static readonly FontImageSource Fingerprint = Create(MaterialIcons.Fingerprint, MenuSize, Colors.White);
+    public static readonly FontImageSource Flag = Create(MaterialIcons.Flag, MenuSize, Colors.White);
     public static readonly FontImageSource FlightTakeoff = Create(MaterialIcons.Flight_takeoff, MenuSize, Colors.White);
     public static readonly FontImageSource Flip = Create(MaterialIcons.Flip, MenuSize, Colors.White);
     public static readonly FontImageSource FontDownload = Create(MaterialIcons.Font_download, MenuSize, Colors.White);
     public static readonly FontImageSource FormatPaint = Create(MaterialIcons.Format_paint, MenuSize, Colors.White);
     public static readonly FontImageSource FolderOpen = Create(MaterialIcons.Folder_open, MenuSize, Colors.White);
     public static readonly FontImageSource Forum = Create(MaterialIcons.Forum, MenuSize, Colors.White);
+    public static readonly FontImageSource Grid4X4 = Create(MaterialIcons.Grid_4x4, MenuSize, Colors.White);
     public static readonly FontImageSource GridOn = Create(MaterialIcons.Grid_on, MenuSize, Colors.White);
     public static readonly FontImageSource GridView = Create(MaterialIcons.Grid_view, MenuSize, Colors.White);
     public static readonly FontImageSource Handyman = Create(MaterialIcons.Handyman, MenuSize, Colors.White);

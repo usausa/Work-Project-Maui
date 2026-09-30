@@ -70,7 +70,7 @@ Template project for MAUI.
 | View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
 | Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
-| App | Calculator / Sudoku |
+| App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
 | UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Graph / Graph2 / TreeMap / Stream / Dock / Load / Gauge / Meter / Mixer / Monster / Wheel / Character / Social / Radar / Flight / Tactical / Telemetry / Energy |
 
 # TODO
@@ -81,8 +81,7 @@ Template project for MAUI.
 | Network | Tanking send |
 | Device | Push(FCM) |
 | Device | Biometric |
-| Decision | Pending decisions (CoreCLR runtime) |
-| App | Timer / ToDo / 2048 / Minesweeper |
+| Decision | Pending decisions (CoreCLR runtime, BusyState control) |
 | UI | Weather (dummy data, pending decision) |
 | Control | Tab (SfTabView, custom) with news (dummy data, pending decision) |
 

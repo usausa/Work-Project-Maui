@@ -150,6 +150,8 @@ public enum ViewId
     AppTodo,
     AppTodoEdit,
     AppGame,
+    App2048,
+    AppMinesweeper,
 
     // UI
     UIMenu1,
