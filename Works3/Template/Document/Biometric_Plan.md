@@ -14,7 +14,7 @@ Device > Biometric の画面に生体認証のサンプルを作る。本人確�
 | 項目 | 決定 |
 | --- | --- |
 | 範囲 | 本人確認と、端末の中で完結する秘密の保護(暗号化と復号)|
-| 方式 | `Xamarin.AndroidX.Biometric` の `BiometricPrompt` を直接使う(`Components/Biometric.cs` + `.android.cs`)。鍵と結び付けた認証(`BiometricPrompt.CryptoObject`)を使うため |
+| 方式 | Android 本体の `android.hardware.biometrics` の `BiometricPrompt` / `BiometricManager` を直接使う薄いラッパー(`Components/Biometric.cs` + `.android.cs`)。minSdk 30 なので、`setAllowedAuthenticators` / `canAuthenticate(int)`(API 30)と鍵と結び付けた認証(`BiometricPrompt.CryptoObject`)が本体だけで使える。AndroidX のパッケージは足さない。ダイアログはシステムが出す(Activity は要らない)|
 | 鍵 | Android Keystore の AES-256 鍵(GCM)。使うたびに強い生体認証(クラス 3)を求め(`setUserAuthenticationParameters(0, AUTH_BIOMETRIC_STRONG)`)、生体情報の登録が変わると使えなくなる(`setInvalidatedByBiometricEnrollment(true)`)|
 | 保存 | 暗号文と IV を Base64 で設定(`Settings`)に保存する。平文は保存しない |
 | 本人確認の種類 | 生体だけ(`BIOMETRIC_STRONG`)と、画面ロックの PIN なども可(`BIOMETRIC_STRONG` + `DEVICE_CREDENTIAL`)を画面で切り替える |
@@ -43,17 +43,16 @@ Device > Biometric の画面に生体認証のサンプルを作る。本人確�
 | `Components/Biometric.android.cs` | 新規。`BiometricManager` / `BiometricPrompt` / Android Keystore の実装 |
 | `Modules/Device/DeviceBiometricViewModel.cs` + `DeviceBiometricView.xaml` | 空の画面を実装する |
 | `Modules/Device/DeviceMenuView.xaml` | `Grid.Row="7" Grid.Column="1"` のボタンの `IsEnabled="False"` を削除 |
+| `Markup/AppIcons.cs` | ボタンのアイコン(`SmallFingerprint` / `SmallPassword`)|
 | `State/Settings.cs` | 暗号文と IV |
 | `MauiProgram.cs` | DI の登録 |
 | `Platforms/Android/AndroidManifest.xml` | `USE_BIOMETRIC` |
-| `Template.MobileApp.csproj` | `Xamarin.AndroidX.Biometric` |
 
 ## ⚠️制約
 
-- `androidx.biometric` は `androidx.fragment` に依存する。csproj は `Xamarin.AndroidX.Fragment.Ktx` をピン止めしているため、追加後に `dotnet list package --include-transitive` で競合を確かめる
-- `BiometricPrompt` が要る `FragmentActivity` は `MainActivity`(`MauiAppCompatActivity` の派生)で満たしている
 - 鍵と結び付けられるのは強い生体認証(クラス 3)だけ。顔認証がクラス 3 でない機種では、秘密の保存と取り出しに顔認証は使えない
-- 画面ロックが無い端末では鍵を作れない
+- 画面ロックが無い端末では鍵を作れない。本人確認の成功・キャンセル・失敗回数の超過の確認には、画面ロックと生体情報を登録した端末が要る(登録と認証は利用者の操作)
+- 本体の `BiometricManagerAuthenticators` は `[Flags]` の無い列挙で、`CanAuthenticate` / `SetAllowedAuthenticators` の引数は int。組み合わせは int にしてから行う
 
 ## 🔗参照
 
@@ -70,6 +69,8 @@ Device > Biometric の画面に生体認証のサンプルを作る。本人確�
 `Components/Biometric`(使えるかどうか・本人確認)、画面の「使えるかどうか」と「本人確認」、メニューのボタン、権限とパッケージ。
 
 確認: 生体情報を登録した実機で成功・キャンセル・失敗回数の超過、画面ロックの PIN での認証。センサー無しと未登録の表示はエミュレーターで確かめる。
+
+実装済み(2026-09-29)。画面ロックと指紋の無い実機とエミュレーターで、「未登録」の表示と、本人確認がエラーで返ることを確認した。成功・キャンセル・失敗回数の超過・PIN は、登録した端末での確認が残る。
 
 ### 🔒4-2 生体認証で守る秘密
 

@@ -345,6 +345,8 @@ public static partial class MauiProgram
         });
 
         // Components
+        services.AddSingleton(TimeProvider.System);
+
         services.AddSingleton<DeviceInformation>();
         services.AddSingleton<IStorageManager, StorageManager>();
         services.AddSingleton<IBluetoothSerialFactory, BluetoothSerialFactory>();
@@ -353,6 +355,7 @@ public static partial class MauiProgram
         services.AddSingleton<INoiseMonitor, NoiseMonitor>();
         services.AddSingleton<IOcrReader, OcrReader>();
         services.AddSingleton<IActivityRecognizer, ActivityRecognizer>();
+        services.AddSingleton<IBiometricAuthenticator, BiometricAuthenticator>();
 
         services.AddSingleton(AudioManager.Current);
 

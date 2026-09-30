@@ -146,6 +146,9 @@ public enum ViewId
     // App
     AppMenu,
     AppCalc,
+    AppTimer,
+    AppTodo,
+    AppTodoEdit,
     AppGame,
 
     // UI

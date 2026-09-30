@@ -2062,6 +2062,91 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 - 実機(Pixel 9a): 変更した 42 画面(Control Chart / Carousel / Custom / Drawer / Refresh / Sf Chart / Bottom Sheet、Device Activity / BLE Scan / Camera / QR Scan / OCR / Sensor、Network Storage、Sample CV Local / Media / PDF / Web App、UI Chat / Graph / Graph2 / Login / Mail / Money / POS / Profile / Schedule / Timeline / TreeMap / Visit / Character / Load / Meter / Radar / Wheel、View Animation / Graphics / Lottie / State、App Calculator、Diagnostics、Setting)を変更の前後で撮影して画素で比較。差が出たのは乱数・時刻・計測値・センサー・アニメーションの部分と Sample Web App のインジケーターの色だけ。View State の Loading と診断画面のログの行も表示して確認。クラッシュなし
 - ビルド 0 エラー 0 警告(Debug / Mono)、inspectcode 0 件、XAML Styler の書き換えなし
 
+### ⏱️App のタイマー 7-1(2026-09-29)
+
+`App_Plan.md` の 7-1。App のメニューにタイマー(ストップウォッチとカウントダウン)を足した。ヘッダーとファンクションキーの帯を隠した暗い画面で、戻るも含めて操作はすべて画面の中のボタンで行う。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/LapStopwatch.cs`(新規) | ストップウォッチ(停止 / 計測中 / 一時停止)。経過時間は開始時刻と止めた時点までの時間から計算し、ラップは取った時点の通算の時間で持つ。最速と最遅のラップ、状態の書き出しと読み込み(`StopwatchSnapshot`) |
+| `Models/App/CountdownTimer.cs`(新規) | カウントダウン(停止 / 計測中 / 一時停止 / 終了)。残り時間は終わる時刻(`EndAt`)から計算する。終わった後のスタートは最初から。状態の書き出しと読み込み(`CountdownSnapshot`) |
+| `Models/App/AppJsonContext.cs`(新規) | 保存する状態 `TimerSnapshot` と JSON のソース生成 |
+| `Controls/TimerDial.cs`(新規) | 文字盤(`SKCanvasView`)。60 本の目盛り、溝、グラデーションの円弧(`SKShader.CreateSweepGradient` を 12 時の方向へ回す)とぼかした光、先端のつまみ。`IsAlert` の間は輪全体を `AlertColor` で脈打たせる(`Animate` の繰り返し) |
+| `Converters/ClockTextConverter.cs`(新規) | 時間の表示(分:秒、1 時間以上は 時:分:秒)。`Part`(全体 / 分と秒 / 1/100 秒)、`RoundUp`(秒の切り上げ)、`Unlit`(数字を 8 にする。7 セグメントの消えているセグメントを重ねる) |
+| `Modules/App/AppTimerView.xaml(.cs)` + `AppTimerViewModel.cs`(新規) | 上の帯(戻る・名前)、モードの切り替え(高さ 44。選んでいる方を塗る)、文字盤(切り替えとボタンの間の空きの真ん中)、下にそろえた丸いボタン(ラップ / リセット / スタート / ストップ)。数字は 7 セグメントのフォント DSEG7(登録名 `DSEG7`)で、消えているセグメントを薄く重ねる。ラップの一覧は取ると文字盤とボタンの間に出す(高さ 200、新しい順。先頭に足した行が見えるように `ItemsUpdatingScrollMode` は `KeepScrollOffset`。一番遅いラップに対する長さの比のバー、最速 🐇 と最遅 🐢)。タイマーはよく使う時間のチップ(1 / 3 / 5 / 10 分)と ✏️ 入力(`InputNumberAsync`)をボタンの上に置く。今のラップは「LAP n」のバッジと時間。タイマーは残り 10 秒から円弧を警告の色(アンバー → 赤)にし、終わると輪が脈打って「⏰ 時間です」が弾む。表示の更新は表示中かつ前面の間だけ 50 ms ごと、計測中は画面を消灯させない。状態は操作のたびに保存する。カウントダウンの開始で終わる時刻に通知を予約し、一時停止・リセット・時間の変更・終了の検出で取り消す(出ている通知も消える)。前面で終わったら 1 秒振動 |
+| `State/Session.cs` | `ObservableObject` にして、`IsForeground` の変化を `PropertyChanged` で知らせる |
+| `State/Settings.cs` | `TimerState`(JSON) |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppTimer`、メニューの 2 行目の Timer、アイコン `Timer` |
+| `MauiProgram.cs` | `TimeProvider.System` の登録 |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-1 を実装の形に / 7-1 を削除 / Implement の App に Timer、TODO から Timer を削除 |
+
+- 実機(Pixel 9a): ストップウォッチの計測・ラップ(最速と最遅の色とバー)・リセット。計測中にアプリを強制終了して開き直すと続きから。1 分のカウントダウンで円弧が減り、終わる時刻が出て、残り 10 秒で警告の色、終わると脈打つ輪と「⏰ 時間です」。前面で終わったときは通知が出ない。背面で終わると通知が出る(正確なアラームの許可が無く、約 50 秒遅れ)。アプリに戻ると通知は消える。文字盤は空きの真ん中に置かれ、ラップを取ると一覧が文字盤とボタンの間に出て文字盤が上に寄り、新しいラップが一覧の先頭に見える。数字は DSEG7 で、消えているセグメントが薄く見える
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🔢数値入力のダイアログのボタン(2026-09-29)
+
+| 対象 | 内容 |
+|---|---|
+| `Resources/Styles/Styles.xaml` | 数値入力のダイアログ(`Modules/Navigation/Modal/InputNumberView.xaml`。Navigation のメニューの Dialog と、App の Timer の ✏️ 入力で開く)のボタンのスタイル `InputTextButton` / `InputCommandButton` / `InputFunctionButton` から、押すと縮むエフェクト(`ButtonOption.PressEffect`)を外した。ダイアログいっぱいに並べたボタンが縮むと、後ろの白い下地が見えていた |
+
+- 実機(Pixel 9a): 数字のキーと下の × を押している間も、ボタンの大きさと色は変わらず、下地は見えない。押している間の見た目の変化は無い(画面の下のファンクションキーと同じ)
+
+### ✅App の ToDo 7-2(2026-09-29)
+
+`App_Plan.md` の 7-2。App のメニューに ToDo(一覧と、Push / Pop で開くダイアログ的な編集)を足した。タイマーと同じく、ヘッダーとファンクションキーの帯を隠し、操作はすべて画面の中のボタンで行う。緑(エメラルド〜ティール)を基調にする。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/Entity/TodoEntity.cs`(新規) | `[Name("Todo")]`(Id / 件名 / メモ / 期限(日付。無しは null)/ 重要 / 完了 / 作成日時 / 更新日時) |
+| `Services/Sql/DataAccessor.CreateTables.sql` / `DataAccessor.QueryTodoList.sql` / `DataAccessor.InsertTodo.sql`(後の 2 つは新規) | 表 `Todo`(Id は `AUTOINCREMENT`、日時は TEXT、bool は INTEGER)、一覧、追加(`RETURNING Id`) |
+| `Services/DataAccessor.cs` | 一覧、追加(振られた Id を返す)、Id を指定した追加(見本の行・元に戻す)、更新、削除 |
+| `Services/DataService.cs` | ToDo の操作。作り直し(`RebuildAsync`)で、各グループがそろう見本の行 9 件を入れる(期限は今日からの相対。`TimeProvider` を受け取る) |
+| `Models/App/TodoDue.cs`(新規) | 期限の区分け `TodoDue`(無し / 期限切れ / 今日 / 明日 / 以降)と一覧のグループ `TodoGroup`(期限切れ / 今日 / 明日 / 今後 / 期限なし / 完了)を日付から決める `TodoDueRule` |
+| `Models/Input/TodoInput.cs`(新規) | 編集に渡す値と、戻りの結果 `TodoEditResult`(保存 / 削除と入力の値) |
+| `Converters/TodoDueTextConverter.cs`(新規) | 期限のバッジの文言(今日 / 明日 / `M/d (ddd)`)。区分けと日付の `MultiBinding` で受ける |
+| `Modules/App/AppTodoView.xaml(.cs)` + `AppTodoViewModel.cs`(新規) | 緑のグラデーションの見出し(戻る・名前・完了の表示の切り替え、今日の日付、残りの件数、完了の件数と割合のバー)、グループの見出し(色と件数)、フラットな行(丸いチェック、件名、期限とメモのバッジ、⭐)、右下の ＋。チェックはすぐに塗って弾み、0.4 秒後に行を完了のグループへ動かす(待つ間も続けて押せるように、動かすのはコマンドの外で `IDispatcher.DispatchDelayed`)。行のタップで編集、左へのスワイプ(`SwipeItems` の `Execute`)で削除し、4 秒の「元に戻す」の帯(同じ Id で入れ直す)。表示するグループが無いときは空の表示(🎉 すべて完了しました / 📝 タスクはありません。一覧の外に重ねる)。行とグループの VM(`TodoItemViewModel` / `TodoGroupViewModel`)を含む |
+| `Modules/App/AppTodoEditView.xaml(.cs)` + `AppTodoEditViewModel.cs`(新規) | `[DialogView]` の白い画面(ステータスバーも白、文字は暗色)。上の帯に ✕・名前(新しいタスク / タスクを編集)・保存(件名が空なら押せない)。件名(100 文字と文字数)とメモのカード、期限(今日 / 明日 / 日付 / なし の 4 等分のチップと選んだ日付。日付は透明の `DatePicker` を `IsOpen` で開く)、⭐ 重要と ✅ 完了のスイッチ、作成・更新の日時、削除のボタン。新規は開いたら件名に入力できる(`Focus.Default` を `IsNew` に結ぶ)。保存と削除は結果を付けて `PopAsync`、✕ と Back は結果なしで戻る |
+| `Modules/Parameters.cs` | 編集に渡す値(`MakeTodoInput` / `GetTodoInput`)と戻りの結果(`MakeTodoResult` / `TryGetTodoResult`) |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppTodo` / `AppTodoEdit`、メニューの 3 行目の ToDo、アイコン `Checklist`。メニューは道具(Calculator / Timer / ToDo)とゲーム(5 行目の Sudoku)を 1 行空けて分けた |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-2 を実装の形に / 7-2 を削除 / Implement の App に ToDo、TODO から ToDo を削除 |
+
+- 実機(Pixel 9a): 見本の行が 6 つのグループに分かれ、バッジは期限切れが赤、今日が緑、明日が水色、今後が紫。チェックで塗られて件数と割合が変わり、行が完了のグループへ動く(0.43 秒のうちに続けて押した 3 つもすべて完了になる)。⭐ の切り替え。スワイプでの削除と元に戻す(帯は 4 秒で閉じる)。編集画面での件名・メモ・期限(チップと `DatePicker`)・重要の変更が一覧に反映され、行がグループを移る。✕ では変わらない。＋ からの新規は開いたら件名に入力でき、件名が空の間は保存できない。編集画面からの削除は一覧で元に戻せる。完了の表示の切り替えと、すべて完了して完了を隠したときの空の表示。メニューへ戻って開き直しても DB の内容のまま(アプリの起動で見本の行に戻る)
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🔢App の 2048 7-3(2026-09-30)
+
+`App_Plan.md` の 7-3。App のメニューに 2048 を足した。タイマー・ToDo と同じく、ヘッダーとファンクションキーの帯を隠し、操作はすべて画面の中のボタンとスワイプで行う。暖色(ベージュ〜オレンジ)を基調にする。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/Game2048.cs`(新規) | `Game2048`: 4×4 の盤面(タイルは Id を持ち、合体すると新しい Id)、1 手の結果 `Game2048Move`(タイルの動き・合体・新しいタイル・加点)、動けない方向では何もしない、1 列の合体は 1 回ずつ、新しいタイル(9 割が 2、1 割が 4。乱数は関数で受け取る)、詰みと 2048 の到達、状態の書き出しと読み込み(`Game2048Snapshot`)。盤面は 1 次元の配列で持つ。描く盤面 `Game2048Frame`(タイルと直前の 1 手) |
+| `Controls/Game2048Board.cs`(新規) | 盤面(`SKCanvasView`。`MeasureOverride` で正方形)。影を落とした盤面と空きのマス、値ごとの色で上が明るいグラデーションと影のタイル(128 以上は光る)。1 手の結果から、動いたタイルを滑らせ(合体で消えるタイルも合体先へ)、合体したタイルを弾ませ、新しいタイルを少し行き過ぎて戻る拡大で出す(全体で 0.26 秒)。途中で次の手が来たら今の動きを止めて次を始める |
+| `Modules/App/App2048View.xaml(.cs)` + `App2048ViewModel.cs`(新規) | 上の帯(戻る・名前)、2048 のロゴのタイル、SCORE(増えると弾む)と BEST のカード、説明と新しいゲームのボタン、盤面(上下左右の `SwipeGestureRecognizer`)、2048 の到達(🎉 続ける / 新しいゲーム)とゲームオーバー(スコアともう一度)の表示を盤面に重ねる(フェードイン)。結果を出している間はスワイプを受けない。1 手ごとに状態を保存し、開き直すと続きから |
+| `State/Settings.cs` / `Models/App/AppJsonContext.cs` | `Game2048State`(JSON)と `Game2048BestScore` |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `App2048`、メニューの 6 行目の 2048、アイコン `Grid4X4` |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-3 を実装の形に / 7-3 を削除 / Implement の App に 2048、TODO から削除 |
+
+- モデルの検証(スクラッチのコンソールで決まった盤面から): `2 2 2 2` → `4 4`(加点 8)、`2 2 4 4` の右 → `_ _ 4 8`、動けない方向では新しいタイルが出ない、詰み、2048 の到達、書き出しと、壊れた状態を読まない
+- 実機(Pixel 9a): スワイプで動いて合体し、スコアとベストが増える。アプリを開き直しても続きから。録画のコマで、滑る → 合体が弾む・新しいタイルが現れる動き。ゲームオーバーの表示
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 💣App のマインスイーパー 7-4(2026-09-30)
+
+`App_Plan.md` の 7-4。App のメニューにマインスイーパーを足した。操作はすべて画面の中のボタンと盤面のタッチで行う。緑(芝)を基調にする。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/MinesweeperGame.cs`(新規) | `MinesweeperGame`: 初級 9×9・10 個 / 中級 16×16・40 個、最初に開いたマスとその周りを避けて地雷を置く(乱数は関数で受け取る)、0 のマスが続く範囲を幅優先でまとめて開く(開いた順に返す)、旗、周りを開く(周りの旗の数が数字と同じとき)、勝ち(地雷以外をすべて開く。残りの地雷に旗)と負け(踏んだマスと、近い順の地雷)、経過時間(最初の 1 手から。時刻は引数)。マスは 1 次元の配列で持つ。描く盤面 `MinesweeperFrame`(ゲームと直前に見せたマス) |
+| `Controls/MineBoard.cs`(新規) | 盤面(`SKCanvasView`。正方形)。閉じたマスは市松の芝、開いたマスは市松の砂で、閉じたマスとの境目に縁。数字は色分け、旗(竿・台・赤い旗)と地雷(マスごとに色を変え、踏んだマスは赤)を図形で描き、負けたときの間違った旗に ×。見せたマスの覆いを、見せた順に少しずつずらして縮めて消す。タッチはコントロールが受け、離したらタップ、0.35 秒押したままなら長押し(`TapCommand` / `LongPressCommand` に行と列)、動かしたらどちらにもしない。押している間はマスを明るく |
+| `Modules/App/AppMinesweeperView.xaml(.cs)` + `AppMinesweeperViewModel.cs`(新規) | 上の帯(戻る・名前)、難易度の切り替え、深緑の帯(🚩 残りの地雷の数・顔のボタン = 新しいゲーム・⏱ 経過時間。数字は DSEG7、顔は状態で 🙂 / 😎 / 😵 になって弾む)、盤面、下に操作の切り替え(⛏ 開く / 🚩 旗)。終わると下の帯を結果のカード(クリアとタイム・ベストタイムの更新とベスト / ゲームオーバー、もう一度)に替え、盤面は見えたまま。タップは開く(旗のモードでは旗、開いた数字は周りを開く)、長押しは旗。旗で短く、地雷で長く振動する。経過時間は表示中で遊んでいる間だけ更新する。難易度ごとのベストタイムを残す |
+| `State/Settings.cs` | `MinesweeperBeginnerBest` / `MinesweeperIntermediateBest`(秒) |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppMinesweeper`、メニューの 7 行目の Minesweeper、アイコン `Flag` |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-4 を実装の形に / 7-4 を削除 / Implement の App に Minesweeper、TODO から削除 |
+
+- モデルの検証(スクラッチのコンソール): 最初の 1 手が 200 通りの乱数ですべて安全で 0 のマス、0 の連鎖、経過時間、正しい旗での周りを開く、地雷以外をすべて開くと勝ちで残りに旗、旗のマスは開かない、地雷で負けて地雷は踏んだマスから近い順、終わった後は旗を立てられない
+- 実機(Pixel 9a): 最初のタップで広く開き、録画のコマで覆いが中央から外へ順に消える。長押しと旗のモードで旗が立ち残りの数が減る。負けると 😵・地雷の色分け・間違った旗に ×・結果のカード。盤面の色から数字を読んで解くスクリプトで 1 局クリアし、😎・残りの地雷に旗・タイムとベストタイムの更新。中級の盤面
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
 ## 🧱B. 画面以外の変更
 
 ### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
@@ -2514,6 +2599,30 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - 実機: Device > Misc の Light on / off で LED が点いて消える(`CameraService` の `Torch ... turned on / off`)。音声認識(`SpeechToText`)と読み上げは `queries`(`RecognitionService` / `TTS_SERVICE`)の宣言なしで動く(読み上げのエンジン `com.google.android.tts` はすべてのアプリから見える)
 - `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` / `MEDIA_CONTENT_CONTROL` は CommunityToolkit.Maui.MediaElement(ライブラリの属性)から入る
 
+### 🔐生体認証 4-1: 本人確認(2026-09-29)
+
+`Biometric_Plan.md` の 4-1。Device > Biometric で、使えるかどうかの表示と本人確認(生体だけ / 画面ロックの PIN なども可)をする。Android 本体の API を直接使い、AndroidX のパッケージは足さない。
+
+| 対象 | 内容 |
+|---|---|
+| `Components/Biometric.cs` + `Biometric.android.cs`(新規) | `IBiometricAuthenticator`(`CheckAvailability` / `AuthenticateAsync`)と、`BiometricMethod`(生体だけ / 画面ロックだけ / どちらか)・`BiometricAvailability`(使える / センサー無し / 未登録 / 一時的に使えない)・`BiometricResult`(成功 / キャンセル / 失敗回数の超過 / エラー)。Android 側は `BiometricManager.CanAuthenticate(int)` と `BiometricPrompt`(`SetAllowedAuthenticators`。生体だけのときは取り消しのボタン、取り消しは `CancellationSignal`)。ダイアログはシステムが出すので、Builder にはアプリのコンテキストを渡す |
+| `Modules/Device/DeviceBiometricView.xaml` + `DeviceBiometricViewModel.cs` | Availability(生体認証と画面ロックを分けて表示)と Authenticate(「Biometric」「Biometric / PIN」のボタンと結果)。文言は `s:MapToTextConverter`。結果の後に使えるかどうかを読み直す |
+| `Modules/Device/DeviceMenuView.xaml` | Biometric のボタンを有効に |
+| `Markup/AppIcons.cs` | `SmallFingerprint` / `SmallPassword` |
+| `MauiProgram.cs` | `IBiometricAuthenticator` の登録(Components の区画) |
+| `Platforms/Android/AndroidManifest.xml` | `USE_BIOMETRIC`(コメント付き) |
+| `Document/Biometric_Plan.md` / `Task_Checklist.md` | 方式を Android 本体の API に / 4-1 を実装済みに、4-2 を保留に |
+
+- 実機(Pixel 9a)とエミュレーター(Android 15)はどちらも画面ロックと指紋が無く、生体認証と画面ロックが「⚠️ 未登録」。本人確認はすぐにエラーで返り(`BiometricService` の status 11)、結果は「❌ エラー」
+- 成功・キャンセル・失敗回数の超過・PIN は、画面ロックと指紋を登録した端末での確認が残る
+- ビルド 0 警告、inspectcode 0 件
+
+### ⏳BusyState の制御を検討項目に(2026-09-29)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Task_Checklist.md` / `README.md` | 6-3(判断 6-3-0)。非同期コマンドの実行中に共有の `BusyState` が全体のオーバーレイを出してほかの操作を止めるのを避けるため、特殊な書き方をしている箇所(コマンドの外で動かす非同期の処理、`AllowBusyExecution`、`DispatchDelayed`、ポップアップの別の `BusyState`)の一覧。サマリと TODO の Decision の行に BusyState の制御 |
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -2578,7 +2687,25 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - **Android では Label の文字色の透明度が絵文字にも掛かる**(既定の Label の文字色は `SecondaryTextColor` = 60% の黒)。絵文字だけのラベルは不透明の文字色を指定する
 - CA1822 は partial メソッドの実装(インターフェースの実装に当たるもの)にも出る。Android 側の片割れでアプリのコンテキストをフィールドに持って使えば、抑制なしで消える
 - **MAUI の `Flashlight` は `CAMERA` と `FLASHLIGHT` がマニフェストに宣言されているかを確かめ、無いと `PermissionException`(未処理ならアプリが落ちる)**。`FLASHLIGHT` は通常の権限でインストール時に付与される
+- **minSdk 30 なら生体認証は Android 本体の `android.hardware.biometrics` だけで足りる**(`BiometricManager.CanAuthenticate(int)` / `BiometricPrompt.Builder.SetAllowedAuthenticators` は API 30)。本体の `BiometricPrompt` のダイアログはシステムが出すので Activity は要らない(AndroidX 版は `FragmentActivity` が要る)
+- Mono.Android の `BiometricManagerAuthenticators` は `[Flags]` の無い列挙で、API の引数は int。列挙のまま `|` すると inspectcode の BitwiseOperatorOnEnumWithoutFlags になるので、int にしてから組み合わせる。`BiometricCode` の未登録は `ErrorNoneEnrolled`(`BiometricErrorCode` 側の名前は `NoBiometrics`)
 - **CA2213 は、IDisposable の型(Android の `Service` など)が DI から取った(`GetRequiredService`)IDisposable をフィールドに持つと出る**(メソッドの戻り値を新しく作ったものと見なし、private メソッドの引数を経由しても追う)。所有しないものはフィールドに持たず、使うメソッドの引数やラムダで受け取る
+- **XAML のソース生成(`MauiXamlInflator` = `SourceGen`)は、バインドの `StringFormat` の前後の空白を削る**(`&#160;` の NBSP も削られ、ビルドした DLL の文字列が `LAP {0}` になる)。書式の空白で間を空けず、要素を分けて `Spacing` で空ける
+- MAUI の `new Animation(...)` は CA2000 になる。繰り返すアニメーションは拡張メソッドの `view.Animate(name, callback, length, repeat: () => 条件)` で作り、`AbortAnimation(name)` で止める
+- `SKShader.CreateSweepGradient` の 0° は 3 時の方向。12 時から始まる円弧のグラデーションは `WithLocalMatrix(SKMatrix.CreateRotationDegrees(-90, cx, cy))` で回す
+- 正確なアラームの許可(`SCHEDULE_EXACT_ALARM`)が無いときの `AlarmManager.SetAndAllowWhileIdle` の通知は、Pixel 9a で約 50 秒遅れた
+- DSEG7 の数字の幅は 0.816 em、`:` は 0.2 em、`.` は幅 0(前の数字の小数点の位置に重なる)。消えているセグメントは、数字を `8` にした文字列を同じ位置に薄く重ねて出す
+- `CollectionView` の先頭に行を足すと、既定の `ItemsUpdatingScrollMode`(`KeepItemsInView`)では見えていた行が残り、足した行は上の見えない位置に入る。先頭に足した行を見せるなら `KeepScrollOffset`
+- グループ表示の `CollectionView`(フッター付き)は、表示中にグループが 0 件になっても `EmptyView` を出さなかった。空の表示は一覧の外に重ね、`Groups.Count` で切り替える
+- `FlexLayout`(`Wrap`)に並べたチップのボタンが 1 行に収まると、4 つとも同じ幅に縮んで文字が切れた。数の決まったチップは `Grid` の等分で並べる
+- MAUI 10 の `DatePicker` は `IsOpen` で開ける(`Date` は `DateTime?`)。透明(`Opacity` 0、`InputTransparent`)にしてボタンの後ろに置けば、ボタンから日付の画面だけを出せる
+- Smart.Data.Accessor で `RETURNING Id` の SQL を `[ExecuteScalar]` にすると、振られた Id を受け取れる。日時を TEXT、bool を INTEGER の列にしても、生成コードが `GetDateTime` / `GetBoolean` で読む
+- Smart.Maui の `{s:NullToBool}` は null のときに true。値があるときに出すなら `{s:NullToBool Invert=True}`
+- SkiaSharp の塗りの透明度はシェーダー(グラデーション)にも掛かる。同じ `SKPaint` で半透明の影を描いた後にグラデーションで塗るときは、色を不透明に戻す(戻さないとタイルが透けて薄くなった)
+- MAUI の `VisualElement` には `Frame`(位置と大きさ)があるので、コントロールに `Frame` という名前のバインド可能なプロパティを作らない(基底を隠す)
+- CA1814(多次元配列より配列の配列)は `AnalysisMode` が `All` だと警告になる。ゲームの盤面は 1 次元の配列(行 × 列数 + 列)で持つ
+- `SKCanvasView` は `MeasureOverride` で幅と高さの短い方を返すと正方形になる。`HorizontalOptions` / `VerticalOptions` を `Center` にすると、`*` の行の真ん中に正方形のまま置ける
+- 画面の VM の非同期コマンドの実行中は、画面全体のオーバーレイ(`BusyState`)が入力を止める。見せるための待ち(動きの後に行を動かすなど)はコマンドの中で待たず、`IDispatcher.DispatchDelayed` でコマンドの外に出す
 
 ---
 
@@ -2589,6 +2716,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - 共有 `Styles.xaml` の既存スタイルは変更しない。ページ枠(`RootGrid` / `RootScroll` / `DarkRootGrid` / `PageStack`)は `Layout` 区画、カードの中で使う部品は `Card` 区画(`CardXxx`)、カードの外でも使う共通部品は `Basic` 区画(`BasicXxx`)に置く。カードの本文の間隔は `CardSmallContentStack`(4)/ `CardContentStack`(8)/ `CardLargeContentStack`(12)から選ぶ。`Controls/` のコントロールは Style を使わず要素の属性で書く。**要素には見た目の属性(配置・余白・文字・色・`behaviors:Focus` など)を書かない**: 役割(セマンティック)でまとめられるものは共有スタイル、まとめられないものは画面固有の要素として画面ローカルのスタイルにする(共有を `BasedOn` してよい。ローカルの派生は基底の直後に置く)。属性に残すのは内容(`Text` / `ImageSource` / `Command` / バインド)・グリッド位置・データ連動の色・デモの内容そのものだけ。`RootGrid` のような汎用名や共有キーと同名のローカルキーは画面固有の名前にする。標準的なコンバーターは `Styles.xaml` に置く
 - **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は共有スタイル + 要素の属性。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
+- **ダイアログのボタンには押すと縮むエフェクト(`ButtonOption.PressEffect`)を付けない**(ダイアログいっぱいに並べたボタンが縮むと、後ろの下地が見える)
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
 - フォントサイズは許可値のみ: `6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72, 96, 160`
 - アイコンは `markup:Material` / `markup:Fluent`(生 Unicode・絵文字は使わない)。サイズは Material スケール(18/24/36/48)推奨

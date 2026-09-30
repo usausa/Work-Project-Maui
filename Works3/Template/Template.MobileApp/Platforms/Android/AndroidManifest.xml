@@ -28,6 +28,8 @@
 	<uses-permission android:name="android.permission.NFC" />
 	<!-- Device > Activity (行動の認識) -->
 	<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+	<!-- Device > Biometric (生体認証・画面ロックでの本人確認) -->
+	<uses-permission android:name="android.permission.USE_BIOMETRIC" />
 	<!-- Bluetooth の旧権限 (Android 11 = minSdk 30 向け。Device > Bluetooth / BLE Scan / BLE Host) -->
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />

@@ -11,8 +11,7 @@
 | Network | Tanking send(端末で溜めて、通信できるときにまとめて送る) | 2-2 |
 | Device | Push(FCM) | 3-2 |
 | Device | Biometric(生体認証) | 4 |
-| Decision | 保留中の判断(CoreCLR の扱い) | 6 |
-| App | Timer / ToDo / 2048 / Minesweeper | 7-1〜7-4 |
+| Decision | 保留中の判断(CoreCLR の扱い、BusyState の制御) | 6 |
 | UI | Weather(ダミーのデータ。採用は判断待ち) | 7-5 |
 | Control | Tab(ニュースのダミーのデータ。採用は判断待ち) | 7-6 |
 
@@ -82,10 +81,10 @@
 
 ## 🔐4. 生体認証
 
-画面・`ViewId`・メニューボタンが配置済み(`DeviceMenuView.xaml` の該当ボタンが `IsEnabled="False"`、画面は `Not implemented` 表示、ViewModel は 8 行)。本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)を作る。計画は `Biometric_Plan.md`。
+Device > Biometric に、本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)を作る。Android 本体の `BiometricPrompt` / `BiometricManager` を直接使う。計画は `Biometric_Plan.md`。
 
-- [ ] **4-1** 本人確認(使えるかどうかの 3 区分の表示・認証・結果の表示)
-- [ ] **4-2** 生体認証で守る秘密(鍵の作成・暗号化して保存・生体認証で復号して表示・削除・鍵が使えなくなったときの作り直し)
+- [ ] **4-1** 本人確認(使えるかどうかの 3 区分の表示・認証・結果の表示)— 実装済み。残りは画面ロックと指紋を登録した端末での確認(成功・キャンセル・失敗回数の超過・PIN。登録と認証は利用者の操作)
+- [ ] **4-2** 生体認証で守る秘密(鍵の作成・暗号化して保存・生体認証で復号して表示・削除・鍵が使えなくなったときの作り直し)— 画面ロックの無い端末では鍵を作れないため、画面ロックと指紋を登録した端末が用意できるまで保留
 
 ## ⏸️6. 保留中の判断
 
@@ -95,14 +94,23 @@ csproj は `UseMonoRuntime=false`(CoreCLR)。Shiny の `[Export]` ライフサ�
 
 - [ ] **6-2-0**⚖️【判断】.NET 11 まで CoreCLR のままにする(実機検証は `-p:UseMonoRuntime=true` の Mono ビルド)か、csproj を Mono に戻すか
 
+### ⏳6-3 BusyState の制御
+
+画面の VM の非同期コマンド(`MakeAsyncCommand`)は、実行中は共有の `BusyState`(DI の `BusyState.Default`)が立ち、メイン画面の全体のオーバーレイ(`MainPage.xaml` の `BusyOverlay`)が入力を止め、ほかのコマンドの実行も捨てる。これを避けるために、次の箇所が特殊な書き方をしている。
+
+| 箇所 | 書き方 |
+| --- | --- |
+| Network > HTTP の Delay(`NetworkHttpViewModel`)、SFTP の送受信(`NetworkSftpViewModel`)、Storage の送受信(`NetworkStorageViewModel`)、Sample > Chat の送信(`SampleChatViewModel`) | `MakeDelegateCommand(() => _ = XxxAsync(), ...)` で非同期の処理をコマンドの外で動かし、画面の独自のフラグ(`Delaying` / `Busy` / `Loading` と `Transferring` / `IsResponding`)で二重実行を止める(長い処理の間もオーバーレイで画面を止めず、Chat は中断のボタンを押せる) |
+| UI > Calendar の表示月の変化(`UICalendarViewModel`) | `CommandBehavior.AllowBusyExecution`(実行中でも捨てない) |
+| App > ToDo の完了のチェック(`AppTodoViewModel`) | 行を動かすまでの見せるための待ちを `IDispatcher.DispatchDelayed` でコマンドの外に出す(待つ間も続けて押せる) |
+| ポップアップの VM の基底(`AppDialogViewModelBase`) | 画面と別の `BusyState` を持つ(ポップアップの処理でメイン画面のオーバーレイを出さない) |
+
+- [ ] **6-3-0**⚖️【判断】BusyState の制御(全体のオーバーレイ・実行中のコマンドの扱い)を見直すか。見直す場合は上の箇所の書き方をそろえる
+
 ## 🧩7. App のミニアプリ
 
 App のメニューに、アプリ・画面・モデルの実装の見本になる小さなアプリを足す。あわせて、ダミーのデータで既存の分類を強化する天気(UI)とニュース(Control のタブ)を検討する。計画は `App_Plan.md`。
 
-- [ ] **7-1** タイマー(ストップウォッチとカウントダウン。背面やアプリの終了をまたいでも合う時間、終了の通知)
-- [ ] **7-2** ToDo(一覧と、Push / Pop で開くダイアログ的な編集。SQLite(既存の `data.db`)への保存)
-- [ ] **7-3** 2048(スワイプ、モデルの結果から作るタイルのアニメーション、途中の盤面の保存)
-- [ ] **7-4** マインスイーパー(描画で作る盤面、長押しで旗、最初の 1 手を安全にする配置)
 - [ ] **7-5-0**⚖️【判断】天気(UI)の採用 — ダミーのデータで、横の一覧をまたぐ気温の折れ線、週の範囲に合わせたバー、日の出・日の入りの弧を見せる画面(UI 2 のメニューの空き)
 - [ ] **7-5** 天気(UI)
 - [ ] **7-6-0**⚖️【判断】ニュース(Control のタブ)の採用 — ダミーのニュースで、`SfTabView` と自作のタブ(見出し + `CarouselView`)を比べる画面と、詳細から戻ったときのタブと一覧の位置の保持(Control のメニューの Refresh の隣)
