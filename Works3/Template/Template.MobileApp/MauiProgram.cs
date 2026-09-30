@@ -388,6 +388,8 @@ public static partial class MauiProgram
         services.AddSingleton<ApiContext>();
 
         // Service
+        services.AddSingleton<JsonStore>();
+
         services.AddSingleton<IDbProvider>(static p =>
         {
             var storage = p.GetRequiredService<IStorageManager>();

@@ -149,7 +149,7 @@ public enum ViewId
     AppTimer,
     AppTodo,
     AppTodoEdit,
-    AppGame,
+    AppSudoku,
     App2048,
     AppMinesweeper,
 
