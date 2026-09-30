@@ -2068,14 +2068,12 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 | 対象 | 内容 |
 |---|---|
-| `Models/App/LapStopwatch.cs`(新規) | ストップウォッチ(停止 / 計測中 / 一時停止)。経過時間は開始時刻と止めた時点までの時間から計算し、ラップは取った時点の通算の時間で持つ。最速と最遅のラップ、状態の書き出しと読み込み(`StopwatchSnapshot`) |
-| `Models/App/CountdownTimer.cs`(新規) | カウントダウン(停止 / 計測中 / 一時停止 / 終了)。残り時間は終わる時刻(`EndAt`)から計算する。終わった後のスタートは最初から。状態の書き出しと読み込み(`CountdownSnapshot`) |
-| `Models/App/AppJsonContext.cs`(新規) | 保存する状態 `TimerSnapshot` と JSON のソース生成 |
+| `Models/App/TimerApplication.cs`(新規) | ストップウォッチ `TimerStopwatch`(停止 / 計測中 / 一時停止。経過時間は開始時刻と止めた時点までの時間から計算し、ラップ `TimerLap` は取った時点の通算の時間で持つ。最速と最遅のラップ)と、カウントダウン `TimerCountdown`(停止 / 計測中 / 一時停止 / 終了。残り時間は終わる時刻(`EndAt`)から計算する。終わった後のスタートは最初から)。どちらも状態の書き出しと読み込みを持ち、保存する状態は `TimerSnapshot` |
+| `Models/App/AppJsonContext.cs`(新規) | ミニアプリの保存する状態の JSON のソース生成 |
 | `Controls/TimerDial.cs`(新規) | 文字盤(`SKCanvasView`)。60 本の目盛り、溝、グラデーションの円弧(`SKShader.CreateSweepGradient` を 12 時の方向へ回す)とぼかした光、先端のつまみ。`IsAlert` の間は輪全体を `AlertColor` で脈打たせる(`Animate` の繰り返し) |
 | `Converters/ClockTextConverter.cs`(新規) | 時間の表示(分:秒、1 時間以上は 時:分:秒)。`Part`(全体 / 分と秒 / 1/100 秒)、`RoundUp`(秒の切り上げ)、`Unlit`(数字を 8 にする。7 セグメントの消えているセグメントを重ねる) |
-| `Modules/App/AppTimerView.xaml(.cs)` + `AppTimerViewModel.cs`(新規) | 上の帯(戻る・名前)、モードの切り替え(高さ 44。選んでいる方を塗る)、文字盤(切り替えとボタンの間の空きの真ん中)、下にそろえた丸いボタン(ラップ / リセット / スタート / ストップ)。数字は 7 セグメントのフォント DSEG7(登録名 `DSEG7`)で、消えているセグメントを薄く重ねる。ラップの一覧は取ると文字盤とボタンの間に出す(高さ 200、新しい順。先頭に足した行が見えるように `ItemsUpdatingScrollMode` は `KeepScrollOffset`。一番遅いラップに対する長さの比のバー、最速 🐇 と最遅 🐢)。タイマーはよく使う時間のチップ(1 / 3 / 5 / 10 分)と ✏️ 入力(`InputNumberAsync`)をボタンの上に置く。今のラップは「LAP n」のバッジと時間。タイマーは残り 10 秒から円弧を警告の色(アンバー → 赤)にし、終わると輪が脈打って「⏰ 時間です」が弾む。表示の更新は表示中かつ前面の間だけ 50 ms ごと、計測中は画面を消灯させない。状態は操作のたびに保存する。カウントダウンの開始で終わる時刻に通知を予約し、一時停止・リセット・時間の変更・終了の検出で取り消す(出ている通知も消える)。前面で終わったら 1 秒振動 |
+| `Modules/App/AppTimerView.xaml(.cs)` + `AppTimerViewModel.cs`(新規) | 上の帯(戻る・名前)、モードの切り替え(高さ 44。選んでいる方を塗る)、文字盤(切り替えとボタンの間の空きの真ん中)、下にそろえた丸いボタン(ラップ / リセット / スタート / ストップ)。数字は 7 セグメントのフォント DSEG7(登録名 `DSEG7`)で、消えているセグメントを薄く重ねる。ラップの一覧は取ると文字盤とボタンの間に出す(高さ 200、新しい順。先頭に足した行が見えるように `ItemsUpdatingScrollMode` は `KeepScrollOffset`。一番遅いラップに対する長さの比のバー、最速 🐇 と最遅 🐢)。タイマーはよく使う時間のチップ(1 / 3 / 5 / 10 分)と ✏️ 入力(`InputNumberAsync`)をボタンの上に置く。今のラップは「LAP n」のバッジと時間。タイマーは残り 10 秒から円弧を警告の色(アンバー → 赤)にし、終わると輪が脈打って「⏰ 時間です」が弾む。表示の更新は表示中かつ前面の間だけ 50 ms ごと、計測中は画面を消灯させない。状態は操作のたびに保存する。カウントダウンの開始で終わる時刻に通知を予約し、一時停止・リセット・時間の変更・終了の検出で取り消す(出ている通知も消える)。前面で終わったら 1 秒振動。状態は JSON(`TimerSnapshot.json`)に保存する |
 | `State/Session.cs` | `ObservableObject` にして、`IsForeground` の変化を `PropertyChanged` で知らせる |
-| `State/Settings.cs` | `TimerState`(JSON) |
 | `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppTimer`、メニューの 2 行目の Timer、アイコン `Timer` |
 | `MauiProgram.cs` | `TimeProvider.System` の登録 |
 | `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-1 を実装の形に / 7-1 を削除 / Implement の App に Timer、TODO から Timer を削除 |
@@ -2100,13 +2098,14 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 | `Models/Entity/TodoEntity.cs`(新規) | `[Name("Todo")]`(Id / 件名 / メモ / 期限(日付。無しは null)/ 重要 / 完了 / 作成日時 / 更新日時) |
 | `Services/Sql/DataAccessor.CreateTables.sql` / `DataAccessor.QueryTodoList.sql` / `DataAccessor.InsertTodo.sql`(後の 2 つは新規) | 表 `Todo`(Id は `AUTOINCREMENT`、日時は TEXT、bool は INTEGER)、一覧、追加(`RETURNING Id`) |
 | `Services/DataAccessor.cs` | 一覧、追加(振られた Id を返す)、Id を指定した追加(見本の行・元に戻す)、更新、削除 |
-| `Services/DataService.cs` | ToDo の操作。作り直し(`RebuildAsync`)で、各グループがそろう見本の行 9 件を入れる(期限は今日からの相対。`TimeProvider` を受け取る) |
-| `Models/App/TodoDue.cs`(新規) | 期限の区分け `TodoDue`(無し / 期限切れ / 今日 / 明日 / 以降)と一覧のグループ `TodoGroup`(期限切れ / 今日 / 明日 / 今後 / 期限なし / 完了)を日付から決める `TodoDueRule` |
+| `Services/DataService.cs` | ToDo の操作(一覧・追加・Id を指定した追加・更新・削除) |
+| `App.xaml.cs` | 起動の DB の作り直しの後に、各グループがそろう見本の行 9 件を入れる(期限は今日からの相対) |
+| `Models/App/TodoApplication.cs`(新規) | 期限の区分け `TodoDue`(無し / 期限切れ / 今日 / 明日 / 以降)と一覧のグループ `TodoGroup`(期限切れ / 今日 / 明日 / 今後 / 期限なし / 完了)を日付から決める `TodoDueRule` |
 | `Models/Input/TodoInput.cs`(新規) | 編集に渡す値と、戻りの結果 `TodoEditResult`(保存 / 削除と入力の値) |
 | `Converters/TodoDueTextConverter.cs`(新規) | 期限のバッジの文言(今日 / 明日 / `M/d (ddd)`)。区分けと日付の `MultiBinding` で受ける |
 | `Modules/App/AppTodoView.xaml(.cs)` + `AppTodoViewModel.cs`(新規) | 緑のグラデーションの見出し(戻る・名前・完了の表示の切り替え、今日の日付、残りの件数、完了の件数と割合のバー)、グループの見出し(色と件数)、フラットな行(丸いチェック、件名、期限とメモのバッジ、⭐)、右下の ＋。チェックはすぐに塗って弾み、0.4 秒後に行を完了のグループへ動かす(待つ間も続けて押せるように、動かすのはコマンドの外で `IDispatcher.DispatchDelayed`)。行のタップで編集、左へのスワイプ(`SwipeItems` の `Execute`)で削除し、4 秒の「元に戻す」の帯(同じ Id で入れ直す)。表示するグループが無いときは空の表示(🎉 すべて完了しました / 📝 タスクはありません。一覧の外に重ねる)。行とグループの VM(`TodoItemViewModel` / `TodoGroupViewModel`)を含む |
 | `Modules/App/AppTodoEditView.xaml(.cs)` + `AppTodoEditViewModel.cs`(新規) | `[DialogView]` の白い画面(ステータスバーも白、文字は暗色)。上の帯に ✕・名前(新しいタスク / タスクを編集)・保存(件名が空なら押せない)。件名(100 文字と文字数)とメモのカード、期限(今日 / 明日 / 日付 / なし の 4 等分のチップと選んだ日付。日付は透明の `DatePicker` を `IsOpen` で開く)、⭐ 重要と ✅ 完了のスイッチ、作成・更新の日時、削除のボタン。新規は開いたら件名に入力できる(`Focus.Default` を `IsNew` に結ぶ)。保存と削除は結果を付けて `PopAsync`、✕ と Back は結果なしで戻る |
-| `Modules/Parameters.cs` | 編集に渡す値(`MakeTodoInput` / `GetTodoInput`)と戻りの結果(`MakeTodoResult` / `TryGetTodoResult`) |
+| `Modules/Parameters.cs` | 編集に渡す値と戻りの結果は汎用の `Model` で受け渡す(B の「🧭画面の受け渡しを Model に」) |
 | `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppTodo` / `AppTodoEdit`、メニューの 3 行目の ToDo、アイコン `Checklist`。メニューは道具(Calculator / Timer / ToDo)とゲーム(5 行目の Sudoku)を 1 行空けて分けた |
 | `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-2 を実装の形に / 7-2 を削除 / Implement の App に ToDo、TODO から ToDo を削除 |
 
@@ -2115,19 +2114,18 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 ### 🔢App の 2048 7-3(2026-09-30)
 
-`App_Plan.md` の 7-3。App のメニューに 2048 を足した。タイマー・ToDo と同じく、ヘッダーとファンクションキーの帯を隠し、操作はすべて画面の中のボタンとスワイプで行う。暖色(ベージュ〜オレンジ)を基調にする。
+`App_Plan.md` の 7-3。App のメニューに 2048 を足した。タイマー・ToDo と同じく、ヘッダーとファンクションキーの帯を隠し、操作はすべて画面の中のボタン(十字キー)とスワイプで行う。暖色(ベージュ〜オレンジ)を基調にする。
 
 | 対象 | 内容 |
 |---|---|
-| `Models/App/Game2048.cs`(新規) | `Game2048`: 4×4 の盤面(タイルは Id を持ち、合体すると新しい Id)、1 手の結果 `Game2048Move`(タイルの動き・合体・新しいタイル・加点)、動けない方向では何もしない、1 列の合体は 1 回ずつ、新しいタイル(9 割が 2、1 割が 4。乱数は関数で受け取る)、詰みと 2048 の到達、状態の書き出しと読み込み(`Game2048Snapshot`)。盤面は 1 次元の配列で持つ。描く盤面 `Game2048Frame`(タイルと直前の 1 手) |
-| `Controls/Game2048Board.cs`(新規) | 盤面(`SKCanvasView`。`MeasureOverride` で正方形)。影を落とした盤面と空きのマス、値ごとの色で上が明るいグラデーションと影のタイル(128 以上は光る)。1 手の結果から、動いたタイルを滑らせ(合体で消えるタイルも合体先へ)、合体したタイルを弾ませ、新しいタイルを少し行き過ぎて戻る拡大で出す(全体で 0.26 秒)。途中で次の手が来たら今の動きを止めて次を始める |
-| `Modules/App/App2048View.xaml(.cs)` + `App2048ViewModel.cs`(新規) | 上の帯(戻る・名前)、2048 のロゴのタイル、SCORE(増えると弾む)と BEST のカード、説明と新しいゲームのボタン、盤面(上下左右の `SwipeGestureRecognizer`)、2048 の到達(🎉 続ける / 新しいゲーム)とゲームオーバー(スコアともう一度)の表示を盤面に重ねる(フェードイン)。結果を出している間はスワイプを受けない。1 手ごとに状態を保存し、開き直すと続きから |
-| `State/Settings.cs` / `Models/App/AppJsonContext.cs` | `Game2048State`(JSON)と `Game2048BestScore` |
-| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `App2048`、メニューの 6 行目の 2048、アイコン `Grid4X4` |
+| `Models/App/Puzzle2048Game.cs`(新規) | `Puzzle2048Game`: 4×4 の盤面(タイルは Id を持ち、合体すると新しい Id)、1 手の結果 `Puzzle2048Move`(タイルの動き・合体・新しいタイル・加点)、動けない方向では何もしない、1 列の合体は 1 回ずつ、新しいタイル(9 割が 2、1 割が 4。乱数は関数で受け取る)、詰みと 2048 の到達、最高点(新しいゲームでも残す)、状態の書き出しと読み込み(`Puzzle2048Snapshot`)。盤面は 1 次元の配列で持つ。描く盤面 `Puzzle2048Frame`(タイルと直前の 1 手) |
+| `Controls/Puzzle2048Board.cs`(新規) | 盤面(`SKCanvasView`。`MeasureOverride` で正方形)。影を落とした盤面(影がビューの端で切れないように内側に寄せる)と空きのマス、値ごとの色で上が明るいグラデーションと影のタイル(128 以上は光る)。1 手の結果から、動いたタイルを滑らせ(合体で消えるタイルも合体先へ)、合体したタイルを弾ませ、新しいタイルを少し行き過ぎて戻る拡大で出す(全体で 0.26 秒)。途中で次の手が来たら今の動きを止めて次を始める |
+| `Modules/App/AppPuzzle2048View.xaml(.cs)` + `AppPuzzle2048ViewModel.cs`(新規) | 上の帯(戻る・名前)、2048 のロゴのタイル、SCORE(増えると弾む)と BEST のカード、説明と新しいゲームのボタン、盤面(上下左右の `SwipeGestureRecognizer`)、下の十字キー(スワイプと同じコマンド。矢印のボタンを十字に並べ、真ん中は飾り)、2048 の到達(🎉 続ける / 新しいゲーム)とゲームオーバー(スコアともう一度)の表示を盤面に重ねる(フェードイン)。結果を出している間は動かさない。1 手ごとに状態を JSON(`Puzzle2048Snapshot.json`)に保存し、開き直すと続きから |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppPuzzle2048`、メニューの 6 行目の 2048、アイコン `Grid4X4` |
 | `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-3 を実装の形に / 7-3 を削除 / Implement の App に 2048、TODO から削除 |
 
-- モデルの検証(スクラッチのコンソールで決まった盤面から): `2 2 2 2` → `4 4`(加点 8)、`2 2 4 4` の右 → `_ _ 4 8`、動けない方向では新しいタイルが出ない、詰み、2048 の到達、書き出しと、壊れた状態を読まない
-- 実機(Pixel 9a): スワイプで動いて合体し、スコアとベストが増える。アプリを開き直しても続きから。録画のコマで、滑る → 合体が弾む・新しいタイルが現れる動き。ゲームオーバーの表示
+- モデルの検証(スクラッチのコンソールで決まった盤面から): `2 2 2 2` → `4 4`(加点 8)、`2 2 4 4` の右 → `_ _ 4 8`、動けない方向では新しいタイルが出ない、詰み、2048 の到達、書き出しと、壊れた状態を読まない、最高点がスコアに付いていき、新しいゲームでも残り、読み込みで戻る
+- 実機(Pixel 9a): スワイプと十字キーで動いて合体し、スコアとベストが増える(十字キーの左 → 上、続けてスワイプの右で、どの列も期待どおりに寄って合体する)。新しいゲームでもベストが残る。アプリを開き直しても続きから。録画のコマで、滑る → 合体が弾む・新しいタイルが現れる動き。ゲームオーバーの表示
 - ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
 
 ### 💣App のマインスイーパー 7-4(2026-09-30)
@@ -2136,15 +2134,29 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 
 | 対象 | 内容 |
 |---|---|
-| `Models/App/MinesweeperGame.cs`(新規) | `MinesweeperGame`: 初級 9×9・10 個 / 中級 16×16・40 個、最初に開いたマスとその周りを避けて地雷を置く(乱数は関数で受け取る)、0 のマスが続く範囲を幅優先でまとめて開く(開いた順に返す)、旗、周りを開く(周りの旗の数が数字と同じとき)、勝ち(地雷以外をすべて開く。残りの地雷に旗)と負け(踏んだマスと、近い順の地雷)、経過時間(最初の 1 手から。時刻は引数)。マスは 1 次元の配列で持つ。描く盤面 `MinesweeperFrame`(ゲームと直前に見せたマス) |
-| `Controls/MineBoard.cs`(新規) | 盤面(`SKCanvasView`。正方形)。閉じたマスは市松の芝、開いたマスは市松の砂で、閉じたマスとの境目に縁。数字は色分け、旗(竿・台・赤い旗)と地雷(マスごとに色を変え、踏んだマスは赤)を図形で描き、負けたときの間違った旗に ×。見せたマスの覆いを、見せた順に少しずつずらして縮めて消す。タッチはコントロールが受け、離したらタップ、0.35 秒押したままなら長押し(`TapCommand` / `LongPressCommand` に行と列)、動かしたらどちらにもしない。押している間はマスを明るく |
-| `Modules/App/AppMinesweeperView.xaml(.cs)` + `AppMinesweeperViewModel.cs`(新規) | 上の帯(戻る・名前)、難易度の切り替え、深緑の帯(🚩 残りの地雷の数・顔のボタン = 新しいゲーム・⏱ 経過時間。数字は DSEG7、顔は状態で 🙂 / 😎 / 😵 になって弾む)、盤面、下に操作の切り替え(⛏ 開く / 🚩 旗)。終わると下の帯を結果のカード(クリアとタイム・ベストタイムの更新とベスト / ゲームオーバー、もう一度)に替え、盤面は見えたまま。タップは開く(旗のモードでは旗、開いた数字は周りを開く)、長押しは旗。旗で短く、地雷で長く振動する。経過時間は表示中で遊んでいる間だけ更新する。難易度ごとのベストタイムを残す |
-| `State/Settings.cs` | `MinesweeperBeginnerBest` / `MinesweeperIntermediateBest`(秒) |
+| `Models/App/MinesweeperGame.cs`(新規) | `MinesweeperGame`: 1 つのモデルで難易度を変えて遊び直す(`NewGame`)。初級 9×9・10 個 / 中級 16×16・40 個、最初に開いたマスとその周りを避けて地雷を置く(乱数は関数で受け取る)、0 のマスが続く範囲を幅優先でまとめて開く(開いた順に返す)、旗、周りを開く(周りの旗の数が数字と同じとき)、勝ち(地雷以外をすべて開く。残りの地雷に旗)と負け(踏んだマスと、近い順の地雷)、経過時間(最初の 1 手から。時刻は引数)、勝ったら難易度ごとのベストタイム(秒は切り上げ)、保存する状態 `MinesweeperSnapshot`(ベストタイム)。マスは 1 次元の配列で持つ。描く盤面 `MinesweeperFrame`(ゲームと直前に見せたマス) |
+| `Controls/MinesweeperBoard.cs`(新規) | 盤面(`SKCanvasView`。正方形。影がビューの端で切れないように内側に寄せる)。閉じたマスは市松の芝、開いたマスは市松の砂で、閉じたマスとの境目に縁。数字は色分け、旗(竿・台・赤い旗)と地雷(マスごとに色を変え、踏んだマスは赤)を図形で描き、負けたときの間違った旗に ×。見せたマスの覆いを、見せた順に少しずつずらして縮めて消す。タッチはコントロールが受け、離したらタップ、0.35 秒押したままなら長押し(`TapCommand` / `LongPressCommand` に行と列)、動かしたらどちらにもしない。押している間はマスを明るく |
+| `Modules/App/AppMinesweeperView.xaml(.cs)` + `AppMinesweeperViewModel.cs`(新規) | 上の帯(戻る・名前)、難易度の切り替え、深緑の帯(🚩 残りの地雷の数・顔のボタン = 新しいゲーム・⏱ 経過時間。数字は DSEG7、顔は状態で 🙂 / 😎 / 😵 になって弾む)、盤面、下に操作の切り替え(⛏ 開く / 🚩 旗)。終わると下の帯を結果のカード(クリアとタイム・ベストタイムの更新とベスト / ゲームオーバー、もう一度)に替え、盤面は見えたまま。タップは開く(旗のモードでは旗、開いた数字は周りを開く)、長押しは旗。旗で短く、地雷で長く振動する。経過時間は表示中で遊んでいる間だけ更新する。ベストタイムを更新したら JSON(`MinesweeperSnapshot.json`)に保存する |
 | `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | `AppMinesweeper`、メニューの 7 行目の Minesweeper、アイコン `Flag` |
 | `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-4 を実装の形に / 7-4 を削除 / Implement の App に Minesweeper、TODO から削除 |
 
-- モデルの検証(スクラッチのコンソール): 最初の 1 手が 200 通りの乱数ですべて安全で 0 のマス、0 の連鎖、経過時間、正しい旗での周りを開く、地雷以外をすべて開くと勝ちで残りに旗、旗のマスは開かない、地雷で負けて地雷は踏んだマスから近い順、終わった後は旗を立てられない
-- 実機(Pixel 9a): 最初のタップで広く開き、録画のコマで覆いが中央から外へ順に消える。長押しと旗のモードで旗が立ち残りの数が減る。負けると 😵・地雷の色分け・間違った旗に ×・結果のカード。盤面の色から数字を読んで解くスクリプトで 1 局クリアし、😎・残りの地雷に旗・タイムとベストタイムの更新。中級の盤面
+- モデルの検証(スクラッチのコンソール): 最初の 1 手が 200 通りの乱数ですべて安全で 0 のマス、0 の連鎖、経過時間、正しい旗での周りを開く、地雷以外をすべて開くと勝ちで残りに旗、旗のマスは開かない、地雷で負けて地雷は踏んだマスから近い順、終わった後は旗を立てられない、ベストタイム(29.2 秒 → 30 秒、遅い勝ちでは更新しない、難易度ごと、新しいゲームでも残る、書き出しと読み込み)
+- 実機(Pixel 9a): 最初のタップで広く開き、録画のコマで覆いが中央から外へ順に消える。長押しと旗のモードで旗が立ち残りの数が減る。負けると 😵・地雷の色分け・間違った旗に ×・結果のカード。盤面の色から数字を読んで解くスクリプトで 1 局クリアし、😎・残りの地雷に旗・タイムとベストタイムの更新。画面を出て入り直すと、負けたときの結果のカードにベストタイムが出る。中級の盤面
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🧩App の数独をグラフィカルに(2026-09-30)
+
+数独の画面を、2048・マインスイーパーと同じく描画の盤面と画面の中のボタンで操作する形に作り直した。ヘッダーとファンクションキーの帯を隠し、藍色を基調にする。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/SudokuGame.cs` | 答えが 1 つだけの問題を作る(答えを作ってから、消しても答えが 1 つのままのマスだけを消す。答えの数は置ける数字のいちばん少ない空きのマスから試して 2 つまで数える)。難易度(やさしい 40 / ふつう 32 / むずかしい 26 マスを残す)、答えと違う数字はミスとして数える(答えと同じ数字は変えられない)、メモ(数字を入れると同じ行・列・ブロックのメモから消す)、取り消し(1 回の操作で変わったマスをまとめて戻す。ミスとヒントの回数は戻さず、完成した後は取り消さない)、ヒント(3 回。選んだマス、答えになっていれば置ける数字のいちばん少ないマスに答えを入れる)、重なった数字、そろった行・列・ブロック、経過時間(数え始めた時刻と止めた時点までの時間から計算する)、完成したら時間を止めて難易度ごとのベストタイム(秒は切り捨て)、保存する状態 `SudokuSnapshot`。乱数は関数で受け取る(`System.Random` の CA5394 の抑制をやめた)。描く盤面 `SudokuFrame`(選んだマス・直前に数字を入れたマス・光らせるマス) |
+| `Controls/SudokuBoard.cs`(新規) | 盤面(`SKCanvasView`。正方形)。選んだマス・同じ行 / 列 / ブロック・同じ数字・重なった数字を塗り分け、問題の数字は太字、入れた数字はアクセントの色、答えと違う数字は赤。メモは 3×3 の小さな数字(選んだマスの数字と同じメモは強調)。触れたマスを選び、なぞると選び直す。数字を入れたマスを弾ませ(答えと違えば横に揺らす)、そろった行・列・ブロックを入れたマスから広がるように光らせる。完成は盤面全体を金色の波で光らせる。選ぶだけの操作では動きを止めない |
+| `Modules/App/AppSudokuView.xaml(.cs)` + `AppSudokuViewModel.cs`(`AppGameView` / `AppGameViewModel` から改名して作り直し) | 上の帯(戻る・名前・新しいゲーム)、難易度の切り替え、ミス(増えると弾み、1 以上は赤)・のこり・タイムのカード、盤面、道具(取り消し / 消す / メモ(入れている間は塗って ON のバッジ)/ ヒント(残りの回数のバッジ))、数字のキー(下に残りの数。置き終えた数字は場所を残して隠す)。完成すると道具と数字を場所を残して隠し(盤面の位置が変わらない)、結果のカード(タイム・ミス・ベストタイムの更新とベスト・新しいゲーム)を出す。遊んでいる途中の新しいゲームと難易度の切り替えは確かめてから。経過時間は表示中で前面の間だけ数える。操作のたびに JSON(`SudokuSnapshot.json`)に保存し、開き直すと続きから。数字のキーの VM(`SudokuDigitViewModel`)を含む |
+| `Modules/ViewId.cs` / `Modules/App/AppMenuView.xaml` | `AppGame` → `AppSudoku` |
+
+- モデルの検証(スクラッチのコンソール): 3 つの難易度 × 15 通りの問題の答えが 1 つ(別に書いた総当たりで数える)、生成の時間(PC で平均 0.7 / 1.1 / 4.3 ms)、問題のマスと答えのマスは変わらない、ミス、メモの付け外しと同じ行での消去と取り消しでの復元、ヒント、重なった数字、経過時間、書き出しと読み込み(JSON を通しても)、完成で盤面全体、行がそろう、ベストタイム(95.7 秒 → 95 秒、時間が止まる、完成後は取り消せない、難易度ごと、盤面が読めなくてもベストタイムは読む)
+- 実機(Pixel 9a): 選んだマスの塗り分け、答えと違う数字が赤くなりミスが増え重なった数字が赤く塗られる、取り消し、メモ(3×3 の位置)、ヒント、難易度の切り替えの確認(むずかしいは 26 マス)。答えを読んで入れるスクリプトで解き、録画のコマで行がそろうと光が入れたマスから広がり、完成で金色の波が右下から広がる。結果のカード(タイム・ミス・ベストタイムの更新)。画面を出ている間と背面の間は経過時間が止まる。開き直すと続き(完成した盤面とベスト)から
 - ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
 
 ## 🧱B. 画面以外の変更
@@ -2572,8 +2584,8 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 
 | 対象 | 内容 |
 |---|---|
-| `Document/Biometric_Plan.md`(新規) | 本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)の計画。`AndroidX.Biometric` の `BiometricPrompt` を直接使う |
-| `Document/Task_Checklist.md` | 4 節を計画への参照と 4-1 / 4-2 に |
+| `Document/Biometric_Plan.md`(新規) | 本人確認(4-1)、生体認証で守る秘密(4-2。Android Keystore の AES 鍵で暗号化して保存し、生体認証で復号して取り出す)、鍵での署名(4-3。チャレンジに生体認証付きで署名し、登録した公開鍵で検証する。サーバーの役は端末の中で行う)の計画。Android 本体の `BiometricPrompt` / `BiometricManager` を直接使う。パスキー(4-4。Credential Manager + WebAuthn)は前提だけを書き、当面対応しない |
+| `Document/Task_Checklist.md` / `README.md` | 4 節を計画への参照と 4-1〜4-3、パスキーの 4-4 と判断 4-4-0 に / サマリと TODO に Passkey の行 |
 
 ### 📦タンキング送信を予定に(2026-09-28)
 
@@ -2622,6 +2634,73 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 | 対象 | 内容 |
 |---|---|
 | `Document/Task_Checklist.md` / `README.md` | 6-3(判断 6-3-0)。非同期コマンドの実行中に共有の `BusyState` が全体のオーバーレイを出してほかの操作を止めるのを避けるため、特殊な書き方をしている箇所(コマンドの外で動かす非同期の処理、`AllowBusyExecution`、`DispatchDelayed`、ポップアップの別の `BusyState`)の一覧。サマリと TODO の Decision の行に BusyState の制御 |
+
+### 💾ミニアプリの状態を JSON に(2026-09-30)
+
+| 対象 | 内容 |
+|---|---|
+| `Services/JsonStore.cs`(新規) | アプリのデータフォルダーの `json/` に、型の名前のファイル(`TimerSnapshot.json` / `Puzzle2048Snapshot.json` / `MinesweeperSnapshot.json` / `SudokuSnapshot.json`)で値を読み書きする。無いか読めなければ null。書くときは別のファイルに書いてから置き換える |
+| `State/Settings.cs` | ミニアプリの値を持たない |
+| `MauiProgram.cs` | `JsonStore` の登録(Service の区画) |
+
+- 実機(Pixel 9a): タイマー・2048・マインスイーパー・数独のそれぞれで、保存したファイルの中身と、画面を出て入り直したときの続き・ベストの記録
+
+### 🏷️ミニアプリの名前をそろえる(2026-09-30)
+
+ミニアプリのモデルはアプリごとに 1 つのファイルにし(ゲームは `XxxGame.cs`、道具は `XxxApplication.cs`)、型の名前はアプリの名前で始める(2048 は `Puzzle2048`)。盤面のコントロールは `XxxBoard`、画面は `AppXxx`。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/CalcApplication.cs`(`ExpressionCalculator.cs` から改名) | `CalcEngine`(旧 `ExpressionCalculator`)と `CalcException`(旧 `CalculationException`) |
+| `Modules/App/AppCalcViewModel.cs` / `AppCalcView.xaml` | `CalcEngine` を使う |
+| `Modules/App/AppSudokuView.xaml(.cs)` + `AppSudokuViewModel.cs` / `Modules/ViewId.cs` | 数独の画面を `AppGame` から `AppSudoku` に |
+
+- 実機(Pixel 9a): 電卓の `1+2×3` が 7
+
+### 🧭画面の受け渡しを Model に(2026-09-30)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Parameters.cs` | 画面ごとのキー(`ColumnEditSession` / `ColumnOrders`)をやめ、汎用の `Model`(`MakeModel` / `GetModel<T>` / `TryGetModel<T>`)で渡す値と戻りの値を受け渡す |
+| `Modules/UI/UIGridViewModel.cs` / `UIGridColumnViewModel.cs` | 列の設定画面へ渡す編集のセッションと、戻りの列の表示 / 順序を `Model` で |
+| `Modules/App/AppTodoViewModel.cs` / `AppTodoEditViewModel.cs` | 編集に渡す値(`TodoInput`)と戻りの結果(`TodoEditResult`)を `Model` で |
+
+- 実機(Pixel 9a): UI > Grid の見出しの長押しで列の設定を開き、列を外して Apply すると一覧から消える。ToDo の編集で重要にして保存すると一覧の ⭐ が付く
+
+### 🧪見本のデータを起動処理で入れる(2026-09-30)
+
+| 対象 | 内容 |
+|---|---|
+| `Services/DataService.cs` | `RebuildAsync` は DB の作り直し(ファイルの削除と表の作成)だけにした |
+| `App.xaml.cs` | 起動で `RebuildAsync` の後に見本の行を入れる(`InsertDummyDataAsync`: Work の 4 件と ToDo の 9 件。ToDo の期限は今日からの相対で、日時は `DateTime.Now`) |
+
+- 実機(Pixel 9a): 起動後の ToDo が見本の 9 件(完了 2 件)
+
+### 🔔リアルタイムの通知はローカル通知に(2026-09-30)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/Network/NetworkRealtimeViewModel.cs` | サーバーからの通知は、前面・背面によらずローカル通知で出す(前面のトーストをやめ、`IDialog` と `Session` を使わない) |
+
+- ビルド 0 警告、inspectcode 0 件(サーバーからの通知の実機での確認は未実施)
+
+### 🔑生体認証 4-3: 鍵での署名(サーバー認証の疑似)(2026-09-30)
+
+`Biometric_Plan.md` の 4-3。サーバーでの鍵による認証(公開鍵の登録、チャレンジへの署名、公開鍵での検証)を、サーバーの役も端末の中に置いて試す。
+
+| 対象 | 内容 |
+|---|---|
+| `Components/Biometric.cs` + `Biometric.android.cs` | `IBiometricAuthenticator` に署名の鍵の状態(`CheckSigningKey`: 無し / あり / 使えない)、鍵の作成(`CreateSigningKey`。強い生体認証を使えるときだけ作り、公開鍵(SubjectPublicKeyInfo)を返す)、公開鍵(`GetSigningPublicKey`)、署名(`SignAsync`: `Signature`(`SHA256withECDSA`)を `CryptoObject` にして強い生体認証。結果は `BiometricSignResult`(成功 / キャンセル / 失敗回数の超過 / エラー / 鍵が無い / 鍵が使えない と DER 形式の署名))、削除(`DeleteSigningKey`)を足した。鍵は Android Keystore の EC P-256 で、使うたびに強い生体認証を求め、生体情報の登録が変わると使えなくなる(`KeyPermanentlyInvalidatedException` で見分ける)。公開のメソッドは共通の側に置き、処理は static な `PlatformXxx`(本人確認と共通のダイアログの処理 `PromptAsync`) |
+| `Models/Sample/BiometricSignInServer.cs`(新規) | サーバーの役。公開鍵の登録と指紋(SHA-256)、チャレンジ(32 バイトの乱数)の発行、出したチャレンジへの署名だけの受け付け(チャレンジは結果によらず 1 回で使い済み)、署名だけの検証(`ECDsa.ImportSubjectPublicKeyInfo` + `VerifyData` の `DSASignatureFormat.Rfc3279DerSequence`) |
+| `Converters/HexTextConverter.cs`(新規) | バイト列を 16 進へ(`Length` バイトより長ければ先頭と全体のバイト数)。空は — |
+| `Modules/Device/DeviceBiometricView.xaml` + `DeviceBiometricViewModel.cs` | Key sign in のカード(Register / Sign in / Delete と、鍵・公開鍵の指紋・チャレンジ・署名・結果・検証・1 バイト変えたチャレンジ・同じチャレンジの 2 回目のタイル)。Register は強い生体認証を使えるとき、Sign in は鍵があるとき、Delete は鍵があるか使えないときだけ押せる。画面を開くと、端末の鍵の公開鍵を登録済みとして読み直す。画面はスクロールしない形にした(ScrollView をやめ、Availability と結果の欄を見出しと値のタイルの 2 列に) |
+| `Markup/AppIcons.cs` | `SmallKey` / `SmallLogin` |
+| `Document/Biometric_Plan.md` / `Task_Checklist.md` | 4-3 を実装の形に / 4-3 を実装済みに(残りは登録した端末での確認) |
+
+- 実機(Pixel 9a。画面ロックと指紋が無い): 鍵が「無し」で 3 つのボタンが押せず、画面はスクロールせずに収まる。一時的に呼び出して、鍵が無いときの API の動き(状態 無し・作成と公開鍵は null・署名は「鍵が無い」・削除は何もしない)と、生体情報の確認を飛ばして鍵を作ると例外を捕まえて null になることを確認した(呼び出しは外した)。本人確認は今までどおり「❌ エラー」
+- サーバーの役の検証(スクラッチのコンソールで、.NET の P-256 の鍵の DER 形式の署名): 受け付ける、1 バイト変えたチャレンジは断る、同じチャレンジの 2 回目は断る、古いチャレンジの試行で今のチャレンジも使い済み、別の鍵と P1363 形式の署名は断る、登録を消すと断る
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+- 登録と署名の成功・キャンセル・生体情報の登録を足したときの無効化は、画面ロックと指紋を登録した端末での確認が残る
 
 ## 💡C. この区間のナレッジ
 
@@ -2706,6 +2785,12 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - CA1814(多次元配列より配列の配列)は `AnalysisMode` が `All` だと警告になる。ゲームの盤面は 1 次元の配列(行 × 列数 + 列)で持つ
 - `SKCanvasView` は `MeasureOverride` で幅と高さの短い方を返すと正方形になる。`HorizontalOptions` / `VerticalOptions` を `Center` にすると、`*` の行の真ん中に正方形のまま置ける
 - 画面の VM の非同期コマンドの実行中は、画面全体のオーバーレイ(`BusyState`)が入力を止める。見せるための待ち(動きの後に行を動かすなど)はコマンドの中で待たず、`IDispatcher.DispatchDelayed` でコマンドの外に出す
+- `SKCanvasView` の中でぼかした影(`SKMaskFilter.CreateBlur`)がビューの端を越えると、端で切れて四角い帯が見える。ぼかしの幅の 2 倍ほどの余白を内側に取る(ぼかし 3dp・ずらし 2dp なら 8dp)
+- `Grid` の `Auto` の行は、中の要素がすべて `IsVisible` = false になると高さが 0 になり、`*` の行の要素が動く。場所を残して隠すときは `Opacity` 0 と `InputTransparent` にする
+- **partial メソッドの実装がインターフェースのメンバーに当たっていても CA1822 が出る**。インスタンスを使わせるためにクラスを IDisposable にすると、持っているだけの `Context` などに CA2213 が出る。公開のメソッドを共通の側に置き、static partial の `PlatformXxx` を呼ぶ形(MAUI Essentials と同じ)にすると、どちらも出ない
+- Android の `SHA256withECDSA` の署名は DER 形式。.NET の `ECDsa.VerifyData` の既定は IEEE P1363 なので、`DSASignatureFormat.Rfc3279DerSequence` を渡す。公開鍵は `GetEncoded()`(SubjectPublicKeyInfo)を `ImportSubjectPublicKeyInfo` でそのまま読める
+- 使うたびに本人確認を求める鍵(`setUserAuthenticationParameters(0, AUTH_BIOMETRIC_STRONG)`)は、生体情報が登録されていないと作れない(`KeyPairGenerator` が例外を出す)。作る前に `BiometricManager.CanAuthenticate(BIOMETRIC_STRONG)` を見る
+- 数独の問題は、答えから消しても答えが 1 つのままのマスだけを消すと、答えが 1 つに決まる。数えるのは 2 つまででよく、置ける数字のいちばん少ない空きのマスから試すと速い(PC で 26 マスまで消して平均 4 ms)
 
 ---
 
@@ -2717,6 +2802,10 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - **`StyleClass` は文字サイズ × 配置のような直交する属性の組み合わせにだけ使う**(基本は共有スタイル + 要素の属性。色や余白は Style 側。同じプロパティを Style と StyleClass の両方で指定しない。全面的なユーティリティクラスは採用しない)
 - **View の code-behind 不使用**(Behavior / Trigger / VM / コントローラパターンで実装。再利用コントロールは `Controls/` に配置可)
 - **ダイアログのボタンには押すと縮むエフェクト(`ButtonOption.PressEffect`)を付けない**(ダイアログいっぱいに並べたボタンが縮むと、後ろの下地が見える)
+- **ミニアプリの名前**: モデルはアプリごとに 1 つのファイル(ゲームは `XxxGame.cs`、道具は `XxxApplication.cs`)に置き、型の名前はアプリの名前で始める(2048 は `Puzzle2048`)。盤面のコントロールは `XxxBoard`、画面は `AppXxx`
+- **ミニアプリの状態(続き・ベストの記録)は `Settings` に持たず、`JsonStore` でアプリごとの JSON に保存する**
+- **画面の受け渡しは `Parameters` の汎用の `Model` を使い、画面ごとのキーを作らない**
+- 見本のデータは `RebuildAsync` の呼び出し側(起動処理)で入れる。見本の日時は `TimeProvider` を使わず `DateTime.Now`
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
 - フォントサイズは許可値のみ: `6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72, 96, 160`
 - アイコンは `markup:Material` / `markup:Fluent`(生 Unicode・絵文字は使わない)。サイズは Material スケール(18/24/36/48)推奨

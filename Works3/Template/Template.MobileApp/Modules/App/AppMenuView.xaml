@@ -38,13 +38,13 @@
         <Button Grid.Row="4"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId AppGame}"
+                CommandParameter="{markup:ViewId AppSudoku}"
                 Text="Sudoku"
                 ImageSource="{x:Static markup:AppIcons.GridOn}" />
         <Button Grid.Row="5"
                 Style="{StaticResource MenuIconButton}"
                 Command="{Binding ForwardCommand}"
-                CommandParameter="{markup:ViewId App2048}"
+                CommandParameter="{markup:ViewId AppPuzzle2048}"
                 Text="2048"
                 ImageSource="{x:Static markup:AppIcons.Grid4X4}" />
         <Button Grid.Row="6"

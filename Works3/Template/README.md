@@ -81,6 +81,7 @@ Template project for MAUI.
 | Network | Tanking send |
 | Device | Push(FCM) |
 | Device | Biometric |
+| Device | Passkey (Credential Manager + WebAuthn, pending decision) |
 | Decision | Pending decisions (CoreCLR runtime, BusyState control) |
 | UI | Weather (dummy data, pending decision) |
 | Control | Tab (SfTabView, custom) with news (dummy data, pending decision) |

@@ -10,7 +10,8 @@
 | Device | Background task(WorkManager) | 2-1 |
 | Network | Tanking send(端末で溜めて、通信できるときにまとめて送る) | 2-2 |
 | Device | Push(FCM) | 3-2 |
-| Device | Biometric(生体認証) | 4 |
+| Device | Biometric(生体認証) | 4-1〜4-3 |
+| Device | Passkey(パスキー) | 4-4 |
 | Decision | 保留中の判断(CoreCLR の扱い、BusyState の制御) | 6 |
 | UI | Weather(ダミーのデータ。採用は判断待ち) | 7-5 |
 | Control | Tab(ニュースのダミーのデータ。採用は判断待ち) | 7-6 |
@@ -81,10 +82,17 @@
 
 ## 🔐4. 生体認証
 
-Device > Biometric に、本人確認と、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)を作る。Android 本体の `BiometricPrompt` / `BiometricManager` を直接使う。計画は `Biometric_Plan.md`。
+Device > Biometric に、本人確認、生体認証で守る秘密(Android Keystore の鍵で暗号化して保存し、生体認証で復号して取り出す)、鍵での署名(サーバーでの認証の流れを端末の中で疑似的に確かめる)を作る。Android 本体の `BiometricPrompt` / `BiometricManager` を直接使う。パスキーは計画だけ(4-4)。計画は `Biometric_Plan.md`。
 
 - [ ] **4-1** 本人確認(使えるかどうかの 3 区分の表示・認証・結果の表示)— 実装済み。残りは画面ロックと指紋を登録した端末での確認(成功・キャンセル・失敗回数の超過・PIN。登録と認証は利用者の操作)
 - [ ] **4-2** 生体認証で守る秘密(鍵の作成・暗号化して保存・生体認証で復号して表示・削除・鍵が使えなくなったときの作り直し)— 画面ロックの無い端末では鍵を作れないため、画面ロックと指紋を登録した端末が用意できるまで保留
+- [ ] **4-3** 鍵での署名(サーバー認証の疑似。署名の鍵の作成と公開鍵の登録・チャレンジへの生体認証付きの署名・端末の中での検証・改ざんと使い回しの検出・鍵の削除と作り直し)— 実装済み。残りは画面ロックと指紋を登録した端末での確認(登録と署名の成功・キャンセル・生体情報の登録を足したときの無効化。登録と認証は利用者の操作)
+
+### 🔑4-4 パスキー
+
+Credential Manager(`androidx.credentials`)でパスキーを作ってログインする。前提と流れは `Biometric_Plan.md` の 4-4。
+
+- [ ] **4-4-0**⚖️【判断】パスキー(Credential Manager + WebAuthn)の要否 — 当面対応しない。サーバーの WebAuthn の API(template-maui-server)、アプリとドメインの関連付け(`assetlinks.json`)、`Xamarin.AndroidX.Credentials` のダウンロードが前提
 
 ## ⏸️6. 保留中の判断
 

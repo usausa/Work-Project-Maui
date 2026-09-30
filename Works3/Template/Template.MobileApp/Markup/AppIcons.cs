@@ -176,10 +176,14 @@ public static class AppIcons
     public static readonly FontImageSource SmallDelete = Create(MaterialIcons.Delete, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallDoNotDisturb = Create(MaterialIcons.Do_not_disturb, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallError = Create(MaterialIcons.Error, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallFace = Create(MaterialIcons.Face, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFingerprint = Create(MaterialIcons.Fingerprint, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOff = Create(MaterialIcons.Flashlight_off, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallFlashlightOn = Create(MaterialIcons.Flashlight_on, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallHowToReg = Create(MaterialIcons.How_to_reg, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallInput = Create(MaterialIcons.Input, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallKey = Create(MaterialIcons.Key, SmallSize, ResourceColor("BlueGrayDarken1"));
+    public static readonly FontImageSource SmallLogin = Create(MaterialIcons.Login, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallMic = Create(MaterialIcons.Mic, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallPassword = Create(MaterialIcons.Password, SmallSize, ResourceColor("BlueGrayDarken1"));
     public static readonly FontImageSource SmallRecordVoiceOver = Create(MaterialIcons.Record_voice_over, SmallSize, ResourceColor("BlueGrayDarken1"));

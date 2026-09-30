@@ -97,7 +97,7 @@ public sealed partial class AppCalcViewModel : AppViewModelBase
             return;
         }
 
-        var result = ExpressionCalculator.Evaluate(Expression);
+        var result = CalcEngine.Evaluate(Expression);
         if (result.IsSuccess)
         {
             lastValue = result.Value;
