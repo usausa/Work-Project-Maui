@@ -50,7 +50,7 @@ public sealed class DataService
             (int)await accessor.CountBulkDataAsync());
     }
 
-    public async ValueTask RebuildAsync()
+    public ValueTask RebuildAsync()
     {
         var dbPath = DatabasePath;
 
@@ -63,7 +63,7 @@ public sealed class DataService
             }
         }
 
-        await provider.UsingAsync(async con =>
+        return provider.UsingAsync(async con =>
         {
             await accessor.ExecutePragmaAsync(con);
             await accessor.CreateTablesAsync(con);

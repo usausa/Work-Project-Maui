@@ -150,7 +150,7 @@ public enum ViewId
     AppTodo,
     AppTodoEdit,
     AppSudoku,
-    App2048,
+    AppPuzzle2048,
     AppMinesweeper,
 
     // UI
