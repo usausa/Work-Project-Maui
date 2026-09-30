@@ -2159,6 +2159,92 @@ Network の SCP の画面を SFTP の送受信に変えた。接続先の設定�
 - 実機(Pixel 9a): 選んだマスの塗り分け、答えと違う数字が赤くなりミスが増え重なった数字が赤く塗られる、取り消し、メモ(3×3 の位置)、ヒント、難易度の切り替えの確認(むずかしいは 26 マス)。答えを読んで入れるスクリプトで解き、録画のコマで行がそろうと光が入れたマスから広がり、完成で金色の波が右下から広がる。結果のカード(タイム・ミス・ベストタイムの更新)。画面を出ている間と背面の間は経過時間が止まる。開き直すと続き(完成した盤面とベスト)から
 - ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
 
+### 🌤️UI の天気 7-5-1(2026-09-30)
+
+`App_Plan.md` の 7-5-1。UI 1 のメニューに、ダミーのデータの天気の画面を足した。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/Sample/WeatherForecast.cs`(新規) | 天気(`WeatherCondition`)・UV の段階(`WeatherUvLevel`)・時間ごと(`WeatherHour`)・日ごと(`WeatherDay`)と、現在・今から 24 時間・今日から 7 日の予報 `WeatherForecast`。ダミーのデータは `Create`(現在時刻と乱数を受け取る): 日ごとの天気と平均気温を前の日から少しずつ変え(月ごとの平均気温は東京に近い値)、気温は最低の 5 時と最高の 14 時の間をなめらかにつなぐ。日の出・日の入り(昼の長さは 1 年の正弦)と昼夜、湿度・風・体感・UV(昼の高さと天気) |
+| `Controls/SeriesSegmentView.cs`(新規) | 横の一覧の 1 項目ぶんの折れ線(`SKCanvasView`)。中央に自分の値の点と文字を置き、左右の端は前後の値との中間まで線と下の面を描く。高さは全体の範囲に合わせるので、項目の間を空けずに並べると一覧をまたいで線がつながる。今の項目は点を光らせる |
+| `Controls/RangeBar.cs`(新規) | 範囲のバー(`SKCanvasView`)。全体の範囲の溝の上に最低〜最高を、全体の幅に対するグラデーションで描き、今の値の点を影付きで重ねる |
+| `Converters/CompassPointConverter.cs`(新規) | 向き(度)を 8 方位の名前に |
+| `Modules/UI/UIWeatherView.xaml(.cs)` + `UIWeatherViewModel.cs`(新規) | 現在(地点・更新時刻・大きな気温・天気の絵文字と名前・最高 / 最低 / 体感)、24 時間の予報(時刻・絵文字・折れ線・降水確率)、週間予報(曜日と日付・絵文字・降水確率・最低・範囲のバー・最高。今日は今の気温の点)、詳細(湿度とバー、風速と風下を向く矢印と方位、UV と段階の色のバッジ、日の出・日の入り)。背景は天気で変わり、夜は夜の空(データトリガー)。絵文字は昼と夜で変える(夜の晴れは月)。引っ張って更新で作り直す。一覧の項目 `UIWeatherHour` / `UIWeatherDay` は前後の値と全体の範囲を持つ |
+| `Modules/ViewId.cs` / `Modules/UI/UIMenu1View.xaml` / `Markup/AppIcons.cs` | `UIWeather`、メニュー、アイコン `WbSunny` |
+| `Document/App_Plan.md` / `README.md` | 7-5 を基本(7-5-1)と強化(7-5-5〜7-5-8)の段階に分け、7-5-1 を実装の形に / Implement の UI に Weather |
+
+- 実機(Pixel 9a): 雨・くもり・晴れの背景、折れ線が項目の境目で途切れずにつながる(拡大して確認)、週間のバーと今日の点、北東の風で矢印が南西を向く、UV のバッジ、引っ張って更新でデータと背景が変わる、日の入りの後の時間は月の絵文字
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 📰UI のニュース 7-6-1(2026-09-30)
+
+`App_Plan.md` の 7-6-1。UI 1 のメニューに、上部のタブと左右のスワイプで切り替えるダミーのニュースの画面を足した。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/Sample/NewsFeed.cs`(新規) | カテゴリ(`NewsCategory`。総合は各カテゴリから集める)・記事(`NewsArticle`)と、ダミーの記事を作る `NewsFeed`(カテゴリごとの 8 本の見出しと要約・配信元・本文の段落から作る。時刻は少しずつさかのぼる。乱数は関数で受け取る) |
+| `Controls/TabStrip.cs`(新規) | 上部のタブの見出しの列。`ItemsSource` の項目ごとに `ItemTemplate` で見出しを作って横に並べ、幅を超えると横にスクロールする。見出しのタップで `SelectedIndex`(双方向)を変え、選択の下線を選んだ見出しへ動かして(幅は `ScaleX` で伸縮)、見出しを中央までスクロールする。見出しには VisualState の `Selected` / `Unselected` を送る |
+| `Converters/ElapsedTimeConverter.cs`(新規) | たった今 / 5分前 / 3時間前 / 2日前 |
+| `Behaviors/CarouselOption.cs`(新規。`.android.cs` / `.ios.cs`)/ `AppHostBuilderExtensions.cs` | `CarouselView` の添付プロパティ。`PageSnap`: スクロールが止まったときにページの途中なら、いちばん近いページに合わせる(標準のスナップの処理の後に確かめる)。`CacheSize`: 画面の外のページを作り直さずに残す数 |
+| `Modules/UI/UINewsView.xaml(.cs)` + `UINewsViewModel.cs`(新規) | タブ(選んだ見出しは色を変える)と、カテゴリごとのページ(`CarouselView`。Loop なし、タブのタップでは間のページを流さずに移る、`PageSnap` と `CacheSize`)。ページは引っ張って更新する記事の一覧(見出し・カテゴリ・配信元・経過時間と、カテゴリの色の面にアイコンのサムネイル)。記事はページを初めて表示したときに読み込む(読み込み中の表示)。記事のタップで詳細を `PushAsync` で開く。ページの VM `UINewsPage` を含む |
+| `Modules/UI/UINewsDetailView.xaml(.cs)` + `UINewsDetailViewModel.cs`(新規) | 記事の詳細(カテゴリの色の面とアイコン・カテゴリ・見出し・配信元と時刻・本文)。戻るは `PopAsync` |
+| `Modules/ViewId.cs` / `Modules/UI/UIMenu1View.xaml` / `Markup/AppIcons.cs` | `UINews` / `UINewsDetail`、メニュー、アイコン `Newspaper` |
+| `Document/App_Plan.md` / `README.md` | 7-6 を UI のニュースとして基本(7-6-1)と強化(7-6-2〜7-6-8)の段階に分け、7-6-1 を実装の形に / Implement の UI に News |
+
+- 実機(Pixel 9a): 見出しのタップとスワイプのどちらでもページと下線がそろい、見出しの列が選んだ見出しまで流れる。初めてのページは読み込み中の表示の後に記事が出る。引っ張って更新で「たった今」の記事が増える。詳細から戻ると、タブと一覧のスクロールの位置がそのまま。速いスワイプ(0.2 秒)を、開き直しとタブのタップを交えて 40 回ほど繰り返し、ページの途中で止まらないことと、画面を開いた直後の最初の 1 回がまれに戻る以外はすべてページが変わることを確かめた(0.3 秒のスワイプでは、開いた直後も 6 回すべて変わる)
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🗂️UI のメニューの並べ替え(2026-09-30)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/UI/UIMenu1View.xaml` | Profile \| Login / Money \| Super / POS \| Shop / Grid \| Visit / Calendar \| Schedule / Mail \| Chat / Weather \| News / Timeline \| Kit / Stream \| Dock(空きなし) |
+| `Modules/UI/UIMenu2View.xaml` | Graph \| Graph2 / Load \| Gauge / Meter \| Mixer / TreeMap \| Radar / Wheel \| Monster / Character \| Social / Flight \| Tactical / Telemetry \| Energy / 空き |
+| `Modules/UI/UIGraphViewModel.cs` / `UIGraph2ViewModel.cs` / `UITreeMapViewModel.cs` | 戻り先を UI 2 のメニューに |
+| `Modules/UI/UIStreamViewModel.cs` / `UIDockViewModel.cs` | 戻り先を UI 1 のメニューに |
+| `Modules/ViewId.cs` | メニューの並び順に並べ替え。節はメインメニューの順(Basic / Navigation / Device / Data / Network / View / Control / UI / Sample / App / Diagnostics / Setting)、節の中はメニューのボタンの順、メニューに無い画面は開く元の画面の直後。UI のほか、Navigation(Initialize / Cancel)と View(Layout を先頭、State を最後)の順も直した |
+
+- 実機(Pixel 9a): UI 1 の最後の行に Stream / Dock、UI 2 は Graph から始まり最後の行が空き。Stream(Back)と Dock(Exit と戻るキー)から UI 1 に戻る
+- 各メニューのボタンの並びと ViewId の順が一致することを、XAML と列挙を読むスクリプトで確かめた
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🌤️UI の天気の強化 7-5-5〜7-5-8(2026-09-30)
+
+`App_Plan.md` の 7-5-5〜7-5-8。天気の画面に生活指数・詳細のゲージ・縮む見出し・注意報の帯を足し、全体を色と描画で華やかにした。7-5-2〜7-5-4(動く空・都市の切り替え・1 時間の雨)は対象外にした。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/Sample/WeatherForecast.cs` | 露点(Magnus の式)、気圧と傾向(`WeatherPressureTrend`)、昼の長さ、月齢(2000-01-06 の新月からの朔望月の余り)と満ち欠けの 8 段階(`WeatherMoonPhase`)・輝面比、生活指数(`WeatherIndex`: 洗濯・傘・服装・熱中症(WBGT の近似)・紫外線・花粉(月で変わる)を 1〜5)、注意報・警報(`WeatherAlert`: 大雨・雷・強風・乾燥・大雪と、発表の時刻) |
+| `Controls/ArcMeter.cs`(新規) | 円弧のメーター(`SKCanvasView`)。開始と広がりの角度、溝、円弧に沿うグラデーション(`GradientStop` の位置を円弧の始まりから終わりに当てる)、値までの塗りか値の位置の印、針、目盛り。円弧の外形がいちばん大きく収まる中心と半径で描く |
+| `Controls/CompassDial.cs`(新規) | 風の羅針盤。5 度ごとの目盛りと方位の文字、風上の丸から風下の矢じりまでの矢印(真ん中は風速の文字のために空ける) |
+| `Controls/SunArcView.cs`(新規) | 日の出から日の入りまでの弧。通った部分を塗って線を太くし、今の位置に光る太陽を置く(夜は地平線の端で暗く) |
+| `Controls/MoonPhaseView.cs`(新規) | 月の満ち欠け。光る側の半円と明暗の境目の半楕円で光る部分を囲み、模様(海)を重ねる |
+| `Controls/SegmentBar.cs`(新規) | 段階のバー(`Maximum` 個の区切りのうち `Value` 個を塗る) |
+| `Converters/WeatherIndexTextConverter.cs`(新規) | 生活指数の種類と段階から文言(よく乾く / 念のため / 長袖シャツ / 厳重警戒など) |
+| `Behaviors/Scroll.cs` | `CollapseTarget` / `CollapsedTarget`: スクロールの量に合わせて大きな見出しを小さく薄くし、小さな見出しを出す |
+| `Modules/UI/UIWeatherView.xaml` + `UIWeatherViewModel.cs` | 空は 3 段のグラデーションに日差し(夜は月明かり)の光を重ね、カードは半透明と縁にする。現在(天気の名前の帯)、注意報の帯(注意報は橙、警報は赤。種類のチップ、タップで説明を開く `AlertCommand`)、24 時間の予報(今の時間を強調)、週間予報(土日の色)、生活指数(3 列のタイル)、詳細(風・UV・湿度と露点・気圧と傾向・日の出と日の入りと昼の長さ・月の名前と月齢の 2 列 3 段のタイル)。スクロールで大きな見出しが畳まれ、上に小さな見出し(地点・気温・天気)が残る |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 7-5-2〜7-5-4 を対象外に、強化を実装の形に / 7 節を削除(すべて完了) / TODO から削除 |
+
+- 実機(Pixel 9a): 昼と日の入りの後で背景・光・アイコン・UV(夜は 0)・太陽の位置が変わる。注意報の帯のタップで説明が開閉する。スクロールで見出しが畳まれ、小さな見出しが残る。指数の文言が切れない。風の矢印が風下を向く。月齢 18.5 で寝待月(左側が光る)
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 📰UI のニュースの強化 7-6-2〜7-6-8(2026-09-30)
+
+`App_Plan.md` の 7-6-2〜7-6-8。ニュースの画面に、スワイプに追従する下線、トップ記事と印のある一覧、速報の帯、読み込みの見せ方、記事の詳細の機能、続きの読み込み、保存のタブを足し、全体を色と描画で華やかにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/Sample/NewsFeed.cs` | 記事に速報(まれ)とコメントの数(少ないものが多く、ときどき 3 桁)を足す。速報の記事(数分前)と、同じカテゴリの関連記事(一覧の見出しの順は進めない)。見出しはカテゴリごとに混ぜた順に使い切ってから繰り返す(周の変わり目でも同じ見出しが続かない) |
+| `Controls/TabStrip.cs` | `PagePosition`(ページのスクロールの位置。既定の NaN では使わない): 選んだ見出しの近くにあるときは、下線の進む側の端を速く、残る側の端を遅く動かして伸び縮みさせ、見出しの列も真ん中を追って流す。1 ページ以上の変化(タブのタップでの移動)は選択の変更の動きに任せる。下線の色の変更は動きで移す |
+| `Behaviors/CarouselOption.cs` / `CarouselOption.android.cs` | `PagePosition`(`OneWayToSource`): `PageSnap` のときに、先頭に見えているページとそのずれからスクロールの位置を出す。`PageSnap` のときは `DescendantFocusability` を `BeforeDescendants` にし、ページより先に自分がフォーカスを受ける(下のナレッジ) |
+| `Behaviors/Scroll.cs` | `TopTrigger`: 値が変わると先頭へ戻す(最初の値では戻さない) |
+| `Modules/UI/UINewsView.xaml` + `UINewsViewModel.cs` | タブの見出しと下線はカテゴリの色(下線はスワイプに追従)。タブの下に速報の帯(赤のグラデーションに `MarqueeLabel`。タップで開く)。一覧の見出しはどのページも同じ高さで、トップ記事(カテゴリの色の面に模様とアイコン、カテゴリ / 速報 / NEW のチップ、見出し、配信元と経過時間とコメントの数)、読み込み中は形だけ、保存のページは件数の面。行は速報の印・コメントの数・サムネイルの NEW(1 時間以内)、既読は薄く。読み込み中はスケルトン(`SfShimmer`)。引っ張って更新で今のトップを一覧へ送って新しいトップにし、「↑ 新着 N 件」を 3 秒出して速報も新しくする。一覧の最後に近づくと 8 件ずつ古い記事を足す(40 件まで。読み込み中の表示と「これ以上の記事はありません」)。最後のタブは保存した記事(無いときは案内)。記事の VM `UINewsItem`(既読)、ページの VM `UINewsPage`(カテゴリの無いページが保存)。詳細から戻ると、読んだ記事を既読にし、保存の一覧を作り直す |
+| `Modules/UI/UINewsDetailView.xaml` + `UINewsDetailViewModel.cs` | 上に読んだ量のバー(カテゴリの色)、絵の視差(`Scroll.ParallaxTarget`)、カテゴリと速報のチップ、保存(保存済みは色と印を変える)・共有(`IShare` の文字)・文字の大きさ(14〜22 の 5 段階)、関連記事(タップでこの画面のまま切り替えて先頭へ戻る)。受け渡しは `UINewsDetailInput`(記事・関連記事・保存した記事)と、戻るときの `UINewsDetailResult`(読んだ記事・保存した記事) |
+| `Document/App_Plan.md` / `Task_Checklist.md` / `README.md` | 強化を実装の形にし、対象外(保存の永続化・検索)を足す / 7 節を削除(すべて完了) / TODO から削除 |
+
+- 実機(Pixel 9a): スワイプの途中で下線が次の見出しへ伸び縮みしながら追い、色がカテゴリの色に変わる。画面を開いた直後から速いスワイプ(0.2 秒)を左右に 18 回続け、すべてページが変わり、途中で止まらず、下線とページがそろう(撮影の画素で下線の色とページの端を確認)。トップ記事・速報 / NEW のチップ・既読の薄さ。速報の帯が流れ、タップで記事(速報のチップ付き)が開く。読み込み中は形とスケルトン、引っ張って更新で「↑ 新着 N 件」が出て 3 秒で消え、元のトップが一覧に入る。続きの読み込みで記事が増え、読み込み中の表示と終わりの表示が出る。詳細で保存・文字の大きさ・関連記事の切り替え(先頭に戻る)・読んだ量のバー。共有は共有の画面が開くまで(戻るで閉じた)。保存のタブで保存した記事の行が件数の面のすぐ下に並ぶ。詳細から戻った後にタブで別のページへ移っても、前のページに戻らない
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
 ## 🧱B. 画面以外の変更
 
 ### 📡テレメトリの受信口(template-maui-server)(2026-09-23)
@@ -2585,7 +2671,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 | 対象 | 内容 |
 |---|---|
 | `Document/Biometric_Plan.md`(新規) | 本人確認(4-1)、生体認証で守る秘密(4-2。Android Keystore の AES 鍵で暗号化して保存し、生体認証で復号して取り出す)、鍵での署名(4-3。チャレンジに生体認証付きで署名し、登録した公開鍵で検証する。サーバーの役は端末の中で行う)の計画。Android 本体の `BiometricPrompt` / `BiometricManager` を直接使う。パスキー(4-4。Credential Manager + WebAuthn)は前提だけを書き、当面対応しない |
-| `Document/Task_Checklist.md` / `README.md` | 4 節を計画への参照と 4-1〜4-3、パスキーの 4-4 と判断 4-4-0 に / サマリと TODO に Passkey の行 |
+| `Document/Task_Checklist.md` / `README.md` | 4 節を計画への参照と 4-1〜4-3・4-5、パスキーの 4-4 と判断 4-4-0 に / サマリと TODO に Passkey の行 |
 
 ### 📦タンキング送信を予定に(2026-09-28)
 
@@ -2691,7 +2777,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 | 対象 | 内容 |
 |---|---|
 | `Components/Biometric.cs` + `Biometric.android.cs` | `IBiometricAuthenticator` に署名の鍵の状態(`CheckSigningKey`: 無し / あり / 使えない)、鍵の作成(`CreateSigningKey`。強い生体認証を使えるときだけ作り、公開鍵(SubjectPublicKeyInfo)を返す)、公開鍵(`GetSigningPublicKey`)、署名(`SignAsync`: `Signature`(`SHA256withECDSA`)を `CryptoObject` にして強い生体認証。結果は `BiometricSignResult`(成功 / キャンセル / 失敗回数の超過 / エラー / 鍵が無い / 鍵が使えない と DER 形式の署名))、削除(`DeleteSigningKey`)を足した。鍵は Android Keystore の EC P-256 で、使うたびに強い生体認証を求め、生体情報の登録が変わると使えなくなる(`KeyPermanentlyInvalidatedException` で見分ける)。公開のメソッドは共通の側に置き、処理は static な `PlatformXxx`(本人確認と共通のダイアログの処理 `PromptAsync`) |
-| `Models/Sample/BiometricSignInServer.cs`(新規) | サーバーの役。公開鍵の登録と指紋(SHA-256)、チャレンジ(32 バイトの乱数)の発行、出したチャレンジへの署名だけの受け付け(チャレンジは結果によらず 1 回で使い済み)、署名だけの検証(`ECDsa.ImportSubjectPublicKeyInfo` + `VerifyData` の `DSASignatureFormat.Rfc3279DerSequence`) |
+| `DeviceBiometricViewModel` の内部クラス `BiometricSignInServer` | サーバーの役。公開鍵の登録と指紋(SHA-256)、チャレンジ(32 バイトの乱数)の発行、出したチャレンジへの署名だけの受け付け(チャレンジは結果によらず 1 回で使い済み)、署名だけの検証(`ECDsa.ImportSubjectPublicKeyInfo` + `VerifyData` の `DSASignatureFormat.Rfc3279DerSequence`) |
 | `Converters/HexTextConverter.cs`(新規) | バイト列を 16 進へ(`Length` バイトより長ければ先頭と全体のバイト数)。空は — |
 | `Modules/Device/DeviceBiometricView.xaml` + `DeviceBiometricViewModel.cs` | Key sign in のカード(Register / Sign in / Delete と、鍵・公開鍵の指紋・チャレンジ・署名・結果・検証・1 バイト変えたチャレンジ・同じチャレンジの 2 回目のタイル)。Register は強い生体認証を使えるとき、Sign in は鍵があるとき、Delete は鍵があるか使えないときだけ押せる。画面を開くと、端末の鍵の公開鍵を登録済みとして読み直す。画面はスクロールしない形にした(ScrollView をやめ、Availability と結果の欄を見出しと値のタイルの 2 列に) |
 | `Markup/AppIcons.cs` | `SmallKey` / `SmallLogin` |
@@ -2701,6 +2787,20 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - サーバーの役の検証(スクラッチのコンソールで、.NET の P-256 の鍵の DER 形式の署名): 受け付ける、1 バイト変えたチャレンジは断る、同じチャレンジの 2 回目は断る、古いチャレンジの試行で今のチャレンジも使い済み、別の鍵と P1363 形式の署名は断る、登録を消すと断る
 - ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
 - 登録と署名の成功・キャンセル・生体情報の登録を足したときの無効化は、画面ロックと指紋を登録した端末での確認が残る
+
+### ➕生体認証 4-5: 本人確認と鍵の追加(2026-09-30)
+
+`Biometric_Plan.md` の 4-5。本人確認と鍵の API に、手間の小さいものを足した。
+
+| 対象 | 内容 |
+|---|---|
+| `Components/Biometric.cs` + `Biometric.android.cs` | 弱い生体認証(`BiometricMethod.WeakBiometric` = `BIOMETRIC_WEAK`。鍵には使えない)。ダイアログの文言 `BiometricPromptText`(タイトル・取り消しのボタン・サブタイトル・説明・顔認証などの後の確認のボタン `ConfirmationRequired`)。結果 `BiometricAuthenticationResult`(結果と、使われた方式 `BiometricAuthenticationType`: 生体 / 画面ロック。`AuthenticationResult.getAuthenticationType`)。端末に合う文言 `GetLabels`(Android 12 から。`BiometricManager.getStrings` のボタン・説明・設定の名前)。最後の本人確認からの時間 `GetTimeSinceLastAuthentication`(Android 15 から。`getLastAuthenticationTime` と `SystemClock.elapsedRealtime`。弱い生体認証は対象外)。登録の画面 `OpenEnrollment`(`ACTION_BIOMETRIC_ENROLL` に使える方式を渡す。開けなければ false)。署名の鍵の置き場所 `GetSigningKeyLocation`(`KeyInfo.getSecurityLevel`: StrongBox / TEE / Software。Android 11 は安全な領域かどうか)。署名の鍵は StrongBox があれば StrongBox に作る(`StrongBoxUnavailableException` のときは TEE) |
+| `Modules/Device/DeviceBiometricView.xaml` + `DeviceBiometricViewModel.cs` | Availability を 3 列(Biometric・Weak・Screen lock)にし、最後の本人確認からの時間(Last used)と Enroll(強い生体認証が未登録のときだけ押せる)を足した。Authenticate のボタンを Strong / Weak / PIN にし、結果に使われた方式を添える。本人確認のダイアログにはサブタイトルと端末に合う説明を出し、確認のボタンを省く。Key sign in に鍵の置き場所(Location)を足し、検証の 3 つを 3 列に。前面に戻ったとき(登録の画面から戻ったときなど)に表示を読み直す(`Session.IsForeground`)。サーバーの役を VM の内部クラス `BiometricSignInServer` にした |
+| `Markup/AppIcons.cs` | `SmallFace` / `SmallHowToReg` |
+| `Document/Biometric_Plan.md` / `Task_Checklist.md` | 4-5 を足し、実装済みに(残りは実機での確認) |
+
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+- 実機での画面の確認(見た目、Weak の本人確認、Enroll で設定の登録の画面が開くこと、最後の本人確認からの時間)は未実施。成功の流れと鍵の置き場所は、画面ロックと指紋を登録した端末での確認になる
 
 ## 💡C. この区間のナレッジ
 
@@ -2789,8 +2889,21 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - `Grid` の `Auto` の行は、中の要素がすべて `IsVisible` = false になると高さが 0 になり、`*` の行の要素が動く。場所を残して隠すときは `Opacity` 0 と `InputTransparent` にする
 - **partial メソッドの実装がインターフェースのメンバーに当たっていても CA1822 が出る**。インスタンスを使わせるためにクラスを IDisposable にすると、持っているだけの `Context` などに CA2213 が出る。公開のメソッドを共通の側に置き、static partial の `PlatformXxx` を呼ぶ形(MAUI Essentials と同じ)にすると、どちらも出ない
 - Android の `SHA256withECDSA` の署名は DER 形式。.NET の `ECDsa.VerifyData` の既定は IEEE P1363 なので、`DSASignatureFormat.Rfc3279DerSequence` を渡す。公開鍵は `GetEncoded()`(SubjectPublicKeyInfo)を `ImportSubjectPublicKeyInfo` でそのまま読める
+- `StrongBoxUnavailableException` は `ProviderException` の派生。鍵の作成の `ProviderException` を捕まえるときは、StrongBox の失敗を除いて TEE で作り直せるようにする
 - 使うたびに本人確認を求める鍵(`setUserAuthenticationParameters(0, AUTH_BIOMETRIC_STRONG)`)は、生体情報が登録されていないと作れない(`KeyPairGenerator` が例外を出す)。作る前に `BiometricManager.CanAuthenticate(BIOMETRIC_STRONG)` を見る
+- **MAUI 10 の `CarouselView`(Android)は、最初のフリングの前・位置の変更の後・項目の数の変化の後に、指を止めてから離すとページの途中で止まったままになる**(スナップの `SingleSnapHelper` が、目標の位置を持っていないときに合わせるページを返さない)。止まった後(`SCROLL_STATE_IDLE` の `Post`)に、いちばん近いページへ `SmoothScrollBy` で合わせる
+- **ページの中身を作る処理が重いと、スワイプの途中で UI スレッドが止まってフリングにならず、ページが変わらない**(Debug で 1 ページ 0.14 秒ほど止まった)。中身は選んだ後に入れ、一度作ったページは `RecyclerView.SetItemViewCacheSize` で残す
+- `CarouselView` の `Position` をアニメーションありで離れたページに変えると、ページの中身が重いときに行き過ぎることがある(最後のページまで流れた)。タブから移すときは `IsScrollAnimated` = false で移す
+- `StringFormat='{0:H}'` のように 1 文字だけの書式は標準の書式として扱われ、無効なので既定の文字列(日付と時刻)になる。1 文字のカスタムの書式は `%H`
+- レイアウトの `SizeChanged` は子を並べる前に通知されるので、そこで子の位置や幅を読むとまだ 0。子に合わせるときは子の `SizeChanged` で読む
+- ラムダの引数が 1 つで名前が `_` のときは破棄ではなく引数なので、`_ => _ = FooAsync()` は引数への代入になる(型が合わずにエラー)。メソッドに切り出す
+- `ConditionalWeakTable.GetValue` の作成の関数の中で作って返すと、表に入れる `IDisposable`(Java のオブジェクトなど)に CA2000 が出ない
 - 数独の問題は、答えから消しても答えが 1 つのままのマスだけを消すと、答えが 1 つに決まる。数えるのは 2 つまででよく、置ける数字のいちばん少ない空きのマスから試すと速い(PC で 26 マスまで消して平均 4 ms)
+- **`CarouselView`(Android)のページの中にフォーカスがあると、`Position` を変えた後のレイアウトで、フォーカスのあるページに戻る**(`LinearLayoutManager` がフォーカスのある子をレイアウトの基準にし、MAUI が中央のページから `Position` を戻す)。別の画面から戻ると、ページの中の一覧がフォーカスを受ける。`RecyclerView` の `DescendantFocusability` を `BeforeDescendants` にすると、ページより先に自分が受けるので起きない(ViewPager2 と同じ設定)
+- **`CollectionView`(Android)の見出しは、最初に測った高さのまま変わらない**(中の要素を後から隠しても、その分の空きが残る。最初から隠れていれば 0)。ページごとに見出しの中身が変わる一覧は、どのページも同じ高さの見出しにする。`HeaderTemplate` は `Header` が null でも作られ、一覧の BindingContext を受け継ぐ
+- BindingContext が null の要素のバインドは評価されない(コンバーターも呼ばれず、`IsVisible` などは既定値のまま)。null のときに隠すなら、親の値を `RelativeSource` で見る
+- `SfShimmer` は置かれた場所の高さ全体を下地の色(`#FFFBFE`)で塗る。下地の色(`ShimmerBackground`)は internal で、テーマのキー `SfShimmerNormalBackground` を画面の `ResourceDictionary` に置いても、`CollectionView` の `EmptyView` の中には効かなかった
+- `uiautomator dump` は、動き続ける要素(流れる文字・シマー)がある画面では `could not get idle state` で失敗する(前に書いたファイルが残るので、読むと古い内容になる)。確かめるときは撮影の画素で見る
 
 ---
 
@@ -2842,6 +2955,7 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 ※ 2026-09-03: メインメニューの**番号プレフィックスを廃止**し並び替え(View → Sample → UI → App → Setting 最後、UI 行のみ 2 列)。**UIMenu は UIMenu1(アプリ系 18)/ UIMenu2(可視化・計器・HUD 系 13)へ分離**(F4 相互遷移)。**メニューは 8 段以上を確保し、グループ毎に行を分けて余りセルを可視の無効ボタンにする形へ統一**(ユーザー指示)。
 ※ 2026-09-05: **メニュー規約を 9 段基本へ改定**(ユーザー指示)。メインメニュー=9 段×2 列(関連項目 Data\|Network / Sample\|App / UI 1\|UI 2 をペア行に・Setting 最終行・余り行は無効ボタン)+**全ボタンに Material アイコン追加**。UI 1/UI 2=**各 3 列×9 段**。2 列化は UI 1(18 ボタン=2 列×9 段の 18 セルちょうど)でグループ行分けが成立しないため見送り、**UI 1/UI 2 の列数は統一する**(ユーザー決定=片方だけの 2 列化はしない)。
 ※ 2026-09-12: **UI 1 / UI 2 を 2 列×9 段へ**(UI 1 = Profile \| Login / Money \| Super / POS \| Shop / Schedule \| Calendar / Timeline \| − / Mail \| Chat / Kit \| − / Graph \| Graph2 / TreeMap \| −、UI 2 = Stream \| Dock / Load \| Gauge / Meter \| Mixer / Monster \| Wheel / Character \| Social / Radar \| − / Flight \| Tactical / Telemetry \| Energy / 余り 1 行)。UIPet → UIMonster 改名、UIFeel 廃止(hex 配置は `HoneycombLayout` として View > Layout へ)。全メニューが 1 列または 2 列になった
+※ 2026-09-30: **UI 1 = Profile \| Login / Money \| Super / POS \| Shop / Grid \| Visit / Calendar \| Schedule / Mail \| Chat / Weather \| News / Timeline \| Kit / 余り 1 行、UI 2 = Stream \| Dock / Graph \| Graph2 / Load \| Gauge / Meter \| Mixer / TreeMap \| Radar / Wheel \| Monster / Character \| Social / Flight \| Tactical / Telemetry \| Energy(余りなし)**(ユーザー指示。Graph / Graph2 / TreeMap を UI 2 へ)
 
 ### 🚫対応しない・保留と確定した項目(旧チェックリストから移設)
 

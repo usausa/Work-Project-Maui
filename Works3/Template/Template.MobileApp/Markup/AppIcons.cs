@@ -99,6 +99,7 @@ public static class AppIcons
     public static readonly FontImageSource MenuOpen = Create(MaterialIcons.Menu_open, MenuSize, Colors.White);
     public static readonly FontImageSource MovieFilter = Create(MaterialIcons.Movie_filter, MenuSize, Colors.White);
     public static readonly FontImageSource Navigation = Create(MaterialIcons.Navigation, MenuSize, Colors.White);
+    public static readonly FontImageSource Newspaper = Create(MaterialIcons.Newspaper, MenuSize, Colors.White);
     public static readonly FontImageSource Nfc = Create(MaterialIcons.Nfc, MenuSize, Colors.White);
     public static readonly FontImageSource Opacity = Create(MaterialIcons.Opacity, MenuSize, Colors.White);
     public static readonly FontImageSource Palette = Create(MaterialIcons.Palette, MenuSize, Colors.White);
@@ -143,6 +144,7 @@ public static class AppIcons
     public static readonly FontImageSource ViewQuilt = Create(MaterialIcons.View_quilt, MenuSize, Colors.White);
     public static readonly FontImageSource ViewTimeline = Create(MaterialIcons.View_timeline, MenuSize, Colors.White);
     public static readonly FontImageSource VolumeUp = Create(MaterialIcons.Volume_up, MenuSize, Colors.White);
+    public static readonly FontImageSource WbSunny = Create(MaterialIcons.Wb_sunny, MenuSize, Colors.White);
     public static readonly FontImageSource Web = Create(MaterialIcons.Web, MenuSize, Colors.White);
     public static readonly FontImageSource Widgets = Create(MaterialIcons.Widgets, MenuSize, Colors.White);
     public static readonly FontImageSource Wifi = Create(MaterialIcons.Wifi, MenuSize, Colors.White);
