@@ -6,7 +6,7 @@ using SkiaSharp.Views.Maui.Controls;
 
 // 風の羅針盤。Direction は風が吹いてくる向き (度。北 = 0 で時計回り) で、矢印は風下を向く。
 // 真ん中は文字を重ねるために空ける
-public sealed class CompassDial : SKCanvasView
+public sealed class WeatherCompassDial : SKCanvasView
 {
     private static readonly SKTypeface BoldTypeface = SKTypeface.FromFamilyName("sans-serif", SKFontStyle.Bold);
 
@@ -15,7 +15,7 @@ public sealed class CompassDial : SKCanvasView
     public static readonly BindableProperty DirectionProperty = BindableProperty.Create(
         nameof(Direction),
         typeof(double),
-        typeof(CompassDial),
+        typeof(WeatherCompassDial),
         0d,
         propertyChanged: OnVisualChanged);
 
@@ -28,7 +28,7 @@ public sealed class CompassDial : SKCanvasView
     public static readonly BindableProperty TickColorProperty = BindableProperty.Create(
         nameof(TickColor),
         typeof(Color),
-        typeof(CompassDial),
+        typeof(WeatherCompassDial),
         Color.FromRgba(255, 255, 255, 110),
         propertyChanged: OnVisualChanged);
 
@@ -41,7 +41,7 @@ public sealed class CompassDial : SKCanvasView
     public static readonly BindableProperty LabelColorProperty = BindableProperty.Create(
         nameof(LabelColor),
         typeof(Color),
-        typeof(CompassDial),
+        typeof(WeatherCompassDial),
         Colors.White,
         propertyChanged: OnVisualChanged);
 
@@ -54,7 +54,7 @@ public sealed class CompassDial : SKCanvasView
     public static readonly BindableProperty NorthColorProperty = BindableProperty.Create(
         nameof(NorthColor),
         typeof(Color),
-        typeof(CompassDial),
+        typeof(WeatherCompassDial),
         Color.FromArgb("#FF8A80"),
         propertyChanged: OnVisualChanged);
 
@@ -67,7 +67,7 @@ public sealed class CompassDial : SKCanvasView
     public static readonly BindableProperty ArrowColorProperty = BindableProperty.Create(
         nameof(ArrowColor),
         typeof(Color),
-        typeof(CompassDial),
+        typeof(WeatherCompassDial),
         Colors.White,
         propertyChanged: OnVisualChanged);
 
@@ -78,7 +78,7 @@ public sealed class CompassDial : SKCanvasView
     }
 
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((CompassDial)bindable).InvalidateSurface();
+        ((WeatherCompassDial)bindable).InvalidateSurface();
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {

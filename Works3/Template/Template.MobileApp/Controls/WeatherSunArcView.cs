@@ -5,12 +5,12 @@ using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
 // 日の出から日の入りまでの太陽の道のり。通った部分を塗り、今の位置に太陽を置く (夜は地平線の端で暗く)
-public sealed class SunArcView : SKCanvasView
+public sealed class WeatherSunArcView : SKCanvasView
 {
     public static readonly BindableProperty SunriseProperty = BindableProperty.Create(
         nameof(Sunrise),
         typeof(DateTime),
-        typeof(SunArcView),
+        typeof(WeatherSunArcView),
         default(DateTime),
         propertyChanged: OnVisualChanged);
 
@@ -23,7 +23,7 @@ public sealed class SunArcView : SKCanvasView
     public static readonly BindableProperty SunsetProperty = BindableProperty.Create(
         nameof(Sunset),
         typeof(DateTime),
-        typeof(SunArcView),
+        typeof(WeatherSunArcView),
         default(DateTime),
         propertyChanged: OnVisualChanged);
 
@@ -36,7 +36,7 @@ public sealed class SunArcView : SKCanvasView
     public static readonly BindableProperty NowProperty = BindableProperty.Create(
         nameof(Now),
         typeof(DateTime),
-        typeof(SunArcView),
+        typeof(WeatherSunArcView),
         default(DateTime),
         propertyChanged: OnVisualChanged);
 
@@ -49,7 +49,7 @@ public sealed class SunArcView : SKCanvasView
     public static readonly BindableProperty PathColorProperty = BindableProperty.Create(
         nameof(PathColor),
         typeof(Color),
-        typeof(SunArcView),
+        typeof(WeatherSunArcView),
         Color.FromRgba(255, 255, 255, 90),
         propertyChanged: OnVisualChanged);
 
@@ -62,7 +62,7 @@ public sealed class SunArcView : SKCanvasView
     public static readonly BindableProperty SunColorProperty = BindableProperty.Create(
         nameof(SunColor),
         typeof(Color),
-        typeof(SunArcView),
+        typeof(WeatherSunArcView),
         Color.FromArgb("#FFD54F"),
         propertyChanged: OnVisualChanged);
 
@@ -73,7 +73,7 @@ public sealed class SunArcView : SKCanvasView
     }
 
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((SunArcView)bindable).InvalidateSurface();
+        ((WeatherSunArcView)bindable).InvalidateSurface();
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {

@@ -377,7 +377,7 @@
                 <Button Grid.Column="0"
                         Style="{StaticResource ModeButton}"
                         Command="{Binding ModeCommand}"
-                        CommandParameter="{x:Static module:TimerMode.Stopwatch}"
+                        CommandParameter="{x:Static models:TimerMode.Stopwatch}"
                         Text="⏱ ストップウォッチ">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -391,7 +391,7 @@
                 <Button Grid.Column="1"
                         Style="{StaticResource ModeButton}"
                         Command="{Binding ModeCommand}"
-                        CommandParameter="{x:Static module:TimerMode.Countdown}"
+                        CommandParameter="{x:Static models:TimerMode.Countdown}"
                         Text="⏳ タイマー">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button"
@@ -409,7 +409,7 @@
         <Grid Grid.Row="2"
               Style="{StaticResource ModeContentGrid}"
               RowDefinitions="*,Auto,Auto"
-              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static module:TimerMode.Stopwatch}}">
+              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Stopwatch}}">
 
             <!-- 文字盤 (1 分で 1 周)。中央に経過時間と今のラップ -->
             <Grid Grid.Row="0"
@@ -455,7 +455,7 @@
                             ItemsSource="{Binding Laps}"
                             IsVisible="{Binding Laps.Count, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type module:TimerLapViewModel}">
+                    <DataTemplate x:DataType="{x:Type models:TimerLapItem}">
                         <Grid Style="{StaticResource LapRowGrid}"
                               RowDefinitions="Auto,Auto"
                               ColumnDefinitions="Auto,*,Auto">
@@ -546,7 +546,7 @@
         <Grid Grid.Row="2"
               Style="{StaticResource ModeContentGrid}"
               RowDefinitions="*,Auto,Auto"
-              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static module:TimerMode.Countdown}}">
+              IsVisible="{Binding Mode, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerMode.Countdown}}">
 
             <!-- 文字盤 (残りの割合)。残り 10 秒で警告の色、終わったら脈打つ -->
             <Grid Grid.Row="0"

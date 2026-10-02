@@ -83,6 +83,9 @@ public sealed class Puzzle2048Game
     // 届いた後も続ける
     public bool KeepPlaying { get; set; }
 
+    // 届いて、続けるかを選ぶ前 (結果を出している)
+    public bool IsWinPending => IsWon && !KeepPlaying;
+
     // 動ける方向が無い
     public bool IsOver { get; private set; }
 
@@ -104,11 +107,11 @@ public sealed class Puzzle2048Game
         IsOver = false;
     }
 
-    // 動けない方向では何もしない (None を返す)。動いたら新しいタイルを置く
+    // 動けない方向と、結果を出している間は何もしない (None を返す)。動いたら新しいタイルを置く
     public Puzzle2048Move Move(Puzzle2048Direction direction)
     {
         var result = Puzzle2048Move.None;
-        if (!IsOver)
+        if (!IsOver && !IsWinPending)
         {
             var next = new Puzzle2048Tile?[Size * Size];
             var slides = new List<Puzzle2048Slide>();

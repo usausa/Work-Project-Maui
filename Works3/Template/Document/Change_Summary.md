@@ -2804,17 +2804,18 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 
 ### 🚦遷移中の操作の受け付けとコントロールの通知(2026-10-01)
 
-画面は自分の遷移イベントの前にアクティブになり、遷移は Busy の中で始めて、遷移の途中の利用者の操作を止める。コントロールからの通知のコマンドのうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るものは `CommandMode.Simple`(アクティブのときだけ実行し、Busy は見ず立てもしない)にした(`Command_Plan.md`)。
+画面は自分の遷移イベントの前にアクティブになり、遷移の間は Busy にして、遷移の途中の利用者の操作を止める。コントロールからの通知のコマンドのうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)は `CommandMode.Simple`(アクティブのときだけ実行し、Busy は見ず立てもしない)にした(`Command_Plan.md`)。Smart.Windows(WPF)と Smart.Avalonia にも同じコマンドの形を入れた。
 
 | 対象 | 内容 |
 |---|---|
 | `Template.MobileApp.csproj` | `Usa.Smart.Navigation` / `.Extensions.DependencyInjection` / `.Maui` を 3.15.0 に。`INavigationLifecycleSupport`(`OnActivated` / `OnDeactivated`): 遷移の始め(`Executing` が立った直後)に今の画面の `OnDeactivated`、新画面の `OnNavigatingTo` の前に新画面の `OnActivated`。表示の切り替えの前に失敗したときは、新画面を非アクティブにして元の画面をアクティブに戻す。`Exit` は `OnDeactivated` |
 | `Smart.Maui`(サブモジュール。2.32.0) | `CommandMode` は `Default` / `Standard` / `ControlByBusyState` / `Simple`。`ExtendViewModelBase.AcceptsCommand`(既定 true)が false の間は、`MakeXxxCommand` を実行しない。`Standard` は Busy なら実行せず、実行中は Busy を立てる。`ControlByBusyState` は Busy の間は無効(CanExecute)で、ほかは `Standard` と同じ。`Simple` は Busy を見ず立てもしない(CanExecute の更新の対象にはする)。`MakeDelegateCommand` / `MakeAsyncCommand` は `CommandMode` を第 1 引数に取り(`MakeDelegateCommand(CommandMode.Simple, execute)`)、省略したオーバーロードは既定(`ExtendViewModelOptions.CommandMode`、`Standard`) |
+| Smart.Windows / Smart.Avalonia(別リポジトリ) | `ExtendViewModelBase` を Smart.Maui 2.32.0 と同じ形に(`CommandMode`、`AcceptsCommand`、Simple もアクティブを見る、`CommandMode` を第 1 引数)。Behavior は `LongPressBehavior`(押し続けでコマンド)と `TypingStoppedBehavior`(入力が止まったらコマンド)を追加。押下の効果と刻みは各フレームワークのスタイルと標準の機能(`TickFrequency` + `IsSnapToTickEnabled`)で書き、振動(API が無い)とシーク(ドラッグの完了がつまみからしか来ない)の Behavior は作らない |
 | `Modules/AppViewModelBase.cs` | 作るときに `AcceptsCommand` を false にし、`INavigationLifecycleSupport` で切り替える(遷移イベントの前にアクティブ、Push で下になった画面は受け付けないまま)。F キーと戻るキー(`NavigatorNotifyAsync`)も、受け付けていなければ何もしない。ポップアップの基底(`AppDialogViewModelBase`)と `MainPageViewModel` は受け付けたまま |
 | `MainPageViewModel.cs` | 遷移の間は Busy にする(`Navigator.ExecutingChanged` で、遷移が始まったら `BusyState.Begin()`、終わったら破棄)。新画面は遷移の途中からアクティブになるので、どこから始めた遷移(コマンド・F キー・戻るキー・起動時)でも、その間の利用者の操作を止める。コマンドから始めた遷移はコマンドの Busy と重なるが、`BusyState` は数で持つので `IsBusy` は途中で切れない |
 | コントロールの通知のコマンド | `CommandMode.Simple` は 19 件: Calendar の表示範囲、記事の読んだ量、News / HTTP / Collection の続きの読み込み、Lottie のスクラブ、DragDrop の全部(11 件。重なりが続けて来るので、同じ操作の通知をそろえる。定義はイベントの順)、Setting と QR Scan の読み取り(QR Scan は素の `DelegateCommand` から)。ほかの通知 13 件(Carousel の現在の項目、Character の選択、Grid と列の設定のセルの値・行の移動、PDF のページ、Behavior のフォーカス・入力の停止・スイッチ、Audio / Media / Lottie のシーク)は既定(`Standard`)。基準・一覧・理由は `Command_Plan.md`。どれも `MakeDelegateCommand(CommandMode.Simple, ...)` で、非同期の処理を始めるもの(HTTP と News の続きの読み込み、Setting の読み取り)は `_ = LoadMoreAsync()` などで開始だけ行い、本体は Busy の外で動かす(読み込む間もスクロールを止めない)。Setting の読み取りは `DetectAsync` に切り出し、`ApiContext` / `ITelemetryControl` をフィールドに |
 | `Modules/Device/DeviceAudioViewModel.cs` | Pause / Stop を素の `DelegateCommand` から `MakeDelegateCommand` に |
-| `Document/Task_Checklist.md` / `README.md` | 6-3(BusyState の制御)を削除し(同期のコマンド(`MakeDelegateCommand`)は今までどおり実行中に Busy を立てる)、8 節(コマンドの受け付けの見直し。残りは Simple の一覧と理由の更新)を追加。サマリと TODO の Decision の行は CoreCLR と 8 節 |
+| `Document/Task_Checklist.md` / `README.md` | 6-3(BusyState の制御)を削除(同期のコマンド(`MakeDelegateCommand`)は今までどおり実行中に Busy を立てる)。サマリと TODO の Decision の行は CoreCLR だけ |
 | `Document/Command_Plan.md` | 方針、遷移の順番とアクティブ(3.15.0)、問題になりうるケースと確認の結果、Simple の基準、Simple と Standard のコントロールの通知の一覧と理由、検証の方法、未確認 |
 
 - 実機(Pixel 9a): 遷移の途中(Weather の `OnNavigatingFromAsync` に一時的に 1.5 秒の待ちを入れて確認し、確認後に外した)に、戻るキー → F1、戻るキー → 戻るキーと続けても、2 回目は何もせずに UI 1 へ戻る(例外なし)
@@ -2828,7 +2829,9 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - 実機: Simple の理由。Calendar の表示範囲は開く途中の初回がアクティブで Busy、「今日へ」の実行の中が Busy。記事の読んだ量は関連記事の切り替えの実行の中が Busy。DragDrop の重なりは 1〜8 ms ごと、Lottie の長押しは 16 ms ごと(一時的なログで確認し、確認後に外した)
 - 実機: Standard にした通知。PDF(開いた直後の 1 / 6、F4 で 2 / 6)、Behavior(開いた直後のフォーカス、キーボードを閉じたときの Unfocused、スイッチ、入力の停止)
 - 実機: DragDrop(全部 Simple)で、リスト間の移動・並べ替え・ゴミ箱
-- 未確認: QR を写しての読み取り、HTTP の続きの読み込み(サーバーが要る)、Standard にした Character・Grid と列の設定・Audio / Media / Lottie のシーク
+- 実機(3.15.0 / 2.32.0 と遷移の間の Busy): Standard にした 13 件の通知は、離れる途中の Behavior のフォーカスと Carousel、開く途中の Carousel(Busy の間)だけを捨て、ほか(Character の選択・Grid と列の設定のセルの値と行の移動・PDF のページ・Behavior の入力の停止とスイッチ・Audio / Media / Lottie のシーク)はアクティブで Busy なしで実行(一時的なログで確認し、確認後に外した)
+- Smart.Windows / Smart.Avalonia: ビルド 0 警告、テスト(Smart.Windows 220 件・Smart.Avalonia 231 件)成功、inspectcode 0 件
+- 未確認: QR を写しての読み取り、HTTP の続きの読み込み(サーバーが要る)
 - ビルド 0 警告、inspectcode 0 件
 
 ### 🎚️シークバーの追従・Audio の再生位置・遷移の後の処理の Busy(2026-10-01)
@@ -2867,6 +2870,37 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 | `Behaviors/ButtonOption.cs` / `EntryOption.cs` / `SliderOption.cs` | 添付プロパティは入口として残し、要素ごとに Smart.Maui の Behavior を作って付ける(値は作るときと変わったときに渡し、ミリ秒の値は `TimeSpan` に直す)。アプリの中の同じ働きの Behavior(押下の縮み・ハプティクス・長押し・入力の停止)と、シークバー・刻みの処理は削除 |
 
 - 実機(Pixel 9a): 長押し(短いタップでは数えない)、押している間の縮み(Effect の Button と Dock の ImageButton)、入力の停止、Audio のドラッグの後の追従、Lottie のドラッグなしの追従、Telemetry の刻みのあるスライダー、ハプティクスを付けた Audio の ▶
+- ビルド 0 警告、inspectcode 0 件
+
+### 🧱画面のモデルの見直し(2026-10-02)
+
+処理をモデル(Application / Game)と、一覧と従属画面が共有する文脈クラス(`[Scope]`)へ寄せ、VM をメソッドの呼び出しとバインドだけにした。表示の文言はモデルから外し、天気に固有のコントロールに `Weather` を付けた。計画と決定事項は `ScreenModel_Plan.md`。
+
+| 対象 | 内容 |
+|---|---|
+| `Models/App/CalcApplication.cs` | 計算できなかった理由を `CalcErrorType`(空・数値が不正・未知の名前・未知の文字・括弧の対応・不完全・不正・0 で割る・負数の平方根・階乗の範囲・未知の演算子・未知の関数・計算できない)と `CalcError`(Smart.Results の `Error` の派生。種類 `Type` と原因の数値・名前・文字などの `Text`)で返す。字句・逆ポーランド記法への変換・評価の各段は例外を投げずに `Result` で返し(`Ensure` / `Bind` でつなぐ)、`CalcException` は削除。階乗の上限は `CalcEngine.MaxFactorial`。式の入力 `CalcInput`(計算の後に演算子を入れると前の結果から続け、ほかは新しい式。1 文字消す・全部消す・直前の結果、値の書き方 `Format`) |
+| `Modules/App/AppCalcViewModel.cs` | エラーの文言を `CalcError` の種類と原因から作る(`FormatError`)。入力は `CalcInput` を呼んで式を写すだけ |
+| `Models/App/TimerApplication.cs` | 保存する状態の後を Stopwatch と Countdown の区切りで分ける。画面の切り替え `TimerMode`、ラップの行 `TimerLapItem` とラップの一覧 `TimerLapList`(新しいラップを先頭に足す・作り直す、最速と最遅の印と一番遅いラップに対する比)、1 分で 1 周の進み(`TimerStopwatch.GetMinuteProgress`)、残りの割合と警告(`TimerCountdown.GetProgress` / `IsWarning`)。`TimerStopwatch.FindExtremes` は削除 |
+| `Modules/App/AppTimerViewModel.cs` / `AppTimerView.xaml` | モデルを呼ぶだけに(`TimerMode` と `TimerLapViewModel` をモデルへ移した) |
+| `Models/App/TodoApplication.cs` | 行 `TodoItem`、グループの行のまとまり `TodoSection`、一覧 `TodoList`(表示するグループ・完了の表示の切り替え・件数と完了の割合・行を置く / 外す / 動かす・並び)、編集の入力 `TodoDraft`(期限の区分けとチップ、保存できるか、前後の空白を除く) |
+| `Modules/App/AppTodoContext.cs`(新規) | 一覧と編集が共有する文脈(`[Scope]`)。読み込み、完了と重要の切り替え、削除と元に戻す(消した行を元に戻せる間だけ持つ)、編集の開始と保存(`DataService` / `TimeProvider`)。`TodoEntity` と `TodoItem`、`TodoItem` と `TodoDraft` の写し替えは Smart.Mapper(`AppTodoContextMapper`) |
+| `Modules/App/AppTodoViewModel.cs` / `AppTodoEditViewModel.cs` / `AppTodoView.xaml` / `AppTodoEditView.xaml` | 文脈を呼ぶだけに。編集は文脈で始めて Push、保存・削除は文脈を呼んでから Pop(結果の受け渡しは無くした)。保存のボタンは `TodoDraft.CanSave` で有効にする。表示の動き(完了の後に動きを見せてから行を動かす、元に戻すの帯を時間で閉じる。編集の画面で消したときは一覧へ戻ってから数える)は一覧の VM(`IDispatcher` / タイマー) |
+| `Models/Input/TodoInput.cs` | 削除 |
+| `Modules/UI/UINewsContext.cs`(新規) | 一覧と記事が共有する文脈(`[Scope]`)。ページ `UINewsPage` と行 `UINewsItem`(VM のファイルから)、速報、開いている記事と関連記事。ページの読み込み・引っ張って更新・続きの読み込み、記事を開く・関連記事へ切り替える(一覧の同じ記事を既読に)、保存の切り替え(保存した記事のページへすぐに反映) |
+| `Modules/UI/UINewsViewModel.cs` / `UINewsDetailViewModel.cs` / `UINewsView.xaml` / `UINewsDetailView.xaml` | 文脈を呼ぶだけに。選んだタブとページの位置(一覧だけの状態)と、引っ張って更新で増えた数を時間で消す(`IDispatcher`)のは一覧の VM。`UINewsDetailInput` / `UINewsDetailResult` は削除 |
+| `Models/App/SudokuGame.cs` / `Modules/App/AppSudokuViewModel.cs` / `AppSudokuView.xaml` | 数字のキーの行 `SudokuDigit`(`SudokuDigitViewModel` から)と、キーの作成と残りの数の付け直し(`CreateDigits` / `UpdateDigits`) |
+| `Models/App/MinesweeperGame.cs` / `Modules/App/AppMinesweeperViewModel.cs` | タップと長押しの規則(`Tap` / `LongPress`)と 1 手の結果 `MinesweeperMove`(開いた・旗。負けたときに見せるマスは地雷を近い順)。`Open` / `Chord` / `ToggleFlag` / `GetMines` は非公開に |
+| `Models/App/Puzzle2048Game.cs` / `Modules/App/AppPuzzle2048ViewModel.cs` | 結果を出している間(`IsWinPending`。届いて、続けるかを選ぶ前)は動かさない |
+| `Controls/WeatherCompassDial.cs` / `WeatherSunArcView.cs` / `WeatherMoonPhaseView.cs` | `CompassDial` / `SunArcView` / `MoonPhaseView` から改名(天気の画面だけで使う、天気に固有の描画)。`ArcMeter` / `RangeBar` / `SegmentBar` / `SeriesSegmentView` / `TabStrip` は汎用なのでそのまま |
+| `Modules/UI/UIWeatherView.xaml` | 新しい名前で使う |
+| `Document/ScreenModel_Plan.md`(新規)/ `App_Plan.md` | 計画と決定事項、天気のコントロールのファイル名 |
+
+- 実機(Pixel 9a): 電卓の `1+2×3` が 7。エラーの文言は、`1÷0` が「0 では割れません」、`(1` が「括弧が対応していません」、`√(−4)` が「負数の平方根は計算できません」、`180!` が「階乗は 0〜170 の整数のみです」、`1+` が「式が不完全です」、`1.2.3` が「数値が不正です: 1.2.3」、`asin(2)` と `2^1024` が「計算できません」
+- 実機: 天気の画面の風の羅針盤、日の出と日の入りの弧、月の満ち欠け
+- 実機: ToDo の一覧(今日・グループと件数)、追加(新規は件名に入力の位置、件名が空の間は保存のボタンが無効、期限のチップ)、編集(期限なし・重要)、完了の切り替え(完了のグループの先頭へ)、編集からの削除と元に戻すの帯(一覧へ戻ってから 4 秒で閉じる)、スワイプでの削除と元に戻す(同じ行が戻る)、完了の表示の切り替え、編集を閉じたときの一覧の位置、画面を出て入り直したときの読み込み
+- 実機: News の最初のページの読み込み、タブの切り替え(下線の色と読み込み)、記事を開く・保存と解除・関連記事へ切り替え(先頭から表示、前の記事が関連記事の先頭)、一覧へ戻ったときの既読と位置、保存した記事のページ、引っ張って更新(新着の数が 3 秒で消える)、続きの読み込み(最後まで)
+- 実機: Timer のラップの印(最速 🐇・最遅 🐢)と比、出て入り直したときのラップ、カウントダウンの残りの割合・警告の色(残り 10 秒以下)・終了
+- 実機: Sudoku のヒントと取り消しでの数字のキーの残りの数、Minesweeper の最初のタップ・長押しの旗・旗のモード・旗のマスのタップ(何もしない)・負け(地雷を近い順に見せる)、2048 のスワイプ、電卓の続けての計算(`1+2=` の後の `×4=` が 12、数字なら新しい式)と 1 文字消す・全部消す
 - ビルド 0 警告、inspectcode 0 件
 
 ## 💡C. この区間のナレッジ
@@ -2985,6 +3019,11 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 - **CommunityToolkit.Maui 10 から、Behavior の BindingContext は付けた要素から引き継がれない**(9.x まではあった)。`Command="{Binding XxxCommand}"` だけではコマンドが null のままで、イベントが来ても何も起きない
 - **MAUI 10 の `Slider` は、利用者がドラッグした後は OneWay のバインドの値がつまみに出ない**: OneWay のバインドの値は優先度 `FromBinding`(TwoWay は `FromHandler`)で入り、Android のハンドラーがドラッグ中に公開の setter で入れる値(`ManualValueSetter`)のほうが優先される。バインドは残っているので、ドラッグの後に `ClearValue(Slider.ValueProperty)` で外すとバインドの値に戻る。`Minimum` / `Maximum` の変更でも Slider が範囲に収めた値を公開の setter で入れるので同じことが起き(実行中に `Maximum` が変わる Media / Lottie はドラッグしなくても追従しなかった)、このときは変更の通知の中で `ClearValue` しても効かず、`Dispatcher.Dispatch` で通知の後に外す
 - **Android の MediaPlayer(Pixel 9a。Plugin.Maui.Audio)は、一度も再生していないときにシークを重ねると、後のシークが効かずに前の位置から鳴る**(`CurrentPosition` は要求した位置を返すので気づきにくい)。再生していないときのシークは位置だけ覚え、再生を始めた直後にシークする。Plugin.Maui.Audio の `CurrentPosition` はストップウォッチで、実際の位置より 0.2 秒ほど先を指す
+- **`[Scope]` の文脈はビューを作った後(VM の構築の後)にプロパティへ入る**。バインドする VM のプロパティも、`Context` と同じく表示の前(`OnNavigatingToAsync`)に設定するものは null 非許容(`= default!`)にする(null 許容にすると ReSharper が `Xaml.PossibleNullReferenceException` を出す)。構築の中では `Context` が null なので、コマンドは文脈を呼ぶ VM のメソッドを経由する(`MakeAsyncCommand<TodoItem>(ToggleDoneAsync)` と `private Task ToggleDoneAsync(TodoItem item) => Context.ToggleDoneAsync(item);`)。`x => Context.M(x)` は IDE0200(ラムダを外せる)の警告になり、外して `Context.M` にすると構築の時点の null を掴む。CanExecute も構築の直後のバインドで評価されるので、文脈の値で有効を変えるボタンは `IsEnabled` を文脈のプロパティにバインドする
+- Smart.Navigation の `ScopePlugin` は、同じプロパティ名と型の `[Scope]` を参照数で共有する(Push で下に残る一覧と、開いた画面で 1 つ)。0 になると `IScopeLifecycle.OnScopeTerminate` と `Dispose`。文脈は DI(`IActivator`)で作るので登録は要らない
+- ラムダの引数が `_` 1 つだけのとき、本体の `_ = XxxAsync()` は破棄ではなく引数への代入になる(CS0029)
+- 公開をやめた(`private` にした)メソッドは、CA1859 が戻り値と引数の `IReadOnlyList<T>` を具象の `List<T>` にするよう警告する
+- Smart.Mapper(1.0.0-beta9)は `long` → `long?`、`DateTime` → `DateTime?` をそのまま写す(`TodoItem` → `TodoDraft` の `Id` と作成・更新の日時)
 
 ---
 

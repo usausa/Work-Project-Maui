@@ -175,7 +175,7 @@ UI 1 のメニューの Timeline の前の行(`Grid.Row="6" Grid.Column="0"`)に
 | ファイル | 変更 |
 | --- | --- |
 | `Models/Sample/WeatherForecast.cs` | 露点・気圧と傾向・月齢と満ち欠け・生活指数・注意報を足す |
-| `Controls/ArcMeter.cs` / `CompassDial.cs` / `SunArcView.cs` / `MoonPhaseView.cs` / `SegmentBar.cs` | 新規。円弧のメーター、風の羅針盤、日の出・日の入りの弧、月の満ち欠け、段階のバー(SkiaSharp の描画) |
+| `Controls/ArcMeter.cs` / `WeatherCompassDial.cs` / `WeatherSunArcView.cs` / `WeatherMoonPhaseView.cs` / `SegmentBar.cs` | 新規。円弧のメーター、風の羅針盤、日の出・日の入りの弧、月の満ち欠け、段階のバー(SkiaSharp の描画) |
 | `Converters/WeatherIndexTextConverter.cs` | 新規。生活指数の段階の文言 |
 | `Behaviors/Scroll.cs` | `CollapseTarget` / `CollapsedTarget`(スクロールで見出しを畳む) |
 | `Modules/UI/UIWeatherView.xaml` + `UIWeatherViewModel.cs` | 上の表の画面 |

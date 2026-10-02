@@ -82,17 +82,13 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
         Save();
     }
 
-    // 結果を出している間は動かさない
     private void Swipe(Puzzle2048Direction direction)
     {
-        if (!IsWon && !IsOver)
+        var move = game.Move(direction);
+        if (move.Moved)
         {
-            var move = game.Move(direction);
-            if (move.Moved)
-            {
-                Apply(move);
-                Save();
-            }
+            Apply(move);
+            Save();
         }
     }
 
@@ -105,7 +101,7 @@ public sealed partial class AppPuzzle2048ViewModel : AppViewModelBase
         Board = new Puzzle2048Frame(game.Tiles, move);
         Score = game.Score;
         BestScore = game.BestScore;
-        IsWon = game.IsWon && !game.KeepPlaying;
+        IsWon = game.IsWinPending;
         IsOver = game.IsOver;
     }
 

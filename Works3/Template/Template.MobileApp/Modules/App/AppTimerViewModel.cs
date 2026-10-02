@@ -4,38 +4,6 @@ using Template.MobileApp.Components;
 using Template.MobileApp.Models.App;
 using Template.MobileApp.Services;
 
-public enum TimerMode
-{
-    Stopwatch,
-    Countdown
-}
-
-// ラップの行 (最速と最遅の印、一番遅いラップに対する長さの比)
-public sealed partial class TimerLapViewModel : ObservableObject
-{
-    public int No { get; }
-
-    public TimeSpan Lap { get; }
-
-    public TimeSpan Split { get; }
-
-    [ObservableProperty]
-    public partial bool IsFastest { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsSlowest { get; set; }
-
-    [ObservableProperty]
-    public partial double Ratio { get; set; }
-
-    public TimerLapViewModel(TimerLap lap)
-    {
-        No = lap.No;
-        Lap = lap.Lap;
-        Split = lap.Split;
-    }
-}
-
 public sealed partial class AppTimerViewModel : AppViewModelBase
 {
     private const int NotificationId = 100;
@@ -43,9 +11,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     private static readonly TimeSpan TickInterval = TimeSpan.FromMilliseconds(50);
 
     private static readonly TimeSpan FinishVibration = TimeSpan.FromSeconds(1);
-
-    // 残りがこれ以下になると警告の色
-    private static readonly TimeSpan WarningTime = TimeSpan.FromSeconds(10);
 
     private readonly IScreen screen;
 
@@ -90,7 +55,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial double StopwatchProgress { get; set; }
 
-    public ObservableCollection<TimerLapViewModel> Laps { get; } = [];
+    public TimerLapList Laps { get; } = [];
 
     // Countdown
 
@@ -189,7 +154,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         if (!context.Attribute.IsRestore())
         {
             Load();
-            RebuildLaps();
+            Laps.Rebuild(stopwatch.GetLaps());
             Refresh();
         }
 
@@ -232,8 +197,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
     {
         if (stopwatch.Lap(timeProvider.GetUtcNow()) is { } lap)
         {
-            Laps.Insert(0, new TimerLapViewModel(lap));
-            UpdateLapMarks();
+            Laps.AddLatest(lap);
             Refresh();
             Save();
         }
@@ -315,7 +279,7 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         Elapsed = stopwatch.GetElapsed(now);
         CurrentLap = stopwatch.GetCurrentLap(now);
         LapNo = stopwatch.LapCount + 1;
-        StopwatchProgress = (Elapsed.TotalSeconds % 60) / 60;
+        StopwatchProgress = stopwatch.GetMinuteProgress(now);
 
         if (countdown.CheckFinished(now))
         {
@@ -331,8 +295,8 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         }
 
         Remaining = countdown.GetRemaining(now);
-        CountdownProgress = Duration > TimeSpan.Zero ? Remaining / Duration : 0;
-        IsWarning = (countdown.State == TimerCountdownState.Running) && (Remaining <= WarningTime);
+        CountdownProgress = countdown.GetProgress(now);
+        IsWarning = countdown.IsWarning(now);
         EndTime = countdown.EndAt is { } end ? TimeZoneInfo.ConvertTime(end, timeProvider.LocalTimeZone).DateTime : null;
     }
 
@@ -350,29 +314,6 @@ public sealed partial class AppTimerViewModel : AppViewModelBase
         }
 
         screen.KeepScreenOn(visible && running);
-    }
-
-    private void RebuildLaps()
-    {
-        Laps.Clear();
-        foreach (var lap in stopwatch.GetLaps().Reverse())
-        {
-            Laps.Add(new TimerLapViewModel(lap));
-        }
-
-        UpdateLapMarks();
-    }
-
-    private void UpdateLapMarks()
-    {
-        var extremes = stopwatch.FindExtremes();
-        var slowest = Laps.Count > 0 ? Laps.Max(static x => x.Lap) : TimeSpan.Zero;
-        foreach (var lap in Laps)
-        {
-            lap.IsFastest = lap.No == extremes?.Fastest;
-            lap.IsSlowest = lap.No == extremes?.Slowest;
-            lap.Ratio = slowest > TimeSpan.Zero ? lap.Lap / slowest : 0;
-        }
     }
 
     // 状態は JSON で持つ (初めては 3 分)

@@ -23,6 +23,21 @@ public enum MinesweeperCellState
 
 public readonly record struct MinesweeperCell(int Row, int Column);
 
+public enum MinesweeperMoveType
+{
+    None,
+    Opened,
+    Flagged
+}
+
+// 1 手の結果 (Revealed は見せるマス。負けたときは地雷を踏んだマスから近い順)
+public sealed record MinesweeperMove(MinesweeperMoveType Type, IReadOnlyList<MinesweeperCell> Revealed)
+{
+    public static MinesweeperMove None { get; } = new(MinesweeperMoveType.None, []);
+
+    public static MinesweeperMove Flagged { get; } = new(MinesweeperMoveType.Flagged, []);
+}
+
 // 描く盤面 (Revealed は直前に見せたマス。見せた順に覆いを消す動きに使う)
 public sealed record MinesweeperFrame(MinesweeperGame Game, IReadOnlyList<MinesweeperCell> Revealed);
 
@@ -112,8 +127,37 @@ public sealed class MinesweeperGame
     public TimeSpan GetElapsed(DateTimeOffset now) =>
         StartedAt is { } start ? (EndedAt ?? now) - start : TimeSpan.Zero;
 
-    // 閉じたマスを開く (最初の 1 手は、そのマスと周りに地雷を置かない)。開いたマスを近い順に返す
-    public IReadOnlyList<MinesweeperCell> Open(MinesweeperCell cell, DateTimeOffset now)
+    // 閉じたマスを開く。開いた数字のマスは周りを開く
+    public MinesweeperMove Open(MinesweeperCell cell, DateTimeOffset now) =>
+        GetState(cell) switch
+        {
+            MinesweeperCellState.Hidden => Reveal(OpenHidden(cell, now)),
+            MinesweeperCellState.Opened => Reveal(Chord(cell, now)),
+            _ => MinesweeperMove.None
+        };
+
+    // 閉じたマスの旗を立てる / 外す。開いた数字のマスには旗を立てられないので、周りを開く
+    public MinesweeperMove ToggleFlag(MinesweeperCell cell, DateTimeOffset now)
+    {
+        var state = GetState(cell);
+        var move = MinesweeperMove.None;
+        if (state == MinesweeperCellState.Opened)
+        {
+            move = Reveal(Chord(cell, now));
+        }
+        else if (IsActive)
+        {
+            var flagged = state == MinesweeperCellState.Hidden;
+            states[Index(cell)] = flagged ? MinesweeperCellState.Flagged : MinesweeperCellState.Hidden;
+            FlagCount += flagged ? 1 : -1;
+            move = MinesweeperMove.Flagged;
+        }
+
+        return move;
+    }
+
+    // 最初の 1 手は、そのマスと周りに地雷を置かない。開いたマスを近い順に返す
+    private List<MinesweeperCell> OpenHidden(MinesweeperCell cell, DateTimeOffset now)
     {
         var opened = new List<MinesweeperCell>();
         if (IsActive && (GetState(cell) == MinesweeperCellState.Hidden))
@@ -132,7 +176,7 @@ public sealed class MinesweeperGame
     }
 
     // 開いた数字のマスで、周りの旗の数が数字と同じなら、周りの閉じたマスを開く
-    public IReadOnlyList<MinesweeperCell> Chord(MinesweeperCell cell, DateTimeOffset now)
+    private List<MinesweeperCell> Chord(MinesweeperCell cell, DateTimeOffset now)
     {
         var opened = new List<MinesweeperCell>();
         if ((State == MinesweeperState.Playing) &&
@@ -152,23 +196,13 @@ public sealed class MinesweeperGame
         return opened;
     }
 
-    // 閉じたマスの旗を立てる / 外す
-    public bool ToggleFlag(MinesweeperCell cell)
-    {
-        var state = GetState(cell);
-        var toggled = IsActive && (state != MinesweeperCellState.Opened);
-        if (toggled)
-        {
-            var flagged = state == MinesweeperCellState.Hidden;
-            states[Index(cell)] = flagged ? MinesweeperCellState.Flagged : MinesweeperCellState.Hidden;
-            FlagCount += flagged ? 1 : -1;
-        }
-
-        return toggled;
-    }
+    private MinesweeperMove Reveal(List<MinesweeperCell> opened) =>
+        opened.Count == 0
+            ? MinesweeperMove.None
+            : new MinesweeperMove(MinesweeperMoveType.Opened, State == MinesweeperState.Lost ? GetMines() : opened);
 
     // 地雷のマス (踏んだマスから近い順)
-    public IReadOnlyList<MinesweeperCell> GetMines()
+    private IReadOnlyList<MinesweeperCell> GetMines()
     {
         var origin = Exploded ?? new MinesweeperCell(0, 0);
         return

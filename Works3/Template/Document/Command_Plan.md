@@ -1,10 +1,10 @@
 # 🚦コマンドの受け付けの見直し
 
-画面の遷移でアクティブ・非アクティブにするタイミング(Smart.Navigation)と、コントロールからの通知のコマンドの種類(`CommandMode.Simple` / 既定の `Standard`)を、あわせて見直す。`Task_Checklist.md` の 8 節から参照する。Simple の一覧と理由は、この見直しが終わるまで、コマンドを変えるたびに更新する。
+画面の遷移でアクティブ・非アクティブにするタイミング(Smart.Navigation)と、コントロールからの通知のコマンドの種類(`CommandMode.Simple` / 既定の `Standard`)を、あわせて見直した。完了(2026-10-02)。結果は `Change_Summary.md` の区間 17。
 
 ## 🎯方針
 
-Smart.Navigation 3.15.0 と Smart.Maui 2.31.0 で入れた。Smart.Maui 2.32.0 で、`CommandMode` を `MakeDelegateCommand` / `MakeAsyncCommand` の第 1 引数にし(省略すると既定)、`AcceptsOperation` を `AcceptsCommand` に改名した。
+Smart.Navigation 3.15.0 と Smart.Maui 2.31.0 で入れた。Smart.Maui 2.32.0 で、`CommandMode` を `MakeDelegateCommand` / `MakeAsyncCommand` の第 1 引数にし(省略すると既定)、`AcceptsOperation` を `AcceptsCommand` に改名した。Smart.Windows(WPF)と Smart.Avalonia の `ExtendViewModelBase` も同じ形にした。
 
 - Smart.Maui: Simple のコマンドもアクティブ(受け付け)を見る。Busy は見ない
 - Smart.Navigation: 遷移イベントとアクティブをそろえる。遷移イベントが起きるときは、その画面はアクティブになっている
@@ -65,6 +65,8 @@ Smart.Navigation 3.15.0 と Smart.Maui 2.31.0 で入れた。Smart.Maui 2.32.0 �
 
 ## 📋Simple のコマンド(19 件)
 
+Smart.Navigation 3.15.0・Smart.Maui 2.32.0・遷移の間の Busy の形で、Simple 19 件と Standard 13 件を実機で確かめ、この振り分けで確定した。
+
 | 画面 | 現在のファイル名 | コマンド | 作り方 | 何用か | 理由 | 確認したこと(実機) |
 |---|---|---|---|---|---|---|
 | UI 1 > Calendar | `Modules/UI/UICalendarViewModel.cs` | `DisplayDateChangedCommand` | `MakeDelegateCommand`(同期) | 表示範囲の予定・スタンプ・祝日を読む | A・B | 開く途中の初回はアクティブで Busy(遷移を始めたコマンドの Busy)。「今日へ」(`GoToTodayCommand`)の実行の中に Busy で来る。▶(コントロールの月送り)はアクティブで Busy なし |
@@ -86,11 +88,11 @@ A・B・C・D のどれにも当たらないもの。
 |---|---|---|---|---|---|
 | Control > Carousel | `Modules/Control/ControlCarouselViewModel.cs` | `CurrentChangedCommand` | `MakeDelegateCommand`(同期) | 現在の項目の印 | 実機: 開く途中の初回は Busy、離れる途中は非アクティブで捨てる。初回の項目は VM が先に印を付けているので、捨てても表示は変わらない。スワイプはアクティブで Busy なし |
 | UI 2 > Character | `Modules/UI/UICharacterViewModel.cs` | `SelectCommand` | `MakeDelegateCommand`(同期) | 選んだクラスの画像 | 実機: タップで 1 回、アクティブで来る |
-| UI 1 > Grid | `Modules/UI/UIGridViewModel.cs` | `CellValueChangedCommand` | `MakeDelegateCommand`(同期) | 確認の列の結果 | ClamGrid は確認の列のタップでだけ出す |
-| UI 1 > Grid の列の設定 | `Modules/UI/UIGridColumnViewModel.cs` | `CellValueChangedCommand` / `RowMovedCommand` | `MakeDelegateCommand`(同期) | 表示の切り替え・行の移動の結果 | ClamGrid はタップと行のドラッグの確定でだけ出す |
+| UI 1 > Grid | `Modules/UI/UIGridViewModel.cs` | `CellValueChangedCommand` | `MakeDelegateCommand`(同期) | 確認の列の結果 | ClamGrid は確認の列のタップでだけ出す。実機: 確認の列のタップで、アクティブで Busy なし |
+| UI 1 > Grid の列の設定 | `Modules/UI/UIGridColumnViewModel.cs` | `CellValueChangedCommand` / `RowMovedCommand` | `MakeDelegateCommand`(同期) | 表示の切り替え・行の移動の結果 | ClamGrid はタップと行のドラッグの確定でだけ出す。実機: 表示の切り替えと行のドラッグで、アクティブで Busy なし |
 | Sample > PDF | `Modules/Sample/SamplePdfViewModel.cs` | `PageChangedCommand` | `MakeDelegateCommand`(同期) | ページの表示と前後のボタン | 実機: 開いた直後と F3 / F4 の後に、アクティブで Busy なしで来る(F キーのコマンドの実行の中ではない) |
 | Basic > Behavior | `Modules/Basic/BasicBehaviorViewModel.cs` | `FocusedCommand` / `UnfocusedCommand` / `TypingStoppedCommand` / `SwitchToggledCommand` | `MakeDelegateCommand`(同期) | フォーカスの出入り・入力の停止・スイッチの表示 | 実機: 最初のフォーカスはアクティブで Busy なし。離れる途中のフォーカスの出入りは非アクティブで捨てる(捨てても変わらない)。入力の停止とスイッチは操作で 1 回 |
-| Device > Audio | `Modules/Device/DeviceAudioViewModel.cs` | `SeekCommand` | `MakeDelegateCommand`(同期) | シークバーのドラッグの完了で再生位置を移す | ドラッグの完了で 1 回(Busy の計測はまだ) |
+| Device > Audio | `Modules/Device/DeviceAudioViewModel.cs` | `SeekCommand` | `MakeDelegateCommand`(同期) | シークバーのドラッグの完了で再生位置を移す | 実機: ドラッグの完了で 1 回、アクティブで Busy なし |
 | Sample > Media | `Modules/Sample/SampleMediaViewModel.cs` | `SeekCommand` | `MakeDelegateCommand`(同期) | 同上 | 同上 |
 | View > Lottie | `Modules/View/ViewLottieViewModel.cs` | `SeekCommand` | `MakeDelegateCommand`(同期) | 同上 | 同上 |
 
@@ -100,14 +102,7 @@ A・B・C・D のどれにも当たらないもの。
 - 遷移の途中の操作: 戻るキー → F キー / 戻るキー / タップ(新画面の `OnNavigatedToAsync` に一時的に待ちを入れる)、メニューのダブルタップ
 - ドラッグは `adb shell input draganddrop`、QR の検出は一時的なコードで見立てる
 
-## ✅項目
-
-| 番号 | 内容 |
-|---|---|
-| 8-5 | Simple の一覧と理由の更新(見直しが終わるまで、コマンドを変えるたびに) |
-
 ## ⏳未確認
 
 - HTTP の続きの読み込み(サーバーが要る)
 - QR を写しての読み取り
-- シーク(Audio / Media / Lottie)の、通知が来たときの Busy の計測

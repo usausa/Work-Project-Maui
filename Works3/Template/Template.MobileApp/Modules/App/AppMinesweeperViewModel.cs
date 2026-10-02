@@ -21,7 +21,7 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
 
     private readonly IDispatcherTimer ticker;
 
-    private readonly MinesweeperGame game = new(NextRandom);
+    private readonly MinesweeperGame game = new(static x => RandomNumberGenerator.GetInt32(x));
 
     private bool visible;
 
@@ -135,69 +135,39 @@ public sealed partial class AppMinesweeperViewModel : AppViewModelBase
         Refresh([]);
     }
 
-    // 開いた数字は周りを開く。旗のモードでは閉じたマスの旗を切り替える
     private void Tap(MinesweeperCell cell)
     {
-        var state = game.GetState(cell);
-        if (state == MinesweeperCellState.Opened)
-        {
-            Apply(game.Chord(cell, timeProvider.GetUtcNow()));
-        }
-        else if (IsFlagMode)
-        {
-            ToggleFlag(cell);
-        }
-        else if (state == MinesweeperCellState.Hidden)
-        {
-            Apply(game.Open(cell, timeProvider.GetUtcNow()));
-        }
+        var now = timeProvider.GetUtcNow();
+        Apply(IsFlagMode ? game.ToggleFlag(cell, now) : game.Open(cell, now));
     }
 
-    // 長押しは旗 (開いた数字は周りを開く)
-    private void LongPress(MinesweeperCell cell)
-    {
-        if (game.GetState(cell) == MinesweeperCellState.Opened)
-        {
-            Apply(game.Chord(cell, timeProvider.GetUtcNow()));
-        }
-        else
-        {
-            ToggleFlag(cell);
-        }
-    }
+    private void LongPress(MinesweeperCell cell) =>
+        Apply(game.ToggleFlag(cell, timeProvider.GetUtcNow()));
 
     //--------------------------------------------------------------------------------
     // Helper
     //--------------------------------------------------------------------------------
 
-    private static int NextRandom(int max) => RandomNumberGenerator.GetInt32(max);
-
-    private void ToggleFlag(MinesweeperCell cell)
+    // 旗と負けは振動で知らせ、ベストタイムを更新したら保存する
+    private void Apply(MinesweeperMove move)
     {
-        if (game.ToggleFlag(cell))
+        if (move.Type == MinesweeperMoveType.Flagged)
         {
             vibration.Vibrate(FlagVibration);
             Refresh([]);
         }
-    }
-
-    // 負けたら地雷を近い順に見せて振動、ベストタイムを更新したら保存する
-    private void Apply(IReadOnlyList<MinesweeperCell> opened)
-    {
-        if (opened.Count > 0)
+        else if (move.Type == MinesweeperMoveType.Opened)
         {
-            var revealed = opened;
             if (game.State == MinesweeperState.Lost)
             {
                 vibration.Vibrate(ExplodeVibration);
-                revealed = game.GetMines();
             }
             else if (game.IsNewBest)
             {
                 store.Save(game.Export(), AppJsonContext.Default.MinesweeperSnapshot);
             }
 
-            Refresh(revealed);
+            Refresh(move.Revealed);
         }
     }
 

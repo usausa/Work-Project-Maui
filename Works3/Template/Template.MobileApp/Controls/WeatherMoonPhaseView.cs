@@ -5,14 +5,14 @@ using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
 // 月の満ち欠け。Age は新月からの日数。満ちていくときは右、欠けていくときは左が光る
-public sealed class MoonPhaseView : SKCanvasView
+public sealed class WeatherMoonPhaseView : SKCanvasView
 {
     private const double SynodicMonth = 29.530588853;
 
     public static readonly BindableProperty AgeProperty = BindableProperty.Create(
         nameof(Age),
         typeof(double),
-        typeof(MoonPhaseView),
+        typeof(WeatherMoonPhaseView),
         0d,
         propertyChanged: OnVisualChanged);
 
@@ -25,7 +25,7 @@ public sealed class MoonPhaseView : SKCanvasView
     public static readonly BindableProperty LightColorProperty = BindableProperty.Create(
         nameof(LightColor),
         typeof(Color),
-        typeof(MoonPhaseView),
+        typeof(WeatherMoonPhaseView),
         Color.FromArgb("#FFF4C7"),
         propertyChanged: OnVisualChanged);
 
@@ -38,7 +38,7 @@ public sealed class MoonPhaseView : SKCanvasView
     public static readonly BindableProperty DarkColorProperty = BindableProperty.Create(
         nameof(DarkColor),
         typeof(Color),
-        typeof(MoonPhaseView),
+        typeof(WeatherMoonPhaseView),
         Color.FromRgba(255, 255, 255, 36),
         propertyChanged: OnVisualChanged);
 
@@ -49,7 +49,7 @@ public sealed class MoonPhaseView : SKCanvasView
     }
 
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((MoonPhaseView)bindable).InvalidateSurface();
+        ((WeatherMoonPhaseView)bindable).InvalidateSurface();
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
