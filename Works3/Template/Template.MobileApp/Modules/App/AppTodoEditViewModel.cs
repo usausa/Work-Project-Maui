@@ -28,7 +28,9 @@ public sealed partial class AppTodoEditViewModel : AppViewModelBase
         SaveCommand = MakeAsyncCommand(SaveAsync);
         DeleteCommand = MakeAsyncCommand(DeleteAsync);
 
-        DueCommand = MakeDelegateCommand<TodoDue>(SetDue);
+#pragma warning disable IDE0200
+        DueCommand = MakeDelegateCommand<TodoDue>(x => Context.Draft.SetDue(x));
+#pragma warning restore IDE0200
         PickDateCommand = MakeDelegateCommand(() => IsDatePickerOpen = true);
     }
 
@@ -53,6 +55,4 @@ public sealed partial class AppTodoEditViewModel : AppViewModelBase
         await Context.DeleteEditingAsync();
         await Navigator.PopAsync();
     }
-
-    private void SetDue(TodoDue due) => Context.Draft.SetDue(due);
 }

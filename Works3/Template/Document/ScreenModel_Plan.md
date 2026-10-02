@@ -11,7 +11,7 @@
 | 9-5 | News | 一覧と記事が共有する文脈クラス |
 | 9-6 | Timer | ラップの行と印、表示の値の計算をモデルへ |
 | 9-7 | Sudoku | 数字のキーの行と残りの数をモデルへ |
-| 9-8 | Minesweeper | タップと長押しの規則、負けたときに見せるマスをモデルへ |
+| 9-8 | Minesweeper | 開くと旗の切り替えの規則、負けたときに見せるマスをモデルへ |
 | 9-9 | 2048 | 入力を受け付けるかと勝ちを見せるかの規則をモデルへ |
 | 9-10 | Calc | 式の入力の組み立てをモデルへ |
 
@@ -25,6 +25,7 @@
 | 文脈クラス | 一覧と、そこから開く画面(編集・記事)が共有する情報(画面寄りのモデル)。VM と同じ場所に置き、`[Scope]` のプロパティで受け取る(Navigation > Wizard の `WizardContext` と同じ形)。画面の間の受け渡し(`Parameters` の Model と Pop の結果)の代わりにし、保存などの処理も文脈が持つ。サービス(`DataService` / `TimeProvider` など)は参照してよいが、表示寄りの仕組み(`IDispatcher`、表示を消す・行を動かすまでの時間)と、片方の画面だけの状態(選んだタブ・スクロールの位置)は VM に置く |
 | VM | 文脈とモデルのメソッドの呼び出しと、バインドだけ。表示の文言(エラーの文言など)は VM で作る |
 | 行の型 | `XxxViewModel` と名付けない(`TodoItem`・`TimerLapItem`・`SudokuDigit` など) |
+| モデルのメソッドの名前 | 何をするかで名付ける(`Open` / `ToggleFlag`)。画面の操作の名前(`Tap` / `LongPress`)にしない。どの操作でどれを呼ぶか(旗のモード・長押し)は VM が決める |
 | 写し替え | 型の間の値の写し替えは Smart.Mapper(`[Mapper]`。使う側のファイルの `// Mapper` 区画) |
 | コントロールの名前 | 1 つの機能に固有のものは機能の名前を頭に付ける(`WeatherMoonPhaseView`)。汎用のもの(`ArcMeter`・`RangeBar`・`SegmentBar`・`SeriesSegmentView`・`TabStrip`)は付けない |
 | Timer のモデルのファイル | `TimerApplication.cs` の 1 つのまま、区切り(Stopwatch / Countdown)で分ける |
@@ -109,8 +110,8 @@
 
 | 現在のファイル名 | 何用か | 変更 |
 | --- | --- | --- |
-| `Models/App/MinesweeperGame.cs` | マインスイーパーのモデル | タップ(開く。旗のモードなら旗、開いた数字なら周りを開く)と長押し(旗。開いた数字なら周りを開く)の規則(`Tap` / `LongPress`)と、1 手の結果 `MinesweeperMove`(開いた・旗。負けたときに見せるマスは地雷を近い順) |
-| `Modules/App/AppMinesweeperViewModel.cs` | マインスイーパーの画面 | 振動・保存・表示の更新だけ |
+| `Models/App/MinesweeperGame.cs` | マインスイーパーのモデル | 開く(`Open`。閉じたマスを開き、開いた数字のマスは周りを開く)と旗の切り替え(`ToggleFlag`。開いた数字のマスには旗を立てられないので周りを開く)と、1 手の結果 `MinesweeperMove`(開いた・旗。負けたときに見せるマスは地雷を近い順) |
+| `Modules/App/AppMinesweeperViewModel.cs` | マインスイーパーの画面 | タップ(旗のモードなら `ToggleFlag`、ほかは `Open`)と長押し(`ToggleFlag`)の振り分けと、振動・保存・表示の更新。乱数はラムダで渡す |
 
 確認: タップ・旗のモード・長押し・周りを開く、負けと勝ち。
 

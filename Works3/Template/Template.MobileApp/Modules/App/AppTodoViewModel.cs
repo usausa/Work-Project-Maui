@@ -40,12 +40,16 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
         Disposables.Add(UndoTimer);
 
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
-        ShowDoneCommand = MakeDelegateCommand(ToggleShowDone);
+#pragma warning disable IDE0200
+        ShowDoneCommand = MakeDelegateCommand(() => Context.List.ToggleShowDone());
+#pragma warning restore IDE0200
 
         AddCommand = MakeAsyncCommand(() => OpenEditAsync(null));
         EditCommand = MakeAsyncCommand<TodoItem>(OpenEditAsync);
         DoneCommand = MakeAsyncCommand<TodoItem>(ToggleDoneAsync);
-        ImportantCommand = MakeAsyncCommand<TodoItem>(ToggleImportantAsync);
+#pragma warning disable IDE0200
+        ImportantCommand = MakeAsyncCommand<TodoItem>(x => Context.ToggleImportantAsync(x));
+#pragma warning restore IDE0200
         DeleteCommand = MakeAsyncCommand<TodoItem>(DeleteAsync);
         UndoCommand = MakeAsyncCommand(UndoAsync);
     }
@@ -76,8 +80,6 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private void ToggleShowDone() => Context.List.ToggleShowDone();
-
     // 元に戻すの帯は閉じる
     private Task OpenEditAsync(TodoItem? item)
     {
@@ -93,8 +95,6 @@ public sealed partial class AppTodoViewModel : AppViewModelBase
         await Context.ToggleDoneAsync(item);
         dispatcher.DispatchDelayed(MoveDelay, () => Context.List.Move(item));
     }
-
-    private Task ToggleImportantAsync(TodoItem item) => Context.ToggleImportantAsync(item);
 
     private async Task DeleteAsync(TodoItem item)
     {

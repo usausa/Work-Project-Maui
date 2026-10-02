@@ -39,7 +39,9 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     {
         this.share = share;
 
-        SaveCommand = MakeDelegateCommand(ToggleSave);
+#pragma warning disable IDE0200
+        SaveCommand = MakeDelegateCommand(() => Context.ToggleSave());
+#pragma warning restore IDE0200
         ShareCommand = MakeAsyncCommand(ShareAsync);
         SmallerCommand = MakeDelegateCommand(() => FontSizeIndex--, () => FontSizeIndex > 0);
         LargerCommand = MakeDelegateCommand(() => FontSizeIndex++, () => FontSizeIndex < FontSizes.Length - 1);
@@ -59,8 +61,6 @@ public sealed partial class UINewsDetailViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
     // Operation
     //--------------------------------------------------------------------------------
-
-    private void ToggleSave() => Context.ToggleSave();
 
     private void ShowRelated(NewsArticle article)
     {
