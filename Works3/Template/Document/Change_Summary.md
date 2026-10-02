@@ -2802,6 +2802,73 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
 - 実機での画面の確認(見た目、Weak の本人確認、Enroll で設定の登録の画面が開くこと、最後の本人確認からの時間)は未実施。成功の流れと鍵の置き場所は、画面ロックと指紋を登録した端末での確認になる
 
+### 🚦遷移中の操作の受け付けとコントロールの通知(2026-10-01)
+
+画面は自分の遷移イベントの前にアクティブになり、遷移は Busy の中で始めて、遷移の途中の利用者の操作を止める。コントロールからの通知のコマンドのうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るものは `CommandMode.Simple`(アクティブのときだけ実行し、Busy は見ず立てもしない)にした(`Command_Plan.md`)。
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `Usa.Smart.Navigation` / `.Extensions.DependencyInjection` / `.Maui` を 3.15.0 に。`INavigationLifecycleSupport`(`OnActivated` / `OnDeactivated`): 遷移の始め(`Executing` が立った直後)に今の画面の `OnDeactivated`、新画面の `OnNavigatingTo` の前に新画面の `OnActivated`。表示の切り替えの前に失敗したときは、新画面を非アクティブにして元の画面をアクティブに戻す。`Exit` は `OnDeactivated` |
+| `Smart.Maui`(サブモジュール。2.32.0) | `CommandMode` は `Default` / `Standard` / `ControlByBusyState` / `Simple`。`ExtendViewModelBase.AcceptsCommand`(既定 true)が false の間は、`MakeXxxCommand` を実行しない。`Standard` は Busy なら実行せず、実行中は Busy を立てる。`ControlByBusyState` は Busy の間は無効(CanExecute)で、ほかは `Standard` と同じ。`Simple` は Busy を見ず立てもしない(CanExecute の更新の対象にはする)。`MakeDelegateCommand` / `MakeAsyncCommand` は `CommandMode` を第 1 引数に取り(`MakeDelegateCommand(CommandMode.Simple, execute)`)、省略したオーバーロードは既定(`ExtendViewModelOptions.CommandMode`、`Standard`) |
+| `Modules/AppViewModelBase.cs` | 作るときに `AcceptsCommand` を false にし、`INavigationLifecycleSupport` で切り替える(遷移イベントの前にアクティブ、Push で下になった画面は受け付けないまま)。F キーと戻るキー(`NavigatorNotifyAsync`)も、受け付けていなければ何もしない。ポップアップの基底(`AppDialogViewModelBase`)と `MainPageViewModel` は受け付けたまま |
+| `MainPageViewModel.cs` | 遷移の間は Busy にする(`Navigator.ExecutingChanged` で、遷移が始まったら `BusyState.Begin()`、終わったら破棄)。新画面は遷移の途中からアクティブになるので、どこから始めた遷移(コマンド・F キー・戻るキー・起動時)でも、その間の利用者の操作を止める。コマンドから始めた遷移はコマンドの Busy と重なるが、`BusyState` は数で持つので `IsBusy` は途中で切れない |
+| コントロールの通知のコマンド | `CommandMode.Simple` は 19 件: Calendar の表示範囲、記事の読んだ量、News / HTTP / Collection の続きの読み込み、Lottie のスクラブ、DragDrop の全部(11 件。重なりが続けて来るので、同じ操作の通知をそろえる。定義はイベントの順)、Setting と QR Scan の読み取り(QR Scan は素の `DelegateCommand` から)。ほかの通知 13 件(Carousel の現在の項目、Character の選択、Grid と列の設定のセルの値・行の移動、PDF のページ、Behavior のフォーカス・入力の停止・スイッチ、Audio / Media / Lottie のシーク)は既定(`Standard`)。基準・一覧・理由は `Command_Plan.md`。どれも `MakeDelegateCommand(CommandMode.Simple, ...)` で、非同期の処理を始めるもの(HTTP と News の続きの読み込み、Setting の読み取り)は `_ = LoadMoreAsync()` などで開始だけ行い、本体は Busy の外で動かす(読み込む間もスクロールを止めない)。Setting の読み取りは `DetectAsync` に切り出し、`ApiContext` / `ITelemetryControl` をフィールドに |
+| `Modules/Device/DeviceAudioViewModel.cs` | Pause / Stop を素の `DelegateCommand` から `MakeDelegateCommand` に |
+| `Document/Task_Checklist.md` / `README.md` | 6-3(BusyState の制御)を削除し(同期のコマンド(`MakeDelegateCommand`)は今までどおり実行中に Busy を立てる)、8 節(コマンドの受け付けの見直し。残りは Simple の一覧と理由の更新)を追加。サマリと TODO の Decision の行は CoreCLR と 8 節 |
+| `Document/Command_Plan.md` | 方針、遷移の順番とアクティブ(3.15.0)、問題になりうるケースと確認の結果、Simple の基準、Simple と Standard のコントロールの通知の一覧と理由、検証の方法、未確認 |
+
+- 実機(Pixel 9a): 遷移の途中(Weather の `OnNavigatingFromAsync` に一時的に 1.5 秒の待ちを入れて確認し、確認後に外した)に、戻るキー → F1、戻るキー → 戻るキーと続けても、2 回目は何もせずに UI 1 へ戻る(例外なし)
+- 実機: メニューのボタンのダブルタップは、間隔 0.05 秒では 2 回目を捨てて UI 1、0.12 / 0.2 / 0.3 秒では遷移の終わった UI 1 の Mail に当たる(例外なし)
+- 実機: 遷移の後の操作。起動直後のメニュー、Calendar(初回の予定・翌月・今日)、News(最後までの続きの読み込み、記事の Push と Pop の後の別の記事、読んだ量のバー、タブ)、ToDo の編集(Push と結果付きの Pop)、Timer の数値入力のポップアップ、Wizard の F4、Stack の Push / Pop の繰り返し、遷移の後の処理(Initialize / Cancel / Mail / Dock)
+- 実機: コントロールの通知。Audio(再生・一時停止・シーク・停止)、DragDrop(リスト間の移動・並べ替え・ゴミ箱)、Lottie(シーク・スクロールのスクラブ・長押し)、Grid(確認の列、列の設定の表示の切り替えと行の移動)、PDF(F4 とスクロールでのページの表示)、Carousel、Collection の続きの読み込み、Behavior のフォーカス、Character の選択
+- 実機: QR の読み取りの通知(Setting / QR Scan)は UI スレッドで約 50 ms ごとに来て(見つからないときは空)、Busy を立てない。Setting で読み取りの後の処理の間(一時的なコードで検出に見立て、確認後に外した)は次の通知が来ず、3 秒の後に再開する
+- 実機(3.15.0 / 2.31.0): 起動・Push・Pop を含む各遷移で、新画面のアクティブは遷移イベントの前。戻るキーで UI 1 へ戻る遷移の初期化の間(UI 1 のメニューの `OnNavigatedToAsync` に一時的に 1.5 秒の待ちを入れて確認し、確認後に外した)の F1・メニューのボタン・2 回目の戻るキーは届かず、メニューのボタンのダブルタップ(0.15 秒)の 2 回目も止まる(例外なし)
+- 実機(3.15.0 / 2.31.0): Simple はすべてアクティブで実行され、非アクティブで捨てたものは無い。Busy の間に Simple で実行されたのは Calendar の表示範囲(開く途中・「今日へ」)と記事の読んだ量(関連記事の切り替え)。Standard で捨てたのは、離れる途中の Behavior のフォーカスと Carousel、開く途中の Carousel(Busy。VM が先に印を付けているので変わらない)だけ(一時的なログで確認し、確認後に外した)
+- 実機: 遷移の Busy の数(一時的なログで `BusyState` の数と `IsBusy` の変更の通知を記録し、確認後に外した)。起動時と戻るキーは 0→1→0、メニューのボタンと F キーは 0→1(コマンド)→2(遷移)→1→0 で、`IsBusy` の変更の通知はどれも最初と最後の 2 回だけ。戻るキーで UI 1 へ戻る遷移の初期化の間(1.5 秒)の F1・メニューのボタン・2 回目の戻るキーは届かない(例外なし)
+- 実機: Simple の理由。Calendar の表示範囲は開く途中の初回がアクティブで Busy、「今日へ」の実行の中が Busy。記事の読んだ量は関連記事の切り替えの実行の中が Busy。DragDrop の重なりは 1〜8 ms ごと、Lottie の長押しは 16 ms ごと(一時的なログで確認し、確認後に外した)
+- 実機: Standard にした通知。PDF(開いた直後の 1 / 6、F4 で 2 / 6)、Behavior(開いた直後のフォーカス、キーボードを閉じたときの Unfocused、スイッチ、入力の停止)
+- 実機: DragDrop(全部 Simple)で、リスト間の移動・並べ替え・ゴミ箱
+- 未確認: QR を写しての読み取り、HTTP の続きの読み込み(サーバーが要る)、Standard にした Character・Grid と列の設定・Audio / Media / Lottie のシーク
+- ビルド 0 警告、inspectcode 0 件
+
+### 🎚️シークバーの追従・Audio の再生位置・遷移の後の処理の Busy(2026-10-01)
+
+| 対象 | 内容 |
+|---|---|
+| `Behaviors/SliderOption.cs` | シークバー(`DragCompletedCommand` を付けた Slider)に Smart.Maui の `SliderSeekBehavior` を付け(刻みの `Step` は `SliderStepBehavior`)、ドラッグの完了でコマンドを実行した後と、`Minimum` / `Maximum` が変わった後(通知の後に `Dispatcher.Dispatch` で)に、`Slider.Value` に入った値を外す(`ClearValue`)。ドラッグや範囲の変更で入った値が OneWay のバインドより優先され、以後の値の変化がつまみに出なかった(Audio / Lottie / Media。実行中に `Maximum` が変わる Lottie / Media はドラッグしなくても追従しなかった) |
+| `Modules/Device/DeviceAudioViewModel.cs` | 再生していないときのシークは位置だけ覚え(画面の位置もそれを出す)、再生を始めた直後にシークする。停止と最初からの再生では覚えた位置を捨てる。再生していない MediaPlayer にシークを重ねると後のシーク(停止の先頭へのシークなど)が効かず、前の位置から鳴ってすぐに再生の終わりになっていた |
+| `Modules/Navigation/Navigate/NavigateCancelViewModel.cs` / `Modules/Device/DeviceBleHostViewModel.cs` | 遷移の後の処理を `BusyState.UsingAsync` で囲む(`Using` に非同期のラムダを渡すと、最初の await で Busy が下りていた) |
+
+- 実機(Pixel 9a): Audio はドラッグの後に停止するとつまみが 0 に戻り、再生に追従する。Lottie / Media はドラッグしなくても再生に追従し、Media は最後に右端へ届く。Media はドロップの直後から落とした位置にあり、そのまま再生に追従する(戻りは見えない)
+- 実機: Audio の再生の長さが位置どおり(一時的なログの時刻で確認)。シーク → 停止 → 再生、シーク 2 回 → 再生、シーク → 再生、一時停止中のシーク → 再生、シーク → 最初から再生、一時停止 → 再開(実際の位置から続く)
+- 実機: Navigate > Cancel の確認(No で残る、Yes でメニューへ)と BLE Host の広告の開始は今までどおり
+- ビルド 0 警告、inspectcode 0 件
+
+### 🧩CommunityToolkit の Behavior の置き換え(2026-10-01)
+
+VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッチは `s:EventToCommandBehavior`、ほかはアプリの添付プロパティから付ける)に置き換えた(バインドを使わない Masked / Email・NumericValidation / IconTintColor / MainPage の StatusBar はそのまま)。
+
+| 対象 | 内容 |
+|---|---|
+| `Behaviors/EntryOption.cs` | `TypingStoppedCommand` / `TypingStoppedDelay`(既定 1000 ms): Smart.Maui の `TypingStoppedBehavior` を付け、入力が止まってから一定時間の後に、入力中の文字列を引数にしてコマンドを実行する |
+| `Behaviors/ButtonOption.cs` | `LongPressCommand` / `LongPressDuration`(既定 500 ms): Smart.Maui の `LongPressBehavior` を付け、押したまま一定時間でコマンドを実行し、離すと取り消す。長押しの後に離したときの Clicked(Command)は止めない |
+| `Modules/Basic/BasicBehaviorView.xaml` | 入力の停止を `EntryOption.TypingStoppedCommand` に、スイッチを Smart の `s:EventToCommandBehavior` に。カードの名前を「Behaviors」にし、見出しに使っているもの(`mct:` / `s:` / 自前の添付プロパティ)を書く |
+| `Modules/View/ViewEffectView.xaml` | 長押しの見本を Border + `mct:TouchBehavior` から Button(スタイルで `ButtonOption.PressEffect`)+ `ButtonOption.LongPressCommand` に。見出しを「演出(Confetti / 長押し / IconTint)」に |
+
+- 実機(Pixel 9a): スイッチの切り替えで数が増え、入力が止まると「確定: …」が出る。長押しで数が増え、短いタップでは増えず、押している間は縮む
+- ビルド 0 警告、inspectcode 0 件、XAML Styler の書式どおり
+
+### 🧱Smart.Maui 2.30.0 / Smart.Mvvm 2.16.0(2026-10-01)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `Usa.Smart.Mvvm` を 2.16.0 に。非同期のラムダを `BusyState.Using` に渡すとコンパイルエラーになる(`UsingAsync` を使う) |
+| `Smart.Maui`(サブモジュール。2.30.0) | 単体の Behavior: `PressEffectBehavior`(Button / ImageButton。押している間の縮みと薄さ、時間、Easing)、`HapticFeedbackBehavior`、`LongPressBehavior`、`TypingStoppedBehavior`、`SliderSeekBehavior`、`SliderStepBehavior` |
+| `Behaviors/ButtonOption.cs` / `EntryOption.cs` / `SliderOption.cs` | 添付プロパティは入口として残し、要素ごとに Smart.Maui の Behavior を作って付ける(値は作るときと変わったときに渡し、ミリ秒の値は `TimeSpan` に直す)。アプリの中の同じ働きの Behavior(押下の縮み・ハプティクス・長押し・入力の停止)と、シークバー・刻みの処理は削除 |
+
+- 実機(Pixel 9a): 長押し(短いタップでは数えない)、押している間の縮み(Effect の Button と Dock の ImageButton)、入力の停止、Audio のドラッグの後の追従、Lottie のドラッグなしの追従、Telemetry の刻みのあるスライダー、ハプティクスを付けた Audio の ▶
+- ビルド 0 警告、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -2904,6 +2971,20 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - BindingContext が null の要素のバインドは評価されない(コンバーターも呼ばれず、`IsVisible` などは既定値のまま)。null のときに隠すなら、親の値を `RelativeSource` で見る
 - `SfShimmer` は置かれた場所の高さ全体を下地の色(`#FFFBFE`)で塗る。下地の色(`ShimmerBackground`)は internal で、テーマのキー `SfShimmerNormalBackground` を画面の `ResourceDictionary` に置いても、`CollectionView` の `EmptyView` の中には効かなかった
 - `uiautomator dump` は、動き続ける要素(流れる文字・シマー)がある画面では `could not get idle state` で失敗する(前に書いたファイルが残るので、読むと古い内容になる)。確かめるときは撮影の画素で見る
+- **同期のコマンドの Busy は、続けて受けたタップを止めない**: `MakeDelegateCommand` の Busy は同期の処理の間だけ立ち、その間に受けたタップは処理が終わってから順に実行される
+- 遷移が速いと、ダブルタップの 2 回目は次の画面に当たる(遷移の後のタップと同じ扱い)
+- 戻るキー(`MainPage.OnBackButtonPressed`)は Busy を立てずに遷移するので、その遷移の途中の F キーや戻るキーは Busy では止まらない
+- `Navigator` は遷移先の `OnNavigatingToAsync` / `OnNavigatedToAsync` を待つので、遷移を始めたコマンドの Busy は遷移先の初めの読み込みの間も続く
+- `BusyState.Using(async () => ...)` は `Using<Task>(Func<Task>)` になり、最初の await で Busy が下りる。Busy を保つには `using (BusyState.Begin())` の中で await する
+- MAUI の `RemainingItemsThresholdReachedCommand` は CanExecute を見てから実行する
+- **遷移の途中(新画面の初期化の間・離れ始めた後)にも来るコントロールの通知がある**: ClamCalendar の表示範囲(ハンドラーが付いたとき)、CarouselView の `CurrentItemChanged`(表示するときと離れるとき)、Entry の `Focused` / `Unfocused`(離れるとき)。初回の通知を捨てると VM が表示とずれる(Calendar は予定が読まれない)
+- **コントロールの通知が、元になったコマンドの実行の中(そのコマンドの Busy の間)に同期で来ることがある**: ClamCalendar の表示範囲(`DisplayDate` を変えたとき)、`Scroll.RatioCommand`(記事を切り替えて先頭へ戻したとき)。PDF のビューアーの `PageChanged` は、ページの番号を変えたコマンドの後に来る
+- MAUI のドラッグとドロップの通知の順番は、ドラッグ元の `DragStarting` → 受け入れ先ごとに `DragOver`(重なっている間 1〜8 ms ごと)→ `DragLeave`(出たときに 1 回)→ … → 離した先の `Drop` → ドラッグ元の `DropCompleted`。離した先の `DragLeave` は来ない。`DropCompleted` は、ドロップで元の項目を一覧から外すと来ない
+- **BarcodeScanning.Native.Maui(Android)の検出の通知は、解析したフレームごと(見つからないときは空の集合)に UI スレッドで 1 件ずつ来る**。前の通知のコマンドの実行が終わるまで次のフレームを解析せず、`PauseScanning` の間は解析もせず、UI スレッドで受けた通知も捨てる。読み取りの後で待つ処理は、最初の await の前に `PauseScanning` を立てれば、待つ間に次の通知は来ない
+- **MAUI の `Style.Behaviors` は、1 つのインスタンスをスタイルを使う全部の要素で共有する**。付けた要素を覚える Behavior(Smart.Maui の `BehaviorBase` の派生など)はスタイルで共有できないので、添付プロパティから要素ごとに作って付ける
+- **CommunityToolkit.Maui 10 から、Behavior の BindingContext は付けた要素から引き継がれない**(9.x まではあった)。`Command="{Binding XxxCommand}"` だけではコマンドが null のままで、イベントが来ても何も起きない
+- **MAUI 10 の `Slider` は、利用者がドラッグした後は OneWay のバインドの値がつまみに出ない**: OneWay のバインドの値は優先度 `FromBinding`(TwoWay は `FromHandler`)で入り、Android のハンドラーがドラッグ中に公開の setter で入れる値(`ManualValueSetter`)のほうが優先される。バインドは残っているので、ドラッグの後に `ClearValue(Slider.ValueProperty)` で外すとバインドの値に戻る。`Minimum` / `Maximum` の変更でも Slider が範囲に収めた値を公開の setter で入れるので同じことが起き(実行中に `Maximum` が変わる Media / Lottie はドラッグしなくても追従しなかった)、このときは変更の通知の中で `ClearValue` しても効かず、`Dispatcher.Dispatch` で通知の後に外す
+- **Android の MediaPlayer(Pixel 9a。Plugin.Maui.Audio)は、一度も再生していないときにシークを重ねると、後のシークが効かずに前の位置から鳴る**(`CurrentPosition` は要求した位置を返すので気づきにくい)。再生していないときのシークは位置だけ覚え、再生を始めた直後にシークする。Plugin.Maui.Audio の `CurrentPosition` はストップウォッチで、実際の位置より 0.2 秒ほど先を指す
 
 ---
 
@@ -2928,6 +3009,9 @@ Mono で `dotnet.gc.collections` の gen0 と `dotnet.gc.heap.total_allocated` �
 - コミットは実機確認後にユーザーが実施
 - **設定項目の投入は設定画面の QR に統一**(`SettingParser` の `key=value`)。手入力 Entry は作らない
 - **ナビゲーションイベントの使い分け**: 表示前に済ませたい処理(表示値の取得・一覧の準備・パラメータの取り出し)は `OnNavigatingToAsync`、表示後でよい / 表示が要る処理(権限要求・カメラ / センサー / タイマー / 接続の開始・スクロール・表示後のアニメーション)は `OnNavigatedToAsync`。初回表示だけの処理は `context.Attribute.IsRestore()` を明示的に見る(`Count == 0` やフラグで代用しない)
+- **コマンドの種類**: 利用者の操作とコントロールからの通知は `MakeXxxCommand` の既定(`Standard`。アクティブでない画面と Busy の間は実行しない)。コントロールからの通知のうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)だけ `MakeDelegateCommand(CommandMode.Simple, ...)`(`CommandMode` は第 1 引数。アクティブのときだけ実行し、Busy は見ず立てもしない。基準・一覧・理由は `Command_Plan.md`)。Simple のコマンドからは遷移もダイアログも出さない。通知から非同期の処理を始めるときは `_ = XxxAsync()` で開始だけ行い(`MakeAsyncCommand` に `Simple` は使わない。Busy を使わないうえ、`async void` の実行で例外がアプリを落とす)、再入は最初の await の前に立てるフラグで防ぐ
+- **遷移の間は Busy**: 画面は自分の遷移イベント(`OnNavigatingTo` の前)からアクティブになるので、遷移の途中の利用者の操作は Busy で止める。`MainPageViewModel` が `Navigator.ExecutingChanged` で遷移の間 Busy を立てるので、遷移を始める側で Busy を用意しなくてよい(コマンドから始めた遷移は Busy が重なるが、`BusyState` は数で持つ)
+- **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`
 - `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
 

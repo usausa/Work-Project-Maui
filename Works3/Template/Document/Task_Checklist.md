@@ -1,7 +1,7 @@
 # ✅残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 2 節(バックグラウンドタスク / タンキング送信)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
+優先順 = 2 節(バックグラウンドタスク / タンキング送信)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。8 節(コマンドの受け付けの見直し)は進行中。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
 
 ## 📋サマリ
 
@@ -12,7 +12,8 @@
 | Device | Push(FCM) | 3-2 |
 | Device | Biometric(生体認証) | 4-1〜4-3、4-5 |
 | Device | Passkey(パスキー) | 4-4 |
-| Decision | 保留中の判断(CoreCLR の扱い、BusyState の制御) | 6 |
+| Decision | 保留中の判断(CoreCLR の扱い) | 6 |
+| Decision | コマンドの受け付けの見直し(遷移でのアクティブのタイミング、Simple の使い分け) | 8 |
 
 ## 📏運用ルール
 
@@ -101,16 +102,8 @@ csproj は `UseMonoRuntime=false`(CoreCLR)。Shiny の `[Export]` ライフサ�
 
 - [ ] **6-2-0**⚖️【判断】.NET 11 まで CoreCLR のままにする(実機検証は `-p:UseMonoRuntime=true` の Mono ビルド)か、csproj を Mono に戻すか
 
-### ⏳6-3 BusyState の制御
+## 🚦8. コマンドの受け付けの見直し
 
-画面の VM の非同期コマンド(`MakeAsyncCommand`)は、実行中は共有の `BusyState`(DI の `BusyState.Default`)が立ち、メイン画面の全体のオーバーレイ(`MainPage.xaml` の `BusyOverlay`)が入力を止め、ほかのコマンドの実行も捨てる。これを避けるために、次の箇所が特殊な書き方をしている。
+遷移でアクティブ・非アクティブにするタイミングと、コントロールからの通知のコマンド(`CommandMode.Simple`)の使い分けを見直す。方針(Simple もアクティブを見る、遷移イベントのときはアクティブ)は Smart.Navigation 3.15.0 と Smart.Maui 2.31.0 で入れ、実機で確かめた。遷移の順番・確認の結果・Simple の一覧と理由・未確認は `Command_Plan.md`。
 
-| 箇所 | 書き方 |
-| --- | --- |
-| Network > HTTP の Delay(`NetworkHttpViewModel`)、SFTP の送受信(`NetworkSftpViewModel`)、Storage の送受信(`NetworkStorageViewModel`)、Sample > Chat の送信(`SampleChatViewModel`) | `MakeDelegateCommand(() => _ = XxxAsync(), ...)` で非同期の処理をコマンドの外で動かし、画面の独自のフラグ(`Delaying` / `Busy` / `Loading` と `Transferring` / `IsResponding`)で二重実行を止める(長い処理の間もオーバーレイで画面を止めず、Chat は中断のボタンを押せる) |
-| UI > Calendar の表示月の変化(`UICalendarViewModel`) | `CommandBehavior.AllowBusyExecution`(実行中でも捨てない) |
-| App > ToDo の完了のチェック(`AppTodoViewModel`) | 行を動かすまでの見せるための待ちを `IDispatcher.DispatchDelayed` でコマンドの外に出す(待つ間も続けて押せる) |
-| UI > News の続きの読み込み(`UINewsViewModel`) | 一覧の最後に近づいたときの読み込みを `MakeDelegateCommand(x => _ = LoadMoreAsync(x))` でコマンドの外で動かし、ページのフラグ(`IsLoadingMore`)で二重実行を止める(読み込む間もスクロールを止めない)。新着の件数を消す待ちは `IDispatcher.DispatchDelayed` |
-| ポップアップの VM の基底(`AppDialogViewModelBase`) | 画面と別の `BusyState` を持つ(ポップアップの処理でメイン画面のオーバーレイを出さない) |
-
-- [ ] **6-3-0**⚖️【判断】BusyState の制御(全体のオーバーレイ・実行中のコマンドの扱い)を見直すか。見直す場合は上の箇所の書き方をそろえる
+- [ ] **8-5** Simple の一覧と理由の更新(見直しが終わるまで、コマンドを変えるたびに)

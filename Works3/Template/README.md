@@ -82,7 +82,7 @@ Template project for MAUI.
 | Device | Push(FCM) |
 | Device | Biometric |
 | Device | Passkey (Credential Manager + WebAuthn, pending decision) |
-| Decision | Pending decisions (CoreCLR runtime, BusyState control) |
+| Decision | Pending decisions (CoreCLR runtime) |
 
 ## Pending
 

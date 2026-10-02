@@ -27,6 +27,8 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
 
     private bool foreground;
 
+    private IDisposable? navigatingBusy;
+
     public StartupState Startup { get; }
 
     public INavigator Navigator { get; }
@@ -102,6 +104,10 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         DiagnosticEnabled = true;
 #endif
         DiagnosticCommand = MakeDelegateCommand(ToggleDiagnostic);
+
+        // Busy while navigating
+        Disposables.Add(Observable.FromEventPattern<EventArgs>(h => Navigator.ExecutingChanged += h, h => Navigator.ExecutingChanged -= h)
+            .Subscribe(_ => UpdateNavigatingBusy()));
 
         // Screen lock detection
         // ReSharper disable AsyncVoidLambda
@@ -196,6 +202,23 @@ public sealed partial class MainPageViewModel : ExtendViewModelBase, IShellContr
         pushService.Disconnect();
 
         destroying = true;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    private void UpdateNavigatingBusy()
+    {
+        if (Navigator.Executing)
+        {
+            navigatingBusy ??= BusyState.Begin();
+        }
+        else
+        {
+            navigatingBusy?.Dispose();
+            navigatingBusy = null;
+        }
     }
 
     //--------------------------------------------------------------------------------
