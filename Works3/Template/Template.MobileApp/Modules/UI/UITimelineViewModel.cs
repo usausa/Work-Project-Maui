@@ -14,6 +14,8 @@ public sealed class UITimelineEvent
     public Color DotFill => Done || Current ? DotColor : Colors.White;
     public Color DotStroke => Done || Current ? Colors.White : DotColor;
     public double RowOpacity => Done ? 0.7 : 1.0;
+
+    public Color RowBackground => Current ? DotColor.WithAlpha(0.08f) : Colors.Transparent;
 }
 
 public sealed class UITimelineViewModel : AppViewModelBase

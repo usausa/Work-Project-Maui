@@ -2903,6 +2903,74 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 - 実機: Sudoku のヒントと取り消しでの数字のキーの残りの数、Minesweeper の最初のタップ・長押しの旗・旗のモード・旗のマスのタップ(何もしない)・負け(地雷を近い順に見せる)、2048 のスワイプ、電卓の続けての計算(`1+2=` の後の `×4=` が 12、数字なら新しい式)と 1 文字消す・全部消す
 - ビルド 0 警告、inspectcode 0 件
 
+### 🎨UI のブラッシュアップ(2026-10-04)
+
+UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作り、指示を受けた項目(10-6・10-7 の ①②・10-10 の行の形・10-19・10-20・10-24〜10-28)を実施した。10-24 で Control のメニューを View にまとめた。10-5 の POS は作り直した版を画面パターンとして別に保存し、画面は元のままにした。
+
+| 対象 | 内容 |
+|---|---|
+| `Document/UIBrushup_Plan.md`(新規)/ `README.md` | 計画(10-0〜10-28)と決定事項、README の TODO の行。UI のブラッシュアップの残作業はこの計画で管理する(`Task_Checklist.md` には載せない) |
+| `Modules/UI/UISocialViewModel.cs` | 10-19: 端末の戻るキーで UI 2 のメニューへ戻る(`OnNotifyBackAsync`。画面の「作戦中止」も同じ処理) |
+| `Modules/Control/ControlRefreshView.xaml` + `.xaml.cs` / `ControlRefreshViewModel.cs` / `Models/Sample/NewsItem.cs` / `Document/Control_Refresh.png` | 10-20: 削除(引っ張って更新・更新の無効・スケルトンは UI News にある) |
+| `Modules/Control/ControlCarouselView.xaml` + `.xaml.cs` / `ControlCarouselViewModel.cs` / `Models/Sample/PhotoItem.cs` / `Document/Control_Carousel.png` | 10-20: 削除(のぞき・中央の強調・インジケーターは UI Shop の人気の商品へ移した) |
+| `Modules/Control/ControlCollectionView.xaml` + `.xaml.cs` / `ControlCollectionViewModel.cs` / `Models/Sample/AddressItem.cs` / `CollectionGroup.cs` / `AlternateRow.cs` / `Document/Control_Collection.png` | 10-20: 削除(グループ・スワイプ・続きの読み込み・行の開閉はほかの画面にあり、グループの開閉は App ToDo へ移した) |
+| `Models/App/TodoApplication.cs` / `Modules/App/AppTodoViewModel.cs` / `AppTodoView.xaml` | グループの見出しのタップでグループを畳む・開く(`TodoSection.ToggleExpanded`。畳んでいる間は行を出さず、見出しの件数 `Total` と右の矢印は残る)。`TodoSection` は全部の行 `Items` と、一覧に出す行(列挙と `Count`)を分けた |
+| `Modules/View/ViewToolkitView` / `ViewCustomView` / `ViewChartView` / `ViewSfChartView` / `ViewBottomSheetView` / `ViewDrawerView`(`.xaml` + `.xaml.cs` / `ViewModel.cs`) | 10-24: `Modules/Control/Control*` から移動・改名(`ViewId` も `View*`、戻り先は `ViewMenu`)。Custom の TreeView の見本のデータの画面のファイル名も `ViewCustomView.xaml` に |
+| `Modules/Control/ControlMenuView.xaml` + `.xaml.cs` / `ControlMenuViewModel.cs` | 10-24: 削除(Control の画面は View のメニューから開く) |
+| `Modules/View/ViewMenuView.xaml` / `Modules/Main/MenuView.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-24: View のメニューを 9 行 18 項目に(Layout・State / Border・Shadow / Toolkit・Custom / Bottom Sheet・Drawer / Animation・Easing / Effect・DragDrop / Lottie・Svg / Graphics・Drawing / Chart・Sf Chart)、`ViewId` の View の節を同じ順に。メインメニューは View を 2 列分にして Control を削除。使わなくなったアイコン(`ViewModule` / `Refresh` / `ViewCarousel` / `ViewList`)を削除 |
+| `Document/View_Chart.png` / `View_SfChart.png` / `View_BottomSheet.png` / `View_Drawer.png` / `README.md` | 10-24: `Control_*.png` から改名。README の Image の画像のパス、Implement の View の行(Control の行をまとめた) |
+| `Models/Sample/ShopCatalog.cs`(新規) | 10-6: 見本の商品 9 件(カテゴリ・種類の名前・値段(数)・評価とレビュー数・人気・説明・仕様・選べる種類)、カテゴリと並び順の列挙 |
+| `Modules/UI/UIShopContext.cs`(新規) | 一覧・商品・カートが共有する文脈(`[Scope]`)。商品の行 `UIShopProduct`(お気に入り)、選んだ商品、カートの行 `UIShopCartItem`(同じ商品と種類は数を足す・増減・削除)、小計・割引(10%)・合計、注文の確定 `UIShopOrder`(注文番号・お届け予定の日)、カテゴリ・名前・価格の上限での絞り込みと並べ替え |
+| `Modules/UI/UIShopViewModel.cs` / `UIShopView.xaml` | 上の部分を一覧のヘッダーにして一緒にスクロール。カートのバッジ、カテゴリのチップ(`SfChipGroup`)、人気の商品の `CarouselView`(のぞき・中央の強調・インジケーター)、評価とお気に入りのある商品のカード、絞り込みのボタン(指定中の印)と並び順・価格のシート(自作の `BottomSheetView`)、該当なしの表示。選んだ商品を文脈に置いて Push |
+| `Modules/UI/UIItemViewModel.cs` / `UIItemView.xaml` | 選んだ商品の絵・名前・値段・評価の星(`RatingView`)とレビュー数・お気に入り・種類のチップ・説明 / 仕様 / 配送と返品の折りたたみ(`SfAccordion`。開いた見出しの灰色はテーマの色を画面のリソースで上書きし、その 2 つのキーの inspectcode の `Xaml.RedundantResource` は 2 行だけ抑止)。下に数量と「カートに入れる」(押すとバッジが増え、1.5 秒「カートに追加しました」)。戻るは Pop |
+| `Modules/UI/UICartViewModel.cs` / `UICartView.xaml` | 文脈のカートの行(フラットな行、種類のバッジ、左へスワイプで削除、空の表示)。「レジに進む」で注文を確定して完了の表示(注文番号・お届け予定・点数・お支払い)、「お買い物を続ける」で一覧まで戻る(`PopAsync(Navigator.StackedCount - 1)`) |
+| `Modules/UI/UIShopView.xaml` / `UIItemView.xaml` / `UICartView.xaml` | 既定のフォーカスを付けない(`Focus.SuppressDefaultFocus`) |
+| `MauiProgram.cs` | `MauiNavigationProviderOptions.RestoreFocus` を false に。戻ったときのフォーカスは `NavigationFocusPlugin` が戻す(Provider は、戻った画面で何もフォーカスしていなかったときに画面へ `Focus()` をかけ、先頭の入力欄がフォーカスを受けていた) |
+| `Services/CalendarService.cs` / `Models/Sample/Calendar/TimetableEvent.cs` | 10-7 ①: 時刻のある予定(`GetSchedule`)。平日は朝会と、ほかの予定(設計レビュー・1on1・お客さまとの打ち合わせ・採用面接など)の約半分、土日と祝日は 3 件(ジム・買い物・映画など)。予定に場所・参加者(アイコンの画像)・メモ |
+| `Modules/UI/UIScheduleViewModel.cs` / `UIScheduleView.xaml` / `Controls/DayTimetableView.cs` | 10-7 ①②: タイムテーブルは時刻のある予定、上に終日の予定(カレンダーと同じ予定)の帯。予定のタップで詳細のシート(時刻と所要時間・場所・参加者のアイコンの重なりと人数・メモ)。予定のカードの 2 行目に場所 |
+| `Document/Pattern/Pos/`(新規) | 10-5: 作り直した POS(カフェのレジ)の画面パターン。`PosRegister.cs`(商品 24 件・明細・割引の順・内税 10%・支払い方法・お預かりとお釣り・レシート)、`UIPosViewModel.cs`、`UIPosView.xaml`(店名の帯・カテゴリのチップ・商品のタイル・明細・割引・合計・お会計のシート・レシート)、画面の画像 `Pos.png`、組み込み方と規則の `README.md`。アプリには組み込まない(UI 1 > POS は元の画面) |
+| `Behaviors/LabelOption.cs` | `CountUpValue` の既定値を NaN に(最初の値が 0 のときも表示する) |
+| `Modules/UI/UITimelineView.xaml` / `UITimelineViewModel.cs` | 10-10 ②: 行をフラットにした(灰色の背景に白地の箱、1px の枠・角 4px・影なし、左に予定の色の帯、進行中は淡い色の背景。タグとバッジの角は 2px) |
+| `Graphics/Scene/EnergySim.cs`(新規) | 10-25: 工場の 1 日の電力と熱のモデル。端末の時計を使い、起動時に 0 時から今までを 1 分ごとに計算し直す。負荷(ライン A は稼働時間・昼休み・プレス、ライン B は 2 交代、空調は気温、ユーティリティはコンプレッサーの負荷の繰り返し)、太陽光(時刻と数十秒の雲)、CGS(8〜20 時)、蓄電池(夜に充電し、昼は買電が目標の 95% を超えると放電)、熱(CGS の発電 40%・熱回収 34%、ボイラーの効率 90%)。30 分の時限のデマンド(1 分ごとの平均と予測)、5 分ごとの供給の内訳の履歴、今日の電力量・CO2・費用、イベント(雲・プレス・ピークカット・デマンドの超過・夜間充電・CGS・時限の結果) |
+| `Graphics/Scene/EnergyFlowScene.cs` | 10-25: 全面的に作り直した。見出し(時計と状態)、デマンド監視(予測の輪・時限の残り・1 分ごとの棒・今 / 前の時限 / 今日の最大 / 目標)、電力と熱のサンキー図(帯の太さは値に比例し光の粒が流れる、節点のタップで、つながる帯と中央を通って先へ流れる分を強調)、24 時間の推移(供給の内訳の積み上げ・使った電力・見込み・目標の線)、設備のタイル(蓄電池・CGS・ボイラー・冷却の動き。タップで該当の節点を選ぶ)、イベントの 2 行。変わらない背景とパネルは端末の解像度の画像にして写すだけにし、光はぼかしを使わず薄い図形の重ねで描く。流れの図は、枠に収まる倍率を連続に求めて少し余裕を持たせ、ゆっくり追う(縮めるときは速く。値の揺れで図全体の大きさが跳ねない)。文字は画面の幅を 400 とした座標で最小 7.5、見出し 9.5、値 11.5〜12.5 |
+| `Document/UI_Energy.png` | 10-25: 撮り直し |
+| `Graphics/Scene/FlightHudScene.cs` | 10-26: 描画を作り直した(モデルの `FlightHudSim` は同じ)。見出し(モードのチップ・燃料の棒)、姿勢の表示(傾きとピッチで回る空と地面、ロールの目盛りの内側だけのピッチの目盛り、方位の帯、速度と高度の帯と読み取りの枠、6 秒後の速度の見込み)、レーダー(走査・10 秒後の位置への線・ロックの枠、タップで目標を選ぶ)、兵装(機体の上面図に 6 本のミサイル、機銃の残弾、FOX 2)、状態のチップ。配置は `FlightLayout` |
+| `Graphics/Scene/MechHudScene.cs` | 10-27: 描画を作り直した(モデルの `MechHudSim` は同じ)。見出し(部隊の記章・損傷の状態のチップ)、通信(選んだチャンネル・波形・信号の棒。SIG はフォントに無い記号をやめて棒で描く)、機体の損傷の図(部位の耐久で色、いちばん傷んだ部位が点滅)、地図(標高の色と陰影の地形・等高線・格子・縮尺と北・センサーの走査・視界の扇・敵の足跡と脅威の範囲・目標の輪と経路・近い順の脅威の一覧)、状態のチップ。D2 / D3 の名前は各小隊の 1 人目の横に出す |
+| `Graphics/Scene/SceneObject.cs` / `EnergyFlowScene.cs` | 変わらない部分を端末の解像度の画像に一度描いて写す `DrawStaticImage` を基底に移し、Energy・Flight・Tactical で使う |
+| `Graphics/Scene/TelemetryScene.cs` | 10-28: 下の 6 項目を横長の枠にし(高さは画面の高さの 12%、72〜90)、空いた高さを回転計とブースト(半径 70)とギアの行に回した(`DashLayout`)。ギアの枠は幅 112・高さ 150 で ERS と G-FORCE(半径 44)より大きく、角のラインは付けない。表示項目は変えない |
+| `Document/UI_Flight.png` / `UI_Tactical.png` / `UI_Telemetry.png` | 10-26〜10-28: 撮り直し |
+
+- 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
+- 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
+- 実機: Schedule の今日(日曜。休日の予定 3 件)と月曜(終日の帯と平日の予定 5 件、重なりは列に分かれる)、予定の詳細のシート
+- 実機: 作り直した POS のカテゴリの切り替え、明細の追加・数の増減・スワイプで削除・取消、割引 3 つの重ね(小計 ¥4,200 → 割引 ¥1,108 → 合計 ¥3,092、うち税 ¥281)、お会計(お札を足す・数字のキー・⌫ の長押しで 0・お釣り、クレジットと QR の表示)、確定のレシート、次のお客さまで空に(保存の前に確認)。合計が 0 のときも ¥0 を出す
+- 実機: Timeline の枠付きのフラットな版とカードの版を同じ位置で撮って並べた
+- 実機: ToDo のグループの見出しのタップで畳む・開く(件数と矢印)、畳んだ「完了」へ行を完了にして動かす(件数が増え、空になった「明日」は消える)。UI 1 > POS が元の画面
+- 実機: メインメニューに Control が無く View が 2 列分、View のメニューの 18 項目を順に開いて戻るキーで View のメニューへ戻る(移した 6 画面の中身は元のまま)
+- 実機: Energy の電力と熱の切り替え、節点のタップで按分の強調と選び直し、設備のタイルのタップ(ボイラーで熱へ切り替えて節点を選ぶ)、ピークカットで蓄電池が放電、時計を一時的にずらした夜の表示(太陽光 0・CGS 停止・夜間充電)。描画は 1 フレーム平均 14 ms(Pixel 9a、Debug。同じ条件で Telemetry は 23 ms)。熱の表示を続けて 8 回撮り、図の大きさが変わらないこと
+- 実機: Flight(空と地面の姿勢の表示、レーダーの目標の線、兵装の機体の図)、Tactical(地形図、脅威の一覧、機体の損傷の図、SIG の棒)、Telemetry(横長の 6 項目、大きくなった回転計・ブースト・ギア)。描画は 1 フレーム平均で Flight 13〜14 ms、Tactical 12〜13 ms(Pixel 9a、Debug)
+- ビルド 0 警告、inspectcode 0 件(`UIItemView.xaml` の Syncfusion のテーマの色の 2 つのキーは、ライブラリが名前で読むため `Xaml.RedundantResource` になる。その 2 行だけ抑止)
+
+### ✨既存の画面の細部の見直し(2026-10-04)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/UIBrushup_Plan.md` | 既存の画面(Main / Basic / Navigation / Device / Network / View / Sample)の細部の見直し(11-x)を加えた。表示する項目は変えない。決定事項(英語と日本語の混在はそのまま、日本語と英語・数字の間と括弧の前は半角スペースを詰める(対象の画面だけ)、F キーだけの操作はそのまま、メニューの大きさと色は変えず角丸も使わない、番号ごとに前後を確認し、指示に無い点は確認する)、共通の方針(11-0)、ヘッダーの題(11-2)、文字のスペース(11-67)、画面ごとの候補(11-3〜11-66)、不具合の一覧、直さない画面、見ていない画面。一覧に優先(🔴 / 🟡 / 🟢)・変更量(📦 の数)・状態(📝 案のまま / 👀 確認待ち)を絵文字で付けた。済んだ項目は消し、内容はこの記録に書く |
+| `Document/Task_Checklist.md` / `README.md` | UI のブラッシュアップの節を外し、`UIBrushup_Plan.md` で管理して終わってから本書に戻る形に(サマリの行も外した) / TODO の UI の行を 1 行に |
+| `Document/App_Plan.md` / `Push_Plan.md` / `ScreenModel_Plan.md` / `Telemetry_Plan.md` / `TelemetryServer_Plan.md` / `DeviceInformation_Plan.md` | 削除(全部の項目が済んだ計画。内容はこの記録の各区間)。`Telemetry_Study.md` / `Task_Checklist.md` / `UIBrushup_Plan.md` からの参照を直した |
+| `Document/Command_Plan.md` | 削除(コマンドの受け付けの見直しは完了)。Simple の基準と、アクティブでない画面での扱いは付録A の「コマンドの種類」に書いた |
+| `README.md` | Implement の View の行の DragDrop を Drag & Drop に |
+| `Resources/Styles/Styles.xaml` | 11-1 ③: `FooterInfoLabel` を 14 の灰色に、Flavor のチップ(`FooterFlavorBorder` / `FooterFlavorLabel`)を追加 |
+| `Modules/Main/MenuView.xaml` | 11-1 ③: Flavor を角 2 の灰色のチップに |
+| `Modules/Navigation/Effect/EffectMenuView.xaml` | 11-1 ④: Fade (Stack) のアイコンを `BlurOn` に(Push (Stack) と同じ `Layers` だった) |
+| `Modules/Network/NetworkMenuView.xaml` / `Markup/AppIcons.cs` | 11-1 ⑤: HTTP (Data) のアイコンを `TableRows`(画面のカードの見出しと同じ)に。使わなくなった `AppIcons.Http` を削除 |
+| `MainPage.xaml` / `Resources/Styles/Styles.xaml` | 11-2 ①: 題をヘッダーの中央の列(左 96・右 48 + 48 の間)に置き、`HeaderTitleLabel` に Android の文字の自動縮小(`LabelOption.AutoSize`、最大 36)を付けた。入らない長さの題(Communication など)は入る大きさまで縮み、右のアイコンに重ならない。全画面に効く |
+| `Modules/Navigation/NavigationMenuView.xaml` / `Edit/EditDetailView.xaml`、`Modules/Device/DeviceOcrView.xaml` / `DeviceNfcView.xaml` / `DeviceBleScanView.xaml` / `DeviceBleHostView.xaml`、`Modules/View/ViewSvgView.xaml` / `ViewDragDropView.xaml` / `ViewMenuView.xaml`、`Modules/Sample/SampleWebBasicView.xaml` / `SampleWebAppView.xaml` / `SamplePdfView.xaml` / `SampleCvLocalView.xaml` | 11-2 ②: 題をメニューの名前に(NavigationMenu → Navigation、EditDetailNew / EditDetailUpdate → New / Update、Ocr → OCR、Nfc → NFC、BleScan → BLE Scan、Host → BLE Host、Svg → SVG、DragDrop → Drag & Drop、WebBasic → Web Basic、WebApp → Web App、Pdf → PDF、Custom Vision → CV Local)。View のメニューの表記も SVG / Drag & Drop に |
+
+- 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
+- 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
+- ビルド 0 警告、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3024,6 +3092,13 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 - ラムダの引数が `_` 1 つだけのとき、本体の `_ = XxxAsync()` は破棄ではなく引数への代入になる(CS0029)
 - 公開をやめた(`private` にした)メソッドは、CA1859 が戻り値と引数の `IReadOnlyList<T>` を具象の `List<T>` にするよう警告する
 - Smart.Mapper(1.0.0-beta9)は `long` → `long?`、`DateTime` → `DateTime?` をそのまま写す(`TodoItem` → `TodoDraft` の `Id` と作成・更新の日時)
+- **Smart.Navigation の `MauiNavigationProvider` の `RestoreFocus`(既定 true)は、戻った画面で何もフォーカスしていなかったときに画面へ `Focus()` をかけ、Android では先頭の入力欄がフォーカスを受ける**(Pop で戻った Shop の検索欄に枠と入力の位置が出た)。アプリは `NavigationFocusPlugin` が前のフォーカスを戻すので、`RestoreFocus` は false にした
+- Syncfusion の `SfAccordion` は、開いた項目の見出しをテーマの `SfAccordionFocusedHeaderBackground`(灰色)で塗る。画面のリソースに同じキーの色を置くと変えられる(ReSharper は使われていないリソースと見る)。キーはほかに `SfAccordionNormalHeaderBackground` / `SfAccordionFocusedItemStroke` / `SfAccordionExpandedItemStroke` など
+- `SfChipGroup` の `ChipLayout` の既定は折り返さない。折り返すときは `FlexLayout`(`Wrap`)、横に流すときは `HorizontalStackLayout` を横の `ScrollView` に入れる。チップはアクセシビリティのツリーに出ないので、実機の操作は座標で行う
+- 添付プロパティの既定値と同じ値は変更として通知されない。`LabelOption.CountUpValue` は既定値が 0 だったので、最初の値が 0 だと何も表示されなかった
+- CA1716: インターフェースのメソッドの引数に `date` を使うと、VB のキーワード `Date` と重なるとして警告になる
+- CA1826: `IReadOnlyList<T>` に `FirstOrDefault()` を使うと警告になる(添字で読む)
+- **`SceneObject` のダブルバッファは CPU で描く(`SKSurface.Create` のラスター)ので、全画面のグラデーションとぼかし(`SKMaskFilter`)が重い**。`DrawCachedLayer`(`SKPicture`)は記録した描画の命令を毎フレーム実行し直すため、全画面の背景とパネルは端末の解像度の `SKImage` に一度描いて写すだけにし、光はぼかしを使わず薄い図形を重ねると、Energy は 1 フレーム平均 40 ms → 14 ms になった(Pixel 9a、Debug)
 
 ---
 
@@ -3048,7 +3123,7 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 - コミットは実機確認後にユーザーが実施
 - **設定項目の投入は設定画面の QR に統一**(`SettingParser` の `key=value`)。手入力 Entry は作らない
 - **ナビゲーションイベントの使い分け**: 表示前に済ませたい処理(表示値の取得・一覧の準備・パラメータの取り出し)は `OnNavigatingToAsync`、表示後でよい / 表示が要る処理(権限要求・カメラ / センサー / タイマー / 接続の開始・スクロール・表示後のアニメーション)は `OnNavigatedToAsync`。初回表示だけの処理は `context.Attribute.IsRestore()` を明示的に見る(`Count == 0` やフラグで代用しない)
-- **コマンドの種類**: 利用者の操作とコントロールからの通知は `MakeXxxCommand` の既定(`Standard`。アクティブでない画面と Busy の間は実行しない)。コントロールからの通知のうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)だけ `MakeDelegateCommand(CommandMode.Simple, ...)`(`CommandMode` は第 1 引数。アクティブのときだけ実行し、Busy は見ず立てもしない。基準・一覧・理由は `Command_Plan.md`)。Simple のコマンドからは遷移もダイアログも出さない。通知から非同期の処理を始めるときは `_ = XxxAsync()` で開始だけ行い(`MakeAsyncCommand` に `Simple` は使わない。Busy を使わないうえ、`async void` の実行で例外がアプリを落とす)、再入は最初の await の前に立てるフラグで防ぐ
+- **コマンドの種類**: 利用者の操作とコントロールからの通知は `MakeXxxCommand` の既定(`Standard`。アクティブでない画面と Busy の間は実行しない)。コントロールからの通知のうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)だけ `MakeDelegateCommand(CommandMode.Simple, ...)`(`CommandMode` は第 1 引数。アクティブのときだけ実行し、Busy は見ず立てもしない。使っている所は `CommandMode.Simple` で探す)。Simple のコマンドからは遷移もダイアログも出さない。Simple もアクティブでない画面(離れる途中・Push で下になった画面)では実行しないので、その間も受けたい通知は Make 系でない素のコマンドにするか、戻ったときに VM で取り直す。通知から非同期の処理を始めるときは `_ = XxxAsync()` で開始だけ行い(`MakeAsyncCommand` に `Simple` は使わない。Busy を使わないうえ、`async void` の実行で例外がアプリを落とす)、再入は最初の await の前に立てるフラグで防ぐ
 - **遷移の間は Busy**: 画面は自分の遷移イベント(`OnNavigatingTo` の前)からアクティブになるので、遷移の途中の利用者の操作は Busy で止める。`MainPageViewModel` が `Navigator.ExecutingChanged` で遷移の間 Busy を立てるので、遷移を始める側で Busy を用意しなくてよい(コマンドから始めた遷移は Busy が重なるが、`BusyState` は数で持つ)
 - **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`

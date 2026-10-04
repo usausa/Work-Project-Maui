@@ -375,11 +375,13 @@ public sealed class DayTimetableView : SKCanvasView
             paint.Color = TitleColor;
             canvas.DrawText(TruncateText(ev.Title, boldFont, titleRight - textLeft), textLeft, titleY, SKTextAlign.Left, boldFont, paint);
 
-            // 2 行入らない高さのカードでは時刻行を省く
+            // 2 行入らない高さのカードでは時刻と場所の行を省く
             if (rect.Height >= TextTop + (LineHeight * 2) + TextTop)
             {
+                var time = $"{ev.Start:hh\\:mm} - {ev.End:hh\\:mm}";
+                var line = String.IsNullOrEmpty(ev.Place) ? time : $"{time}  {ev.Place}";
                 paint.Color = TimeTextColor;
-                canvas.DrawText($"{ev.Start:hh\\:mm} - {ev.End:hh\\:mm}", textLeft, titleY + LineHeight, SKTextAlign.Left, font, paint);
+                canvas.DrawText(TruncateText(line, font, textRight - textLeft), textLeft, titleY + LineHeight, SKTextAlign.Left, font, paint);
             }
 
             canvas.Restore();

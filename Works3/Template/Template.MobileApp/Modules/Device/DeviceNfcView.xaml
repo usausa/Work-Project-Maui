@@ -11,7 +11,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceNfcView"
              x:DataType="{x:Type module:DeviceNfcViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceNfcViewModel}"
-             shell:ShellProperty.Title="Nfc"
+             shell:ShellProperty.Title="NFC"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="Clear"
              shell:ShellProperty.Function1Enabled="True"

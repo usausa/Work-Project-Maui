@@ -333,7 +333,11 @@ public static partial class MauiProgram
         // Navigator
         services.AddNavigator(static (_, config) =>
         {
-            config.UseMauiNavigationProvider(static options => options.RegisterAppEffects());
+            config.UseMauiNavigationProvider(static options =>
+            {
+                options.RestoreFocus = false;
+                options.RegisterAppEffects();
+            });
             config.AddPlugin<NavigationTelemetryPlugin>();
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();

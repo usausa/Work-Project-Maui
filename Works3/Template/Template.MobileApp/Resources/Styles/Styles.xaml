@@ -159,6 +159,8 @@
         <Setter Property="FontSize" Value="36" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="behaviors:LabelOption.AutoSize" Value="True" />
+        <Setter Property="behaviors:LabelOption.MaxSize" Value="36" />
     </Style>
 
     <Style x:Key="HeaderIconButton"
@@ -199,9 +201,26 @@
 
     <Style x:Key="FooterInfoLabel"
            TargetType="Label">
-        <Setter Property="Padding" Value="6,0,6,0" />
-        <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
-        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Padding" Value="0,0,8,0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="FooterFlavorBorder"
+           TargetType="Border">
+        <Setter Property="Margin" Value="8,0,0,0" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 2" />
+        <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />
+    </Style>
+
+    <Style x:Key="FooterFlavorLabel"
+           TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource GrayDarken2}" />
+        <Setter Property="FontSize" Value="12" />
     </Style>
 
     <!-- ================================================================================ -->

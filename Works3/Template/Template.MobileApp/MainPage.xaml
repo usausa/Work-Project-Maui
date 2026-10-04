@@ -70,7 +70,7 @@
               Style="{StaticResource HeaderGrid}"
               ColumnDefinitions="96,*,48,48"
               IsVisible="{Binding HeaderVisible.Value}">
-            <Label Grid.Column="0" Grid.ColumnSpan="4"
+            <Label Grid.Column="1"
                    Style="{StaticResource HeaderTitleLabel}"
                    Text="{Binding Title.Value}" />
             <Label Grid.Column="2"

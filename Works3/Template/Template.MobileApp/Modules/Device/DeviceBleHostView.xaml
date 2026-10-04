@@ -10,7 +10,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceBleHostView"
              x:DataType="{x:Type module:DeviceBleHostViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceBleHostViewModel}"
-             shell:ShellProperty.Title="Host"
+             shell:ShellProperty.Title="BLE Host"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="{Binding Running, Converter={s:BoolToText True='OFF', False='ON'}}"
              shell:ShellProperty.Function1Enabled="True"

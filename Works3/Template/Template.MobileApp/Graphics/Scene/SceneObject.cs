@@ -345,6 +345,9 @@ public abstract class SceneObject : ISceneObject, IDisposable
 
             layerCache.Clear();
 
+            staticImage?.Dispose();
+            staticImage = null;
+
             lock (bufferSync)
             {
                 frontImage?.Dispose();
@@ -394,6 +397,31 @@ public abstract class SceneObject : ISceneObject, IDisposable
         }
 
         canvas.DrawPicture(layer.Picture);
+    }
+
+    private SKImage? staticImage;
+
+    private int staticWidth;
+
+    private int staticHeight;
+
+    // 背景・パネルの枠・見出しのような変わらない部分を、端末の解像度の画像に一度だけ描いて写す。
+    // オフスクリーンは CPU で描くため、全画面のグラデーションなどを毎フレーム描く (DrawCachedLayer の再生を含む) より軽い。
+    // draw には仮想座標 (scale を掛けた) のキャンバスが渡る
+    protected void DrawStaticImage(SKCanvas canvas, int width, int height, float scale, Action<SKCanvas> draw)
+    {
+        if ((staticImage is null) || (staticWidth != width) || (staticHeight != height))
+        {
+            staticImage?.Dispose();
+            using var surface = SKSurface.Create(new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul));
+            surface.Canvas.Scale(scale);
+            draw(surface.Canvas);
+            staticImage = surface.Snapshot();
+            staticWidth = width;
+            staticHeight = height;
+        }
+
+        canvas.DrawImage(staticImage, 0f, 0f, new SKSamplingOptions(SKFilterMode.Nearest));
     }
 
     //--------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
              x:Class="Template.MobileApp.Modules.View.ViewDragDropView"
              x:DataType="{x:Type module:ViewDragDropViewModel}"
              s:BindingContextResolver.Type="{x:Type module:ViewDragDropViewModel}"
-             shell:ShellProperty.Title="DragDrop"
+             shell:ShellProperty.Title="Drag &amp; Drop"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

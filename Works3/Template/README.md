@@ -43,7 +43,7 @@ Template project for MAUI.
 
 <img width="25%" src="Document/Sample_CV.png" />
 <img width="25%" src="Document/UI_TreeMap.png" />
-<img width="25%" src="Document/Control_Chart.png" />
+<img width="25%" src="Document/View_Chart.png" />
 
 <img width="25%" src="Document/App_Calc.png" />
 <img width="25%" src="Document/App_Game.png" />
@@ -67,8 +67,7 @@ Template project for MAUI.
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
 | Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
-| View | Layout / Border / Shadow / Animation / Easing / Lottie / SVG / Graphics / Drawing / DragDrop / Effect / State |
-| Control | Collection / Carousel / Refresh / Toolkit / Custom / Chart / SfChart / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) |
+| View | Layout / State / Border / Shadow / Toolkit / Custom / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) / Animation / Easing / Effect / Drag & Drop / Lottie / SVG / Graphics / Drawing / Chart / SfChart |
 | Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
 | UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Weather / News / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Stream / Dock / Graph / Graph2 / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Monster / Character / Social / Flight / Tactical / Telemetry / Energy |
@@ -83,6 +82,7 @@ Template project for MAUI.
 | Device | Biometric |
 | Device | Passkey (Credential Manager + WebAuthn, pending decision) |
 | Decision | Pending decisions (CoreCLR runtime) |
+| UI | Brushup (UI 1 / UI 2, View component screens, details of existing screens) |
 
 ## Pending
 

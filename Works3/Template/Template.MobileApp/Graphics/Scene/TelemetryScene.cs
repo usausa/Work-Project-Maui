@@ -172,6 +172,9 @@ public sealed class TelemetryScene : SceneObject
 
     private readonly CarSim sim = new();
 
+    // 縦の配置。下の 6 項目は横長の枠にし、余った高さを回転計・ブーストとギアの行に回す
+    private readonly record struct DashLayout(float GaugeY, float GaugeR, float GearY, float GearH, float SideR, float MiniTop, float CellH);
+
     private SKShader? glow;
     private int glowWidth;
     private int glowHeight;
@@ -190,16 +193,34 @@ public sealed class TelemetryScene : SceneObject
         canvas.Save();
         canvas.Scale(s);
 
+        var layout = ComputeLayout(vh);
         DrawTopRow(canvas);
         DrawSpeedCluster(canvas, vh);
-        DrawTachometer(canvas, vh);
-        DrawBoost(canvas, Time, vh);
-        DrawErs(canvas, vh);
-        DrawGear(canvas, Time, vh);
-        DrawGForce(canvas, vh);
-        DrawMiniGauges(canvas, Time, vh);
+        DrawTachometer(canvas, layout);
+        DrawBoost(canvas, Time, layout);
+        DrawErs(canvas, layout);
+        DrawGear(canvas, Time, layout);
+        DrawGForce(canvas, layout);
+        DrawMiniGauges(canvas, Time, layout);
 
         canvas.Restore();
+    }
+
+    private static DashLayout ComputeLayout(float vh)
+    {
+        var speedBottom = (vh * 0.075f) + 88f;
+        var cellH = Math.Clamp(vh * 0.12f, 72f, 90f);
+        var miniTop = vh - 12f - (cellH * 2f) - 8f;
+
+        // 回転計の行は目盛りと上下の文字を含めて 2r + 20 程度の高さ
+        var gaugeR = Math.Clamp(((miniTop - speedBottom) * 0.48f) - 23f, 52f, 70f);
+        var gaugeY = speedBottom + 12f + gaugeR + 19f;
+
+        var gearTop = gaugeY + gaugeR + 13f;
+        var gearBottom = miniTop - 12f;
+        var gearH = MathF.Min(150f, gearBottom - gearTop - 16f);
+        var sideR = Math.Clamp((gearBottom - gearTop - 50f) / 2.6f, 30f, 44f);
+        return new DashLayout(gaugeY, gaugeR, (gearTop + gearBottom) / 2f, gearH, sideR, miniTop, cellH);
     }
 
     //--------------------------------------------------------------------------------
@@ -290,11 +311,11 @@ public sealed class TelemetryScene : SceneObject
     // Tachometer / boost
     //--------------------------------------------------------------------------------
 
-    private void DrawTachometer(SKCanvas canvas, float vh)
+    private void DrawTachometer(SKCanvas canvas, DashLayout layout)
     {
-        var cy = vh * 0.31f;
+        var cy = layout.GaugeY;
         const float cx = 102f;
-        const float r = 60f;
+        var r = layout.GaugeR;
         const float start = 150f;
         const float sweep = 240f;
         const float maxRpm = 19000f;
@@ -312,7 +333,7 @@ public sealed class TelemetryScene : SceneObject
         if (frac > 0.005f)
         {
             Stroke.Color = inRed ? Red : sim.Rpm > 15200f ? Amber : Cyan;
-            Stroke.StrokeWidth = 10f;
+            Stroke.StrokeWidth = 11f;
             canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), start, sweep * frac, false, Stroke);
         }
 
@@ -325,19 +346,19 @@ public sealed class TelemetryScene : SceneObject
             cx + ((r - 6f) * MathF.Cos(needleRad)),
             cy + ((r - 6f) * MathF.Sin(needleRad)),
             inRed ? Red : White,
-            2f);
+            2.4f);
 
         // Hub
         Fill.Color = Panel;
-        canvas.DrawCircle(cx, cy, 8f, Fill);
+        canvas.DrawCircle(cx, cy, 9f, Fill);
         Stroke.Color = PanelLine;
         Stroke.StrokeWidth = 1.5f;
-        canvas.DrawCircle(cx, cy, 8f, Stroke);
+        canvas.DrawCircle(cx, cy, 9f, Stroke);
         Fill.Color = inRed ? Red : Cyan;
-        canvas.DrawCircle(cx, cy, 3f, Fill);
+        canvas.DrawCircle(cx, cy, 3.5f, Fill);
 
         // Readout
-        DrawGlowText(canvas, $"{(int)sim.Rpm}", cx, cy + 44f, 14f, inRed ? Red : White, 3f, bold: true, align: SKTextAlign.Center);
+        DrawGlowText(canvas, $"{(int)sim.Rpm}", cx, cy + (r * 0.73f), 16f, inRed ? Red : White, 3f, bold: true, align: SKTextAlign.Center);
     }
 
     private void DrawTachometerChrome(SKCanvas canvas, float cx, float cy, float r, float start, float sweep, float maxRpm, float redlineRpm)
@@ -353,7 +374,7 @@ public sealed class TelemetryScene : SceneObject
 
         // Track
         Stroke.Color = PanelLine.WithAlpha(160);
-        Stroke.StrokeWidth = 10f;
+        Stroke.StrokeWidth = 11f;
         canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), start, sweep, false, Stroke);
 
         // Ticks (major every 2000, label inside)
@@ -376,20 +397,20 @@ public sealed class TelemetryScene : SceneObject
             if (major)
             {
                 var tp = new SKPoint(cx + ((r - 16f) * MathF.Cos(angle)), cy + ((r - 16f) * MathF.Sin(angle)));
-                DrawText(canvas, $"{rpm / 1000}", tp.X, tp.Y + 3f, 8f, rpm >= 18000 ? Red : Dim, align: SKTextAlign.Center);
+                DrawText(canvas, $"{rpm / 1000}", tp.X, tp.Y + 3.5f, 9f, rpm >= 18000 ? Red : Dim, align: SKTextAlign.Center);
             }
         }
 
         // Fixed labels
-        DrawText(canvas, "×1000 r/min", cx, cy + 26f, 8f, Dim, align: SKTextAlign.Center);
-        DrawText(canvas, "ENGINE RPM", cx, cy + 58f, 8f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, "×1000 r/min", cx, cy + (r * 0.43f), 8.5f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, "ENGINE RPM", cx, cy + (r * 0.97f), 9f, Dim, align: SKTextAlign.Center);
     }
 
-    private void DrawBoost(SKCanvas canvas, float t, float vh)
+    private void DrawBoost(SKCanvas canvas, float t, DashLayout layout)
     {
-        var cy = vh * 0.31f;
+        var cy = layout.GaugeY;
         const float cx = 298f;
-        const float r = 60f;
+        var r = layout.GaugeR;
         const float start = 150f;
         const float sweep = 240f;
 
@@ -416,7 +437,7 @@ public sealed class TelemetryScene : SceneObject
         {
             var segStart = start + (i * (sweep / segments)) + 1.5f;
             Stroke.Color = i < litSegments ? ringColor.WithAlpha(230) : PanelLine.WithAlpha(150);
-            Stroke.StrokeWidth = 9f;
+            Stroke.StrokeWidth = 10f;
             canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), segStart, (sweep / segments) - 3f, false, Stroke);
         }
 
@@ -424,7 +445,7 @@ public sealed class TelemetryScene : SceneObject
         for (var p = 0; p <= 100; p += 50)
         {
             var rad = DegToRad(start + (sweep * p / 100f));
-            DrawText(canvas, $"{p}", cx + ((r + 15f) * MathF.Cos(rad)), cy + ((r + 15f) * MathF.Sin(rad)) + 3f, 8f, Dim, align: SKTextAlign.Center);
+            DrawText(canvas, $"{p}", cx + ((r + 15f) * MathF.Cos(rad)), cy + ((r + 15f) * MathF.Sin(rad)) + 3.5f, 9f, Dim, align: SKTextAlign.Center);
         }
 
         // Pulse rings when active
@@ -438,44 +459,44 @@ public sealed class TelemetryScene : SceneObject
 
         // Center disc
         Fill.Color = Panel;
-        canvas.DrawCircle(cx, cy, r - 16f, Fill);
+        canvas.DrawCircle(cx, cy, r - 18f, Fill);
         Stroke.Color = PanelLine;
         Stroke.StrokeWidth = 1.5f;
-        canvas.DrawCircle(cx, cy, r - 16f, Stroke);
+        canvas.DrawCircle(cx, cy, r - 18f, Stroke);
 
-        DrawGlowText(canvas, $"{(int)(sim.BoostCharge * 100f):00}%", cx, cy + 2f, 22f, sim.BoostActive ? Amber : White, 4f, bold: true, align: SKTextAlign.Center);
+        DrawGlowText(canvas, $"{(int)(sim.BoostCharge * 100f):00}%", cx, cy + 4f, 26f, sim.BoostActive ? Amber : White, 4f, bold: true, align: SKTextAlign.Center);
         if (sim.BoostActive)
         {
             if (Blink(t, 18f))
             {
-                DrawText(canvas, "■ DISCHARGE", cx, cy + 22f, 8f, Red, bold: true, align: SKTextAlign.Center);
+                DrawText(canvas, "■ DISCHARGE", cx, cy + 25f, 9f, Red, bold: true, align: SKTextAlign.Center);
             }
         }
         else if (sim.BoostCharge >= 0.985f)
         {
-            DrawGlowText(canvas, "READY", cx, cy + 22f, 8f, Green, 3f, bold: true, align: SKTextAlign.Center);
+            DrawGlowText(canvas, "READY", cx, cy + 25f, 9f, Green, 3f, bold: true, align: SKTextAlign.Center);
         }
         else
         {
-            DrawText(canvas, "CHARGING..", cx, cy + 22f, 8f, Azure, align: SKTextAlign.Center);
+            DrawText(canvas, "CHARGING..", cx, cy + 25f, 9f, Azure, align: SKTextAlign.Center);
         }
 
-        DrawText(canvas, "BOOST POT", cx, cy - 22f, 8f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, "BOOST POT", cx, cy - 25f, 9f, Dim, align: SKTextAlign.Center);
     }
 
     //--------------------------------------------------------------------------------
     // ERS / Gear / G-Force
     //--------------------------------------------------------------------------------
 
-    private void DrawErs(SKCanvas canvas, float vh)
+    private void DrawErs(SKCanvas canvas, DashLayout layout)
     {
-        var cy = vh * 0.52f;
-        const float cx = 68f;
-        const float r = 36f;
+        var cy = layout.GearY;
+        const float cx = 66f;
+        var r = layout.SideR;
 
         Stroke.StrokeCap = SKStrokeCap.Round;
         Stroke.Color = PanelLine.WithAlpha(150);
-        Stroke.StrokeWidth = 6f;
+        Stroke.StrokeWidth = 7f;
         canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), 135f, 270f, false, Stroke);
 
         var norm = Math.Clamp((sim.ErsKw + 100f) / 400f, 0f, 1f);
@@ -487,47 +508,45 @@ public sealed class TelemetryScene : SceneObject
         var px = cx + (r * MathF.Cos(rad));
         var py = cy + (r * MathF.Sin(rad));
         Fill.Color = White.WithAlpha(80);
-        canvas.DrawCircle(px, py, 6f, Fill);
+        canvas.DrawCircle(px, py, 7f, Fill);
         Fill.Color = White;
-        canvas.DrawCircle(px, py, 3f, Fill);
+        canvas.DrawCircle(px, py, 3.5f, Fill);
 
-        DrawGlowText(canvas, $"{(int)sim.ErsKw:+0;-0}", cx, cy + 5f, 16f, color, 4f, bold: true, align: SKTextAlign.Center);
-        DrawText(canvas, "kW", cx, cy + 18f, 8f, Dim, align: SKTextAlign.Center);
-        DrawText(canvas, "ERS OUTPUT", cx, cy + r + 16f, 8f, Dim, align: SKTextAlign.Center);
+        DrawGlowText(canvas, $"{(int)sim.ErsKw:+0;-0}", cx, cy + 6f, 19f, color, 4f, bold: true, align: SKTextAlign.Center);
+        DrawText(canvas, "kW", cx, cy + 20f, 9f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, "ERS OUTPUT", cx, cy + r + 18f, 9f, Dim, align: SKTextAlign.Center);
     }
 
-    private void DrawGear(SKCanvas canvas, float t, float vh)
+    private void DrawGear(SKCanvas canvas, float t, DashLayout layout)
     {
-        var cy = vh * 0.52f;
+        var cy = layout.GearY;
         const float cx = 200f;
-        const float w = 84f;
-        const float h = 104f;
+        const float w = 112f;
+        var h = layout.GearH;
         var y0 = cy - (h / 2f);
 
-        DrawCutPanel(canvas, cx - (w / 2f), y0, w, h, 10f, Panel, PanelLine, 1.6f);
-        Fill.Color = Cyan;
-        canvas.DrawRect(cx - (w / 2f) + 5f, y0 + 5f, 2f, 16f, Fill);
-        canvas.DrawRect(cx + (w / 2f) - 7f, y0 + h - 21f, 2f, 16f, Fill);
+        DrawCutPanel(canvas, cx - (w / 2f), y0, w, h, 12f, Panel, PanelLine, 1.6f);
 
         var gearColor = sim.Rpm > 17000f ? (Blink(t, 12f) ? Red : Amber) : sim.Rpm > 15200f ? Amber : White;
-        DrawGlowText(canvas, sim.Gear.ToString(), cx, cy + 20f, 72f, gearColor, 6f, bold: true, align: SKTextAlign.Center);
-        DrawText(canvas, "GEAR", cx, cy + 40f, 9f, Dim, align: SKTextAlign.Center);
+        DrawGlowText(canvas, sim.Gear.ToString(), cx, cy + (h * 0.2f), h * 0.68f, gearColor, 7f, bold: true, align: SKTextAlign.Center);
+        DrawText(canvas, "GEAR", cx, cy + (h * 0.39f), 10f, Dim, align: SKTextAlign.Center);
 
         // Side indicators
+        var step = h * 0.1f;
         for (var i = 0; i < 8; i++)
         {
-            var iy = cy + 32f - (i * 10.5f);
+            var iy = cy + (h * 0.31f) - (i * step);
             Fill.Color = i < sim.Gear ? Cyan.WithAlpha(220) : PanelLine.WithAlpha(140);
-            canvas.DrawRect(cx - (w / 2f) + 9f, iy, 5f, 7f, Fill);
-            canvas.DrawRect(cx + (w / 2f) - 14f, iy, 5f, 7f, Fill);
+            canvas.DrawRect(cx - (w / 2f) + 10f, iy, 7f, step * 0.68f, Fill);
+            canvas.DrawRect(cx + (w / 2f) - 17f, iy, 7f, step * 0.68f, Fill);
         }
     }
 
-    private void DrawGForce(SKCanvas canvas, float vh)
+    private void DrawGForce(SKCanvas canvas, DashLayout layout)
     {
-        var cy = vh * 0.52f;
-        const float cx = 332f;
-        const float r = 36f;
+        var cy = layout.GearY;
+        const float cx = 334f;
+        var r = layout.SideR;
 
         // 不変の盤面 (外円 / 十字 / 破線円) はキャッシュから再生
         DrawCachedLayer(canvas, "gforce", BaseWidth, cy + r + 16f, c => DrawGForceChrome(c, cx, cy, r));
@@ -541,11 +560,11 @@ public sealed class TelemetryScene : SceneObject
         Stroke.StrokeWidth = 1.5f;
         canvas.DrawLine(cx, cy, gx, gy, Stroke);
         Fill.Color = color.WithAlpha(90);
-        canvas.DrawCircle(gx, gy, 8f, Fill);
+        canvas.DrawCircle(gx, gy, 9f, Fill);
         Fill.Color = color;
-        canvas.DrawCircle(gx, gy, 4f, Fill);
+        canvas.DrawCircle(gx, gy, 4.5f, Fill);
 
-        DrawText(canvas, $"G-FORCE  {total:0.0} G", cx, cy + r + 16f, 8f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, $"G-FORCE  {total:0.0} G", cx, cy + r + 18f, 9f, Dim, align: SKTextAlign.Center);
     }
 
     private void DrawGForceChrome(SKCanvas canvas, float cx, float cy, float r)
@@ -571,11 +590,10 @@ public sealed class TelemetryScene : SceneObject
     // Mini gauges
     //--------------------------------------------------------------------------------
 
-    private void DrawMiniGauges(SKCanvas canvas, float t, float vh)
+    private void DrawMiniGauges(SKCanvas canvas, float t, DashLayout layout)
     {
-        var top = vh * 0.615f;
-        var bottom = vh - 12f;
-        var cellH = (bottom - top - 8f) / 2f;
+        var top = layout.MiniTop;
+        var cellH = layout.CellH;
         var cy1 = top + (cellH / 2f);
         var cy2 = top + cellH + 8f + (cellH / 2f);
 
@@ -603,11 +621,11 @@ public sealed class TelemetryScene : SceneObject
         canvas.DrawRect(x + 4f, y + 8f, 2f, 14f, Fill);
         canvas.DrawRect(x + w - 6f, y + h - 22f, 2f, 14f, Fill);
 
-        DrawText(canvas, label, cx, y + 15f, 8f, Dim, align: SKTextAlign.Center);
+        DrawText(canvas, label, cx, y + 15f, 8.5f, Dim, align: SKTextAlign.Center);
 
-        // Half arc
-        var gy = cy + (h * 0.17f);
-        var r = MathF.Min(31f, h * 0.30f);
+        // Half arc (横長の枠の下寄りに置き、上の余白を減らす)
+        var gy = y + (h * 0.7f);
+        var r = MathF.Min(30f, h * 0.34f);
         Stroke.StrokeCap = SKStrokeCap.Round;
         Stroke.Color = PanelLine.WithAlpha(140);
         Stroke.StrokeWidth = 5f;

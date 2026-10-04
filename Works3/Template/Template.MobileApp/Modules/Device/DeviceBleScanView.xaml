@@ -10,7 +10,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceBleScanView"
              x:DataType="{x:Type module:DeviceBleScanViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceBleScanViewModel}"
-             shell:ShellProperty.Title="BleScan"
+             shell:ShellProperty.Title="BLE Scan"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function1Enabled="True">
 

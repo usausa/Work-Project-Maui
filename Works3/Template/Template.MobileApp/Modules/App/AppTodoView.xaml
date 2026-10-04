@@ -261,6 +261,14 @@
                 <Setter Property="FontAttributes" Value="Bold" />
             </Style>
 
+            <Style x:Key="GroupChevronLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="TextColor" Value="{StaticResource TodoMutedColor}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
             <!-- Row -->
             <Style x:Key="TodoRowGrid"
                    TargetType="Grid">
@@ -540,11 +548,15 @@
             <CollectionView ItemsSource="{Binding Context.List.Sections}"
                             IsGrouped="True">
 
-                <!-- グループの見出しと件数 -->
+                <!-- グループの見出しと件数。タップで畳む・開く -->
                 <CollectionView.GroupHeaderTemplate>
                     <DataTemplate x:DataType="{x:Type models:TodoSection}">
                         <Grid Style="{StaticResource GroupHeaderGrid}"
-                              ColumnDefinitions="Auto,Auto,*">
+                              ColumnDefinitions="Auto,Auto,*,Auto">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:AppTodoViewModel}}, Path=SectionCommand, x:DataType={x:Type module:AppTodoViewModel}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
                             <Label Grid.Column="0"
                                    Style="{StaticResource GroupTitleLabel}"
                                    Text="{Binding Group, Converter={StaticResource GroupTitleConverter}}"
@@ -553,9 +565,12 @@
                                     Style="{StaticResource GroupCountBorder}"
                                     BackgroundColor="{Binding Group, Converter={StaticResource GroupSoftColorConverter}}">
                                 <Label Style="{StaticResource GroupCountLabel}"
-                                       Text="{Binding Count}"
+                                       Text="{Binding Total}"
                                        TextColor="{Binding Group, Converter={StaticResource GroupColorConverter}}" />
                             </Border>
+                            <Label Grid.Column="3"
+                                   Style="{StaticResource GroupChevronLabel}"
+                                   Text="{Binding IsExpanded, Converter={StaticResource ExpandGlyphConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.GroupHeaderTemplate>

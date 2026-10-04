@@ -88,40 +88,31 @@ public enum ViewId
     ViewMenu,
 
     ViewLayout,
+    ViewState,
 
     ViewBorder,
     ViewShadow,
 
+    ViewToolkit,
+    ViewCustom,
+
+    ViewBottomSheet,
+    ViewDrawer,
+
     ViewAnimation,
     ViewEasing,
+
+    ViewEffect,
+    ViewDragDrop,
 
     ViewLottie,
     ViewSvg,
 
     ViewGraphics,
-
     ViewDrawing,
-    ViewDragDrop,
 
-    ViewEffect,
-    ViewState,
-
-    // Control
-    ControlMenu,
-
-    ControlCollection,
-
-    ControlCarousel,
-    ControlRefresh,
-
-    ControlToolkit,
-    ControlCustom,
-
-    ControlChart,
-    ControlSfChart,
-
-    ControlBottomSheet,
-    ControlDrawer,
+    ViewChart,
+    ViewSfChart,
 
     // UI
     UIMenu1,

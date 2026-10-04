@@ -19,14 +19,20 @@
             <Style x:Key="TimelineGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
-                <Setter Property="Padding" Value="16" />
-                <Setter Property="RowSpacing" Value="12" />
             </Style>
 
             <!-- Header -->
             <Style x:Key="TimelineHeaderGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="16,16,16,12" />
                 <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+
+            <Style x:Key="TimelineHeaderDivider"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
             <Style x:Key="CalendarIconBorder"
@@ -79,6 +85,7 @@
 
             <Style x:Key="EventRowGrid"
                    TargetType="Grid">
+                <Setter Property="Padding" Value="16,0,16,0" />
                 <Setter Property="ColumnSpacing" Value="10" />
             </Style>
 
@@ -132,19 +139,25 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
-            <Style x:Key="EventCardBorder"
+            <!-- Flat box: 1px frame + accent bar in the event color (the current row is tinted) -->
+            <Style x:Key="EventBoxBorder"
                    TargetType="Border">
-                <Setter Property="Padding" Value="14" />
+                <Setter Property="Margin" Value="0,5" />
+                <Setter Property="Padding" Value="0" />
                 <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-                <Setter Property="Margin" Value="0,4,0,8" />
-                <Setter Property="Shadow">
-                    <Shadow Offset="0,2"
-                            Brush="Black"
-                            Opacity="0.1"
-                            Radius="10" />
-                </Setter>
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten2}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="EventAccentBox"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="4" />
+            </Style>
+
+            <Style x:Key="EventContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="12,12,14,12" />
             </Style>
 
             <Style x:Key="EventTitleRow"
@@ -164,7 +177,7 @@
                    TargetType="Border">
                 <Setter Property="Padding" Value="7,2" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 9" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
                 <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
@@ -193,7 +206,7 @@
                 <Setter Property="Padding" Value="8,3" />
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
                 <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 2" />
             </Style>
 
             <Style x:Key="TagContentRow"
@@ -220,7 +233,7 @@
     </ContentView.Resources>
 
     <Grid Style="{StaticResource TimelineGrid}"
-          RowDefinitions="Auto,*">
+          RowDefinitions="Auto,Auto,*">
 
         <!-- Header -->
         <Grid Grid.Row="0"
@@ -241,8 +254,11 @@
             </VerticalStackLayout>
         </Grid>
 
+        <BoxView Grid.Row="1"
+                 Style="{StaticResource TimelineHeaderDivider}" />
+
         <!-- Timeline list -->
-        <CollectionView Grid.Row="1"
+        <CollectionView Grid.Row="2"
                         Style="{StaticResource TimelineCollection}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
                         behaviors:AnimationOption.EnterDelay="80"
@@ -275,44 +291,51 @@
                                    Text="{x:Static fonts:MaterialIcons.Check}" />
                         </Grid>
 
-                        <!-- Card with title, status badge, description, tags -->
+                        <!-- Flat box with title, status badge, description, tags -->
                         <Border Grid.Column="2"
-                                Style="{StaticResource EventCardBorder}">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource EventTitleRow}"
-                                      ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource EventTitleLabel}"
-                                           Text="{Binding Title}" />
-                                    <Border Grid.Column="1"
-                                            Style="{StaticResource NowBadgeBorder}"
-                                            IsVisible="{Binding Current}"
-                                            BackgroundColor="{Binding DotColor}">
-                                        <Label Style="{StaticResource NowBadgeLabel}"
-                                               Text="進行中" />
-                                    </Border>
-                                </Grid>
-                                <Label Style="{StaticResource EventDescLabel}"
-                                       Text="{Binding Description}" />
-                                <HorizontalStackLayout Style="{StaticResource TagRow}">
-                                    <Border Style="{StaticResource TagBorder}">
-                                        <HorizontalStackLayout Style="{StaticResource TagContentRow}">
-                                            <Label Style="{StaticResource TagIcon}"
-                                                   Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}"
-                                                   Text="{Binding Tag1}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
-                                    <Border Style="{StaticResource TagBorder}">
-                                        <HorizontalStackLayout Style="{StaticResource TagContentRow}">
-                                            <Label Style="{StaticResource TagIcon}"
-                                                   Text="{x:Static fonts:MaterialIcons.Tag}" />
-                                            <Label Style="{StaticResource TagLabel}"
-                                                   Text="{Binding Tag2}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+                                Style="{StaticResource EventBoxBorder}">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  BackgroundColor="{Binding RowBackground}">
+                                <BoxView Grid.Column="0"
+                                         Style="{StaticResource EventAccentBox}"
+                                         Color="{Binding DotColor}" />
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource EventContentStack}">
+                                    <Grid Style="{StaticResource EventTitleRow}"
+                                          ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Style="{StaticResource EventTitleLabel}"
+                                               Text="{Binding Title}" />
+                                        <Border Grid.Column="1"
+                                                Style="{StaticResource NowBadgeBorder}"
+                                                IsVisible="{Binding Current}"
+                                                BackgroundColor="{Binding DotColor}">
+                                            <Label Style="{StaticResource NowBadgeLabel}"
+                                                   Text="進行中" />
+                                        </Border>
+                                    </Grid>
+                                    <Label Style="{StaticResource EventDescLabel}"
+                                           Text="{Binding Description}" />
+                                    <HorizontalStackLayout Style="{StaticResource TagRow}">
+                                        <Border Style="{StaticResource TagBorder}">
+                                            <HorizontalStackLayout Style="{StaticResource TagContentRow}">
+                                                <Label Style="{StaticResource TagIcon}"
+                                                       Text="{x:Static fonts:MaterialIcons.Tag}" />
+                                                <Label Style="{StaticResource TagLabel}"
+                                                       Text="{Binding Tag1}" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                        <Border Style="{StaticResource TagBorder}">
+                                            <HorizontalStackLayout Style="{StaticResource TagContentRow}">
+                                                <Label Style="{StaticResource TagIcon}"
+                                                       Text="{x:Static fonts:MaterialIcons.Tag}" />
+                                                <Label Style="{StaticResource TagLabel}"
+                                                       Text="{Binding Tag2}" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Border>
 
                     </Grid>

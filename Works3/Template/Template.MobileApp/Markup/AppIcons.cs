@@ -82,7 +82,6 @@ public static class AppIcons
     public static readonly FontImageSource Info = Create(MaterialIcons.Info, MenuSize, Colors.White);
     public static readonly FontImageSource InsertChart = Create(MaterialIcons.Insert_chart, MenuSize, Colors.White);
     public static readonly FontImageSource Insights = Create(MaterialIcons.Insights, MenuSize, Colors.White);
-    public static readonly FontImageSource Http = Create(MaterialIcons.Http, MenuSize, Colors.White);
     public static readonly FontImageSource Hub = Create(MaterialIcons.Hub, MenuSize, Colors.White);
     public static readonly FontImageSource Language = Create(MaterialIcons.Language, MenuSize, Colors.White);
     public static readonly FontImageSource Layers = Create(MaterialIcons.Layers, MenuSize, Colors.White);
@@ -111,7 +110,6 @@ public static class AppIcons
     public static readonly FontImageSource QrCode = Create(MaterialIcons.Qr_code, MenuSize, Colors.White);
     public static readonly FontImageSource QrCodeScanner = Create(MaterialIcons.Qr_code_scanner, MenuSize, Colors.White);
     public static readonly FontImageSource Radar = Create(MaterialIcons.Radar, MenuSize, Colors.White);
-    public static readonly FontImageSource Refresh = Create(MaterialIcons.Refresh, MenuSize, Colors.White);
     public static readonly FontImageSource RotateRight = Create(MaterialIcons.Rotate_right, MenuSize, Colors.White);
     public static readonly FontImageSource Schedule = Create(MaterialIcons.Schedule, MenuSize, Colors.White);
     public static readonly FontImageSource Science = Create(MaterialIcons.Science, MenuSize, Colors.White);
@@ -126,6 +124,7 @@ public static class AppIcons
     public static readonly FontImageSource Storefront = Create(MaterialIcons.Storefront, MenuSize, Colors.White);
     public static readonly FontImageSource SwapHoriz = Create(MaterialIcons.Swap_horiz, MenuSize, Colors.White);
     public static readonly FontImageSource Sync = Create(MaterialIcons.Sync, MenuSize, Colors.White);
+    public static readonly FontImageSource TableRows = Create(MaterialIcons.Table_rows, MenuSize, Colors.White);
     public static readonly FontImageSource TextFields = Create(MaterialIcons.Text_fields, MenuSize, Colors.White);
     public static readonly FontImageSource Timeline = Create(MaterialIcons.Timeline, MenuSize, Colors.White);
     public static readonly FontImageSource Timer = Create(MaterialIcons.Timer, MenuSize, Colors.White);
@@ -138,9 +137,6 @@ public static class AppIcons
     public static readonly FontImageSource Upload = Create(MaterialIcons.Upload, MenuSize, Colors.White);
     public static readonly FontImageSource VerticalAlignBottom = Create(MaterialIcons.Vertical_align_bottom, MenuSize, Colors.White);
     public static readonly FontImageSource ViewAgenda = Create(MaterialIcons.View_agenda, MenuSize, Colors.White);
-    public static readonly FontImageSource ViewCarousel = Create(MaterialIcons.View_carousel, MenuSize, Colors.White);
-    public static readonly FontImageSource ViewList = Create(MaterialIcons.View_list, MenuSize, Colors.White);
-    public static readonly FontImageSource ViewModule = Create(MaterialIcons.View_module, MenuSize, Colors.White);
     public static readonly FontImageSource ViewQuilt = Create(MaterialIcons.View_quilt, MenuSize, Colors.White);
     public static readonly FontImageSource ViewTimeline = Create(MaterialIcons.View_timeline, MenuSize, Colors.White);
     public static readonly FontImageSource VolumeUp = Create(MaterialIcons.Volume_up, MenuSize, Colors.White);

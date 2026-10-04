@@ -101,7 +101,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     public UISocialViewModel()
     {
-        BackCommand = MakeAsyncCommand(() => Navigator.ForwardAsync(ViewId.UIMenu2));
+        BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
 
         HasIconNotificationMail = true;
         HasIconNotificationInfo = true;
@@ -139,4 +139,10 @@ public sealed partial class UISocialViewModel : AppViewModelBase
         HasMenuNotificationWeaponStorage = true;
         HasMenuNotificationDevelopment = true;
     }
+
+    //--------------------------------------------------------------------------------
+    // Navigation
+    //--------------------------------------------------------------------------------
+
+    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 }

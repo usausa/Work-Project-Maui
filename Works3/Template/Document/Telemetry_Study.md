@@ -1,6 +1,6 @@
 # 📈クラッシュレポート / テレメトリ基盤 検討資料
 
-採用した方式(候補 B)の実装計画は `Telemetry_Plan.md`。
+採用した方式は候補 B。決定と実装の内容は `Change_Summary.md`。
 
 MAUI アプリ(本テンプレート)からクラッシュレポート・ログ・メトリクスをサーバーへ送る基盤を検討するための初期資料。検討の候補は「DeviceManager 型のサーバー + 端末向けライブラリ」「OpenTelemetry(OTLP)で汎用の収集基盤へ送る」「外部サービス」。本書は現状・候補・論点をまとめたもので、方式の決定と設計は別途行なう。
 
@@ -22,7 +22,7 @@ MAUI アプリ(本テンプレート)からクラッシュレポート・ログ�
 
 | 資産 | 内容 | 位置 |
 | --- | --- | --- |
-| template-maui-server | 本テンプレートの対向サーバー。Serilog(ファイル)、OpenTelemetry(OTLP エクスポーター / Prometheus)、ヘルスチェック、SignalR ハブ(端末の状態と通知)。テレメトリは OTLP/gRPC の受信口(4317)で受け、受信内容をログに出す(保存と画面は `Telemetry_Plan.md` の 1-3 / 1-4) | `D:\GitHubTemplate\template-maui-server` |
+| template-maui-server | 本テンプレートの対向サーバー。Serilog(ファイル)、OpenTelemetry(OTLP エクスポーター / Prometheus)、ヘルスチェック、SignalR ハブ(端末の状態と通知)。テレメトリは OTLP/gRPC の受信口(4317)で受け、受信内容をログに出す(保存と画面は実装済み。内容は `Change_Summary.md`) | `D:\GitHubTemplate\template-maui-server` |
 | DeviceManager | MAUI 端末の管理サーバー(Blazor Server + Minimal API + SignalR + gRPC)。メトリクス(ダッシュボード)/ ログ / エラーレポート / ストレージ / メッセージ / モック Function / 設定配信。端末向け SDK(`DeviceManager.Client`)と WPF テストクライアント付き | `D:\GitHubTemplate\DeviceManager`(`README.md`、`docs/features.md`、`docs/sdk.md`) |
 
 DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
@@ -95,7 +95,7 @@ DeviceManager の SDK(`DeviceManager.Client`、net10.0)の要点:
 
 ## ❓6. 検討の論点
 
-方式は B(OTLP で template-maui-server へ送る。端末は OTLP/HTTP(protobuf)で送り、サーバーは HTTP と gRPC の両方で受ける)。1〜6 の決定は `Telemetry_Plan.md` の「決定事項」「送る内容」「構成」。
+方式は B(OTLP で template-maui-server へ送る。端末は OTLP/HTTP(protobuf)で送り、サーバーは HTTP と gRPC の両方で受ける)。1〜6 の決定と実装の内容は `Change_Summary.md`。
 
 1. 方式: A / B / C のどれか、または A のサーバーに OTLP の受け口を足す・B の永続キューを自前で足すといった組み合わせ
 2. 収集する項目と粒度(クラッシュのみから始めるか、ログ / メトリクスまで含めるか)

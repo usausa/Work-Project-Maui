@@ -11,7 +11,7 @@
              x:Class="Template.MobileApp.Modules.Device.DeviceOcrView"
              x:DataType="{x:Type module:DeviceOcrViewModel}"
              s:BindingContextResolver.Type="{x:Type module:DeviceOcrViewModel}"
-             shell:ShellProperty.Title="Ocr"
+             shell:ShellProperty.Title="OCR"
              shell:ShellProperty.Function1Text="Back"
              shell:ShellProperty.Function4Text="Scan"
              shell:ShellProperty.Function1Enabled="True"
