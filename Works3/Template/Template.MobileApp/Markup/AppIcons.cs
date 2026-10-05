@@ -214,6 +214,7 @@ public static class AppIcons
     // Screen (画面固有の指定)
     //--------------------------------------------------------------------------------
 
+    public static readonly FontImageSource DiagnosticsDelete = Create(MaterialIcons.Delete, SmallSize, ResourceColor("RedDefault"));
     public static readonly FontImageSource LoginVisibility = Create(MaterialIcons.Visibility, MenuSize, ResourceColor("GrayDefault"));
     public static readonly FontImageSource LoginVisibilityOff = Create(MaterialIcons.Visibility_off, MenuSize, ResourceColor("LightBlueDarken1"));
     public static readonly FontImageSource MapAdd = Create(MaterialIcons.Add, MenuSize, ResourceColor("GrayDarken3"));

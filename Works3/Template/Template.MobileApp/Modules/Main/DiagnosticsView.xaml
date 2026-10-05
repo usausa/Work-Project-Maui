@@ -51,6 +51,12 @@
                 <Setter Property="Margin" Value="0,8,0,0" />
             </Style>
 
+            <Style x:Key="DeleteButton"
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicIconOutlinedButton}">
+                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            </Style>
+
             <converters:ByteSizeConverter x:Key="ByteSizeConverter" />
             <converters:DurationConverter x:Key="DurationConverter" />
 
@@ -443,10 +449,10 @@
                                 Text="Share files"
                                 ImageSource="{x:Static markup:AppIcons.SmallShare}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource BasicIconOutlinedButton}"
+                                Style="{StaticResource DeleteButton}"
                                 Command="{Binding DeleteLogsCommand}"
                                 Text="Delete files"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                                ImageSource="{x:Static markup:AppIcons.DiagnosticsDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -465,10 +471,10 @@
                            Text="{Binding LastCrashReport}" />
                     <Grid Style="{StaticResource ActionRowGrid}"
                           ColumnDefinitions="*">
-                        <Button Style="{StaticResource BasicIconOutlinedButton}"
+                        <Button Style="{StaticResource DeleteButton}"
                                 Command="{Binding ClearCrashReportCommand}"
                                 Text="Clear"
-                                ImageSource="{x:Static markup:AppIcons.SmallDelete}" />
+                                ImageSource="{x:Static markup:AppIcons.DiagnosticsDelete}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

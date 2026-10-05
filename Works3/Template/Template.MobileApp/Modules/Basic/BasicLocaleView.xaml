@@ -65,19 +65,19 @@
                                Icon="{x:Static fonts:MaterialIcons.Language}">
                 <Grid Style="{StaticResource CardInfoGrid}"
                       RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="2*,3*">
+                      ColumnDefinitions="72,*">
                     <Label Grid.Row="0" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource ResourceTagLabel}"
                            Text="Culture" />
                     <Label Grid.Row="0" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardPrimaryValueLabel}"
                            Text="{Binding CultureName}" />
 
                     <Label Grid.Row="1" Grid.Column="0"
-                           Style="{StaticResource NameLabel}"
+                           Style="{StaticResource ResourceTagLabel}"
                            Text="UICulture" />
                     <Label Grid.Row="1" Grid.Column="1"
-                           Style="{StaticResource ValueLabel}"
+                           Style="{StaticResource CardPrimaryValueLabel}"
                            Text="{Binding UICultureName}" />
                 </Grid>
             </controls:InfoCard>

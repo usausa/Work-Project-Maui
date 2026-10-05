@@ -1011,28 +1011,6 @@
     </Style>
 
     <!-- ================================================================================ -->
-    <!-- CollectionView -->
-    <!-- ================================================================================ -->
-
-    <Style x:Key="ItemCollectionGrid"
-           TargetType="Grid">
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
-        <Setter Property="VerticalOptions" Value="Fill" />
-        <Setter Property="HeightRequest" Value="48" />
-        <Setter Property="RowSpacing" Value="0" />
-        <Setter Property="ColumnSpacing" Value="0" />
-    </Style>
-
-    <Style x:Key="ItemCollectionLabel"
-           TargetType="Label">
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
-    </Style>
-
-    <!-- ================================================================================ -->
     <!-- Dialog -->
     <!-- ================================================================================ -->
 
@@ -1369,6 +1347,18 @@
            TargetType="Button"
            BasedOn="{StaticResource BasicOutlinedButton}">
         <Setter Property="ContentLayout" Value="Left,8" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.4" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <Style x:Key="BasicFilledButton"

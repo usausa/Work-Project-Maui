@@ -119,7 +119,7 @@
             <Style x:Key="ConnectionSignalIcon"
                    TargetType="Label"
                    BasedOn="{StaticResource SignalIconBase}">
-                <Setter Property="FontSize" Value="56" />
+                <Setter Property="FontSize" Value="48" />
                 <Setter Property="WidthRequest" Value="64" />
                 <Setter Property="TextColor" Value="{Binding Connection.SignalLevel, Converter={StaticResource SignalColorConverter}, FallbackValue={StaticResource GrayDefault}}" />
             </Style>
@@ -189,7 +189,7 @@
             <Style x:Key="InfoLabel"
                    TargetType="Label">
                 <Setter Property="FlexLayout.Shrink" Value="0" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="Margin" Value="0,0,12,2" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />

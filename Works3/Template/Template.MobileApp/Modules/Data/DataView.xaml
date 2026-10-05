@@ -55,7 +55,7 @@
                             Command="{Binding UpdateCommand}"
                             Text="Update" />
                     <Button Grid.Row="1" Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
+                            Style="{StaticResource BasicOutlinedCancelButton}"
                             Command="{Binding DeleteCommand}"
                             Text="Delete" />
                     <Button Grid.Row="1" Grid.Column="1"
@@ -87,7 +87,7 @@
                                 Command="{Binding BulkInsertCommand}"
                                 Text="BulkInsert" />
                         <Button Grid.Row="0" Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicOutlinedCancelButton}"
                                 Command="{Binding DeleteAllCommand}"
                                 Text="DeleteAll" />
                         <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"

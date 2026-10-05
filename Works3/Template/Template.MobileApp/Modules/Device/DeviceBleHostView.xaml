@@ -22,7 +22,6 @@
             <Style x:Key="UserIdValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
-                <Setter Property="FontSize" Value="18" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>

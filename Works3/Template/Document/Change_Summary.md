@@ -2976,14 +2976,55 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Sample/SampleMarkdownView.xaml` | 11-63: 本文を左右 16・上下 12 の余白の内側に(画面ローカルのスタイル `MarkdownScroll`)。見出しを太字にして H1 28(`BlueDarken2`)/ H2 22(`BlueGrayDarken3`)/ H3 18(`BlueGrayDarken2`)、本文を `GrayDarken3` に。引用とコードの箱の枠を淡く(`OrangeLighten2` / `GrayLighten2`) |
 | `Modules/Sample/SampleMap2View.xaml` / `SampleMap2ViewModel.cs` / `Messaging/MapsuiMapManagers.cs` | 11-61: Mapsui のズームのボタン(`ZoomInOutWidget`)を左上から右上へ。6 つの切り替えを地図の上のパネルから下から出るシート(自作の `BottomSheetView`、`IsLayerOpen`)に移し、右下のボタンの列の一番上にシートを開くレイヤーのボタン(`LayerCommand`)を足した。シートの行は高さ 44・文字 14・名前の前に絵文字(🧭 Widget / 📍 Spot / 🔷 Shape / 🗾 GeoJSON / 🔵 Cluster / 🌈 Overlay)。右下のボタンの列の下の余白を 40 にして地図の表記から離した |
 | `Modules/Navigation/Edit/EditListView.xaml` | 11-14: 角丸の枠のカードの行を、白地のフラットな行と 1px の区切り線に(行の高さは 56 ちょうどで、選択モードでも変わらない)。編集・削除を透明の 44 のアイコンのボタン(青のペン・赤のゴミ箱。画面ローカルのスタイル `WorkEditButton` / `WorkDeleteButton`)に。番号のバッジを淡い青の地に青の文字(角 2)に。選択モードで選んだ行は淡い琥珀(`AmberLighten4`)の地、番号は白地に茶色(`BrownDarken1`)の文字。全選択のボタンを白地に青の枠と青の文字に(灰色の地は押せないように見えた) |
-| `Resources/Styles/Styles.xaml` | 11-14: 使う画面が無くなった `ItemCollectionButtonBase` / `ItemCollectionButtonPrimary` / `ItemCollectionButtonDanger` を削除 |
+| `Resources/Styles/Styles.xaml` | 11-14: 使う画面が無くなった `ItemCollectionButtonBase` / `ItemCollectionButtonPrimary` / `ItemCollectionButtonDanger` と、前から使われていなかった `ItemCollectionGrid` / `ItemCollectionLabel`(CollectionView の区画ごと)を削除 |
+| `Modules/View/ViewBorderView.xaml` | 11-44: 白地に名前と Picker / Slider を並べた形から、灰色の地に 4 枚の InfoCard(プレビュー / 形と色 / 線 / 角丸。角丸は RoundRectangle のときだけ)に。プレビューのカードは画面の上に固定(余白は画面ローカルのスタイル `PreviewCard`)し、ほかの 3 枚だけを `RootScroll` でスクロールする。行は名前を左、値を右(青の等幅、画面ローカルのスタイル `BorderValueLabel`)、Picker はカードの枠の欄(`CardFieldBorder` + `CardFieldPicker`)。Color・StrokeColor の欄の左に選んだ色の丸(`ColorDotBorder`) |
+| `Modules/View/ViewShadowView.xaml` | 11-45: 白地に名前と Picker / Slider を並べた形から、灰色の地に 3 枚の InfoCard(プレビュー / 影の設定 / ニューモーフィズム)に。プレビューのカードは画面の上に固定(余白は画面ローカルのスタイル `PreviewCard`)し、ほかの 2 枚だけを `RootScroll` でスクロールする。行は名前を左、値を右(青の等幅、`ShadowValueLabel`)、Offset は 1 行(`MultiBinding`)にスライダー 2 本、Picker はカードの枠の欄(`CardFieldBorder` + `CardFieldPicker`)で、Border・Color の欄の左に選んだ色の丸(`ColorDotBorder`)。ニューモーフィズムはカードの中に灰色の枠を置き、上に説明「影2方向の重ね合わせ」(`BasicCaptionLabel`)。タイルを並べた `NeumorphRowStack` に Padding 20 を取り(灰色の枠の Padding は 16,24 → 16,4)、明暗の影がタイルの並びの端で切れないように。使わなくなった `ShadowVerticalStackLayout` / `SeparateBoxView` と、区切りのコメント(Target / Setting / Neumorphism)を削除 |
+| `Modules/Data/DataView.xaml` | 11-3 ②: Delete / DeleteAll を `BasicOutlinedCancelButton` に |
+| `Modules/Main/DiagnosticsView.xaml` / `Markup/AppIcons.cs` | 11-4 ④: Delete files / Clear を、赤い文字と赤いアイコンの枠のボタンに(画面ローカルのスタイル `DeleteButton`、アイコン `AppIcons.DiagnosticsDelete`) |
+| `Modules/Main/SettingView.xaml` | 11-5 ③: 文字 13 の 3 か所(`SettingCaptionLabel` / `SettingValueLabel` / `SettingEmptyLabel`)を 14 に |
+| `Modules/Basic/BasicTypographyView.xaml` | 11-6 ①: 色の帯の見本 18 個に左右 8 の内側の余白(画面ローカルのスタイル `BandLabel` を StyleClass と併せて付ける) |
+| `Modules/Basic/BasicLocaleView.xaml` | 11-10 ①: Current culture を、下のカードと同じ `ResourceTagLabel` + `CardPrimaryValueLabel`(列 72)の形に |
+| `Modules/Basic/BasicDialogView.xaml` | 11-11 ②: Information のボタンを全幅に |
+| `Modules/Basic/BasicSettingView.xaml` | 11-13 ③: 開く / クリア(`RowButton`)を高さ 44・角 22・文字 14 に |
+| `Modules/Device/DeviceLocationView.xaml` | 11-20 ①: 時刻の文字を縦の中央に(画面ローカルのスタイル `TimestampLabel`) |
+| `Modules/Device/DeviceQrDisplayView.xaml` | 11-21 ②③: QR の内側の枠線を消して白い余白だけに、QR の下の文字を 1 行の省略に |
+| `Modules/Device/DeviceWiFiView.xaml` | 11-25 ①: 情報の行の文字 13 → 14、接続中の電波のアイコン 56 → 48 |
+| `Modules/Device/DeviceBleHostView.xaml` | 11-28 ①: UserId を `BasicMonoLabel` の 14 のままにして 1 行に(18 の指定を削除) |
+| `Modules/Device/DeviceNfcView.xaml` | 11-29 ①: 読み取る前(`Access` が null)は、上の IDm と残高の帯を隠す |
+| `Resources/Styles/Styles.xaml` | 11-32 ②: `BasicIconOutlinedButton` の押せないときを、ボタン全体の Opacity 0.4 に(アイコンも薄くなる。Biometric・Diagnostics・Misc・Telemetry) |
+| `Controls/StatControl.cs` / `Modules/Network/NetworkRealtimeView.xaml` | 11-38 ①: 値の書式 `ValueFormat`(既定 F1)を足し、Connections は F0 で整数に |
+| `Modules/View/ViewLayoutView.xaml` | 11-42 ②: UniformItemsLayout を左右に 3 広げ(画面ローカルのスタイル `UniformItems`)、セルの端を DockLayout とそろえた |
+| `Modules/View/ViewStateView.xaml` | 11-43 ②③: 状態の表示を高さ 180 の枠の上下中央に置き、アイコンを共有の丸い地(`BasicEmptyIconBorder` / `BasicSuccessIconBorder`、Error は画面ローカルの赤 `StateErrorIconBorder`)に。状態の切り替えの 4 つと読み込みのボタンを `BasicOutlinedButton` に(画面ローカルの `StateButton` と使わなくなったアイコンのスタイルは削除) |
+| `Modules/View/ViewBottomSheetView.xaml` | 11-48 ②: シートの行の文字 15 → 16、各行の下に `SheetSeparator` の線(Sf と自作の両方) |
+| `Modules/View/ViewEffectView.xaml` | 11-52 ①: Replay を見出しの行の上下中央に置き(高さ 44・角 22、`SectionHeaderGrid` / `SectionHeaderLabel`)、カードとの間を 8 空けた |
+| `Modules/View/ViewLottieView.xaml` | 11-54 ②③: スクロール連動の帯の文字を左寄せ(余白 16)にして最初から読めるように、時刻の行に左右 15 の余白を付けてスライダーの溝の端とそろえた。長押しのボタンを高さ 44(角 22)に |
+| `Modules/Sample/SampleWebBasicView.xaml` | 11-59 ④: 状態の帯の文字 18 → 14 |
+| `Modules/Sample/SampleCropView.xaml` | 11-66 ②: ボタンの高さ 40 → 44(角 22) |
 
 - 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
 - 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
 - 実機: 不具合を直した 7 画面を前後で撮って比べた(Audio の音量が 50%、Drawing の白いキャンバス、Chart の両端の点、Web Basic の「…」、Border の下までのスクロール、Setting の (not set)、Basic Style の 1 / 2 / 3 の順)
 - 実機: Markdown(左右の余白・見出しの強弱・本文の色・淡い枠)と Map2(右上のズームのボタン・レイヤーのボタンで開くシート・右下のボタンの位置)を前後で撮って比べた
 - 実機: Navigation Edit のふつうの状態と選択モード(2 行を選んだ状態)を前後で撮って比べた。文字の色(選んだ行・番号・名前)と、選んだ行の色・全選択のボタンは、それぞれ 3 案を並べて比べて決めた。区切り線の位置で、ふつうの状態と選択モードの行の高さが同じことを確かめた
+- 実機: Border の 4 枚のカード(色の丸・等幅の値・角丸のカード)を前後で撮って比べ、下までスクロールしてもプレビューが上に残ることを確かめた
+- 実機: Shadow を前後で撮って比べ、スクロールしてもプレビューが上に残ること、ニューモーフィズムの明暗の影がタイルの並びの端で切れず、地の色まで途切れずに薄くなることを確かめた。スライダーを全部最大(Offset 20, 20・Radius 40・Opacity 1)にすると、プレビューの影はカードの下の端で切れる
+- 実機: 簡単な候補(値・スタイルをそろえる / ずれ・不具合)の 21 画面を前後で撮って比べた(State は 4 つの状態、Bottom Sheet はシートを開いた状態、QR Display は長い文字、Realtime はサーバーにつながる前の 0 の表示)。Biometric の押せないボタンのアイコンが薄くなること、Location の時刻の縦の位置、Basic Setting の開く / クリアの形を拡大して確かめた
 - ビルド 0 警告、inspectcode 0 件
+
+### 🏷️API の名前と応答の宣言(template-maui-server)(2026-10-05)
+
+template-maui-server の API に、エンドポイントの名前と応答の宣言(OpenAPI)を付け、本文の読み取りを厳しくした。端末は型の名前だけ合わせた。(server) は `template-maui-server/src/Template.MobileServer.Web/` からの相対。
+
+| 対象 | 内容 |
+|---|---|
+| (server) `Endpoints/*.cs` | 名前(`WithName`)を機能名 + 操作名にした(`AccountLogin` / `DataList` / `DataGet` / `DataCreate` / `DataUpdate` / `DataDelete` / `DeviceRegister` / `PushSend` / `SecretMessage` / `ServerTime` / `StorageGet` / `StorageUpload` / `StorageDelete` / `TestError` / `TestDelay`)。応答は `Produces<T>` / `ProducesProblem` / `ProducesValidationProblem` で宣言(`StorageGet` の 200 は一覧の `StorageListResponse` だけ)。`DataResponse` → `DataGetResponse` |
+| (server) `Application/EndpointExtensions.cs` / `Endpoints/SecretEndpoints.cs` | API 全体に 500、Secret のグループに 401(ProblemDetails) |
+| (server) `ExceptionHandling/GlobalExceptionHandler.cs` | 読めない本文(`BadHttpRequestException`)は例外の状態コードの ProblemDetails で返し、エラーのログを出さない |
+| (server) `Application/ApplicationExtensions.cs` | JSON の読み取りを厳しくした(文字列の数値・重複したキー・知らない項目は 400) |
+| `Services/HttpService.cs` / `Usecase/NetworkUsecase.cs` | `DataResponse` → `DataGetResponse`(サーバーの型名に合わせた) |
+
+- 端末: ビルド 0 警告
+- サーバー: ビルド 0 警告、テスト 140 件成功、inspectcode 0 件
 
 ## 💡C. この区間のナレッジ
 

@@ -160,10 +160,24 @@
                 <Setter Property="Padding" Value="16,0,16,24" />
             </Style>
 
+            <Style x:Key="SectionHeaderGrid"
+                   TargetType="Grid">
+                <Setter Property="Margin" Value="0,8,0,8" />
+            </Style>
+
+            <Style x:Key="SectionHeaderLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionLabel}">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="SectionActionButton"
                    TargetType="Button"
                    BasedOn="{StaticResource SmallActionButton}">
-                <Setter Property="Margin" Value="0,12,0,0" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="BadgeHostGrid"
@@ -337,9 +351,10 @@
         <VerticalStackLayout Style="{StaticResource EffectPageStack}">
 
             <!-- エントランス(FadeUp 時間差) -->
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid Style="{StaticResource SectionHeaderGrid}"
+                  ColumnDefinitions="*,Auto">
                 <Label Grid.Column="0"
-                       Style="{StaticResource SectionLabel}"
+                       Style="{StaticResource SectionHeaderLabel}"
                        Text="エントランス(FadeUp 時間差)" />
                 <Button Grid.Column="1"
                         Style="{StaticResource SectionActionButton}"

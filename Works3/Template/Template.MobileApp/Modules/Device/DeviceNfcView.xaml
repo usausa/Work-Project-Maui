@@ -200,7 +200,8 @@
 
         <Grid Grid.Row="0"
               Style="{StaticResource FillGrid}"
-              ColumnDefinitions="*,*">
+              ColumnDefinitions="*,*"
+              IsVisible="{Binding Access, Converter={StaticResource NotEmptyConverter}}">
             <Label Grid.Column="0"
                    Style="{StaticResource IdmLabel}"
                    Text="{Binding Idm}" />

@@ -102,7 +102,7 @@
                 <controls:StatControl Style="{StaticResource StatGraph}"
                                       DataSet="{Binding ConnectionSet}"
                                       GraphColor="{StaticResource OrangeDefault}"
-                                      Label="Connections" MaxValue="10" Unit="" />
+                                      Label="Connections" MaxValue="10" Unit="" ValueFormat="F0" />
             </Border>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"

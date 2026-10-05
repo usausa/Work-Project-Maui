@@ -39,8 +39,8 @@
             <Style x:Key="CropButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="16,0" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten3}" />

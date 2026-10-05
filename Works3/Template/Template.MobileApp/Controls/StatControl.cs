@@ -97,6 +97,19 @@ public sealed class StatControl : GraphicsView, IDrawable
         set => SetValue(UnitProperty, value);
     }
 
+    public static readonly BindableProperty ValueFormatProperty = BindableProperty.Create(
+        nameof(ValueFormat),
+        typeof(string),
+        typeof(StatControl),
+        "F1",
+        propertyChanged: OnPropertyChanged);
+
+    public string ValueFormat
+    {
+        get => (string)GetValue(ValueFormatProperty);
+        set => SetValue(ValueFormatProperty, value);
+    }
+
     public static readonly BindableProperty MaxValueProperty = BindableProperty.Create(
         nameof(MaxValue),
         typeof(float),
@@ -238,7 +251,8 @@ public sealed class StatControl : GraphicsView, IDrawable
         // Value
         var currentValue = values.LastValue;
         var unit = Unit;
-        var valueText = String.IsNullOrEmpty(unit) ? $"{currentValue:F1}" : $"{currentValue:F1} {unit}";
+        var value = currentValue.ToString(ValueFormat, CultureInfo.CurrentCulture);
+        var valueText = String.IsNullOrEmpty(unit) ? value : $"{value} {unit}";
 
         canvas.FontColor = Colors.White;
         canvas.FontSize = ValueFontSize;

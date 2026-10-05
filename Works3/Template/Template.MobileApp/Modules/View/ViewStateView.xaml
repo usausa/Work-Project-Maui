@@ -20,42 +20,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="StateButton"
-                   TargetType="Button">
-                <Setter Property="Padding" Value="8,0" />
-                <Setter Property="HeightRequest" Value="40" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="BorderColor" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="behaviors:ButtonOption.PressEffect" Value="True" />
+            <Style x:Key="StateErrorIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
             </Style>
 
-            <Style x:Key="StateIconLabel"
-                   TargetType="Label">
-                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
-                <Setter Property="FontSize" Value="48" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="EmptyStateIconLabel"
+            <Style x:Key="StateErrorIconLabel"
                    TargetType="Label"
-                   BasedOn="{StaticResource StateIconLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
-            <Style x:Key="ErrorStateIconLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource StateIconLabel}">
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <Style x:Key="SuccessStateIconLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource StateIconLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
+                   BasedOn="{StaticResource BasicIconCircleLabel}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
             </Style>
 
             <Style x:Key="StateTextLabel"
@@ -65,16 +39,9 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="StateContainerStack"
-                   TargetType="VerticalStackLayout">
+            <Style x:Key="StateContainerGrid"
+                   TargetType="Grid">
                 <Setter Property="HeightRequest" Value="180" />
-            </Style>
-
-            <Style x:Key="StatePanelStack"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Spacing" Value="8" />
-                <Setter Property="HeightRequest" Value="180" />
-                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <Style x:Key="StateButtonGrid"
@@ -96,61 +63,67 @@
                     <Grid Style="{StaticResource StateButtonGrid}"
                           ColumnDefinitions="*,*,*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource StateButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Loading"
                                 Text="Loading" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource StateButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Empty"
                                 Text="Empty" />
                         <Button Grid.Column="2"
-                                Style="{StaticResource StateButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Error"
                                 Text="Error" />
                         <Button Grid.Column="3"
-                                Style="{StaticResource StateButton}"
+                                Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter=""
                                 Text="Success" />
                     </Grid>
 
-                    <VerticalStackLayout Style="{StaticResource StateContainerStack}"
-                                         mct:StateContainer.CurrentState="{Binding CurrentState}">
+                    <Grid Style="{StaticResource StateContainerGrid}"
+                          mct:StateContainer.CurrentState="{Binding CurrentState}">
                         <mct:StateContainer.StateViews>
-                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                            <VerticalStackLayout Style="{StaticResource BasicEmptyStack}"
                                                  mct:StateView.StateKey="Loading">
                                 <ActivityIndicator Style="{StaticResource BasicLoadingIndicator}"
                                                    IsRunning="True" />
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="読み込み中..." />
                             </VerticalStackLayout>
-                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                            <VerticalStackLayout Style="{StaticResource BasicEmptyStack}"
                                                  mct:StateView.StateKey="Empty">
-                                <Label Style="{StaticResource EmptyStateIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                                <Border Style="{StaticResource BasicEmptyIconBorder}">
+                                    <Label Style="{StaticResource BasicEmptyIconLabel}"
+                                           Text="{x:Static fonts:MaterialIcons.Inbox}" />
+                                </Border>
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="データがありません" />
                             </VerticalStackLayout>
-                            <VerticalStackLayout Style="{StaticResource StatePanelStack}"
+                            <VerticalStackLayout Style="{StaticResource BasicEmptyStack}"
                                                  mct:StateView.StateKey="Error">
-                                <Label Style="{StaticResource ErrorStateIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Error}" />
+                                <Border Style="{StaticResource StateErrorIconBorder}">
+                                    <Label Style="{StaticResource StateErrorIconLabel}"
+                                           Text="{x:Static fonts:MaterialIcons.Error}" />
+                                </Border>
                                 <Label Style="{StaticResource StateTextLabel}"
                                        Text="読み込みに失敗しました" />
                             </VerticalStackLayout>
                         </mct:StateContainer.StateViews>
 
                         <!-- 既定コンテンツ (CurrentState が空のとき表示) -->
-                        <VerticalStackLayout Style="{StaticResource StatePanelStack}">
-                            <Label Style="{StaticResource SuccessStateIconLabel}"
-                                   Text="{x:Static fonts:MaterialIcons.Check_circle}" />
+                        <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
+                            <Border Style="{StaticResource BasicSuccessIconBorder}">
+                                <Label Style="{StaticResource BasicSuccessIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Check_circle}" />
+                            </Border>
                             <Label Style="{StaticResource StateTextLabel}"
                                    Text="読み込み完了 (既定コンテンツ)" />
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -161,7 +134,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="ボタンを押すまで下のコンテンツは生成されない" />
-                    <Button Style="{StaticResource StateButton}"
+                    <Button Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding LoadPanelCommand}"
                             Text="コンテンツを読み込む" />
                     <mct:LazyView x:TypeArguments="module:ViewStatePanelView"

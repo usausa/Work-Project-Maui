@@ -35,6 +35,12 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="TimestampLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicMonoLabel}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -94,7 +100,7 @@
                                    Text="{x:Static fonts:MaterialIcons.Schedule}" />
                             <!-- ReSharper disable Xaml.PossibleNullReferenceException -->
                             <Label Grid.Column="1"
-                                   Style="{StaticResource BasicMonoLabel}"
+                                   Style="{StaticResource TimestampLabel}"
                                    behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                    behaviors:AnimationOption.HighlightTrigger="{Binding Location.Timestamp}"
                                    Text="{Binding Location.Timestamp.LocalDateTime, StringFormat='{0:yyyy-MM-dd HH:mm:ss}', FallbackValue='-'}" />

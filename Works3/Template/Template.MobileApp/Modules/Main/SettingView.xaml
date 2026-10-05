@@ -91,7 +91,7 @@
 
             <Style x:Key="SettingCaptionLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
                 <Setter Property="WidthRequest" Value="84" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -100,7 +100,7 @@
             <Style x:Key="SettingValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
                 <Setter Property="LineBreakMode" Value="MiddleTruncation" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -109,7 +109,7 @@
 
             <Style x:Key="SettingEmptyLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="Text" Value="(not set)" />

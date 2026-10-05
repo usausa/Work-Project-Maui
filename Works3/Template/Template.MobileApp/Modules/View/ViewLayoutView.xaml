@@ -44,6 +44,11 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
 
+            <Style x:Key="UniformItems"
+                   TargetType="mct:UniformItemsLayout">
+                <Setter Property="Margin" Value="-3,0" />
+            </Style>
+
             <Style x:Key="UniformCell"
                    TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
@@ -261,7 +266,8 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicCaptionLabel}"
                            Text="全セルが同じサイズになる (MaxColumns=4)" />
-                    <mct:UniformItemsLayout MaxColumns="4">
+                    <mct:UniformItemsLayout Style="{StaticResource UniformItems}"
+                                            MaxColumns="4">
                         <Border Style="{StaticResource UniformCell}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="A" />

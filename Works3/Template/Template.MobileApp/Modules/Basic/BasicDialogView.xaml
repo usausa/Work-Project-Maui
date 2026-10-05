@@ -20,13 +20,9 @@
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                Title="Notification"
                                Icon="{x:Static fonts:MaterialIcons.Info}">
-                <Grid Style="{StaticResource BasicButtonGrid}"
-                      ColumnDefinitions="*,*">
-                    <Button Grid.Column="0"
-                            Style="{StaticResource BasicOutlinedButton}"
-                            Command="{Binding InformationCommand}"
-                            Text="Information" />
-                </Grid>
+                <Button Style="{StaticResource BasicOutlinedButton}"
+                        Command="{Binding InformationCommand}"
+                        Text="Information" />
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
