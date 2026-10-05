@@ -122,7 +122,7 @@
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="100"
                                Title="Network"
-                               Icon="{x:Static fonts:MaterialIcons.Network_wifi}">
+                               Icon="{x:Static fonts:MaterialIcons.Wifi}">
                 <VerticalStackLayout Style="{StaticResource NetworkStack}">
 
                     <FlexLayout Wrap="Wrap">

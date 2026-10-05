@@ -129,8 +129,7 @@
           RowDefinitions="*,Auto">
 
         <Border Grid.Row="0"
-                Style="{StaticResource FrameBorder}"
-                behaviors:AnimationOption.EnterAnimation="FadeUp">
+                Style="{StaticResource FrameBorder}">
             <extended:SKLottieView Source="Lottie/popping.json"
                                    Progress="{Binding Progress}"
                                    Duration="{Binding Duration}"

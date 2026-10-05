@@ -2985,7 +2985,7 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Basic/BasicTypographyView.xaml` | 11-6 ①: 色の帯の見本 18 個に左右 8 の内側の余白(画面ローカルのスタイル `BandLabel` を StyleClass と併せて付ける) |
 | `Modules/Basic/BasicLocaleView.xaml` | 11-10 ①: Current culture を、下のカードと同じ `ResourceTagLabel` + `CardPrimaryValueLabel`(列 72)の形に |
 | `Modules/Basic/BasicDialogView.xaml` | 11-11 ②: Information のボタンを全幅に |
-| `Modules/Basic/BasicSettingView.xaml` | 11-13 ③: 開く / クリア(`RowButton`)を高さ 44・角 22・文字 14 に |
+| `Modules/Basic/BasicSettingView.xaml` | 11-13 ③: 開く / クリア(`RowButton`)の文字を 12 → 14 に(高さ 32・角 16 はそのまま) |
 | `Modules/Device/DeviceLocationView.xaml` | 11-20 ①: 時刻の文字を縦の中央に(画面ローカルのスタイル `TimestampLabel`) |
 | `Modules/Device/DeviceQrDisplayView.xaml` | 11-21 ②③: QR の内側の枠線を消して白い余白だけに、QR の下の文字を 1 行の省略に |
 | `Modules/Device/DeviceWiFiView.xaml` | 11-25 ①: 情報の行の文字 13 → 14、接続中の電波のアイコン 56 → 48 |
@@ -2996,10 +2996,31 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/View/ViewLayoutView.xaml` | 11-42 ②: UniformItemsLayout を左右に 3 広げ(画面ローカルのスタイル `UniformItems`)、セルの端を DockLayout とそろえた |
 | `Modules/View/ViewStateView.xaml` | 11-43 ②③: 状態の表示を高さ 180 の枠の上下中央に置き、アイコンを共有の丸い地(`BasicEmptyIconBorder` / `BasicSuccessIconBorder`、Error は画面ローカルの赤 `StateErrorIconBorder`)に。状態の切り替えの 4 つと読み込みのボタンを `BasicOutlinedButton` に(画面ローカルの `StateButton` と使わなくなったアイコンのスタイルは削除) |
 | `Modules/View/ViewBottomSheetView.xaml` | 11-48 ②: シートの行の文字 15 → 16、各行の下に `SheetSeparator` の線(Sf と自作の両方) |
-| `Modules/View/ViewEffectView.xaml` | 11-52 ①: Replay を見出しの行の上下中央に置き(高さ 44・角 22、`SectionHeaderGrid` / `SectionHeaderLabel`)、カードとの間を 8 空けた |
-| `Modules/View/ViewLottieView.xaml` | 11-54 ②③: スクロール連動の帯の文字を左寄せ(余白 16)にして最初から読めるように、時刻の行に左右 15 の余白を付けてスライダーの溝の端とそろえた。長押しのボタンを高さ 44(角 22)に |
+| `Modules/View/ViewEffectView.xaml` | 11-52 ①②: Replay を見出しの行の上下中央に置き(`SectionHeaderGrid` / `SectionHeaderLabel`、高さは元の 36)、カードとの間を 8 空けた。バッジを増減するボタンの「-」「+」を MaterialIcons の Remove / Add(24)に。ベルのバッジのはみ出す分をカードの中の行に入れた(11-71、画面ローカルのスタイル `BadgeCard` / `BadgeRowGrid`) |
+| `Modules/View/ViewLottieView.xaml` | 11-54 ②③: スクロール連動の帯の文字を左寄せ(余白 16)にして最初から読めるように、時刻の行に左右 15 の余白を付けてスライダーの溝の端とそろえた。長押しのボタンを高さ 44(角 22)に。表示欄の入場の動き(FadeUp)を外した |
 | `Modules/Sample/SampleWebBasicView.xaml` | 11-59 ④: 状態の帯の文字 18 → 14 |
-| `Modules/Sample/SampleCropView.xaml` | 11-66 ②: ボタンの高さ 40 → 44(角 22) |
+| `Modules/Sample/SampleCropView.xaml` | 11-66 ①②: ボタンの高さ 40 → 44(角 22)。書き出す前のプレビューに灰色の切り抜きのアイコン(36、画面ローカルのスタイル `PreviewEmptyIconLabel`) |
+| `Modules/Basic/BasicFontView.xaml` | 11-8 ①②: 見本の文字を濃い色に(画面ローカルのスタイル `FontSampleLabel`)。Default の見本を「+(1234567890.) ABCDEF 金額」にして 24 でも 1 行に。JetBrainsMono の見本を「+(1234567890.) ABCDEF」に(11-70)。NotoSerifJP の見本を「金額 あいうえお 1234567890」に(11-70) |
+| `Modules/Basic/BasicConverterView.xaml` | 11-9 ①②: BoolTo / EmptyTo の色を `RedDefault` / `PrimaryTextColor` に。入力と結果の間に `CardDivider`(3 枚とも) |
+| `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` / `Modules/Navigation/Shared/SharedInputView.xaml` | 11-15 ①: プレースホルダーを入力例(「例: Apple」「例: Orange」「例: 1001」)に |
+| `Modules/Navigation/Shared/SharedMain2View.xaml` | 11-15 ②: 番号の丸を `TealDefault` に |
+| `Modules/Device/DeviceStatusView.xaml` | 11-18 ④: Network の見出しのアイコンを `Wifi` に |
+| `Modules/Device/DeviceBleScanView.xaml` | 11-27 ②: 一覧を `RootGrid` の灰色の地に置き(画面ローカルのスタイル `SensorCollection`)、パネルの間と左右を 12 に |
+| `Modules/Device/DeviceActivityView.xaml` | 11-31 ③: ⏱ を ⏱️ に |
+| `Modules/Device/DeviceBiometricView.xaml` | 11-32 ③: 値の無い「—」(Last used・Result・Location・署名の Result・Verify・Tampered・Replay)と Key の「— 無し」を、DataTrigger で `SecondaryTextColor` に |
+| `Modules/Network/NetworkRealtimeView.xaml` | 11-38 ③: 通知が無いときの文を、いつもローカル通知に出す今の動きに合わせた |
+| `Modules/Network/NetworkSftpView.xaml` | 11-40 ①: 「サーバ」を「サーバー」に |
+| `Modules/View/ViewToolkitView.xaml` | 11-46 ①②③: SfSegmentedControl の選択を `BlueDefault`(画面ローカルのスタイル `SegmentedControl`)、SfOtpInput を中央に、Expander の見出しを「タップして展開」と開閉で向きが変わる矢印(`ExpandGlyphConverter`)に |
+| `Modules/View/ViewDrawerView.xaml` | 11-49 ①: SfSegmentedControl の選択を `BlueDefault` に(画面ローカルのスタイル `SegmentedControl`) |
+| `Modules/View/ViewGraphicsViewModel.cs` | 11-55 ①: 最初の図形の色をリソースの `BlueDefault` / `RedDefault` に(コンストラクターで `ResourceDictionary` を受ける) |
+| `Modules/View/ViewDrawingView.xaml` | 11-56 ②: プレビューの案内の文字を `BasicCenterHintLabel` と同じ濃さに |
+| `Modules/View/ViewChartView.xaml` | 11-57 ②: 地を `RootGrid` の灰色にし、グラフを白い枠(画面ローカルのスタイル `ChartFrameBorder`)に入れた |
+| `Modules/View/ViewSfChartView.xaml` | 11-58 ③: 縦棒の縦の格子線を消し(`ShowMajorGridLines`)、棒の上の角を 4 で丸めた(`CornerRadius`) |
+| `Modules/Sample/SamplePdfView.xaml` | 11-64 ①: F3 / F4 を Prev / Next に |
+| `Behaviors/Focus.cs` / `Resources/Styles/Styles.xaml` / `Modules/Basic/BasicBehaviorView.xaml` / `Modules/UI/UIShopView.xaml` | 11-68: `FocusedThickness` の既定を NaN(太さを変えない)にし、指定しない所はフォーカス枠の色だけを変える(共有の `BasicFieldEntry` / `CardFieldPicker`、UI 1 Shop、Basic Behavior の太さの指定は削除)。指定した所は、太くした分だけ Border の Margin を外へ広げ、周りの位置と大きさを変えない。色の変化は `Handler.UpdateValue` で枠に反映する |
+| `Modules/UI/UILoginView.xaml` / `UIChatView.xaml` / `Modules/View/ViewEffectView.xaml` | 11-68: フォーカス枠の太さを指定(Login 2.5・Chat 2、Effect の見本は 2.5 の画面ローカルのスタイル `BlueFocusEntry` / `GreenFocusEntry`) |
+| `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` | 11-68: スクロールをやめ、入力のカードを段の表示の下の空きの上下中央に置いた(画面ローカルのスタイル `WizardRootGrid` / `WizardCard`)。入力欄はフォーカス枠の太さ 2.5(`FocusFieldEntry`) |
+| `Graphics/Drawing/DrawingControl.cs` / `DrawingControl.android.cs` | 11-69: `IInteractiveDrawing` を描いている間は、親のスクロールが指を取らないように(Android の `RequestDisallowInterceptTouchEvent`)。Graphics の Sketch で縦の線が描ける |
 
 - 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
 - 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
@@ -3009,6 +3030,9 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: Border の 4 枚のカード(色の丸・等幅の値・角丸のカード)を前後で撮って比べ、下までスクロールしてもプレビューが上に残ることを確かめた
 - 実機: Shadow を前後で撮って比べ、スクロールしてもプレビューが上に残ること、ニューモーフィズムの明暗の影がタイルの並びの端で切れず、地の色まで途切れずに薄くなることを確かめた。スライダーを全部最大(Offset 20, 20・Radius 40・Opacity 1)にすると、プレビューの影はカードの下の端で切れる
 - 実機: 簡単な候補(値・スタイルをそろえる / ずれ・不具合)の 21 画面を前後で撮って比べた(State は 4 つの状態、Bottom Sheet はシートを開いた状態、QR Display は長い文字、Realtime はサーバーにつながる前の 0 の表示)。Biometric の押せないボタンのアイコンが薄くなること、Location の時刻の縦の位置、Basic Setting の開く / クリアの形を拡大して確かめた
+- 実機: 簡単な候補(色・アイコン / 灰色の地 / 文言)の画面を前後で撮って比べた(Toolkit は Expander を開いた状態、Shared2 は値を入れて戻った画面、Wizard は 2 段目、Biometric は「—」を拡大)。Basic Setting の開く / クリアは 3 案をそれぞれビルドして並べた。SFTP は SSH を設定していないので見ていない
+- 実機: Wizard の入力欄でフォーカスの前後を撮り、枠が青になっても欄の大きさと下の文字の位置が変わらないことを画素で確かめた。Graphics の Sketch に縦と斜めの線を描き、画面がスクロールしないこと(見出しの位置が同じ)と 2 本の線が残ることを確かめた。Effect のバッジ(99+)の上が欠けないこと、Font の JetBrainsMono が 24 でも 1 行のことを撮って確かめた
+- 実機: フォーカス枠の太さを指定した Login・Chat・Effect の見本を、色だけのときと入力中どうしで比べ、欄の枠のほかは画素が一致する(キーボードで画面が押し上げられる量の 1px を除く)ことを確かめた。Wizard は入力のカードが中央に置かれ、フォーカスで変わるのは欄の枠の行だけのことを確かめた。Font の NotoSerifJP が 24 でも 1 行のことを撮って確かめた
 - ビルド 0 警告、inspectcode 0 件
 
 ### 🏷️API の名前と応答の宣言(template-maui-server)(2026-10-05)

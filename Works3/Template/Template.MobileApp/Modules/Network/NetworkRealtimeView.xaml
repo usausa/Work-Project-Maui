@@ -119,7 +119,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="管理画面の Devices から送った通知がここに出る (前面ならトースト、バックグラウンドならローカル通知)" />
+                               Text="管理画面のDevicesから送った通知が、こことローカル通知に出る" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

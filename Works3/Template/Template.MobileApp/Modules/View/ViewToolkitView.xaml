@@ -18,10 +18,33 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="ExpanderHeaderLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource CardRowLabel}">
+            <Style x:Key="ExpanderHeaderGrid"
+                   TargetType="Grid">
                 <Setter Property="Padding" Value="0,8" />
+                <Setter Property="ColumnSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="ExpanderGlyphLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="OtpInput"
+                   TargetType="sf:SfOtpInput">
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SegmentedControl"
+                   TargetType="sf:SfSegmentedControl">
+                <Setter Property="SelectionIndicatorSettings">
+                    <Setter.Value>
+                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
+                                                       TextColor="White" />
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <Style x:Key="ExpanderContentLabel"
@@ -65,7 +88,8 @@
                     <controls:InfoCard Title="SfOtpInput"
                                        Icon="{x:Static fonts:MaterialIcons.Pin}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                            <sf:SfOtpInput Value="{Binding OtpValue}"
+                            <sf:SfOtpInput Style="{StaticResource OtpInput}"
+                                           Value="{Binding OtpValue}"
                                            Length="4" Type="Number" />
                             <Label Style="{StaticResource CardAccentLabel}"
                                    Text="{Binding OtpValue, StringFormat='入力: {0}'}" />
@@ -75,7 +99,8 @@
                     <controls:InfoCard Title="SfSegmentedControl"
                                        Icon="{x:Static fonts:MaterialIcons.View_week}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                            <sf:SfSegmentedControl ItemsSource="{Binding Segments}"
+                            <sf:SfSegmentedControl Style="{StaticResource SegmentedControl}"
+                                                   ItemsSource="{Binding Segments}"
                                                    SegmentHeight="40"
                                                    SelectedIndex="{Binding SegmentIndex, Mode=TwoWay}" />
                             <Label Style="{StaticResource CardAccentLabel}"
@@ -139,10 +164,18 @@
 
                     <controls:InfoCard Title="Expander (CommunityToolkit)"
                                        Icon="{x:Static fonts:MaterialIcons.Unfold_more}">
-                        <mct:Expander>
+                        <mct:Expander x:Name="SampleExpander">
                             <mct:Expander.Header>
-                                <Label Style="{StaticResource ExpanderHeaderLabel}"
-                                       Text="タップして展開 ▼" />
+                                <Grid Style="{StaticResource ExpanderHeaderGrid}"
+                                      ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource CardRowLabel}"
+                                           Text="タップして展開" />
+                                    <Label Grid.Column="1"
+                                           x:DataType="{x:Type mct:Expander}"
+                                           Style="{StaticResource ExpanderGlyphLabel}"
+                                           Text="{Binding IsExpanded, Source={x:Reference SampleExpander}, Converter={StaticResource ExpandGlyphConverter}}" />
+                                </Grid>
                             </mct:Expander.Header>
                             <Label Style="{StaticResource ExpanderContentLabel}"
                                    Text="Expander は Header タップで Content の表示/非表示を切り替える。折りたたみ FAQ やフィルタパネルに使える" />

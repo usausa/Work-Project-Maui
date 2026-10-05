@@ -1185,7 +1185,6 @@
            BasedOn="{StaticResource BasicEntry}">
         <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
         <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
-        <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
     </Style>
 
     <!-- Action -->
@@ -1449,7 +1448,6 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
         <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
-        <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
     </Style>
 
     <!-- Action -->

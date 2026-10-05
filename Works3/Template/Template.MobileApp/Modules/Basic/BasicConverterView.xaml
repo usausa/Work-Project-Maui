@@ -30,6 +30,7 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="ReverseChecked" />
                     </Grid>
+                    <BoxView Style="{StaticResource CardDivider}" />
                     <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
@@ -48,7 +49,7 @@
                         <Label Grid.Row="1" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
                                Text="{Binding ReverseChecked, Converter={s:BoolToText True='ON', False='OFF'}}"
-                               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True=Red, False=Black}}" />
+                               TextColor="{Binding ReverseChecked, Converter={s:BoolToColor True={StaticResource RedDefault}, False={StaticResource PrimaryTextColor}}}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -74,6 +75,7 @@
                                Style="{StaticResource CardRowLabel}"
                                Text="Checked2" />
                     </Grid>
+                    <BoxView Style="{StaticResource CardDivider}" />
                     <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="2*,3*">
@@ -115,6 +117,7 @@
                             Command="{Binding SwitchTextCommand}"
                             Text="Switch Text"
                             ImageSource="{x:Static markup:AppIcons.SmallTextFormat}" />
+                    <BoxView Style="{StaticResource CardDivider}" />
                     <Grid Style="{StaticResource CardInfoGrid}"
                           RowDefinitions="Auto,Auto,Auto"
                           ColumnDefinitions="2*,3*">
@@ -142,7 +145,7 @@
                         <Label Grid.Row="2" Grid.Column="1"
                                Style="{StaticResource ValueLabel}"
                                Text="{Binding Text, Converter={s:NullToText HandleEmptyString=True, Null='No value', NonNull='Has value'}}"
-                               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null=Red, NonNull=Black}}" />
+                               TextColor="{Binding Text, Converter={s:NullToColor HandleEmptyString=True, Null={StaticResource RedDefault}, NonNull={StaticResource PrimaryTextColor}}}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

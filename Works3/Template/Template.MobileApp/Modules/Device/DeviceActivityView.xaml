@@ -162,7 +162,7 @@
 
                     <Label Grid.Row="4" Grid.Column="0"
                            Style="{StaticResource DetailIconLabel}"
-                           Text="⏱" />
+                           Text="⏱️" />
                     <Label Grid.Row="4" Grid.Column="1"
                            Style="{StaticResource DetailNameLabel}"
                            Text="活動時間" />

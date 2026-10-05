@@ -46,7 +46,7 @@
                            Text="{Binding HostDisplay}" />
                     <Label Style="{StaticResource BasicCaptionLabel}"
                            IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
-                           Text="サーバのホスト鍵指紋 (参考表示)" />
+                           Text="サーバーのホスト鍵指紋 (参考表示)" />
                     <Label Style="{StaticResource FingerprintLabel}"
                            IsVisible="{Binding ServerFingerprint, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding ServerFingerprint}" />

@@ -20,9 +20,15 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="GreenFocusEntry"
+            <Style x:Key="BlueFocusEntry"
                    TargetType="Entry"
                    BasedOn="{StaticResource BasicFieldEntry}">
+                <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
+            </Style>
+
+            <Style x:Key="GreenFocusEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BlueFocusEntry}">
                 <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource GreenDefault}" />
             </Style>
 
@@ -87,8 +93,8 @@
                    BasedOn="{StaticResource SmallActionButton}">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="WidthRequest" Value="44" />
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="24" />
             </Style>
 
             <Style x:Key="BadgeBorder"
@@ -149,6 +155,18 @@
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
+            <Style x:Key="BadgeCard"
+                   TargetType="Border"
+                   BasedOn="{StaticResource EffectCard}">
+                <Setter Property="Padding" Value="16,6,16,12" />
+            </Style>
+
+            <Style x:Key="BadgeRowGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource EffectRowGrid}">
+                <Setter Property="Padding" Value="0,6,0,0" />
+            </Style>
+
             <Style x:Key="EffectPageScroll"
                    TargetType="ScrollView"
                    BasedOn="{StaticResource RootScroll}">
@@ -162,7 +180,7 @@
 
             <Style x:Key="SectionHeaderGrid"
                    TargetType="Grid">
-                <Setter Property="Margin" Value="0,8,0,8" />
+                <Setter Property="Margin" Value="0,12,0,8" />
             </Style>
 
             <Style x:Key="SectionHeaderLabel"
@@ -175,8 +193,6 @@
             <Style x:Key="SectionActionButton"
                    TargetType="Button"
                    BasedOn="{StaticResource SmallActionButton}">
-                <Setter Property="HeightRequest" Value="44" />
-                <Setter Property="CornerRadius" Value="22" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
@@ -397,8 +413,8 @@
             <!-- ポップ+バッジ -->
             <Label Style="{StaticResource SectionLabel}"
                    Text="ポップ+バッジ(BadgeCountConverter)" />
-            <Border Style="{StaticResource EffectCard}">
-                <Grid Style="{StaticResource EffectRowGrid}"
+            <Border Style="{StaticResource BadgeCard}">
+                <Grid Style="{StaticResource BadgeRowGrid}"
                       ColumnDefinitions="Auto,*,Auto,Auto">
                     <Grid Grid.Column="0"
                           Style="{StaticResource BadgeHostGrid}">
@@ -424,11 +440,11 @@
                     <Button Grid.Column="2"
                             Style="{StaticResource StepButton}"
                             Command="{Binding BadgePrevCommand}"
-                            Text="-" />
+                            Text="{x:Static fonts:MaterialIcons.Remove}" />
                     <Button Grid.Column="3"
                             Style="{StaticResource StepButton}"
                             Command="{Binding BadgeNextCommand}"
-                            Text="+" />
+                            Text="{x:Static fonts:MaterialIcons.Add}" />
                 </Grid>
             </Border>
 
@@ -452,7 +468,7 @@
             <Label Style="{StaticResource SectionLabel}"
                    Text="フォーカス枠(Focus)" />
             <Border Style="{StaticResource FocusEntryBorder}">
-                <Entry Style="{StaticResource BasicFieldEntry}"
+                <Entry Style="{StaticResource BlueFocusEntry}"
                        Placeholder="ユーザー名(フォーカスで青枠)" />
             </Border>
             <Border Style="{StaticResource FocusEntryBorder}">

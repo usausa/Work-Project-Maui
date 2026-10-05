@@ -1,6 +1,6 @@
 namespace Template.MobileApp.Graphics.Drawing;
 
-public sealed class DrawingControl : GraphicsView
+public sealed partial class DrawingControl : GraphicsView
 {
     public static readonly BindableProperty DrawingProperty = BindableProperty.Create(
         nameof(Drawing),
@@ -38,7 +38,15 @@ public sealed class DrawingControl : GraphicsView
                 interactive.OnInteractionEnd(e.Touches[0]);
             }
         };
+
+        HandlerChanging += (_, e) => DetachPlatformTouch(e.OldHandler?.PlatformView);
+        HandlerChanged += (_, _) => AttachPlatformTouch();
     }
+
+    // スクロールの中で縦になぞると親のスクロールに指を取られるため、プラットフォーム側で描いている間は止める
+    partial void AttachPlatformTouch();
+
+    partial void DetachPlatformTouch(object? platformView);
 
     private static void HandlePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {

@@ -47,11 +47,12 @@ public static class Focus
 
     public static void SetFocusedStroke(BindableObject bindable, Color? value) => bindable.SetValue(FocusedStrokeProperty, value);
 
+    // 既定(NaN)は枠の太さを変えない
     public static readonly BindableProperty FocusedThicknessProperty = BindableProperty.CreateAttached(
         "FocusedThickness",
         typeof(double),
         typeof(Focus),
-        2d);
+        double.NaN);
 
     public static double GetFocusedThickness(BindableObject bindable) => (double)bindable.GetValue(FocusedThicknessProperty);
 
@@ -78,7 +79,9 @@ public static class Focus
         }
     }
 
-    // FocusedStroke / FocusedThickness に応じて、親 Border の枠線を色・太さアニメーション付きで強調する。
+    // FocusedStroke に応じて、親 Border の枠線の色をアニメーション付きで強調する。
+    // FocusedThickness を指定したときは太さも変える。太さは Border の大きさに含まれるため、
+    // 太くした分だけ Margin を外へ広げ、周りの位置と大きさを変えない。
     // XAML から直接は使わず、上記の添付プロパティ経由で自動付与される。
     private sealed class FocusBorderBehavior : BehaviorBase<VisualElement>
     {
@@ -88,6 +91,8 @@ public static class Focus
         private Color normalStroke = Colors.Transparent;
 
         private double normalThickness;
+
+        private Thickness normalMargin;
 
         private bool captured;
 
@@ -128,15 +133,17 @@ public static class Focus
                 captured = true;
                 normalStroke = (border.Stroke as SolidColorBrush)?.Color ?? Colors.Transparent;
                 normalThickness = border.StrokeThickness;
+                normalMargin = border.Margin;
             }
 
             var focusedStroke = GetFocusedStroke(element) ?? Colors.Blue;
             var focusedThickness = GetFocusedThickness(element);
+            var changeThickness = !Double.IsNaN(focusedThickness);
 
             var fromColor = (border.Stroke as SolidColorBrush)?.Color ?? normalStroke;
             var toColor = focused ? focusedStroke : normalStroke;
             var fromThickness = border.StrokeThickness;
-            var toThickness = focused ? focusedThickness : normalThickness;
+            var toThickness = focused && changeThickness ? focusedThickness : normalThickness;
 
             border.AbortAnimation(AnimationName);
 
@@ -147,17 +154,37 @@ public static class Focus
                 AnimationName,
                 v =>
                 {
-                    brush.Color = LerpColor(fromColor, toColor, v);
-                    border.StrokeThickness = fromThickness + ((toThickness - fromThickness) * v);
+                    UpdateStroke(border, brush, LerpColor(fromColor, toColor, v));
+                    if (changeThickness)
+                    {
+                        UpdateThickness(border, fromThickness + ((toThickness - fromThickness) * v));
+                    }
                 },
                 16,
                 150,
                 Easing.CubicOut,
                 (_, _) =>
                 {
-                    brush.Color = toColor;
-                    border.StrokeThickness = toThickness;
+                    UpdateStroke(border, brush, toColor);
+                    if (changeThickness)
+                    {
+                        UpdateThickness(border, toThickness);
+                    }
                 });
+        }
+
+        private void UpdateThickness(MauiBorder border, double thickness)
+        {
+            var grow = thickness - normalThickness;
+            border.StrokeThickness = thickness;
+            border.Margin = new Thickness(normalMargin.Left - grow, normalMargin.Top - grow, normalMargin.Right - grow, normalMargin.Bottom - grow);
+        }
+
+        // ブラシの色を変えただけでは枠が描き直されないため、ハンドラーに反映させる
+        private static void UpdateStroke(MauiBorder border, SolidColorBrush brush, Color color)
+        {
+            brush.Color = color;
+            border.Handler?.UpdateValue(nameof(MauiBorder.Stroke));
         }
 
         private static MauiBorder? FindParentBorder(Element start)

@@ -10,8 +10,8 @@
              s:BindingContextResolver.Type="{x:Type module:SamplePdfViewModel}"
              shell:ShellProperty.Title="PDF"
              shell:ShellProperty.Function1Text="Back"
-             shell:ShellProperty.Function3Text="◀️"
-             shell:ShellProperty.Function4Text="▶️"
+             shell:ShellProperty.Function3Text="Prev"
+             shell:ShellProperty.Function4Text="Next"
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function3Enabled="{Binding CanMovePrev}"
              shell:ShellProperty.Function4Enabled="{Binding CanMoveNext}">

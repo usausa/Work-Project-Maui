@@ -52,65 +52,59 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 | 番号 | 対象 | 優先 | 変更量 | 状態 | 内容 |
 | --- | --- | --- | --- | --- | --- |
 | 11-0 | 共通 | — | — | 📝 | 共通の方針(スペース、状態の見せ方、ボタン、空・読み込み中、名前と値の行、配置)。決めたことは決定事項の表 |
-| 11-3 | Main Data | 🟡 | 📦📦 | 📝 ②👀 | ボタンのアイコンと削除の赤、件数のカードを残りの高さに |
-| 11-4 | Main Diagnostics | 🟡 | 📦📦 | 📝 ④👀 | 名前と値の行を詰める、ID・パスは等幅、状態はバッジ |
-| 11-5 | Main Setting | 🟡 | 📦 | 📝 ③👀 | 行の高さをそろえる、文字 13 → 14 |
-| 11-6 | Basic Typography | 🟢 | 📦 | 👀 | 色の帯の見本の内側の余白 |
+| 11-3 | Main Data | 🟡 | 📦📦 | 📝 | ボタンのアイコン、件数のカードを残りの高さに |
+| 11-4 | Main Diagnostics | 🟡 | 📦📦 | 📝 | 名前と値の行を詰める、ID・パスは等幅、状態はバッジ |
+| 11-5 | Main Setting | 🟡 | 📦 | 📝 | 行の高さをそろえる |
 | 11-7 | Basic Style | 🟡 | 📦 | 📝 | 選択の枠と文字、Action 系のボタンの形 |
-| 11-8 | Basic Font | 🟢 | 📦 | 📝 | 見本の文字の色、Default の見本の折り返し |
-| 11-9 | Basic Converter | 🟢 | 📦 | 📝 | 値の色をパレットに、入力と結果の区切り |
-| 11-10 | Basic Locale | 🟢 | 📦 | 📝 ①👀 | Current culture の書き方をそろえる、キーの塊の区切り |
-| 11-11 | Basic Dialog | 🟢 | 📦 | 📝 ②👀 | ボタンのアイコン、Information のボタンを全幅、見出しの色 |
+| 11-9 | Basic Converter | 🟢 | 📦 | 📝 | 名前と値の文字の大きさ |
+| 11-10 | Basic Locale | 🟢 | 📦 | 📝 | キーの塊の区切り |
+| 11-11 | Basic Dialog | 🟢 | 📦 | 📝 | ボタンのアイコン、見出しの色 |
 | 11-12 | Basic Validation | 🟢 | 📦 | 📝 | 欄名と説明を分ける、エラーの間は枠を赤 |
-| 11-13 | Basic Setting | 🟡 | 📦📦 | 📝 ③👀 | SearchBar の枠、日付・時刻の欄、Stepper とボタンの高さ、Summary |
-| 11-15 | Navigation Wizard / Shared | 🟢 | 📦 | 📝 | プレースホルダーを入力例に、Shared2 の番号の丸の色 |
+| 11-13 | Basic Setting | 🟡 | 📦📦 | 📝 | SearchBar の枠、日付・時刻の欄、Stepper、Summary |
 | 11-16 | Navigation Dialog(数値入力) | 🟡 | 📦📦 | 📝 | 角丸、数字の帯、✓ と ✕ の区別、AC / C の色 |
 | 11-17 | Device Info | 🟢 | 📦📦 | 📝 | 機種名の見出し、名前と値の強弱、カードごとの色 |
 | 11-18 | Device Status | 🟡 | 📦📦 | 📝 | 値を 1 回だけ状態のチップで、列挙の名前を短い言葉に、電池の輪 |
 | 11-19 | Device Sensor | 🟢 | 📦📦 | 📝 | 中央から左右に伸びるバー |
-| 11-20 | Device Location | 🟢 | 📦 | 📝 ①👀 | 時刻の行の高さ、緯度・経度を 2 列、Motion をタイルに |
-| 11-21 | Device QR Display | 🟢 | 📦 | 📝 ②③👀 | QR を大きく中央に、二重の枠、下の文字を 1 行 |
+| 11-20 | Device Location | 🟢 | 📦 | 📝 | 緯度・経度を 2 列、Motion をタイルに |
+| 11-21 | Device QR Display | 🟢 | 📦 | 📝 | QR を大きく中央に |
 | 11-22 | Device QR Scan | 🔴 | 📦📦 | 📝 | 結果の帯、状態のチップ、プレビューに重ねた丸いボタン、読み取りの枠 |
 | 11-23 | Device Camera | 🔴 | 📦📦 | 📝 | 黒地と状態のチップ、プレビューに重ねた丸いボタン |
-| 11-25 | Device WiFi | 🟢 | 📦 | 👀 | 文字の大きさを許可値に |
 | 11-26 | Device Bluetooth | 🟡 | 📦📦 | 📝 | 状態に合わせた色、段階の表示、Print を下に |
-| 11-27 | Device BLE Scan | 🟢 | 📦 | 📝 | 7 セグの消えたセグメント、灰色の地 |
-| 11-28 | Device BLE Host | 🟡 | 📦📦 | 📝 ①👀 | UserId を 1 行、広告中の色と動き |
-| 11-29 | Device NFC | 🔴 | 📦📦 | 📝 ①👀 | 読み取る前の空の箱、IC カード風のカード、履歴をフラットな行に |
+| 11-27 | Device BLE Scan | 🟢 | 📦 | 📝 | 7 セグの消えたセグメント |
+| 11-28 | Device BLE Host | 🟡 | 📦📦 | 📝 | 広告中の色と動き |
+| 11-29 | Device NFC | 🔴 | 📦📦 | 📝 | IC カード風のカード、履歴をフラットな行に |
 | 11-30 | Device Audio | 🟡 | 📦📦 | 📝 | ジャケット風の絵、音量のアイコン |
 | 11-31 | Device Activity | 🟡 | 📦📦 | 📝 | 歩数の強調と輪のグラデーション、3 つのタイル、活動時間の書式 |
-| 11-32 | Device Biometric | 🟡 | 📦📦 | 📝 ②👀 | 状態の色のバッジ、押せないボタンのアイコン、「—」の色 |
+| 11-32 | Device Biometric | 🟡 | 📦📦 | 📝 | 状態の色のバッジ、Result のタイル |
 | 11-33 | Device Communication | 🟡 | 📦📦 | 📝 | 連絡先の画面の形、外のアプリを開く印 |
 | 11-34 | Device Misc | 🟢 | 📦 | 📝 | 対の操作をセグメントに、見出しの色 |
 | 11-35 | Network HTTP (Data) | 🟡 | 📦📦 | 📝 | 空・読み込み中・失敗の表示、選んだ行、主な操作のボタン |
 | 11-36 | Network HTTP (Auth) | 🟡 | 📦📦 | 📝 | ログインの状態の表示、ボタンの強弱、入力欄の枠 |
 | 11-37 | Network Storage | 🟡 | 📦📦 | 📝 | 空の表示、パスと「上へ」、転送の進捗とボタン |
-| 11-38 | Network Realtime | 🟡 | 📦📦 | 📝 ①👀 | グラフの枠、状態のチップ、通知の空の文 |
+| 11-38 | Network Realtime | 🟡 | 📦📦 | 📝 | グラフの枠、状態のチップ |
 | 11-39 | Network gRPC | 🟡 | 📦📦 | 📝 | 接続の状態、チャットの空の表示と行、入力欄と送信 |
 | 11-40 | Network SFTP | 🟢 | 📦📦 | 📝 | 接続先と指紋、転送を Storage と同じ形、ログを下まで |
 | 11-41 | Network Telemetry | 🟢 | 📦 | 📝 | アイコンの色、Custom value の行 |
-| 11-42 | View Layout | 🟢 | 📦 | 📝 ②👀 | セルの色分け、左右の端 |
-| 11-43 | View State | 🟢 | 📦 | 📝 ②③👀 | 状態の切り替えのボタン、状態の表示を中央に |
-| 11-46 | View Toolkit | 🟢 | 📦 | 📝 | SegmentedControl の色、OtpInput の位置、Expander の印 |
+| 11-42 | View Layout | 🟢 | 📦 | 📝 | セルの色分け |
+| 11-43 | View State | 🟢 | 📦 | 📝 | 状態の切り替えのボタン |
 | 11-47 | View Custom | 🟢 | 📦📦 | 📝 | TreeView の印とアイコン、ColorPicker のスライダーの色 |
-| 11-48 | View Bottom Sheet | 🟢 | 📦 | 📝 ②👀 | シートの行のアイコンと区切り、結果の表示 |
-| 11-49 | View Drawer | 🟢 | 📦 | 📝 | SegmentedControl の色、選んでいる行、選択中の表示 |
+| 11-48 | View Bottom Sheet | 🟢 | 📦 | 📝 | シートの行のアイコン、結果の表示 |
+| 11-49 | View Drawer | 🟢 | 📦 | 📝 | 選んでいる行、選択中の表示 |
 | 11-50 | View Animation | 🟡 | 📦📦 | 📝 | タイルを 2 × 2 に、効果のアイコン、ボタンの形 |
 | 11-51 | View Easing | 🟡 | 📦📦 | 📝 | 丸を曲線に沿って動かす、曲線の色 |
-| 11-52 | View Effect | 🟢 | 📦 | 📝 ①👀 | Replay の位置、増減のアイコン |
 | 11-53 | View Drag & Drop | 🟡 | 📦📦 | 📝 | 並べ替えの行をフラットに、取っ手、TODO / DONE のバッジ |
-| 11-54 | View Lottie | 🟡 | 📦 | 📝 ②③👀 | 開いた直後の絵、帯の文字の切れ、端をそろえる |
-| 11-55 | View Graphics | 🟢 | 📦 | 📝 | 図形の色、ボタンのアイコン |
-| 11-56 | View Drawing | 🟡 | 📦 | 📝 | 案内の色 |
-| 11-57 | View Chart | 🟡 | 📦 | 📝 | グラフの枠、チップのアイコン |
-| 11-58 | View Sf Chart | 🟢 | 📦 | 📝 | ドーナツの色と凡例、ラベル、格子線と棒の角 |
-| 11-59 | Sample Web Basic | 🔴 | 📦📦 | 📝 ④👀 | 中のページの見た目、状態の帯の文字の大きさ |
+| 11-54 | View Lottie | 🟡 | 📦 | 📝 | 開いた直後の絵 |
+| 11-55 | View Graphics | 🟢 | 📦 | 📝 | ボタンのアイコン |
+| 11-57 | View Chart | 🟡 | 📦 | 📝 | チップのアイコン |
+| 11-58 | View Sf Chart | 🟢 | 📦 | 📝 | ドーナツの色と凡例、ラベル |
+| 11-59 | Sample Web Basic | 🔴 | 📦📦 | 📝 | 中のページの見た目 |
 | 11-60 | Sample Map | 🟢 | 📦 | 📝 | 切り替えのボタンに状態 |
 | 11-62 | Sample Media | 🟢 | 📦 | 📝 | 開いた直後の操作のバー、失敗の表示 |
-| 11-64 | Sample PDF | 🟢 | 📦 | 📝 | F キーの表示、スライダーとページ数 |
+| 11-64 | Sample PDF | 🟢 | 📦 | 📝 | スライダーとページ数 |
 | 11-65 | Sample CV Local | 🟡 | 📦 | 📝 | 推論中の表示と撮影のフラッシュ、結果の後の案内 |
-| 11-66 | Sample Crop | 🟢 | 📦 | 📝 ②👀 | プレビューの空の表示、ボタンの高さ |
 | 11-67 | 文字のスペース | 🟢 | 📦📦📦 | 📝 | 対象の画面の文字のスペースを決まりにそろえる(日本語と英語・数字の間、括弧の前は詰める) |
+| 11-68 | 共通 フォーカス枠 | 🟡 | 📦📦 | 👀 | フォーカスで周りがずれないように(既定は色だけ、太さは指定した画面だけ) |
+| 11-70 | Basic Font の NotoSerifJP | 🟢 | 📦 | 👀 | 見本を 1 行に収める |
 
 ## ⚖️決定事項
 
@@ -164,7 +158,6 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 | 名前と値の行 | 名前は小さい灰色、値は濃い色にする(太字の名前の方が値より目立つ画面がある)。カードの中の名前と値の行に使う文字 16 のスタイルと 1px の区切り線を `Styles.xaml` の Card の区画に足し、Diagnostics・Converter・Locale・Info・Status・Location で使う(`NameLabel` / `ValueLabel` は変えない) |
 | 見出しのアイコンの色 | `InfoCard` の見出しのアイコンは全部同じ灰青。カードの意味ごとに色を付ける(画面ローカルのスタイル) |
 | 配置 | 中央のカード 1 枚の画面(QR Display・Bluetooth・BLE Host・Audio・View State)は、主役を空きの真ん中に、操作を下にそろえる。下が大きく空く画面は、その画面の情報で埋める |
-| 地の色 | 白地の画面(View Chart、Device BLE Scan)は、ほかと同じ灰色の地に白い枠の形にする |
 | カメラの画面 | Camera・QR Scan は、OCR と同じく黒地にし、プレビューに重ねた丸いボタンと状態のチップでそろえる |
 | 一覧の行 | 角丸のカードの行(View Drag & Drop・Device NFC の履歴)は、フラットな行と区切り線にする |
 | 決まりに合わない値 | 許可値以外の文字の大きさ(13・15・56)と押す部品の高さ(32・36・40)は、その画面を直すときに許可値へ寄せる。要素に直接書いた見た目の属性(見本の内容のものを除く)も画面ローカルのスタイルへ移す |
@@ -175,11 +168,7 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 | 画面 | 内容 | 候補 | 状態 |
 | --- | --- | --- | --- |
-| Device NFC | 読み取る前も、上に空の緑の箱と「¥ 0」が出る | 11-29 ① | 👀 |
-| Device Biometric | 押せないボタンのアイコンが濃いまま | 11-32 ② | 👀 |
-| Network Realtime | 通知の空の文(前面ならトースト)が、今の動き(いつもローカル通知)と違う | 11-38 ③ |  |
 | View Easing | 丸が、描いた曲線と違う向き・道筋で動く | 11-51 ① |  |
-| View Lottie | スクロール連動の帯の文字が右端で切れる | 11-54 ② | 👀 |
 
 ## 🙅見直さない画面
 
@@ -499,13 +488,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Data/DataView.xaml` + `DataViewModel.cs` | SQLite の CRUD と一括の処理の見本 |
 
-今: 文字だけの同じ枠のボタンが並び、削除の Delete / DeleteAll もほかと同じ見た目。件数は JetBrainsMono の中に点のある 0 で、記号のように見える。画面の下の 4 割が空く。
+今: 文字だけの同じ枠のボタンが並ぶ。件数は JetBrainsMono の中に点のある 0 で、記号のように見える。画面の下の 4 割が空く。
 
 - ① ボタンにアイコンを付ける(`BasicIconOutlinedButton` と `AppIcons` の Small 系。無いものは足す)
-- ② Delete / DeleteAll は赤の枠のボタン(`BasicOutlinedCancelButton`)にする
 - ③ Bulk のカードを残りの高さいっぱいに広げ、件数を中央に既定のフォントの太字で大きく置き、ボタンをカードの下端にそろえる
-
-結果(👀 確認待ち): ② Delete / DeleteAll を `BasicOutlinedCancelButton`(赤い文字)に。
 
 ### 🩺11-4 Diagnostics(🟡📦📦)
 
@@ -518,9 +504,6 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 - ① 名前と値の行を 11-0 の形(16・1px の区切り線)にして縦を詰める
 - ② ID・Path・日時は JetBrainsMono の 14 にそろえる
 - ③ Status / Last send / Crash は白文字の色付きのバッジにする
-- ④ Delete files / Clear は赤の枠のボタンにする
-
-結果(👀 確認待ち): ④ Delete files / Clear を、赤い文字と赤いアイコンの枠のボタンに(画面ローカルのスタイル `DeleteButton`、`AppIcons.DiagnosticsDelete`)。
 
 ### ⚙️11-5 Setting(🟡📦)
 
@@ -528,27 +511,12 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Main/SettingView.xaml` + `SettingViewModel.cs` | 設定の QR の読み取りと、今の設定値の表示 |
 
-今: 文字の行(高さ約 25)に対してスイッチの行(約 50)が倍の高さで、Telemetry / Push の所だけ間延びする。文字 13 は許可値の外。
+今: 文字の行(高さ約 25)に対してスイッチの行(約 50)が倍の高さで、Telemetry / Push の所だけ間延びする。
 
 - ① Telemetry と Push を 1 行に左右で並べるか、全部の行の最小の高さを 40 にして間隔をそろえる
-- ③ 13 の 3 か所(`SettingCaptionLabel` / `SettingValueLabel` / `SettingEmptyLabel`)を 14 にする
 - ④ 節の見出しのアイコンに節ごとの色を付ける
 
-結果(👀 確認待ち): ③ 3 か所を 14 に。
-
 ## 🧱Basic
-
-### 🔤11-6 Typography(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/Basic/BasicTypographyView.xaml` + `BasicTypographyViewModel.cs` | 共有の文字のスタイルと Label のクラスの見本 |
-
-今: 色の帯の見本に内側の余白が無く、左寄せ・右寄せの文字が帯の端に接して窮屈に見える。
-
-- ① 見本の Label に左右 8 の Padding を足す画面ローカルのスタイルを作り、StyleClass と併せて付ける(共有のクラスは変えない)
-
-結果(👀 確認待ち): ① 色の帯の 18 個に左右 8 の内側の余白(画面ローカルのスタイル `BandLabel` を StyleClass と併せて付ける)。
 
 ### 🖌️11-7 Style(🟡📦)
 
@@ -561,27 +529,14 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 - ② 選択の 3 つを角丸 8 の枠でくるみ、文字を 14 の BlueGray にする(画面ローカルのスタイル)
 - ③ ⚖️ Action 系の共有のスタイル(`ActionButtonBase` と Primary〜Error。`BasicFilledButton` / `BasicFilledSecondaryButton` の基底でもある)を角丸 8・文字 18 にするか
 
-### 🅰️11-8 Font(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/Basic/BasicFontView.xaml` + `BasicFontViewModel.cs` | 同梱のフォントとアイコンのフォントの見本 |
-
-今: 見本の文字が既定の灰色(SecondaryTextColor)で、字形が薄く見える。Default の 24 の行は最後の「歴」だけが次の行に落ちる。
-
-- ① 見本の行に PrimaryTextColor の画面ローカルのスタイルを付ける(FontFamily / FontSize は見本の内容として属性のまま)
-- ② Default の見本の文字列を、24 でも 1 行に収まる長さにする
-
 ### 🔁11-9 Converter(🟢📦)
 
 | 現在のファイル名 | 何用か |
 | --- | --- |
 | `Modules/Basic/BasicConverterView.xaml` + `BasicConverterViewModel.cs` | Bool / Multi / Text のコンバーターの見本 |
 
-今: BoolTo / EmptyTo の値だけ素の Black と Red で、ほかの灰色の値やパレットの赤から浮く。同じカードにチェックボックスの名前 14 と名前 18 の太字が混ざり、入力と結果の境目が分かりにくい。
+今: 同じカードにチェックボックスの名前 14 と名前 18 の太字が混ざる。
 
-- ① 色をパレットの値にする(True は `RedDefault`、False は `PrimaryTextColor` など)
-- ② チェックボックスの行と結果の行の間に `CardDivider` を入れる
 - ③ 文字の大きさを 11-0 の名前と値の行でそろえる
 
 ### 🌐11-10 Locale(🟢📦)
@@ -590,12 +545,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Basic/BasicLocaleView.xaml` + `BasicLocaleViewModel.cs` | カルチャとローカライズのリソースの見本 |
 
-今: Current culture のカードだけ名前 18 の太字と値 18 で、下の 2 枚(等幅の小さいタグと値)と書き方がそろわない。Localized resources は 2 つ目のキーの前の間隔が行の間隔と同じで、塊の区切りが分かりにくい。
+今: Localized resources は 2 つ目のキーの前の間隔が行の間隔と同じで、塊の区切りが分かりにくい。
 
-- ① Current culture も `ResourceTagLabel` + `CardPrimaryValueLabel` の形にする
 - ② キーの塊の間に `CardDivider` か 16 の間隔を入れる
-
-結果(👀 確認待ち): ① Current culture も、等幅の小さい名前と濃い値の形(列 72)に。
 
 ### 💬11-11 Dialog(🟢📦)
 
@@ -603,13 +555,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Basic/BasicDialogView.xaml` + `BasicDialogViewModel.cs` | 通知・確認・進捗・フィードバックのダイアログの見本 |
 
-今: 文字だけの枠のボタンが 4 枚のカードに並ぶだけで単調。Notification のカードは Information のボタン 1 つが左半分にだけあり、右半分が空いて見える。
+今: 文字だけの枠のボタンが 4 枚のカードに並ぶだけで単調。
 
 - ① 各ボタンにアイコンを付ける(Validation の Error / Clear と同じ形。無い Small のアイコンは `AppIcons` に足す)
-- ② Information のボタンを全幅にする
 - ③ 見出しのアイコンに種類ごとの色を付ける(11-0)
-
-結果(👀 確認待ち): ② Information のボタンを全幅に。
 
 ### ☑️11-12 Validation(🟢📦)
 
@@ -628,28 +577,14 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Basic/BasicSettingView.xaml` + `BasicSettingViewModel.cs` | 設定の画面でよく使う入力の部品の見本 |
 
-今: SearchBar だけ枠が無く大きく字下げされ、上の Entry の枠と形がそろわない。Stepper の - / + は Android の標準の灰色の四角で浮いて見える。日付・時刻は未設定だと短い下線だけが出て崩れて見え、開く / クリアのボタンは高さ 32 で押しにくい。
+今: SearchBar だけ枠が無く大きく字下げされ、上の Entry の枠と形がそろわない。Stepper の - / + は Android の標準の灰色の四角で浮いて見える。日付・時刻は未設定だと短い下線だけが出て崩れて見える。
 
 - ① SearchBar も `CardFieldBorder` に入れて下線を消す(`EntryOption.NoBorder` の対象に SearchBar を足す)
 - ② 日付・時刻のピッカーを幅をそろえた枠の欄に入れ、未設定でも空の欄に見せる
-- ③ 開く / クリアは高さ 44 にし、Stepper のボタンは白地・枠・角丸に寄せる(ハンドラーでの見た目の調整が要る)
+- ③ Stepper のボタンは白地・枠・角丸に寄せる(ハンドラーでの見た目の調整が要る)
 - ④ Summary は名前と値の 2 列にして値を太字にする
 
-結果(👀 確認待ち): ③ のうち、開く / クリアを高さ 44・角 22(丸い端のまま)・文字 14 に。Stepper の見た目は残り。
-
 ## 🧭Navigation
-
-### 🧙11-15 Wizard / Shared(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` / `WizardResultView.xaml` + 各 ViewModel | 段階を追って入力するウィザード |
-| `Modules/Navigation/Shared/SharedInputView.xaml` / `SharedMain1View.xaml` / `SharedMain2View.xaml` + 各 ViewModel | 2 つの画面から共有する入力の画面 |
-
-今: 欄名とプレースホルダーが同じ文言で重なる(「Data1 (required)」と「Data1」、「No」と「No」)。Shared2 から戻った先の SharedMain2View は、番号の丸だけ藍(`IndigoDefault`)で、チップと No の値のティールとそろわない。
-
-- ① プレースホルダーを欄名の繰り返しではなく入力例にする
-- ② SharedMain2View の番号の丸(`NumberCircleBorder`)を `TealDefault` にする
 
 ### 🔢11-16 Dialog(数値入力)(🟡📦📦)
 
@@ -684,12 +619,11 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceStatusView.xaml` + `DeviceStatusViewModel.cs` | 電池と通信の今の状態 |
 
-今: Network はチップの列と下の表が同じ 3 つの値を二重に出し、値は列挙の名前のまま(ConnectedHighSpeed / Usb など)。充電中でもチップは灰色。電池のバーは細い既定の ProgressBar で、Network の見出しのアイコンは塗りの扇形で読み取りにくい。下の 4 割が空く。
+今: Network はチップの列と下の表が同じ 3 つの値を二重に出し、値は列挙の名前のまま(ConnectedHighSpeed / Usb など)。充電中でもチップは灰色。電池のバーは細い既定の ProgressBar。下の 4 割が空く。
 
 - ① 表の値の側を状態の色のチップにして、上のチップの列はやめる(各値を 1 回だけ出す)
 - ② 列挙の値を絵文字付きの短い言葉にし(コンバーター。例 ⚡ 充電中 / 🔌 USB / 📶 高速)、充電中は緑にする
 - ③ 電池の残量を `ArcMeter` の輪にして % を中に置く(20% 以下は赤)
-- ④ Network の見出しのアイコンを線の形(`Wifi` など)にする
 
 ### 🧲11-19 Sensor(🟢📦📦)
 
@@ -708,13 +642,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceLocationView.xaml` + `DeviceLocationViewModel.cs` | 地図と現在地の座標・高度・速度など |
 
-今: 時刻の行で、時計のアイコン(縦の中央)と文字(上寄せ)の高さがずれる。緯度・経度は縦に積んで長く、Motion だけ名前と値の表で書式が違う。
+今: 緯度・経度は縦に積んで長く、Motion だけ名前と値の表で書式が違う。
 
-- ① 時刻の文字も縦の中央にそろえる(画面ローカルのスタイル)
 - ② 緯度・経度を 2 列に並べる
 - ③ Motion の 4 項目も 2 × 2 のタイル(見出しの下に値、単位は小さく)にし、Position と書式をそろえる
-
-結果(👀 確認待ち): ① 時刻の文字を、時計のアイコンと同じ縦の中央に。
 
 ### 🔳11-21 QR Display(🟢📦)
 
@@ -722,13 +653,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceQrDisplayView.xaml` + `DeviceQrDisplayViewModel.cs` | 入力した文字の QR コード |
 
-今: 中央のカードの中に QR の枠が入れ子になっていて線が二重。QR は 240 と小さめで、カードの上下に大きな空きがある。QR の下の文字は入力欄と同じ値で、長い文字だと折り返してカードが伸びる。
+今: QR は 240 と小さめで、カードの上下に大きな空きがある。
 
 - ① QR を 280〜300 に大きくして空きの真ん中に置き、入力欄は画面の下にそろえる
-- ② 内側の QR の枠線をやめて白い余白だけにする
-- ③ QR の下の文字は 1 行の省略にする
-
-結果(👀 確認待ち): ② 内側の枠線を消して白い余白だけに。③ QR の下の文字を 1 行の省略に。
 
 ### 🔍11-22 QR Scan(🔴📦📦)
 
@@ -755,18 +682,6 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 - ② Torch / Flash / Zoom を、プレビューに重ねた丸いアイコンのボタン(半透明の黒地)にして、水色の帯をやめる(切り替え・撮影は F キーのまま)
 - 11-22 と 11-23 で水色の帯をやめると、`SubMenuButton` を使う画面が無くなる(削除する)
 
-### 📶11-25 WiFi(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/Device/DeviceWiFiView.xaml` + `DeviceWiFiViewModel.cs` | 接続中の Wi-Fi と周りのアクセスポイント |
-
-今: フラットな行・色付きのバッジ・絵文字で整っている。文字の大きさに許可値以外が 2 つ残る(情報の行が 13、接続中の電波のアイコンが 56)。
-
-- ① 13 → 14、56 → 48 にそろえる
-
-結果(👀 確認待ち): ① 13 → 14、56 → 48。アクセスポイントの情報の行は、14 にすると最後の項目が次の行に回る。
-
 ### 🖨️11-26 Bluetooth(🟡📦📦)
 
 | 現在のファイル名 | 何用か |
@@ -785,10 +700,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceBleScanView.xaml` + `DeviceBleScanViewModel.cs` | SwitchBot の温湿度計・CO2 の値の受信 |
 
-今: 液晶を真似たパネルで個性はあるが、背景がほかの Device の画面の灰色ではなく白。7 セグの数字に消えたセグメントが無く、時刻は 1 の字の幅で「15:3 1:05」と間が空いて見える。
+今: 液晶を真似たパネルで個性がある。7 セグの数字に消えたセグメントが無く、時刻は 1 の字の幅で「15:3 1:05」と間が空いて見える。
 
 - ① Timer と同じく、消えたセグメント(8)を薄く重ねる(1 の字の空きも液晶らしく見える)
-- ② 背景を `RootGrid` と同じ灰色にし、パネルの間を 12 にする
 - ③ ⚖️ 行の角丸は、液晶のパネルの見立てとして残す(案)
 
 ### 📡11-28 BLE Host(🟡📦📦)
@@ -797,12 +711,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceBleHostView.xaml` + `DeviceBleHostViewModel.cs` | BLE のペリフェラル(広告)の開始と停止 |
 
-今: 中央のカードだけで上下が空き、UserId(36 文字の GUID)が決まっていない位置で 2 行に折れる。円は広告中も停止中も青。
+今: 中央のカードだけで上下が空き、円は広告中も停止中も青。
 
-- ① UserId を等幅の 14 にして 1 行に収める
 - ② 広告中は円を緑にして、電波の輪が広がる動きにする
-
-結果(👀 確認待ち): ① UserId を等幅 14 にして 1 行に。
 
 ### 💳11-29 NFC(🔴📦📦)
 
@@ -810,12 +721,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceNfcView.xaml` + `DeviceNfcViewModel.cs` | Suica の残高と利用履歴の読み取り |
 
-今: Metro 風の濃い灰色と原色の箱で古く見え、読み取る前も上に空の緑の箱と「¥ 0」が出る。履歴は 1 件ごとに日時 3 段・処理・残高の大きな箱で、1 画面に 7 件ほどしか入らない。
+今: Metro 風の濃い灰色と原色の箱で古く見える。履歴は 1 件ごとに日時 3 段・処理・残高の大きな箱で、1 画面に 7 件ほどしか入らない。
 
-- ① 読み取る前は上の帯を隠し、読み取った後は IC カード風のカードにする(グラデーション、IDm は等幅、残高は大きくカウントアップ)
+- ① 読み取った後の上の帯を IC カード風のカードにする(グラデーション、IDm は等幅、残高は大きくカウントアップ)
 - ② 履歴をフラットな行にする(左に処理の色の細い帯、日時は「05/12 11:24」の 1 行、端末と処理は絵文字付きのバッジ、残高は右寄せ)
-
-結果(👀 確認待ち): ① のうち、読み取る前は上の帯を隠す。IC カード風のカードは残り。
 
 ### 🎵11-30 Audio(🟡📦📦)
 
@@ -834,11 +743,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceActivityView.xaml` + `DeviceActivityViewModel.cs` | 歩数の輪と、消費カロリー・距離・活動時間 |
 
-今: 輪と歩数で主役ははっきりしているが、歩数は細い灰色の文字で、下の表は名前・値・単位がすべて 24 で同じ強さ。⏱ だけ白黒の絵文字(異体字セレクタなし)で、活動時間は「0.00 時間」。下の 4 分の 1 が空く。
+今: 輪と歩数で主役ははっきりしているが、歩数は細い灰色の文字で、下の表は名前・値・単位がすべて 24 で同じ強さ。活動時間は「0.00 時間」。下の 4 分の 1 が空く。
 
 - ① 歩数を太字の濃い色にし、輪の進みを Timer の文字盤のようなグラデーションにする
 - ② 下の 3 項目を横並びの 3 つのタイル(絵文字、太字の大きな値、小さな単位)にし、活動時間は「0:00」(時:分)にする
-- ③ ⏱ を色の付く「⏱️」にする
 
 ### 👆11-32 Biometric(🟡📦📦)
 
@@ -846,13 +754,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Device/DeviceBiometricView.xaml` + `DeviceBiometricViewModel.cs` | 生体認証の可否・本人確認・鍵での署名と検証 |
 
-今: 状態の値がすべて青の文字なので、使える / 使えないが色で分からず、3 列のタイルでは「一時的に使えない」が途中で折り返す。押せないボタンは文字だけ薄くなり、アイコンは濃いまま。値の無い「—」は青と灰色が混ざる。
+今: 状態の値がすべて青の文字なので、使える / 使えないが色で分からず、3 列のタイルでは「一時的に使えない」が途中で折り返す。Authenticate の Result だけ名前と値の 1 行で、ほかのタイルと形が違う。
 
 - ① 状態の値を状態の色のバッジにし(使える = 緑、未登録 = 琥珀、一時的に使えない = 灰、センサー無し = 赤)、文言は 1 行に収まる長さにする(例 ⏳ 一時不可)
-- ② 押せないボタンはアイコンも薄くする(画面ローカルの派生のスタイルで、押せないときの Opacity)
-- ③ 「—」を灰色にそろえ、Authenticate の Result も見出しの下に値を置くタイルにする
-
-結果(👀 確認待ち): ② 共有の `BasicIconOutlinedButton` で、押せないときはボタン全体を薄く(Opacity 0.4)。Diagnostics・Misc・Telemetry のボタンにも効く。
+- ③ Authenticate の Result も見出しの下に値を置くタイルにする
 
 ### ☎️11-33 Communication(🟡📦📦)
 
@@ -921,13 +826,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | `Modules/Network/NetworkRealtimeView.xaml` + `NetworkRealtimeViewModel.cs` | SignalR の常時接続で、サーバーの状態のグラフと通知を受ける |
 | `Controls/StatControl.cs` | グラフ(この画面だけで使う) |
 
-今: グラフは白い枠(余白 8)の中に角の無い色の四角を置いた二重の枠。名前が上端と左端にほぼ接していて、データが無いとただの色の塊に見える。Connections が「0.0」と小数で出る。状態は「状態: 接続中...」の文字で、エラーは赤の小さな文字。通知の空の文に「前面ならトースト」とあり、今の動き(いつもローカル通知)と違う。
+今: グラフは白い枠(余白 8)の中に角の無い色の四角を置いた二重の枠。名前が上端と左端にほぼ接していて、データが無いとただの色の塊に見える。状態は「状態: 接続中...」の文字で、エラーは赤の小さな文字。
 
-- ① グラフを角の丸い色の面にして二重の枠をやめる。名前は 14 の太字で余白 12、Connections は整数にし、データが無くても薄い目盛りの横線を出す
+- ① グラフを角の丸い色の面にして二重の枠をやめる。名前は 14 の太字で余白 12 にし、データが無くても薄い目盛りの横線を出す
 - ② 状態は `StatusChip` にする(緑 = 接続済み / 琥珀 = 接続中・再接続中 / 赤 = 停止・エラー)。接続 ID・サーバー時刻・送信の回数は名前と値の 2 列(`CardInfoGrid`)にし、エラーは淡い赤の帯で出す
-- ③ 通知の空の文を今の動きに合わせる
-
-結果(👀 確認待ち): ① のうち、Connections を整数に(`StatControl` に値の書式 `ValueFormat` を足した)。
 
 ### 🗨️11-39 gRPC(🟡📦📦)
 
@@ -947,9 +849,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Network/NetworkSftpView.xaml` + `NetworkSftpViewModel.cs` | SFTP でのアップロード・ダウンロードと、サーバーのホスト鍵の表示 |
 
-今: 接続先はホストの本文 1 行。転送は下線の入力欄・細い進捗・枠のボタン 3 つで、11-37 と同じく強弱が無い。ログのカードは、転送する前は「まだ転送していません」の 1 行だけ。「サーバ」の表記がほかの画面(サーバー)と違う。
+今: 接続先はホストの本文 1 行。転送は下線の入力欄・細い進捗・枠のボタン 3 つで、11-37 と同じく強弱が無い。ログのカードは、転送する前は「まだ転送していません」の 1 行だけ。
 
-- ① ホストを等幅にしてサーバーのアイコンの行に置き、指紋は淡い灰色の箱(等幅)に入れる。「サーバ」は「サーバー」にそろえる
+- ① ホストを等幅にしてサーバーのアイコンの行に置き、指紋は淡い灰色の箱(等幅)に入れる
 - ② 転送を 11-37 と同じ形にする(割合付きの進捗、アイコン付きのボタン、見出し付きの枠の入力欄)
 - ③ ログのカードを残りの高さいっぱいに広げる(11-39 のチャットと同じ組み方)
 - 実機の見た目は、SSH を設定した端末で確かめる
@@ -973,12 +875,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewLayoutView.xaml` + `ViewLayoutViewModel.cs` | CommunityToolkit と自作のレイアウトの見本 |
 
-今: 上の UniformItems と Circular のセルが水色 1 色で、色分けした下の Staggered / VariableSize / Honeycomb より地味。UniformItems のセルは外側に余白 3 があるので、左右の端がほかの段より内側にずれる。
+今: 上の UniformItems と Circular のセルが水色 1 色で、色分けした下の Staggered / VariableSize / Honeycomb より地味。
 
 - ① UniformItems・Circular(曜日・弧・扇・軌道)のセルを Staggered と同じ淡い色分けにし、曜日は土を青・日を赤にする
-- ② UniformItemsLayout を余白 3 の分だけ外へ広げ、左右の端を上の DockLayout とそろえる
-
-結果(👀 確認待ち): ② UniformItemsLayout を左右に 3 広げ、セルの端を DockLayout とそろえた。
 
 ### 🚦11-43 State(🟢📦)
 
@@ -986,26 +885,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewStateView.xaml` + `ViewStateViewModel.cs`(+ `ViewStatePanelView.xaml`) | StateContainer(状態ごとの表示)と LazyView(遅延生成)の見本 |
 
-今: 4 つのボタンのどれが今の状態か分からない。状態の表示が高さ 180 の枠の上に寄って枠の下が空き、画面の下半分も空いている。
+今: 4 つのボタンのどれが今の状態か分からない。画面の下半分が空いている。
 
 - ① 4 つのボタンを、選んでいるものを塗る切り替え(App の Timer・Sudoku の形)にし、Loading は青・Empty は灰・Error は赤・Success は緑にする
-- ② 状態の表示を枠の上下中央に置き、アイコンを共有の丸い地のアイコン(`BasicEmptyIconBorder` / `BasicSuccessIconBorder` など)にそろえる
-- ③ LazyView の読み込みのボタン(高さ 40・文字 12)を `BasicOutlinedButton`(44・14)に寄せる
-
-結果(👀 確認待ち): ② 状態の表示を枠の上下中央に置き、アイコンを共有の丸い地にした(Empty = 灰、Success = 緑、Error は画面ローカルの赤)。③ 読み込みのボタンと、状態の切り替えの 4 つのボタンを `BasicOutlinedButton`(44・14)に。
-
-### 🧩11-46 Toolkit(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/View/ViewToolkitView.xaml` + `ViewToolkitViewModel.cs` | Syncfusion / CommunityToolkit の部品の一覧(入力 / 表示のタブ) |
-
-今: `SfSegmentedControl` の選択が既定の紫(#6750A4)で、青で統一したタブの下線やチップと合わない。`SfOtpInput` だけ左寄せで、Expander の見出しの「▼」はただの文字なので、開いても向きが変わらない。
-
-- ① SegmentedControl の選択の色(`SelectionIndicatorSettings`)を `BlueDefault` にする
-- ② OtpInput を中央に寄せる
-- ③ Expander の見出しの「▼」を、開閉で向きが変わる表示(共有の `ExpandGlyphConverter`)にする
-- 部品の UI の画面への取り込みは 10-21
 
 ### 🛠️11-47 Custom(🟢📦📦)
 
@@ -1025,13 +907,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewBottomSheetView.xaml` + `ViewBottomSheetViewModel.cs` | SfBottomSheet と自作の BottomSheetView の比較 |
 
-今: シートの 4 行(共有 / リンクをコピー / お気に入りに追加 / レポート)がどれも同じ Chevron のアイコンで、行の区切りも無い(`SheetSeparator` は定義だけで使っていない)。行の文字は許可値に無い 15。結果のカードは小さな 1 行だけで、画面の下半分が空く。
+今: シートの 4 行(共有 / リンクをコピー / お気に入りに追加 / レポート)がどれも同じ Chevron のアイコン。結果のカードは小さな 1 行だけで、画面の下半分が空く。
 
 - ① 行ごとのアイコンを XAML のコンバーターで出す(共有 = Share・リンク = Link・お気に入り = 琥珀の Star・レポート = 赤の Flag)
-- ② 行の間に `SheetSeparator` の 1px の線を入れ、文字を 16 にする
 - ③ 結果のカードを、選んだ操作のアイコンと名前を並べた大きめの行にする
-
-結果(👀 確認待ち): ② 行の文字を 16 にし、各行の下に `SheetSeparator` の線。
 
 ### 📑11-49 Drawer(🟢📦)
 
@@ -1039,9 +918,8 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewDrawerView.xaml` + `ViewDrawerViewModel.cs` | SfNavigationDrawer と自作の SideDrawer の比較 |
 
-今: 切り替えの `SfSegmentedControl` が既定の紫で、ほかの青と合わない。選択中のカードは小さな青文字 1 行だけで、画面の下半分が空く。ドロワーの行では選んでいる項目が分からず、文字も許可値に無い 15。
+今: 選択中のカードは小さな青文字 1 行だけで、画面の下半分が空く。ドロワーの行では選んでいる項目が分からず、文字も許可値に無い 15。
 
-- ① SegmentedControl の選択の色を `BlueDefault` にする
 - ② ドロワーで選んでいる行を、淡い青の地に青のアイコンと文字で示し、文字を 16 にする
 - ③ 選択中のカードを、項目のアイコンと名前を並べた大きめの行にする
 
@@ -1068,20 +946,6 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 - ① 丸を曲線の始点(左下)に置き、横を時間・縦を Easing の値で動かして曲線をなぞらせる
 - ② 曲線を系統ごとの濃い色(Sin は青・Cubic は緑・Bounce は橙・Spring は紫)にし、0 と 1 の高さに薄い補助線を引く
 
-### ✨11-52 Effect(🟢📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/View/ViewEffectView.xaml` + `ViewEffectViewModel.cs` | 出現・バッジ・カウントアップ・フォーカス・押下などの演出の一覧 |
-
-今: 白いカードと影で整っている。Replay のボタンが 1 枚目のカードに接していて、バッジを増減するボタンが細いハイフンの「-」「+」。
-
-- ① Replay を見出しの行の上下中央に置き、カードとの間を空ける
-- ② 「-」「+」を MaterialIcons の Remove / Add にする
-- 文字のスペースは 11-67
-
-結果(👀 確認待ち): ① Replay を見出しの行の上下中央に置き(高さ 44・角 22)、カードとの間を 8 空けた。ほかの小さなボタン(高さ 36)は残り。
-
 ### 🖐️11-53 Drag & Drop(🟡📦📦)
 
 | 現在のファイル名 | 何用か |
@@ -1101,13 +965,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewLottieView.xaml` + `ViewLottieViewModel.cs` | Lottie の再生・シーク・スクロール連動・長押しでの進行 |
 
-今: 開いた直後は大きな白い枠の真ん中に小さな点が 1 つあるだけで、空の画面に見える。スクロール連動の帯の文字が右端で「→ → → スクロ」と切れ、スライダーと時刻の左右の端もそろっていない。
+今: 開いた直後は大きな白い枠の真ん中に小さな点が 1 つあるだけで、空の画面に見える。
 
 - ① 枠の地を淡いグラデーションにし、開いた直後に絵が分かるコマを出す(少し進めた位置にするか、自動で再生する)
-- ② 帯の文字を左寄せにして、最初から読めるようにする
-- ③ スライダーと時刻の左右の端をそろえる
-
-結果(👀 確認待ち): ② 帯の文字を左寄せにして最初から読めるように。③ 時刻の行に左右 15 の余白を付け、スライダーの溝の端とそろえた。長押しのボタンも高さ 44 に。
 
 ### 🖍️11-55 Graphics(🟢📦)
 
@@ -1115,20 +975,9 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewGraphicsView.xaml` + `ViewGraphicsViewModel.cs` | DrawingControl の図形・手描きと PNG 出力・波紋・カウントダウン |
 
-今: 最初に出る図形が原色の青(#0000FF)と赤(#FF0000)で、ほかの画面の色より粗く見える。ボタンのアイコンは Clear にしか付いていない。
+今: ボタンのアイコンは Clear にしか付いていない。
 
-- ① 最初に出る図形の色を、アプリのパレット(`BlueDefault` / `RedDefault` など)にする
 - ② ボタンを `BasicIconOutlinedButton` で、全部アイコン付き(線・丸・四角・消す・元に戻す・出力)にそろえる
-
-### ✍️11-56 Drawing(🟡📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/View/ViewDrawingView.xaml` + `ViewDrawingViewModel.cs` | DrawingView での手描きと、保存した絵のプレビュー |
-
-今: プレビューの案内は薄い灰色。
-
-- ② 案内の文字色を `BasicCenterHintLabel` と同じ濃さにする(今は GrayLighten1)
 
 ### 📊11-57 Chart(🟡📦)
 
@@ -1136,9 +985,8 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewChartView.xaml` + `ViewChartViewModel.cs`(描画は `Graphics/Drawing/ChartDrawing.cs`) | 自作の描画によるグラフ 7 種の切り替え |
 
-今: グラフは白地のまま残りの高さいっぱいに縦長に伸び、切り替えのチップは 4 + 3 の並びで 2 段目の右が空く。
+今: 切り替えのチップは 4 + 3 の並びで 2 段目の右が空く。
 
-- ② グラフを、灰色の地の上の白い枠に入れる
 - ③ チップに種類のアイコン(Show_chart / Bar_chart / Donut_large など)を付け、2 段目を中央にそろえる
 - 軸・凡例・値の表示は 10-22
 
@@ -1148,11 +996,10 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/View/ViewSfChartView.xaml` + `ViewSfChartViewModel.cs` | Syncfusion のグラフの一覧 |
 
-今: ドーナツが Syncfusion の既定の色のままで、濃い灰色の区画が浮いて見え、数字しか出ないので何の区画か分からない。小さい区画の「9」だけが外の吹き出しになる。縦棒のグラフは縦の格子線が多く、単色の角ばった棒が並ぶ。
+今: ドーナツが Syncfusion の既定の色のままで、濃い灰色の区画が浮いて見え、数字しか出ないので何の区画か分からない。小さい区画の「9」だけが外の吹き出しになる。
 
 - ① ドーナツの色をアプリのパレット(`PaletteBrushes`)にし、凡例(食品 / 日用品 / 衣料 / 家電 / その他)を出す
 - ② 値のラベルの置き方をそろえる(全部を内側か、全部を線付きの外側)
-- ③ 縦棒の縦の格子線を消し(`ShowMajorGridLines`)、棒の上の角を丸める(`CornerRadius`)
 
 ## 🧪Sample
 
@@ -1166,9 +1013,6 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 
 - ① `index.html` / `other.html` に CSS を足す。余白 16・文字 16、ボタンは幅いっぱい・高さ 44・角 8 で `BasicOutlinedButton` と同じ色の枠、ログは等幅の角丸の枠にして下まで広げる
 - ③ 受信のハイライトを、code-behind から `AnimationOption.HighlightTrigger` / `HighlightColor` へ移す
-- ④ 状態の帯の文字を 18 → 14 にする
-
-結果(👀 確認待ち): ④ 18 → 14。
 
 ### 🗺️11-60 Map(🟢📦)
 
@@ -1197,9 +1041,8 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 | --- | --- |
 | `Modules/Sample/SamplePdfView.xaml` + `SamplePdfViewModel.cs` | PDF の表示とページの移動 |
 
-今: F3 / F4 の ◀️ ▶️ が絵文字の橙の四角で、緑・橙のキーの色とぶつかる。スライダーの溝(GrayLighten2)は白地でほとんど見えず、ページ数(18 の灰色)は別の行に離れている。
+今: スライダーの溝(GrayLighten2)は白地でほとんど見えず、ページ数(18 の灰色)は別の行に離れている。
 
-- ① F3 / F4 を文字(Prev / Next)にする
 - ② スライダーとページ数を 1 行にまとめ(右に `BasicMonoLabel` で「1 / 6」)、溝の色を濃くする(GrayLighten1 など)
 
 ### 👁️11-65 CV Local(🟡📦)
@@ -1213,18 +1056,33 @@ Toolkit は取り込んだ後も「ライブラリの部品の一覧」として
 - ① 推論中は `BasicLightLoadingIndicator` を出す(VM の IsProcessing)。撮影の瞬間は白いフラッシュを出す(CV Net の `ShutterFlashBoxView` と `FlashTrigger`)
 - ② 結果の表示中は、CV Net と同じ「Retry でプレビューを再開」の帯を下に出す
 
-### ✂️11-66 Crop(🟢📦)
+## 🆕追加の手直し
+
+### 🎯11-68 フォーカス枠(🟡📦📦)
 
 | 現在のファイル名 | 何用か |
 | --- | --- |
-| `Modules/Sample/SampleCropView.xaml` + `SampleCropViewModel.cs` | 画像のトリミング(枠の移動・四隅での拡大縮小)と書き出し |
+| `Behaviors/Focus.cs`(`Focus.FocusedStroke` / `FocusedThickness`)と、使う所(`Styles.xaml` の `BasicFieldEntry` / `CardFieldPicker`、Navigation Wizard、View Effect、UI 1 Chat / Login / Shop、Basic Behavior) | 入力欄にフォーカスがある間、親の Border の枠を強調する |
 
-今: 暗い編集の面、角丸の白いパネル、丸いボタンで整っている。書き出す前のプレビューが灰色の四角だけで、ボタンの高さが 40。
+今: フォーカスで枠の太さが 1 → 2.5(画面によって 2)に変わる。太さは Border の大きさに含まれるので、欄が伸びて下の文字がずれる。
 
-- ① 書き出す前のプレビューに、薄い切り抜きのアイコンを出す
-- ② ボタンの高さを 44 にする
+- ① 既定は色だけを変える(`FocusedThickness` の既定を NaN = 太さを変えない)。共有の入力欄・Picker、UI 1 Shop、Basic Behavior は色だけ
+- ② `FocusedThickness` を指定した所は、太くした分だけ枠を外へ広げ、周りの位置と大きさが変わらないようにする(UI 1 Login・Chat、View Effect の見本、Navigation Wizard)
+- ③ Wizard の Input1 / Input2 は、入力のカードを段の表示の下の空きの上下中央に置く
 
-結果(👀 確認待ち): ② 高さ 44(角 22)。
+結果(👀 確認待ち): ① `FocusedThickness` の既定を NaN にし、指定しない所(共有の入力欄・Picker、UI 1 Shop、Basic Behavior)は色だけを変える。② 指定した所(UI 1 Login 2.5・Chat 2、View Effect の見本 2.5、Navigation Wizard 2.5)は、太くした分だけ Margin を外へ広げ、周りの位置と大きさが変わらない(フォーカスの前後の画素で確認)。③ Wizard の Input1 / Input2 は、入力のカードを段の表示の下の空きの上下中央に置いた(スクロールはやめた)。
+
+### 🅰️11-70 Font の NotoSerifJP(🟢📦)
+
+| 現在のファイル名 | 何用か |
+| --- | --- |
+| `Modules/Basic/BasicFontView.xaml` | 同梱のフォントとアイコンのフォントの見本 |
+
+今: NotoSerifJP の見本「金額履歴 あいうえお 1234567890」が、24 で 2 行になる。
+
+- ① 見本を、Default と同じく「履歴」を削って「金額 あいうえお 1234567890」にする
+
+結果(👀 確認待ち): ① 12 / 18 / 24 の 3 行とも「金額 あいうえお 1234567890」に。24 でも 1 行に収まる。
 
 ## 🙈見ていない画面
 

@@ -35,16 +35,21 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
-            <Style x:Key="ChartDrawing"
-                   TargetType="drawing:DrawingControl">
-                <Setter Property="Margin" Value="8,0,8,16" />
+            <Style x:Key="ChartFrameBorder"
+                   TargetType="Border">
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             </Style>
 
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
 
-    <Grid Style="{StaticResource FillGrid}"
+    <Grid Style="{StaticResource RootGrid}"
           RowDefinitions="Auto,*">
 
         <!-- 切替セグメント -->
@@ -153,9 +158,10 @@
         </Grid>
 
         <!-- チャート -->
-        <drawing:DrawingControl Grid.Row="1"
-                                Style="{StaticResource ChartDrawing}"
-                                Drawing="{Binding Drawing}" />
+        <Border Grid.Row="1"
+                Style="{StaticResource ChartFrameBorder}">
+            <drawing:DrawingControl Drawing="{Binding Drawing}" />
+        </Border>
 
     </Grid>
 

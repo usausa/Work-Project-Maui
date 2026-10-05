@@ -26,6 +26,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="SegmentedControl"
+                   TargetType="sf:SfSegmentedControl">
+                <Setter Property="SelectionIndicatorSettings">
+                    <Setter.Value>
+                        <sf:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
+                                                       TextColor="White" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style x:Key="DrawerFooterLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCaptionLabel}">
@@ -174,7 +184,8 @@
                                            Title="実装"
                                            Icon="{x:Static fonts:MaterialIcons.Menu_open}">
                             <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                                <sf:SfSegmentedControl ItemsSource="{Binding Modes}"
+                                <sf:SfSegmentedControl Style="{StaticResource SegmentedControl}"
+                                                       ItemsSource="{Binding Modes}"
                                                        SegmentHeight="40"
                                                        SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
                                                        VisibleSegmentsCount="2" />

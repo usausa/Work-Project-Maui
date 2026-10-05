@@ -16,31 +16,57 @@
              shell:ShellProperty.Function1Enabled="True"
              shell:ShellProperty.Function4Enabled="{Binding Context.Data1, Converter={StaticResource NotEmptyConverter}}">
 
-    <ScrollView Style="{StaticResource RootScroll}">
-        <VerticalStackLayout Style="{StaticResource PageStack}">
+    <ContentView.Resources>
+        <ResourceDictionary>
 
-            <controls:StepIndicator Style="{StaticResource BasicStepIndicator}"
-                                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                    CurrentStep="1" TotalSteps="3" />
+            <Style x:Key="WizardRootGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource RootGrid}">
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="RowSpacing" Value="12" />
+            </Style>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="80"
-                               Title="Step 1 - Data1"
-                               Icon="{x:Static fonts:MaterialIcons.Edit}">
-                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Data1 (required)" />
-                    <Border Style="{StaticResource CardFieldBorder}">
-                        <Entry Style="{StaticResource BasicFieldEntry}"
-                               Text="{Binding Context.Data1}"
-                               Placeholder="Data1" />
-                    </Border>
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Next (▶️) is enabled once this field is filled" />
-                </VerticalStackLayout>
-            </controls:InfoCard>
+            <Style x:Key="WizardCard"
+                   TargetType="controls:InfoCard">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
 
-        </VerticalStackLayout>
-    </ScrollView>
+            <Style x:Key="FocusFieldEntry"
+                   TargetType="Entry"
+                   BasedOn="{StaticResource BasicFieldEntry}">
+                <Setter Property="behaviors:Focus.FocusedThickness" Value="2.5" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid Style="{StaticResource WizardRootGrid}"
+          RowDefinitions="Auto,*">
+
+        <controls:StepIndicator Grid.Row="0"
+                                Style="{StaticResource BasicStepIndicator}"
+                                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                CurrentStep="1" TotalSteps="3" />
+
+        <controls:InfoCard Grid.Row="1"
+                           Style="{StaticResource WizardCard}"
+                           behaviors:AnimationOption.EnterAnimation="FadeUp"
+                           behaviors:AnimationOption.EnterDelay="80"
+                           Title="Step 1 - Data1"
+                           Icon="{x:Static fonts:MaterialIcons.Edit}">
+            <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                       Text="Data1 (required)" />
+                <Border Style="{StaticResource CardFieldBorder}">
+                    <Entry Style="{StaticResource FocusFieldEntry}"
+                           Text="{Binding Context.Data1}"
+                           Placeholder="例: Apple" />
+                </Border>
+                <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                       Text="Next (▶️) is enabled once this field is filled" />
+            </VerticalStackLayout>
+        </controls:InfoCard>
+
+    </Grid>
 
 </ContentView>

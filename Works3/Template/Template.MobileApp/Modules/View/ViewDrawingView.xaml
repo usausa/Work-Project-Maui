@@ -39,7 +39,6 @@
                    TargetType="Label"
                    BasedOn="{StaticResource BasicCenterHintLabel}">
                 <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
             <Style x:Key="CanvasView"

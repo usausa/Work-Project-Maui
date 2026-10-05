@@ -76,13 +76,14 @@
                                Icon="{x:Static fonts:MaterialIcons.Insert_chart}">
                 <charts:SfCartesianChart Style="{StaticResource ColumnChart}">
                     <charts:SfCartesianChart.XAxes>
-                        <charts:CategoryAxis />
+                        <charts:CategoryAxis ShowMajorGridLines="False" />
                     </charts:SfCartesianChart.XAxes>
                     <charts:SfCartesianChart.YAxes>
                         <charts:NumericalAxis />
                     </charts:SfCartesianChart.YAxes>
                     <charts:ColumnSeries ItemsSource="{Binding Monthly}"
                                          Fill="{StaticResource BlueDefault}"
+                                         CornerRadius="4,4,0,0"
                                          XBindingPath="Label" YBindingPath="Value"
                                          EnableAnimation="True" />
                 </charts:SfCartesianChart>

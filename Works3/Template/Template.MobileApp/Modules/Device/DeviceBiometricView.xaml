@@ -190,7 +190,15 @@
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Last used" />
                         <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} 前', TargetNullValue='—'}" />
+                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} 前', TargetNullValue='—'}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding SinceLastAuthentication, Converter={StaticResource EmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                     </VerticalStackLayout>
                     <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                             Style="{StaticResource BasicIconOutlinedButton}"
@@ -234,7 +242,15 @@
                                Text="Result" />
                         <Label Grid.Column="1"
                                Style="{StaticResource CardRowValueLabel}"
-                               Text="{Binding Result, Converter={StaticResource ResultTextConverter}}" />
+                               Text="{Binding Result, Converter={StaticResource ResultTextConverter}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding Result, Converter={StaticResource EmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
                         <Label Grid.Column="2"
                                Style="{StaticResource CardRowValueLabel}"
                                Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
@@ -276,14 +292,30 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Key" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding KeyState, Converter={StaticResource KeyStateTextConverter}}" />
+                                   Text="{Binding KeyState, Converter={StaticResource KeyStateTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding KeyState}"
+                                                 Value="{x:Static components:BiometricKeyState.None}">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Location" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding KeyLocation, Converter={StaticResource KeyLocationTextConverter}}" />
+                                   Text="{Binding KeyLocation, Converter={StaticResource KeyLocationTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding KeyLocation, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0"
                                              Style="{StaticResource TileStack}">
@@ -311,7 +343,15 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Result" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding SignStatus, Converter={StaticResource SignStatusTextConverter}}" />
+                                   Text="{Binding SignStatus, Converter={StaticResource SignStatusTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding SignStatus, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                     </Grid>
                     <Grid Style="{StaticResource TileGrid}"
@@ -321,21 +361,45 @@
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Verify" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding Verified, Converter={StaticResource AcceptTextConverter}}" />
+                                   Text="{Binding Verified, Converter={StaticResource AcceptTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Verified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Tampered" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding TamperedVerified, Converter={StaticResource RejectTextConverter}}" />
+                                   Text="{Binding TamperedVerified, Converter={StaticResource RejectTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding TamperedVerified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Row="0" Grid.Column="2"
                                              Style="{StaticResource TileStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
                                    Text="Replay" />
                             <Label Style="{StaticResource CardAccentLabel}"
-                                   Text="{Binding ReplayVerified, Converter={StaticResource RejectTextConverter}}" />
+                                   Text="{Binding ReplayVerified, Converter={StaticResource RejectTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding ReplayVerified, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </VerticalStackLayout>
                     </Grid>
                 </VerticalStackLayout>
