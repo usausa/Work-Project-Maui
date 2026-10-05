@@ -2975,11 +2975,14 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Basic/BasicStyleView.xaml` | 11-7 ①: 選択の 3 つの中央と右を入れ替え、Data-1 / Data-2 / Data-3 の順に |
 | `Modules/Sample/SampleMarkdownView.xaml` | 11-63: 本文を左右 16・上下 12 の余白の内側に(画面ローカルのスタイル `MarkdownScroll`)。見出しを太字にして H1 28(`BlueDarken2`)/ H2 22(`BlueGrayDarken3`)/ H3 18(`BlueGrayDarken2`)、本文を `GrayDarken3` に。引用とコードの箱の枠を淡く(`OrangeLighten2` / `GrayLighten2`) |
 | `Modules/Sample/SampleMap2View.xaml` / `SampleMap2ViewModel.cs` / `Messaging/MapsuiMapManagers.cs` | 11-61: Mapsui のズームのボタン(`ZoomInOutWidget`)を左上から右上へ。6 つの切り替えを地図の上のパネルから下から出るシート(自作の `BottomSheetView`、`IsLayerOpen`)に移し、右下のボタンの列の一番上にシートを開くレイヤーのボタン(`LayerCommand`)を足した。シートの行は高さ 44・文字 14・名前の前に絵文字(🧭 Widget / 📍 Spot / 🔷 Shape / 🗾 GeoJSON / 🔵 Cluster / 🌈 Overlay)。右下のボタンの列の下の余白を 40 にして地図の表記から離した |
+| `Modules/Navigation/Edit/EditListView.xaml` | 11-14: 角丸の枠のカードの行を、白地のフラットな行と 1px の区切り線に(行の高さは 56 ちょうどで、選択モードでも変わらない)。編集・削除を透明の 44 のアイコンのボタン(青のペン・赤のゴミ箱。画面ローカルのスタイル `WorkEditButton` / `WorkDeleteButton`)に。番号のバッジを淡い青の地に青の文字(角 2)に。選択モードで選んだ行は淡い琥珀(`AmberLighten4`)の地、番号は白地に茶色(`BrownDarken1`)の文字。全選択のボタンを白地に青の枠と青の文字に(灰色の地は押せないように見えた) |
+| `Resources/Styles/Styles.xaml` | 11-14: 使う画面が無くなった `ItemCollectionButtonBase` / `ItemCollectionButtonPrimary` / `ItemCollectionButtonDanger` を削除 |
 
 - 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
 - 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
 - 実機: 不具合を直した 7 画面を前後で撮って比べた(Audio の音量が 50%、Drawing の白いキャンバス、Chart の両端の点、Web Basic の「…」、Border の下までのスクロール、Setting の (not set)、Basic Style の 1 / 2 / 3 の順)
 - 実機: Markdown(左右の余白・見出しの強弱・本文の色・淡い枠)と Map2(右上のズームのボタン・レイヤーのボタンで開くシート・右下のボタンの位置)を前後で撮って比べた
+- 実機: Navigation Edit のふつうの状態と選択モード(2 行を選んだ状態)を前後で撮って比べた。文字の色(選んだ行・番号・名前)と、選んだ行の色・全選択のボタンは、それぞれ 3 案を並べて比べて決めた。区切り線の位置で、ふつうの状態と選択モードの行の高さが同じことを確かめた
 - ビルド 0 警告、inspectcode 0 件
 
 ## 💡C. この区間のナレッジ
