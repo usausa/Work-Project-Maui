@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Sample"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui" xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
@@ -26,7 +27,7 @@
 
             <Style x:Key="MapFabStack"
                    TargetType="VerticalStackLayout">
-                <Setter Property="Margin" Value="0,0,16,16" />
+                <Setter Property="Margin" Value="0,0,16,40" />
                 <Setter Property="Spacing" Value="12" />
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="VerticalOptions" Value="End" />
@@ -49,35 +50,26 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="TogglePanelBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="16,16,0,0" />
-                <Setter Property="WidthRequest" Value="148" />
-                <Setter Property="Padding" Value="10,8" />
-                <Setter Property="BackgroundColor" Value="#E6FFFFFF" />
-                <Setter Property="StrokeThickness" Value="0" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-                <Setter Property="Shadow">
-                    <Setter.Value>
-                        <Shadow Offset="0,2"
-                                Brush="Black"
-                                Opacity="0.3"
-                                Radius="6" />
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="Start" />
+            <Style x:Key="LayerSheet"
+                   TargetType="controls:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="LayerSheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,20" />
             </Style>
 
             <Style x:Key="ToggleRowGrid"
                    TargetType="Grid">
                 <Setter Property="ColumnSpacing" Value="4" />
-                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="44" />
             </Style>
 
             <Style x:Key="ToggleNameLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
             </Style>
@@ -100,67 +92,10 @@
         <skia:SKCanvasView behaviors:MapsuiBind.Overlay="{Binding Controller}"
                            InputTransparent="True" />
 
-        <!-- 機能グループ別マネージャのトグル -->
-        <Border Style="{StaticResource TogglePanelBorder}">
-            <VerticalStackLayout>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="Widget" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding WidgetsEnabled}" />
-                </Grid>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="Spot" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding SpotsEnabled}" />
-                </Grid>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="Shape" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding ShapesEnabled}" />
-                </Grid>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="GeoJSON" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding GeoJsonEnabled}" />
-                </Grid>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="Cluster" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding ClusterEnabled}" />
-                </Grid>
-                <Grid Style="{StaticResource ToggleRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource ToggleNameLabel}"
-                           Text="Overlay" />
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource ToggleSwitch}"
-                            IsToggled="{Binding OverlayEnabled}" />
-                </Grid>
-            </VerticalStackLayout>
-        </Border>
-
         <VerticalStackLayout Style="{StaticResource MapFabStack}">
+            <ImageButton Style="{StaticResource MapFabButton}"
+                         Source="{x:Static markup:AppIcons.MapLayers}"
+                         Command="{Binding LayerCommand}" />
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapAdd}"
                          Command="{Binding ZoomInCommand}" />
@@ -171,6 +106,69 @@
                          Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
         </VerticalStackLayout>
+
+        <!-- 機能グループ別マネージャのトグル -->
+        <controls:BottomSheetView Style="{StaticResource LayerSheet}"
+                                  IsOpen="{Binding IsLayerOpen}">
+            <controls:BottomSheetView.SheetContent>
+                <VerticalStackLayout Style="{StaticResource LayerSheetStack}">
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="🧭 Widget" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding WidgetsEnabled}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="📍 Spot" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding SpotsEnabled}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="🔷 Shape" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding ShapesEnabled}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="🗾 GeoJSON" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding GeoJsonEnabled}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="🔵 Cluster" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding ClusterEnabled}" />
+                    </Grid>
+                    <Grid Style="{StaticResource ToggleRowGrid}"
+                          ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource ToggleNameLabel}"
+                               Text="🌈 Overlay" />
+                        <Switch Grid.Column="1"
+                                Style="{StaticResource ToggleSwitch}"
+                                IsToggled="{Binding OverlayEnabled}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </controls:BottomSheetView.SheetContent>
+        </controls:BottomSheetView>
 
     </Grid>
 
