@@ -129,14 +129,14 @@
                                 Style="{StaticResource CenterSelectButton}"
                                 behaviors:Select.EmptyString="-"
                                 behaviors:Select.List="{Binding Items}"
-                                behaviors:Select.Value="{Binding Value3}"
-                                Command="{Binding Select3Command}" />
+                                behaviors:Select.Value="{Binding Value2}"
+                                Command="{Binding Select2Command}" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource RightSelectButton}"
                                 behaviors:Select.EmptyString="-"
                                 behaviors:Select.List="{Binding Items}"
-                                behaviors:Select.Value="{Binding Value2}"
-                                Command="{Binding Select2Command}" />
+                                behaviors:Select.Value="{Binding Value3}"
+                                Command="{Binding Select3Command}" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

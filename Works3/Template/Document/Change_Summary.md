@@ -2966,9 +2966,17 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Network/NetworkMenuView.xaml` / `Markup/AppIcons.cs` | 11-1 ⑤: HTTP (Data) のアイコンを `TableRows`(画面のカードの見出しと同じ)に。使わなくなった `AppIcons.Http` を削除 |
 | `MainPage.xaml` / `Resources/Styles/Styles.xaml` | 11-2 ①: 題をヘッダーの中央の列(左 96・右 48 + 48 の間)に置き、`HeaderTitleLabel` に Android の文字の自動縮小(`LabelOption.AutoSize`、最大 36)を付けた。入らない長さの題(Communication など)は入る大きさまで縮み、右のアイコンに重ならない。全画面に効く |
 | `Modules/Navigation/NavigationMenuView.xaml` / `Edit/EditDetailView.xaml`、`Modules/Device/DeviceOcrView.xaml` / `DeviceNfcView.xaml` / `DeviceBleScanView.xaml` / `DeviceBleHostView.xaml`、`Modules/View/ViewSvgView.xaml` / `ViewDragDropView.xaml` / `ViewMenuView.xaml`、`Modules/Sample/SampleWebBasicView.xaml` / `SampleWebAppView.xaml` / `SamplePdfView.xaml` / `SampleCvLocalView.xaml` | 11-2 ②: 題をメニューの名前に(NavigationMenu → Navigation、EditDetailNew / EditDetailUpdate → New / Update、Ocr → OCR、Nfc → NFC、BleScan → BLE Scan、Host → BLE Host、Svg → SVG、DragDrop → Drag & Drop、WebBasic → Web Basic、WebApp → Web App、Pdf → PDF、Custom Vision → CV Local)。View のメニューの表記も SVG / Drag & Drop に |
+| `Modules/Device/DeviceAudioViewModel.cs` | 11-30 ①: 再生器 `AudioPlayer` を変更の通知を持つプロパティにした。開いたときの音量が 0% ではなく実際の値で出る |
+| `Modules/View/ViewBorderView.xaml` | 11-44 ①: 画面を ScrollView で包み、下の角丸のスライダーまで操作できるように(地の色は今のまま) |
+| `Modules/View/ViewDrawingView.xaml` | 11-56 ①: キャンバスの白をスタイルの `Background` で指定(DrawingView はコンストラクターで `BackgroundColor` を灰色にするので、スタイルの `BackgroundColor` が効かなかった) |
+| `Graphics/Drawing/ChartDrawing.cs` | 11-57 ①: 折れ線の伸びる動きの切り抜きを、点の大きさの分(`PointExtent`)だけ左右に広げた。両端の点が切れない |
+| `Modules/Sample/SampleWebBasicView.xaml` | 11-59 ②: 状態の帯を Grid(Auto,*)にして、長い文字の末尾を「…」に |
+| `Modules/Main/SettingView.xaml` | 11-5 ②: 隠して出す ServiceKey / Password も、未設定なら (not set) を出す |
+| `Modules/Basic/BasicStyleView.xaml` | 11-7 ①: 選択の 3 つの中央と右を入れ替え、Data-1 / Data-2 / Data-3 の順に |
 
 - 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
 - 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
+- 実機: 不具合を直した 7 画面を前後で撮って比べた(Audio の音量が 50%、Drawing の白いキャンバス、Chart の両端の点、Web Basic の「…」、Border の下までのスクロール、Setting の (not set)、Basic Style の 1 / 2 / 3 の順)
 - ビルド 0 警告、inspectcode 0 件
 
 ## 💡C. この区間のナレッジ

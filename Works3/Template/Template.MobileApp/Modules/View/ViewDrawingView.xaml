@@ -44,7 +44,7 @@
 
             <Style x:Key="CanvasView"
                    TargetType="toolkit:DrawingView">
-                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Background" Value="White" />
             </Style>
 
             <Style x:Key="PaletteBorder"

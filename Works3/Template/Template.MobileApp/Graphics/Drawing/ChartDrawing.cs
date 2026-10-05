@@ -20,6 +20,9 @@ public sealed class ChartDrawing : DrawingObject, IDisposable
     private const float AnimationDuration = 600f;
     private const float Padding = 24f;
 
+    // 折れ線の点(半径 4・枠線 2)とにじみが収まる幅
+    private const float PointExtent = 6f;
+
     private static readonly Color BackgroundColor = Colors.White;
     private static readonly Color AxisColor = Color.FromArgb("#E0E0E0");
     private static readonly Color TextColor = Color.FromArgb("#757575");
@@ -41,7 +44,7 @@ public sealed class ChartDrawing : DrawingObject, IDisposable
         Color.FromArgb("#26C6DA")
     ];
 
-    private readonly System.Timers.Timer animationTimer = new(1000d / 60);
+    private readonly Timer animationTimer = new(1000d / 60);
 
     private ChartKind kind = ChartKind.Line;
 
@@ -214,9 +217,9 @@ public sealed class ChartDrawing : DrawingObject, IDisposable
                 area.Left + (area.Width * i / (values.Count - 1)),
                 area.Bottom - (float)((values[i] - min) / range * area.Height));
 
-        // 左から右へ描画をクリップして伸ばす
+        // 左から右へ描画をクリップして伸ばす (両端の点が切れないよう、点の大きさの分だけ左右に広げる)
         canvas.SaveState();
-        canvas.ClipRectangle(area.Left, dirtyRect.Top, area.Width * eased, dirtyRect.Height);
+        canvas.ClipRectangle(area.Left - PointExtent, dirtyRect.Top, (area.Width * eased) + (PointExtent * 2), dirtyRect.Height);
 
         // 線下のグラデーション
         using (var fillPath = new PathF())

@@ -47,136 +47,138 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <VerticalStackLayout Style="{StaticResource BorderVerticalStackLayout}">
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource BorderVerticalStackLayout}">
 
-        <!-- Target -->
+            <!-- Target -->
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="{Binding CornerRadius}" />
-            </Border.StrokeShape>
-        </Border>
+            <Border Style="{StaticResource SharedBorderStyle}"
+                    IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="{Binding CornerRadius}" />
+                </Border.StrokeShape>
+            </Border>
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Ellipse}}">
-            <Border.StrokeShape>
-                <Ellipse />
-            </Border.StrokeShape>
-        </Border>
+            <Border Style="{StaticResource SharedBorderStyle}"
+                    IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Ellipse}}">
+                <Border.StrokeShape>
+                    <Ellipse />
+                </Border.StrokeShape>
+            </Border>
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Rectangle}}">
-            <Border.StrokeShape>
-                <Rectangle />
-            </Border.StrokeShape>
-        </Border>
+            <Border Style="{StaticResource SharedBorderStyle}"
+                    IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Rectangle}}">
+                <Border.StrokeShape>
+                    <Rectangle />
+                </Border.StrokeShape>
+            </Border>
 
-        <Border Style="{StaticResource SharedBorderStyle}"
-                IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Polygon}}">
-            <Border.StrokeShape>
-                <Path Data="M 120 0 L 0 80 L 240 80 Z" />
-            </Border.StrokeShape>
-        </Border>
+            <Border Style="{StaticResource SharedBorderStyle}"
+                    IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.Polygon}}">
+                <Border.StrokeShape>
+                    <Path Data="M 120 0 L 0 80 L 240 80 Z" />
+                </Border.StrokeShape>
+            </Border>
 
-        <!-- Setting -->
+            <!-- Setting -->
 
-        <BoxView Style="{StaticResource SeparateBoxView}" />
+            <BoxView Style="{StaticResource SeparateBoxView}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Shape" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding Shapes}"
-                SelectedItem="{Binding BorderShape, Mode=TwoWay}" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="Shape" />
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+            <Picker ItemsSource="{Binding Shapes}"
+                    SelectedItem="{Binding BorderShape, Mode=TwoWay}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="Color" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding BorderColors}"
-                SelectedItem="{Binding BorderColor, Mode=TwoWay}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="Color" />
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+            <Picker ItemsSource="{Binding BorderColors}"
+                    SelectedItem="{Binding BorderColor, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeColor" />
-        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-        <Picker ItemsSource="{Binding StrokeColors}"
-                SelectedItem="{Binding StrokeColor, Mode=TwoWay}"
-                ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="StrokeColor" />
+            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+            <Picker ItemsSource="{Binding StrokeColors}"
+                    SelectedItem="{Binding StrokeColor, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding Path=Key, x:DataType={x:Type models:ColorItem}}" />
 
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding StrokeThickness, StringFormat='StrokeThickness: {0:F2}'}" />
-        <Slider Value="{Binding StrokeThickness}"
-                Minimum="0" Maximum="20" />
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding StrokeThickness, StringFormat='StrokeThickness: {0:F2}'}" />
+            <Slider Value="{Binding StrokeThickness}"
+                    Minimum="0" Maximum="20" />
 
-        <Label Style="{StaticResource NameLabel}">
-            <Label.FormattedText>
-                <FormattedString>
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="StrokeDashArray: " />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="{Binding StrokeDashLength1, StringFormat='{0:F2}'}" />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text=", " />
-                    <Span Style="{StaticResource NameSpan}"
-                          Text="{Binding StrokeDashLength2, StringFormat='{0:F2}'}" />
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-        <Slider Value="{Binding StrokeDashLength1}"
-                Minimum="0" Maximum="10" />
-        <Slider Value="{Binding StrokeDashLength2}"
-                Minimum="0" Maximum="10" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="{Binding StrokeDashOffset, StringFormat='StrokeDashOffset: {0:F2}'}" />
-        <Slider Value="{Binding StrokeDashOffset}"
-                Minimum="0" Maximum="20" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeLineJoin" />
-        <Picker ItemsSource="{Binding LineJoins}"
-                SelectedItem="{Binding StrokeLineJoin, Mode=TwoWay}" />
-
-        <Label Style="{StaticResource NameLabel}"
-               Text="StrokeLineCap" />
-        <Picker ItemsSource="{Binding LineCaps}"
-                SelectedItem="{Binding StrokeLineCap, Mode=TwoWay}" />
-
-        <!-- Setting:RoundRectangle -->
-
-        <VerticalStackLayout IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
             <Label Style="{StaticResource NameLabel}">
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Style="{StaticResource NameSpan}"
-                              Text="CornerRadius: " />
+                              Text="StrokeDashArray: " />
                         <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusTopLeft, StringFormat='{0:F2}'}" />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text=", " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusTopRight, StringFormat='{0:F2}'}" />
+                              Text="{Binding StrokeDashLength1, StringFormat='{0:F2}'}" />
                         <Span Style="{StaticResource NameSpan}"
                               Text=", " />
                         <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusBottomLeft, StringFormat='{0:F2}'}" />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text=", " />
-                        <Span Style="{StaticResource NameSpan}"
-                              Text="{Binding CornerRadiusBottomRight, StringFormat='{0:F2}'}" />
+                              Text="{Binding StrokeDashLength2, StringFormat='{0:F2}'}" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Slider Value="{Binding CornerRadiusTopLeft}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusTopRight}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusBottomLeft}"
-                    Minimum="0" Maximum="40" />
-            <Slider Value="{Binding CornerRadiusBottomRight}"
-                    Minimum="0" Maximum="40" />
-        </VerticalStackLayout>
+            <Slider Value="{Binding StrokeDashLength1}"
+                    Minimum="0" Maximum="10" />
+            <Slider Value="{Binding StrokeDashLength2}"
+                    Minimum="0" Maximum="10" />
 
-    </VerticalStackLayout>
+            <Label Style="{StaticResource NameLabel}"
+                   Text="{Binding StrokeDashOffset, StringFormat='StrokeDashOffset: {0:F2}'}" />
+            <Slider Value="{Binding StrokeDashOffset}"
+                    Minimum="0" Maximum="20" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="StrokeLineJoin" />
+            <Picker ItemsSource="{Binding LineJoins}"
+                    SelectedItem="{Binding StrokeLineJoin, Mode=TwoWay}" />
+
+            <Label Style="{StaticResource NameLabel}"
+                   Text="StrokeLineCap" />
+            <Picker ItemsSource="{Binding LineCaps}"
+                    SelectedItem="{Binding StrokeLineCap, Mode=TwoWay}" />
+
+            <!-- Setting:RoundRectangle -->
+
+            <VerticalStackLayout IsVisible="{Binding BorderShape, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:BorderShape.RoundRectangle}}">
+                <Label Style="{StaticResource NameLabel}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text="CornerRadius: " />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text="{Binding CornerRadiusTopLeft, StringFormat='{0:F2}'}" />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text=", " />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text="{Binding CornerRadiusTopRight, StringFormat='{0:F2}'}" />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text=", " />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text="{Binding CornerRadiusBottomLeft, StringFormat='{0:F2}'}" />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text=", " />
+                            <Span Style="{StaticResource NameSpan}"
+                                  Text="{Binding CornerRadiusBottomRight, StringFormat='{0:F2}'}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Slider Value="{Binding CornerRadiusTopLeft}"
+                        Minimum="0" Maximum="40" />
+                <Slider Value="{Binding CornerRadiusTopRight}"
+                        Minimum="0" Maximum="40" />
+                <Slider Value="{Binding CornerRadiusBottomLeft}"
+                        Minimum="0" Maximum="40" />
+                <Slider Value="{Binding CornerRadiusBottomRight}"
+                        Minimum="0" Maximum="40" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentView>

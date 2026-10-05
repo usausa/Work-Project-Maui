@@ -259,7 +259,11 @@
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding AIServiceKey}"
+                           IsVisible="{Binding AIServiceKey, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding AIServiceKey, Converter={StaticResource MaskTextConverter}}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding AIServiceKey, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
@@ -342,7 +346,11 @@
                     <Label Grid.Column="1"
                            Style="{StaticResource SettingValueLabel}"
                            behaviors:AnimationOption.HighlightTrigger="{Binding SshPassword}"
+                           IsVisible="{Binding SshPassword, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding SshPassword, Converter={StaticResource MaskTextConverter}}" />
+                    <Label Grid.Column="1"
+                           Style="{StaticResource SettingEmptyLabel}"
+                           IsVisible="{Binding SshPassword, Converter={StaticResource EmptyConverter}}" />
                 </Grid>
 
             </VerticalStackLayout>
