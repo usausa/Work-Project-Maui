@@ -123,12 +123,16 @@
 
         <Button Grid.Row="8" Grid.Column="0"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIHabit}"
+                Text="Habit"
+                ImageSource="{x:Static markup:AppIcons.LocalFireDepartment}" />
         <Button Grid.Row="8" Grid.Column="1"
                 Style="{StaticResource MenuIconButton}"
-                IsEnabled="False"
-                Text="" />
+                Command="{Binding ForwardCommand}"
+                CommandParameter="{markup:ViewId UIHome}"
+                Text="Home"
+                ImageSource="{x:Static markup:AppIcons.Home}" />
 
     </Grid>
 

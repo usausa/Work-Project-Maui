@@ -79,8 +79,25 @@
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken2}" />
                 <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="NetworkHeaderIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionHeaderIcon}">
+                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="AiHeaderIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionHeaderIcon}">
+                <Setter Property="TextColor" Value="{StaticResource PurpleDefault}" />
+            </Style>
+
+            <Style x:Key="SshHeaderIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SectionHeaderIcon}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDefault}" />
             </Style>
 
             <Style x:Key="SettingRowGrid"
@@ -152,7 +169,7 @@
                 <Grid Style="{StaticResource SectionHeaderGrid}"
                       ColumnDefinitions="Auto,*">
                     <Label Grid.Column="0"
-                           Style="{StaticResource SectionHeaderIcon}"
+                           Style="{StaticResource NetworkHeaderIcon}"
                            Text="{x:Static fonts:MaterialIcons.Public}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource BasicSubtitleLabel}"
@@ -205,21 +222,17 @@
                 </Grid>
 
                 <Grid Style="{StaticResource SettingRowGrid}"
-                      ColumnDefinitions="Auto,*">
+                      ColumnDefinitions="Auto,*,Auto,*">
                     <Label Grid.Column="0"
                            Style="{StaticResource SettingCaptionLabel}"
                            Text="Telemetry" />
                     <Switch Grid.Column="1"
                             Style="{StaticResource SettingSwitch}"
                             IsToggled="{Binding TelemetryEnabled}" />
-                </Grid>
-
-                <Grid Style="{StaticResource SettingRowGrid}"
-                      ColumnDefinitions="Auto,*">
-                    <Label Grid.Column="0"
+                    <Label Grid.Column="2"
                            Style="{StaticResource SettingCaptionLabel}"
                            Text="Push" />
-                    <Switch Grid.Column="1"
+                    <Switch Grid.Column="3"
                             Style="{StaticResource SettingSwitch}"
                             IsToggled="{Binding PushEnabled}" />
                 </Grid>
@@ -229,7 +242,7 @@
                 <Grid Style="{StaticResource SectionHeaderGrid}"
                       ColumnDefinitions="Auto,*">
                     <Label Grid.Column="0"
-                           Style="{StaticResource SectionHeaderIcon}"
+                           Style="{StaticResource AiHeaderIcon}"
                            Text="{x:Static fonts:MaterialIcons.Memory}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource BasicSubtitleLabel}"
@@ -301,7 +314,7 @@
                 <Grid Style="{StaticResource SectionHeaderGrid}"
                       ColumnDefinitions="Auto,*">
                     <Label Grid.Column="0"
-                           Style="{StaticResource SectionHeaderIcon}"
+                           Style="{StaticResource SshHeaderIcon}"
                            Text="{x:Static fonts:MaterialIcons.Sync_alt}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource BasicSubtitleLabel}"

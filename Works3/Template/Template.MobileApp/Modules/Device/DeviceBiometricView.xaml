@@ -24,15 +24,26 @@
             <s:MapToTextConverter x:Key="AvailabilityTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Available}"
-                                      Value="✅ 使える" />
+                                      Value="使える" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
-                                      Value="🚫 センサー無し" />
+                                      Value="センサー無し" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
-                                      Value="⚠️ 未登録" />
+                                      Value="未登録" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Unavailable}"
-                                      Value="⏳ 一時的に使えない" />
+                                      Value="一時不可" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="AvailabilityToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.Available}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
+                                               Value="Error" />
+                    <converters:MapToToneEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
+                                               Value="Warning" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <s:MapToTextConverter x:Key="ResultTextConverter"
                                   DefaultValue="—">
@@ -139,15 +150,20 @@
                 <Setter Property="Spacing" Value="2" />
             </Style>
 
+            <Style x:Key="TileChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
+            </Style>
+
             <Style x:Key="HexValueLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicMonoLabel}">
                 <Setter Property="FontSize" Value="12" />
             </Style>
 
-            <Style x:Key="ResultRowGrid"
-                   TargetType="Grid">
-                <Setter Property="ColumnSpacing" Value="8" />
+            <Style x:Key="ResultValueStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="8" />
             </Style>
 
         </ResourceDictionary>
@@ -168,22 +184,25 @@
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Biometric" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding BiometricStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding BiometricStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding BiometricStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="0" Grid.Column="1"
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Weak" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding WeakStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding WeakStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding WeakStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="0" Grid.Column="2"
                                          Style="{StaticResource TileStack}">
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Screen lock" />
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding CredentialStatus, Converter={StaticResource AvailabilityTextConverter}}" />
+                        <controls:StatusChip Style="{StaticResource TileChip}"
+                                             Text="{Binding CredentialStatus, Converter={StaticResource AvailabilityTextConverter}}"
+                                             Tone="{Binding CredentialStatus, Converter={StaticResource AvailabilityToneConverter}}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Row="1" Grid.Column="0"
                                          Style="{StaticResource TileStack}">
@@ -235,26 +254,24 @@
                                 Text="PIN"
                                 ImageSource="{x:Static markup:AppIcons.SmallPassword}" />
                     </Grid>
-                    <Grid Style="{StaticResource ResultRowGrid}"
-                          ColumnDefinitions="*,Auto,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource CardRowLabel}"
+                    <VerticalStackLayout Style="{StaticResource TileStack}">
+                        <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Result" />
-                        <Label Grid.Column="1"
-                               Style="{StaticResource CardRowValueLabel}"
-                               Text="{Binding Result, Converter={StaticResource ResultTextConverter}}">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label"
-                                             Binding="{Binding Result, Converter={StaticResource EmptyConverter}}"
-                                             Value="True">
-                                    <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
-                        <Label Grid.Column="2"
-                               Style="{StaticResource CardRowValueLabel}"
-                               Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
-                    </Grid>
+                        <HorizontalStackLayout Style="{StaticResource ResultValueStack}">
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding Result, Converter={StaticResource ResultTextConverter}}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Result, Converter={StaticResource EmptyConverter}}"
+                                                 Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   Text="{Binding AuthenticationType, Converter={StaticResource AuthenticationTypeTextConverter}}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </controls:InfoCard>
 

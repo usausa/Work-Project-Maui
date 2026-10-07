@@ -66,8 +66,38 @@ public partial class StatusChip
         set => SetValue(TextColorProperty, value);
     }
 
+    // 指定すると ChipColor / IconColor / TextColor をまとめて決める
+    public static readonly BindableProperty ToneProperty = BindableProperty.Create(
+        nameof(Tone),
+        typeof(StatusTone),
+        typeof(StatusChip),
+        StatusTone.Neutral,
+        propertyChanged: OnToneChanged);
+
+    public StatusTone Tone
+    {
+        get => (StatusTone)GetValue(ToneProperty);
+        set => SetValue(ToneProperty, value);
+    }
+
     public StatusChip()
     {
         InitializeComponent();
+    }
+
+    private static void OnToneChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        var chip = (StatusChip)bindable;
+        // 地は Lighten4、文字とアイコンは Darken2 相当(琥珀は Darken3)。Neutral は既定値
+        var (chipColor, iconColor, textColor) = (StatusTone)newValue! switch
+        {
+            StatusTone.Success => (Color.FromArgb("#C8E6C9"), Color.FromArgb("#388E3C"), Color.FromArgb("#388E3C")),
+            StatusTone.Warning => (Color.FromArgb("#FFECB3"), Color.FromArgb("#FF8F00"), Color.FromArgb("#FF8F00")),
+            StatusTone.Error => (Color.FromArgb("#FFCDD2"), Color.FromArgb("#D32F2F"), Color.FromArgb("#D32F2F")),
+            _ => (Color.FromArgb("#F5F5F5"), Color.FromArgb("#546E7A"), Color.FromArgb("#455A64"))
+        };
+        chip.ChipColor = chipColor;
+        chip.IconColor = iconColor;
+        chip.TextColor = textColor;
     }
 }

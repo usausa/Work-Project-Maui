@@ -63,9 +63,10 @@
                        behaviors:WebViewBind.Controller="{Binding Controller}"
                        DefaultFile="index.html" HybridRoot="web-basic" />
 
-        <Border x:Name="StatusBorder"
-                Grid.Row="1"
-                Style="{StaticResource StatusBarBorder}">
+        <Border Grid.Row="1"
+                Style="{StaticResource StatusBarBorder}"
+                behaviors:AnimationOption.HighlightColor="{StaticResource SelectFocusColor}"
+                behaviors:AnimationOption.HighlightTrigger="{Binding Result}">
             <Grid Style="{StaticResource StatusContentGrid}"
                   ColumnDefinitions="Auto,*">
                 <Label Grid.Column="0"

@@ -48,7 +48,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
     public partial bool Loading { get; set; }
 
     [ObservableProperty]
-    public partial bool IsEmpty { get; set; } = true;
+    public partial bool IsEmpty { get; set; }
 
     [ObservableProperty]
     public partial bool Delaying { get; set; }

@@ -82,6 +82,8 @@ Template project for MAUI.
 | Device | Biometric |
 | Device | Passkey (Credential Manager + WebAuthn, pending decision) |
 | Decision | Pending decisions (CoreCLR runtime) |
+| Device | Health Connect (candidate, pending decision) |
+| Sample | AI tool calling (candidate, pending decision) |
 | UI | Brushup (UI 1 / UI 2, View component screens, details of existing screens) |
 
 ## Pending

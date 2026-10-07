@@ -20,8 +20,8 @@
             <Style x:Key="PrintButton"
                    TargetType="Button"
                    BasedOn="{StaticResource BasicFilledButton}">
-                <Setter Property="WidthRequest" Value="200" />
-                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Margin" Value="16,0,16,16" />
+                <Setter Property="HeightRequest" Value="48" />
             </Style>
 
             <Style x:Key="StateChip"
@@ -32,16 +32,53 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
-    <Grid Style="{StaticResource RootGrid}">
+    <Grid Style="{StaticResource RootGrid}"
+          RowDefinitions="*,Auto">
 
-        <Border Style="{StaticResource CardCenterBorder}"
+        <Border Grid.Row="0"
+                Style="{StaticResource CardCenterBorder}"
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
                 <Border Style="{StaticResource BasicIconCircleBorder}"
                         behaviors:AnimationOption.Pulse="{Binding IsBusy}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Connecting">
+                            <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Completed">
+                            <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding State}"
+                                     Value="Failed">
+                            <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
+                        </DataTrigger>
+                    </Border.Triggers>
                     <Label Style="{StaticResource BasicIconCircleLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Bluetooth}" />
+                           Text="{x:Static fonts:MaterialIcons.Bluetooth}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Connecting">
+                                <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Completed">
+                                <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Failed">
+                                <Setter Property="TextColor" Value="{StaticResource RedDarken2}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                 </Border>
 
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
@@ -86,12 +123,13 @@
                        behaviors:AnimationOption.FadeInTrigger="{Binding Detail}"
                        Text="{Binding Detail}" />
 
-                <Button Style="{StaticResource PrintButton}"
-                        Command="{Binding PrintCommand}"
-                        Text="Print" />
-
             </VerticalStackLayout>
         </Border>
+
+        <Button Grid.Row="1"
+                Style="{StaticResource PrintButton}"
+                Command="{Binding PrintCommand}"
+                Text="Print" />
 
     </Grid>
 

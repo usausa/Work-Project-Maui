@@ -194,47 +194,15 @@ public sealed class TimerDial : SKCanvasView
         canvas.DrawCircle(center, radius, paint);
     }
 
-    // グラデーションの円弧と、ぼかした同じ円弧の光。先端に光るつまみ
+    // グラデーションの円弧と、ぼかした同じ円弧の光(GlowRing と共通)。先端に光るつまみ
     private void DrawArc(SKCanvas canvas, SKPoint center, float radius, float stroke, float density)
     {
         var progress = (float)Math.Clamp(Progress, 0d, 1d);
         if (progress > 0f)
         {
-            var sweep = 360f * progress;
-            var rect = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
+            GlowRing.DrawGlowArc(canvas, center, radius, stroke, 9 * density, progress, ArcStartColor.ToSKColor(), ArcEndColor.ToSKColor());
 
-            // SKShader.CreateSweepGradient は 3 時の方向が 0° なので、12 時から始まるように -90° 回す
-            using var baseShader = SKShader.CreateSweepGradient(
-                center,
-                [ArcStartColor.ToSKColor(), ArcEndColor.ToSKColor()],
-                [0f, progress],
-                SKShaderTileMode.Clamp,
-                0f,
-                360f);
-            using var shader = baseShader.WithLocalMatrix(SKMatrix.CreateRotationDegrees(-90f, center.X, center.Y));
-            using var builder = new SKPathBuilder();
-            builder.AddArc(rect, -90f, sweep);
-            using var path = builder.Detach();
-
-            using var glow = new SKPaint();
-            glow.IsAntialias = true;
-            glow.Style = SKPaintStyle.Stroke;
-            glow.StrokeWidth = stroke * 1.8f;
-            glow.StrokeCap = SKStrokeCap.Round;
-            glow.Shader = shader;
-            glow.Color = SKColors.White.WithAlpha(140);
-            glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 9 * density);
-            canvas.DrawPath(path, glow);
-
-            using var paint = new SKPaint();
-            paint.IsAntialias = true;
-            paint.Style = SKPaintStyle.Stroke;
-            paint.StrokeWidth = stroke;
-            paint.StrokeCap = SKStrokeCap.Round;
-            paint.Shader = shader;
-            canvas.DrawPath(path, paint);
-
-            var end = (sweep - 90f) * MathF.PI / 180f;
+            var end = ((360f * progress) - 90f) * MathF.PI / 180f;
             var knob = new SKPoint(center.X + (MathF.Cos(end) * radius), center.Y + (MathF.Sin(end) * radius));
             using var knobGlow = new SKPaint();
             knobGlow.IsAntialias = true;

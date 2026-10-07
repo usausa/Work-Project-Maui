@@ -105,19 +105,22 @@
                           RowDefinitions="Auto,Auto"
                           ColumnDefinitions="*,*">
                         <Button Grid.Row="0" Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding AddLineCommand}"
-                                Text="Add line" />
+                                Text="Add line"
+                                ImageSource="{x:Static markup:AppIcons.SmallHorizontalRule}" />
                         <Button Grid.Row="0" Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding AddCircleCommand}"
-                                Text="Add circle" />
+                                Text="Add circle"
+                                ImageSource="{x:Static markup:AppIcons.SmallRadioButtonUnchecked}" />
                         <Button Grid.Row="1" Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding AddRectCommand}"
-                                Text="Add rect" />
+                                Text="Add rect"
+                                ImageSource="{x:Static markup:AppIcons.SmallCropSquare}" />
                         <Button Grid.Row="1" Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ClearCommand}"
                                 Text="Clear"
                                 ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}" />
@@ -146,17 +149,20 @@
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding UndoSketchCommand}"
-                                Text="Undo" />
+                                Text="Undo"
+                                ImageSource="{x:Static markup:AppIcons.SmallUndo}" />
                         <Button Grid.Column="1"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ClearSketchCommand}"
-                                Text="Clear" />
+                                Text="Clear"
+                                ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}" />
                         <Button Grid.Column="2"
-                                Style="{StaticResource BasicOutlinedButton}"
+                                Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ExportSketchCommand}"
-                                Text="PNG出力" />
+                                Text="PNG出力"
+                                ImageSource="{x:Static markup:AppIcons.SmallImage}" />
                     </Grid>
 
                     <Border Style="{StaticResource SmallCanvasBorder}"

@@ -21,6 +21,8 @@ internal static class AppHostBuilderExtensions
 
         CarouselOption.UseCustomMapper(options);
 
+        PdfOption.UseCustomMapper(options);
+
         return builder;
     }
 }

@@ -58,6 +58,30 @@ public static class Focus
 
     public static void SetFocusedThickness(BindableObject bindable, double value) => bindable.SetValue(FocusedThicknessProperty, value);
 
+    // ------------------------------------------------------------------ ErrorStroke / HasError (エラーの枠)
+
+    // HasError の間は、フォーカス中も枠を ErrorStroke にする(FocusedStroke と併せて使う)
+    public static readonly BindableProperty ErrorStrokeProperty = BindableProperty.CreateAttached(
+        "ErrorStroke",
+        typeof(Color),
+        typeof(Focus),
+        null);
+
+    public static Color? GetErrorStroke(BindableObject bindable) => (Color?)bindable.GetValue(ErrorStrokeProperty);
+
+    public static void SetErrorStroke(BindableObject bindable, Color? value) => bindable.SetValue(ErrorStrokeProperty, value);
+
+    public static readonly BindableProperty HasErrorProperty = BindableProperty.CreateAttached(
+        "HasError",
+        typeof(bool),
+        typeof(Focus),
+        false,
+        propertyChanged: OnHasErrorChanged);
+
+    public static bool GetHasError(BindableObject bindable) => (bool)bindable.GetValue(HasErrorProperty);
+
+    public static void SetHasError(BindableObject bindable, bool value) => bindable.SetValue(HasErrorProperty, value);
+
     private static void OnFocusedStrokeChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
         if (bindable is not VisualElement element)
@@ -76,6 +100,14 @@ public static class Focus
         else if (behavior is not null)
         {
             element.Behaviors.Remove(behavior);
+        }
+    }
+
+    private static void OnHasErrorChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is VisualElement element)
+        {
+            element.Behaviors.OfType<FocusBorderBehavior>().FirstOrDefault()?.Refresh();
         }
     }
 
@@ -117,6 +149,14 @@ public static class Focus
             base.OnDetachingFrom(bindable);
         }
 
+        public void Refresh()
+        {
+            if (AssociatedObject is { } element)
+            {
+                AnimateBorder(element.IsFocused);
+            }
+        }
+
         private void OnFocused(object? sender, FocusEventArgs e) => AnimateBorder(focused: true);
 
         private void OnUnfocused(object? sender, FocusEventArgs e) => AnimateBorder(focused: false);
@@ -137,11 +177,12 @@ public static class Focus
             }
 
             var focusedStroke = GetFocusedStroke(element) ?? Colors.Blue;
+            var errorStroke = GetHasError(element) ? GetErrorStroke(element) : null;
             var focusedThickness = GetFocusedThickness(element);
             var changeThickness = !Double.IsNaN(focusedThickness);
 
             var fromColor = (border.Stroke as SolidColorBrush)?.Color ?? normalStroke;
-            var toColor = focused ? focusedStroke : normalStroke;
+            var toColor = errorStroke ?? (focused ? focusedStroke : normalStroke);
             var fromThickness = border.StrokeThickness;
             var toThickness = focused && changeThickness ? focusedThickness : normalThickness;
 

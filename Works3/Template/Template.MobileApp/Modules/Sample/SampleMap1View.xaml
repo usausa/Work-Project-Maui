@@ -66,20 +66,56 @@
         <VerticalStackLayout Style="{StaticResource MapFabStack}">
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapLayers}"
-                         Command="{Binding ToggleMapTypeCommand}" />
+                         Command="{Binding ToggleMapTypeCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding CurrentMapType}"
+                                 Value="{x:Static maps:MapType.Hybrid}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
+                        <Setter Property="Source" Value="{x:Static markup:AppIcons.MapLayersWhite}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapHome}"
                          Command="{Binding HomeCommand}" />
             <!-- MapElements: 経路 / 範囲 / 半径円 -->
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapRoute}"
-                         Command="{Binding ToggleRouteCommand}" />
+                         Command="{Binding ToggleRouteCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding RouteVisible}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                        <Setter Property="Source" Value="{x:Static markup:AppIcons.MapRouteWhite}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapPentagon}"
-                         Command="{Binding ToggleAreaCommand}" />
+                         Command="{Binding ToggleAreaCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding AreaVisible}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                        <Setter Property="Source" Value="{x:Static markup:AppIcons.MapPentagonWhite}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
             <ImageButton Style="{StaticResource MapFabButton}"
                          Source="{x:Static markup:AppIcons.MapCircle}"
-                         Command="{Binding ToggleCircleCommand}" />
+                         Command="{Binding ToggleCircleCommand}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton"
+                                 Binding="{Binding CircleVisible}"
+                                 Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                        <Setter Property="Source" Value="{x:Static markup:AppIcons.MapCircleWhite}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
         </VerticalStackLayout>
 
     </Grid>

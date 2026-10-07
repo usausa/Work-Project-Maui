@@ -24,6 +24,18 @@
                 <Setter Property="WidthRequest" Value="40" />
             </Style>
 
+            <Style x:Key="SummaryGrid"
+                   TargetType="Grid"
+                   BasedOn="{StaticResource CardInfoGrid}">
+                <Setter Property="ColumnSpacing" Value="16" />
+            </Style>
+
+            <Style x:Key="SummaryValueLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BasicBodyLabel}">
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
             <Style x:Key="RowButton"
                    TargetType="Button">
                 <Setter Property="Padding" Value="12,0" />
@@ -219,22 +231,52 @@
                                behaviors:AnimationOption.EnterDelay="240"
                                Title="Summary"
                                Icon="{x:Static fonts:MaterialIcons.Fact_check}">
-                <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding UserName, StringFormat='ユーザー: {0}'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding CacheSize, StringFormat='キャッシュ: {0:F0} GB'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding Volume, StringFormat='音量: {0:F0}'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding BackupDate, StringFormat='バックアップ: {0:yyyy/MM/dd}', TargetNullValue='バックアップ: 未設定'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding BackupTime, StringFormat='時刻: {0:hh\\:mm}', TargetNullValue='時刻: 未設定'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding Quality, StringFormat='画質: {0}'}" />
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding Language, StringFormat='言語: {0}'}" />
-                </VerticalStackLayout>
+                <Grid Style="{StaticResource SummaryGrid}"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="Auto,*">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="ユーザー" />
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding UserName}" />
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="キャッシュ" />
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding CacheSize, StringFormat='{0:F0} GB'}" />
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="音量" />
+                    <Label Grid.Row="2" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding Volume, StringFormat='{0:F0}'}" />
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="バックアップ" />
+                    <Label Grid.Row="3" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding BackupDate, StringFormat='{0:yyyy/MM/dd}', TargetNullValue='未設定'}" />
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="時刻" />
+                    <Label Grid.Row="4" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding BackupTime, StringFormat='{0:hh\\:mm}', TargetNullValue='未設定'}" />
+                    <Label Grid.Row="5" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="画質" />
+                    <Label Grid.Row="5" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding Quality}" />
+                    <Label Grid.Row="6" Grid.Column="0"
+                           Style="{StaticResource BasicBodyLabel}"
+                           Text="言語" />
+                    <Label Grid.Row="6" Grid.Column="1"
+                           Style="{StaticResource SummaryValueLabel}"
+                           Text="{Binding Language}" />
+                </Grid>
             </controls:InfoCard>
 
         </VerticalStackLayout>

@@ -2939,6 +2939,12 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Graphics/Scene/SceneObject.cs` / `EnergyFlowScene.cs` | 変わらない部分を端末の解像度の画像に一度描いて写す `DrawStaticImage` を基底に移し、Energy・Flight・Tactical で使う |
 | `Graphics/Scene/TelemetryScene.cs` | 10-28: 下の 6 項目を横長の枠にし(高さは画面の高さの 12%、72〜90)、空いた高さを回転計とブースト(半径 70)とギアの行に回した(`DashLayout`)。ギアの枠は幅 112・高さ 150 で ERS と G-FORCE(半径 44)より大きく、角のラインは付けない。表示項目は変えない |
 | `Document/UI_Flight.png` / `UI_Tactical.png` / `UI_Telemetry.png` | 10-26〜10-28: 撮り直し |
+| `Controls/GlowRing.cs`(新規)/ `Controls/TimerDial.cs` | 10-29 ④: 光るグラデーションの輪(`Progress`・始まりと終わりの色・溝の色・太さ)。光る弧の描き方(`DrawGlowArc`)を Timer の文字盤と共有する |
+| `Models/Sample/HabitTracker.cs`(新規)/ `Modules/UI/UIHabitView.xaml` + `.xaml.cs` / `UIHabitViewModel.cs`(新規) | 10-29: 習慣の記録の画面。暗い地の全面の画面(ヘッダーと F キーの帯を隠し、上の帯は #121212)。日付と題、今日の達成率のカード(完了の数・光る輪・週の 7 日の点)、習慣のカード 4 枚(分類の色の輪と割合・分類のチップ・名前・目標・連続日数)。カードのタップで 1 回分進み、100% で ✓ と弾み、連続日数が 1 増えて琥珀と 🔥 になる。今日の全部が終わると週の今日の点を塗る。文字は日本語、見本のデータはメモリーの中だけ |
+| `Models/Sample/SmartHome.cs`(新規)/ `Modules/UI/UIHomeView.xaml` + `.xaml.cs` / `UIHomeViewModel.cs`(新規) | 10-30: スマートホームの画面。全面の画面(上の帯は #101418)。部屋ごとの写真をぼかして暗く敷き、半透明のカードを重ねる。見出し(部屋の名前・接続・室温・シーン)、空調(ダイヤルのドラッグと −/+ で 0.5 度刻み、16〜30°C。運転を切ると灰色)、機器のタイル 3 × 2(タップでオン・オフ。照明とランプは明るさのスライダーで、消すと 0%・点けると消す前の明るさ。状態の点)、電池の行(60% 以上 緑・30% 以上 琥珀・それ未満 赤)、下のタブで部屋(リビング・寝室・キッチン)を切り替え。文字は日本語、見本のデータはメモリーの中だけ |
+| `Controls/HomeControls.cs` / `HomeControls.android.cs` / `HomeControls.ios.cs`(新規) | 10-30: Home だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。`HomeBlurredImage`(写真を 4 分の 1 の大きさでぼかして暗くした画像を 1 回だけ作って写す。写真は MauiImage の名前で、Android は drawable から読む)、`HomeThermostatDial`(下の開いた 270° の弧・光るグラデーション・つまみ・輪のドラッグ)、`HomeGlowIcon`(MaterialIcons の文字を光らせる)、`HomeBatteryGauge`(横向きの電池)。基底の `HomeControl` に再描画と密度 |
+| `Converters/HomeDeviceTextConverter.cs` / `HomeBatteryLevelConverter.cs`(新規) | 10-30: 機器の種類と状態からアイコン・状態の言葉・下の行の文(開度・安全・風量・冷房の温度)、電池の残量の言葉(十分・良好・普通・少ない)と色 |
+| `Modules/UI/UIMenu2View.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-29 / 10-30: UI 2 のメニューの 8 段に Habit(炎のアイコン `LocalFireDepartment`)と Home(家のアイコン `Home`)。`ViewId` の UI の節の最後に `UIHabit` / `UIHome` |
 
 - 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
 - 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
@@ -2949,6 +2955,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: メインメニューに Control が無く View が 2 列分、View のメニューの 18 項目を順に開いて戻るキーで View のメニューへ戻る(移した 6 画面の中身は元のまま)
 - 実機: Energy の電力と熱の切り替え、節点のタップで按分の強調と選び直し、設備のタイルのタップ(ボイラーで熱へ切り替えて節点を選ぶ)、ピークカットで蓄電池が放電、時計を一時的にずらした夜の表示(太陽光 0・CGS 停止・夜間充電)。描画は 1 フレーム平均 14 ms(Pixel 9a、Debug。同じ条件で Telemetry は 23 ms)。熱の表示を続けて 8 回撮り、図の大きさが変わらないこと
 - 実機: Flight(空と地面の姿勢の表示、レーダーの目標の線、兵装の機体の図)、Tactical(地形図、脅威の一覧、機体の損傷の図、SIG の棒)、Telemetry(横長の 6 項目、大きくなった回転計・ブースト・ギア)。描画は 1 フレーム平均で Flight 13〜14 ms、Tactical 12〜13 ms(Pixel 9a、Debug)
+- 実機: Habit のカードのタップで割合と輪が伸び、100% で ✓ と弾んで連続日数が琥珀と 🔥 になること、今日の達成率の輪も伸びることを確かめた
+- 実機: Home の −/+(22.5 → 23.5°C)、照明を消す(0%・灰色)・ランプを点ける(100%)・鍵を開ける(解錠・要確認・灰色)、ダイヤルを右へドラッグ(27.5°C)、運転を切る(弧が灰色で停止)、寝室・キッチンへの切り替え(背景の写真・機器・電池・空調が入れ替わり、18% の電池は赤の少ない)を撮って確かめた
 - ビルド 0 警告、inspectcode 0 件(`UIItemView.xaml` の Syncfusion のテーマの色の 2 つのキーは、ライブラリが名前で読むため `Xaml.RedundantResource` になる。その 2 行だけ抑止)
 
 ### ✨既存の画面の細部の見直し(2026-10-04)
@@ -2985,8 +2993,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Basic/BasicTypographyView.xaml` | 11-6 ①: 色の帯の見本 18 個に左右 8 の内側の余白(画面ローカルのスタイル `BandLabel` を StyleClass と併せて付ける) |
 | `Modules/Basic/BasicLocaleView.xaml` | 11-10 ①: Current culture を、下のカードと同じ `ResourceTagLabel` + `CardPrimaryValueLabel`(列 72)の形に |
 | `Modules/Basic/BasicDialogView.xaml` | 11-11 ②: Information のボタンを全幅に |
-| `Modules/Basic/BasicSettingView.xaml` | 11-13 ③: 開く / クリア(`RowButton`)の文字を 12 → 14 に(高さ 32・角 16 はそのまま) |
-| `Modules/Device/DeviceLocationView.xaml` | 11-20 ①: 時刻の文字を縦の中央に(画面ローカルのスタイル `TimestampLabel`) |
+| `Modules/Basic/BasicSettingView.xaml` | 11-13 ③④: 開く / クリア(`RowButton`)の文字を 12 → 14 に(高さ 32・角 16 はそのまま)。Summary を名前と値の 2 列にし、値を太字に(画面ローカルのスタイル `SummaryGrid` / `SummaryValueLabel`) |
+| `Modules/Device/DeviceLocationView.xaml` | 11-20 ①②: 時刻の文字を縦の中央に(画面ローカルのスタイル `TimestampLabel`)。緯度・経度を 2 列に(画面ローカルのスタイル `CoordGrid`) |
 | `Modules/Device/DeviceQrDisplayView.xaml` | 11-21 ②③: QR の内側の枠線を消して白い余白だけに、QR の下の文字を 1 行の省略に |
 | `Modules/Device/DeviceWiFiView.xaml` | 11-25 ①: 情報の行の文字 13 → 14、接続中の電波のアイコン 56 → 48 |
 | `Modules/Device/DeviceBleHostView.xaml` | 11-28 ①: UserId を `BasicMonoLabel` の 14 のままにして 1 行に(18 の指定を削除) |
@@ -2994,8 +3002,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Resources/Styles/Styles.xaml` | 11-32 ②: `BasicIconOutlinedButton` の押せないときを、ボタン全体の Opacity 0.4 に(アイコンも薄くなる。Biometric・Diagnostics・Misc・Telemetry) |
 | `Controls/StatControl.cs` / `Modules/Network/NetworkRealtimeView.xaml` | 11-38 ①: 値の書式 `ValueFormat`(既定 F1)を足し、Connections は F0 で整数に |
 | `Modules/View/ViewLayoutView.xaml` | 11-42 ②: UniformItemsLayout を左右に 3 広げ(画面ローカルのスタイル `UniformItems`)、セルの端を DockLayout とそろえた |
-| `Modules/View/ViewStateView.xaml` | 11-43 ②③: 状態の表示を高さ 180 の枠の上下中央に置き、アイコンを共有の丸い地(`BasicEmptyIconBorder` / `BasicSuccessIconBorder`、Error は画面ローカルの赤 `StateErrorIconBorder`)に。状態の切り替えの 4 つと読み込みのボタンを `BasicOutlinedButton` に(画面ローカルの `StateButton` と使わなくなったアイコンのスタイルは削除) |
-| `Modules/View/ViewBottomSheetView.xaml` | 11-48 ②: シートの行の文字 15 → 16、各行の下に `SheetSeparator` の線(Sf と自作の両方) |
+| `Modules/View/ViewStateView.xaml` | 11-43 ①②③: 状態の表示を高さ 180 の枠の上下中央に置き、アイコンを共有の丸い地(`BasicEmptyIconBorder` / `BasicSuccessIconBorder`、Error は画面ローカルの赤 `StateErrorIconBorder`)に。状態の切り替えの 4 つと読み込みのボタンを `BasicOutlinedButton` に(画面ローカルの `StateButton` と使わなくなったアイコンのスタイルは削除)。状態の切り替えの 4 つのボタンは、今の状態のものを塗る(Loading = 青・Empty = 灰・Error = 赤・Success = 緑、文字は白) |
+| `Modules/View/ViewBottomSheetView.xaml` | 11-48 ①②: シートの行の文字 15 → 16、各行の下に `SheetSeparator` の線、行のアイコンを操作ごとに(共有 = Share・リンクをコピー = Link・お気に入りに追加 = 琥珀の Star・レポート = 赤の Flag。`MapToTextConverter` / `MapToColorConverter`)。Sf と自作の両方 |
 | `Modules/View/ViewEffectView.xaml` | 11-52 ①②: Replay を見出しの行の上下中央に置き(`SectionHeaderGrid` / `SectionHeaderLabel`、高さは元の 36)、カードとの間を 8 空けた。バッジを増減するボタンの「-」「+」を MaterialIcons の Remove / Add(24)に。ベルのバッジのはみ出す分をカードの中の行に入れた(11-71、画面ローカルのスタイル `BadgeCard` / `BadgeRowGrid`) |
 | `Modules/View/ViewLottieView.xaml` | 11-54 ②③: スクロール連動の帯の文字を左寄せ(余白 16)にして最初から読めるように、時刻の行に左右 15 の余白を付けてスライダーの溝の端とそろえた。長押しのボタンを高さ 44(角 22)に。表示欄の入場の動き(FadeUp)を外した |
 | `Modules/Sample/SampleWebBasicView.xaml` | 11-59 ④: 状態の帯の文字 18 → 14 |
@@ -3011,16 +3019,78 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Network/NetworkRealtimeView.xaml` | 11-38 ③: 通知が無いときの文を、いつもローカル通知に出す今の動きに合わせた |
 | `Modules/Network/NetworkSftpView.xaml` | 11-40 ①: 「サーバ」を「サーバー」に |
 | `Modules/View/ViewToolkitView.xaml` | 11-46 ①②③: SfSegmentedControl の選択を `BlueDefault`(画面ローカルのスタイル `SegmentedControl`)、SfOtpInput を中央に、Expander の見出しを「タップして展開」と開閉で向きが変わる矢印(`ExpandGlyphConverter`)に |
-| `Modules/View/ViewDrawerView.xaml` | 11-49 ①: SfSegmentedControl の選択を `BlueDefault` に(画面ローカルのスタイル `SegmentedControl`) |
+| `Modules/View/ViewDrawerView.xaml` / `ViewDrawerViewModel.cs` | 11-49 ①②: SfSegmentedControl の選択を `BlueDefault` に(画面ローカルのスタイル `SegmentedControl`)。ドロワーで選んでいる行を淡い青の地(`BlueLighten5`)と青のアイコン・文字で示し(`DrawerMenuItem` を変更の通知を持つクラスにして `IsSelected`)、文字を 15 → 16 に |
 | `Modules/View/ViewGraphicsViewModel.cs` | 11-55 ①: 最初の図形の色をリソースの `BlueDefault` / `RedDefault` に(コンストラクターで `ResourceDictionary` を受ける) |
 | `Modules/View/ViewDrawingView.xaml` | 11-56 ②: プレビューの案内の文字を `BasicCenterHintLabel` と同じ濃さに |
 | `Modules/View/ViewChartView.xaml` | 11-57 ②: 地を `RootGrid` の灰色にし、グラフを白い枠(画面ローカルのスタイル `ChartFrameBorder`)に入れた |
 | `Modules/View/ViewSfChartView.xaml` | 11-58 ③: 縦棒の縦の格子線を消し(`ShowMajorGridLines`)、棒の上の角を 4 で丸めた(`CornerRadius`) |
-| `Modules/Sample/SamplePdfView.xaml` | 11-64 ①: F3 / F4 を Prev / Next に |
+| `Modules/Sample/SamplePdfView.xaml` | 11-64 ①②: F3 / F4 を Prev / Next に。スライダーとページ数を 1 行にまとめ(右に `BasicMonoLabel` の「1 / 6」、画面ローカルのスタイル `PageBarGrid` / `PageNumberLabel`)、溝の色を `GrayLighten2` → `GrayLighten1` に |
 | `Behaviors/Focus.cs` / `Resources/Styles/Styles.xaml` / `Modules/Basic/BasicBehaviorView.xaml` / `Modules/UI/UIShopView.xaml` | 11-68: `FocusedThickness` の既定を NaN(太さを変えない)にし、指定しない所はフォーカス枠の色だけを変える(共有の `BasicFieldEntry` / `CardFieldPicker`、UI 1 Shop、Basic Behavior の太さの指定は削除)。指定した所は、太くした分だけ Border の Margin を外へ広げ、周りの位置と大きさを変えない。色の変化は `Handler.UpdateValue` で枠に反映する |
 | `Modules/UI/UILoginView.xaml` / `UIChatView.xaml` / `Modules/View/ViewEffectView.xaml` | 11-68: フォーカス枠の太さを指定(Login 2.5・Chat 2、Effect の見本は 2.5 の画面ローカルのスタイル `BlueFocusEntry` / `GreenFocusEntry`) |
 | `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` | 11-68: スクロールをやめ、入力のカードを段の表示の下の空きの上下中央に置いた(画面ローカルのスタイル `WizardRootGrid` / `WizardCard`)。入力欄はフォーカス枠の太さ 2.5(`FocusFieldEntry`) |
 | `Graphics/Drawing/DrawingControl.cs` / `DrawingControl.android.cs` | 11-69: `IInteractiveDrawing` を描いている間は、親のスクロールが指を取らないように(Android の `RequestDisallowInterceptTouchEvent`)。Graphics の Sketch で縦の線が描ける |
+| `Modules/Network/NetworkTelemetryView.xaml` / `Markup/AppIcons.cs` | 11-41 ①: Warning のアイコンを琥珀、Error・Crash を赤に(`AppIcons.TelemetryWarning` / `TelemetryError` / `TelemetryCrash`)。Crash は文字も赤(画面ローカルのスタイル `CrashButton`)。使わなくなった `SmallWarning` / `SmallError` / `SmallBugReport` を削除 |
+| `Controls/ColorPicker.cs` | 11-47 ②: R / G / B / A のスライダーを赤・緑・青・灰に色分けし、16 進の値を等幅の灰色のチップに |
+| `Modules/Sample/SampleMediaViewModel.cs` | 11-62 ①: 開いた直後も操作のバーを出して 3 秒で隠す(`OnNavigatedToAsync`) |
+| `Modules/Main/SettingView.xaml` | 11-5 ①: Telemetry と Push のスイッチを 1 行に左右で並べた(文字の行の高さは今のまま) |
+| `Modules/Basic/BasicStyleView.xaml` / `Resources/Styles/Styles.xaml` | 11-7 ②: 選択の 3 つを 1 つの角丸 8 の枠でくるみ、間に 1px の区切り線、文字 14 の `BlueGrayDarken2`・高さ 36 に(画面ローカルのスタイル `SelectGroupBorder` / `SelectDivider` / `GroupSelectButton`)。使わなくなった共有の `LeftSelectButton` / `CenterSelectButton` / `RightSelectButton` を削除 |
+| `Modules/Basic/BasicLocaleView.xaml` | 11-10 ②: Localized resources のキーの塊の下に `CardDivider` の線(x:Static の塊の前にあった線は、この形に含めた) |
+| `Behaviors/Focus.cs` | 11-12 ②: 添付プロパティ `ErrorStroke` / `HasError` を追加。`HasError` の間は、フォーカス中も親の Border の枠を `ErrorStroke` にする |
+| `Modules/Basic/BasicValidationView.xaml` | 11-12 ①②: 欄名を Text1 / Text2 / Password / Confirm / Email / Quantity にし、説明を欄の下に 12 の注記(`BasicCaptionLabel`)で置いた。Text1・Text2・Confirm はエラーの間は枠を赤に(画面ローカルのスタイル `ValidationEntry`)。Toolkit の検証が差し替える `InvalidEntry` / `ValidEntry` を `BasicFieldEntry` から派生させ、Email / Quantity の欄に Android の下線が出ないように |
+| `Modules/Device/DeviceQrDisplayView.xaml` | 11-21 ①: スクロールをやめ、QR(240 → 280)のカードを空きの上下中央に、入力欄を画面の下のカードに |
+| `Modules/Device/DeviceBleScanView.xaml` | 11-27 ①: 温度・湿度・CO2・時刻の 7 セグの数字の後ろに、消えたセグメント(88.8 / 88 / 8888 / 88:88:88)を黒の 5% で重ねた(画面ローカルの `LcdUnlitColor` / `BleScanUnlitLabel` / `TimestampUnlitLabel`)。値の弾む動きは数字と消えたセグメントの両方に |
+| `Converters/VolumeIconConverter.cs`(新規)/ `Modules/Device/DeviceAudioView.xaml` | 11-30 ③: 音量のアイコンを 0% で `Volume_off`、50% 未満で `Volume_down`、50% 以上で `Volume_up` に(境目は表示の % と同じく四捨五入した値) |
+| `Modules/View/ViewLayoutView.xaml` / `ViewLayoutViewModel.cs` | 11-42 ①: UniformItems の A〜H・弧・扇・軌道の点を Staggered と同じ順の淡い色(Lighten4)に。曜日は月〜金を `GrayLighten3`、土を `BlueLighten4` の地に `BlueDefault` の文字、日を `RedLighten4` の地に `RedDefault` の文字に。Honeycomb の Calm・Tired・Focus も淡い色に(#B2DFDB / #BBDEFB / #FFF9C4) |
+| `Modules/View/ViewBottomSheetView.xaml` / `ViewBottomSheetViewModel.cs` | 11-48 ③: 結果のカードを、淡い色の丸い地(40)に操作のアイコン(24)と名前(18 の太字)の行に。VM は選んだ操作の名前(`Selected`)だけを持ち、選ぶ前の文は XAML に |
+| `Modules/View/ViewDrawerView.xaml` / `ViewDrawerViewModel.cs` | 11-49 ③: 選択中のカードを、`BlueLighten4` の丸い地(40)に項目のアイコン(24)と名前(18 の太字)の行に。VM は選んだ項目(`SelectedItem`)を持つ |
+| `Controls/EasingCurveView.cs` / `Modules/View/ViewEasingView.xaml` | 11-51 ②: 曲線を Linear = `BlueGrayDefault`・Sin = `BlueDefault`・Cubic = `GreenDefault`・Bounce = `OrangeDefault`・Spring = `PurpleDefault` に(画面ローカルのスタイル `LinearCurve` など)。出力 0 と 1 の高さに淡い灰(#E0E0E0)の 1px の点線 |
+| `Modules/View/ViewLottieView.xaml` / `ViewLottieViewModel.cs` | 11-54 ①: 表示欄の地を `BlueLighten5` → `PurpleLighten5` の斜めのグラデーションに。開いたら繰り返し再生する(`OnNavigatedToAsync` で再生、`RepeatCount="-1"`)。繰り返しの `SKLottieView` は止めたまま最後の位置にすると固まるので、シーク(スライダー・帯・長押し)は最後の 1 tick 手前までにした(`Seek`) |
+| `Modules/View/ViewChartView.xaml` / `Markup/AppIcons.cs` | 11-57 ③: 切り替えのチップに種類のアイコン(18、選んだチップは白の版。`AppIcons.ChartLine` など 14 個)を付け、2 段目を中央に(8 列で 2 列ずつ) |
+| `Modules/View/ViewSfChartView.xaml` | 11-58 ①②: ドーナツの色を青・緑・琥珀・赤・紫(`PaletteBrushes`)に、凡例を下に、値のラベルを全部線付きの外側に |
+| `Modules/Sample/SampleMap1View.xaml` / `Markup/AppIcons.cs` | 11-60 ①: 経路・範囲・円・地図の種類のボタンを、表示中は色の地(青・緑・赤、地図の種類は Hybrid のとき `GrayDarken3`)に白のアイコンに(`AppIcons.MapRouteWhite` など 4 個) |
+| `Messaging/MediaController.cs` / `Modules/Sample/SampleMediaView.xaml` / `SampleMediaViewModel.cs` | 11-62 ②: 読み込みに失敗したら(`MediaElementState.Failed`)、黒地の中央に白の `Error_outline`(48)と「再生できません」(16) |
+| `Behaviors/PdfOption.cs` / `PdfOption.android.cs` / `PdfOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` / `Modules/Sample/SamplePdfViewModel.cs` | 11-64: Maui.PDFView は上から見て最初に全部見えているページを今のページにするため、最後の 2 ページが 1 画面に収まると、最後まで送っても「5 / 6」になる。PDF の表示の一覧(RecyclerView)にリスナーを足し、指で送ってこれ以上送れなくなったら最後のページにする(RecyclerView は後から加えたリスナーを先に呼ぶので `Post` で後に回す。ページの指定での移動は dx / dy が 0 なので対象外)。ページ数の表示と Prev / Next の有効・無効は、スライダーと同じ `PageIndex` から決める |
+| `Behaviors/Scroll.android.cs` / `Platforms/Android/MainActivity.cs` / `Platforms/Android/Resources/values/styles.xml`(新規) | 11-72: テーマ(`android:overScrollMode` = never の `NoOverScrollTheme`)を `base.OnCreate` の前に当て(`Scroll.ApplyTheme`)、全部のビューのオーバースクロールの既定を無しにした。マッパーの届かない横の ScrollView の中のビューや、PDF・WebView などのライブラリのビューにも効く。`BehaviorOptions.DisableOverScroll` が false なら当てない |
+| `Controls/EasingCurveView.cs` / `Animations/EasingDemoAnimation.cs` / `Modules/View/ViewEasingView.xaml` | 11-51 ①: 丸を曲線に沿って動かす。`EasingCurveView` に `Progress`(0〜1)を足し、その時間の位置(縦は Easing の値)に曲線の色の丸(半径 8)を描く。曲線は丸が切れないよう左右を 8 だけ内側に描く。`EasingDemoAnimation` は曲線のビューの `Progress` を 0 から 1 へ一定の速さで動かす(`Animate`)。丸の `BoxView` と地の `Grid` は削除し、地の色は曲線のスタイルの `EasingCurve` に |
+| `Markup/AppIcons.cs` | 11-3 ①・11-11 ①・11-50 ③・11-55 ② のアイコンを足した。Small(18・`BlueGrayDarken1`)に 21 個(Add / Autorenew / CallToAction / Checklist / CropSquare / DataUsage / Dialpad / Downloading / Edit / HelpOutline / HorizontalRule / Image / Info / Lock / ManageSearch / Message / PlaylistAdd / RadioButtonUnchecked / Rule / Search / Undo)、画面固有に `AnimationFade` / `AnimationRotate` / `AnimationScale` / `AnimationShake`(18・白)と `DataDelete` / `DataDeleteSweep`(18・赤) |
+| `Modules/Data/DataView.xaml` | 11-3 ①: 7 つのボタンを `BasicIconOutlinedButton` にしてアイコンを付けた。Delete / DeleteAll は画面ローカルの `DeleteButton`(赤の文字。Diagnostics と同じ形)と赤のアイコン |
+| `Modules/Basic/BasicDialogView.xaml` | 11-11 ①: 11 個のボタンを `BasicIconOutlinedButton` にしてアイコンを付けた |
+| `Modules/View/ViewAnimationView.xaml` | 11-50 ③: 画面ローカルの `AnimationButton` を `BasicFilledButton` の派生(アイコンの左 8、`ButtonOption.PressEffect` = false)にし、4 つのボタンに白のアイコンを付けた(高さ 48 → 44、太字をやめた) |
+| `Modules/View/ViewGraphicsView.xaml` | 11-55 ②: 7 つのボタンを `BasicIconOutlinedButton` にそろえてアイコンを付けた(前は Clear の 1 つだけ `BasicOutlinedButton` にアイコン) |
+| `Controls/StatusChip.xaml.cs` / `Controls/StatusTone.cs`(新規)/ `Converters/MapToToneConverter.cs`(新規) | I(状態の見せ方): `StatusChip` に `Tone`(Neutral / Success / Warning / Error)を足し、指定すると地・アイコン・文字の色をまとめて決める(Lighten4 の地に Darken2 の文字、琥珀は Darken3、Neutral は今の既定値)。状態の値から Tone へは `MapToToneConverter`(Smart.Maui の `MapToObjectConverter` の派生。一致しない値は Neutral) |
+| `Resources/Styles/Styles.xaml` | I(名前と値の行・エラーの文): Card の区画に `CardNameValueGrid` / `CardNameLabel`(14・Secondary)/ `CardValueLabel`(16・Primary)/ `CardMonoValueLabel`(等幅 14・文字で折り返し)/ `CardValueChip`(表の値のチップ)、エラーの帯の `CardErrorBorder`(RedLighten5)/ `CardErrorGrid` / `CardErrorIconLabel` / `CardErrorLabel`(RedDarken2・14)を足した。行の間の線は既存の `CardRowDivider` |
+| `Modules/Main/SettingView.xaml` | 11-5 ④: 節の見出しのアイコンを Network = 青・AI Service = 紫・SSH = 緑に(`SectionHeaderIcon` の派生の画面ローカルのスタイル) |
+| `Modules/Basic/BasicDialogView.xaml` | 11-11 ③: カードの見出しのアイコンを Notification = 青・Confirm / Select / Input = 緑・Progress = 琥珀(AmberDarken2)・Feedback = 紫に(InfoCard の `IconColor` を画面ローカルのスタイルで) |
+| `Modules/Device/DeviceMiscView.xaml` | 11-34 ②: Screen = 青・Feedback = 紫・Light = 琥珀・Speech = 緑・Notification = 赤 |
+| `Modules/Device/DeviceInfoView.xaml` | 11-17 ②③: 3 枚の表を名前と値の行の形に。見出しのアイコンを Device = 青・Application = 緑・Display = 紫に、パッケージ名は等幅 |
+| `Modules/Main/DiagnosticsView.xaml` | 11-4 ①②③: Device〜Telemetry の表を名前と値の行の形に(Device ID・Installation・Started・Path・Modified・Token expires は等幅)。Status・Last send・Crash をチップに(色の `BoolToColorConverter` 3 つを Tone の変換に置き換え)。使わなくなった `PathLabel` / `WrapValueLabel` は削除 |
+| `Modules/Basic/BasicConverterView.xaml` | 11-9 ③: 3 枚の表を名前と値の行の形に |
+| `Modules/Device/DeviceStatusView.xaml` | 11-18 ①②: Network の上のチップの列をやめ、表の Access・State をチップに。電池の状態・電源・Access・State を短い言葉(`MapToTextConverter`)と色(`MapToToneConverter`)に(MAUI の列挙は `Microsoft.Maui.Essentials` の名前空間を XAML に宣言)。使わなくなった `NetworkStack` / `NetworkGrid` は削除 |
+| `Modules/Device/DeviceBiometricView.xaml` | 11-32 ①: Availability の 3 つの値をチップに(使える 緑・未登録 琥珀・一時不可 灰・センサー無し 赤。絵文字をやめた) |
+| `Modules/Network/NetworkAuthView.xaml` / `NetworkAuthViewModel.cs` | 11-36 ①: カードの先頭に丸い鍵のアイコンと状態のチップ(+ ログインした ID)、トークンの期限の行。VM は文言の `LoginState` をやめて `AuthenticatedId` を持ち、`TokenExpires` は `DateTime?`(書式は XAML) |
+| `Modules/Network/NetworkRealtimeView.xaml` / `NetworkRealtimeViewModel.cs` | 11-38 ②: 状態のチップ・エラーの帯・接続ID / サーバー時刻 / 状態の送信の行。VM は文言の `StateText` をやめて `RealtimeState`(Stopped / Connecting / Connected / Reconnecting / Error)を持つ。使わなくなった `ErrorLabel` は削除 |
+| `Modules/Network/NetworkGrpcView.xaml` / `NetworkGrpcViewModel.cs` | 11-39 ①: アドレスを等幅に、状態のチップ・エラーの帯・未配送の送信の行、サーバー時刻はボタンの下の行に。VM は文言の `StateText` をやめて `ChatConnectionState` を持つ。使わなくなった `ErrorLabel` は削除 |
+| `Modules/Device/DeviceQrScanView.xaml` | 11-22 ①〜④: 黒地にし、下に白い結果の帯(青の QR のアイコンと値、読む前は案内)。プレビューの上に半透明の状態のチップ(カメラ・ズーム・反転・振動。ズームの値が無ければ「-」、ON は青の地)、下に半透明の丸いボタン(ライト・照準・縮小・拡大。ライトの ON は琥珀、照準の ON は青)、中央に読み取りの枠(`CameraOverlayView` の格子なし) |
+| `Modules/Device/DeviceCameraView.xaml` / `Resources/Styles/Styles.xaml` | 11-23 ①②: 黒地にし、QR Scan と同じ状態のチップ(カメラの名前・ズーム・フラッシュ・ライト)と丸いボタン(ライト・フラッシュ・縮小・拡大。フラッシュは Off・On・Auto でアイコンと色を切り替え)。使わなくなった共有の `SubMenuGrid` / `SubMenuButton` を削除 |
+| `Modules/Device/DeviceNfcView.xaml` | 11-29 ①②: 読んだ後の上の帯を、緑のグラデーションの IC カード風のカード(Suica・非接触のアイコン・数え上げる残高・等幅の IDm)に。履歴はフラットな行(処理の色の帯・1 行の日時・端末と処理のバッジ・右寄せの残高・1px の線)に。Metro の箱のスタイルは削除 |
+| `Resources/Raw/web-basic/index.html` / `other.html` / `style.css`(新規)/ `Modules/Sample/SampleWebBasicView.xaml` / `SampleWebBasicView.xaml.cs` | 11-59 ①③: 中のページに共通の CSS(余白 16・文字 16、幅いっぱいの高さ 44・角 8 の枠のボタン、下まで広がる等幅のログ)。下の帯の受信の光を `AnimationOption.HighlightTrigger` にし、code-behind の処理を削除 |
+| `Modules/Device/DeviceInfoView.xaml` | 11-17 ①: Device のカードを、機種名(24 の太字)と OS の版・実機 / エミュレーターのチップ(実機は緑、エミュレーターは琥珀)に |
+| `Modules/Device/DeviceStatusView.xaml` | 11-18 ③: 電池を `ArcMeter` の輪(120・太さ 10、20% 以下は赤)にして、中に電池のアイコンと % |
+| `Modules/Device/DeviceLocationView.xaml` | 11-20 ③: Motion の 4 項目を Position と同じ見出しと値の 2 × 2 に(単位は 14 の灰、値が無いときは出さない) |
+| `Modules/Device/DeviceBluetoothView.xaml` | 11-26 ①③: アイコンの円を状態で色分け(接続中 琥珀・完了 緑・失敗 赤)。カードは上の空きの中央、Print は下の幅いっぱい(高さ 48) |
+| `Modules/Device/DeviceAudioView.xaml` | 11-30 ②: 音符の円を、グラデーションの 240 の四角(ジャケットの見立て)に。シーク・操作・音量は下の白いパネルに |
+| `Modules/Device/DeviceBiometricView.xaml` | 11-32 ③: Authenticate の Result を見出しと値のタイルに |
+| `Modules/Device/DeviceMiscView.xaml` | 11-34 ①: 対の操作(Keep・向き・明るさ・ライト)を、1 つの枠を 2 つに分けたセグメントに |
+| `Modules/Network/NetworkTelemetryView.xaml` | 11-41 ②: Custom value の Value 1〜4 のスライダーと値を青・緑・橙・紫に |
+| `Modules/View/ViewAnimationView.xaml` / `Animations/SpringAnimation.cs` | 11-50 ①②: タップのタイル 4 枚を 2 × 2 にそろえ、効果のアイコンと淡いグラデーションを付けた。Sequence とばねの動く量を区画の中に収めた(ばねの右への動き 150 → 36) |
+| `Modules/View/ViewDragDropView.xaml` | 11-53 ①〜③: 並べ替えの一覧をフラットな行(区切り線・行の高さいっぱいの帯・取っ手)の専用のテンプレートに。TODO / DONE をバッジに |
+| `Modules/Sample/SampleCvLocalView.xaml` | 11-65 ②: 結果の表示中に「Retry でプレビューを再開」の帯 |
+| `Modules/Network/NetworkHttpView.xaml` / `NetworkHttpViewModel.cs` | 11-35 ①〜③: 一覧の空の表示(`BasicEmptyStack`)と読み込み中の表示。空の表示は読み込みに成功してから決める(`IsEmpty` の既定を false に)。件数を「全 N 件」のバッジに、選んだ行を青地に白文字、Id を「#N」の淡いバッジに。作成は塗り、ほかのボタンとテスト API はアイコン付きの枠(削除・キャンセルは赤)。保存の括弧書きは下の説明へ |
+| `Modules/Network/NetworkAuthView.xaml` | 11-36 ②③: ログインを塗りのボタンに、Secure を呼ぶに鍵のアイコン。ログイン ID の入力欄に見出しと枠 |
+| `Modules/Network/NetworkStorageView.xaml` / `NetworkStorageViewModel.cs` | 11-37 ①〜③: 空の表示と読み込み中の表示(`IsEmpty` の既定を false に)。パスの前にフォルダーのアイコン、「上へ」に矢印、ディレクトリの行の右に ›、ファイルのサイズを淡いバッジに。転送の進捗に割合を添えて `ProgressTo` で伸ばし、5 つのボタンにアイコン(キャンセル・削除は赤)、説明を見出しのすぐ下へ |
+| `Modules/Network/NetworkGrpcView.xaml` | 11-39 ②③: チャットの空の表示を枠の中央(アイコンと文)に。メッセージは名前のバッジ・右寄せの時刻・区切り線。入力欄を枠付きに、送信を丸い塗りのアイコンのボタンに |
+| `Markup/AppIcons.cs` | J2 のアイコン: `SmallArrowUpward` / `SmallUploadFile`(18・`BlueGrayDarken1`)、`NetworkCancel` / `NetworkDelete`(18・赤) |
+| `Document/UIBrushup_Plan.md` | 決定事項の「言葉」: 日本語にしたのは UI 2 の Habit・Home で、ほかは英語と日本語の混在のまま(題・メニュー・F キー、機材・計器風の英語、方位、英語のバッジ)。曜日は端末の言語、確認のダイアログの Cancel はそのまま。UI 1 / UI 2 / App の日付の括弧の前のスペースも今のまま |
 
 - 実機: 11 のメニュー(Main / Basic / Navigation / Effect / Device / Network / View / UI 1 / UI 2 / Sample / App)を前後で撮って比べた(変わったのはメインメニューの下の表示と、Effect・Network のアイコンだけ)
 - 実機: 題を変えた画面と長い題の画面(15 画面)を前後で撮って比べた(Communication は縮んで右のアイコンに重ならない)
@@ -3033,6 +3103,15 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: 簡単な候補(色・アイコン / 灰色の地 / 文言)の画面を前後で撮って比べた(Toolkit は Expander を開いた状態、Shared2 は値を入れて戻った画面、Wizard は 2 段目、Biometric は「—」を拡大)。Basic Setting の開く / クリアは 3 案をそれぞれビルドして並べた。SFTP は SSH を設定していないので見ていない
 - 実機: Wizard の入力欄でフォーカスの前後を撮り、枠が青になっても欄の大きさと下の文字の位置が変わらないことを画素で確かめた。Graphics の Sketch に縦と斜めの線を描き、画面がスクロールしないこと(見出しの位置が同じ)と 2 本の線が残ることを確かめた。Effect のバッジ(99+)の上が欠けないこと、Font の JetBrainsMono が 24 でも 1 行のことを撮って確かめた
 - 実機: フォーカス枠の太さを指定した Login・Chat・Effect の見本を、色だけのときと入力中どうしで比べ、欄の枠のほかは画素が一致する(キーボードで画面が押し上げられる量の 1px を除く)ことを確かめた。Wizard は入力のカードが中央に置かれ、フォーカスで変わるのは欄の枠の行だけのことを確かめた。Font の NotoSerifJP が 24 でも 1 行のことを撮って確かめた
+- 実機: 色・アイコン・配置の候補の 10 画面を前後で撮って比べた(State は 4 つの状態、Bottom Sheet は Sf と自作のシートを開いた状態、Drawer は Sf と自作のドロワーで選び直した状態、Basic Setting は Summary まで下げた状態)。Media は開いてから約 1 秒・2 秒で操作のバーが出て、約 5 秒で隠れることを撮って確かめた。PDF の溝は Android が残りの部分を約 26% の濃さで描くので、`GrayLighten1` でも画面の色は 247 → 238 の変化
+- 実機: 決める候補の 15 画面を前後で撮って比べた(Map は経路・範囲・円・地図の種類を表示した状態、Audio は 50%・20%・0%、Bottom Sheet はお気に入りに追加を選んだ後、Validation は Text2 のエラー中にフォーカスした状態と Clear の後)。Layout は下げながら曜日・弧・扇・軌道を、Easing は補助線を拡大して確かめた。Lottie は開いてから時間を追って撮り、再生し終わると約 0.5 秒のコマに戻ること、そこから再生し直しても同じこと、止めた状態でスライダーを最後へ動かしたときは戻らないことを確かめた。Media の失敗の表示は、動画の URL を一時的に存在しないものに変えて確かめた(約 12 秒で出る。確認後に元へ戻した)
+- 実機: Honeycomb の色、BLE の消えたセグメント(5%)、Lottie の繰り返し再生(開いてから 1・2.8・4.4 秒)を撮った。PDF は、スライダーで最後へ・指で最後まで送ると「6 / 6」、そこから Prev で「5 / 6」「4 / 6」、Next で「6 / 6」、指で少し戻すと見えているページになることを確かめた。Lottie の帯と PDF の端を引っぱった途中を撮り、変更の前は止まっているときと比べて PDF で約 40 万画素・帯で約 9 千画素ずれていたのが、変更の後は一致することを確かめた
+- 実機: Lottie の帯を最後まで送ると、変更の前は UI スレッドが回り続けて応答なし(ANR)になった。変更の後は、帯・長押し・止めたままのスライダーで最後まで送っても固まらず「00:02.0」で止まり、そこから再生すると先頭から繰り返すこと、再生中にスライダーで最後まで送っても続けて繰り返すことを確かめた
+- 実機: Data・Dialog・Animation・Graphics を前後で撮って比べた(Animation のボタンの行は 8 低くなる)。Easing は Run の後 0.5・1.0・1.5・2.6 秒を撮り、前は丸が左上から右下へまっすぐ動いていたのが、後は 11 個とも始点から曲線をなぞって終点で止まることを確かめた
+- 実機: I の 11 画面を前後で撮って比べた。Realtime・gRPC・HTTP (Auth)・Diagnostics はサーバーにつないだ状態も撮り、接続済みの緑のチップ、接続ID・サーバー時刻の行、ログイン済みの緑の鍵とチップ・ID・トークンの期限、Diagnostics の Sending / Succeeded の緑と Not sent の琥珀のチップを確かめた
+- 実機: QR Scan・Camera・NFC・Web Basic を前後で撮って比べた。QR Scan はライト・照準・反転(F3)・振動(F4)を ON にしてチップとボタンの色、戻した状態を、Camera はライトとフラッシュ(On・Auto)と戻した状態を撮った。NFC のカードと履歴は、一時的に見本のデータ(9 件)を入れて撮り、元に戻した。Web Basic は JS からの送信・C# の呼び出し・F3 の Call で下の帯が光ること、other page と W-Back の行き来を確かめた
+- 実機: J3 の 11 画面を前後で撮って比べた。Bluetooth は Print で接続中の琥珀と失敗の赤、CV Local は Detect の後の案内の帯を撮った。Animation は動きの時間を一時的に 6 倍にしたビルドで途中を連続で撮り、4 枚とも区画の中で動いてカードの枠からはみ出さず、ほかのタイルにぶつからないことを画素で確かめた(Sequence は上へ 6px だけ区画の間の余白に入る)
+- 実機: J2 の 4 画面(HTTP (Data)・HTTP (Auth)・Storage・gRPC)をサーバーにつないで前後で撮って比べた。gRPC はメッセージを 2 件送って、名前のバッジ・時刻・区切り線を確かめた
 - ビルド 0 警告、inspectcode 0 件
 
 ### 🏷️API の名前と応答の宣言(template-maui-server)(2026-10-05)
@@ -3049,6 +3128,15 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 
 - 端末: ビルド 0 警告
 - サーバー: ビルド 0 警告、テスト 140 件成功、inspectcode 0 件
+
+### 📚取り込みの候補と検討資料(2026-10-06)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Development.md` | 「🔧開発環境」に「AI エージェントでの開発支援」(スキルの候補・MCP の種類と設定の例・DevFlow のできることと本アプリでの注意・参照) |
+| `Document/Task_Checklist.md` / `README.md` | 12 節 Health Connect(`Shiny.Health` で歩数・心拍・睡眠などを読み書きする候補。パッケージ・端末・マニフェスト・変更するファイルと、要否と範囲の判断 12-0)。13 節 取り込み候補に 13-1 Sample > Chat のツール呼び出し(仕組み・題材・トリミング・ツールの分け方と、判断 13-1-0)。サマリと TODO に 2 つの行 |
+| `Document/UIBrushup_Plan.md` | 新しい画面 10-29 Habit と 10-30 Home(UI 2 のメニューの 8 段の空き。中身は 📝)、10-3 Money の ⑤〜⑦(前月比のバッジ・月の支出の棒・支出の分類)、10-22 Chart の ③(棒のグラデーションと溝・選んだ棒の強調)。決定事項に 10-29 / 10-30 の新設。10-29 / 10-30 の作り方(メニュー・画面 ID・結線・全面の画面・描画・再利用の候補)と使える部品、10-3 ⑤〜⑦・10-22 ③ の使える部品。番号なしのアニメーションの強化の案(今ある動き・足す動きの案・画面ごとの案) |
+| `Document/Change_Summary.md` | 付録D の不採用 (1) に Revv |
 
 ## 💡C. この区間のナレッジ
 
@@ -3178,6 +3266,11 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - CA1716: インターフェースのメソッドの引数に `date` を使うと、VB のキーワード `Date` と重なるとして警告になる
 - CA1826: `IReadOnlyList<T>` に `FirstOrDefault()` を使うと警告になる(添字で読む)
 - **`SceneObject` のダブルバッファは CPU で描く(`SKSurface.Create` のラスター)ので、全画面のグラデーションとぼかし(`SKMaskFilter`)が重い**。`DrawCachedLayer`(`SKPicture`)は記録した描画の命令を毎フレーム実行し直すため、全画面の背景とパネルは端末の解像度の `SKImage` に一度描いて写すだけにし、光はぼかしを使わず薄い図形を重ねると、Energy は 1 フレーム平均 40 ms → 14 ms になった(Pixel 9a、Debug)
+- **SkiaSharp の `SKCanvas.DrawColor` の既定の合成は `SKBlendMode.Src`(置き換え)**。半透明の色を上から重ねて暗くするときは `SKBlendMode.SrcOver` を渡す(既定のままだと下の絵が消えて半透明の黒だけが残る)
+- XAML の `clr-namespace:...;assembly=...` は、名前空間とアセンブリが違うと MAUI のビルドと実行は通るが ReSharper は型を解決できずエラーにする。CommunityToolkit の `CameraFlashMode` は名前空間が `CommunityToolkit.Maui.Core` でも、アセンブリは `CommunityToolkit.Maui.Camera`
+- MauiImage の画像は Android では drawable(拡張子なしの名前)になり、`FileSystem.OpenAppPackageFileAsync` では読めない。SkiaSharp で描くときは `Resources.GetIdentifier` と `BitmapFactory.DecodeResource`(密度で拡大しないよう `InScaled` = false)から `ToSKBitmap` にする
+- `BindableProperty` の `propertyChanged` に基底の protected の静的メソッドを渡すと、使わない引数が IDE0060 の警告になる(private なら出ない)。基底で共有するときは `static (bindable, _, _) => ...` のデリゲートの静的フィールドにする
+- **SkiaSharp.Extended.UI 3.0 の `SKLottieView` は、`RepeatCount` が 0 以外のとき、止めたまま(`IsAnimationEnabled` = false)`Progress` を `Duration` にすると UI スレッドが回り続けて固まる**。最後に着いたので先頭へ戻す `Progress = 0` は、MAUI が設定中の同じプロパティへの設定として後回しの列に入れ、止めているときの再描画(`Invalidate` → `Update`)がまだ古い `Duration` を設定し直すので、2 つの値が交互に列に入り続ける(`BindableObject.SetValueCore` の `DelayedSetters`)。止めたまま動かす位置は `Duration` の 1 tick 手前までにする
 
 ---
 
@@ -3319,7 +3412,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 
 ### 🚫不採用 (1) — サンプルとしては不要だが、ライブラリ / ツール / 資料としては有用
 
-LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTabView で充足) / Maui.VirtualListView・MPowerKit.VirtualizeListView (データ規模的に不要) / AiForms.SettingsView (BasicSettingView で達成) / MPowerKit.GoogleMaps (API キー前提。マネージャ分割設計のみ Mapsui 実装へ反映済み) / ArcGIS (商用) / Maui.Nuke (iOS スコープ外) / ImageCropper.Maui (ネイティブラッパ。自作 = 9-6) / Evergine 3D / DrawnUI 全面採用 (実験的。SKPicture キャッシュ等の部分技法は実装済み) / Grial FluentEmoji (CDN 依存) / CSLA (相関検証のみ 3-6 へ) / LocalizationResourceManager (根本切替は不要) / AlohaKit.Layouts (CircularLayout のみ自作済み) / TemplateMAUI (Marquee/TreeView のみ自作済み) / Plugin.Maui.SegmentedControl (SfSegmentedControl で充足) / GitTrends・WeatherTwentyOne・showcase (資料) / dotnet-maui-templates・MauiAppAccelerator (開発ツール) / Shiny Controls の DataGrid・FrostedGlass・Mermaid・Tray (コスト高 / デスクトップ向け) / Plugin.LocalNotification (thudugala。自作 Components/NotificationService で充足。NotificationRequest の項目構成 = Title / Description / BadgeNumber / Schedule / Android.ChannelId / ReturningData は参考) / MAUIHighSchool の Window.Stopped でローカル通知を予約する記事 (資料)
+LiveCharts2 (自前 ChartDrawing + Syncfusion で充足) / Sharpnado.Tabs (SfTabView で充足) / Maui.VirtualListView・MPowerKit.VirtualizeListView (データ規模的に不要) / AiForms.SettingsView (BasicSettingView で達成) / MPowerKit.GoogleMaps (API キー前提。マネージャ分割設計のみ Mapsui 実装へ反映済み) / ArcGIS (商用) / Maui.Nuke (iOS スコープ外) / ImageCropper.Maui (ネイティブラッパ。自作 = 9-6) / Evergine 3D / DrawnUI 全面採用 (実験的。SKPicture キャッシュ等の部分技法は実装済み) / Grial FluentEmoji (CDN 依存) / CSLA (相関検証のみ 3-6 へ) / LocalizationResourceManager (根本切替は不要) / AlohaKit.Layouts (CircularLayout のみ自作済み) / TemplateMAUI (Marquee/TreeView のみ自作済み) / Plugin.Maui.SegmentedControl (SfSegmentedControl で充足) / GitTrends・WeatherTwentyOne・showcase (資料) / dotnet-maui-templates・MauiAppAccelerator (開発ツール) / Shiny Controls の DataGrid・FrostedGlass・Mermaid・Tray (コスト高 / デスクトップ向け) / Plugin.LocalNotification (thudugala。自作 Components/NotificationService で充足。NotificationRequest の項目構成 = Title / Description / BadgeNumber / Schedule / Android.ChannelId / ReturningData は参考) / MAUIHighSchool の Window.Stopped でローカル通知を予約する記事 (資料) / Revv (スマホを PC のゲームのハンドルにする。傾きの処理・仮想スティック・UDP の自動検出)
 
 ### 🚫不採用 (2) — 本サンプル側が優れた / 同等の実装を持つため参考自体が不要
 

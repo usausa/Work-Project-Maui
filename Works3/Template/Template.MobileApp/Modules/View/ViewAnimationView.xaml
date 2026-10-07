@@ -6,6 +6,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.View"
              xmlns:animations="clr-namespace:Template.MobileApp.Animations"
              x:Class="Template.MobileApp.Modules.View.ViewAnimationView"
@@ -25,12 +26,10 @@
             </Style>
 
             <Style x:Key="AnimationButton"
-                   TargetType="Button">
-                <Setter Property="HeightRequest" Value="48" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                   TargetType="Button"
+                   BasedOn="{StaticResource BasicFilledButton}">
+                <Setter Property="ContentLayout" Value="Left,8" />
+                <Setter Property="behaviors:ButtonOption.PressEffect" Value="False" />
             </Style>
 
             <Style x:Key="TapStack"
@@ -38,29 +37,42 @@
                 <Setter Property="Spacing" Value="12" />
             </Style>
 
-            <Style x:Key="TileRowGrid"
+            <Style x:Key="TileGrid"
                    TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
                 <Setter Property="ColumnSpacing" Value="8" />
-            </Style>
-
-            <Style x:Key="SequenceAreaGrid"
-                   TargetType="Grid">
-                <Setter Property="HeightRequest" Value="140" />
             </Style>
 
             <Style x:Key="AnimationBorder"
                    TargetType="Border">
                 <Setter Property="WidthRequest" Value="96" />
                 <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="StrokeThickness" Value="0" />
                 <Setter Property="StrokeShape">
                     <RoundRectangle CornerRadius="16" />
                 </Setter>
             </Style>
 
+            <Style x:Key="TileContentStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Spacing" Value="2" />
+            </Style>
+
+            <Style x:Key="TileIconLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
             <Style x:Key="AnimationLabel"
                    TargetType="Label">
                 <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -69,21 +81,34 @@
             <Style x:Key="OrangeTile"
                    TargetType="Border"
                    BasedOn="{StaticResource AnimationBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource OrangeDefault}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource OrangeLighten1}" />
+                        <GradientStop Offset="1" Color="{StaticResource OrangeDarken1}" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
             <Style x:Key="PurpleTile"
                    TargetType="Border"
                    BasedOn="{StaticResource AnimationBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource PurpleDefault}" />
-                <Setter Property="HorizontalOptions" Value="Start" />
-                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource PurpleLighten1}" />
+                        <GradientStop Offset="1" Color="{StaticResource PurpleDarken1}" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
             <Style x:Key="PinkTile"
                    TargetType="Border"
                    BasedOn="{StaticResource AnimationBorder}">
-                <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource PinkLighten1}" />
+                        <GradientStop Offset="1" Color="{StaticResource PinkDarken1}" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
         </ResourceDictionary>
@@ -101,7 +126,8 @@
 
                     <Button Grid.Row="0" Grid.Column="0"
                             Style="{StaticResource AnimationButton}"
-                            Text="Fade">
+                            Text="Fade"
+                            ImageSource="{x:Static markup:AppIcons.AnimationFade}">
                         <Button.Behaviors>
                             <s:EventActionBehavior EventName="Clicked">
                                 <s:BeginAnimationAction>
@@ -116,7 +142,8 @@
 
                     <Button Grid.Row="0" Grid.Column="1"
                             Style="{StaticResource AnimationButton}"
-                            Text="Rotate">
+                            Text="Rotate"
+                            ImageSource="{x:Static markup:AppIcons.AnimationRotate}">
                         <Button.Behaviors>
                             <s:EventActionBehavior EventName="Clicked">
                                 <s:BeginAnimationAction>
@@ -131,7 +158,8 @@
 
                     <Button Grid.Row="1" Grid.Column="0"
                             Style="{StaticResource AnimationButton}"
-                            Text="Scale">
+                            Text="Scale"
+                            ImageSource="{x:Static markup:AppIcons.AnimationScale}">
                         <Button.Behaviors>
                             <s:EventActionBehavior EventName="Clicked">
                                 <s:BeginAnimationAction>
@@ -146,7 +174,8 @@
 
                     <Button Grid.Row="1" Grid.Column="1"
                             Style="{StaticResource AnimationButton}"
-                            Text="Shake">
+                            Text="Shake"
+                            ImageSource="{x:Static markup:AppIcons.AnimationShake}">
                         <Button.Behaviors>
                             <s:EventActionBehavior EventName="Clicked">
                                 <s:BeginAnimationAction>
@@ -177,9 +206,10 @@
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Tap each tile to play its animation" />
 
-                    <Grid Style="{StaticResource TileRowGrid}"
+                    <Grid Style="{StaticResource TileGrid}"
+                          RowDefinitions="150,150"
                           ColumnDefinitions="*,*">
-                        <Border Grid.Column="0"
+                        <Border Grid.Row="0" Grid.Column="0"
                                 Style="{StaticResource OrangeTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
@@ -193,11 +223,15 @@
                                     </s:BeginAnimationAction>
                                 </s:TapActionBehavior>
                             </Border.Behaviors>
-                            <Label Style="{StaticResource AnimationLabel}"
-                                   Text="Rotate" />
+                            <VerticalStackLayout Style="{StaticResource TileContentStack}">
+                                <Label Style="{StaticResource TileIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Rotate_right}" />
+                                <Label Style="{StaticResource AnimationLabel}"
+                                       Text="Rotate" />
+                            </VerticalStackLayout>
                         </Border>
 
-                        <Border Grid.Column="1"
+                        <Border Grid.Row="0" Grid.Column="1"
                                 Style="{StaticResource OrangeTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
@@ -206,27 +240,30 @@
                                     </s:BeginAnimationAction>
                                 </s:TapActionBehavior>
                             </Border.Behaviors>
-                            <Label Style="{StaticResource AnimationLabel}"
-                                   Text="RelRotate" />
+                            <VerticalStackLayout Style="{StaticResource TileContentStack}">
+                                <Label Style="{StaticResource TileIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Rotate_90_degrees_cw}" />
+                                <Label Style="{StaticResource AnimationLabel}"
+                                       Text="RelRotate" />
+                            </VerticalStackLayout>
                         </Border>
-                    </Grid>
 
-                    <Grid Style="{StaticResource SequenceAreaGrid}">
-                        <Border Style="{StaticResource PurpleTile}">
+                        <Border Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource PurpleTile}">
                             <Border.Behaviors>
                                 <s:TapActionBehavior>
                                     <s:BeginAnimationAction>
                                         <s:SequentialAnimation>
                                             <s:ParallelAnimation>
                                                 <s:TranslateToAnimation Duration="600"
-                                                                        TranslateX="90" TranslateY="-30"
+                                                                        TranslateX="24" TranslateY="-12"
                                                                         Easing="{x:Static Easing.SinInOut}" />
                                                 <s:RotateToAnimation Duration="600"
                                                                      Easing="{x:Static Easing.CubicInOut}"
                                                                      Rotation="270" />
                                                 <s:ScaleToAnimation Duration="600"
                                                                     Easing="{x:Static Easing.CubicOut}"
-                                                                    Scale="1.4" />
+                                                                    Scale="1.15" />
                                             </s:ParallelAnimation>
                                             <s:ScaleToAnimation Duration="300"
                                                                 Scale="1" />
@@ -238,22 +275,31 @@
                                     </s:BeginAnimationAction>
                                 </s:TapActionBehavior>
                             </Border.Behaviors>
-                            <Label Style="{StaticResource AnimationLabel}"
-                                   Text="Sequence" />
+                            <VerticalStackLayout Style="{StaticResource TileContentStack}">
+                                <Label Style="{StaticResource TileIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Animation}" />
+                                <Label Style="{StaticResource AnimationLabel}"
+                                       Text="Sequence" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource PinkTile}">
+                            <Border.Behaviors>
+                                <s:TapActionBehavior>
+                                    <s:BeginAnimationAction>
+                                        <animations:SpringAnimation />
+                                    </s:BeginAnimationAction>
+                                </s:TapActionBehavior>
+                            </Border.Behaviors>
+                            <VerticalStackLayout Style="{StaticResource TileContentStack}">
+                                <Label Style="{StaticResource TileIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Waves}" />
+                                <Label Style="{StaticResource AnimationLabel}"
+                                       Text="Custom" />
+                            </VerticalStackLayout>
                         </Border>
                     </Grid>
-
-                    <Border Style="{StaticResource PinkTile}">
-                        <Border.Behaviors>
-                            <s:TapActionBehavior>
-                                <s:BeginAnimationAction>
-                                    <animations:SpringAnimation />
-                                </s:BeginAnimationAction>
-                            </s:TapActionBehavior>
-                        </Border.Behaviors>
-                        <Label Style="{StaticResource AnimationLabel}"
-                               Text="Custom" />
-                    </Border>
 
                 </VerticalStackLayout>
             </controls:InfoCard>

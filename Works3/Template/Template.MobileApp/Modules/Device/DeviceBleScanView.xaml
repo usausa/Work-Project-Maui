@@ -18,6 +18,8 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Color x:Key="LcdUnlitColor">#0D000000</Color>
+
             <Style x:Key="SensorCollection"
                    TargetType="CollectionView">
                 <Setter Property="Margin" Value="0,6" />
@@ -62,6 +64,12 @@
                 <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
+            <Style x:Key="TimestampUnlitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource TimestampLabel}">
+                <Setter Property="TextColor" Value="{StaticResource LcdUnlitColor}" />
+            </Style>
+
             <Style x:Key="BleScanValueHorizontalStack"
                    TargetType="HorizontalStackLayout">
                 <Setter Property="Margin" Value="0" />
@@ -79,6 +87,13 @@
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="DSEG7" />
                 <Setter Property="FontSize" Value="48" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+            </Style>
+
+            <Style x:Key="BleScanUnlitLabel"
+                   TargetType="Label"
+                   BasedOn="{StaticResource BleScanValueLabel}">
+                <Setter Property="TextColor" Value="{StaticResource LcdUnlitColor}" />
             </Style>
 
             <Style x:Key="UnitLabel"
@@ -117,9 +132,12 @@
                                 <Label Grid.Column="0"
                                        Style="{StaticResource DeviceIdLabel}"
                                        Text="{Binding DeviceId}" />
-                                <Label Grid.Column="1"
-                                       Style="{StaticResource TimestampLabel}"
-                                       Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}" />
+                                <Grid Grid.Column="1">
+                                    <Label Style="{StaticResource TimestampUnlitLabel}"
+                                           Text="88:88:88" />
+                                    <Label Style="{StaticResource TimestampLabel}"
+                                           Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}" />
+                                </Grid>
                             </Grid>
 
                             <BoxView Style="{StaticResource SeparatorWideBoxView}" />
@@ -130,9 +148,12 @@
                                                        Style="{StaticResource BleScanValueHorizontalStack}">
                                     <Label Style="{StaticResource IconLabel}"
                                            Text="🌡" />
-                                    <Label Style="{StaticResource BleScanValueLabel}"
-                                           behaviors:AnimationOption.BounceTrigger="{Binding Temperature}"
-                                           Text="{Binding Temperature, StringFormat='{0:F1}'}" />
+                                    <Grid behaviors:AnimationOption.BounceTrigger="{Binding Temperature}">
+                                        <Label Style="{StaticResource BleScanUnlitLabel}"
+                                               Text="88.8" />
+                                        <Label Style="{StaticResource BleScanValueLabel}"
+                                               Text="{Binding Temperature, StringFormat='{0:F1}'}" />
+                                    </Grid>
                                     <Label Style="{StaticResource UnitLabel}"
                                            Text="°C" />
                                 </HorizontalStackLayout>
@@ -141,9 +162,12 @@
                                                        Style="{StaticResource BleScanValueHorizontalStack}">
                                     <Label Style="{StaticResource IconLabel}"
                                            Text="💧" />
-                                    <Label Style="{StaticResource BleScanValueLabel}"
-                                           behaviors:AnimationOption.BounceTrigger="{Binding Humidity}"
-                                           Text="{Binding Humidity}" />
+                                    <Grid behaviors:AnimationOption.BounceTrigger="{Binding Humidity}">
+                                        <Label Style="{StaticResource BleScanUnlitLabel}"
+                                               Text="88" />
+                                        <Label Style="{StaticResource BleScanValueLabel}"
+                                               Text="{Binding Humidity}" />
+                                    </Grid>
                                     <Label Style="{StaticResource UnitLabel}"
                                            Text="%" />
                                 </HorizontalStackLayout>
@@ -160,9 +184,12 @@
                                                    IsVisible="{Binding Co2, Converter={StaticResource NotEmptyConverter}}">
                                 <Label Style="{StaticResource IconLabel}"
                                        Text="💨" />
-                                <Label Style="{StaticResource BleScanValueLabel}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding Co2}"
-                                       Text="{Binding Co2}" />
+                                <Grid behaviors:AnimationOption.BounceTrigger="{Binding Co2}">
+                                    <Label Style="{StaticResource BleScanUnlitLabel}"
+                                           Text="8888" />
+                                    <Label Style="{StaticResource BleScanValueLabel}"
+                                           Text="{Binding Co2}" />
+                                </Grid>
                                 <Label Style="{StaticResource UnitLabel}"
                                        Text="ppm" />
                             </HorizontalStackLayout>

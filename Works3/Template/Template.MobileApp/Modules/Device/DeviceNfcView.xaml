@@ -104,91 +104,137 @@
 
             <!-- Style -->
 
-            <Style x:Key="BalanceGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="ColumnSpacing" Value="0" />
-                <Setter Property="RowSpacing" Value="0" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
-                <Setter Property="VerticalOptions" Value="Fill" />
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDarkDarker}" />
-            </Style>
-
-            <Style x:Key="LogBalanceGrid"
-                   TargetType="Grid">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="ColumnSpacing" Value="0" />
-                <Setter Property="RowSpacing" Value="0" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
-                <Setter Property="VerticalOptions" Value="Fill" />
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
-            </Style>
-
-            <Style x:Key="DateTimeVerticalStackLayout"
-                   TargetType="VerticalStackLayout">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="VerticalOptions" Value="Fill" />
-            </Style>
-
-            <Style x:Key="TerminalHorizontalStackLayout"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Margin" Value="0" />
-                <Setter Property="Padding" Value="3" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
-            </Style>
-
-            <Style x:Key="LogBorder"
+            <Style x:Key="IcCardBorder"
                    TargetType="Border">
-                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Margin" Value="16,16,16,8" />
+                <Setter Property="Padding" Value="20,16" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="{StaticResource GreenDarken4}" />
+                        <GradientStop Offset="0.6" Color="{StaticResource GreenDarken1}" />
+                        <GradientStop Offset="1" Color="{StaticResource LightGreenLighten1}" />
+                    </LinearGradientBrush>
+                </Setter>
             </Style>
 
-            <Style x:Key="IdmLabel"
+            <Style x:Key="IcCardGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8" />
+            </Style>
+
+            <Style x:Key="CardBrandLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="BackgroundColor" Value="{StaticResource MetroGreen}" />
             </Style>
 
-            <Style x:Key="YenLabel"
+            <Style x:Key="CardIconLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="FontSize" Value="28" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Start" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="BalanceLabel"
+            <Style x:Key="CardBalanceStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="CardYenLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="32" />
+                <Setter Property="Margin" Value="0,0,0,6" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontSize" Value="20" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="End" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="DateTimeLabel"
+            <Style x:Key="CardBalanceLabel"
                    TargetType="Label">
+                <Setter Property="FontSize" Value="40" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="CardIdmStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="CardCaptionLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="#B3FFFFFF" />
+            </Style>
+
+            <Style x:Key="CardIdmLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
-            </Style>
-
-            <Style x:Key="TerminalProcessLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="VerticalTextAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="LogCollectionView"
                    TargetType="CollectionView">
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken4}" />
+            </Style>
+
+            <Style x:Key="LogRowGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="4" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="LogBandBoxView"
+                   TargetType="BoxView">
+                <Setter Property="WidthRequest" Value="4" />
+            </Style>
+
+            <Style x:Key="LogDateLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,10,0,0" />
+                <Setter Property="FontFamily" Value="JetBrainsMono" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="LogBadgeStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+
+            <Style x:Key="LogBadgeBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8,2" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GrayDarken3}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            </Style>
+
+            <Style x:Key="LogBadgeLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LogBalanceLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,16,0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LogDividerBoxView"
+                   TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1" />
+                <Setter Property="Color" Value="{StaticResource GrayDarken3}" />
             </Style>
 
         </ResourceDictionary>
@@ -198,26 +244,36 @@
     <Grid Style="{StaticResource FillGrid}"
           RowDefinitions="Auto,*">
 
-        <Grid Grid.Row="0"
-              Style="{StaticResource FillGrid}"
-              ColumnDefinitions="*,*"
-              IsVisible="{Binding Access, Converter={StaticResource NotEmptyConverter}}">
-            <Label Grid.Column="0"
-                   Style="{StaticResource IdmLabel}"
-                   Text="{Binding Idm}" />
-            <Grid Grid.Column="1"
-                  Style="{StaticResource BalanceGrid}"
-                  ColumnDefinitions="Auto,*">
-                <Label Grid.Column="0"
-                       Style="{StaticResource YenLabel}"
-                       Text="￥" />
-                <Label Grid.Column="1"
-                       Style="{StaticResource BalanceLabel}"
-                       behaviors:LabelOption.CountUpDuration="600"
-                       behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
-                       behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}" />
+        <Border Grid.Row="0"
+                Style="{StaticResource IcCardBorder}"
+                IsVisible="{Binding Access, Converter={StaticResource NotEmptyConverter}}">
+            <Grid Style="{StaticResource IcCardGrid}"
+                  RowDefinitions="Auto,Auto,Auto"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Row="0" Grid.Column="0"
+                       Style="{StaticResource CardBrandLabel}"
+                       Text="Suica" />
+                <Label Grid.Row="0" Grid.Column="1"
+                       Style="{StaticResource CardIconLabel}"
+                       Text="{x:Static fonts:MaterialIcons.Contactless}" />
+                <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                       Style="{StaticResource CardBalanceStack}">
+                    <Label Style="{StaticResource CardYenLabel}"
+                           Text="￥" />
+                    <Label Style="{StaticResource CardBalanceLabel}"
+                           behaviors:LabelOption.CountUpDuration="600"
+                           behaviors:LabelOption.CountUpFormat="{}{0:#,0}"
+                           behaviors:LabelOption.CountUpValue="{Binding Access.Balance, FallbackValue=0}" />
+                </HorizontalStackLayout>
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                     Style="{StaticResource CardIdmStack}">
+                    <Label Style="{StaticResource CardCaptionLabel}"
+                           Text="IDm" />
+                    <Label Style="{StaticResource CardIdmLabel}"
+                           Text="{Binding Idm}" />
+                </VerticalStackLayout>
             </Grid>
-        </Grid>
+        </Border>
 
         <CollectionView Grid.Row="1"
                         Style="{StaticResource LogCollectionView}"
@@ -237,48 +293,39 @@
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type models:SuicaLogData}">
-                    <Border Style="{StaticResource LogBorder}">
-
-                        <Grid Style="{StaticResource FillGrid}"
-                              RowDefinitions="*,*"
-                              ColumnDefinitions="*,2*">
-
-                            <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                                 Style="{StaticResource DateTimeVerticalStackLayout}"
-                                                 BackgroundColor="{Binding Process, Converter={StaticResource ProcessColorConverter}}">
-                                <Label Style="{StaticResource DateTimeLabel}"
-                                       Text="{Binding DateTime, StringFormat='{0:yyyy年}'}" />
-                                <Label Style="{StaticResource DateTimeLabel}"
-                                       Text="{Binding DateTime, StringFormat='{0:MM月dd日}'}" />
-                                <Label Style="{StaticResource DateTimeLabel}"
-                                       Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat='{0:HH時mm分}'}" />
-                            </VerticalStackLayout>
-
-                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
-                                                   Style="{StaticResource TerminalHorizontalStackLayout}"
-                                                   Background="{StaticResource MetroGrayDarkBrighter}">
-                                <Label Style="{StaticResource TerminalProcessLabel}"
+                    <Grid Style="{StaticResource LogRowGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*,Auto">
+                        <BoxView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                 Style="{StaticResource LogBandBoxView}"
+                                 Color="{Binding Process, Converter={StaticResource ProcessColorConverter}}" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource LogDateLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding DateTime, StringFormat='{0:MM/dd}'}" />
+                                    <Span Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat=' {0:HH:mm}'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1"
+                                               Style="{StaticResource LogBadgeStack}">
+                            <Border Style="{StaticResource LogBadgeBorder}">
+                                <Label Style="{StaticResource LogBadgeLabel}"
                                        Text="{Binding Terminal, Converter={StaticResource TerminalTextConverter}}" />
-                                <Label Style="{StaticResource TerminalProcessLabel}"
-                                       Text=" - " />
-                                <Label Style="{StaticResource TerminalProcessLabel}"
+                            </Border>
+                            <Border Style="{StaticResource LogBadgeBorder}"
+                                    BackgroundColor="{Binding Process, Converter={StaticResource ProcessColorConverter}}">
+                                <Label Style="{StaticResource LogBadgeLabel}"
                                        Text="{Binding Process, Converter={StaticResource ProcessTextConverter}}" />
-                            </HorizontalStackLayout>
-
-                            <Grid Grid.Row="1" Grid.Column="1"
-                                  Style="{StaticResource LogBalanceGrid}"
-                                  ColumnDefinitions="Auto,*">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource YenLabel}"
-                                       Text="￥" />
-                                <Label Grid.Column="1"
-                                       Style="{StaticResource BalanceLabel}"
-                                       Text="{Binding Balance, StringFormat='{0:#,0}'}" />
-                            </Grid>
-
-                        </Grid>
-                    </Border>
-
+                            </Border>
+                        </HorizontalStackLayout>
+                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                               Style="{StaticResource LogBalanceLabel}"
+                               Text="{Binding Balance, StringFormat='￥{0:#,0}'}" />
+                        <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                 Style="{StaticResource LogDividerBoxView}" />
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

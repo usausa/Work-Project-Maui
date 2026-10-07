@@ -200,6 +200,78 @@ adb logcat -s SceneStats
 
 計測例として、SceneControl(SKCanvasViewの60fps自走描画)のダブルバッファ有無をUI > TelemetryのFunction2トグルで切り替えて比較した結果、直描きが約30fps(平均16.5〜17.8ms)、ダブルバッファが約60fps(平均14.0〜14.5ms)となり、`SceneObject.UseDoubleBuffer`を既定ONとしている。  
 
+## AI エージェントでの開発支援
+
+エージェント(Claude Code・GitHub Copilot など)への指示は `AGENTS.md`(`CLAUDE.md` から読む)にまとめている。手順(ビルド・配置・InspectCode・Xaml Styler・計測)は本書に書き、エージェント向けのスキルと MCP の設定は置いていない。
+以降は、スキル・MCP・DevFlow を入れる場合の資料。
+
+### スキル
+
+手順を `SKILL.md`(前書きの `name` / `description` と本文)にまとめ、エージェントが必要なときに読み込む。置き場所は Claude Code が `.claude/skills/<名前>/SKILL.md`、GitHub Copilot が `.github/skills/<名前>/SKILL.md`。
+dotnet/maui の `.github/skills/` はテストの作成と確認(PR の検証・UI テスト・XAML のテスト)が中心で、テストのプロジェクトの無い本テンプレートにはそのまま当てはまらない。
+MAUI のスキルは maui-labs が配布している。`maui ai init` でスキル・DevFlow のスキル・エージェントの定義・MCP の設定を入れる。1 つずつ足す場合は `maui ai add skill maui-devflow-debug --env Claude --yes` / `maui ai add mcp maui-devflow --env Claude --yes`。Claude Code のプラグインは `/plugin marketplace add dotnet/maui-labs` → `/plugin install dotnet-maui@dotnet-maui-labs`。
+
+本テンプレートで作る場合の候補(内容は本書の手順と同じにする)。
+
+| スキル | 内容 |
+| --- | --- |
+| ビルドと配置 | Visual Studio が `obj` を使っている間の CLI ビルド(`-p:IntermediateOutputPath=obj\cli\net10.0-android\ -p:OutDir=bin\cli\net10.0-android\`)。配置は `-t:Install -p:AdbTarget="-s <シリアル>"`(`adb install` では高速配置のアセンブリが入らない)。Release は既定の `obj`(相対の `IntermediateOutputPath` では ILLink が IL1011 で失敗する) |
+| 静的検査と整形 | InspectCode、Xaml Styler(`xstyler -d Template.MobileApp -r -c Settings.XamlStyler`。書き換えたファイルに付く BOM を外す)、改行の確認(`git ls-files --eol` の `w/` が `crlf`) |
+| 実機の確認 | 撮る前に前面の画面(`dumpsys window` の `mCurrentFocus`)を確かめる。スクリーンショットの前後の比較と画素の計測 |
+| 計測 | Release ビルド + 実機(本書の「Releaseビルドでの検証と計測」) |
+
+### MCP
+
+MCP のサーバーは、情報の変わる周期で分ける(Uno Platform もドキュメントの MCP とアプリの MCP を分け、ツールの説明はそれぞれ約 6.4k / 1.5k トークン)。
+
+| 種類 | 内容 | MAUI での相当 |
+| --- | --- | --- |
+| ドキュメント | フレームワークの版で変わる。HTTP で状態を持たない。検索して必要な部分だけを取る | Microsoft Learn MCP(`https://learn.microsoft.com/api/mcp`、Streamable HTTP、認証なし。`microsoft_docs_search` / `microsoft_docs_fetch` / `microsoft_code_sample_search`) |
+| 実行中のアプリ | 実行のたびに変わる。stdio で状態を持つ。画面の構造・スクリーンショット・操作 | DevFlow(`maui devflow mcp`。下の「DevFlow」) |
+
+- ツールの説明はいつも文脈を使うので、ツールは少なく、説明は短くする
+- 座標でのクリックは画面の大きさと密度で崩れる。要素を意味で指定して操作する(MAUI では `AutomationId`・型・文字・スタイルのクラス)
+- 作るより確かめる方が高くつく。変更の後に、画面の構造とスクリーンショットでエージェント自身が確かめて直してから返す
+
+設定の例(Claude Code。リポジトリの直下の `.mcp.json`)。
+
+```json
+{
+  "mcpServers": {
+    "maui-devflow": { "command": "maui", "args": ["devflow", "mcp"] },
+    "microsoft-learn": { "type": "http", "url": "https://learn.microsoft.com/api/mcp" }
+  }
+}
+```
+
+### DevFlow(実行中のアプリの検査)
+
+| 項目 | 内容 |
+| --- | --- |
+| 構成 | アプリの中の HTTP のエージェント(`Microsoft.Maui.DevFlow.Agent`)、CLI(`maui devflow`。`dotnet tool install -g Microsoft.Maui.Cli --prerelease`)、ブローカー(複数のアプリのポートの割り当てと発見)、MCP サーバー(`maui devflow mcp`、stdio) |
+| できること | 画面の構造の取得、CSS セレクターでの要素の検索、タップ・入力・スクロール、プロパティの読み書き、スクリーンショット、表示の検証、ログ、通信の監視、CPU・メモリ・GC・カクつきのプロファイル、Preferences と SecureStorage の読み書き、アプリのファイル(一覧・取得・置き換え・削除)、センサー、操作の記録 |
+| 組み込み | Debug だけに入れる(PackageReference に構成の条件を付け、`MauiProgram` で `#if DEBUG` の `builder.AddMauiDevFlowAgent()`) |
+| Android | USB の端末も `adb reverse tcp:19223 tcp:19223`(ブローカー)と、エージェントのポートの `adb reverse` が要る |
+| 版 | `0.1.0-preview.12.26421.1`(2026-08-21)。実験的で、版ごとに変わる。Learn の文書(2026-05)では Android は「対応中」 |
+
+本アプリで使う場合の注意。
+
+| 点 | 内容 |
+| --- | --- |
+| SkiaSharp | エージェントの依存は SkiaSharp 3.119.2 以上で、本アプリは 4.152.1。4 系で無くなった API を使っていると、実行時(スクリーンショットなど)に失敗する。入れる前に確かめる |
+| 遷移 | 遷移の操作は Shell と Page の遷移が前提。Smart.Navigation の画面の切り替えには使えない見込みで、画面のボタンのタップで遷移する |
+| 要素の指定 | `AutomationId` は付けていない(`Change_Summary.md` の付録B)。型・文字・スタイルのクラスでの CSS セレクターになる |
+| DI | `UseGeneratedServiceProvider`(BunnyTail)。ライブラリが登録する型は `GeneratedFactory.cs` か実行時のフォールバックで作る |
+| 使える場面 | 画面の確認(要素の位置・文字・表示の状態)、ミニアプリの状態の JSON(`files/json`)と設定(Preferences)の読み書き、通信の監視、カクつきの検出 |
+
+### 参照
+
+- https://learn.microsoft.com/dotnet/maui/developer-tools/devflow/ (DevFlow の概要・Android の準備・MCP)
+- https://github.com/dotnet/maui-labs (DevFlow・CLI・スキル・AI Attributes)
+- https://learn.microsoft.com/training/support/mcp (Microsoft Learn MCP)
+- https://devblogs.microsoft.com/dotnet/accelerating-dotnet-maui-with-ai-agents/ (dotnet/maui のエージェントとスキル)
+- https://devblogs.microsoft.com/dotnet/how-uno-platform-uses-dotnet-mcp-ai-to-build-high-quality-apps/ (Uno Platform のドキュメントとアプリの MCP)
+
 ----
 
 # 🌱新規プロジェクト作成

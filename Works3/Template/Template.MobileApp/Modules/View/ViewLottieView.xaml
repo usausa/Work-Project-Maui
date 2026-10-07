@@ -26,7 +26,14 @@
                    TargetType="Border">
                 <Setter Property="Margin" Value="12" />
                 <Setter Property="Padding" Value="8" />
-                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0" Color="{StaticResource BlueLighten5}" />
+                            <GradientStop Offset="1" Color="{StaticResource PurpleLighten5}" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
                 <Setter Property="StrokeThickness" Value="1" />
                 <Setter Property="StrokeShape" Value="RoundRectangle 16" />
@@ -133,7 +140,8 @@
             <extended:SKLottieView Source="Lottie/popping.json"
                                    Progress="{Binding Progress}"
                                    Duration="{Binding Duration}"
-                                   IsAnimationEnabled="{Binding IsAnimationEnabled}" />
+                                   IsAnimationEnabled="{Binding IsAnimationEnabled}"
+                                   RepeatCount="-1" />
         </Border>
 
         <!-- プレイヤーコントロール -->

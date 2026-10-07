@@ -2,7 +2,21 @@ namespace Template.MobileApp.Modules.View;
 
 using Fonts;
 
-public sealed record DrawerMenuItem(string Icon, string Text);
+public sealed partial class DrawerMenuItem : ObservableObject
+{
+    public string Icon { get; }
+
+    public string Text { get; }
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+
+    public DrawerMenuItem(string icon, string text)
+    {
+        Icon = icon;
+        Text = text;
+    }
+}
 
 // Syncfusion の SfNavigationDrawer と自作の SideDrawer (Controls/SideDrawer.cs) を切り替えて比べる
 public sealed partial class ViewDrawerViewModel : AppViewModelBase
@@ -24,7 +38,7 @@ public sealed partial class ViewDrawerViewModel : AppViewModelBase
     public partial bool IsCustomDrawerOpen { get; set; }
 
     [ObservableProperty]
-    public partial string Selected { get; set; } = "ホーム";
+    public partial DrawerMenuItem SelectedItem { get; set; }
 
     public IReadOnlyList<string> Modes { get; } = ["SfNavigationDrawer", "自作 SideDrawer"];
 
@@ -47,10 +61,15 @@ public sealed partial class ViewDrawerViewModel : AppViewModelBase
 
     public ViewDrawerViewModel()
     {
+        SelectedItem = MenuItems[0];
+        SelectedItem.IsSelected = true;
+
         OpenCommand = MakeDelegateCommand(Toggle);
         SelectCommand = MakeDelegateCommand<DrawerMenuItem>(x =>
         {
-            Selected = x.Text;
+            SelectedItem.IsSelected = false;
+            SelectedItem = x;
+            SelectedItem.IsSelected = true;
             IsSfDrawerOpen = false;
             IsCustomDrawerOpen = false;
         });

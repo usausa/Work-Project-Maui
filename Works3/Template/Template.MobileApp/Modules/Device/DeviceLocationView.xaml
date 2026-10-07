@@ -19,6 +19,25 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
+            <Style x:Key="CoordGrid"
+                   TargetType="Grid">
+                <Setter Property="RowSpacing" Value="12" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ValueUnitStack"
+                   TargetType="HorizontalStackLayout">
+                <Setter Property="Spacing" Value="4" />
+            </Style>
+
+            <Style x:Key="UnitLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,0,0,3" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
+            </Style>
+
             <Style x:Key="CoordValueLabel"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="JetBrainsMono" />
@@ -80,18 +99,23 @@
                                    Title="Position"
                                    Icon="{x:Static fonts:MaterialIcons.My_location}">
                     <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                        <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
-                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                                   Text="Latitude" />
-                            <Label Style="{StaticResource CoordValueLabel}"
-                                   Text="{Binding Location.Latitude, StringFormat='{0:F6}', FallbackValue='-'}" />
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Style="{StaticResource BasicTextGroupStack}">
-                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                                   Text="Longitude" />
-                            <Label Style="{StaticResource CoordValueLabel}"
-                                   Text="{Binding Location.Longitude, StringFormat='{0:F6}', FallbackValue='-'}" />
-                        </VerticalStackLayout>
+                        <Grid Style="{StaticResource CoordGrid}"
+                              ColumnDefinitions="*,*">
+                            <VerticalStackLayout Grid.Column="0"
+                                                 Style="{StaticResource BasicTextGroupStack}">
+                                <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                       Text="Latitude" />
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Latitude, StringFormat='{0:F6}', FallbackValue='-'}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Style="{StaticResource BasicTextGroupStack}">
+                                <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                       Text="Longitude" />
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Longitude, StringFormat='{0:F6}', FallbackValue='-'}" />
+                            </VerticalStackLayout>
+                        </Grid>
                         <BoxView Style="{StaticResource CardDivider}" />
                         <Grid Style="{StaticResource CardRowGrid}"
                               ColumnDefinitions="Auto,*">
@@ -113,36 +137,57 @@
                                    behaviors:AnimationOption.EnterDelay="100"
                                    Title="Motion"
                                    Icon="{x:Static fonts:MaterialIcons.Directions_run}">
-                    <Grid Style="{StaticResource CardInfoGrid}"
-                          RowDefinitions="Auto,Auto,Auto,Auto"
-                          ColumnDefinitions="2*,3*">
-                        <Label Grid.Row="0" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Altitude" />
-                        <Label Grid.Row="0" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Altitude, StringFormat='{0:F1} m', TargetNullValue='-', FallbackValue='-'}" />
-
-                        <Label Grid.Row="1" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Course" />
-                        <Label Grid.Row="1" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Course, StringFormat='{0:F0}°', TargetNullValue='-', FallbackValue='-'}" />
-
-                        <Label Grid.Row="2" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Speed" />
-                        <Label Grid.Row="2" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Speed, StringFormat='{0:F1} m/s', TargetNullValue='-', FallbackValue='-'}" />
-
-                        <Label Grid.Row="3" Grid.Column="0"
-                               Style="{StaticResource NameLabel}"
-                               Text="Accuracy" />
-                        <Label Grid.Row="3" Grid.Column="1"
-                               Style="{StaticResource ValueLabel}"
-                               Text="{Binding Location.Accuracy, StringFormat='±{0:F0} m', TargetNullValue='-', FallbackValue='-'}" />
+                    <Grid Style="{StaticResource CoordGrid}"
+                          RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0"
+                                             Style="{StaticResource BasicTextGroupStack}">
+                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                   Text="Altitude" />
+                            <HorizontalStackLayout Style="{StaticResource ValueUnitStack}">
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Altitude, StringFormat='{0:F1}', TargetNullValue='-', FallbackValue='-'}" />
+                                <Label Style="{StaticResource UnitLabel}"
+                                       IsVisible="{Binding Location.Altitude, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
+                                       Text="m" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                             Style="{StaticResource BasicTextGroupStack}">
+                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                   Text="Course" />
+                            <HorizontalStackLayout Style="{StaticResource ValueUnitStack}">
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Course, StringFormat='{0:F0}', TargetNullValue='-', FallbackValue='-'}" />
+                                <Label Style="{StaticResource UnitLabel}"
+                                       IsVisible="{Binding Location.Course, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
+                                       Text="°" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0"
+                                             Style="{StaticResource BasicTextGroupStack}">
+                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                   Text="Speed" />
+                            <HorizontalStackLayout Style="{StaticResource ValueUnitStack}">
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Speed, StringFormat='{0:F1}', TargetNullValue='-', FallbackValue='-'}" />
+                                <Label Style="{StaticResource UnitLabel}"
+                                       IsVisible="{Binding Location.Speed, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
+                                       Text="m/s" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1"
+                                             Style="{StaticResource BasicTextGroupStack}">
+                            <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                                   Text="Accuracy" />
+                            <HorizontalStackLayout Style="{StaticResource ValueUnitStack}">
+                                <Label Style="{StaticResource CoordValueLabel}"
+                                       Text="{Binding Location.Accuracy, StringFormat='±{0:F0}', TargetNullValue='-', FallbackValue='-'}" />
+                                <Label Style="{StaticResource UnitLabel}"
+                                       IsVisible="{Binding Location.Accuracy, Converter={StaticResource NotEmptyConverter}, FallbackValue=False}"
+                                       Text="m" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
                     </Grid>
                 </controls:InfoCard>
 

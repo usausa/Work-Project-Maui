@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Network"
              x:Class="Template.MobileApp.Modules.Network.NetworkRealtimeView"
@@ -22,11 +23,38 @@
     <ContentView.Resources>
         <ResourceDictionary>
 
-            <Style x:Key="ErrorLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource RedDefault}" />
+            <Style x:Key="StateChip"
+                   TargetType="controls:StatusChip">
+                <Setter Property="HorizontalOptions" Value="Start" />
             </Style>
+
+            <s:MapToTextConverter x:Key="StateTextConverter">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Stopped}"
+                                      Value="停止" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                      Value="接続中" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connected}"
+                                      Value="接続済み" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                      Value="再接続中" />
+                    <s:MapToTextEntry Key="{x:Static module:RealtimeState.Error}"
+                                      Value="エラー" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <converters:MapToToneConverter x:Key="StateToneConverter">
+                <converters:MapToToneConverter.Entries>
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Connected}"
+                                               Value="Success" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                               Value="Warning" />
+                    <converters:MapToToneEntry Key="{x:Static module:RealtimeState.Error}"
+                                               Value="Error" />
+                </converters:MapToToneConverter.Entries>
+            </converters:MapToToneConverter>
 
             <Style x:Key="StatBorder"
                    TargetType="Border">
@@ -53,17 +81,50 @@
                                Title="接続"
                                Icon="{x:Static fonts:MaterialIcons.Sync}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicBodyLabel}"
-                           Text="{Binding StateText, StringFormat='状態: {0}'}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ConnectionId, StringFormat='接続 ID: {0}'}" />
-                    <Label Style="{StaticResource ErrorLabel}"
-                           IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding LastError}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ServerTime, StringFormat='サーバー時刻: {0}'}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="{Binding ReportCount, StringFormat='端末の状態を送信: {0} 回 (10 秒ごと)'}" />
+                    <controls:StatusChip Style="{StaticResource StateChip}"
+                                         Icon="{x:Static fonts:MaterialIcons.Sync}"
+                                         Text="{Binding State, Converter={StaticResource StateTextConverter}}"
+                                         Tone="{Binding State, Converter={StaticResource StateToneConverter}}" />
+                    <Border Style="{StaticResource CardErrorBorder}"
+                            IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}">
+                        <Grid Style="{StaticResource CardErrorGrid}"
+                              ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource CardErrorIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Error_outline}" />
+                            <Label Grid.Column="1"
+                                   Style="{StaticResource CardErrorLabel}"
+                                   Text="{Binding LastError}" />
+                        </Grid>
+                    </Border>
+                    <Grid Style="{StaticResource CardNameValueGrid}"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="2*,3*">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="接続ID" />
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource CardMonoValueLabel}"
+                               Text="{Binding ConnectionId}" />
+                        <BoxView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
+
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="サーバー時刻" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource CardMonoValueLabel}"
+                               Text="{Binding ServerTime}" />
+                        <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Style="{StaticResource CardRowDivider}" />
+
+                        <Label Grid.Row="2" Grid.Column="0"
+                               Style="{StaticResource CardNameLabel}"
+                               Text="状態の送信" />
+                        <Label Grid.Row="2" Grid.Column="1"
+                               Style="{StaticResource CardValueLabel}"
+                               Text="{Binding ReportCount, StringFormat='{0}回(10秒ごと)'}" />
+                    </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"

@@ -66,22 +66,62 @@
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Loading"
-                                Text="Loading" />
+                                Text="Loading">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding CurrentState}"
+                                             Value="Loading">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource BlueDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Empty"
-                                Text="Empty" />
+                                Text="Empty">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding CurrentState}"
+                                             Value="Empty">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource GrayDefault}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource GrayDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                         <Button Grid.Column="2"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter="Error"
-                                Text="Error" />
+                                Text="Error">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding CurrentState}"
+                                             Value="Error">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource RedDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                         <Button Grid.Column="3"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding StateCommand}"
                                 CommandParameter=""
-                                Text="Success" />
+                                Text="Success">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding CurrentState, Converter={StaticResource EmptyConverter}}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                                    <Setter Property="BorderColor" Value="{StaticResource GreenDefault}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                     </Grid>
 
                     <Grid Style="{StaticResource StateContainerGrid}"

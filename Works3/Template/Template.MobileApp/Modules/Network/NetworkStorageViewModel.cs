@@ -53,7 +53,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
     public partial bool Loading { get; set; }
 
     [ObservableProperty]
-    public partial bool IsEmpty { get; set; } = true;
+    public partial bool IsEmpty { get; set; }
 
     [ObservableProperty]
     public partial bool Transferring { get; set; }

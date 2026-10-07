@@ -12,7 +12,7 @@ public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
     public partial bool IsCustomSheetOpen { get; set; }
 
     [ObservableProperty]
-    public partial string Message { get; set; } = "シートはまだ開いていません";
+    public partial string? Selected { get; set; }
 
     public IReadOnlyList<string> Actions { get; } = ["共有", "リンクをコピー", "お気に入りに追加", "レポート"];
 
@@ -35,7 +35,7 @@ public sealed partial class ViewBottomSheetViewModel : AppViewModelBase
         CloseCommand = MakeDelegateCommand(Close);
         SelectCommand = MakeDelegateCommand<string>(x =>
         {
-            Message = $"選択: {x}";
+            Selected = x;
             Close();
         });
     }

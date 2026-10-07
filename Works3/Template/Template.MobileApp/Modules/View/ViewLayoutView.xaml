@@ -268,35 +268,43 @@
                            Text="全セルが同じサイズになる (MaxColumns=4)" />
                     <mct:UniformItemsLayout Style="{StaticResource UniformItems}"
                                             MaxColumns="4">
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="A" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="B" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource AmberLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="C" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource PinkLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="D" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="E" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource PurpleLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="F" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource OrangeLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="G" />
                         </Border>
-                        <Border Style="{StaticResource UniformCell}">
+                        <Border Style="{StaticResource UniformCell}"
+                                BackgroundColor="{StaticResource GrayLighten2}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="H" />
                         </Border>
@@ -313,33 +321,42 @@
                            Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
                     <Grid HeightRequest="240">
                         <controls:CircularLayout>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="月" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="火" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="水" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="木" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource GrayLighten3}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="金" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource BlueLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
-                                       Text="土" />
+                                       Text="土"
+                                       TextColor="{StaticResource BlueDefault}" />
                             </Border>
-                            <Border Style="{StaticResource CircleCell}">
+                            <Border Style="{StaticResource CircleCell}"
+                                    BackgroundColor="{StaticResource RedLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
-                                       Text="日" />
+                                       Text="日"
+                                       TextColor="{StaticResource RedDefault}" />
                             </Border>
                         </controls:CircularLayout>
                         <Label Style="{StaticResource UniformCellLabel}"
@@ -352,23 +369,28 @@
                     <controls:CircularLayout HorizontalOptions="Center"
                                              Radius="88"
                                              FitToArc="True" StartAngle="180" SweepAngle="180">
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="1" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource AmberLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="3" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource PinkLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="4" />
                         </Border>
-                        <Border Style="{StaticResource ArcCell}">
+                        <Border Style="{StaticResource ArcCell}"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="5" />
                         </Border>
@@ -388,27 +410,32 @@
                                                  HorizontalOptions="Center" VerticalOptions="Center"
                                                  Radius="64"
                                                  FitToArc="True" RotateItems="True" StartAngle="200" SweepAngle="140">
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource BlueLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="A"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource GreenLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="B"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource AmberLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="C"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource PinkLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="D"
                                        FontSize="12" />
                             </Border>
-                            <Border Style="{StaticResource FanPill}">
+                            <Border Style="{StaticResource FanPill}"
+                                    BackgroundColor="{StaticResource CyanLighten4}">
                                 <Label Style="{StaticResource UniformCellLabel}"
                                        Text="E"
                                        FontSize="12" />
@@ -420,21 +447,30 @@
                                                  OrbitSpacing="40">
                             <Border Style="{StaticResource OrbitCenter}"
                                     controls:CircularLayout.Orbit="0" />
-                            <Border Style="{StaticResource OrbitDot}" />
-                            <Border Style="{StaticResource OrbitDot}" />
-                            <Border Style="{StaticResource OrbitDot}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource BlueLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource GreenLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    BackgroundColor="{StaticResource AmberLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource BlueLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource GreenLighten4}" />
                             <Border Style="{StaticResource OrbitDot}"
-                                    controls:CircularLayout.Orbit="2" />
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource AmberLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource PinkLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource CyanLighten4}" />
+                            <Border Style="{StaticResource OrbitDot}"
+                                    controls:CircularLayout.Orbit="2"
+                                    BackgroundColor="{StaticResource PurpleLighten4}" />
                         </controls:CircularLayout>
                     </Grid>
                 </VerticalStackLayout>

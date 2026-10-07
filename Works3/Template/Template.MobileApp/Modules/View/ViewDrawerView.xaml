@@ -43,10 +43,35 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten5}" />
             </Style>
 
-            <Style x:Key="SelectedLabel"
+            <Style x:Key="SelectedRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="SelectedIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten4}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="SelectedIconLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
                 <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="SelectedNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
             <!-- ドロワーの中身 (両方で共通の見た目) -->
@@ -114,7 +139,7 @@
 
             <Style x:Key="DrawerItemLabel"
                    TargetType="Label">
-                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken3}" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -123,16 +148,39 @@
                           x:DataType="{x:Type module:DrawerMenuItem}">
                 <Grid Style="{StaticResource DrawerItemGrid}"
                       ColumnDefinitions="Auto,*">
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid"
+                                     Binding="{Binding IsSelected}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueLighten5}" />
+                        </DataTrigger>
+                    </Grid.Triggers>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewDrawerViewModel}}, Path=SelectCommand, x:DataType={x:Type module:ViewDrawerViewModel}}"
                                               CommandParameter="{Binding .}" />
                     </Grid.GestureRecognizers>
                     <Label Grid.Column="0"
                            Style="{StaticResource DrawerItemIcon}"
-                           Text="{Binding Icon}" />
+                           Text="{Binding Icon}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding IsSelected}"
+                                         Value="True">
+                                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                     <Label Grid.Column="1"
                            Style="{StaticResource DrawerItemLabel}"
-                           Text="{Binding Text}" />
+                           Text="{Binding Text}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding IsSelected}"
+                                         Value="True">
+                                <Setter Property="TextColor" Value="{StaticResource BlueDefault}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                 </Grid>
             </DataTemplate>
 
@@ -201,8 +249,17 @@
                                            behaviors:AnimationOption.EnterDelay="100"
                                            Title="選択中"
                                            Icon="{x:Static fonts:MaterialIcons.Check_circle}">
-                            <Label Style="{StaticResource SelectedLabel}"
-                                   Text="{Binding Selected}" />
+                            <Grid Style="{StaticResource SelectedRowGrid}"
+                                  ColumnDefinitions="Auto,*">
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource SelectedIconBorder}">
+                                    <Label Style="{StaticResource SelectedIconLabel}"
+                                           Text="{Binding SelectedItem.Icon}" />
+                                </Border>
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource SelectedNameLabel}"
+                                       Text="{Binding SelectedItem.Text}" />
+                            </Grid>
                         </controls:InfoCard>
 
                     </VerticalStackLayout>

@@ -78,6 +78,69 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <s:MapToTextConverter x:Key="ActionIconConverter"
+                                  DefaultValue="{x:Static fonts:MaterialIcons.Chevron_right}">
+                <s:MapToTextConverter.Entries>
+                    <s:MapToTextEntry Key="共有"
+                                      Value="{x:Static fonts:MaterialIcons.Share}" />
+                    <s:MapToTextEntry Key="リンクをコピー"
+                                      Value="{x:Static fonts:MaterialIcons.Link}" />
+                    <s:MapToTextEntry Key="お気に入りに追加"
+                                      Value="{x:Static fonts:MaterialIcons.Star}" />
+                    <s:MapToTextEntry Key="レポート"
+                                      Value="{x:Static fonts:MaterialIcons.Flag}" />
+                </s:MapToTextConverter.Entries>
+            </s:MapToTextConverter>
+
+            <s:MapToColorConverter x:Key="ActionColorConverter"
+                                   DefaultValue="{StaticResource BlueGrayDarken1}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="お気に入りに追加"
+                                       Value="{StaticResource AmberDarken3}" />
+                    <s:MapToColorEntry Key="レポート"
+                                       Value="{StaticResource RedDefault}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <s:MapToColorConverter x:Key="ActionTintConverter"
+                                   DefaultValue="{StaticResource BlueGrayLighten4}">
+                <s:MapToColorConverter.Entries>
+                    <s:MapToColorEntry Key="お気に入りに追加"
+                                       Value="{StaticResource AmberLighten4}" />
+                    <s:MapToColorEntry Key="レポート"
+                                       Value="{StaticResource RedLighten4}" />
+                </s:MapToColorConverter.Entries>
+            </s:MapToColorConverter>
+
+            <Style x:Key="ResultRowGrid"
+                   TargetType="Grid">
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <Style x:Key="ResultIconBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+            </Style>
+
+            <Style x:Key="ResultIconLabel"
+                   TargetType="Label">
+                <Setter Property="FontFamily" Value="MaterialIcons" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResultNameLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryTextColor}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
             <Style x:Key="SheetSeparator"
                    TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1" />
@@ -111,7 +174,8 @@
                                         </Grid.GestureRecognizers>
                                         <Label Grid.Column="0"
                                                Style="{StaticResource SheetItemIcon}"
-                                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                                               Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
+                                               TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
                                         <Label Grid.Column="1"
                                                Style="{StaticResource SheetItemLabel}"
                                                Text="{Binding .}" />
@@ -160,8 +224,25 @@
                                        behaviors:AnimationOption.EnterDelay="200"
                                        Title="結果"
                                        Icon="{x:Static fonts:MaterialIcons.Check_circle}">
-                        <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding Message}" />
+                        <Grid>
+                            <Label Style="{StaticResource CardAccentLabel}"
+                                   IsVisible="{Binding Selected, Converter={StaticResource EmptyConverter}}"
+                                   Text="シートはまだ開いていません" />
+                            <Grid Style="{StaticResource ResultRowGrid}"
+                                  ColumnDefinitions="Auto,*"
+                                  IsVisible="{Binding Selected, Converter={StaticResource NotEmptyConverter}}">
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource ResultIconBorder}"
+                                        BackgroundColor="{Binding Selected, Converter={StaticResource ActionTintConverter}}">
+                                    <Label Style="{StaticResource ResultIconLabel}"
+                                           Text="{Binding Selected, Converter={StaticResource ActionIconConverter}}"
+                                           TextColor="{Binding Selected, Converter={StaticResource ActionColorConverter}}" />
+                                </Border>
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource ResultNameLabel}"
+                                       Text="{Binding Selected}" />
+                            </Grid>
+                        </Grid>
                     </controls:InfoCard>
 
                 </VerticalStackLayout>
@@ -188,7 +269,8 @@
                                         </Grid.GestureRecognizers>
                                         <Label Grid.Column="0"
                                                Style="{StaticResource SheetItemIcon}"
-                                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                                               Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
+                                               TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
                                         <Label Grid.Column="1"
                                                Style="{StaticResource SheetItemLabel}"
                                                Text="{Binding .}" />

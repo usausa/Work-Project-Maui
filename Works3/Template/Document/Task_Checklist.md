@@ -1,7 +1,7 @@
 # ✅残作業チェックリスト
 
 残作業(実機確認 / 実テスト / 保留)のマスターチェックリスト。経緯・実装内容・ナレッジ・開発ポリシーは `Change_Summary.md`(付録含む)を参照。
-優先順 = 2 節(バックグラウンドタスク / タンキング送信)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。UI のブラッシュアップ(UI 1 / UI 2・View の部品の画面・既存の画面の細部)は本書に載せず `UIBrushup_Plan.md` で管理して先に進め、それが終わってから本書の項目に戻る。小さな項目は「取り込み候補」の章にまとめ(現在は無し)、大きな項目は章を分けている。
+優先順 = 2 節(バックグラウンドタスク / タンキング送信)→ 3 節(プッシュ通知)→ 4 節(生体認証)。6 節(保留中の判断)はユーザーの決定待ち。12 節(Health Connect)と 13 節(取り込み候補)は候補の記録で、要否はユーザーの決定待ち。UI のブラッシュアップ(UI 1 / UI 2・View の部品の画面・既存の画面の細部)は本書に載せず `UIBrushup_Plan.md` で管理して先に進め、それが終わってから本書の項目に戻る。小さな項目は「取り込み候補」の章(13 節)にまとめ、大きな項目は章を分けている。
 
 ## 📋サマリ
 
@@ -13,6 +13,8 @@
 | Device | Biometric(生体認証) | 4-1〜4-3、4-5 |
 | Device | Passkey(パスキー) | 4-4 |
 | Decision | 保留中の判断(CoreCLR の扱い) | 6 |
+| Device | Health Connect(歩数・心拍・睡眠などの健康データ。候補) | 12 |
+| Sample | AI tool calling(Sample > Chat のツール呼び出し。候補) | 13-1 |
 
 ## 📏運用ルール
 
@@ -20,7 +22,7 @@
 - **⚖️【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
-- `README.md` の TODO 表は本書のサマリ表(2〜6 節)と、UI のブラッシュアップ(`UIBrushup_Plan.md`)の 1 行と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
+- `README.md` の TODO 表は本書のサマリ表(2〜6・12・13 節)と、UI のブラッシュアップ(`UIBrushup_Plan.md`)の 1 行と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
 - リンク集 `■MAUI.txd` は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。🟩 の項目は本書へ移し、元行は同書から削除する
 - 描画・性能の計測は **Release ビルド + 実機**(手順は `Development.md` の「Releaseビルドでの検証と計測」)
 
@@ -100,3 +102,52 @@ Credential Manager(`androidx.credentials`)でパスキーを作ってログイ�
 csproj は `UseMonoRuntime=false`(CoreCLR)。Shiny の `[Export]` ライフサイクルコールバックで起動時にクラッシュする(dotnet/android#10996、.NET 11 で修正)。「外部待ち」の表と README の Pending に記載。
 
 - [ ] **6-2-0**⚖️【判断】.NET 11 まで CoreCLR のままにする(実機検証は `-p:UseMonoRuntime=true` の Mono ビルド)か、csproj を Mono に戻すか
+
+## 🩺12. Health Connect
+
+ほかのアプリ(歩数計・フィットネス・体重計など)が記録した歩数・心拍・睡眠・体重などを、Android の Health Connect で読み書きする。今の Device > Activity は歩数センサー(`Components/ActivityRecognizer`、起動からの累計)だけで、履歴とほかのアプリの記録は扱わない。候補の記録で、実施は 12-0 の決定の後。ファイルパスは `Template.MobileApp/` からの相対。
+
+参照: https://allanritchie.com/blog/2026/06/shiny-health-v2/ — `Shiny.Health`(https://github.com/shinyorg/health、MIT)。iOS の HealthKit と Android の Health Connect を `IHealthService` 1 つで扱う。データは 30 種以上(歩数・距離・消費カロリー・階数・心拍の平均 / 安静時 / 変動・体重・身長・体脂肪・血圧・SpO₂・血糖・体温・呼吸数・VO₂ max・睡眠・水分・運動 21 種・栄養など)。API は `RequestPermissions(DataType…)`、期間ごとの集計(`GetStepCounts(start, end, Interval)` など)、`GetWorkouts(start, end)`、`Write(HealthResult)`、`Observe(DataType, token)`(`IAsyncEnumerable`。Android は変更トークンのポーリング)。登録は `builder.Services.AddHealthIntegration()`。
+
+| 項目 | 内容 |
+| --- | --- |
+| パッケージ | `Shiny.Health` 2.0.1(2026-08、累計 4.9K ダウンロード)。依存は `Shiny.Core` 5.0.0-beta-0132 以上(導入済みの Shiny 5.7.2 で満たす)、`Xamarin.AndroidX.Health.Connect.ConnectClient` 1.1.0.2 以上、`Xamarin.AndroidX.Lifecycle.LiveData.Core` 2.10.0.2 以上。`dotnet list package --include-transitive` で `Fragment.Ktx` のピン止めとの競合を確かめる |
+| AndroidX を直接使う場合 | Health Connect のクライアントの API は Kotlin の suspend 関数で、C# から呼ぶには継続(`Continuation`)の橋渡しが要る |
+| 端末 | Android 14 以降は OS に含まれる(Pixel 9a はこれ)。Android 11〜13(minSdk 30)は Health Connect のアプリが別に要るので、使える状態(未導入・更新が要る)を確かめてから使う |
+| マニフェスト | 読み書きするデータの種類ごとの `android.permission.health.READ_*` / `WRITE_*`。権限の要求には、権限の説明を出す画面の宣言が要る(Android 13 以前 = `androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE` の intent-filter、Android 14 以降 = `android.intent.action.VIEW_PERMISSION_USAGE` + `android.intent.category.HEALTH_PERMISSIONS` の activity-alias。対象は `template.mobileapp.MainActivity`)。Android 11〜13 向けの `<queries>`(`com.google.android.apps.healthdata`) |
+| 確かめ方 | 端末に記録が無くても、アプリから書き込んで(歩数・体重など)読み戻せば確かめられる |
+| AI のツール | `Shiny.Health.Extensions.AI`(`AddHealthAITools`)は健康データを `Microsoft.Extensions.AI` のツールにする。Sample > Chat のツール呼び出しの題材になる |
+
+| 現在のファイル名 | 何用か | 変更 |
+| --- | --- | --- |
+| `Template.MobileApp.csproj` | パッケージ | `Shiny.Health` を追加 |
+| `Platforms/Android/AndroidManifest.xml` | 権限・開く先のアプリの宣言 | health の権限(使う画面のコメント付き)、`<queries>`、権限の説明の activity-alias |
+| `Platforms/Android/MainActivity.cs` | 起動の Activity | 権限の説明の intent-filter と、説明の画面への遷移 |
+| `Modules/Device/DeviceHealthView.xaml` + `DeviceHealthViewModel.cs`(新規)か `DeviceActivityView.xaml` + `DeviceActivityViewModel.cs` | 健康データ / 歩数と行動の認識 | 使えるかどうか、権限の要求、今日と 7 日の歩数、心拍、睡眠、書き込みと読み戻し |
+| `Modules/Device/DeviceMenuView.xaml` / `Modules/ViewId.cs` | メニュー / 画面 ID | 新しい画面にする場合(Device メニューは満杯) |
+| `MauiProgram.cs` | DI 登録 | `AddHealthIntegration()` |
+
+- [ ] **12-0**⚖️【判断】要否と範囲 — 新しいパッケージ(`Shiny.Health` と AndroidX の 2 つ)と、マニフェストの権限・説明の画面が前提。採用する場合、新しい画面か Device > Activity への追記か、扱うデータの種類(歩数・心拍・睡眠・体重など)を決める
+
+## 🧩13. 取り込み候補
+
+小さな候補の記録。実施は各項目の判断の後。ファイルパスは `Template.MobileApp/` からの相対。
+
+### 🧠13-1 Sample > Chat のツール呼び出し
+
+今の Sample > Chat は `OllamaApiClient`(`IChatClient`)のストリーミングの応答だけで、ツール呼び出しは無い。モデルが端末やアプリの情報を取るツールを呼び、その結果で応答を続ける形にする。
+
+| 項目 | 内容 |
+| --- | --- |
+| 仕組み | `Microsoft.Extensions.AI` の `ChatClientBuilder(client).UseFunctionInvocation()` で包み、`ChatOptions.Tools` に `AIFunctionFactory.Create(...)` のツールを渡す。モデルがツールを呼ぶと、結果を返して応答を続ける。`UseFunctionInvocation` は `Microsoft.Extensions.AI` にある(OllamaSharp が入れる `Microsoft.Extensions.AI.Abstractions` には無い) |
+| Ollama | `OllamaApiClient` はツールに対応する。モデルもツールに対応したものが要る(モデルは設定の `OllamaModel`) |
+| 題材 | 端末の情報(電池・通信・位置・機種)、アプリのデータ(ToDo の一覧と追加)、健康データ(`Shiny.Health.Extensions.AI`。12 節) |
+| トリミング | `AIFunctionFactory.Create` はリフレクションでパラメーターのスキーマを作るので、Release(トリミング)で確かめる。`Microsoft.Maui.AI.Attributes`(maui-labs。`[ExportAIFunction]` のソース生成、承認のゲート、AOT 向け)で置き換えられる |
+| ツールの分け方 | 指標ごとに 1 ツールにしない(数が多いとモデルが選び間違える)。種類を引数にした少数のツールにする。権限が要るものは、ツールを使う前に取っておく |
+
+| 現在のファイル名 | 何用か | 変更 |
+| --- | --- | --- |
+| `Template.MobileApp.csproj` | パッケージ | `Microsoft.Extensions.AI` を追加 |
+| `Modules/Sample/SampleChatViewModel.cs` | AI とのチャット | クライアントを `UseFunctionInvocation()` で包み、ツールを渡す |
+
+- [ ] **13-1-0**⚖️【判断】要否と範囲 — ツールに対応したモデル(Ollama)が前提。採用する場合、ツールの題材(端末の情報・アプリのデータ・健康データ)と、Release での確かめ方を決める

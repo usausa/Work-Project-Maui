@@ -33,6 +33,15 @@
                 <Setter Property="HeightRequest" Value="240" />
             </Style>
 
+            <x:Array x:Key="DoughnutBrushes"
+                     Type="{x:Type Brush}">
+                <SolidColorBrush Color="{StaticResource BlueDefault}" />
+                <SolidColorBrush Color="{StaticResource GreenDefault}" />
+                <SolidColorBrush Color="{StaticResource AmberDefault}" />
+                <SolidColorBrush Color="{StaticResource RedDefault}" />
+                <SolidColorBrush Color="{StaticResource PurpleDefault}" />
+            </x:Array>
+
             <Style x:Key="PolarChart"
                    TargetType="charts:SfPolarChart">
                 <Setter Property="HeightRequest" Value="260" />
@@ -94,9 +103,21 @@
                                Title="Doughnut (SfCircularChart)"
                                Icon="{x:Static fonts:MaterialIcons.Donut_large}">
                 <charts:SfCircularChart Style="{StaticResource DoughnutChart}">
+                    <charts:SfCircularChart.Legend>
+                        <charts:ChartLegend Placement="Bottom" />
+                    </charts:SfCircularChart.Legend>
                     <charts:DoughnutSeries ItemsSource="{Binding Share}"
                                            XBindingPath="Label" YBindingPath="Value"
-                                           EnableAnimation="True" ShowDataLabels="True" />
+                                           PaletteBrushes="{StaticResource DoughnutBrushes}"
+                                           EnableAnimation="True" ShowDataLabels="True">
+                        <charts:DoughnutSeries.DataLabelSettings>
+                            <charts:CircularDataLabelSettings LabelPosition="Outside">
+                                <charts:CircularDataLabelSettings.ConnectorLineSettings>
+                                    <charts:ConnectorLineStyle ConnectorType="Line" />
+                                </charts:CircularDataLabelSettings.ConnectorLineSettings>
+                            </charts:CircularDataLabelSettings>
+                        </charts:DoughnutSeries.DataLabelSettings>
+                    </charts:DoughnutSeries>
                 </charts:SfCircularChart>
             </controls:InfoCard>
 

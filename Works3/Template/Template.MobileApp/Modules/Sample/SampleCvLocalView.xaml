@@ -30,6 +30,23 @@
                 <Setter Property="BackgroundColor" Value="Black" />
             </Style>
 
+            <Style x:Key="RetryHintBorder"
+                   TargetType="Border">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="Margin" Value="0,0,0,24" />
+                <Setter Property="Padding" Value="20,8" />
+                <Setter Property="BackgroundColor" Value="#B3000000" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+            </Style>
+
+            <Style x:Key="RetryHintLabel"
+                   TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -51,6 +68,14 @@
         <!-- 撮影ガイドオーバーレイ -->
         <controls:CameraOverlayView Grid.Row="0"
                                     IsVisible="{Binding IsPreview}" />
+
+        <Border Grid.Row="0"
+                Style="{StaticResource RetryHintBorder}"
+                behaviors:AnimationOption.FadeInTrigger="{Binding IsPreview}"
+                IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}">
+            <Label Style="{StaticResource RetryHintLabel}"
+                   Text="Retry でプレビューを再開" />
+        </Border>
 
     </Grid>
 

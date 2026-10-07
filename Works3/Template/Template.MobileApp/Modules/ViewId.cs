@@ -180,6 +180,9 @@ public enum ViewId
     UITelemetry,
     UIEnergy,
 
+    UIHabit,
+    UIHome,
+
     // Sample
     SampleMenu,
 

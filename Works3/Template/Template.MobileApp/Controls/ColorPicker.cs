@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Controls;
 
+using Microsoft.Maui.Controls.Shapes;
+
 // RGBA スライダ 4 本 + プレビューの色選択コントロール (両 Toolkit に無い自作部品)
 public sealed class ColorPicker : ContentView
 {
@@ -19,6 +21,10 @@ public sealed class ColorPicker : ContentView
 
     private static readonly Color CaptionColor = Color.FromArgb("#78909C");
 
+    private static readonly Color ChipColor = Color.FromArgb("#F5F5F5");
+
+    private static readonly Color ChipTextColor = Color.FromArgb("#455A64");
+
     private readonly Slider redSlider;
     private readonly Slider greenSlider;
     private readonly Slider blueSlider;
@@ -30,18 +36,26 @@ public sealed class ColorPicker : ContentView
 
     public ColorPicker()
     {
-        redSlider = CreateSlider();
-        greenSlider = CreateSlider();
-        blueSlider = CreateSlider();
-        alphaSlider = CreateSlider();
+        redSlider = CreateSlider(Color.FromArgb("#F44336"));
+        greenSlider = CreateSlider(Color.FromArgb("#4CAF50"));
+        blueSlider = CreateSlider(Color.FromArgb("#2196F3"));
+        alphaSlider = CreateSlider(Color.FromArgb("#9E9E9E"));
 
         preview = new BoxView { CornerRadius = 8, HeightRequest = 44 };
         valueLabel = new Label
         {
+            FontFamily = "JetBrainsMono",
             FontSize = 12,
-            TextColor = CaptionColor,
-            VerticalTextAlignment = TextAlignment.Center,
-            HorizontalTextAlignment = TextAlignment.End
+            TextColor = ChipTextColor
+        };
+        var valueChip = new Border
+        {
+            Padding = new Thickness(8, 2),
+            BackgroundColor = ChipColor,
+            StrokeThickness = 0,
+            StrokeShape = new RoundRectangle { CornerRadius = 10 },
+            VerticalOptions = LayoutOptions.Center,
+            Content = valueLabel
         };
 
         var grid = new Grid
@@ -78,7 +92,7 @@ public sealed class ColorPicker : ContentView
             }
         };
         previewGrid.Add(preview, 0);
-        previewGrid.Add(valueLabel, 1);
+        previewGrid.Add(valueChip, 1);
         grid.Add(previewGrid, 0, 4);
         Grid.SetColumnSpan(previewGrid, 2);
 
@@ -87,9 +101,9 @@ public sealed class ColorPicker : ContentView
         UpdateFromColor();
     }
 
-    private Slider CreateSlider()
+    private Slider CreateSlider(Color color)
     {
-        var slider = new Slider { Minimum = 0, Maximum = 255 };
+        var slider = new Slider { Minimum = 0, Maximum = 255, MinimumTrackColor = color, ThumbColor = color };
         slider.ValueChanged += (_, _) =>
         {
             if (updating)
