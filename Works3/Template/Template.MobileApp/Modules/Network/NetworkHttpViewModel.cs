@@ -351,7 +351,7 @@ public sealed partial class NetworkHttpViewModel : AppViewModelBase
                 HttpStatusCode.Unauthorized => "認証エラー (401)",
                 HttpStatusCode.Conflict => "名前が重複 (409)",
                 HttpStatusCode.BadRequest => "入力エラー (400)",
-                _ => $"HTTP エラー ({(int)result.StatusCode})"
+                _ => $"HTTPエラー ({(int)result.StatusCode})"
             },
             _ => "通信エラー"
         };

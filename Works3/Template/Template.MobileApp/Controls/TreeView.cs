@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Controls;
 
+using Fonts;
+
 public sealed class TreeNode
 {
     public string Text { get; }
@@ -58,7 +60,7 @@ public sealed class TreeView : ContentView
         set => SetValue(IndentSizeProperty, value);
     }
 
-    private static readonly Color ChevronColor = Color.FromArgb("#90A4AE");
+    private static readonly Color ChevronColor = Color.FromArgb("#616161");
     private static readonly Color TextColor = Color.FromArgb("#37474F");
     private static readonly Color SelectedBackground = Color.FromArgb("#BBDEFB");
 
@@ -101,6 +103,7 @@ public sealed class TreeView : ContentView
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
                 new ColumnDefinition(GridLength.Star)
             },
             BackgroundColor = ReferenceEquals(node, SelectedNode) ? SelectedBackground : Colors.Transparent
@@ -108,13 +111,22 @@ public sealed class TreeView : ContentView
 
         var chevron = new Label
         {
-            Text = node.HasChildren ? (node.IsExpanded ? "▾" : "▸") : "・",
+            Text = node.HasChildren ? (node.IsExpanded ? MaterialIcons.Expand_more : MaterialIcons.Chevron_right) : string.Empty,
+            FontFamily = MaterialIcons.FontFamily,
             TextColor = ChevronColor,
-            FontSize = 14,
-            WidthRequest = 18,
+            FontSize = 20,
+            WidthRequest = 20,
             VerticalTextAlignment = TextAlignment.Center
         };
         row.Add(chevron, 0);
+
+        var icon = new Label
+        {
+            Text = node.HasChildren ? "📁" : "📄",
+            FontSize = 14,
+            VerticalTextAlignment = TextAlignment.Center
+        };
+        row.Add(icon, 1);
 
         var text = new Label
         {
@@ -123,7 +135,7 @@ public sealed class TreeView : ContentView
             FontSize = 14,
             VerticalTextAlignment = TextAlignment.Center
         };
-        row.Add(text, 1);
+        row.Add(text, 2);
 
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, _) =>

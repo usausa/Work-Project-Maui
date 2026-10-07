@@ -449,7 +449,7 @@
                         <!-- ReSharper restore Xaml.PossibleNullReferenceException -->
                         <Label Style="{StaticResource PermissionHintLabel}"
                                IsVisible="{Binding HasPermission, Converter={StaticResource ReverseConverter}}"
-                               Text="位置情報 / 付近の Wi-Fi 機器の権限が無いため SSID とスキャン結果は取得できません" />
+                               Text="位置情報 / 付近のWi-Fi機器の権限が無いためSSIDとスキャン結果は取得できません" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
                 <Button Grid.Row="0" Grid.Column="2"

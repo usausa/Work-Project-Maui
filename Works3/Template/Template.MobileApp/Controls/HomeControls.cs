@@ -62,6 +62,20 @@ public sealed partial class HomeBlurredImage : HomeControl
         set => SetValue(DimProperty, value);
     }
 
+    // 0〜1。暗くした後の平均の明るさの上限。明るい写真は、これを超えないところまで暗くする
+    public static readonly BindableProperty MaxLuminanceProperty = BindableProperty.Create(
+        nameof(MaxLuminance),
+        typeof(double),
+        typeof(HomeBlurredImage),
+        1d,
+        propertyChanged: Invalidate);
+
+    public double MaxLuminance
+    {
+        get => (double)GetValue(MaxLuminanceProperty);
+        set => SetValue(MaxLuminanceProperty, value);
+    }
+
     private SKImage? cache;
 
     private string? cacheKey;
@@ -85,7 +99,7 @@ public sealed partial class HomeBlurredImage : HomeControl
 
         if ((info.Width > 0) && (info.Height > 0) && (Width > 0))
         {
-            var key = $"{Source}:{info.Width}x{info.Height}:{BlurRadius}:{Dim}";
+            var key = $"{Source}:{info.Width}x{info.Height}:{BlurRadius}:{Dim}:{MaxLuminance}";
             if (key != cacheKey)
             {
                 cache?.Dispose();
@@ -121,8 +135,47 @@ public sealed partial class HomeBlurredImage : HomeControl
         paint.ImageFilter = SKImageFilter.CreateBlur(sigma, sigma, SKShaderTileMode.Clamp);
         using var image = SKImage.FromBitmap(bitmap);
         canvas.DrawImage(image, dest, new SKSamplingOptions(SKFilterMode.Linear), paint);
-        canvas.DrawColor(SKColors.Black.WithAlpha((byte)(255 * Math.Clamp(Dim, 0d, 1d))), SKBlendMode.SrcOver);
+
+        var dim = Math.Clamp(Dim, 0d, 1d);
+        if (MaxLuminance < 1d)
+        {
+            var luminance = MeasureLuminance(surface);
+            if (luminance > 0d)
+            {
+                dim = Math.Max(dim, 1d - (MaxLuminance / luminance));
+            }
+        }
+
+        canvas.DrawColor(SKColors.Black.WithAlpha((byte)(255 * dim)), SKBlendMode.SrcOver);
         return surface.Snapshot();
+    }
+
+    // 平均の明るさ(0〜1)。縦横 4 画素おきに見る
+    private static double MeasureLuminance(SKSurface surface)
+    {
+        using var pixmap = surface.PeekPixels();
+        if ((pixmap is null) || ((pixmap.ColorType != SKColorType.Rgba8888) && (pixmap.ColorType != SKColorType.Bgra8888)))
+        {
+            return 0d;
+        }
+
+        var bgra = pixmap.ColorType == SKColorType.Bgra8888;
+        var span = pixmap.GetPixelSpan();
+        var sum = 0d;
+        var count = 0;
+        for (var y = 0; y < pixmap.Height; y += 4)
+        {
+            var row = span.Slice(y * pixmap.RowBytes, pixmap.Width * 4);
+            for (var x = 0; x < row.Length; x += 16)
+            {
+                var r = bgra ? row[x + 2] : row[x];
+                var b = bgra ? row[x] : row[x + 2];
+                sum += (0.2126 * r) + (0.7152 * row[x + 1]) + (0.0722 * b);
+                count++;
+            }
+        }
+
+        return count > 0 ? sum / count / 255d : 0d;
     }
 
     private static partial SKBitmap? LoadBitmap(string? source);

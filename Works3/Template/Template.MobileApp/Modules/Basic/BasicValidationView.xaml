@@ -64,8 +64,6 @@
                                behaviors:Focus.HasError="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
                                Text="{Binding Text1}" />
                     </Border>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="clears error on focus, validates on unfocused" />
                     <Label Style="{StaticResource ErrorMessageLabel}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Text1]}"
                            IsVisible="{Binding Errors[Text1], Converter={StaticResource NotEmptyConverter}}"
@@ -145,8 +143,6 @@
                                IsPassword="True"
                                Text="{Binding Confirm}" />
                     </Border>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="[Compare] で Password との一致を入力の度に検証。Password 変更時も再検証" />
                     <Label Style="{StaticResource ErrorMessageLabel}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding Errors[Confirm]}"
                            IsVisible="{Binding Errors[Confirm], Converter={StaticResource NotEmptyConverter}}"
@@ -173,7 +169,7 @@
                         </Entry>
                     </Border>
                     <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="EmailValidationBehavior (入力の度に検証し文字色が変わる)" />
+                           Text="EmailValidationBehavior (メールアドレスの形式のみ)" />
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Quantity" />
                     <Border Style="{StaticResource CardFieldBorder}">

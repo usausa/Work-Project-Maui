@@ -137,7 +137,7 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
             }
 
             notification.Show(NotificationId, "承認依頼", "SO-2026-000123 の承認をお願いします", "SO-2026-000123", [new("approve", "承認"), new("reject", "却下")]);
-            NotificationText = "通知を表示しました (本体またはボタンのタップで戻ります)";
+            NotificationText = "通知を表示しました(本体またはボタンのタップで戻ります)";
         });
         NotifyScheduleCommand = MakeAsyncCommand(async () =>
         {
@@ -147,8 +147,8 @@ public sealed partial class DeviceMiscViewModel : AppViewModelBase
                 return;
             }
 
-            notification.Schedule(ScheduledNotificationId, "リマインダー", "10 秒後に予約した通知です", TimeSpan.FromSeconds(10), "reminder");
-            NotificationText = notification.CanScheduleExact ? "10 秒後に通知します" : "10 秒後に通知します (正確なアラームが未許可のため前後します)";
+            notification.Schedule(ScheduledNotificationId, "リマインダー", "10秒後に予約した通知です", TimeSpan.FromSeconds(10), "reminder");
+            NotificationText = notification.CanScheduleExact ? "10秒後に通知します" : "10秒後に通知します(正確なアラームが未許可のため前後します)";
         });
         NotifyCancelCommand = MakeDelegateCommand(() =>
         {

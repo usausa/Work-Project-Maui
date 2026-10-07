@@ -294,7 +294,7 @@ public sealed partial class NetworkStorageViewModel : AppViewModelBase
             NetworkResultType.Disconnected => "未接続",
             NetworkResultType.Canceled => "キャンセル",
             NetworkResultType.NotFound => "見つからない (404)",
-            NetworkResultType.HttpError => $"HTTP エラー ({(int)result.StatusCode})",
+            NetworkResultType.HttpError => $"HTTPエラー ({(int)result.StatusCode})",
             _ => "通信エラー"
         };
 

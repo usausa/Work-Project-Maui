@@ -103,11 +103,9 @@
                                Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}', TargetNullValue='-'}" />
                     </Grid>
                     <BoxView Style="{StaticResource CardDivider}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ID だけで JWT を発行する (パスワードなし)。トークンは以降の API 呼び出しに付く" />
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="ログイン ID" />
+                               Text="ログインID" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    Text="{Binding LoginId}"
@@ -130,17 +128,15 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="JWT が必要な API"
+                               Title="JWTが必要なAPI"
                                Icon="{x:Static fonts:MaterialIcons.Verified_user}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="未ログインは 401 の通知。トークンが無効なら保存した ID で再ログインして再送する (無効化で確認)" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding SecureCommand}"
-                                Text="Secure を呼ぶ"
+                                Text="Secureを呼ぶ"
                                 ImageSource="{x:Static markup:AppIcons.SmallLock}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedCancelButton}"

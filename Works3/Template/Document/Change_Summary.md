@@ -2942,9 +2942,9 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Controls/GlowRing.cs`(新規)/ `Controls/TimerDial.cs` | 10-29 ④: 光るグラデーションの輪(`Progress`・始まりと終わりの色・溝の色・太さ)。光る弧の描き方(`DrawGlowArc`)を Timer の文字盤と共有する |
 | `Models/Sample/HabitTracker.cs`(新規)/ `Modules/UI/UIHabitView.xaml` + `.xaml.cs` / `UIHabitViewModel.cs`(新規) | 10-29: 習慣の記録の画面。暗い地の全面の画面(ヘッダーと F キーの帯を隠し、上の帯は #121212)。日付と題、今日の達成率のカード(完了の数・光る輪・週の 7 日の点)、習慣のカード 4 枚(分類の色の輪と割合・分類のチップ・名前・目標・連続日数)。カードのタップで 1 回分進み、100% で ✓ と弾み、連続日数が 1 増えて琥珀と 🔥 になる。今日の全部が終わると週の今日の点を塗る。文字は日本語、見本のデータはメモリーの中だけ |
 | `Models/Sample/SmartHome.cs`(新規)/ `Modules/UI/UIHomeView.xaml` + `.xaml.cs` / `UIHomeViewModel.cs`(新規) | 10-30: スマートホームの画面。全面の画面(上の帯は #101418)。部屋ごとの写真をぼかして暗く敷き、半透明のカードを重ねる。見出し(部屋の名前・接続・室温・シーン)、空調(ダイヤルのドラッグと −/+ で 0.5 度刻み、16〜30°C。運転を切ると灰色)、機器のタイル 3 × 2(タップでオン・オフ。照明とランプは明るさのスライダーで、消すと 0%・点けると消す前の明るさ。状態の点)、電池の行(60% 以上 緑・30% 以上 琥珀・それ未満 赤)、下のタブで部屋(リビング・寝室・キッチン)を切り替え。文字は日本語、見本のデータはメモリーの中だけ |
-| `Controls/HomeControls.cs` / `HomeControls.android.cs` / `HomeControls.ios.cs`(新規) | 10-30: Home だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。`HomeBlurredImage`(写真を 4 分の 1 の大きさでぼかして暗くした画像を 1 回だけ作って写す。写真は MauiImage の名前で、Android は drawable から読む)、`HomeThermostatDial`(下の開いた 270° の弧・光るグラデーション・つまみ・輪のドラッグ)、`HomeGlowIcon`(MaterialIcons の文字を光らせる)、`HomeBatteryGauge`(横向きの電池)。基底の `HomeControl` に再描画と密度 |
+| `Controls/HomeControls.cs` / `HomeControls.android.cs` / `HomeControls.ios.cs`(新規) | 10-30: Home だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。`HomeBlurredImage`(写真を 4 分の 1 の大きさでぼかして暗くした画像を 1 回だけ作って写す。`MaxLuminance` を付けると、暗くした後の平均の明るさがそれを超えないところまで暗くする。写真は MauiImage の名前で、Android は drawable から読む)、`HomeThermostatDial`(下の開いた 270° の弧・光るグラデーション・つまみ・輪のドラッグ)、`HomeGlowIcon`(MaterialIcons の文字を光らせる)、`HomeBatteryGauge`(横向きの電池)。基底の `HomeControl` に再描画と密度 |
 | `Converters/HomeDeviceTextConverter.cs` / `HomeBatteryLevelConverter.cs`(新規) | 10-30: 機器の種類と状態からアイコン・状態の言葉・下の行の文(開度・安全・風量・冷房の温度)、電池の残量の言葉(十分・良好・普通・少ない)と色 |
-| `Modules/UI/UIMenu2View.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-29 / 10-30: UI 2 のメニューの 8 段に Habit(炎のアイコン `LocalFireDepartment`)と Home(家のアイコン `Home`)。`ViewId` の UI の節の最後に `UIHabit` / `UIHome` |
+| `Modules/UI/UIMenu2View.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-29 / 10-30: UI 2 のメニューの 1 段目に Home(家のアイコン `Home`)と Habit(炎のアイコン `LocalFireDepartment`)。Graph 以下は 1 段ずつ下げた。`ViewId` は UI 2 の節の先頭(`UIDock` の後)に `UIHome` / `UIHabit` |
 
 - 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
 - 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
@@ -2957,6 +2957,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: Flight(空と地面の姿勢の表示、レーダーの目標の線、兵装の機体の図)、Tactical(地形図、脅威の一覧、機体の損傷の図、SIG の棒)、Telemetry(横長の 6 項目、大きくなった回転計・ブースト・ギア)。描画は 1 フレーム平均で Flight 13〜14 ms、Tactical 12〜13 ms(Pixel 9a、Debug)
 - 実機: Habit のカードのタップで割合と輪が伸び、100% で ✓ と弾んで連続日数が琥珀と 🔥 になること、今日の達成率の輪も伸びることを確かめた
 - 実機: Home の −/+(22.5 → 23.5°C)、照明を消す(0%・灰色)・ランプを点ける(100%)・鍵を開ける(解錠・要確認・灰色)、ダイヤルを右へドラッグ(27.5°C)、運転を切る(弧が灰色で停止)、寝室・キッチンへの切り替え(背景の写真・機器・電池・空調が入れ替わり、18% の電池は赤の少ない)を撮って確かめた
+- 実機: Home の背景をリビング・寝室・キッチンで前後を撮って比べた(カードの無い所の明るさ: リビング 0.35 → 0.17、キッチン 0.16 → 0.08、寝室は 0.07 のまま)
+- 実機: UI 2 のメニューの 1 段目の Home・Habit から開き、戻るキーで UI 2 のメニューへ戻る。メニューの並びと `ViewId` の順はスクリプトで突き合わせた(全メニューで食い違いなし)
 - ビルド 0 警告、inspectcode 0 件(`UIItemView.xaml` の Syncfusion のテーマの色の 2 つのキーは、ライブラリが名前で読むため `Xaml.RedundantResource` になる。その 2 行だけ抑止)
 
 ### ✨既存の画面の細部の見直し(2026-10-04)
@@ -3074,6 +3076,26 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Device/DeviceCameraView.xaml` / `Resources/Styles/Styles.xaml` | 11-23 ①②: 黒地にし、QR Scan と同じ状態のチップ(カメラの名前・ズーム・フラッシュ・ライト)と丸いボタン(ライト・フラッシュ・縮小・拡大。フラッシュは Off・On・Auto でアイコンと色を切り替え)。使わなくなった共有の `SubMenuGrid` / `SubMenuButton` を削除 |
 | `Modules/Device/DeviceNfcView.xaml` | 11-29 ①②: 読んだ後の上の帯を、緑のグラデーションの IC カード風のカード(Suica・非接触のアイコン・数え上げる残高・等幅の IDm)に。履歴はフラットな行(処理の色の帯・1 行の日時・端末と処理のバッジ・右寄せの残高・1px の線)に。Metro の箱のスタイルは削除 |
 | `Modules/Device/DeviceNfcView.xaml` / `DeviceNfcViewModel.cs` / `Models/Sample/SuicaLogData.cs` | 11-29 ③〜⑥: 端末のバッジを幅 76、処理のバッジを幅 88 以上(長い名前は伸びる)にして横の開始位置をそろえ、文字は中央に。残高を日付の行に置き、その下に前の履歴からの差分(14。プラスは `BlueLighten1`、マイナスは `RedLighten1` で「+￥10,000」「−￥178」。一番古い行と差が 0 の行は出さない)。差分は読み取りのときに ViewModel が求める(`SuicaLogData.Difference`。履歴は新しい順なので次の行との差)。行の上下の余白を 10 → 8、行の間隔を 4 → 0(バッジの上は 3)にして、1 行の高さは 73.5 → 65dp。日付は既定のフォントの 16 の白の太字で曜日付き(「10/06 (火)」)、時刻は 14 の灰 |
+| `Behaviors/EntryOption.android.cs` / `Behaviors/StepperOption.cs` / `StepperOption.android.cs` / `StepperOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` / `Modules/Basic/BasicSettingView.xaml` | 11-13 ①〜③: `EntryOption.NoBorder` を SearchBar(AndroidX の SearchView の `search_plate`)・DatePicker・TimePicker にも足した。SearchBar・日付・時刻を枠の欄に(日付・時刻は見出しを上に、未設定は空の欄)。Stepper の −・+ を幅 48・高さ 32 の白地・灰の枠・角丸 8 のボタンにして間を 8 空ける添付プロパティ `StepperOption.Outlined`。開く・クリアの角丸 16 → 8 |
+| `Resources/Styles/Styles.xaml` / `Modules/Navigation/Modal/InputNumberView.xaml` | 11-16: キーを角丸なし・隙間なしに。✕ は `BlueGrayDefault` の塗りに白の ✕(`InputCancelIconButton`)。色・文字の大きさ・ダイアログの形は今のまま |
+| `Modules/Device/DeviceSensorView.xaml` | 11-19 ①②: 13 本のバーを `RangeBar` に(Low は中央の 0.5、High に割合の値。太さ 8、溝は軸の色の Lighten4) |
+| `Converters/MapToIntConverter.cs`(新規)/ `Controls/StepIndicator.cs` / `Modules/Device/DeviceBluetoothView.xaml` | 11-26 ②: 状態のチップの下に `StepIndicator` の点(待機 0・接続中 1・印刷中 2・完了 3、失敗は 0)。状態から番号へは `MapToIntConverter`。段階の数を隠す `IsCountVisible` を足し、点だけにした |
+| `Behaviors/AnimationOption.cs` / `Modules/Device/DeviceBleHostView.xaml` | 11-28 ②: `AnimationOption.Ripple` / `RippleDelay`(広がりながら消える輪を繰り返す)を足し、広告中は円を緑に、緑の輪を 2 本 0.9 秒ずらして広げる。円の Pulse はやめた |
+| `Graphics/Drawing/ActivityDrawing.cs` / `Modules/Device/DeviceActivityView.xaml` | 11-31 ①②: 歩数を太字の濃い色に、輪の進みを水色から青へのグラデーション(短い弧に分けて色を変える)。下の 3 項目を淡い色の角丸 12 のタイル(絵文字・値と単位・名前)に、活動時間は「0:00」 |
+| `Modules/Device/DeviceCommunicationView.xaml` | 11-33 ①: 縦の中央に、丸い人のアイコン・宛先のカード(電話番号・メール・本文)・丸い操作のボタン(Dial 緑・SMS 青・Email 赤)の連絡先の形に |
+| `Controls/StatControl.cs` / `Modules/Network/NetworkRealtimeView.xaml` | 11-38 ①: グラフを色の面として描き(外の白い枠はやめた。角丸にしない)、名前は 14 の太字・余白 12、データが無くても目盛りの横線 3 本 |
+| `Modules/Network/NetworkSftpView.xaml` | 11-40 ①〜③: ホストを等幅にしてアイコンの行に。転送は見出し付きの枠の入力欄・割合付きの進捗・アイコン付きのボタン(UL・DL・キャンセルの 1 行)。ログは残りの高さいっぱいの枠 |
+| `Controls/TreeView.cs` | 11-47 ①: 開閉の印を MaterialIcons の Chevron(20・#616161)に、印の後ろに 📁 / 📄 |
+| `Modules/Sample/SampleCvLocalView.xaml` | 11-65 ①: 撮影から推論の終わりまで読み込み中の表示 |
+| `Modules/Basic/BasicBehaviorView.xaml` / `BasicLocaleView.xaml` / `BasicStyleView.xaml` / `BasicValidationView.xaml` / `BasicValidationViewModel.cs` | 11-67: Behavior の TypingStoppedCommand と EventToCommandBehavior の見出しの括弧の補足を削った。Locale と Validation(Validate on Unfocused・Correlation)の説明の文を削り、Style は「Segmented select」、Validation の Email の見出しは Numeric と同じく条件の補足だけ(「EmailValidationBehavior (メールアドレスの形式のみ)」)に。Compare のエラーは「Passwordと一致しません」 |
+| `Modules/Navigation/Navigate/NavigateCancelView.xaml` / `NavigateInitializeView.xaml` / `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` | 11-67: Cancel・Initialize の説明の文と区切り線、Wizard の Next の説明を削った |
+| `Modules/Device/DeviceBiometricView.xaml` / `DeviceNfcView.xaml` / `DeviceSensorView.xaml` / `DeviceWiFiView.xaml` / `DeviceWiFiViewModel.cs` / `DeviceMiscViewModel.cs` | 11-67: Key sign in の説明と NFC の 2 行目(と `NfcHintLabel`)を削り、Level は「Tilt the device」に。NFC・Wi-Fi・Misc の文のスペースを詰めた(「Suicaをかざしてください」「Wi-Fiオフ」「10秒後に通知します」など) |
+| `Modules/Network/NetworkAuthView.xaml` / `NetworkHttpView.xaml` / `NetworkHttpViewModel.cs` / `NetworkStorageView.xaml` / `NetworkStorageViewModel.cs` / `NetworkGrpcView.xaml` / `NetworkRealtimeView.xaml` | 11-67: HTTP (Auth)・HTTP (Data)・Storage の説明の文と、gRPC の再接続の説明を削った。gRPC のチャットが空のときは「まだメッセージはありません」、Realtime の通知は「管理画面のDevicesから送った通知を表示」。題・ボタン・エラーの文のスペースを詰め(「JWTが必要なAPI」「テストAPI」「10秒待つAPI」「HTTPエラー (…)」など)、未配送の送信と状態の送信は値と単位の間を入れた(「{0} 件」「{0} 回 (10 秒ごと)」) |
+| `Modules/Network/NetworkSftpView.xaml` / `NetworkSftpViewModel.cs` / `Usecase/SshUsecase.cs` | 11-67: ホスト鍵の指紋の表示をやめた(見出しと箱、VM の `ServerFingerprint`、`SshUsecase` の `HostKeyReceived` での受け取りと `SftpTransferResult` の項目)。転送の説明の文も削った |
+| `Modules/View/ViewBottomSheetView.xaml` / `ViewCustomView.xaml` / `ViewDragDropView.xaml` / `ViewDrawerView.xaml` / `ViewEffectView.xaml` / `ViewGraphicsView.xaml` / `ViewLayoutView.xaml` / `ViewLottieView.xaml` / `ViewSfChartView.xaml` / `ViewStateView.xaml` / `ViewStatePanelView.xaml` / `ViewToolkitView.xaml` | 11-67: 実装の説明の文を削った(Layout の 10 件、Graphics の Shape drawing・Pulse ring・Countdown button、Custom の MarqueeLabel・TreeView・ColorPicker・AvatarGroup、Lottie、Sunburst、LazyView と読み込んだ後の中身)。Bottom Sheet・Drag & Drop・Drawer・Sketch は何をするかだけの文に(「⇔」をやめた)。Custom の流れる文字の 2 本目は消し(`NoticeMarqueeLabel` / `NoticeMarqueeBorder` も)、Effect の撮影の見本は「撮影プレビュー」、State の Success は「読み込み完了」、Expander の中身は「展開した内容」。ボタンと見本の文のスペースを詰めた(「Sfのシートを開く (F2)」「1番目のカード(遅延なし)」など) |
+| `Modules/Sample/SampleChatViewModel.cs` / `SampleCvLocalView.xaml` / `SampleCvNetView.xaml` | 11-67: 「AIアシスタント」「Retryでプレビューを再開」 |
+| `Modules/View/ViewDrawingView.xaml` / `ViewDrawingViewModel.cs` | 11-73: パレットで色と幅を変えても線が黒・5 のままだった不具合を直した。線の色と幅は `DrawingController` だけが持ち、画面のモデルの `LineColor` / `LineWidth` はやめた。`DrawingView` の色と幅の XAML の結び付けは消し、チップの選択の枠・スライダー・幅の値はコントローラーの値に結ぶ |
+| `Document/UIBrushup_Plan.md` | 決定事項に「補足の文」(実装の説明や断り書きは書かない。「⇔」と状態の移り変わりは書かず、何をするかだけ)を足し、「スペース」は文章の中だけ詰めてパラメータ的な所は半角スペースを入れる形にした。11-7 Action 系のボタン、11-27 BLE Scan の行、11-53 かんばんのカードは今のまま(付録B) |
 | `Resources/Raw/web-basic/index.html` / `other.html` / `style.css`(新規)/ `Modules/Sample/SampleWebBasicView.xaml` / `SampleWebBasicView.xaml.cs` | 11-59 ①③: 中のページに共通の CSS(余白 16・文字 16、幅いっぱいの高さ 44・角 8 の枠のボタン、下まで広がる等幅のログ)。下の帯の受信の光を `AnimationOption.HighlightTrigger` にし、code-behind の処理を削除 |
 | `Modules/Device/DeviceInfoView.xaml` | 11-17 ①: Device のカードを、機種名(24 の太字)と OS の版・実機 / エミュレーターのチップ(実機は緑、エミュレーターは琥珀)に |
 | `Modules/Device/DeviceStatusView.xaml` | 11-18 ③: 電池を `ArcMeter` の輪(120・太さ 10、20% 以下は赤)にして、中に電池のアイコンと % |
@@ -3085,9 +3107,9 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Network/NetworkTelemetryView.xaml` | 11-41 ②: Custom value の Value 1〜4 のスライダーと値を青・緑・橙・紫に |
 | `Modules/View/ViewAnimationView.xaml` / `Animations/SpringAnimation.cs` | 11-50 ①②: タップのタイル 4 枚を 2 × 2 にそろえ、効果のアイコンと淡いグラデーションを付けた。Sequence とばねの動く量を区画の中に収めた(ばねの右への動き 150 → 36) |
 | `Modules/View/ViewDragDropView.xaml` | 11-53 ①〜③: 並べ替えの一覧をフラットな行(区切り線・行の高さいっぱいの帯・取っ手)の専用のテンプレートに。TODO / DONE をバッジに |
-| `Modules/Sample/SampleCvLocalView.xaml` | 11-65 ②: 結果の表示中に「Retry でプレビューを再開」の帯 |
-| `Modules/Network/NetworkHttpView.xaml` / `NetworkHttpViewModel.cs` | 11-35 ①〜③: 一覧の空の表示(`BasicEmptyStack`)と読み込み中の表示。空の表示は読み込みに成功してから決める(`IsEmpty` の既定を false に)。件数を「全 N 件」のバッジに、選んだ行を青地に白文字、Id を「#N」の淡いバッジに。作成は塗り、ほかのボタンとテスト API はアイコン付きの枠(削除・キャンセルは赤)。保存の括弧書きは下の説明へ |
-| `Modules/Network/NetworkAuthView.xaml` | 11-36 ②③: ログインを塗りのボタンに、Secure を呼ぶに鍵のアイコン。ログイン ID の入力欄に見出しと枠 |
+| `Modules/Sample/SampleCvLocalView.xaml` | 11-65 ②: 結果の表示中に「Retryでプレビューを再開」の帯 |
+| `Modules/Network/NetworkHttpView.xaml` / `NetworkHttpViewModel.cs` | 11-35 ①〜③: 一覧の空の表示(`BasicEmptyStack`)と読み込み中の表示。空の表示は読み込みに成功してから決める(`IsEmpty` の既定を false に)。件数を「全 N 件」のバッジに、選んだ行を青地に白文字、Id を「#N」の淡いバッジに。作成は塗り、ほかのボタンとテストAPI はアイコン付きの枠(削除・キャンセルは赤)。保存のボタンの括弧書きはやめた |
+| `Modules/Network/NetworkAuthView.xaml` | 11-36 ②③: ログインを塗りのボタンに、「Secureを呼ぶ」に鍵のアイコン。「ログインID」の入力欄に見出しと枠 |
 | `Modules/Network/NetworkStorageView.xaml` / `NetworkStorageViewModel.cs` | 11-37 ①〜③: 空の表示と読み込み中の表示(`IsEmpty` の既定を false に)。パスの前にフォルダーのアイコン、「上へ」に矢印、ディレクトリの行の右に ›、ファイルのサイズを淡いバッジに。転送の進捗に割合を添えて `ProgressTo` で伸ばし、5 つのボタンにアイコン(キャンセル・削除は赤)、説明を見出しのすぐ下へ |
 | `Modules/Network/NetworkGrpcView.xaml` | 11-39 ②③: チャットの空の表示を枠の中央(アイコンと文)に。メッセージは名前のバッジ・右寄せの時刻・区切り線。入力欄を枠付きに、送信を丸い塗りのアイコンのボタンに |
 | `Markup/AppIcons.cs` | J2 のアイコン: `SmallArrowUpward` / `SmallUploadFile`(18・`BlueGrayDarken1`)、`NetworkCancel` / `NetworkDelete`(18・赤) |
@@ -3115,6 +3137,10 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: J2 の 4 画面(HTTP (Data)・HTTP (Auth)・Storage・gRPC)をサーバーにつないで前後で撮って比べた。gRPC はメッセージを 2 件送って、名前のバッジ・時刻・区切り線を確かめた
 - 実機: NFC は一時的に見本のデータ(5 文字の端末・長い処理名・差が 0 の行を含む 9 件)を入れて、バッジの開始位置・差分の色と書式・差分を出さない行を撮って確かめた
 - 実機: オーバースクロールは、端で引っぱった途中を止まっているときと画素で比べた。Misc(ScrollView)・Mail(CollectionView)・Diagnostics・Lottie の帯(横)・PDF はどれも効果なし(Diagnostics の差は動いている時刻の 1 文字だけ)
+- 実機: 11-x の残りの 12 画面を前後で撮って比べ、確認を受けた直し(Setting の Stepper とボタンの角丸、数値入力の色、Bluetooth の点、Realtime の角、SFTP のボタン、CV Local のフラッシュ)も撮り直した。Bluetooth は Print で接続中の段階、BLE Host は広告中の輪、Custom は TreeView を開いた状態、CV Local は推論の前に一時的に 2 秒待たせて読み込み中の表示を撮った。Activity の輪は一時的に 6,500 歩にして、SFTP は SSH を設定していない端末で一時的に画面に入れるようにして撮った
+- 実機: 11-67 の 26 画面を前後で撮って比べた(Cancel は No で残った画面、Initialize は準備の後、Toolkit は Expander を開いた状態、State は LazyView を読み込んだ後。SFTP は一時的に画面に入れるようにして撮った)
+- 実機: Drawing で黒・5 のまま 1 本、赤・幅 23 で 1 本、青・幅 12 で 1 本を描き、前は 3 本とも黒・5、後は色と太さが変わり Save の後のプレビューにも出ることを撮って比べた
+- 実機: Behavior の見出しを前後で撮って比べた(前は一時的に前の文言に戻したビルドで撮った)
 - ビルド 0 警告、inspectcode 0 件
 
 ### 🏷️API の名前と応答の宣言(template-maui-server)(2026-10-05)
@@ -3138,7 +3164,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 |---|---|
 | `Document/Development.md` | 「🔧開発環境」に「AI エージェントでの開発支援」(スキルの候補・MCP の種類と設定の例・DevFlow のできることと本アプリでの注意・参照) |
 | `Document/Task_Checklist.md` / `README.md` | 12 節 Health Connect(`Shiny.Health` で歩数・心拍・睡眠などを読み書きする候補。パッケージ・端末・マニフェスト・変更するファイルと、要否と範囲の判断 12-0)。13 節 取り込み候補に 13-1 Sample > Chat のツール呼び出し(仕組み・題材・トリミング・ツールの分け方と、判断 13-1-0)。サマリと TODO に 2 つの行 |
-| `Document/UIBrushup_Plan.md` | 新しい画面 10-29 Habit と 10-30 Home(UI 2 のメニューの 8 段の空き。中身は 📝)、10-3 Money の ⑤〜⑦(前月比のバッジ・月の支出の棒・支出の分類)、10-22 Chart の ③(棒のグラデーションと溝・選んだ棒の強調)。決定事項に 10-29 / 10-30 の新設。10-29 / 10-30 の作り方(メニュー・画面 ID・結線・全面の画面・描画・再利用の候補)と使える部品、10-3 ⑤〜⑦・10-22 ③ の使える部品。番号なしのアニメーションの強化の案(今ある動き・足す動きの案・画面ごとの案) |
+| `Document/UIBrushup_Plan.md` | 10-3 Money の ⑤〜⑦(前月比のバッジ・月の支出の棒・支出の分類)、10-22 Chart の ③(棒のグラデーションと溝・選んだ棒の強調)。10-3 ⑤〜⑦・10-22 ③ の使える部品。番号なしのアニメーションの強化の案(今ある動き・足す動きの案・画面ごとの案) |
 | `Document/Change_Summary.md` | 付録D の不採用 (1) に Revv |
 
 ## 💡C. この区間のナレッジ
@@ -3272,8 +3298,11 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - **SkiaSharp の `SKCanvas.DrawColor` の既定の合成は `SKBlendMode.Src`(置き換え)**。半透明の色を上から重ねて暗くするときは `SKBlendMode.SrcOver` を渡す(既定のままだと下の絵が消えて半透明の黒だけが残る)
 - XAML の `clr-namespace:...;assembly=...` は、名前空間とアセンブリが違うと MAUI のビルドと実行は通るが ReSharper は型を解決できずエラーにする。CommunityToolkit の `CameraFlashMode` は名前空間が `CommunityToolkit.Maui.Core` でも、アセンブリは `CommunityToolkit.Maui.Camera`
 - MauiImage の画像は Android では drawable(拡張子なしの名前)になり、`FileSystem.OpenAppPackageFileAsync` では読めない。SkiaSharp で描くときは `Resources.GetIdentifier` と `BitmapFactory.DecodeResource`(密度で拡大しないよう `InScaled` = false)から `ToSKBitmap` にする
+- SearchBar(AndroidX の SearchView)の下線は入力欄ではなく、入力欄を囲む `search_plate` の背景にある。消すときは `search_plate` の `BackgroundTintList` を透明にする
+- `using Microsoft.Maui.Controls.Shapes;` を足すと `Path` が `System.IO.Path` と衝突して `Path.Combine` が解決できなくなる。図形の型だけを使うときはファイルの using エイリアス(`using RoundRectangle = Microsoft.Maui.Controls.Shapes.RoundRectangle;`)にする
 - .NET の数値の書式は 3 つ目の区画が 0 の書式で、`#` だけにすると 0 は空の文字になる(`{0:+￥#,0;−￥#,0;#}` は 0 を出さない。2 つ目の区画を書くと負の数に符号は付かないので自分で書く)
 - `BindableProperty` の `propertyChanged` に基底の protected の静的メソッドを渡すと、使わない引数が IDE0060 の警告になる(private なら出ない)。基底で共有するときは `static (bindable, _, _) => ...` のデリゲートの静的フィールドにする
+- **1 つの `BindableProperty` に結べる `Binding` は 1 つ**。Behavior の中で `SetBinding` すると、XAML で書いた同じプロパティの `Binding` は黙って置き換わる(Drawing の `DrawingBind` が `DrawingView` の色と幅をコントローラーへ結び直し、パレットの値が線に届かなかった)
 - **SkiaSharp.Extended.UI 3.0 の `SKLottieView` は、`RepeatCount` が 0 以外のとき、止めたまま(`IsAnimationEnabled` = false)`Progress` を `Duration` にすると UI スレッドが回り続けて固まる**。最後に着いたので先頭へ戻す `Progress = 0` は、MAUI が設定中の同じプロパティへの設定として後回しの列に入れ、止めているときの再描画(`Invalidate` → `Update`)がまだ古い `Duration` を設定し直すので、2 つの値が交互に列に入り続ける(`BindableObject.SetValueCore` の `DelayedSetters`)。止めたまま動かす位置は `Duration` の 1 tick 手前までにする
 
 ---
@@ -3344,6 +3373,9 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - オフライン同期の差分同期・競合解決 = 実装しない(2026-09-27)。端末で溜めて送る部分は Task_Checklist 2-2(タンキング送信)
 - `WebView` の Android 全画面動画 / JavaScript 有効・無効の platform-specific(.NET 10)= 対象外(2026-09-21。`WebView` を使う画面が無い。Web の画面は `HybridWebView`)
 - Material 3(`UseMaterial3`)= 見送り(2026-09-21。csproj にコメントアウトで残置。Entry / Editor の枠と既定色の手当てが要るため)
+- BLE Scan の行の角丸 12 の枠 = 液晶のパネルの見立てとして残す(2026-10-07。一覧の行はフラットの決まりの例外)
+- Drag & Drop の TODO / DONE の列の中のカード = かんばんのカードとして角丸のまま(2026-10-07。並べ替えの一覧はフラットな行)
+- 角丸にしない所 = メニュー・F キーのボタン、Basic Style の Action 系の共有のボタン(角 0・文字 24)、数値入力のダイアログとキー、Realtime のグラフ(2026-10-07)
 - XAML の global xmlns(接頭辞の省略)= 保留(2026-09-21。ReSharper が対応したら再開。ビルドは通るが inspectcode が解決できない。名前の衝突と範囲は区間 16 の記録)
 - `StyleClass` の新体系(`text-*` など)= 不要(2026-09-21。既存の Label クラスで方針を満たす)
 - Face(顔検出 / 顔識別、`Azure.AI.Vision.Face`)= 対象外(2026-09-19。Face API を持つ専用リソースが必要なため実装を撤去)

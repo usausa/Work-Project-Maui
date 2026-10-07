@@ -31,6 +31,31 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="RadioRingGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="150" />
+                <Setter Property="HeightRequest" Value="150" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="RadioRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="96" />
+                <Setter Property="HeightRequest" Value="96" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource GreenDefault}" />
+                <Setter Property="StrokeThickness" Value="3" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
+            <Style x:Key="RadioIconBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource BasicIconCircleBorder}">
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -40,11 +65,32 @@
                 behaviors:AnimationOption.EnterAnimation="FadeUp">
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
-                <Border Style="{StaticResource BasicIconCircleBorder}"
-                        behaviors:AnimationOption.Pulse="{Binding Running}">
-                    <Label Style="{StaticResource BasicIconCircleLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Podcasts}" />
-                </Border>
+                <Grid Style="{StaticResource RadioRingGrid}">
+                    <Ellipse Style="{StaticResource RadioRing}"
+                             behaviors:AnimationOption.Ripple="{Binding Running}" />
+                    <Ellipse Style="{StaticResource RadioRing}"
+                             behaviors:AnimationOption.Ripple="{Binding Running}"
+                             behaviors:AnimationOption.RippleDelay="900" />
+                    <Border Style="{StaticResource RadioIconBorder}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding Running}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Label Style="{StaticResource BasicIconCircleLabel}"
+                               Text="{x:Static fonts:MaterialIcons.Podcasts}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding Running}"
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource GreenDarken2}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+                </Grid>
 
                 <Label Style="{StaticResource BasicCenterTitleLabel}"
                        Text="BLE Peripheral" />

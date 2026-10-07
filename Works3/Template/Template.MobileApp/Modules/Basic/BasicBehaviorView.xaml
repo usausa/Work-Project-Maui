@@ -124,7 +124,7 @@
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="EntryOption.TypingStoppedCommand (入力停止 800ms で確定)" />
+                               Text="EntryOption.TypingStoppedCommand" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    behaviors:EntryOption.TypingStoppedCommand="{Binding TypingStoppedCommand}"
@@ -140,7 +140,7 @@
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="s:EventToCommandBehavior (Toggled イベント → Command)" />
+                               Text="s:EventToCommandBehavior" />
                         <Grid Style="{StaticResource CardRowGrid}"
                               ColumnDefinitions="Auto,*">
                             <Switch Grid.Column="0">

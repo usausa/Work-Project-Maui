@@ -131,8 +131,6 @@
                                Title="ファイル"
                                Icon="{x:Static fonts:MaterialIcons.Folder}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ディレクトリの行を選ぶと下の階層へ。ファイルの行を選ぶとダウンロード / 削除の対象" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="Auto,*,Auto">
                         <Label Grid.Column="0"
@@ -217,8 +215,6 @@
                                Title="転送"
                                Icon="{x:Static fonts:MaterialIcons.Sync_alt}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="アップロードは現在のディレクトリへ (ファイル名のまま)。ダウンロードは公開フォルダへ保存" />
                     <Grid Style="{StaticResource ProgressGrid}"
                           ColumnDefinitions="*,Auto">
                         <ProgressBar Grid.Column="0"

@@ -139,7 +139,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Keyboard}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Segmented select (tap to choose a value)" />
+                           Text="Segmented select" />
                     <Border Style="{StaticResource SelectGroupBorder}">
                         <Grid Style="{StaticResource SegmentRowGrid}"
                               ColumnDefinitions="*,Auto,*,Auto,*">

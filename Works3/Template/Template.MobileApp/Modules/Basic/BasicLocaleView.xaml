@@ -129,8 +129,6 @@
                         <Label Style="{StaticResource CardPrimaryValueLabel}"
                                Text="{x:Static strings:Messages.Hello_World}" />
                     </VerticalStackLayout>
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Values switch with the system language (en / ja resx)" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

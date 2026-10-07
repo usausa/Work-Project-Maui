@@ -39,12 +39,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <Style x:Key="NfcHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCenterHintLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
             <!-- Converter -->
 
             <converters:SuicaProcessColorConverter x:Key="ProcessColorConverter">
@@ -324,9 +318,7 @@
                                Text="{x:Static fonts:MaterialIcons.Contactless}" />
                     </Border>
                     <Label Style="{StaticResource NfcTitleLabel}"
-                           Text="Suica をかざしてください" />
-                    <Label Style="{StaticResource NfcHintLabel}"
-                           Text="読み取ると残高と利用履歴を表示します" />
+                           Text="Suicaをかざしてください" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>

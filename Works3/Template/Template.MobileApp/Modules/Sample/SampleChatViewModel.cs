@@ -94,7 +94,7 @@ public sealed partial class SampleChatViewModel : AppViewModelBase
             Messages.Add(new AiChatMessage
             {
                 Role = AiChatRole.Assistant,
-                Text = $"こんにちは!AI アシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
+                Text = $"こんにちは!AIアシスタントです。開発に関する質問をどうぞ 🤖\n(Ollama: {model})"
             });
         }
         return Task.CompletedTask;

@@ -163,7 +163,7 @@ public sealed partial class DeviceWiFiViewModel : AppViewModelBase
         IsRadioOn = wifiManager.IsRadioOn;
         Connection = wifiManager.Connection;
         IsConnected = Connection is not null;
-        StateText = !IsSupported ? "非対応" : !IsRadioOn ? "Wi-Fi オフ" : IsConnected ? "接続中" : "未接続";
+        StateText = !IsSupported ? "非対応" : !IsRadioOn ? "Wi-Fiオフ" : IsConnected ? "接続中" : "未接続";
 
         UpdateAccessPoints(Connection?.Bssid);
     }

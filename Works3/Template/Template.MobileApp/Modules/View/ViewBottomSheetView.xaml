@@ -200,10 +200,10 @@
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
-                                   Text="Syncfusion.Maui.Toolkit。ページ全体を包み、グラバーのドラッグで 半開 ⇔ 全開。モーダルのためオーバーレイのタップで閉じる" />
+                                   Text="グラバーのドラッグで高さを変え、背景のタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenSfSheetCommand}"
-                                    Text="Sf のシートを開く (F2)" />
+                                    Text="Sfのシートを開く (F2)" />
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
@@ -213,7 +213,7 @@
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_bottom}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
                             <Label Style="{StaticResource BasicCaptionLabel}"
-                                   Text="Controls/BottomSheetView.cs (Grid 派生、依存なし)。最前面に重ねて IsOpen で表示。シートのドラッグで 半開 ⇔ 全開 ⇔ 閉じる、背景のタップで閉じる" />
+                                   Text="シートのドラッグで高さを変え、背景のタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenCustomSheetCommand}"
                                     Text="自作のシートを開く (F3)" />

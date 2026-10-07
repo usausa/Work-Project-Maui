@@ -161,7 +161,7 @@
                                        Text="{x:Static fonts:MaterialIcons.Check_circle}" />
                             </Border>
                             <Label Style="{StaticResource StateTextLabel}"
-                                   Text="読み込み完了 (既定コンテンツ)" />
+                                   Text="読み込み完了" />
                         </VerticalStackLayout>
                     </Grid>
                 </VerticalStackLayout>
@@ -172,8 +172,6 @@
                                Title="LazyView"
                                Icon="{x:Static fonts:MaterialIcons.Hourglass_empty}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ボタンを押すまで下のコンテンツは生成されない" />
                     <Button Style="{StaticResource BasicOutlinedButton}"
                             Command="{Binding LoadPanelCommand}"
                             Text="コンテンツを読み込む" />

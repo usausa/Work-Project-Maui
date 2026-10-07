@@ -2,6 +2,8 @@ namespace Template.MobileApp.Controls;
 
 public sealed class StatControl : GraphicsView, IDrawable
 {
+    private const int GridLines = 3;
+
     // ------------------------------------------------------------
     // Property
     // ------------------------------------------------------------
@@ -36,7 +38,7 @@ public sealed class StatControl : GraphicsView, IDrawable
         nameof(HeaderPadding),
         typeof(float),
         typeof(StatControl),
-        4f,
+        12f,
         propertyChanged: OnPropertyChanged);
 
     public float HeaderPadding
@@ -49,7 +51,7 @@ public sealed class StatControl : GraphicsView, IDrawable
         nameof(LabelFontSize),
         typeof(float),
         typeof(StatControl),
-        16f,
+        14f,
         propertyChanged: OnPropertyChanged);
 
     public float LabelFontSize
@@ -183,7 +185,7 @@ public sealed class StatControl : GraphicsView, IDrawable
         var height = dirtyRect.Height;
         var statHeight = height - HeaderHeight;
         var headerPadding = HeaderPadding;
-        var headerRect = new RectF(headerPadding, 0, width - (headerPadding * 2), HeaderHeight);
+        var headerRect = new RectF(headerPadding, headerPadding, width - (headerPadding * 2), HeaderHeight);
 
         var values = DataSet;
         var pointWidth = width / (values.Capacity - 1);
@@ -202,6 +204,15 @@ public sealed class StatControl : GraphicsView, IDrawable
         };
         canvas.SetFillPaint(backgroundPaint, dirtyRect);
         canvas.FillRectangle(dirtyRect);
+
+        // 目盛り(データが無くても出す)
+        canvas.StrokeColor = Colors.White.WithAlpha(0.25f);
+        canvas.StrokeSize = 1;
+        for (var i = 1; i <= GridLines; i++)
+        {
+            var y = height - (statHeight * i / (GridLines + 1));
+            canvas.DrawLine(0, y, width, y);
+        }
 
         // Path
         var wavePath = new PathF();
@@ -244,9 +255,11 @@ public sealed class StatControl : GraphicsView, IDrawable
         canvas.DrawPath(linePath);
 
         // Label
+        canvas.Font = Microsoft.Maui.Graphics.Font.DefaultBold;
         canvas.FontColor = Colors.White;
         canvas.FontSize = LabelFontSize;
         canvas.DrawString(Label, headerRect, HorizontalAlignment.Left, VerticalAlignment.Top);
+        canvas.Font = Microsoft.Maui.Graphics.Font.Default;
 
         // Value
         var currentValue = values.LastValue;

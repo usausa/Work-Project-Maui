@@ -157,6 +157,9 @@ public enum ViewId
 
     UIDock,
 
+    UIHome,
+    UIHabit,
+
     UIGraph,
     UIGraph2,
 
@@ -179,9 +182,6 @@ public enum ViewId
     UITactical,
     UITelemetry,
     UIEnergy,
-
-    UIHabit,
-    UIHome,
 
     // Sample
     SampleMenu,

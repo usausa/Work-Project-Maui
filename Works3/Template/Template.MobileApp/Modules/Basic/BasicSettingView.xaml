@@ -24,6 +24,33 @@
                 <Setter Property="WidthRequest" Value="40" />
             </Style>
 
+            <Style x:Key="FieldSearchBar"
+                   TargetType="SearchBar">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="SearchIconColor" Value="{StaticResource BlueDefault}" />
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="FieldDatePicker"
+                   TargetType="DatePicker">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="FieldTimePicker"
+                   TargetType="TimePicker">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="behaviors:EntryOption.NoBorder" Value="True" />
+                <Setter Property="behaviors:Focus.FocusedStroke" Value="{StaticResource BlueDefault}" />
+            </Style>
+
+            <Style x:Key="OutlinedStepper"
+                   TargetType="Stepper">
+                <Setter Property="behaviors:StepperOption.Outlined" Value="True" />
+            </Style>
+
             <Style x:Key="SummaryGrid"
                    TargetType="Grid"
                    BasedOn="{StaticResource CardInfoGrid}">
@@ -40,7 +67,7 @@
                    TargetType="Button">
                 <Setter Property="Padding" Value="12,0" />
                 <Setter Property="HeightRequest" Value="32" />
-                <Setter Property="CornerRadius" Value="16" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="BorderWidth" Value="1" />
                 <Setter Property="BackgroundColor" Value="White" />
@@ -85,12 +112,14 @@
 
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Search (SearchBar)" />
-                    <SearchBar Text="{Binding SearchText}"
-                               Placeholder="設定を検索"
-                               ToolTipProperties.Text="検索ボタンで確定します"
-                               ReturnType="Search"
-                               SearchCommand="{Binding SearchCommand}"
-                               SearchIconColor="{StaticResource BlueDefault}" />
+                    <Border Style="{StaticResource CardFieldBorder}">
+                        <SearchBar Style="{StaticResource FieldSearchBar}"
+                                   Text="{Binding SearchText}"
+                                   Placeholder="設定を検索"
+                                   ToolTipProperties.Text="検索ボタンで確定します"
+                                   ReturnType="Search"
+                                   SearchCommand="{Binding SearchCommand}" />
+                    </Border>
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            behaviors:AnimationOption.FadeInTrigger="{Binding LastSearch}"
                            IsVisible="{Binding LastSearch, Converter={StaticResource NotEmptyConverter}}"
@@ -112,6 +141,7 @@
                                Style="{StaticResource CardRowValueLabel}"
                                Text="{Binding CacheSize, StringFormat='{0:F0} GB'}" />
                         <Stepper Grid.Column="2"
+                                 Style="{StaticResource OutlinedStepper}"
                                  Value="{Binding CacheSize}"
                                  Minimum="1" Maximum="8"
                                  ToolTipProperties.Text="ローカルキャッシュの上限サイズ"
@@ -150,38 +180,42 @@
                                Title="Backup Schedule"
                                Icon="{x:Static fonts:MaterialIcons.Event}">
                 <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                           Text="日付 (DatePicker)" />
                     <Grid Style="{StaticResource CardRowGrid}"
-                          ColumnDefinitions="*,Auto,Auto,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource CardRowLabel}"
-                               Text="日付 (DatePicker)" />
-                        <DatePicker Grid.Column="1"
-                                    IsOpen="{Binding BackupDateOpen}"
-                                    ToolTipProperties.Text="次回バックアップ日"
-                                    Date="{Binding BackupDate}" />
-                        <Button Grid.Column="2"
+                          ColumnDefinitions="*,Auto,Auto">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource CardFieldBorder}">
+                            <DatePicker Style="{StaticResource FieldDatePicker}"
+                                        IsOpen="{Binding BackupDateOpen}"
+                                        ToolTipProperties.Text="次回バックアップ日"
+                                        Date="{Binding BackupDate}" />
+                        </Border>
+                        <Button Grid.Column="1"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding OpenBackupDateCommand}"
                                 Text="開く" />
-                        <Button Grid.Column="3"
+                        <Button Grid.Column="2"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding ClearBackupDateCommand}"
                                 Text="クリア" />
                     </Grid>
+                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
+                           Text="時刻 (TimePicker)" />
                     <Grid Style="{StaticResource CardRowGrid}"
-                          ColumnDefinitions="*,Auto,Auto,Auto">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource CardRowLabel}"
-                               Text="時刻 (TimePicker)" />
-                        <TimePicker Grid.Column="1"
-                                    IsOpen="{Binding BackupTimeOpen}"
-                                    ToolTipProperties.Text="次回バックアップ時刻"
-                                    Time="{Binding BackupTime}" />
-                        <Button Grid.Column="2"
+                          ColumnDefinitions="*,Auto,Auto">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource CardFieldBorder}">
+                            <TimePicker Style="{StaticResource FieldTimePicker}"
+                                        IsOpen="{Binding BackupTimeOpen}"
+                                        ToolTipProperties.Text="次回バックアップ時刻"
+                                        Time="{Binding BackupTime}" />
+                        </Border>
+                        <Button Grid.Column="1"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding OpenBackupTimeCommand}"
                                 Text="開く" />
-                        <Button Grid.Column="3"
+                        <Button Grid.Column="2"
                                 Style="{StaticResource RowButton}"
                                 Command="{Binding ClearBackupTimeCommand}"
                                 Text="クリア" />

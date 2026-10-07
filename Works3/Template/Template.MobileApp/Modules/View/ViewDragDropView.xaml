@@ -265,7 +265,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Swap_vert}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
                     <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="行を長押しでドラッグし、別の行に重ねて離すとその位置へ移動する (ドラッグ中は受け入れ先が破線、重ねた行に挿入位置の線)" />
+                           Text="行を長押しでドラッグして並べ替える" />
                     <Border Style="{StaticResource ReorderListBorder}">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
                                              BindableLayout.ItemTemplate="{StaticResource ReorderTemplate}" />
@@ -279,7 +279,7 @@
                                Icon="{x:Static fonts:MaterialIcons.Move_up}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="TODO ⇔ DONE へドラッグで移動。ゴミ箱に落とすと削除 (重ねている先が濃く光る)" />
+                           Text="長押しでドラッグして、別のリストかゴミ箱に落とす" />
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
                         <Border Grid.Column="0"

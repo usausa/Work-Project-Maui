@@ -167,8 +167,6 @@
 
                 <!-- スクロール連動 / 長押し進行 -->
                 <VerticalStackLayout Style="{StaticResource ScrubStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="スクロール連動 (横スクロールでシーク) / 長押しで進行" />
                     <ScrollView behaviors:Scroll.RatioCommand="{Binding ScrubCommand}"
                                 Orientation="Horizontal"
                                 HorizontalScrollBarVisibility="Never">

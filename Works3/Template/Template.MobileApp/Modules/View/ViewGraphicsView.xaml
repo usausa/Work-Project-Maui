@@ -126,9 +126,6 @@
                                 ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}" />
                     </Grid>
 
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="Shapes are added to a DrawingControl and redrawn with Invalidate()" />
-
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -173,7 +170,7 @@
                     </Border>
 
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="指でなぞって描く (IInteractiveDrawing)。PNG 出力は表示と同じ OnDraw を BitmapExportContext へ流して生成し、下の Image に表示する" />
+                           Text="指でなぞって描く" />
 
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -187,9 +184,6 @@
                     <Border Style="{StaticResource SmallCanvasBorder}">
                         <drawing:DrawingControl Drawing="{Binding Pulse}" />
                     </Border>
-
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="アイコン周囲に波紋リングを広げる演出。単発アニメーションを完了時に再開始してループさせている" />
 
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -221,9 +215,6 @@
                            behaviors:AnimationOption.BounceTrigger="{Binding CountdownDone}"
                            IsVisible="{Binding CountdownDone}"
                            Text="DONE!" />
-
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="ボタン背面のリングが 5 秒で減り、完走時のみ DONE が出る (画面離脱で中断=通知なし)" />
 
                 </VerticalStackLayout>
             </controls:InfoCard>

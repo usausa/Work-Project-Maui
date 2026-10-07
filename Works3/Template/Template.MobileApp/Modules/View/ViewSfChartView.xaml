@@ -189,8 +189,6 @@
                                Title="Sunburst (SfSunburstChart)"
                                Icon="{x:Static fonts:MaterialIcons.Donut_small}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="地域 → 都市の 2 階層構成比" />
                     <sunburst:SfSunburstChart Style="{StaticResource SunburstChart}"
                                               ItemsSource="{Binding Regions}"
                                               ShowLabels="True" ValueMemberPath="Value">

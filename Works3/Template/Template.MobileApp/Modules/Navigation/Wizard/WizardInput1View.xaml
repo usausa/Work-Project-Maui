@@ -62,8 +62,6 @@
                            Text="{Binding Context.Data1}"
                            Placeholder="例: Apple" />
                 </Border>
-                <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                       Text="Next (▶️) is enabled once this field is filled" />
             </VerticalStackLayout>
         </controls:InfoCard>
 

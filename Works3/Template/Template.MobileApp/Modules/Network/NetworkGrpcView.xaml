@@ -176,10 +176,8 @@
                            Text="未配送の送信" />
                     <Label Grid.Column="1"
                            Style="{StaticResource CardValueLabel}"
-                           Text="{Binding PendingCount, StringFormat='{0}件'}" />
+                           Text="{Binding PendingCount, StringFormat='{0} 件'}" />
                 </Grid>
-                <Label Style="{StaticResource BasicCaptionLabel}"
-                       Text="切断中の送信は再接続後に配送する" />
                 <Button Style="{StaticResource BasicOutlinedButton}"
                         Command="{Binding ServerTimeCommand}"
                         Text="サーバー時刻 (単項 RPC)" />
@@ -207,7 +205,7 @@
                                Text="{x:Static fonts:MaterialIcons.Forum}" />
                     </Border>
                     <Label Style="{StaticResource BasicCenterHintLabel}"
-                           Text="接続すると直近 50 件の履歴を受信する。管理画面の /chat と相互に表示" />
+                           Text="まだメッセージはありません" />
                 </VerticalStackLayout>
                 <CollectionView Style="{StaticResource ChatCollection}"
                                 ItemsSource="{Binding Messages}">

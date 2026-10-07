@@ -98,8 +98,6 @@
                         <Label Style="{StaticResource CountBadgeLabel}"
                                Text="{Binding Total, StringFormat='全 {0} 件'}" />
                     </Border>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="20 件ずつ追加読み込み。行を選ぶと詳細を取得" />
                     <Grid>
                         <CollectionView Style="{StaticResource ListCollection}"
                                         ItemsSource="{Binding Items}"
@@ -192,20 +190,16 @@
                     </Grid>
                     <Button Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding SaveToWorkCommand}"
-                            Text="全件を Work テーブルへ保存"
+                            Text="全件をWorkテーブルへ保存"
                             ImageSource="{x:Static markup:AppIcons.SmallCloudSync}" />
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="保存したデータは Navigation &gt; Edit で表示" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="テスト API"
+                               Title="テストAPI"
                                Icon="{x:Static fonts:MaterialIcons.Bug_report}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="エラーは再試行の確認 (3 回目は通知のみ)、遅延はインジケーター付き。10 秒待つ API は途中でキャンセルできる" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
@@ -224,7 +218,7 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding DelayCommand}"
-                                Text="10 秒待つ API"
+                                Text="10秒待つAPI"
                                 ImageSource="{x:Static markup:AppIcons.SmallDownloading}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource RedButton}"

@@ -384,7 +384,7 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_one}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="1 番目のカード(遅延なし)" />
+                           Text="1番目のカード(遅延なし)" />
                 </HorizontalStackLayout>
             </Border>
             <Border Style="{StaticResource EnterCard}"
@@ -395,7 +395,7 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_two}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="2 番目のカード(120ms 遅延)" />
+                           Text="2番目のカード(120ms 遅延)" />
                 </HorizontalStackLayout>
             </Border>
             <Border Style="{StaticResource EnterCard}"
@@ -406,7 +406,7 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_3}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="3 番目のカード(240ms 遅延)" />
+                           Text="3番目のカード(240ms 遅延)" />
                 </HorizontalStackLayout>
             </Border>
 
@@ -539,7 +539,7 @@
                                Style="{StaticResource FeedbackTextLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding FeedbackCount}"
-                               Text="Bounce / Highlight / Flash を同時に発火" />
+                               Text="Bounce / Highlight / Flashを同時に発火" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource SmallActionButton}"
                                 Command="{Binding FeedbackCommand}"
@@ -548,7 +548,7 @@
                     <Grid Style="{StaticResource FlashPreviewGrid}">
                         <Border Style="{StaticResource DarkPreviewBorder}">
                             <Label Style="{StaticResource PreviewCaptionLabel}"
-                                   Text="撮影プレビュー(FlashTrigger でシャッター発光)" />
+                                   Text="撮影プレビュー" />
                         </Border>
                         <BoxView Style="{StaticResource FlashOverlay}"
                                  behaviors:AnimationOption.FlashTrigger="{Binding FeedbackCount}" />

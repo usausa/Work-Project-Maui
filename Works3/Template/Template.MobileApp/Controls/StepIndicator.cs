@@ -43,6 +43,19 @@ public sealed class StepIndicator : ContentView
         set => SetValue(AccentColorProperty, value);
     }
 
+    public static readonly BindableProperty IsCountVisibleProperty = BindableProperty.Create(
+        nameof(IsCountVisible),
+        typeof(bool),
+        typeof(StepIndicator),
+        true,
+        propertyChanged: Rebuild);
+
+    public bool IsCountVisible
+    {
+        get => (bool)GetValue(IsCountVisibleProperty);
+        set => SetValue(IsCountVisibleProperty, value);
+    }
+
     // GrayLighten2 / BlueGrayDarken1 相当
     private static readonly Color UpcomingColor = Color.FromArgb("#E0E0E0");
     private static readonly Color LabelColor = Color.FromArgb("#546E7A");
@@ -77,15 +90,18 @@ public sealed class StepIndicator : ContentView
             });
         }
 
-        layout.Children.Add(new Label
+        if (IsCountVisible)
         {
-            Margin = new Thickness(10, 0, 0, 0),
-            FontSize = 14,
-            FontAttributes = FontAttributes.Bold,
-            TextColor = LabelColor,
-            VerticalOptions = LayoutOptions.Center,
-            Text = String.Format(CultureInfo.CurrentCulture, "{0} / {1}", CurrentStep, TotalSteps)
-        });
+            layout.Children.Add(new Label
+            {
+                Margin = new Thickness(10, 0, 0, 0),
+                FontSize = 14,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = LabelColor,
+                VerticalOptions = LayoutOptions.Center,
+                Text = String.Format(CultureInfo.CurrentCulture, "{0} / {1}", CurrentStep, TotalSteps)
+            });
+        }
 
         Content = layout;
     }

@@ -965,12 +965,12 @@
 
     <Style x:Key="InputGrid"
            TargetType="Grid">
-        <Setter Property="Margin" Value="6" />
+        <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
-        <Setter Property="RowSpacing" Value="6" />
-        <Setter Property="ColumnSpacing" Value="6" />
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
     </Style>
 
     <Style x:Key="LeftInputLabel"
@@ -988,7 +988,7 @@
            TargetType="Button">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="36" />
@@ -998,7 +998,7 @@
            TargetType="Button">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="BackgroundColor" Value="{StaticResource AmberDarken2}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="FontSize" Value="36" />
@@ -1034,6 +1034,33 @@
            TargetType="Button"
            BasedOn="{StaticResource InputFunctionButton}">
         <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+    </Style>
+
+    <Style x:Key="InputCancelIconButton"
+           TargetType="Button"
+           BasedOn="{StaticResource FunctionButtonBase}">
+        <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDefault}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource BlueGrayDarken2}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource DisabledColor}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <!-- ================================================================================ -->

@@ -281,8 +281,6 @@
                                Title="Key sign in"
                                Icon="{x:Static fonts:MaterialIcons.Key}">
                 <VerticalStackLayout Style="{StaticResource CardActionStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="サーバーの役 (登録・チャレンジ・検証) は端末の中で行う" />
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*,*">
                         <Button Grid.Column="0"

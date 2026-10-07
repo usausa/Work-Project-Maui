@@ -16,6 +16,7 @@ public static class AnimationOption
     private const string HighlightAnimationName = "AnimationOptionHighlight";
     private const string FlashAnimationName = "AnimationOptionFlash";
     private const string WaveAnimationName = "AnimationOptionWave";
+    private const string RippleAnimationName = "AnimationOptionRipple";
     private const string EnterAnimationName = "AnimationOptionEnter";
 
     // ------------------------------------------------------------------ Pulse
@@ -264,6 +265,114 @@ public static class AnimationOption
             700,
             Easing.Linear,
             repeat: () => GetWave(element));
+    }
+
+    // ------------------------------------------------------------------ Ripple
+
+    public static readonly BindableProperty RippleProperty = BindableProperty.CreateAttached(
+        "Ripple",
+        typeof(bool),
+        typeof(AnimationOption),
+        false,
+        propertyChanged: OnRippleChanged);
+
+    public static bool GetRipple(BindableObject bindable) => (bool)bindable.GetValue(RippleProperty);
+
+    public static void SetRipple(BindableObject bindable, bool value) => bindable.SetValue(RippleProperty, value);
+
+    public static readonly BindableProperty RippleDelayProperty = BindableProperty.CreateAttached(
+        "RippleDelay",
+        typeof(int),
+        typeof(AnimationOption),
+        0);
+
+    public static int GetRippleDelay(BindableObject bindable) => (int)bindable.GetValue(RippleDelayProperty);
+
+    public static void SetRippleDelay(BindableObject bindable, int value) => bindable.SetValue(RippleDelayProperty, value);
+
+    private static void OnRippleChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is not VisualElement element)
+        {
+            return;
+        }
+
+        if ((bool)newValue)
+        {
+            element.Loaded += OnRippleLoaded;
+            element.Unloaded += OnRippleUnloaded;
+            if (element.IsLoaded)
+            {
+                StartRippleAfterDelay(element);
+            }
+        }
+        else
+        {
+            element.Loaded -= OnRippleLoaded;
+            element.Unloaded -= OnRippleUnloaded;
+            StopRipple(element);
+        }
+    }
+
+    private static void OnRippleLoaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StartRippleAfterDelay(element);
+        }
+    }
+
+    private static void OnRippleUnloaded(object? sender, EventArgs e)
+    {
+        if (sender is VisualElement element)
+        {
+            StopRipple(element);
+        }
+    }
+
+    private static void StartRippleAfterDelay(VisualElement element)
+    {
+        var delay = GetRippleDelay(element);
+        if (delay > 0)
+        {
+            // 要素毎に位相をずらして輪を重ねる
+            element.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(delay), () =>
+            {
+                if (element.IsLoaded && GetRipple(element))
+                {
+                    StartRipple(element);
+                }
+            });
+        }
+        else
+        {
+            StartRipple(element);
+        }
+    }
+
+    private static void StartRipple(VisualElement element)
+    {
+        element.AbortAnimation(RippleAnimationName);
+
+        // 元の大きさから 1.5 倍へ広がりながら消える
+        element.Animate(
+            RippleAnimationName,
+            v =>
+            {
+                element.Scale = 1 + (0.5 * v);
+                element.Opacity = 0.8 * (1 - v);
+            },
+            16,
+            1800,
+            Easing.CubicOut,
+            repeat: () => GetRipple(element));
+    }
+
+    private static void StopRipple(VisualElement element)
+    {
+        element.AbortAnimation(RippleAnimationName);
+        element.Scale = 1;
+        element.Opacity = 0;
     }
 
     // ------------------------------------------------------------------ Flash

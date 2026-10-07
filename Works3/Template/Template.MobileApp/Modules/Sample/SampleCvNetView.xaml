@@ -163,7 +163,7 @@
                 behaviors:AnimationOption.FadeInTrigger="{Binding State}"
                 IsVisible="{Binding State, Converter={StaticResource ImageVisibleConverter}}">
             <Label Style="{StaticResource RetryHintLabel}"
-                   Text="Retry でプレビューを再開" />
+                   Text="Retryでプレビューを再開" />
         </Border>
 
         <!-- 撮影瞬間のシャッターフラッシュ -->

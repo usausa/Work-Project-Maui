@@ -218,8 +218,6 @@
                                Title="DockLayout"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="子要素を上下左右へドッキングし、最後の要素が残りを埋める" />
                     <mct:DockLayout HeightRequest="240"
                                     HorizontalSpacing="4" ShouldExpandLastChild="True" VerticalSpacing="4">
                         <Border Style="{StaticResource DockPane}"
@@ -264,8 +262,6 @@
                                Title="UniformItemsLayout"
                                Icon="{x:Static fonts:MaterialIcons.Grid_view}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="全セルが同じサイズになる (MaxColumns=4)" />
                     <mct:UniformItemsLayout Style="{StaticResource UniformItems}"
                                             MaxColumns="4">
                         <Border Style="{StaticResource UniformCell}"
@@ -317,8 +313,6 @@
                                Title="CircularLayout (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Data_usage}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ILayoutManager 自作。子要素を円周へ均等配置 (Angle 指定で個別配置も可)" />
                     <Grid HeightRequest="240">
                         <controls:CircularLayout>
                             <Border Style="{StaticResource CircleCell}"
@@ -364,8 +358,6 @@
                                Text="WEEK"
                                FontSize="12" />
                     </Grid>
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="StartAngle / SweepAngle で円弧配置 (半円: 180°→360°)。FitToArc で弧の外接矩形にサイズを詰める" />
                     <controls:CircularLayout HorizontalOptions="Center"
                                              Radius="88"
                                              FitToArc="True" StartAngle="180" SweepAngle="180">
@@ -403,8 +395,6 @@
                                Title="CircularLayout 回転 / リング (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Track_changes}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="左: RotateItems で子を接線方向へ回転した扇。右: 添付 Orbit で中心 (0) と 2 つのリング (1 / 2) へ振り分け" />
                     <Grid ColumnDefinitions="*,*">
                         <controls:CircularLayout Grid.Column="0"
                                                  HorizontalOptions="Center" VerticalOptions="Center"
@@ -481,8 +471,6 @@
                                Title="HoneycombLayout (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Hexagon}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="列を交互に半セルずらして上から埋める (Columns=3、Spacing=6)。7 個で中央 1 + 周囲 6 の花形。タップで選択 (枠 + バッジ)" />
                     <controls:HoneycombLayout Style="{StaticResource HexLayout}"
                                               BindableLayout.ItemsSource="{Binding Hexes}"
                                               Columns="3">
@@ -535,8 +523,6 @@
                                Title="StaggeredGrid (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="高さの異なるカードを最も低い列へ詰める (Pinterest 型)" />
                     <controls:StaggeredGrid Style="{StaticResource StaggeredLayout}"
                                             Columns="3">
                         <Border Style="{StaticResource StaggeredCell}"
@@ -596,8 +582,6 @@
                                Title="VariableSizeWrapPanel (自作)"
                                Icon="{x:Static fonts:MaterialIcons.View_quilt}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="ColumnSpan / RowSpan で占有セル数を指定し、空きセルは先頭から埋め戻す (Columns=3、RowHeight=56)" />
                     <controls:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
                                                     Columns="3" RowHeight="56">
                         <Border Style="{StaticResource TileCell}"
@@ -648,8 +632,6 @@
                                Title="OverlapPanel (自作)"
                                Icon="{x:Static fonts:MaterialIcons.Filter_none}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="子を OffsetX / OffsetY でずらして重ねる (左)。ReverseZIndex=True で先頭が最前面になる (右=重ねアバターの土台)" />
                     <Grid ColumnDefinitions="*,*">
                         <controls:OverlapPanel Grid.Column="0"
                                                HorizontalOptions="Start" VerticalOptions="Start"
@@ -695,8 +677,6 @@
                                Title="CascadeStackLayout"
                                Icon="{x:Static fonts:MaterialIcons.Layers}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="Layout 派生クラスの CreateLayoutManager で子要素を左上から右下へ重ねて配置する。ずらす量は Offset プロパティ" />
                     <controls:CascadeStackLayout HorizontalOptions="Start">
                         <Border Style="{StaticResource DockPane}"
                                 WidthRequest="200" HeightRequest="72"

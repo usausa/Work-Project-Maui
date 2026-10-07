@@ -238,7 +238,7 @@
                                                        SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
                                                        VisibleSegmentsCount="2" />
                                 <Label Style="{StaticResource BasicCaptionLabel}"
-                                       Text="SfNavigationDrawer = Syncfusion.Maui.Toolkit (ページを包む。Position / Transition / 幅と、端のスワイプ) / 自作 = Controls/SideDrawer.cs (Grid 派生、依存なし。最前面に重ね、左端のスワイプとパネルのドラッグ、背景のタップ)" />
+                                       Text="左端からのスワイプでも開く" />
                                 <Button Style="{StaticResource BasicFilledButton}"
                                         Command="{Binding OpenCommand}"
                                         Text="ドロワーを開く (F2)" />

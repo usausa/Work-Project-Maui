@@ -56,18 +56,9 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
 
-            <Style x:Key="StatBorder"
-                   TargetType="Border">
-                <Setter Property="Padding" Value="8" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource GrayLighten1}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            </Style>
-
             <Style x:Key="StatGraph"
                    TargetType="controls:StatControl">
-                <Setter Property="HeightRequest" Value="110" />
+                <Setter Property="HeightRequest" Value="120" />
             </Style>
 
         </ResourceDictionary>
@@ -123,7 +114,7 @@
                                Text="状態の送信" />
                         <Label Grid.Row="2" Grid.Column="1"
                                Style="{StaticResource CardValueLabel}"
-                               Text="{Binding ReportCount, StringFormat='{0}回(10秒ごと)'}" />
+                               Text="{Binding ReportCount, StringFormat='{0} 回 (10 秒ごと)'}" />
                     </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
@@ -139,32 +130,26 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="80">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding CpuLoadSet}"
-                                      GraphColor="{StaticResource BlueDefault}"
-                                      Label="Server CPU" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="80"
+                                  DataSet="{Binding CpuLoadSet}"
+                                  GraphColor="{StaticResource BlueDefault}"
+                                  Label="Server CPU" />
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="160">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding MemoryLoadSet}"
-                                      GraphColor="{StaticResource GreenDefault}"
-                                      Label="Server memory" MaxValue="512" Unit="MB" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="160"
+                                  DataSet="{Binding MemoryLoadSet}"
+                                  GraphColor="{StaticResource GreenDefault}"
+                                  Label="Server memory" MaxValue="512" Unit="MB" />
 
-            <Border Style="{StaticResource StatBorder}"
-                    behaviors:AnimationOption.EnterAnimation="FadeUp"
-                    behaviors:AnimationOption.EnterDelay="240">
-                <controls:StatControl Style="{StaticResource StatGraph}"
-                                      DataSet="{Binding ConnectionSet}"
-                                      GraphColor="{StaticResource OrangeDefault}"
-                                      Label="Connections" MaxValue="10" Unit="" ValueFormat="F0" />
-            </Border>
+            <controls:StatControl Style="{StaticResource StatGraph}"
+                                  behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                  behaviors:AnimationOption.EnterDelay="240"
+                                  DataSet="{Binding ConnectionSet}"
+                                  GraphColor="{StaticResource OrangeDefault}"
+                                  Label="Connections" MaxValue="10" Unit="" ValueFormat="F0" />
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
@@ -180,7 +165,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="管理画面のDevicesから送った通知が、こことローカル通知に出る" />
+                               Text="管理画面のDevicesから送った通知を表示" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

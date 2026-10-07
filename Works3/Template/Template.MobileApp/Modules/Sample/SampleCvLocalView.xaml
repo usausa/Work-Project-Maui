@@ -74,8 +74,13 @@
                 behaviors:AnimationOption.FadeInTrigger="{Binding IsPreview}"
                 IsVisible="{Binding IsPreview, Converter={StaticResource ReverseConverter}}">
             <Label Style="{StaticResource RetryHintLabel}"
-                   Text="Retry でプレビューを再開" />
+                   Text="Retryでプレビューを再開" />
         </Border>
+
+        <ActivityIndicator Grid.Row="0"
+                           Style="{StaticResource BasicLightLoadingIndicator}"
+                           IsRunning="{Binding IsProcessing}"
+                           IsVisible="{Binding IsProcessing}" />
 
     </Grid>
 

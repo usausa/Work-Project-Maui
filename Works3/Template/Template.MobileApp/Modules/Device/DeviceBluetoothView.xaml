@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
+             xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.Device"
              x:Class="Template.MobileApp.Modules.Device.DeviceBluetoothView"
@@ -28,6 +29,17 @@
                    TargetType="controls:StatusChip">
                 <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
+
+            <converters:MapToIntConverter x:Key="StepConverter">
+                <converters:MapToIntConverter.Entries>
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Connecting}"
+                                              Value="1" />
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Printing}"
+                                              Value="2" />
+                    <converters:MapToIntEntry Key="{x:Static module:BluetoothPrintState.Completed}"
+                                              Value="3" />
+                </converters:MapToIntConverter.Entries>
+            </converters:MapToIntConverter>
 
         </ResourceDictionary>
     </ContentView.Resources>
@@ -118,6 +130,10 @@
                         </DataTrigger>
                     </controls:StatusChip.Triggers>
                 </controls:StatusChip>
+
+                <controls:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
+                                        TotalSteps="3"
+                                        IsCountVisible="False" />
 
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        behaviors:AnimationOption.FadeInTrigger="{Binding Detail}"

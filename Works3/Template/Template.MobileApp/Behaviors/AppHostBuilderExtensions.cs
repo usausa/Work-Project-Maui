@@ -18,6 +18,7 @@ internal static class AppHostBuilderExtensions
         LabelOption.UseCustomMapper(options);
         ButtonOption.UseCustomMapper(options);
         EntryOption.UseCustomMapper(options);
+        StepperOption.UseCustomMapper(options);
 
         CarouselOption.UseCustomMapper(options);
 

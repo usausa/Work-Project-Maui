@@ -22,9 +22,6 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool Busy { get; set; }
 
-    [ObservableProperty]
-    public partial string ServerFingerprint { get; set; } = string.Empty;
-
     public ObservableCollection<string> Logs { get; } = [];
 
     public IObserveCommand UploadCommand { get; }
@@ -127,11 +124,6 @@ public sealed partial class NetworkSftpViewModel : AppViewModelBase
         else
         {
             AddLog(token.IsCancellationRequested ? $"{subject} キャンセルしました" : $"{subject} 失敗: {result.Error}");
-        }
-
-        if (!String.IsNullOrEmpty(result.ServerFingerprint))
-        {
-            ServerFingerprint = result.ServerFingerprint;
         }
     }
 
