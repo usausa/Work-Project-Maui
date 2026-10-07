@@ -3050,7 +3050,7 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Sample/SampleMap1View.xaml` / `Markup/AppIcons.cs` | 11-60 ①: 経路・範囲・円・地図の種類のボタンを、表示中は色の地(青・緑・赤、地図の種類は Hybrid のとき `GrayDarken3`)に白のアイコンに(`AppIcons.MapRouteWhite` など 4 個) |
 | `Messaging/MediaController.cs` / `Modules/Sample/SampleMediaView.xaml` / `SampleMediaViewModel.cs` | 11-62 ②: 読み込みに失敗したら(`MediaElementState.Failed`)、黒地の中央に白の `Error_outline`(48)と「再生できません」(16) |
 | `Behaviors/PdfOption.cs` / `PdfOption.android.cs` / `PdfOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` / `Modules/Sample/SamplePdfViewModel.cs` | 11-64: Maui.PDFView は上から見て最初に全部見えているページを今のページにするため、最後の 2 ページが 1 画面に収まると、最後まで送っても「5 / 6」になる。PDF の表示の一覧(RecyclerView)にリスナーを足し、指で送ってこれ以上送れなくなったら最後のページにする(RecyclerView は後から加えたリスナーを先に呼ぶので `Post` で後に回す。ページの指定での移動は dx / dy が 0 なので対象外)。ページ数の表示と Prev / Next の有効・無効は、スライダーと同じ `PageIndex` から決める |
-| `Behaviors/Scroll.android.cs` / `Platforms/Android/MainActivity.cs` / `Platforms/Android/Resources/values/styles.xml`(新規) | 11-72: テーマ(`android:overScrollMode` = never の `NoOverScrollTheme`)を `base.OnCreate` の前に当て(`Scroll.ApplyTheme`)、全部のビューのオーバースクロールの既定を無しにした。マッパーの届かない横の ScrollView の中のビューや、PDF・WebView などのライブラリのビューにも効く。`BehaviorOptions.DisableOverScroll` が false なら当てない |
+| `Platforms/Android/MainActivity.cs` / `Platforms/Android/Resources/values/styles.xml`(新規) | 11-72: `MainActivity` が `base.OnCreate` の前にテーマ(`android:overScrollMode` = never の `NoOverScrollTheme`)を当て、アプリ全体のビューのオーバースクロールの既定を無しにした。`Behaviors/Scroll` のマッパー(ScrollView・ItemsView)の届かない横の ScrollView の中のビューや、PDF・WebView などのライブラリのビューにも効く |
 | `Controls/EasingCurveView.cs` / `Animations/EasingDemoAnimation.cs` / `Modules/View/ViewEasingView.xaml` | 11-51 ①: 丸を曲線に沿って動かす。`EasingCurveView` に `Progress`(0〜1)を足し、その時間の位置(縦は Easing の値)に曲線の色の丸(半径 8)を描く。曲線は丸が切れないよう左右を 8 だけ内側に描く。`EasingDemoAnimation` は曲線のビューの `Progress` を 0 から 1 へ一定の速さで動かす(`Animate`)。丸の `BoxView` と地の `Grid` は削除し、地の色は曲線のスタイルの `EasingCurve` に |
 | `Markup/AppIcons.cs` | 11-3 ①・11-11 ①・11-50 ③・11-55 ② のアイコンを足した。Small(18・`BlueGrayDarken1`)に 21 個(Add / Autorenew / CallToAction / Checklist / CropSquare / DataUsage / Dialpad / Downloading / Edit / HelpOutline / HorizontalRule / Image / Info / Lock / ManageSearch / Message / PlaylistAdd / RadioButtonUnchecked / Rule / Search / Undo)、画面固有に `AnimationFade` / `AnimationRotate` / `AnimationScale` / `AnimationShake`(18・白)と `DataDelete` / `DataDeleteSweep`(18・赤) |
 | `Modules/Data/DataView.xaml` | 11-3 ①: 7 つのボタンを `BasicIconOutlinedButton` にしてアイコンを付けた。Delete / DeleteAll は画面ローカルの `DeleteButton`(赤の文字。Diagnostics と同じ形)と赤のアイコン |
@@ -3073,6 +3073,7 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Device/DeviceQrScanView.xaml` | 11-22 ①〜④: 黒地にし、下に白い結果の帯(青の QR のアイコンと値、読む前は案内)。プレビューの上に半透明の状態のチップ(カメラ・ズーム・反転・振動。ズームの値が無ければ「-」、ON は青の地)、下に半透明の丸いボタン(ライト・照準・縮小・拡大。ライトの ON は琥珀、照準の ON は青)、中央に読み取りの枠(`CameraOverlayView` の格子なし) |
 | `Modules/Device/DeviceCameraView.xaml` / `Resources/Styles/Styles.xaml` | 11-23 ①②: 黒地にし、QR Scan と同じ状態のチップ(カメラの名前・ズーム・フラッシュ・ライト)と丸いボタン(ライト・フラッシュ・縮小・拡大。フラッシュは Off・On・Auto でアイコンと色を切り替え)。使わなくなった共有の `SubMenuGrid` / `SubMenuButton` を削除 |
 | `Modules/Device/DeviceNfcView.xaml` | 11-29 ①②: 読んだ後の上の帯を、緑のグラデーションの IC カード風のカード(Suica・非接触のアイコン・数え上げる残高・等幅の IDm)に。履歴はフラットな行(処理の色の帯・1 行の日時・端末と処理のバッジ・右寄せの残高・1px の線)に。Metro の箱のスタイルは削除 |
+| `Modules/Device/DeviceNfcView.xaml` / `DeviceNfcViewModel.cs` / `Models/Sample/SuicaLogData.cs` | 11-29 ③〜⑥: 端末のバッジを幅 76、処理のバッジを幅 88 以上(長い名前は伸びる)にして横の開始位置をそろえ、文字は中央に。残高を日付の行に置き、その下に前の履歴からの差分(14。プラスは `BlueLighten1`、マイナスは `RedLighten1` で「+￥10,000」「−￥178」。一番古い行と差が 0 の行は出さない)。差分は読み取りのときに ViewModel が求める(`SuicaLogData.Difference`。履歴は新しい順なので次の行との差)。行の上下の余白を 10 → 8、行の間隔を 4 → 0(バッジの上は 3)にして、1 行の高さは 73.5 → 65dp。日付は既定のフォントの 16 の白の太字で曜日付き(「10/06 (火)」)、時刻は 14 の灰 |
 | `Resources/Raw/web-basic/index.html` / `other.html` / `style.css`(新規)/ `Modules/Sample/SampleWebBasicView.xaml` / `SampleWebBasicView.xaml.cs` | 11-59 ①③: 中のページに共通の CSS(余白 16・文字 16、幅いっぱいの高さ 44・角 8 の枠のボタン、下まで広がる等幅のログ)。下の帯の受信の光を `AnimationOption.HighlightTrigger` にし、code-behind の処理を削除 |
 | `Modules/Device/DeviceInfoView.xaml` | 11-17 ①: Device のカードを、機種名(24 の太字)と OS の版・実機 / エミュレーターのチップ(実機は緑、エミュレーターは琥珀)に |
 | `Modules/Device/DeviceStatusView.xaml` | 11-18 ③: 電池を `ArcMeter` の輪(120・太さ 10、20% 以下は赤)にして、中に電池のアイコンと % |
@@ -3112,6 +3113,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: QR Scan・Camera・NFC・Web Basic を前後で撮って比べた。QR Scan はライト・照準・反転(F3)・振動(F4)を ON にしてチップとボタンの色、戻した状態を、Camera はライトとフラッシュ(On・Auto)と戻した状態を撮った。NFC のカードと履歴は、一時的に見本のデータ(9 件)を入れて撮り、元に戻した。Web Basic は JS からの送信・C# の呼び出し・F3 の Call で下の帯が光ること、other page と W-Back の行き来を確かめた
 - 実機: J3 の 11 画面を前後で撮って比べた。Bluetooth は Print で接続中の琥珀と失敗の赤、CV Local は Detect の後の案内の帯を撮った。Animation は動きの時間を一時的に 6 倍にしたビルドで途中を連続で撮り、4 枚とも区画の中で動いてカードの枠からはみ出さず、ほかのタイルにぶつからないことを画素で確かめた(Sequence は上へ 6px だけ区画の間の余白に入る)
 - 実機: J2 の 4 画面(HTTP (Data)・HTTP (Auth)・Storage・gRPC)をサーバーにつないで前後で撮って比べた。gRPC はメッセージを 2 件送って、名前のバッジ・時刻・区切り線を確かめた
+- 実機: NFC は一時的に見本のデータ(5 文字の端末・長い処理名・差が 0 の行を含む 9 件)を入れて、バッジの開始位置・差分の色と書式・差分を出さない行を撮って確かめた
+- 実機: オーバースクロールは、端で引っぱった途中を止まっているときと画素で比べた。Misc(ScrollView)・Mail(CollectionView)・Diagnostics・Lottie の帯(横)・PDF はどれも効果なし(Diagnostics の差は動いている時刻の 1 文字だけ)
 - ビルド 0 警告、inspectcode 0 件
 
 ### 🏷️API の名前と応答の宣言(template-maui-server)(2026-10-05)
@@ -3269,6 +3272,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - **SkiaSharp の `SKCanvas.DrawColor` の既定の合成は `SKBlendMode.Src`(置き換え)**。半透明の色を上から重ねて暗くするときは `SKBlendMode.SrcOver` を渡す(既定のままだと下の絵が消えて半透明の黒だけが残る)
 - XAML の `clr-namespace:...;assembly=...` は、名前空間とアセンブリが違うと MAUI のビルドと実行は通るが ReSharper は型を解決できずエラーにする。CommunityToolkit の `CameraFlashMode` は名前空間が `CommunityToolkit.Maui.Core` でも、アセンブリは `CommunityToolkit.Maui.Camera`
 - MauiImage の画像は Android では drawable(拡張子なしの名前)になり、`FileSystem.OpenAppPackageFileAsync` では読めない。SkiaSharp で描くときは `Resources.GetIdentifier` と `BitmapFactory.DecodeResource`(密度で拡大しないよう `InScaled` = false)から `ToSKBitmap` にする
+- .NET の数値の書式は 3 つ目の区画が 0 の書式で、`#` だけにすると 0 は空の文字になる(`{0:+￥#,0;−￥#,0;#}` は 0 を出さない。2 つ目の区画を書くと負の数に符号は付かないので自分で書く)
 - `BindableProperty` の `propertyChanged` に基底の protected の静的メソッドを渡すと、使わない引数が IDE0060 の警告になる(private なら出ない)。基底で共有するときは `static (bindable, _, _) => ...` のデリゲートの静的フィールドにする
 - **SkiaSharp.Extended.UI 3.0 の `SKLottieView` は、`RepeatCount` が 0 以外のとき、止めたまま(`IsAnimationEnabled` = false)`Progress` を `Duration` にすると UI スレッドが回り続けて固まる**。最後に着いたので先頭へ戻す `Progress = 0` は、MAUI が設定中の同じプロパティへの設定として後回しの列に入れ、止めているときの再描画(`Invalidate` → `Update`)がまだ古い `Duration` を設定し直すので、2 つの値が交互に列に入り続ける(`BindableObject.SetValueCore` の `DelayedSetters`)。止めたまま動かす位置は `Duration` の 1 tick 手前までにする
 

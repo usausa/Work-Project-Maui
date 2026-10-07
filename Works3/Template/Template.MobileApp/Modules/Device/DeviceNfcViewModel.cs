@@ -125,6 +125,24 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
             return null;
         }
 
+        var logs = blocks1.Concat(blocks2).Concat(blocks3)
+            .Where(static x => SuicaLogic.IsValidLog(x.BlockData))
+            .Select(static x => new SuicaLogData
+            {
+                Terminal = SuicaLogic.ExtractLogTerminal(x.BlockData),
+                Process = SuicaLogic.ExtractLogProcess(x.BlockData),
+                DateTime = SuicaLogic.ExtractLogDateTime(x.BlockData),
+                Balance = SuicaLogic.ExtractLogBalance(x.BlockData),
+                TransactionId = SuicaLogic.ExtractLogTransactionId(x.BlockData)
+            })
+            .ToList();
+
+        // 履歴は新しい順なので、次の行が 1 つ前の履歴
+        for (var i = 0; i < logs.Count - 1; i++)
+        {
+            logs[i].Difference = logs[i].Balance - logs[i + 1].Balance;
+        }
+
         return (
             Convert.ToHexString(idm),
             new SuicaAccessData
@@ -132,18 +150,6 @@ public sealed partial class DeviceNfcViewModel : AppViewModelBase
                 Balance = SuicaLogic.ExtractAccessBalance(block.BlockData),
                 TransactionId = SuicaLogic.ExtractAccessTransactionId(block.BlockData)
             },
-#pragma warning disable IDE0028
-            blocks1.Concat(blocks2).Concat(blocks3)
-                .Where(static x => SuicaLogic.IsValidLog(x.BlockData))
-                .Select(static x => new SuicaLogData
-                {
-                    Terminal = SuicaLogic.ExtractLogTerminal(x.BlockData),
-                    Process = SuicaLogic.ExtractLogProcess(x.BlockData),
-                    DateTime = SuicaLogic.ExtractLogDateTime(x.BlockData),
-                    Balance = SuicaLogic.ExtractLogBalance(x.BlockData),
-                    TransactionId = SuicaLogic.ExtractLogTransactionId(x.BlockData)
-                })
-                .ToList());
-#pragma warning restore IDE0028
+            logs);
     }
 }

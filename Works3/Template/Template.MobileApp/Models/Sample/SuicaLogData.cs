@@ -16,4 +16,7 @@ public partial class SuicaLogData : ObservableObject
 
     [ObservableProperty]
     public partial int TransactionId { get; set; }
+
+    [ObservableProperty]
+    public partial int? Difference { get; set; }
 }

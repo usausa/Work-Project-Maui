@@ -102,6 +102,11 @@
 
             <converters:SuicaProcessTextConverter x:Key="ProcessTextConverter" />
 
+            <s:CompareToColorConverter x:Key="DifferenceColorConverter"
+                                       Expression="{x:Static s:CompareExpressions.GreaterThan}"
+                                       TrueValue="{StaticResource BlueLighten1}"
+                                       FalseValue="{StaticResource RedLighten1}" />
+
             <!-- Style -->
 
             <Style x:Key="IcCardBorder"
@@ -186,7 +191,7 @@
 
             <Style x:Key="LogRowGrid"
                    TargetType="Grid">
-                <Setter Property="RowSpacing" Value="4" />
+                <Setter Property="RowSpacing" Value="0" />
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
 
@@ -197,15 +202,26 @@
 
             <Style x:Key="LogDateLabel"
                    TargetType="Label">
-                <Setter Property="Margin" Value="0,10,0,0" />
-                <Setter Property="FontFamily" Value="JetBrainsMono" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="VerticalOptions" Value="End" />
+                <Setter Property="FontSize" Value="16" />
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
+            </Style>
+
+            <Style x:Key="LogDaySpan"
+                   TargetType="Span">
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LogTimeSpan"
+                   TargetType="Span">
+                <Setter Property="FontSize" Value="14" />
             </Style>
 
             <Style x:Key="LogBadgeStack"
                    TargetType="HorizontalStackLayout">
-                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="Margin" Value="0,3,0,8" />
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
@@ -217,8 +233,21 @@
                 <Setter Property="StrokeShape" Value="RoundRectangle 4" />
             </Style>
 
+            <Style x:Key="LogTerminalBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource LogBadgeBorder}">
+                <Setter Property="WidthRequest" Value="76" />
+            </Style>
+
+            <Style x:Key="LogProcessBadgeBorder"
+                   TargetType="Border"
+                   BasedOn="{StaticResource LogBadgeBorder}">
+                <Setter Property="MinimumWidthRequest" Value="88" />
+            </Style>
+
             <Style x:Key="LogBadgeLabel"
                    TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
@@ -226,9 +255,18 @@
             <Style x:Key="LogBalanceLabel"
                    TargetType="Label">
                 <Setter Property="Margin" Value="0,0,16,0" />
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="LogDifferenceLabel"
+                   TargetType="Label">
+                <Setter Property="Margin" Value="0,3,16,8" />
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
             </Style>
 
             <Style x:Key="LogDividerBoxView"
@@ -303,26 +341,32 @@
                                Style="{StaticResource LogDateLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="{Binding DateTime, StringFormat='{0:MM/dd}'}" />
-                                    <Span Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat=' {0:HH:mm}'}" />
+                                    <Span Style="{StaticResource LogDaySpan}"
+                                          Text="{Binding DateTime, StringFormat='{0:MM/dd (ddd)}'}" />
+                                    <Span Style="{StaticResource LogTimeSpan}"
+                                          Text="{Binding ., Converter={StaticResource LogTimeConverter}, StringFormat=' {0:HH:mm}'}" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                         <HorizontalStackLayout Grid.Row="1" Grid.Column="1"
                                                Style="{StaticResource LogBadgeStack}">
-                            <Border Style="{StaticResource LogBadgeBorder}">
+                            <Border Style="{StaticResource LogTerminalBadgeBorder}">
                                 <Label Style="{StaticResource LogBadgeLabel}"
                                        Text="{Binding Terminal, Converter={StaticResource TerminalTextConverter}}" />
                             </Border>
-                            <Border Style="{StaticResource LogBadgeBorder}"
+                            <Border Style="{StaticResource LogProcessBadgeBorder}"
                                     BackgroundColor="{Binding Process, Converter={StaticResource ProcessColorConverter}}">
                                 <Label Style="{StaticResource LogBadgeLabel}"
                                        Text="{Binding Process, Converter={StaticResource ProcessTextConverter}}" />
                             </Border>
                         </HorizontalStackLayout>
-                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                        <Label Grid.Row="0" Grid.Column="2"
                                Style="{StaticResource LogBalanceLabel}"
                                Text="{Binding Balance, StringFormat='￥{0:#,0}'}" />
+                        <Label Grid.Row="1" Grid.Column="2"
+                               Style="{StaticResource LogDifferenceLabel}"
+                               Text="{Binding Difference, StringFormat='{0:+￥#,0;−￥#,0;#}'}"
+                               TextColor="{Binding Difference, Converter={StaticResource DifferenceColorConverter}, ConverterParameter=0}" />
                         <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                  Style="{StaticResource LogDividerBoxView}" />
                     </Grid>
