@@ -2919,8 +2919,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Modules/Control/ControlMenuView.xaml` + `.xaml.cs` / `ControlMenuViewModel.cs` | 10-24: 削除(Control の画面は View のメニューから開く) |
 | `Modules/View/ViewMenuView.xaml` / `Modules/Main/MenuView.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-24: View のメニューを 9 行 18 項目に(Layout・State / Border・Shadow / Toolkit・Custom / Bottom Sheet・Drawer / Animation・Easing / Effect・DragDrop / Lottie・Svg / Graphics・Drawing / Chart・Sf Chart)、`ViewId` の View の節を同じ順に。メインメニューは View を 2 列分にして Control を削除。使わなくなったアイコン(`ViewModule` / `Refresh` / `ViewCarousel` / `ViewList`)を削除 |
 | `Document/View_Chart.png` / `View_SfChart.png` / `View_BottomSheet.png` / `View_Drawer.png` / `README.md` | 10-24: `Control_*.png` から改名。README の Image の画像のパス、Implement の View の行(Control の行をまとめた) |
-| `Models/Sample/ShopCatalog.cs`(新規) | 10-6: 見本の商品 9 件(カテゴリ・種類の名前・値段(数)・評価とレビュー数・人気・説明・仕様・選べる種類)、カテゴリと並び順の列挙 |
-| `Modules/UI/UIShopContext.cs`(新規) | 一覧・商品・カートが共有する文脈(`[Scope]`)。商品の行 `UIShopProduct`(お気に入り)、選んだ商品、カートの行 `UIShopCartItem`(同じ商品と種類は数を足す・増減・削除)、小計・割引(10%)・合計、注文の確定 `UIShopOrder`(注文番号・お届け予定の日)、カテゴリ・名前・価格の上限での絞り込みと並べ替え |
+| `Models/Sample/ShopStore.cs`(新規)/ `ShopCatalog.cs`(削除) | 10-6: Shop の型と処理を 1 ファイルに。見本の商品 9 件(カテゴリ・種類の名前・値段(数)・評価とレビュー数・人気・説明・仕様・選べる種類)、カテゴリと並び順の列挙、商品とお気に入り `ShopItem`、カートの行 `ShopCartItem`(同じ商品と種類は数を足す・増減・削除)、小計・割引(10%)・合計、注文の確定 `ShopOrder`(注文番号・お届け予定の日)、カテゴリ・名前・価格の上限での絞り込みと並べ替え(`ShopStore`) |
+| `Modules/UI/UIShopContext.cs`(新規) | 一覧・商品・カートが共有する文脈(`[Scope]`)。お店 `ShopStore` と選んだ商品。画面はカートと合計を `Context.Store` から見る |
 | `Modules/UI/UIShopViewModel.cs` / `UIShopView.xaml` | 上の部分を一覧のヘッダーにして一緒にスクロール。カートのバッジ、カテゴリのチップ(`SfChipGroup`)、人気の商品の `CarouselView`(のぞき・中央の強調・インジケーター)、評価とお気に入りのある商品のカード、絞り込みのボタン(指定中の印)と並び順・価格のシート(自作の `BottomSheetView`)、該当なしの表示。選んだ商品を文脈に置いて Push |
 | `Modules/UI/UIItemViewModel.cs` / `UIItemView.xaml` | 選んだ商品の絵・名前・値段・評価の星(`RatingView`)とレビュー数・お気に入り・種類のチップ・説明 / 仕様 / 配送と返品の折りたたみ(`SfAccordion`。開いた見出しの灰色はテーマの色を画面のリソースで上書きし、その 2 つのキーの inspectcode の `Xaml.RedundantResource` は 2 行だけ抑止)。下に数量と「カートに入れる」(押すとバッジが増え、1.5 秒「カートに追加しました」)。戻るは Pop |
 | `Modules/UI/UICartViewModel.cs` / `UICartView.xaml` | 文脈のカートの行(フラットな行、種類のバッジ、左へスワイプで削除、空の表示)。「レジに進む」で注文を確定して完了の表示(注文番号・お届け予定・点数・お支払い)、「お買い物を続ける」で一覧まで戻る(`PopAsync(Navigator.StackedCount - 1)`) |
@@ -2941,48 +2941,71 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Document/UI_Flight.png` / `UI_Tactical.png` / `UI_Telemetry.png` | 10-26〜10-28: 撮り直し |
 | `Controls/GlowRing.cs`(新規)/ `Controls/TimerDial.cs` | 10-29 ④: 光るグラデーションの輪(`Progress`・始まりと終わりの色・溝の色・太さ)。光る弧の描き方(`DrawGlowArc`)を Timer の文字盤と共有する |
 | `Models/Sample/HabitTracker.cs`(新規)/ `Modules/UI/UIHabitView.xaml` + `.xaml.cs` / `UIHabitViewModel.cs`(新規) | 10-29: 習慣の記録の画面。暗い地の全面の画面(ヘッダーと F キーの帯を隠し、上の帯は #121212)。日付と題、今日の達成率のカード(完了の数・光る輪・週の 7 日の点)、習慣のカード 4 枚(分類の色の輪と割合・分類のチップ・名前・目標・連続日数)。カードのタップで 1 回分進み、100% で ✓ と弾み、連続日数が 1 増えて琥珀と 🔥 になる。今日の全部が終わると週の今日の点を塗る。文字は日本語、見本のデータはメモリーの中だけ |
-| `Models/Sample/SmartHome.cs`(新規)/ `Modules/UI/UIHomeView.xaml` + `.xaml.cs` / `UIHomeViewModel.cs`(新規) | 10-30: スマートホームの画面。全面の画面(上の帯は #101418)。部屋ごとの写真をぼかして暗く敷き、半透明のカードを重ねる。見出し(部屋の名前・接続・室温・シーン)、空調(ダイヤルのドラッグと −/+ で 0.5 度刻み、16〜30°C。運転を切ると灰色)、機器のタイル 3 × 2(タップでオン・オフ。照明とランプは明るさのスライダーで、消すと 0%・点けると消す前の明るさ。状態の点)、電池の行(60% 以上 緑・30% 以上 琥珀・それ未満 赤)、下のタブで部屋(リビング・寝室・キッチン)を切り替え。文字は日本語、見本のデータはメモリーの中だけ |
+| `Models/Sample/SmartHome.cs`(新規)/ `Modules/UI/UIHomeView.xaml` + `.xaml.cs` / `UIHomeViewModel.cs`(新規) | 10-30: スマートホームの画面。全面の画面(上の帯は #101418)。部屋ごとの写真をぼかして暗く敷き、半透明のカードを重ねる。見出し(部屋の名前・接続・室温・シーン)、空調(ダイヤルのドラッグと −/+ で 0.5 度刻み、16〜30°C。運転を切ると灰色)、機器のタイル 3 × 2(タップでオン・オフ。照明とランプは明るさのスライダーで、消すと 0%・点けると消す前の明るさ。状態の点)、電池の行(60% 以上 緑・30% 以上 琥珀・それ未満 赤)、下のタブで部屋(リビング・寝室・キッチン)を切り替え。文字は日本語、見本のデータはメモリーの中だけ。部屋の選択はモデルに持たせず、下のタブは `Selectable<HomeRoom>` |
 | `Controls/HomeControls.cs` / `HomeControls.android.cs` / `HomeControls.ios.cs`(新規) | 10-30: Home だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。`HomeBlurredImage`(写真を 4 分の 1 の大きさでぼかして暗くした画像を 1 回だけ作って写す。`MaxLuminance` を付けると、暗くした後の平均の明るさがそれを超えないところまで暗くする。写真は MauiImage の名前で、Android は drawable から読む)、`HomeThermostatDial`(下の開いた 270° の弧・光るグラデーション・つまみ・輪のドラッグ)、`HomeGlowIcon`(MaterialIcons の文字を光らせる)、`HomeBatteryGauge`(横向きの電池)。基底の `HomeControl` に再描画と密度 |
 | `Converters/HomeDeviceTextConverter.cs` / `HomeBatteryLevelConverter.cs`(新規) | 10-30: 機器の種類と状態からアイコン・状態の言葉・下の行の文(開度・安全・風量・冷房の温度)、電池の残量の言葉(十分・良好・普通・少ない)と色 |
 | `Modules/UI/UIMenu2View.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-29 / 10-30: UI 2 のメニューの 1 段目に Home(家のアイコン `Home`)と Habit(炎のアイコン `LocalFireDepartment`)。Graph 以下は 1 段ずつ下げた。`ViewId` は UI 2 の節の先頭(`UIDock` の後)に `UIHome` / `UIHabit` |
 | `Modules/View/ViewCustomViewModel.cs` | 10-23: TreeView の見本のデータを今のフォルダーの構成に(Template.MobileApp の Controls・Modules・Resources。Document は入れない) |
 | `Graphics/Drawing/LoadDrawing.cs` | 10-15: 履歴の棒の左に 0〜100 dB の目盛り(20 ごと。横の線は薄い白)、50 dB(NORMAL・金)と 70 dB(LOUD・赤)の点線、50 の下に QUIET(緑)。目安の値はメーターの色(`DecibelToColorConverter`)と同じ |
 | `Modules/UI/UIDockViewModel.cs` / `UIDockView.xaml` | 10-13: CPU・メモリはアプリの実際の値(1 秒ごと。CPU は前回からの CPU 時間の増分を小数 1 桁の %、メモリは WorkingSet の MB。診断のパネルと同じ取り方)。2 つのフォルダーを Media(巻き戻し・再生・一時停止・早送り・停止)と System(ホーム・再開・電源)にし、押すと中のボタンの面(左上に戻る)に切り替える(戻るキーでも閉じる)。ミュートはアイコンと名前が Muted に変わる。タイマーは押すと 00:30 から 1 秒ずつ減り(もう一度押すと止まる)、0 で「Time's up」のダイアログ。タイルの余白を 0 に(「MEM 457 MB」を 2 行に収める) |
-| `Models/Sample/Chat/ChatMessage.cs` / `MessageReaction.cs` / `Modules/UI/UIChatViewModel.cs` / `UIChatView.xaml` | 10-9: カメラのボタンで端末の写真を選び、画像のメッセージ(200 × 150・角丸 12)として送る(`MediaPicker.PickPhotosAsync`)。相手のメッセージのタップで、その行を琥珀の地にしてメッセージの下(リアクションの下)にリアクションの帯(👍 ❤️ 😂 😮 😢 🙏。`ChatMessage.IsSelected`。帯の中身は初めて選んだときに作る)。押すとメッセージのリアクションに加わり(同じ絵文字は数が増える)、帯を閉じる。同じメッセージをもう一度押す・戻るキー・スタンプの帯・送信でも閉じる。帯が隠れないよう、選んだメッセージが見える位置までスクロールする。自分のメッセージには付けない |
+| `Models/Sample/ChatMessage.cs` / `Modules/UI/UIChatViewModel.cs` / `UIChatView.xaml` / `Controls/ChatMessageTemplateSelector.cs` | 10-9: カメラのボタンで端末の写真を選び、画像のメッセージ(200 × 150・角丸 12)として送る(`MediaPicker.PickPhotosAsync`)。相手のメッセージのタップで、その行を琥珀の地にしてメッセージの下(リアクションの下)にリアクションの帯(👍 ❤️ 😂 😮 😢 🙏。一覧の行は `Selectable<ChatMessage>`。帯の中身は初めて選んだときに作る)。押すとメッセージのリアクションに加わり(同じ絵文字は数が増える)、帯を閉じる。同じメッセージをもう一度押す・戻るキー・スタンプの帯・送信でも閉じる。帯が隠れないよう、選んだメッセージが見える位置までスクロールする。自分のメッセージには付けない |
 | `Modules/UI/UIProfileViewModel.cs` / `UIProfileView.xaml` | 10-1: 興味の下を 写真 / 投稿 / いいね のタブに(`Controls/TabStrip`。最初は写真。投稿は本文・経過時間・❤️ と 💬 の数、写真は 3 列、いいねはアイコン・名前・経過時間・本文の行。見本の日時は今からの相対)。写真のタップで黒地の全画面の表示(左右に送る・点・× と戻るキーで閉じる。`CarouselOption.PageSnap` と `IsScrollAnimated="False"`)。フォロワーは「3.8k」の表示(フォローはボタンの切り替えだけ)、投稿とフォロー中の数は桁区切り |
 | `Models/Sample/SuperItems.cs` / `Modules/UI/UISuperViewModel.cs` / `UISuperView.xaml` | 10-4: クーポンの「獲得する」(押すと「✓ 獲得済み」になって弾む。もう一度押すと戻る)。サービスのアイコンは押すと縮むボタンに(何も開かない)。クーポンの下に「近くのお店」の横の一覧(6 店。色の丸いアイコン・店名・種類、📍 距離のバッジ、混み具合のバッジ 空いています 緑・やや混雑 橙・混雑 赤。`SuperShop` / `SuperCrowd`)。クーポンとお店の横の一覧は止まる位置をそろえない(最後の項目まで送れる) |
 | `Graphics/Drawing/ChartDrawing.cs` | 10-22: 7 種類に値の目盛り(切りのよい 4 本前後の線と左の値。`ChartScale`)と下の名前(重なるときは間引く)、積み上げの上とドーナツの下の凡例。タップで点・棒・区画・セルを選んで値の吹き出し(折れ線は点線の縦の線、棒・積み上げ・ローソク足はほかを薄く、ドーナツは区画を太くして中央に名前・値・割合)。同じ種類・同じ数の値に変えると今の値と目盛りから動かす。`ShowLine(値, 名前)` などで値と名前を渡し、色(`LineColor` / `LineHighColor` / `BarColor` / `BarEndColor` / `TrackColor`)・書式(`AxisFormat` / `ValueFormat`)・`ShowAxis` / `ShowTrack` / `SeriesNames` を画面ごとに変える。棒は上から下へのグラデーションと目盛りの最大までの溝(角は 4 のまま) |
 | `Graphics/Drawing/DrawingObject.cs` / `DrawingControl.cs` | 10-22: タップを受け取る `ITapDrawing`(指の移動が 10 以下で離したときに `OnTap`。`IInteractiveDrawing` と違い、スクロールの中で親のスクロールを止めない) |
 | `Modules/View/ViewChartViewModel.cs` | 10-22: 見本のデータに名前(月・地域・製品・日付・曜日と時刻) |
-| `Models/Sample/MoneyBook.cs`(新規) | 10-3: 決済の見本の取引(半年前から今日まで、曜日と日付で決まる店と金額。残高が 8,000 円を下回るとオートチャージ)と集計(月の合計・週ごと・週の平均・分類ごと・日ごとの残高・1 日あたりの平均残高の前月比・最近・店の名前で探す・お知らせ・支払いのコード) |
+| `Models/Sample/MoneyBook.cs`(新規) | 10-3: 決済の見本の取引(半年前から今日まで、曜日と日付で決まる店と金額。残高が 8,000 円を下回るとオートチャージ)と集計(月の合計・週ごと・週の平均・分類ごと・日ごとの残高・1 日あたりの平均残高の前月比・最近・店の名前で探す・お知らせ・支払いのコード)。日ごとの取引 `MoneyDay`(日付付きのまとまり。一覧の区切りにそのまま使う)、月と支出の合計 `MoneyMonth` |
 | `Controls/BarcodeView.cs`(新規) | 10-3: 数字の Code 128(コードセット C)のバーコード。ZXing.Net の出力と 400 件(0〜99 の全値)で突き合わせた |
 | `Converters/RelativeDayConverter.cs`(新規) | 今日・昨日、それより前は「10/06 (月)」(Money の取引と Kit の通知の区切り) |
-| `Modules/UI/UIMoneyViewModel.cs` / `UIMoneyView.xaml` | 10-3: 残高の前月比のバッジ、月の支出のカード(▼ で月の一覧のシート、合計と週の平均、週ごとの棒)、支出の分類(› で一覧のシート)、最近の取引 5 件、下のタブの中身(検索・お知らせ・アカウント)、支払いのシート(バーコード・QR・30 秒で作り直す)、詳細で残高の推移のシート。戻るキーは開いているシートを先に閉じる。画面を開くときに作る要素を減らす: 取引の行は 1 つの Grid(丸は `BoxView`)、検索の結果は見えている行だけを作る `CollectionView`(日ごとの区切り `UIMoneyDayGroup`)、お知らせの一覧はタブを開いたとき、アカウントのタブは初めて開いたとき(`LazyViewOption.Template`)、4 つのシートは初めて開くとき(`SheetTemplate`)に作る |
+| `Modules/UI/UIMoneyViewModel.cs` / `UIMoneyView.xaml` | 10-3: 残高の前月比のバッジ、月の支出のカード(▼ で月の一覧のシート、合計と週の平均、週ごとの棒)、支出の分類(› で一覧のシート)、最近の取引 5 件、下のタブの中身(検索・お知らせ・アカウント)、支払いのシート(バーコード・QR・30 秒で作り直す)、詳細で残高の推移のシート。戻るキーは開いているシートを先に閉じる。画面を開くときに作る要素を減らす: 取引の行は 1 つの Grid(丸は `BoxView`)、検索の結果は見えている行だけを作る `CollectionView`(日ごとの区切りは `MoneyDay`)、お知らせの一覧はタブを開いたとき、アカウントのタブは初めて開いたとき(`LazyViewOption.Template`)、4 つのシートは初めて開くとき(`SheetTemplate`)に作る。月の一覧の選択は `Selectable<MoneyMonth>` |
 | `Models/Sample/KitActivity.cs`(新規) | 10-11: 歩数・心拍(1 時間ごと / 7 日 / 30 日)・昨夜の睡眠の段階・配達の予定(次の 30 分の区切りの 30 分後) |
 | `Controls/KitControls.cs`(新規) | 10-11: Kit の画面だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。睡眠の段階の帯 `KitSleepBand`(覚醒・レム・浅い・深い の 4 段と 1 時間ごとの時刻。日本語は `SKFontManager.MatchCharacter` で選んだ書体) |
 | `Behaviors/AnimationOption.cs` | 10-11: `EnterAnimation` に `Grow`(上の端を起点に縦に伸ばす) |
 | `Controls/BottomSheetView.cs` | 10-3: `SheetTemplate`(`SheetContent` の代わりに DataTemplate を渡すと、初めて開くときに中身を作る) |
 | `Behaviors/LazyViewOption.cs` | 10-3: `ContentView` に `Template`(DataTemplate)を渡すと、`Load` が初めて true になったときに中身を作る(以後は残す) |
 | `Modules/UI/UIKitDashViewModel.cs` / `UIKitDashView.xaml` | 10-11: 先頭を歩数の輪のカードに(メトリクスの歩数は距離に)、日 / 週 / 月(`SfSegmentedControl`)で歩数の棒と心拍の折れ線、昨夜の睡眠のカード、注文のカードの番号と到着の予定。心拍の折れ線と睡眠の段は青(睡眠は浅いほど淡い青) |
-| `Modules/UI/UIKitNotifyViewModel.cs` / `UIKitNotifyView.xaml` | 10-11: フラットな行、日ごとの区切り(`UIKitNotifyGroup`)、右へのスワイプで既読・左へで削除(端まで引いて離すとそのまま実行。引いたところは色とアイコンだけ = 既読は緑と ✓、削除は赤とごみ箱)、F4 の Read All |
+| `Modules/UI/UIKitNotifyViewModel.cs` / `UIKitNotifyView.xaml` | 10-11: フラットな行、日ごとの区切り(`UIKitNotifyGroup`)、右へのスワイプで既読・左へで削除(端まで引いて離すとそのまま実行。引いたところは淡い地に色の小さなアイコンだけ = 既読は淡い緑と緑の ✓、削除は淡い赤と赤のごみ箱)、F4 の Read All |
 | `Modules/UI/UIKitSettingViewModel.cs` / `UIKitSettingView.xaml` | 10-11: 表示(文字の大きさ・テーマの色の `ColorPicker`)、よくある質問(`SfAccordion`)、その他(バージョン・ログアウト) |
 | `Modules/UI/UIKitTrackingViewModel.cs` / `UIKitTrackingView.xaml` | 10-11: 到着までの分と進み具合の棒、配達員のカード、済んだ段階の線を順に伸ばす、日付付きの時刻 |
-| `Modules/UI/UIKitOnboardViewModel.cs` / `UIKitOnboardView.xaml` | 10-11: ページごとに絵の地と同じ色で全体を塗る、1・2 ページはスキップと次へ、最後のページだけ始める |
-| `Models/Sample/MailMessage.cs` | 10-8: フォルダー(`MailFolder`)・添付・スター。未読・スター・フォルダーは変更の通知を持つ。一覧の 2 行の要約 `Preview`(改行を詰める) |
-| `Modules/UI/UIMailContext.cs`(新規) | 10-8: 一覧と本文が共有する文脈(`[Scope]`)。見本のメール 13 件(日時は今からの相対)、表示のフォルダー(受信トレイ・スター付き・送信済み・下書き・ゴミ箱)と数、日付の区切り(`UIMailGroup`。今日・昨日・今週・それ以前)、開く(既読)・スター・削除(ゴミ箱へ、ゴミ箱の中では消す)・アーカイブ。絵の無い差出人には頭文字の画像を入れる(同じ差出人は同じ画像) |
-| `Modules/UI/UIMailViewModel.cs` / `UIMailView.xaml` | 10-8: 日付の区切りのある一覧、絵の無い差出人は頭文字の丸いアイコン(色の地に頭文字を描いた画像を SkiaSharp で作る。色は名前から決める。ドロワーの自分のアイコンも同じ)、添付の印とスター、行のタップで本文へ Push、左上のアイコンで自作のドロワー(`SideDrawer`。フォルダーと数、選んだ行は琥珀)、見出しの名前とアイコンは選んだフォルダー、空の表示。戻るキーは開いているドロワーを先に閉じる。本文から戻ったときは読み込み直さない |
+| `Modules/UI/UIKitOnboardViewModel.cs` / `UIKitOnboardView.xaml` | 10-11: ページごとに絵の地と同じ色で全体を塗る、1・2 ページはスキップと次へ、最後のページだけ始める(`Position` と最後のページの値を `EqualsConverter` / `NotEqualsConverter` で比べる) |
+| `Models/Sample/MailBox.cs`(新規)/ `MailMessage.cs`(削除) | 10-8: Mail の型と処理を 1 ファイルに。メール `MailMessage`(フォルダー `MailFolder`・差出人の画像の名前・添付・スター。未読・スター・フォルダーは変更の通知を持つ。一覧の 2 行の要約 `Preview`(改行を詰める))、見本のメール 13 件(日時は今からの相対)、一覧で見るフォルダー `MailView` と数 `MailViewCount`(受信トレイは未読の数)、日付の区切り `MailGroup`(`MailDay` = 今日・昨日・今週・それ以前)、既読・スター・削除(ゴミ箱へ、ゴミ箱の中では消す)・アーカイブ(`MailBox`) |
+| `Modules/UI/UIMailContext.cs`(新規) | 10-8: 一覧と本文が共有する文脈(`[Scope]`)。メール `MailBox`、選んだフォルダーと日付の区切りの一覧、本文の画面のメール。ドロワーのフォルダーの選択は `Selectable<MailViewCount>` |
+| `Modules/UI/UIMailViewModel.cs` / `UIMailView.xaml` | 10-8: 日付の区切りのある一覧、差出人のアイコンは `MailAvatarImage`(絵の無い差出人とドロワーの自分は頭文字の丸いアイコン)、添付の印とスター、行のタップで本文へ Push、左上のアイコンで自作のドロワー(`SideDrawer`。フォルダーと数、選んだ行は琥珀)、見出しの名前とアイコンは選んだフォルダー、空の表示。戻るキーは開いているドロワーを先に閉じる。本文から戻ったときは読み込み直さない |
+| `Controls/MailControls.cs`(新規)/ `Modules/UI/UIMailDetailView.xaml` | 10-8: 差出人のアイコン `MailAvatarImage`(画像の名前があればアプリの中の Avatar フォルダーから読み、無ければ色の地に名前の頭文字を描く。色は名前から決める。同じ画像は作り直さない)。本文の画面の差出人も同じ |
 | `Modules/UI/UIMailDetailView.xaml` + `.xaml.cs` / `UIMailDetailViewModel.cs`(新規)/ `Modules/ViewId.cs` | 10-8: 本文の画面(件名とスター・差出人・日時・添付のチップ・本文)。F4 の Delete で削除して一覧へ。戻るは Pop。`ViewId` は `UIMail` の後に `UIMailDetail` |
-| `Models/Sample/StreamCatalog.cs`(新規) | 10-12: 見本の作品 7 件(題・絵・年・ジャンル・時間(分)・レーティング・評価・マッチ度・バッジ・トップとオリジナルの印・説明・出演・監督・予告(種類と長さ)) |
+| `Models/Sample/StreamLibrary.cs`(新規)/ `StreamCatalog.cs`(削除) | 10-12: Stream の型と処理を 1 ファイルに。見本の作品 7 件(題・絵・年・ジャンル・時間(分)・レーティング・評価・マッチ度・バッジ・トップとオリジナルの印・説明・出演・監督・予告(種類と長さ))、作品と見る人の状態 `StreamItem`(見た割合と残りの分・マイリスト・お気に入り・ダウンロード)、棚 `StreamShelf`、トップ・続きを見る・棚・関連(同じジャンルを先に 4 件)の選び方(`StreamLibrary`) |
 | `Converters/RuntimeTextConverter.cs`(新規) | 10-12: 時間(分)を「2h 18m」の形に(1 時間未満は「58m」) |
-| `Modules/UI/UIStreamContext.cs`(新規) | 10-12: 一覧と詳細が共有する文脈(`[Scope]`)。作品の行 `UIStreamWork`(見た割合と残りの分・マイリスト・お気に入り・ダウンロード)、選んだ作品と関連(同じジャンルを先に 4 件) |
+| `Modules/UI/UIStreamContext.cs`(新規) | 10-12: 一覧と詳細が共有する文脈(`[Scope]`)。作品の一覧 `StreamLibrary`、選んだ作品と関連 |
 | `Modules/UI/UIStreamViewModel.cs` / `UIStreamView.xaml` | 10-12: トップを 5 作品の幅いっぱいの `CarouselView`(高さ 340。下の点は横長の棒で、今の作品は長く赤。5 秒ごとに次へ、スワイプでも送れ、手で送ると数え直す。詳細を開く前に止める)、絵の上に評価・バッジ・題・年とジャンルと時間・Play・+ My List。続きを見るの棚(進み具合の棒と残りの分)、棚ごとに中身を変えた(高評価・オリジナル・急上昇・アクション & アドベンチャー)。作品のタップで文脈に置いて Push |
 | `Modules/UI/UIStreamDetailViewModel.cs` / `UIStreamDetailView.xaml` | 10-12: 選んだ作品の絵・題・マッチ度・年とジャンルと時間とレーティング・説明・出演と監督・予告(種類と長さ)。見ている途中の作品は Resume と進み具合の棒、ほかは Play。ダウンロードとお気に入りは作品ごと。More Like This のタップで同じ画面で作品を入れ替えて先頭へ戻る。戻るは Pop |
 | `Modules/UI/UITimelineViewModel.cs` / `UITimelineView.xaml` | 10-10: 日付を今日に、セッションを今の前後(90 分ごとに 75 分、4 番目が今の 30 分の区切りに始まる)に置き、終わった・進行中を今の時刻から決めて分が変わると見直す。最後に始まったセッションの下に今の時刻の線。行の ☆ でブックマーク、すべて・ブックマーク・タグのチップ(`SfChipGroup`)で絞り込み、該当なしの表示 |
 | `Modules/UI/UIGraphViewModel.cs` / `UIGraphView.xaml` | 10-14: 行のタップでコミットの詳細のシート(自作の `BottomSheetView`。要約・ブランチとタグ・作者・日時・SHA)。閉じると選択を外す。戻るキーは開いているシートを先に閉じる。ブランチとタグのバッジは一覧とシートで同じテンプレート |
-| `Modules/UI/UIGraph2View.xaml` | 10-14: 開いた行に要約(太字・折り返し)と SHA |
+| `Modules/UI/UIGraph2View.xaml` / `UIGraph2ViewModel.cs` | 10-14: 開いた行に要約(太字・折り返し)と SHA。開いた行は `Selectable<GraphRow>` |
 | `Graphics/Drawing/WheelDrawing.cs` | 10-17: 項目の色 `ColorOf`(最後の項目が先頭と同じ色で隣り合わないようにする) |
 | `Modules/UI/UIWheelViewModel.cs` / `UIWheelView.xaml` | 10-17: 背景のグラデーション(藍から紫)、結果のカード(当たりは琥珀の枠)、履歴(直近 5 回)、項目のチップ(扇形と同じ色の点、当たり枠は琥珀の枠)。× で削除(2 つまで)、F3 の Add で追加(12 個まで・8 文字まで)。回っている間は変えない |
-| `MauiProgram.cs` | `CarouselView` のオーバースクロールも無効に(`CarouselViewHandler` の `IsBounceEnabled` のマッピングの後に `OverScrollMode.Never` を当てる) |
+| `Behaviors/Scroll.android.cs` | `CarouselView` のオーバースクロールも無効に(`CarouselViewHandler` の `IsBounceEnabled` のマッピングの後に `Scroll.DisableOverScroll` を当て直す) |
+| `Resources/Styles/Styles.xaml` | `NotEqualsConverter`(値が違うときに true) |
+| `Models/Selectable.cs`(新規) | 選択の状態のホルダー(`Item` と `IsSelected`)。選択はモデルに持たせず、これで包む(Chat のリアクション・Home の部屋・Graph2 の開いた行・Money の月・Mail のフォルダー) |
+| `Models/Sample/Timetable.cs` / `ChatTalk.cs` / `AiChatMessage.cs` / `CommitGraph.cs`(新規)/ `Models/Sample/Calendar/*` / `Chat/*` / `Graph/*`(削除) | Models/Sample のサブフォルダをやめ、機能ごとに 1 ファイル(名前空間は `Models.Sample`)。Graph2 の `TimelineRow` は `Selectable<GraphRow>` に置き換えて削除 |
+| `Models/Sample/*.cs` / `Models/App/*.cs`(複数の型を持つファイル) | 区切りのコメント(Enum・Data・Service など。Timer は先頭に Common、ToDo は Enum・Rule・Data・Service)。Super・Weather・Minesweeper は列挙を先頭のまとまりへ移した |
+| `Modules/App/AppTodoContext.cs` / `Models/App/TodoApplication.cs` | 編集の入力 `TodoDraft` を文脈のファイルへ移した(区切りは Input・Mapper・Context) |
+| `Modules/UI/UIGridColumnViewModel.cs` / `UIGridColumnView.xaml` / `Models/Sample/ColumnOptionAccessors.cs`(削除) | 列設定の画面で表示の有無を編集する値の出し入れ `ColumnOptionAccessors` を、画面の VM の上へ移した |
+| `Modules/App/AppSudokuViewModel.cs` / `AppSudokuView.xaml` / `Models/App/SudokuGame.cs` | 数字のキー `SudokuDigit`(並べる列と残りの数)を VM の上へ移した。ゲームは数字ごとの残りの数 `CountRemaining` を返す |
+| `Models/TreeNode.cs`(新規)/ `Controls/TreeView.cs` / `Modules/View/ViewCustomViewModel.cs` | TreeView の節 `TreeNode` を Models へ移した(VM と TreeView の両方が使う) |
+| `Models/Sample/SuperPortal.cs`(新規)/ `SuperItems.cs`(削除)/ `Modules/UI/UISuperViewModel.cs` | スーパーアプリのホームの見本 `SuperSample`(`LoadPoint` / `LoadBanners` / `LoadApps` / `LoadCoupons` / `LoadShops`)。VM は個々のプロパティにそれを入れる |
+| `Models/Sample/ButtonDeck.cs`(新規)/ `DeckButtonInfo.cs`(削除)/ `Modules/UI/UIDockViewModel.cs` | ボタンの盤の定義 `DeckButton`(位置・種類・名前・文字・画像・色・押したときの動き `DeckAction`)と、見本の並び `DeckSample`(`LoadButtons` / `LoadFolders`。色 16・フォルダー 2 と中身・音・音量・ミュート・タイマー・ロック・設定・終了・CPU とメモリ)。VM は定義からボタンを作り(コマンドと画像)、ミュート・タイマー・CPU とメモリの表示を変える |
+| `Models/Sample/ChatTalk.cs`(新規)/ `ChatMessage.cs`(削除)/ `Modules/UI/UIChatViewModel.cs` / `UIChatView.xaml` | 自分のメッセージ・写真・スタンプを作る `ChatTalk` と、見本の `ChatSample`(`LoadMessages` = 昨日と今日の会話、`LoadStamps`)。日付の区切りの文言は画面で日付から作る |
+| `Models/Sample/CharacterRoster.cs`(新規)/ `CharacterItem.cs`(削除)/ `Modules/UI/UICharacterViewModel.cs` | キャラクターの見本 `CharacterSample.LoadCharacters` |
+| `Models/Sample/SocialGame.cs`(新規)/ `SocialUnit.cs` / `SocialNotificationInfo.cs`(削除)/ `Modules/UI/UISocialViewModel.cs` | ソーシャルゲームのホームの見本 `SocialSample`(`LoadPlayer` = エピソード・経験値・所持数、`LoadAlert`、`LoadNotifications`、`LoadStatus`、`LoadInformation` = 支援部隊、`LoadBadges` = 新着の印 `SocialBadges`)。VM は個々のプロパティにそれを入れる |
+| `Models/Sample/RadarScan.cs`(新規)/ `RadarTarget.cs`(削除)/ `Modules/UI/UIRadarViewModel.cs` | 目標の見本 `RadarSample.LoadTargets`(4〜7 個。乱数は 0 以上 1 未満を返す関数で受け取る) |
+| `Models/Sample/CommitGraph.cs` / `Modules/UI/UIGraphViewModel.cs` / `UIGraph2ViewModel.cs` | コミットの履歴の見本 `GraphSample.LoadRepositoryAsync`(`Graph/repository.json` を `GraphRepository` に読む。2 つの VM にあった同じ読み込みをまとめた) |
+| `Models/Sample/MapGuide.cs`(新規)/ `MapSpot.cs`(削除)/ `Modules/Sample/SampleMap1ViewModel.cs` | 地点の見本 `MapSample.LoadSpots` |
+| `Models/Sample/OrderBook.cs` / `VisitSchedule.cs`(新規)/ `OrderInfo.cs` / `VisitInfo.cs`(削除)/ `Modules/UI/UIGridViewModel.cs` / `UIVisitViewModel.cs` | 見本を作るクラスを `OrderSample.LoadOrders` / `VisitSample.LoadVisits` に |
+| `Models/Sample/Timetable.cs` / `ColorPalette.cs` / `SuicaCard.cs`(新規)/ `TimetableCalculator.cs` / `ResourceItem.cs` / `SuicaAccessData.cs` / `SuicaLogData.cs`(削除) | ファイル名を中身の用途に。Suica の 2 つの型は 1 つのファイルに |
+| `Models/Sample/SuicaCard.cs` / `Modules/Device/DeviceNfcViewModel.cs` | Suica の読み取り(ポーリングで IDm を取り、残高と履歴のブロックを読んで解析する)をヘルパー `SuicaHelper.ParseTag` へ移した。解析の失敗を受けてログを出すのは VM のまま |
+| `Models/Sample/MailBox.cs` / `ShopStore.cs` / `StreamLibrary.cs` / `MoneyBook.cs` / `NewsFeed.cs` / `HabitTracker.cs` / `SmartHome.cs` / `WeatherForecast.cs` / `KitActivity.cs` と使う VM・文脈 | 見本のデータを作る部分を `XxxSample` に分けた(`MailSample.LoadMails`、`ShopSample.LoadProducts` / `LoadCart`、`StreamSample.LoadItems`、`MoneySample.LoadStartBalance` / `LoadTransactions` / `LoadNotices` / `LoadPaymentCode`、`NewsSample.LoadArticles` / `LoadLatest` / `LoadBreaking` / `LoadRelated`、`HabitSample.LoadHabits` / `LoadWeek`、`HomeSample.LoadRooms`、`WeatherSample.LoadForecast`、`KitSample.LoadActivity` / `LoadStepSeries` / `LoadHeartSeries`)。処理のクラスは受け取ったデータで動く(`MailBox`・`ShopStore`・`StreamLibrary`・`MoneyBook` は取引から日ごとの残高を求める・`HabitTracker`・`SmartHome`。予報 `WeatherForecast` と今日の活動 `KitActivity` はデータだけに) |
+| `Models/Sample/*.cs`(見本のクラスを持つファイル) | 見本のクラスの区切りは `// Sample`(処理のクラスがあるファイルは `// Service` の後ろに別に置く) |
+| `Modules/UI/UIShopViewModel.cs` | カテゴリなどを変えたときは一覧を入れ替えず、同じ一覧に商品を足して並べ直してから残りを外す(上の検索・カテゴリ・人気の商品はそのままで、一覧の商品だけが変わる) |
 
 - 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
 - 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
@@ -3009,6 +3032,9 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: Mail の日付の区切り・頭文字のアイコン・添付とスター、ドロワー(スター付きを選ぶと見出しと一覧が変わる)、本文を開いて戻ると既読、F4 の Delete でゴミ箱へ(ドロワーの数が変わる)、頭文字の画像(差出人ごとに色が違う)
 - 実機: Stream の幅いっぱいのトップの自動送り(5 秒ごと。詳細から戻った後も)とスワイプ、+ My List、続きを見る、選んだ作品の詳細(Resume と進み具合)、More Like This で入れ替え(Play になり、お気に入りは作品ごと)、戻ったトップの位置
 - 実機: カルーセル(Stream のトップ・Shop の人気の商品・News のページ・Profile の写真の全画面・Kit のはじめに)の最初のページで右へ引っぱった途中と、離した後を画素で比べた(前: 約 6 万〜42 万画素の差 → 後: 0)
+- 実機: Models の整理の後、Mail(ファイルの画像と頭文字のアイコン・ドロワーの数と選択・スター付き・本文の差出人)、Shop(一覧・カートの小計と割引と合計)、Stream(トップ・棚・詳細)、Money(最近の取引・検索の日ごとの区切り・月の選択の印)、Chat(帯とリアクション)、Home(部屋のタブの切り替え)、Graph2(行の開閉)、Kit の通知(淡い地のスワイプ)、Schedule・Graph を開いて確かめた
+- 実機: 型を移した後、ToDo の編集(題・期限のチップ・日付・重要と完了)、Grid の列設定(チェックを外すと 12 / 13 列、Cancel で元のまま)、Sudoku の数字のキーの残りの数(盤面の数と合う)、Custom の TreeView(開閉と、選んだ節の表示)
+- 実機: 見本のデータを Models へ移した後、Super、Dock(フォルダーの中と戻る・ミュート・タイマー・CPU とメモリ)、Chat(見本の会話・日付の区切り・送信)、Character、Social、Radar(目標の数が 4〜7 で変わる)、Graph・Graph2、Grid・Visit・Schedule、Sample の Map(地点のピン)を開いて確かめた。NFC の画面はカードを待つ表示まで(Suica の読み取りは実物のカードが要るので未確認)
 - 実機: Timeline の今の時刻の線、ブックマークとタグの絞り込み、行の ☆
 - 実機: Graph の行のタップのシートと、閉じた後に同じ行を押し直して開くこと、Graph2 の開いた行
 - 実機: Wheel の当たりのカードと紙吹雪、5 回の履歴、F3 で項目を足す(9 個目は黄)、× で削除
@@ -3222,6 +3248,62 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | `Document/UIBrushup_Plan.md` | 10-x の進め方(第 1 弾〜第 3 弾。弾ごとにまとめて作り、前後をまとめて確認)を足した。10-3 ⑤〜⑦ と 10-22 ③ は案のままで実施待ちに。11-x が全部済んだので 11-0 を閉じ、適用済みの行(空・読み込み中・失敗、ボタン、配置、カメラの画面、一覧の行、決まりに合わない値)を決定事項へ移した |
 | `Document/Change_Summary.md` | 付録D の不採用 (1) に Revv |
 
+### ⚡画面を開く時間の短縮(2026-10-10)
+
+画面を開くときに作る要素を減らした。隠れている部分(タブの中身・開閉する部分・ドロワー・シート)は初めて開くときに作り(`LazyViewOption.Template` / `BottomSheetView`)、タップの効果の `SfEffectsView` は要素を足さない添付プロパティ(`TouchOption`)に置き換えて使うのをやめた。押したときの波紋は Android の標準(`selectableItemBackground`)の色で、`SfEffectsView` の波紋より薄い。ほかの見た目は変えていない。
+
+| 画面 | 対応 | 開く時間 (ms) | 要素の数 |
+|---|---|---|---|
+| UI 1 > Visit | 行の枠(枠線の無い四角の `Border`)を背景を持つ `Grid` にまとめた。並替のパネルと行の展開部分は初めて開くときに作る | 479 → 347 | 391 → 281 |
+| UI 1 > Money | タップの効果の `SfEffectsView` 9 個を `TouchOption` に置き換えた。検索とお知らせのページは初めて開くときに作る。シートは初めて開くときに画面に加える | 450 → 343 | 244 → 200 |
+| UI 2 > Graph2 | 行の詳細は初めて開くときに作る | 321 → 163 | 269 → 115 |
+| UI 1 > Chat | スタンプの帯は初めて開くときに作る。写真の部分は写真のあるメッセージだけで作る | 310 → 260 | 198 → 168 |
+| UI 1 > Profile | 投稿・いいねのタブの中身と写真の全画面は初めて開くときに作る | 294 → 185 | 157 → 97 |
+| UI 1 > Shop | 絞り込みのシートは初めて開くときに画面に加える | 390 → 314 | 135 → 110 |
+| UI 1 > Schedule | 予定の詳細のシートは初めて開くときに画面に加える | 219 → 157 | 98 → 70 |
+| UI 2 > Graph | コミットの詳細のシートは初めて開くときに画面に加える | 326 → 289 | 207 → 189 |
+| UI 1 > Mail | ドロワーの中身は初めて開くときに作る | 150 → 104 | 59 → 33 |
+| View > Drawer | `SfNavigationDrawer` と自作のドロワーの中身は初めて開くときに作る | 168 → 113 | 100 → 55 |
+| App > Timer | ストップウォッチとカウントダウンは、選んだほうを初めて表示するときに作る | 148 → 101 | 63 → 38 |
+| View > Bottom Sheet | `SfBottomSheet` と自作のシートの中身は初めて開くときに作る | 132 → 104 | 80 → 57 |
+| UI 2 > Social | `SfEffectsView` 12 個を `TouchOption` に置き換えた | 214 → 184 | 88 → 76 |
+| UI 1 > Stream | `SfEffectsView` 19 個を `TouchOption` に置き換えた | 407 → 371 | 269 → 250 |
+| UI 1 > POS | `SfEffectsView` 5 個を `TouchOption` に置き換えた | 145 → 134 | 66 → 61 |
+| UI 1 > Login / UI 1 > Kit / View > Effect | `SfEffectsView`(1 個 / 2 個 / 1 個)を `TouchOption` に置き換えた | 108 → 106 / 239 → 245 / 168 → 162 | 32 → 31 / 132 → 130 / 98 → 97 |
+
+- 開く時間は Pixel 9a・Debug で、メニューのタップから最初のフレームまで(`Extender/PerfPlugin.cs` の `frame`)。後は 2〜4 回目に開いたときの中央値、前は Visit〜Graph が 2 回目の値、Mail 以降が 2・3 回目の中央値。計測の回ごとに 1 割前後の揺れがあり、変えていない画面は View > Layout 672 → 549、UI 2 > Home 296 → 295、App > ToDo 259 → 259、App > Calculator 142 → 147
+- 要素の数は、画面を開いたときにできている要素の数(隠れている要素も数える)
+
+`SfEffectsView` の重さ(Syncfusion.Maui.Toolkit 1.0.11 の実装):
+
+- 1 つごとに描画の層を持つ。`DrawingOrder.AboveContent` のため Android の `LayoutViewGroupExt` が描画を有効にし(`SetWillNotDraw(false)`)、`PlatformCanvas` と `ScalingCanvas` を作って、描くたびにマネージドの `OnDraw` を通る
+- 1 つごとにテーマの動的リソースを 2 つ足す(`ThemeElement.InitializeThemeResources`)
+- 1 つごとにタッチの仕組みを作る(`GestureDetector` / `TouchDetector` と `ScaleGestureDetector`、`HandlerChanged` と Android の Touch のイベントの購読)
+- 波紋・選択・強調の効果の層を最初から作る。アプリで最初の 1 つは Syncfusion の型とテーマの初期化も走る
+- `TouchOption` は付けた要素の Android のビューに、波紋は前景の `selectableItemBackground`、タップはクリックのリスナーを付けるだけ(要素も描画の処理も足さない)。Money で置き換えだけを比べると(シートの変更の後で、置き換えの前 → 後)、2 回目以降に開く時間は 406 → 384 ms(−22 ms、約 5%。要素 220 → 211)、アプリを起動して最初に開くときは 785 → 613 ms(−172 ms)
+
+| 対象 | 内容 |
+|---|---|
+| `Behaviors/TouchOption.cs` / `TouchOption.android.cs` / `TouchOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` | 押したときの波紋 `Ripple` と、タップのコマンド `ClickCommand` / `ClickCommandParameter` の添付プロパティ。Android はビューの前景に `selectableItemBackground` を当て、クリックのリスナーでコマンドを呼ぶ(付けたビューだけを変える)。`ConfigureCustomBehaviors` で `UseCustomMapper` を呼ぶ |
+| `Controls/BottomSheetView.cs` | 下地とシートは初めて開くときに画面に加える(閉じている間はハンドラーを作らない) |
+| `Modules/UI/UIMoneyView.xaml` | `SfEffectsView` をやめ、明細・ランク・口座の行は `TouchOption.Ripple`、下のタブと支払いのボタンは `TouchOption.ClickCommand`。検索とお知らせのページは `LazyViewOption.Template` |
+| `Modules/UI/UIVisitView.xaml` | 行の枠を `CardGrid`(背景と選択の色を持つ `Grid`)に。並替のパネルと行の展開部分は `LazyViewOption.Template` |
+| `Modules/UI/UIGraph2View.xaml` | 行の詳細は `LazyViewOption.Template` |
+| `Modules/UI/UIChatView.xaml` | スタンプの帯と写真の部分は `LazyViewOption.Template` |
+| `Modules/UI/UIProfileView.xaml` | 投稿・いいねのタブの中身と写真の全画面は `LazyViewOption.Template` |
+| `Modules/UI/UIMailView.xaml` | ドロワーの中身は `LazyViewOption.Template`(ドロワーを開いたときに作る) |
+| `Modules/View/ViewDrawerView.xaml` | `SfNavigationDrawer` の見出し・中身・下と、自作のドロワーの中身は `LazyViewOption.Template` |
+| `Modules/View/ViewBottomSheetView.xaml` | `SfBottomSheet` の中身は `LazyViewOption.Template`、自作のシートの中身は `BottomSheetView.SheetTemplate` |
+| `Modules/App/AppTimerView.xaml` | ストップウォッチとカウントダウンは `LazyViewOption.Template`(選んだほうを作り、`IsVisible` で切り替える) |
+| `Modules/UI/UISocialView.xaml` / `UIStreamView.xaml` / `UIStreamDetailView.xaml` / `UIPosView.xaml` / `UILoginView.xaml` / `UIKitDashView.xaml` / `Modules/View/ViewEffectView.xaml` | `SfEffectsView` をやめ、波紋は `TouchOption.Ripple`、押したときの処理は `TouchOption.ClickCommand` / `ClickCommandParameter`(Social の作戦中止、Stream の作品、Stream の詳細の More Like This、Kit の注文とはじめに)。View > Effect の見本は `TouchOption.Ripple` に |
+| `Extender/PerfPlugin.cs`(新規)/ `MauiProgram.cs` / `Document/Development.md` | 画面遷移の時間と画面の要素の数をデバッグ出力に書くプラグイン。普段は `MauiProgram.cs` の 2 か所の `#if false` で無効。使い方は Development.md の「画面を開く時間の計測」 |
+
+- 実機: Profile(投稿・いいねのタブ、写真の全画面を 2 枚目・6 枚目・1 枚目から開く)、Visit(並替のパネルの名前のキーで並べ替え、行の展開、全部の展開と畳む、行の選択の色)、Graph2(行の開閉と開き直し)、Chat(スタンプの帯を開いて送る・開き直す)、Money(検索・お知らせ・ホームのタブ、支払いのシート)。Chat の写真のメッセージは端末の写真を選ぶので未確認
+- 実機(Mail 以降): Mail(ドロワーの開閉)、View > Drawer と View > Bottom Sheet(Sf と自作の開閉)、App > Timer(ストップウォッチとカウントダウンの切り替え、カウントダウン)、Social(作戦中止で戻る、押したときの波紋)、Stream(作品 → 詳細 → More Like This で切り替え)、Kit(注文 → Tracking、はじめに → Onboarding)、Money(お知らせ、支払いのシート)、Shop(カテゴリの切り替えで上の部分がそのまま)
+- 残り(未実施): 縦に長く隠れた部分の少ない画面(View > Layout 358 要素、UI 1 > Weather 276 要素)は、画面の外の部分を後から作る別の仕組みが要る。シートの中身を `SheetTemplate` にする(Shop の絞り込み・Schedule の詳細・Graph のコミット)、Stream の詳細の More Like This、Kit の設定の `ColorPicker`、View > Toolkit の `SfTabView` の 2 つ目のタブ
+- UI の画面に残る Syncfusion の部品: `SfAccordion`(Item・Kit の設定)、`SfChipGroup`(Shop・Item・Timeline)、`SfSegmentedControl`(Kit のダッシュボード)、`SfShimmer`(News)
+- ビルド 0 警告、inspectcode 0 件
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3348,6 +3430,15 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - `IsVisible` が False の要素も、画面を開いたときに作られる(隠れたタブの中の `BindableLayout` の行も)。開くのが遅い画面は、隠れたタブの一覧をタブを開いたときに入れ、長い一覧は見えている行だけを作る `CollectionView` にする
 - `IndicatorView` の `IndicatorTemplate` の要素には、今の項目に `Selected`、ほかに `Normal` の VisualState が付く(今の項目だけ形や色を変えられる)
 - **`CarouselView`(Android)は `IsBounceEnabled`(既定 true)から `OverScrollMode` を Always にするので、テーマの `android:overScrollMode` = never が効かない**(`CarouselViewHandler.MapIsBounceEnabled`)
+- XAML の `x:DataType` に総称型は `holder:Selectable(models:ChatMessage)` の形で書ける(SourceGen の `TypeArgumentsParser`)
+- 型の名前 `Expandable` は Android の名前空間 `Google.Android.Material.Expandable` とぶつかり CA1724 になる
+- `ReadOnlyCollection<T>` の `Items` は protected なので、まとまりを `BindableLayout` に渡すときは `{Binding .}` で渡す
+- **ハンドラーのマッパー(`ViewHandler.ViewMapper.AppendToMapping`)のキーはプロパティの名前で、同じ名前のプロパティの変更すべてで呼ばれる**。添付プロパティを `Command` にすると `Button.Command` の変更でも呼ばれ、全部のボタンのクリックを外してしまう。添付プロパティは固有の名前にし、`IsSet` で付けた要素だけに当てる
+- 画面の要素を作る時間は Debug で 1 要素あたり約 1 ms(枠線の無い `Border` は `StrokeShape` と合わせて 2 要素)。`LazyViewOption.Template` の中身は ContentView の BindingContext を受け継ぎ、`x:Reference` は同じテンプレートの中の要素を指せる(写真の全画面の `CarouselView` と `IndicatorView`)
+- `SfEffectsView` は 1 つごとに描画の層・テーマの動的リソース 2 つ・タッチの検出を作り、アプリで最初の 1 つは Syncfusion の型とテーマの初期化も走る(Money の 9 個で 2 回目以降に開く時間 −22 ms、起動して最初は −172 ms)
+- `TapGestureRecognizer` はタッチを受けるので、付けた要素の Android のビューが押された状態にならず、`TouchOption.Ripple` の波紋が出ない。押したときの処理は `TouchOption.ClickCommand` にする
+- `CollectionView`(Android)の `Header` の中の `AnimationOption.EnterAnimation` は、`ItemsSource` を入れ替えたときと、一覧が途中で空になったときに出直す。絞り込みは同じ `ObservableCollection` に足して並べてから残りを外す
+- `Debug.WriteLine` は Debug ビルドでは logcat に出る(Release では呼び出しが消える)
 - `SfChipGroup` の `ChipLayout` の既定は折り返さない。折り返すときは `FlexLayout`(`Wrap`)、横に流すときは `HorizontalStackLayout` を横の `ScrollView` に入れる。チップはアクセシビリティのツリーに出ないので、実機の操作は座標で行う
 - 添付プロパティの既定値と同じ値は変更として通知されない。`LabelOption.CountUpValue` は既定値が 0 だったので、最初の値が 0 だと何も表示されなかった
 - CA1716: インターフェースのメソッドの引数に `date` を使うと、VB のキーワード `Date` と重なるとして警告になる
@@ -3379,6 +3470,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - **ミニアプリの名前**: モデルはアプリごとに 1 つのファイル(ゲームは `XxxGame.cs`、道具は `XxxApplication.cs`)に置き、型の名前はアプリの名前で始める(2048 は `Puzzle2048`)。盤面のコントロールは `XxxBoard`、画面は `AppXxx`
 - **ミニアプリの状態(続き・ベストの記録)は `Settings` に持たず、`JsonStore` でアプリごとの JSON に保存する**
 - **画面の受け渡しは `Parameters` の汎用の `Model` を使い、画面ごとのキーを作らない**
+- **型の置き場所**: データ本来の意味の型は Models(機能ごとに 1 ファイル、型のまとまりごとに区切りのコメント)。ファイル名は中の型の名前ではなく、ドメインの概念・何用かを表す名前にする(型が 1 つでも同じ)。見本のデータは VM で作らず、Models の `XxxSample`(区切りは `// Sample`)で作り、`XxxSample.LoadYyy()` で受け取る(見本を作るクラスの名前はファイル名と同じにしない)。VM は値を個々のプロパティに持つ(見本の値のまとまりを 1 つのプロパティにしない)。選択の状態はモデルに持たせず `Selectable<T>` で包む。1 つの画面(文脈)だけで使う編集・表示の都合の型は、使う文脈・VM のファイルに置く(複数の画面で使う入力のダイアログの型は `Models/Input`)。VM はコントロールの名前空間(`Template.MobileApp.Controls`)を参照しないので、VM が作ってコントロールが受け取る型(盤面の `XxxFrame` など)は Models に置く
 - 見本のデータは `RebuildAsync` の呼び出し側(起動処理)で入れる。見本の日時は `TimeProvider` を使わず `DateTime.Now`
 - ビルド**警告ゼロ**(抑制が必要な場合は事前確認。Random の CA5394 のみファイル先頭 pragma の前例=UIRadarViewModel)
 - フォントサイズは許可値のみ: `6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72, 96, 160`
@@ -3391,6 +3483,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - **ナビゲーションイベントの使い分け**: 表示前に済ませたい処理(表示値の取得・一覧の準備・パラメータの取り出し)は `OnNavigatingToAsync`、表示後でよい / 表示が要る処理(権限要求・カメラ / センサー / タイマー / 接続の開始・スクロール・表示後のアニメーション)は `OnNavigatedToAsync`。初回表示だけの処理は `context.Attribute.IsRestore()` を明示的に見る(`Count == 0` やフラグで代用しない)
 - **コマンドの種類**: 利用者の操作とコントロールからの通知は `MakeXxxCommand` の既定(`Standard`。アクティブでない画面と Busy の間は実行しない)。コントロールからの通知のうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)だけ `MakeDelegateCommand(CommandMode.Simple, ...)`(`CommandMode` は第 1 引数。アクティブのときだけ実行し、Busy は見ず立てもしない。使っている所は `CommandMode.Simple` で探す)。Simple のコマンドからは遷移もダイアログも出さない。Simple もアクティブでない画面(離れる途中・Push で下になった画面)では実行しないので、その間も受けたい通知は Make 系でない素のコマンドにするか、戻ったときに VM で取り直す。通知から非同期の処理を始めるときは `_ = XxxAsync()` で開始だけ行い(`MakeAsyncCommand` に `Simple` は使わない。Busy を使わないうえ、`async void` の実行で例外がアプリを落とす)、再入は最初の await の前に立てるフラグで防ぐ
 - **遷移の間は Busy**: 画面は自分の遷移イベント(`OnNavigatingTo` の前)からアクティブになるので、遷移の途中の利用者の操作は Busy で止める。`MainPageViewModel` が `Navigator.ExecutingChanged` で遷移の間 Busy を立てるので、遷移を始める側で Busy を用意しなくてよい(コマンドから始めた遷移は Busy が重なるが、`BusyState` は数で持つ)
+- **Syncfusion の部品は Sf のサンプル画面(View > Toolkit・Sf Chart・Bottom Sheet・Drawer)以外では極力使わない**。タップの効果は `SfEffectsView` を使わず `TouchOption`(`Ripple` / `ClickCommand`)
 - **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`
 - `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
@@ -3462,7 +3555,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | バー伸長 | `behaviors:AnimationOption.ProgressTo`(ProgressBar を 800ms CubicOut で伸長) | ステータスバー・ゲージ |
 | カウントアップ | `behaviors:LabelOption.CountUpValue`+`CountUpFormat`(+`CountUpDuration`) | 金額・件数・歩数(Loaded 数え上げ対応) |
 | フォーカス枠 | `behaviors:Focus.FocusedStroke`+`FocusedThickness`(**親 Border 必須**) | Entry/Editor の入力体験 |
-| 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `toolkit:SfEffectsView TouchDownEffects="Ripple"`(+`TouchDownCommand`/`TouchDownCommandParameter`) | 全タップ要素 |
+| 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `behaviors:TouchOption.Ripple="True"`(+`TouchOption.ClickCommand`/`ClickCommandParameter`) | 全タップ要素 |
 | バッジ | `converters:BadgeCountConverter`(0→空、Max 超→「99+」) | 件数バッジ |
 | アイコン | `{markup:Material Glyph={x:Static fonts:MaterialIcons.Xxx}, Color=.., Size=..}` / `{markup:Fluent ..}` / `{markup:MenuIcon ..}` | 絵文字・生 Unicode の置換(バインド不可な点に注意) |
 | ステータスバー | `shell:ShellProperty.StatusBarColor="{StaticResource ...}"` + `StatusBarStyle="LightContent|DarkContent"`(未指定 = `MainPage.xaml` の既定 `BlueDefault` / `LightContent`) | ヘッダ非表示・全面画像の画面 |

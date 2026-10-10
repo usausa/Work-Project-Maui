@@ -1,7 +1,5 @@
 namespace Template.MobileApp.Modules.View;
 
-using Template.MobileApp.Controls;
-
 public sealed partial class ViewCustomViewModel : AppViewModelBase
 {
     private const int MaxAvatars = 8;

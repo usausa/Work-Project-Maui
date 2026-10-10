@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
@@ -59,13 +58,13 @@
 
             <s:MapToTextConverter x:Key="ShelfNameConverter">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="{x:Static module:StreamShelf.TopRated}"
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.TopRated}"
                                       Value="高評価" />
-                    <s:MapToTextEntry Key="{x:Static module:StreamShelf.Original}"
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Original}"
                                       Value="オリジナル" />
-                    <s:MapToTextEntry Key="{x:Static module:StreamShelf.Trending}"
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Trending}"
                                       Value="急上昇" />
-                    <s:MapToTextEntry Key="{x:Static module:StreamShelf.Action}"
+                    <s:MapToTextEntry Key="{x:Static models:StreamShelf.Action}"
                                       Value="アクション &amp; アドベンチャー" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -384,7 +383,7 @@
                           CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
                           IndicatorView="{x:Reference FeaturedIndicator}">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="module:UIStreamWork">
+                    <DataTemplate x:DataType="models:StreamItem">
                         <Grid>
                             <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                             <Grid.GestureRecognizers>
@@ -462,27 +461,23 @@
                                 ItemsSource="{Binding Continue}"
                                 ItemsLayout="HorizontalList">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="module:UIStreamWork">
+                        <DataTemplate x:DataType="models:StreamItem">
                             <VerticalStackLayout Style="{StaticResource ContinueStack}">
                                 <Border Style="{StaticResource ContinueBorder}">
-                                    <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                        <toolkit:SfEffectsView.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
-                                                                  CommandParameter="{Binding .}" />
-                                        </toolkit:SfEffectsView.GestureRecognizers>
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <Grid behaviors:TouchOption.ClickCommand="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                          behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                          behaviors:TouchOption.Ripple="True">
                                         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                        <Grid>
-                                            <Image Style="{StaticResource PosterImage}"
-                                                   Source="{Binding Work.Image}" />
-                                            <Border Style="{StaticResource ContinuePlayBorder}">
-                                                <Label Style="{StaticResource ContinuePlayLabel}"
-                                                       Text="▶" />
-                                            </Border>
-                                            <ProgressBar Style="{StaticResource ContinueProgressBar}"
-                                                         Progress="{Binding Progress}" />
-                                        </Grid>
-                                    </toolkit:SfEffectsView>
+                                        <Image Style="{StaticResource PosterImage}"
+                                               Source="{Binding Work.Image}" />
+                                        <Border Style="{StaticResource ContinuePlayBorder}">
+                                            <Label Style="{StaticResource ContinuePlayLabel}"
+                                                   Text="▶" />
+                                        </Border>
+                                        <ProgressBar Style="{StaticResource ContinueProgressBar}"
+                                                     Progress="{Binding Progress}" />
+                                    </Grid>
                                 </Border>
                                 <Label Style="{StaticResource ContinueRemainLabel}"
                                        Text="{Binding RemainMinutes, StringFormat='残り {0} 分'}" />
@@ -510,29 +505,25 @@
                                             ItemsSource="{Binding Items}"
                                             ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="module:UIStreamWork">
+                                    <DataTemplate x:DataType="models:StreamItem">
                                         <Border Style="{StaticResource PosterBorder}">
-                                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                                <toolkit:SfEffectsView.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
-                                                                          CommandParameter="{Binding .}" />
-                                                </toolkit:SfEffectsView.GestureRecognizers>
+                                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                            <Grid behaviors:TouchOption.ClickCommand="{Binding DetailCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamViewModel}}, x:DataType={x:Type module:UIStreamViewModel}}"
+                                                  behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                                  behaviors:TouchOption.Ripple="True">
                                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                                <Grid>
-                                                    <Image Style="{StaticResource PosterImage}"
-                                                           Source="{Binding Work.Image}" />
-                                                    <Border Style="{StaticResource PosterBadgeBorder}"
-                                                            IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
-                                                        <Label Style="{StaticResource PosterBadgeLabel}"
-                                                               Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
-                                                    </Border>
-                                                    <Border Style="{StaticResource PosterDurationBorder}">
-                                                        <Label Style="{StaticResource PosterDurationLabel}"
-                                                               Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
-                                                    </Border>
-                                                </Grid>
-                                            </toolkit:SfEffectsView>
+                                                <Image Style="{StaticResource PosterImage}"
+                                                       Source="{Binding Work.Image}" />
+                                                <Border Style="{StaticResource PosterBadgeBorder}"
+                                                        IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
+                                                    <Label Style="{StaticResource PosterBadgeLabel}"
+                                                           Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
+                                                </Border>
+                                                <Border Style="{StaticResource PosterDurationBorder}">
+                                                    <Label Style="{StaticResource PosterDurationLabel}"
+                                                           Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

@@ -2,16 +2,16 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
-             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:drawing="clr-namespace:Template.MobileApp.Graphics.Drawing"
              xmlns:markup="clr-namespace:Template.MobileApp.Markup"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
+             xmlns:holder="clr-namespace:Template.MobileApp.Models"
              x:Class="Template.MobileApp.Modules.UI.UIMoneyView"
              x:DataType="{x:Type module:UIMoneyViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIMoneyViewModel}"
@@ -276,12 +276,6 @@
                             Radius="12" />
                 </Setter>
             </Style>
-            <Style x:Key="RankEffect"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
             <Style x:Key="RankBadgeBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="2" />
@@ -375,18 +369,6 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten2}" />
             </Style>
 
-            <Style x:Key="DetailEffectWithLink"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="DetailEffectWithoutLink"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="None" />
-                <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
             <Style x:Key="DetailGridWithLink"
                    TargetType="Grid">
                 <Setter Property="Padding" Value="8,8,0,8" />
@@ -439,11 +421,6 @@
             <Style x:Key="BottomSelectGrid"
                    TargetType="Grid">
                 <Setter Property="BackgroundColor" Value="White" />
-            </Style>
-
-            <Style x:Key="BottomSelectEffect"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="None" />
             </Style>
 
             <Style x:Key="BottomSelectImage"
@@ -503,11 +480,6 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource PinkDefault}" />
                 <Setter Property="StrokeShape" Value="Ellipse" />
                 <Setter Property="StrokeThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="CenterButtonEffect"
-                   TargetType="toolkit:SfEffectsView">
-                <Setter Property="TouchDownEffects" Value="Ripple" />
             </Style>
 
             <Style x:Key="CenterButtonLayout"
@@ -1157,7 +1129,7 @@
                 <VerticalStackLayout>
                     <Label Style="{StaticResource DayHeaderLabel}"
                            Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding .}"
                                          BindableLayout.ItemTemplate="{StaticResource TransactionTemplate}" />
                 </VerticalStackLayout>
             </DataTemplate>
@@ -1218,86 +1190,167 @@
                     <VerticalStackLayout Style="{StaticResource DetailLayout}">
                         <Border Style="{StaticResource DetailBorder}">
                             <VerticalStackLayout>
-                                <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                    <Grid Style="{StaticResource DetailGridWithLink}"
-                                          ColumnDefinitions="*,*,36">
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource DetailNameLabel}"
-                                               Text="🪪 本人確認" />
-                                        <Border Grid.Column="1"
-                                                Style="{StaticResource AlertBadgeBorder}"
-                                                IsVisible="{Binding HasAccountAlert}">
-                                            <Label Style="{StaticResource AlertBadgeLabel}"
-                                                   Text="未完了" />
-                                        </Border>
-                                        <Label Grid.Column="2"
-                                               Style="{StaticResource DetailNextLabel}"
-                                               Text="➡️" />
-                                    </Grid>
-                                </toolkit:SfEffectsView>
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36"
+                                      behaviors:TouchOption.Ripple="True">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="🪪 本人確認" />
+                                    <Border Grid.Column="1"
+                                            Style="{StaticResource AlertBadgeBorder}"
+                                            IsVisible="{Binding HasAccountAlert}">
+                                        <Label Style="{StaticResource AlertBadgeLabel}"
+                                               Text="未完了" />
+                                    </Border>
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
 
                                 <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                                <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                    <Grid Style="{StaticResource DetailGridWithLink}"
-                                          ColumnDefinitions="*,*,36">
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource DetailNameLabel}"
-                                               Text="💳 支払い方法" />
-                                        <Label Grid.Column="1"
-                                               Style="{StaticResource DetailValueLabel}"
-                                               Text="うさうさカード" />
-                                        <Label Grid.Column="2"
-                                               Style="{StaticResource DetailNextLabel}"
-                                               Text="➡️" />
-                                    </Grid>
-                                </toolkit:SfEffectsView>
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36"
+                                      behaviors:TouchOption.Ripple="True">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="💳 支払い方法" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource DetailValueLabel}"
+                                           Text="うさうさカード" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
 
                                 <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                                <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                    <Grid Style="{StaticResource DetailGridWithLink}"
-                                          ColumnDefinitions="*,*,36">
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource DetailNameLabel}"
-                                               Text="🧾 利用明細" />
-                                        <Label Grid.Column="2"
-                                               Style="{StaticResource DetailNextLabel}"
-                                               Text="➡️" />
-                                    </Grid>
-                                </toolkit:SfEffectsView>
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36"
+                                      behaviors:TouchOption.Ripple="True">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="🧾 利用明細" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
 
                                 <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                                <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                    <Grid Style="{StaticResource DetailGridWithLink}"
-                                          ColumnDefinitions="*,*,36">
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource DetailNameLabel}"
-                                               Text="🔔 通知の設定" />
-                                        <Label Grid.Column="2"
-                                               Style="{StaticResource DetailNextLabel}"
-                                               Text="➡️" />
-                                    </Grid>
-                                </toolkit:SfEffectsView>
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36"
+                                      behaviors:TouchOption.Ripple="True">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="🔔 通知の設定" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
 
                                 <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                                <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                    <Grid Style="{StaticResource DetailGridWithLink}"
-                                          ColumnDefinitions="*,*,36">
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource DetailNameLabel}"
-                                               Text="❓ ヘルプ" />
-                                        <Label Grid.Column="2"
-                                               Style="{StaticResource DetailNextLabel}"
-                                               Text="➡️" />
-                                    </Grid>
-                                </toolkit:SfEffectsView>
+                                <Grid Style="{StaticResource DetailGridWithLink}"
+                                      ColumnDefinitions="*,*,36"
+                                      behaviors:TouchOption.Ripple="True">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource DetailNameLabel}"
+                                           Text="❓ ヘルプ" />
+                                    <Label Grid.Column="2"
+                                           Style="{StaticResource DetailNextLabel}"
+                                           Text="➡️" />
+                                </Grid>
                             </VerticalStackLayout>
                         </Border>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SearchTemplate"
+                          x:DataType="module:UIMoneyViewModel">
+                <Grid Style="{StaticResource BackgroundGrid}"
+                      RowDefinitions="Auto,*">
+                    <Border Grid.Row="0"
+                            Style="{StaticResource SearchBorder}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0"
+                                   Style="{StaticResource SearchIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Search}" />
+                            <Entry Grid.Column="1"
+                                   Style="{StaticResource SearchEntry}"
+                                   Text="{Binding SearchText}" />
+                        </Grid>
+                    </Border>
+                    <Border Grid.Row="1"
+                            Style="{StaticResource SearchResultBorder}">
+                        <CollectionView IsGrouped="True"
+                                        ItemsSource="{Binding SearchResults}"
+                                        ItemTemplate="{StaticResource TransactionTemplate}">
+                            <CollectionView.GroupHeaderTemplate>
+                                <DataTemplate x:DataType="models:MoneyDay">
+                                    <Label Style="{StaticResource DayHeaderLabel}"
+                                           Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
+                                </DataTemplate>
+                            </CollectionView.GroupHeaderTemplate>
+                            <CollectionView.EmptyView>
+                                <Label Style="{StaticResource EmptyLabel}"
+                                       Text="見つかりませんでした" />
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="NoticeTemplate"
+                          x:DataType="module:UIMoneyViewModel">
+                <ScrollView Style="{StaticResource NoticeScroll}">
+                    <Border Style="{StaticResource MoneyCardBorder}">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notices}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:MoneyNotice">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource NoticeRowGrid}"
+                                              ColumnDefinitions="Auto,*,Auto">
+                                            <Grid.GestureRecognizers>
+                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=ReadNoticeCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+                                            <Border Grid.Column="0"
+                                                    Style="{StaticResource NoticeIconBorder}"
+                                                    BackgroundColor="{Binding Kind, Converter={StaticResource NoticeColorConverter}}">
+                                                <Label Style="{StaticResource NoticeIconLabel}"
+                                                       Text="{Binding Kind, Converter={StaticResource NoticeIconConverter}}" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1"
+                                                                 Style="{StaticResource NoticeTextStack}">
+                                                <Label Style="{StaticResource NoticeTitleLabel}"
+                                                       Text="{Binding Title}">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                                     Binding="{Binding IsUnread}"
+                                                                     Value="True">
+                                                            <Setter Property="FontAttributes" Value="Bold" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <Label Style="{StaticResource NoticeBodyLabel}"
+                                                       Text="{Binding Body}" />
+                                                <Label Style="{StaticResource NoticeDateLabel}"
+                                                       Text="{Binding Date, StringFormat='{0:MM/dd HH:mm}'}" />
+                                            </VerticalStackLayout>
+                                            <Ellipse Grid.Column="2"
+                                                     Style="{StaticResource NoticeUnreadEllipse}"
+                                                     IsVisible="{Binding IsUnread}" />
+                                        </Grid>
+                                        <BoxView Style="{StaticResource RowLine}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+                </ScrollView>
             </DataTemplate>
 
         </ResourceDictionary>
@@ -1388,21 +1441,20 @@
                         Style="{StaticResource RankBorder}"
                         behaviors:AnimationOption.EnterAnimation="FadeUp"
                         behaviors:AnimationOption.EnterDelay="100">
-                    <toolkit:SfEffectsView Style="{StaticResource RankEffect}">
-                        <Grid ColumnDefinitions="36,*,36">
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource RankBadgeBorder}">
-                                <Label Style="{StaticResource RankBadgeLabel}"
-                                       Text="S" />
-                            </Border>
-                            <Label Grid.Column="1"
-                                   Style="{StaticResource RankValueLabel}"
-                                   Text="シルバーランク会員" />
-                            <Label Grid.Column="2"
-                                   Style="{StaticResource RankLinkLabel}"
-                                   Text="➡️" />
-                        </Grid>
-                    </toolkit:SfEffectsView>
+                    <Grid ColumnDefinitions="36,*,36"
+                          behaviors:TouchOption.Ripple="True">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource RankBadgeBorder}">
+                            <Label Style="{StaticResource RankBadgeLabel}"
+                                   Text="S" />
+                        </Border>
+                        <Label Grid.Column="1"
+                               Style="{StaticResource RankValueLabel}"
+                               Text="シルバーランク会員" />
+                        <Label Grid.Column="2"
+                               Style="{StaticResource RankLinkLabel}"
+                               Text="➡️" />
+                    </Grid>
                 </Border>
 
                 <!-- Menu -->
@@ -1472,51 +1524,47 @@
                                      Style="{StaticResource DetailLayout}">
                     <Border Style="{StaticResource DetailBorder}">
                         <VerticalStackLayout>
-                            <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="💰 利用可能額" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource DetailValueLabel}"
-                                           Text="21,234 円" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <Grid Style="{StaticResource DetailGridWithLink}"
+                                  ColumnDefinitions="*,*,36"
+                                  behaviors:TouchOption.Ripple="True">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource DetailNameLabel}"
+                                       Text="💰 利用可能額" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource DetailValueLabel}"
+                                       Text="21,234 円" />
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource DetailNextLabel}"
+                                       Text="➡️" />
+                            </Grid>
 
                             <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                            <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithLink}">
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="🪙 うさうさポイント" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource DetailValueLabel}"
-                                           Text="1,234 pt" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <Grid Style="{StaticResource DetailGridWithLink}"
+                                  ColumnDefinitions="*,*,36"
+                                  behaviors:TouchOption.Ripple="True">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource DetailNameLabel}"
+                                       Text="🪙 うさうさポイント" />
+                                <Label Grid.Column="1"
+                                       Style="{StaticResource DetailValueLabel}"
+                                       Text="1,234 pt" />
+                                <Label Grid.Column="2"
+                                       Style="{StaticResource DetailNextLabel}"
+                                       Text="➡️" />
+                            </Grid>
 
                             <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
 
-                            <toolkit:SfEffectsView Style="{StaticResource DetailEffectWithoutLink}">
-                                <Grid Style="{StaticResource DetailGridWithoutLink}"
-                                      ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="💳 うさうさカード" />
-                                    <Button Grid.Column="1"
-                                            Style="{StaticResource DetailButton}"
-                                            Text="クレジット設定" />
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <Grid Style="{StaticResource DetailGridWithoutLink}"
+                                  ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource DetailNameLabel}"
+                                       Text="💳 うさうさカード" />
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource DetailButton}"
+                                        Text="クレジット設定" />
+                            </Grid>
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -1613,95 +1661,21 @@
 
         </ScrollView>
 
-        <Grid Grid.Row="0"
-              Style="{StaticResource BackgroundGrid}"
-              IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
-              RowDefinitions="Auto,*">
-            <Border Grid.Row="0"
-                    Style="{StaticResource SearchBorder}">
-                <Grid ColumnDefinitions="Auto,*">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource SearchIconLabel}"
-                           Text="{x:Static fonts:MaterialIcons.Search}" />
-                    <Entry Grid.Column="1"
-                           Style="{StaticResource SearchEntry}"
-                           Text="{Binding SearchText}" />
-                </Grid>
-            </Border>
-            <Border Grid.Row="1"
-                    Style="{StaticResource SearchResultBorder}">
-                <CollectionView IsGrouped="True"
-                                ItemsSource="{Binding SearchResults}"
-                                ItemTemplate="{StaticResource TransactionTemplate}">
-                    <CollectionView.GroupHeaderTemplate>
-                        <DataTemplate x:DataType="module:UIMoneyDayGroup">
-                            <Label Style="{StaticResource DayHeaderLabel}"
-                                   Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
-                        </DataTemplate>
-                    </CollectionView.GroupHeaderTemplate>
-                    <CollectionView.EmptyView>
-                        <Label Style="{StaticResource EmptyLabel}"
-                               Text="見つかりませんでした" />
-                    </CollectionView.EmptyView>
-                </CollectionView>
-            </Border>
-        </Grid>
+        <ContentView Grid.Row="0"
+                     behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
+                     behaviors:LazyViewOption.Template="{StaticResource SearchTemplate}"
+                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}" />
 
-        <ScrollView Grid.Row="0"
-                    Style="{StaticResource NoticeScroll}"
-                    IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}">
-            <Border Style="{StaticResource MoneyCardBorder}">
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notices}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:MoneyNotice">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource NoticeRowGrid}"
-                                      ColumnDefinitions="Auto,*,Auto">
-                                    <Grid.GestureRecognizers>
-                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=ReadNoticeCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
-                                                              CommandParameter="{Binding .}" />
-                                    </Grid.GestureRecognizers>
-                                    <Border Grid.Column="0"
-                                            Style="{StaticResource NoticeIconBorder}"
-                                            BackgroundColor="{Binding Kind, Converter={StaticResource NoticeColorConverter}}">
-                                        <Label Style="{StaticResource NoticeIconLabel}"
-                                               Text="{Binding Kind, Converter={StaticResource NoticeIconConverter}}" />
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         Style="{StaticResource NoticeTextStack}">
-                                        <Label Style="{StaticResource NoticeTitleLabel}"
-                                               Text="{Binding Title}">
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label"
-                                                             Binding="{Binding IsUnread}"
-                                                             Value="True">
-                                                    <Setter Property="FontAttributes" Value="Bold" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
-                                        <Label Style="{StaticResource NoticeBodyLabel}"
-                                               Text="{Binding Body}" />
-                                        <Label Style="{StaticResource NoticeDateLabel}"
-                                               Text="{Binding Date, StringFormat='{0:MM/dd HH:mm}'}" />
-                                    </VerticalStackLayout>
-                                    <Ellipse Grid.Column="2"
-                                             Style="{StaticResource NoticeUnreadEllipse}"
-                                             IsVisible="{Binding IsUnread}" />
-                                </Grid>
-                                <BoxView Style="{StaticResource RowLine}" />
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </Border>
-        </ScrollView>
+        <ContentView Grid.Row="0"
+                     behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
+                     behaviors:LazyViewOption.Template="{StaticResource NoticeTemplate}"
+                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
 
         <ScrollView Grid.Row="0"
                     Style="{StaticResource NoticeScroll}"
                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}">
-            <ContentView behaviors:LazyViewOption.Template="{StaticResource AccountTemplate}"
-                         behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}" />
+            <ContentView behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}"
+                         behaviors:LazyViewOption.Template="{StaticResource AccountTemplate}" />
         </ScrollView>
 
         <!-- Bottom select -->
@@ -1712,117 +1686,109 @@
               Style="{StaticResource BottomSelectGrid}"
               ColumnDefinitions="*,*,72,*,*">
 
-            <toolkit:SfEffectsView Grid.Column="0"
-                                   TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Home}"
-                                   TouchDownEffects="None">
-                <Grid RowDefinitions="*,Auto">
-                    <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
-                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Home}">
-                        <Image.Source>
-                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
-                                             FontFamily="MaterialIcons"
-                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}"
-                                             Size="36" />
-                        </Image.Source>
-                    </Image>
-                    <Label Grid.Row="1"
-                           Style="{StaticResource BottomSelectLabel}"
-                           Text="ホーム"
-                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Column="0"
+                  RowDefinitions="*,Auto"
+                  behaviors:TouchOption.ClickCommand="{Binding PageCommand}"
+                  behaviors:TouchOption.ClickCommandParameter="{x:Static module:MoneyPage.Home}">
+                <Image Grid.Row="0"
+                       Style="{StaticResource BottomSelectImage}"
+                       behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                       behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Home}">
+                    <Image.Source>
+                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Home}"
+                                         FontFamily="MaterialIcons"
+                                         Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}"
+                                         Size="36" />
+                    </Image.Source>
+                </Image>
+                <Label Grid.Row="1"
+                       Style="{StaticResource BottomSelectLabel}"
+                       Text="ホーム"
+                       TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Home}}" />
+            </Grid>
 
-            <toolkit:SfEffectsView Grid.Column="1"
-                                   TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Search}"
-                                   TouchDownEffects="None">
-                <Grid RowDefinitions="*,Auto">
-                    <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
-                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Search}">
-                        <Image.Source>
-                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Search}"
-                                             FontFamily="MaterialIcons"
-                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
-                                             Size="36" />
-                        </Image.Source>
-                    </Image>
-                    <Label Grid.Row="1"
-                           Style="{StaticResource BottomSelectLabel}"
-                           Text="検索"
-                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}" />
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Column="1"
+                  RowDefinitions="*,Auto"
+                  behaviors:TouchOption.ClickCommand="{Binding PageCommand}"
+                  behaviors:TouchOption.ClickCommandParameter="{x:Static module:MoneyPage.Search}">
+                <Image Grid.Row="0"
+                       Style="{StaticResource BottomSelectImage}"
+                       behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                       behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Search}">
+                    <Image.Source>
+                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Search}"
+                                         FontFamily="MaterialIcons"
+                                         Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
+                                         Size="36" />
+                    </Image.Source>
+                </Image>
+                <Label Grid.Row="1"
+                       Style="{StaticResource BottomSelectLabel}"
+                       Text="検索"
+                       TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}" />
+            </Grid>
 
-            <toolkit:SfEffectsView Grid.Column="3"
-                                   TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Notifications}"
-                                   TouchDownEffects="None">
-                <Grid RowDefinitions="*,Auto">
-                    <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
-                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Notifications}">
-                        <Image.Source>
-                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Notifications_none}"
-                                             FontFamily="MaterialIcons"
-                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
-                                             Size="36" />
-                        </Image.Source>
-                    </Image>
-                    <Label Grid.Row="1"
-                           Style="{StaticResource BottomSelectLabel}"
-                           Text="お知らせ"
-                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
-                    <Border Grid.Row="0" Grid.RowSpan="2"
-                            Style="{StaticResource NotificationBadgeBorder}"
-                            behaviors:AnimationOption.EnterAnimation="Pop"
-                            behaviors:AnimationOption.EnterTrigger="{Binding NotificationCount}">
-                        <Border.Triggers>
-                            <DataTrigger TargetType="Border"
-                                         Binding="{Binding NotificationCount}"
-                                         Value="0">
-                                <Setter Property="IsVisible" Value="False" />
-                            </DataTrigger>
-                        </Border.Triggers>
-                        <Label Style="{StaticResource BottomSelectBadgeLabel}"
-                               Text="{Binding NotificationCount, Converter={StaticResource BadgeCountConverter}}" />
-                    </Border>
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Column="3"
+                  RowDefinitions="*,Auto"
+                  behaviors:TouchOption.ClickCommand="{Binding PageCommand}"
+                  behaviors:TouchOption.ClickCommandParameter="{x:Static module:MoneyPage.Notifications}">
+                <Image Grid.Row="0"
+                       Style="{StaticResource BottomSelectImage}"
+                       behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                       behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Notifications}">
+                    <Image.Source>
+                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Notifications_none}"
+                                         FontFamily="MaterialIcons"
+                                         Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
+                                         Size="36" />
+                    </Image.Source>
+                </Image>
+                <Label Grid.Row="1"
+                       Style="{StaticResource BottomSelectLabel}"
+                       Text="お知らせ"
+                       TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
+                <Border Grid.Row="0" Grid.RowSpan="2"
+                        Style="{StaticResource NotificationBadgeBorder}"
+                        behaviors:AnimationOption.EnterAnimation="Pop"
+                        behaviors:AnimationOption.EnterTrigger="{Binding NotificationCount}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border"
+                                     Binding="{Binding NotificationCount}"
+                                     Value="0">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
+                           Text="{Binding NotificationCount, Converter={StaticResource BadgeCountConverter}}" />
+                </Border>
+            </Grid>
 
-            <toolkit:SfEffectsView Grid.Column="4"
-                                   TouchDownCommand="{Binding PageCommand}"
-                                   TouchDownCommandParameter="{x:Static module:MoneyPage.Account}"
-                                   TouchDownEffects="None">
-                <Grid RowDefinitions="*,Auto">
-                    <Image Grid.Row="0"
-                           Style="{StaticResource BottomSelectImage}"
-                           behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
-                           behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Account}">
-                        <Image.Source>
-                            <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
-                                             FontFamily="MaterialIcons"
-                                             Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}"
-                                             Size="36" />
-                        </Image.Source>
-                    </Image>
-                    <Label Grid.Row="1"
-                           Style="{StaticResource BottomSelectLabel}"
-                           Text="アカウント"
-                           TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}" />
-                    <Border Grid.Row="0" Grid.RowSpan="2"
-                            Style="{StaticResource BottomSelectBadgeBorder}"
-                            IsVisible="{Binding HasAccountAlert}">
-                        <Label Style="{StaticResource BottomSelectBadgeLabel}"
-                               Text="!" />
-                    </Border>
-                </Grid>
-            </toolkit:SfEffectsView>
+            <Grid Grid.Column="4"
+                  RowDefinitions="*,Auto"
+                  behaviors:TouchOption.ClickCommand="{Binding PageCommand}"
+                  behaviors:TouchOption.ClickCommandParameter="{x:Static module:MoneyPage.Account}">
+                <Image Grid.Row="0"
+                       Style="{StaticResource BottomSelectImage}"
+                       behaviors:AnimationOption.BounceTrigger="{Binding Selected}"
+                       behaviors:AnimationOption.BounceValue="{x:Static module:MoneyPage.Account}">
+                    <Image.Source>
+                        <FontImageSource Glyph="{x:Static fonts:MaterialIcons.Account_circle}"
+                                         FontFamily="MaterialIcons"
+                                         Color="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}"
+                                         Size="36" />
+                    </Image.Source>
+                </Image>
+                <Label Grid.Row="1"
+                       Style="{StaticResource BottomSelectLabel}"
+                       Text="アカウント"
+                       TextColor="{Binding Selected, Converter={StaticResource EqualToSelectColorConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}" />
+                <Border Grid.Row="0" Grid.RowSpan="2"
+                        Style="{StaticResource BottomSelectBadgeBorder}"
+                        IsVisible="{Binding HasAccountAlert}">
+                    <Label Style="{StaticResource BottomSelectBadgeLabel}"
+                           Text="!" />
+                </Border>
+            </Grid>
 
         </Grid>
 
@@ -1830,17 +1796,14 @@
         <Border Grid.RowSpan="3"
                 Style="{StaticResource CenterButtonBorder}"
                 behaviors:AnimationOption.Pulse="True">
-            <toolkit:SfEffectsView Style="{StaticResource CenterButtonEffect}">
-                <toolkit:SfEffectsView.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding PayCommand}" />
-                </toolkit:SfEffectsView.GestureRecognizers>
-                <VerticalStackLayout Style="{StaticResource CenterButtonLayout}">
-                    <Image Style="{StaticResource CenterButtonImage}"
-                           Source="{x:Static markup:AppIcons.LargeQrCode}" />
-                    <Label Style="{StaticResource CenterButtonLabel}"
-                           Text="支払い" />
-                </VerticalStackLayout>
-            </toolkit:SfEffectsView>
+            <VerticalStackLayout Style="{StaticResource CenterButtonLayout}"
+                                 behaviors:TouchOption.ClickCommand="{Binding PayCommand}"
+                                 behaviors:TouchOption.Ripple="True">
+                <Image Style="{StaticResource CenterButtonImage}"
+                       Source="{x:Static markup:AppIcons.LargeQrCode}" />
+                <Label Style="{StaticResource CenterButtonLabel}"
+                       Text="支払い" />
+            </VerticalStackLayout>
         </Border>
 
         <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
@@ -1905,7 +1868,7 @@
                                    Text="月を選ぶ" />
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Months}">
                                 <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="module:UIMoneyMonth">
+                                    <DataTemplate x:DataType="holder:Selectable(models:MoneyMonth)">
                                         <VerticalStackLayout>
                                             <Grid Style="{StaticResource MonthRowGrid}"
                                                   ColumnDefinitions="Auto,*,Auto">
@@ -1920,7 +1883,7 @@
                                                        Text="{x:Static fonts:MaterialIcons.Check}" />
                                                 <Label Grid.Column="1"
                                                        Style="{StaticResource MonthNameLabel}"
-                                                       Text="{Binding Month, StringFormat='{0:yyyy年M月}'}">
+                                                       Text="{Binding Item.Month, StringFormat='{0:yyyy年M月}'}">
                                                     <Label.Triggers>
                                                         <DataTrigger TargetType="Label"
                                                                      Binding="{Binding IsSelected}"
@@ -1931,7 +1894,7 @@
                                                 </Label>
                                                 <Label Grid.Column="2"
                                                        Style="{StaticResource MonthTotalLabel}"
-                                                       Text="{Binding Total, StringFormat='{0:N0} 円'}" />
+                                                       Text="{Binding Item.Total, StringFormat='{0:N0} 円'}" />
                                             </Grid>
                                             <BoxView Style="{StaticResource RowLine}" />
                                         </VerticalStackLayout>

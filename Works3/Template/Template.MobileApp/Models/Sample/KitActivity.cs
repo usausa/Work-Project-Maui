@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum KitPeriod
 {
     Day,
@@ -15,14 +19,60 @@ public enum KitSleepStage
     Deep
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
 public sealed record KitSeries(IReadOnlyList<double> Values, IReadOnlyList<string> Labels);
 
 public sealed record KitSleepSpan(DateTime Start, TimeSpan Length, KitSleepStage Stage);
 
 public sealed record KitSleepTotal(KitSleepStage Stage, TimeSpan Length);
 
-// 見本の活動の記録 (歩数・心拍・睡眠) と配達中の注文。日時は今日からの相対
+// 今日の活動 (歩数・心拍・消費・配達中の注文・昨夜の睡眠)
 public sealed class KitActivity
+{
+    public required DateTime Today { get; init; }
+
+    public required int Steps { get; init; }
+
+    public required int StepGoal { get; init; }
+
+    public required int HeartRate { get; init; }
+
+    public required int Calories { get; init; }
+
+    public required string OrderNumber { get; init; }
+
+    public required DateTime OrderEta { get; init; }
+
+    public required IReadOnlyList<KitSleepSpan> Sleep { get; init; }
+
+    public double StepRate => (double)Steps / StepGoal;
+
+    public int StepRemain => Math.Max(0, StepGoal - Steps);
+
+    public double Distance => Math.Round(Steps * 0.00072, 1);
+
+    public DateTime BedTime => Sleep[0].Start;
+
+    public DateTime WakeTime => Sleep[^1].Start + Sleep[^1].Length;
+
+    public TimeSpan SleepLength => WakeTime - BedTime;
+
+    public IReadOnlyList<KitSleepTotal> SleepTotals() =>
+        Enum.GetValues<KitSleepStage>()
+            .Reverse()
+            .Select(x => new KitSleepTotal(x, TimeSpan.FromMinutes(Sleep.Where(y => y.Stage == x).Sum(static y => y.Length.TotalMinutes))))
+            .ToList();
+}
+
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 活動の見本 (今日の値・昨夜の睡眠・1 日 / 週 / 月の歩数と心拍)。日時は今日からの相対
+public static class KitSample
 {
     private const int MonthDays = 30;
 
@@ -42,41 +92,9 @@ public sealed class KitActivity
         (37, KitSleepStage.Light), (10, KitSleepStage.Awake)
     ];
 
-    private readonly DateTime today;
-
-    public int Steps { get; } = 7852;
-
-    public int StepGoal { get; } = 10000;
-
-    public int HeartRate { get; } = 72;
-
-    public int Calories { get; } = 412;
-
-    public string OrderNumber { get; } = "#A1284";
-
-    // 配達の予定は次の 30 分の区切りの 30 分後
-    public DateTime OrderEta { get; }
-
-    public IReadOnlyList<KitSleepSpan> Sleep { get; }
-
-    public double StepRate => (double)Steps / StepGoal;
-
-    public int StepRemain => Math.Max(0, StepGoal - Steps);
-
-    public double Distance => Math.Round(Steps * 0.00072, 1);
-
-    public DateTime BedTime => Sleep[0].Start;
-
-    public DateTime WakeTime => Sleep[^1].Start + Sleep[^1].Length;
-
-    public TimeSpan SleepLength => WakeTime - BedTime;
-
-    public KitActivity(DateTime now)
+    public static KitActivity LoadActivity(DateTime now)
     {
-        today = now.Date;
-
-        var slot = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute >= 30 ? 30 : 0, 0);
-        OrderEta = slot.AddMinutes(60);
+        var today = now.Date;
 
         var start = today.AddDays(-1).AddHours(23).AddMinutes(12);
         var spans = new List<KitSleepSpan>();
@@ -85,34 +103,37 @@ public sealed class KitActivity
             spans.Add(new KitSleepSpan(start, TimeSpan.FromMinutes(minutes), stage));
             start = start.AddMinutes(minutes);
         }
-        Sleep = spans;
+
+        // 配達の予定は次の 30 分の区切りの 30 分後
+        var slot = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute >= 30 ? 30 : 0, 0);
+        return new KitActivity
+        {
+            Today = today,
+            Steps = 7852,
+            StepGoal = 10000,
+            HeartRate = 72,
+            Calories = 412,
+            OrderNumber = "#A1284",
+            OrderEta = slot.AddMinutes(60),
+            Sleep = spans
+        };
     }
 
-    public IReadOnlyList<KitSleepTotal> SleepTotals() =>
-        Enum.GetValues<KitSleepStage>()
-            .Reverse()
-            .Select(x => new KitSleepTotal(x, TimeSpan.FromMinutes(Sleep.Where(y => y.Stage == x).Sum(static y => y.Length.TotalMinutes))))
-            .ToList();
-
-    //--------------------------------------------------------------------------------
-    // Series
-    //--------------------------------------------------------------------------------
-
-    public KitSeries StepSeries(KitPeriod period)
+    public static KitSeries LoadStepSeries(KitActivity activity, KitPeriod period)
     {
         if (period == KitPeriod.Day)
         {
             // 割合で分けた端数は、いちばん多い時間に足して合計を今日の歩数にそろえる
             var total = HourWeights.Sum();
-            var hours = HourWeights.Select(x => Math.Floor((double)Steps * x / total)).ToArray();
-            hours[Array.IndexOf(HourWeights, HourWeights.Max())] += Steps - hours.Sum();
+            var hours = HourWeights.Select(x => Math.Floor((double)activity.Steps * x / total)).ToArray();
+            hours[Array.IndexOf(HourWeights, HourWeights.Max())] += activity.Steps - hours.Sum();
             return new KitSeries(hours, Enumerable.Range(0, 24).Select(static x => $"{x}時").ToList());
         }
 
-        return DailySeries(period, StepsOf);
+        return DailySeries(activity.Today, period, x => StepsOf(activity, x));
     }
 
-    public KitSeries HeartSeries(KitPeriod period)
+    public static KitSeries LoadHeartSeries(KitActivity activity, KitPeriod period)
     {
         if (period == KitPeriod.Day)
         {
@@ -121,11 +142,11 @@ public sealed class KitActivity
                 Enumerable.Range(0, 24).Select(static x => $"{x}時").ToList());
         }
 
-        return DailySeries(period, HeartOf);
+        return DailySeries(activity.Today, period, x => HeartOf(activity, x));
     }
 
     // 週は曜日、月は日付の名前
-    private KitSeries DailySeries(KitPeriod period, Func<DateTime, int> valueOf)
+    private static KitSeries DailySeries(DateTime today, KitPeriod period, Func<DateTime, int> valueOf)
     {
         var count = period == KitPeriod.Week ? 7 : MonthDays;
         var format = period == KitPeriod.Week ? "ddd" : "M/d";
@@ -136,9 +157,9 @@ public sealed class KitActivity
     }
 
     // 日ごとの値は周期の違う波を重ねて日付でずらす (今日は今の値)
-    private int StepsOf(DateTime date) =>
-        date == today ? Steps : 7400 + (int)((2600 * Math.Sin(date.DayOfYear * 1.37)) + (1400 * Math.Sin(date.DayOfYear * 0.53)));
+    private static int StepsOf(KitActivity activity, DateTime date) =>
+        date == activity.Today ? activity.Steps : 7400 + (int)((2600 * Math.Sin(date.DayOfYear * 1.37)) + (1400 * Math.Sin(date.DayOfYear * 0.53)));
 
-    private int HeartOf(DateTime date) =>
-        date == today ? HeartRate : 70 + (int)Math.Round((3 * Math.Sin(date.DayOfYear * 1.13)) + (2 * Math.Sin(date.DayOfYear * 0.41)));
+    private static int HeartOf(KitActivity activity, DateTime date) =>
+        date == activity.Today ? activity.HeartRate : 70 + (int)Math.Round((3 * Math.Sin(date.DayOfYear * 1.13)) + (2 * Math.Sin(date.DayOfYear * 0.41)));
 }

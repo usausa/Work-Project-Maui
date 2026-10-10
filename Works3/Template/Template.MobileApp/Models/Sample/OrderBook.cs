@@ -2,6 +2,10 @@ namespace Template.MobileApp.Models.Sample;
 
 using ClamGrid;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum OrderStatus
 {
     Open,
@@ -30,6 +34,10 @@ public enum OrderMarks
     Bulk = 8,
     Recent = 16
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 // 受注一覧の 1 行。状態と確認は画面から変更されるため変更通知を持つ (グリッドが並べ替えと色を追従させる)。
 // 状態・目印・ランク・受付は値のまま渡し、文言は列の Converter で決める
@@ -138,7 +146,11 @@ public sealed partial class OrderInfo : ObservableObject
 }
 
 #pragma warning disable CA5394
-public static class OrderSamples
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+public static class OrderSample
 {
     private static readonly string[] Customers =
     [
@@ -156,7 +168,7 @@ public static class OrderSamples
     private static readonly string[] Staffs = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
 
     // 同じ並びを再現できるよう seed 固定。顧客ランクは顧客ごとに固定
-    public static OrderInfo[] Create(int count, int seed = 20260913)
+    public static OrderInfo[] LoadOrders(int count, int seed = 20260913)
     {
         var random = new Random(seed);
         var today = DateTime.Today;

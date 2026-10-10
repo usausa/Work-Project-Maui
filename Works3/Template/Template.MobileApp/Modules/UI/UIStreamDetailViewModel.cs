@@ -43,7 +43,7 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
         });
         FavoriteCommand = MakeDelegateCommand(ToggleFavorite);
         DownloadCommand = MakeDelegateCommand(ToggleDownload);
-        RelatedCommand = MakeDelegateCommand<UIStreamWork>(ShowRelated);
+        RelatedCommand = MakeDelegateCommand<StreamItem>(ShowRelated);
     }
 
     //--------------------------------------------------------------------------------
@@ -64,5 +64,5 @@ public sealed partial class UIStreamDetailViewModel : AppViewModelBase
     private void ToggleDownload() => Context.Selected.IsDownloaded = !Context.Selected.IsDownloaded;
 
     // 同じ画面で作品を入れ替える (画面は先頭へ戻る)
-    private void ShowRelated(UIStreamWork work) => Context.Open(work);
+    private void ShowRelated(StreamItem item) => Context.Open(item);
 }

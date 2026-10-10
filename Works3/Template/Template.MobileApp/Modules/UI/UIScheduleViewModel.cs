@@ -2,7 +2,6 @@ namespace Template.MobileApp.Modules.UI;
 
 using ClamCalendar;
 
-using Template.MobileApp.Models.Sample.Calendar;
 using Template.MobileApp.Services;
 
 // 終日の予定 (カレンダーの予定の名前と色)

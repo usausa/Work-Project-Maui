@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UICartView"
              x:DataType="{x:Type module:UICartViewModel}"
@@ -474,13 +475,13 @@
                         <Label Style="{StaticResource BannerTitleLabel}"
                                Text="ショッピングカート" />
                         <Label Style="{StaticResource BannerCountLabel}"
-                               Text="{Binding Context.CartCount, StringFormat='カートに {0} 点'}" />
+                               Text="{Binding Context.Store.CartCount, StringFormat='カートに {0} 点'}" />
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- Empty -->
                 <VerticalStackLayout Style="{StaticResource EmptyStack}"
-                                     IsVisible="{Binding Context.CartCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
+                                     IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
                     <Label Style="{StaticResource EmptyIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Remove_shopping_cart}" />
                     <Label Style="{StaticResource EmptyTitleLabel}"
@@ -491,10 +492,10 @@
 
                 <!-- Cart items (swipe left to delete) -->
                 <Border Style="{StaticResource ItemsBorder}"
-                        IsVisible="{Binding Context.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Cart}">
+                        IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Context.Store.Cart}">
                         <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="module:UIShopCartItem">
+                            <DataTemplate x:DataType="models:ShopCartItem">
                                 <VerticalStackLayout>
                                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                     <SwipeView>
@@ -559,7 +560,7 @@
                 </Border>
 
                 <Label Style="{StaticResource SwipeHintLabel}"
-                       IsVisible="{Binding Context.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                       IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
                        Text="行を左へスワイプすると削除できます" />
 
                 <!-- Coupon / points -->
@@ -601,7 +602,7 @@
                                    Text="小計" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource TotalsValue}"
-                                   Text="{Binding Context.Subtotal, StringFormat='¥{0:N0}'}" />
+                                   Text="{Binding Context.Store.Subtotal, StringFormat='¥{0:N0}'}" />
                         </Grid>
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
@@ -609,7 +610,7 @@
                                    Text="割引" />
                             <Label Grid.Column="1"
                                    Style="{StaticResource DiscountValue}"
-                                   Text="{Binding Context.Discount, StringFormat='− ¥{0:N0}'}" />
+                                   Text="{Binding Context.Store.Discount, StringFormat='− ¥{0:N0}'}" />
                         </Grid>
                         <BoxView Style="{StaticResource CouponDivider}" />
                         <Grid ColumnDefinitions="*,Auto">
@@ -620,8 +621,8 @@
                                    Style="{StaticResource TotalValue}"
                                    behaviors:LabelOption.CountUpDuration="450"
                                    behaviors:LabelOption.CountUpFormat="¥{0:N0}"
-                                   behaviors:LabelOption.CountUpValue="{Binding Context.Total}"
-                                   behaviors:AnimationOption.BounceTrigger="{Binding Context.Total}" />
+                                   behaviors:LabelOption.CountUpValue="{Binding Context.Store.Total}"
+                                   behaviors:AnimationOption.BounceTrigger="{Binding Context.Store.Total}" />
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -635,7 +636,7 @@
             <Button Style="{StaticResource CheckoutButton}"
                     behaviors:ButtonOption.PressEffect="True"
                     Command="{Binding CheckoutCommand}"
-                    IsEnabled="{Binding Context.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
+                    IsEnabled="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
                     Text="レジに進む" />
         </Border>
 

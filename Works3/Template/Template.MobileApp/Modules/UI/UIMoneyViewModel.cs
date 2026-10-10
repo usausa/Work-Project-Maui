@@ -10,28 +10,6 @@ public enum MoneyPage
     Account
 }
 
-public sealed partial class UIMoneyMonth : ObservableObject
-{
-    public required DateTime Month { get; init; }
-
-    public required int Total { get; init; }
-
-    [ObservableProperty]
-    public partial bool IsSelected { get; set; }
-}
-
-// 検索の結果の日ごとの区切り
-public sealed class UIMoneyDayGroup : ObservableCollection<MoneyTransaction>
-{
-    public DateTime Date { get; }
-
-    public UIMoneyDayGroup(MoneyDay day)
-        : base(day.Items)
-    {
-        Date = day.Date;
-    }
-}
-
 public sealed partial class UIMoneyViewModel : AppViewModelBase
 {
     private const int PaymentSeconds = 30;
@@ -40,7 +18,9 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     private readonly IDispatcherTimer timer;
 
-    private readonly MoneyBook book = new(DateTime.Now);
+    private readonly DateTime now = DateTime.Now;
+
+    private readonly MoneyBook book;
 
     [ObservableProperty]
     public partial MoneyPage Selected { get; set; }
@@ -66,12 +46,12 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         ValueFormat = "{0:N0} 円"
     };
 
-    public IReadOnlyList<UIMoneyMonth> Months { get; }
+    public IReadOnlyList<Selectable<MoneyMonth>> Months { get; }
 
-    public UIMoneyMonth CurrentMonth => Months[0];
+    public MoneyMonth CurrentMonth => Months[0].Item;
 
     [ObservableProperty]
-    public partial UIMoneyMonth Month { get; set; }
+    public partial MoneyMonth Month { get; set; }
 
     [ObservableProperty]
     public partial int WeeklyAverage { get; set; }
@@ -94,7 +74,7 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     // 検索とお知らせの一覧は、そのタブを開いたときに作る
     [ObservableProperty]
-    public partial IReadOnlyList<UIMoneyDayGroup> SearchResults { get; set; } = [];
+    public partial IReadOnlyList<MoneyDay> SearchResults { get; set; } = [];
 
     [ObservableProperty]
     public partial IReadOnlyList<MoneyNotice> Notices { get; set; } = [];
@@ -140,6 +120,8 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
 
     public UIMoneyViewModel(IDispatcher dispatcher)
     {
+        book = new MoneyBook(MoneySample.LoadStartBalance(), MoneySample.LoadTransactions(now), now);
+
         Disposables.Add(BalanceChart);
         Disposables.Add(WeeklyChart);
 
@@ -153,15 +135,15 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         Balance = book.Balance;
         BalanceRate = book.BalanceRate();
 
-        Months = book.Months(6).Select(x => new UIMoneyMonth { Month = x, Total = book.MonthTotal(x) }).ToList();
-        Month = Months[0];
+        Months = book.Months(6).Select(static x => new Selectable<MoneyMonth>(x)).ToList();
+        Month = Months[0].Item;
         RecentDays = book.Recent(5);
 
         PageCommand = MakeDelegateCommand<MoneyPage>(page => Selected = page);
         PayCommand = MakeDelegateCommand(OpenPayment);
         DetailCommand = MakeDelegateCommand(OpenBalance);
         MonthListCommand = MakeDelegateCommand(() => IsMonthOpen = true);
-        SelectMonthCommand = MakeDelegateCommand<UIMoneyMonth>(SelectMonth);
+        SelectMonthCommand = MakeDelegateCommand<Selectable<MoneyMonth>>(SelectMonth);
         CategoryListCommand = MakeDelegateCommand(() => IsCategoryOpen = true);
         ReadNoticeCommand = MakeDelegateCommand<MoneyNotice>(x => x.IsUnread = false);
 
@@ -221,17 +203,17 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         IsBalanceOpen = true;
     }
 
-    private void SelectMonth(UIMoneyMonth month)
+    private void SelectMonth(Selectable<MoneyMonth> month)
     {
         IsMonthOpen = false;
-        ShowMonth(month);
+        ShowMonth(month.Item);
     }
 
-    private void ShowMonth(UIMoneyMonth month)
+    private void ShowMonth(MoneyMonth month)
     {
         foreach (var item in Months)
         {
-            item.IsSelected = item == month;
+            item.IsSelected = item.Item == month;
         }
         Month = month;
         WeeklyAverage = book.WeeklyAverage(month.Month);
@@ -255,7 +237,7 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
         }
         else if ((page == MoneyPage.Notifications) && (Notices.Count == 0))
         {
-            Notices = book.Notices();
+            Notices = MoneySample.LoadNotices(book, now);
         }
     }
 
@@ -285,11 +267,11 @@ public sealed partial class UIMoneyViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     private void Search() =>
-        SearchResults = book.Search(SearchText, 50).Select(static x => new UIMoneyDayGroup(x)).ToArray();
+        SearchResults = book.Search(SearchText, 50);
 
     private void RenewPaymentCode()
     {
-        PaymentCode = MoneyBook.NewPaymentCode();
+        PaymentCode = MoneySample.LoadPaymentCode();
         PaymentRemain = PaymentSeconds;
         PaymentProgress = 1;
     }

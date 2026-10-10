@@ -2,6 +2,10 @@ namespace Template.MobileApp.Models.Sample;
 
 using System.Security.Cryptography;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum MoneyShopKind
 {
     Cafe,
@@ -40,12 +44,28 @@ public enum MoneyNoticeKind
     Security
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
 public sealed record MoneyTransaction(DateTime Date, string Shop, MoneyShopKind Kind, int Amount)
 {
     public MoneyCategory Category => MoneyBook.CategoryOf(Kind);
 }
 
-public sealed record MoneyDay(DateTime Date, IReadOnlyList<MoneyTransaction> Items);
+// 日ごとの取引 (一覧の日付の区切りにそのまま使う)
+public sealed class MoneyDay : ReadOnlyCollection<MoneyTransaction>
+{
+    public DateTime Date { get; }
+
+    public MoneyDay(DateTime date, IList<MoneyTransaction> items)
+        : base(items)
+    {
+        Date = date;
+    }
+}
+
+public sealed record MoneyMonth(DateTime Month, int Total);
 
 public sealed record MoneyCategoryTotal(MoneyCategory Category, int Amount, double Ratio);
 
@@ -65,19 +85,13 @@ public sealed partial class MoneyNotice : ObservableObject
     public partial bool IsUnread { get; set; }
 }
 
-// 決済アプリの見本の取引と集計。日時は今日からの相対で、残高が足りなくなるとオートチャージする
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
+
+// 決済アプリの取引と集計 (残高の推移・月の支出・分類・検索)
 public sealed class MoneyBook
 {
-    private const int Days = 186;
-
-    private const int StartBalance = 18000;
-
-    private const int ChargeThreshold = 8000;
-
-    private const int ChargeAmount = 20000;
-
-    private static readonly string[] Lunches = ["定食 さくら", "うさぎ弁当", "麺処 ひだまり", "サンドイッチ ハル"];
-
     private readonly DateTime now;
 
     // 新しい順
@@ -90,43 +104,28 @@ public sealed class MoneyBook
 
     public IReadOnlyList<MoneyTransaction> Transactions => transactions;
 
-    public MoneyBook(DateTime now)
+    public MoneyBook(int startBalance, IEnumerable<MoneyTransaction> transactions, DateTime now)
     {
         this.now = now;
 
-        var today = now.Date;
-        var balance = StartBalance;
-        for (var d = Days; d >= 0; d--)
+        var list = transactions.OrderBy(static x => x.Date).ToList();
+        var balance = startBalance;
+        var index = 0;
+        for (var date = list.Count > 0 ? list[0].Date.Date : now.Date; date <= now.Date; date = date.AddDays(1))
         {
-            var date = today.AddDays(-d);
-            foreach (var (time, shop, kind, amount) in DayPlan(date).OrderBy(static x => x.Time))
+            while ((index < list.Count) && (list[index].Date.Date == date))
             {
-                var at = date + time;
-                if (at > now)
-                {
-                    continue;
-                }
-
-                if ((amount < 0) && (balance + amount < ChargeThreshold))
-                {
-                    transactions.Add(new MoneyTransaction(at.AddMinutes(-1), "オートチャージ", MoneyShopKind.Charge, ChargeAmount));
-                    balance += ChargeAmount;
-                }
-
-                transactions.Add(new MoneyTransaction(at, shop, kind, amount));
-                balance += amount;
+                balance += list[index].Amount;
+                index++;
             }
 
             balances.Add(new MoneyBalance(date, balance));
         }
 
-        transactions.Reverse();
+        list.Reverse();
+        this.transactions.AddRange(list);
         Balance = balance;
     }
-
-    // 支払いのコード (4 桁ずつ区切った 20 桁)
-    public static string NewPaymentCode() =>
-        String.Join(' ', Enumerable.Range(0, 5).Select(static _ => RandomNumberGenerator.GetInt32(10000).ToString("D4", CultureInfo.InvariantCulture)));
 
     public static MoneyCategory CategoryOf(MoneyShopKind kind) => kind switch
     {
@@ -159,11 +158,11 @@ public sealed class MoneyBook
     // Expense
     //--------------------------------------------------------------------------------
 
-    // 新しい順の月の初日
-    public IReadOnlyList<DateTime> Months(int count)
+    // 新しい順の月 (初日) と支出の合計
+    public IReadOnlyList<MoneyMonth> Months(int count)
     {
         var month = new DateTime(now.Year, now.Month, 1);
-        return Enumerable.Range(0, count).Select(x => month.AddMonths(-x)).ToList();
+        return Enumerable.Range(0, count).Select(x => month.AddMonths(-x)).Select(x => new MoneyMonth(x, MonthTotal(x))).ToList();
     }
 
     public int MonthTotal(DateTime month) => -Payments(month).Sum(static x => x.Amount);
@@ -223,9 +222,65 @@ public sealed class MoneyBook
     // Notice
     //--------------------------------------------------------------------------------
 
-    public IReadOnlyList<MoneyNotice> Notices()
+    //--------------------------------------------------------------------------------
+    // Sample
+    //--------------------------------------------------------------------------------
+
+    // 曜日と日付で決まる 1 日の支払い。金額は日ごとの値でずらす
+}
+
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 決済の見本 (半年前から今日までの取引。残高が下回るとオートチャージする)
+public static class MoneySample
+{
+    private const int Days = 186;
+
+    private const int StartBalance = 18000;
+
+    private const int ChargeThreshold = 8000;
+
+    private const int ChargeAmount = 20000;
+
+    private static readonly string[] Lunches = ["定食 さくら", "うさぎ弁当", "麺処 ひだまり", "サンドイッチ ハル"];
+
+    public static int LoadStartBalance() => StartBalance;
+
+    public static IReadOnlyList<MoneyTransaction> LoadTransactions(DateTime now)
     {
-        var charge = transactions.FirstOrDefault(static x => x.Kind == MoneyShopKind.Charge);
+        var transactions = new List<MoneyTransaction>();
+        var today = now.Date;
+        var balance = StartBalance;
+        for (var d = Days; d >= 0; d--)
+        {
+            var date = today.AddDays(-d);
+            foreach (var (time, shop, kind, amount) in DayPlan(date).OrderBy(static x => x.Time))
+            {
+                var at = date + time;
+                if (at > now)
+                {
+                    continue;
+                }
+
+                if ((amount < 0) && (balance + amount < ChargeThreshold))
+                {
+                    transactions.Add(new MoneyTransaction(at.AddMinutes(-1), "オートチャージ", MoneyShopKind.Charge, ChargeAmount));
+                    balance += ChargeAmount;
+                }
+
+                transactions.Add(new MoneyTransaction(at, shop, kind, amount));
+                balance += amount;
+            }
+        }
+
+        return transactions;
+    }
+
+    public static IReadOnlyList<MoneyNotice> LoadNotices(MoneyBook book, DateTime now)
+    {
+        var charge = book.Transactions.FirstOrDefault(static x => x.Kind == MoneyShopKind.Charge);
         var today = now.Date;
         var statement = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
         return
@@ -266,7 +321,7 @@ public sealed class MoneyBook
                 Date = new DateTime(now.Year, now.Month, 1).AddHours(8),
                 Kind = MoneyNoticeKind.Statement,
                 Title = $"{statement.Month}月の利用明細",
-                Body = $"{statement.Month}月のお支払いは {MonthTotal(statement):N0} 円でした。"
+                Body = $"{statement.Month}月のお支払いは {book.MonthTotal(statement):N0} 円でした。"
             },
             new MoneyNotice
             {
@@ -287,16 +342,15 @@ public sealed class MoneyBook
                 Date = new DateTime(now.Year, now.Month, 1).AddMonths(-1).AddHours(8),
                 Kind = MoneyNoticeKind.Statement,
                 Title = $"{statement.AddMonths(-1).Month}月の利用明細",
-                Body = $"{statement.AddMonths(-1).Month}月のお支払いは {MonthTotal(statement.AddMonths(-1)):N0} 円でした。"
+                Body = $"{statement.AddMonths(-1).Month}月のお支払いは {book.MonthTotal(statement.AddMonths(-1)):N0} 円でした。"
             }
         ];
     }
 
-    //--------------------------------------------------------------------------------
-    // Sample
-    //--------------------------------------------------------------------------------
+    // 支払いのコード (4 桁ずつ区切った 20 桁)
+    public static string LoadPaymentCode() =>
+        String.Join(' ', Enumerable.Range(0, 5).Select(static _ => RandomNumberGenerator.GetInt32(10000).ToString("D4", CultureInfo.InvariantCulture)));
 
-    // 曜日と日付で決まる 1 日の支払い。金額は日ごとの値でずらす
     private static IEnumerable<(TimeSpan Time, string Shop, MoneyShopKind Kind, int Amount)> DayPlan(DateTime date)
     {
         var seed = date.DayOfYear + (date.Year * 7);

@@ -4,7 +4,7 @@
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample.Chat"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              x:Class="Template.MobileApp.Controls.ChatView"
              x:Name="Root">
 

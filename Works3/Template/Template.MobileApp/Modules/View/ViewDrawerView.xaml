@@ -184,6 +184,65 @@
                 </Grid>
             </DataTemplate>
 
+            <DataTemplate x:Key="SfDrawerHeaderTemplate"
+                          x:DataType="module:ViewDrawerViewModel">
+                <Grid Style="{StaticResource DrawerHeaderGrid}"
+                      ColumnDefinitions="Auto,*">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource DrawerAvatar}">
+                        <Label Style="{StaticResource DrawerAvatarIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Account_circle}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource DrawerProfileStack}">
+                        <Label Style="{StaticResource DrawerNameLabel}"
+                               Text="うさうささん" />
+                        <Label Style="{StaticResource DrawerMailLabel}"
+                               Text="usausa@example.com" />
+                    </VerticalStackLayout>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SfDrawerContentTemplate"
+                          x:DataType="module:ViewDrawerViewModel">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding MenuItems}"
+                                     BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
+            </DataTemplate>
+
+            <DataTemplate x:Key="SfDrawerFooterTemplate"
+                          x:DataType="module:ViewDrawerViewModel">
+                <Label Style="{StaticResource DrawerFooterLabel}"
+                       Text="SfNavigationDrawer" />
+            </DataTemplate>
+
+            <DataTemplate x:Key="CustomDrawerTemplate"
+                          x:DataType="module:ViewDrawerViewModel">
+                <Grid Style="{StaticResource DrawerGrid}"
+                      RowDefinitions="Auto,*,Auto">
+                    <Grid Grid.Row="0"
+                          Style="{StaticResource DrawerHeaderGrid}"
+                          ColumnDefinitions="Auto,*">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource DrawerAvatar}">
+                            <Label Style="{StaticResource DrawerAvatarIcon}"
+                                   Text="{x:Static fonts:MaterialIcons.Account_circle}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1"
+                                             Style="{StaticResource DrawerProfileStack}">
+                            <Label Style="{StaticResource DrawerNameLabel}"
+                                   Text="うさうささん" />
+                            <Label Style="{StaticResource DrawerMailLabel}"
+                                   Text="usausa@example.com" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <VerticalStackLayout Grid.Row="1"
+                                         BindableLayout.ItemsSource="{Binding MenuItems}"
+                                         BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
+                    <Label Grid.Row="2"
+                           Style="{StaticResource DrawerFooterLabel}"
+                           Text="SideDrawer (自作)" />
+                </Grid>
+            </DataTemplate>
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
@@ -197,29 +256,16 @@
                                        EnableSwipeGesture="{Binding IsSfMode}"
                                        Position="Left" Transition="SlideOnTop">
                     <drawer:DrawerSettings.DrawerHeaderView>
-                        <Grid Style="{StaticResource DrawerHeaderGrid}"
-                              ColumnDefinitions="Auto,*">
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource DrawerAvatar}">
-                                <Label Style="{StaticResource DrawerAvatarIcon}"
-                                       Text="{x:Static fonts:MaterialIcons.Account_circle}" />
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1"
-                                                 Style="{StaticResource DrawerProfileStack}">
-                                <Label Style="{StaticResource DrawerNameLabel}"
-                                       Text="うさうささん" />
-                                <Label Style="{StaticResource DrawerMailLabel}"
-                                       Text="usausa@example.com" />
-                            </VerticalStackLayout>
-                        </Grid>
+                        <ContentView behaviors:LazyViewOption.Load="{Binding IsSfDrawerOpen}"
+                                     behaviors:LazyViewOption.Template="{StaticResource SfDrawerHeaderTemplate}" />
                     </drawer:DrawerSettings.DrawerHeaderView>
                     <drawer:DrawerSettings.DrawerContentView>
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MenuItems}"
-                                             BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
+                        <ContentView behaviors:LazyViewOption.Load="{Binding IsSfDrawerOpen}"
+                                     behaviors:LazyViewOption.Template="{StaticResource SfDrawerContentTemplate}" />
                     </drawer:DrawerSettings.DrawerContentView>
                     <drawer:DrawerSettings.DrawerFooterView>
-                        <Label Style="{StaticResource DrawerFooterLabel}"
-                               Text="SfNavigationDrawer" />
+                        <ContentView behaviors:LazyViewOption.Load="{Binding IsSfDrawerOpen}"
+                                     behaviors:LazyViewOption.Template="{StaticResource SfDrawerFooterTemplate}" />
                     </drawer:DrawerSettings.DrawerFooterView>
                 </drawer:DrawerSettings>
             </drawer:SfNavigationDrawer.DrawerSettings>
@@ -271,31 +317,8 @@
                              DrawerWidth="280"
                              EdgeSwipeEnabled="{Binding IsCustomMode}">
             <controls:SideDrawer.DrawerContent>
-                <Grid Style="{StaticResource DrawerGrid}"
-                      RowDefinitions="Auto,*,Auto">
-                    <Grid Grid.Row="0"
-                          Style="{StaticResource DrawerHeaderGrid}"
-                          ColumnDefinitions="Auto,*">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource DrawerAvatar}">
-                            <Label Style="{StaticResource DrawerAvatarIcon}"
-                                   Text="{x:Static fonts:MaterialIcons.Account_circle}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource DrawerProfileStack}">
-                            <Label Style="{StaticResource DrawerNameLabel}"
-                                   Text="うさうささん" />
-                            <Label Style="{StaticResource DrawerMailLabel}"
-                                   Text="usausa@example.com" />
-                        </VerticalStackLayout>
-                    </Grid>
-                    <VerticalStackLayout Grid.Row="1"
-                                         BindableLayout.ItemsSource="{Binding MenuItems}"
-                                         BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
-                    <Label Grid.Row="2"
-                           Style="{StaticResource DrawerFooterLabel}"
-                           Text="SideDrawer (自作)" />
-                </Grid>
+                <ContentView behaviors:LazyViewOption.Load="{Binding IsCustomDrawerOpen}"
+                             behaviors:LazyViewOption.Template="{StaticResource CustomDrawerTemplate}" />
             </controls:SideDrawer.DrawerContent>
         </controls:SideDrawer>
 

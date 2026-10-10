@@ -99,7 +99,7 @@ public sealed partial class UIWeatherViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     private WeatherForecast CreateForecast() =>
-        WeatherForecast.Create(timeProvider.GetLocalNow().DateTime, static x => RandomNumberGenerator.GetInt32(x));
+        WeatherSample.LoadForecast(timeProvider.GetLocalNow().DateTime, static x => RandomNumberGenerator.GetInt32(x));
 
     private void UpdateItems()
     {

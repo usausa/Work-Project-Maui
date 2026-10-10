@@ -2,12 +2,8 @@ namespace Template.MobileApp.Modules.UI;
 
 using System.Text.Json;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed partial class UIGraphViewModel : AppViewModelBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
-
     [ObservableProperty]
     public partial string HeaderText { get; private set; } = string.Empty;
 
@@ -88,8 +84,8 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var data = await Task.Run(async () =>
             {
-                var (commits, refs) = await LoadRepositoryAsync().ConfigureAwait(false);
-                return GraphBuilder.Build(commits, refs);
+                var repository = await GraphSample.LoadRepositoryAsync().ConfigureAwait(false);
+                return GraphBuilder.Build(repository.Commits, repository.Refs);
             }).ConfigureAwait(true);
             sw.Stop();
 
@@ -100,24 +96,5 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         {
             HeaderText = $"Failed to build graph: {ex.Message}";
         }
-    }
-
-    //--------------------------------------------------------------------------------
-    // Helper
-    //--------------------------------------------------------------------------------
-
-    private static async Task<(IReadOnlyList<GraphCommit> Commits, IReadOnlyList<GraphRefData> Refs)> LoadRepositoryAsync()
-    {
-        await using var stream = await FileSystem.OpenAppPackageFileAsync(Path.Combine("Graph", "repository.json")).ConfigureAwait(false);
-        var data = await JsonSerializer.DeserializeAsync<RepositoryData>(stream, JsonOptions).ConfigureAwait(false) ?? RepositoryData.Empty;
-        return (data.Commits, data.Refs);
-    }
-
-    private sealed class RepositoryData
-    {
-        public static readonly RepositoryData Empty = new();
-
-        public List<GraphCommit> Commits { get; set; } = [];
-        public List<GraphRefData> Refs { get; set; } = [];
     }
 }

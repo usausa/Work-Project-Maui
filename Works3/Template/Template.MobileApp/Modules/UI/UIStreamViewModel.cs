@@ -1,5 +1,14 @@
 namespace Template.MobileApp.Modules.UI;
 
+public sealed class UIStreamSection
+{
+    public required StreamShelf Shelf { get; init; }
+
+    public required IReadOnlyList<StreamItem> Items { get; init; }
+
+    public int Delay { get; init; }
+}
+
 public sealed partial class UIStreamViewModel : AppViewModelBase
 {
     // トップの作品を次へ送るまでの秒数 (手で送った後も数え直す)
@@ -14,13 +23,13 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
     public partial UIStreamContext Context { get; set; } = default!;
 
     [ObservableProperty]
-    public partial IReadOnlyList<UIStreamWork> Featured { get; set; } = [];
+    public partial IReadOnlyList<StreamItem> Featured { get; set; } = [];
 
     [ObservableProperty]
     public partial int FeaturedPosition { get; set; }
 
     [ObservableProperty]
-    public partial IReadOnlyList<UIStreamWork> Continue { get; set; } = [];
+    public partial IReadOnlyList<StreamItem> Continue { get; set; } = [];
 
     [ObservableProperty]
     public partial IReadOnlyList<UIStreamSection> Sections { get; set; } = [];
@@ -37,8 +46,8 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
 
     public UIStreamViewModel(IDispatcher dispatcher)
     {
-        DetailCommand = MakeAsyncCommand<UIStreamWork>(OpenAsync);
-        MyListCommand = MakeDelegateCommand<UIStreamWork>(static x => x.InMyList = !x.InMyList);
+        DetailCommand = MakeAsyncCommand<StreamItem>(OpenAsync);
+        MyListCommand = MakeDelegateCommand<StreamItem>(static x => x.InMyList = !x.InMyList);
         CurrentChangedCommand = MakeDelegateCommand(() => idleSeconds = 0);
 
         timer = dispatcher.CreateTimer();
@@ -55,15 +64,15 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            var works = Context.Works;
-            Featured = works.Where(static x => x.Work.IsFeatured).ToArray();
-            Continue = works.Where(static x => x.HasProgress).ToArray();
+            var library = Context.Library;
+            Featured = library.Featured();
+            Continue = library.Continue();
             Sections =
             [
-                new() { Shelf = StreamShelf.TopRated, Items = works.OrderByDescending(static x => x.Work.Rating).ToArray(), Delay = 0 },
-                new() { Shelf = StreamShelf.Original, Items = works.Where(static x => x.Work.IsOriginal).ToArray(), Delay = 80 },
-                new() { Shelf = StreamShelf.Trending, Items = works.OrderByDescending(static x => x.Work.Year).ThenByDescending(static x => x.Work.Match).ToArray(), Delay = 160 },
-                new() { Shelf = StreamShelf.Action, Items = works.Where(static x => x.Work.Genre is StreamGenre.Action or StreamGenre.Sf or StreamGenre.Fantasy).ToArray(), Delay = 240 }
+                new() { Shelf = StreamShelf.TopRated, Items = library.Shelf(StreamShelf.TopRated), Delay = 0 },
+                new() { Shelf = StreamShelf.Original, Items = library.Shelf(StreamShelf.Original), Delay = 80 },
+                new() { Shelf = StreamShelf.Trending, Items = library.Shelf(StreamShelf.Trending), Delay = 160 },
+                new() { Shelf = StreamShelf.Action, Items = library.Shelf(StreamShelf.Action), Delay = 240 }
             ];
         }
 
@@ -92,10 +101,10 @@ public sealed partial class UIStreamViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     // 送りの途中で画面を離れると、戻ったときに位置と表示がずれるので先に止める
-    private Task OpenAsync(UIStreamWork work)
+    private Task OpenAsync(StreamItem item)
     {
         timer.Stop();
-        Context.Open(work);
+        Context.Open(item);
         return Navigator.PushAsync(ViewId.UIStreamDetail);
     }
 

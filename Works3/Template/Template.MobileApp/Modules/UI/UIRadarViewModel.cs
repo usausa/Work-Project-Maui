@@ -18,12 +18,12 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
 
     public UIRadarViewModel(IDispatcher dispatcher)
     {
-        Targets = GenerateTargets();
+        Targets = RadarSample.LoadTargets(random.NextDouble);
 
         // 一定間隔でターゲットを入れ替えるデモ駆動
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(5);
-        Disposables.Add(timer.TickAsObservable().Subscribe(_ => Targets = GenerateTargets()));
+        Disposables.Add(timer.TickAsObservable().Subscribe(_ => Targets = RadarSample.LoadTargets(random.NextDouble)));
     }
 
     //--------------------------------------------------------------------------------
@@ -45,23 +45,5 @@ public sealed partial class UIRadarViewModel : AppViewModelBase
     protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
-
-    //--------------------------------------------------------------------------------
-    // Operation
-    //--------------------------------------------------------------------------------
-
-    private RadarTarget[] GenerateTargets()
-    {
-        var targets = new RadarTarget[random.Next(4, 8)];
-        for (var i = 0; i < targets.Length; i++)
-        {
-            targets[i] = new RadarTarget
-            {
-                Angle = (float)(random.NextDouble() * 360d),
-                Distance = (float)((random.NextDouble() * 0.85d) + 0.1d)
-            };
-        }
-        return targets;
-    }
 }
 #pragma warning restore CA5394

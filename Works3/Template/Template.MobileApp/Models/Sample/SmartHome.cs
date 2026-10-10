@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum HomeDeviceKind
 {
     Light,
@@ -23,6 +27,10 @@ public enum HomeRoomKind
     Bedroom,
     Kitchen
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 public sealed partial class HomeDevice : ObservableObject
 {
@@ -88,13 +96,14 @@ public sealed partial class HomeRoom : ObservableObject
     [ObservableProperty]
     public partial bool IsThermostatActive { get; set; }
 
-    [ObservableProperty]
-    public partial bool IsSelected { get; set; }
-
     public IReadOnlyList<HomeDevice> Devices { get; set; } = [];
 
     public IReadOnlyList<HomeBattery> Batteries { get; set; } = [];
 }
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
 
 public sealed partial class SmartHome : ObservableObject
 {
@@ -109,96 +118,100 @@ public sealed partial class SmartHome : ObservableObject
     [ObservableProperty]
     public partial HomeRoom Room { get; set; }
 
-    public SmartHome()
+    public SmartHome(IReadOnlyList<HomeRoom> rooms)
     {
-        Rooms =
-        [
-            new HomeRoom
-            {
-                Kind = HomeRoomKind.LivingRoom,
-                Name = "リビング",
-                Background = "gallery05.jpg",
-                Temperature = 21,
-                Scene = "夕暮れ",
-                SetTemperature = 22.5,
-                IsThermostatActive = true,
-                Devices =
-                [
-                    new HomeDevice { Name = "メイン照明", Kind = HomeDeviceKind.Light, IsOn = true, Level = 75 },
-                    new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, IsOn = true, Level = 60 },
-                    new HomeDevice { Name = "玄関の鍵", Kind = HomeDeviceKind.Lock, IsOn = true },
-                    new HomeDevice { Name = "フロアランプ", Kind = HomeDeviceKind.Lamp, Level = 0 },
-                    new HomeDevice { Name = "天井ファン", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 2 },
-                    new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, IsOn = true, Level = 22.5 }
-                ],
-                Batteries =
-                [
-                    new HomeBattery { Name = "ドアロック", Level = 0.92 },
-                    new HomeBattery { Name = "センサーハブ", Level = 0.78 },
-                    new HomeBattery { Name = "防犯カメラ", Level = 0.54, Status = HomeDeviceStatus.Active }
-                ]
-            },
-            new HomeRoom
-            {
-                Kind = HomeRoomKind.Bedroom,
-                Name = "寝室",
-                Background = "gallery06.jpg",
-                Temperature = 20,
-                Scene = "おやすみ",
-                SetTemperature = 20.5,
-                IsThermostatActive = true,
-                Devices =
-                [
-                    new HomeDevice { Name = "天井の照明", Kind = HomeDeviceKind.Light, Level = 0 },
-                    new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, Level = 0 },
-                    new HomeDevice { Name = "窓の鍵", Kind = HomeDeviceKind.Lock, IsOn = true },
-                    new HomeDevice { Name = "枕元ランプ", Kind = HomeDeviceKind.Lamp, IsOn = true, Level = 30 },
-                    new HomeDevice { Name = "空気清浄機", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 1 },
-                    new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, IsOn = true, Level = 20.5 }
-                ],
-                Batteries =
-                [
-                    new HomeBattery { Name = "ドアセンサー", Level = 0.66 },
-                    new HomeBattery { Name = "リモコン", Level = 0.35, Status = HomeDeviceStatus.Active },
-                    new HomeBattery { Name = "火災報知器", Level = 0.18, Status = HomeDeviceStatus.Issue }
-                ]
-            },
-            new HomeRoom
-            {
-                Kind = HomeRoomKind.Kitchen,
-                Name = "キッチン",
-                Background = "gallery02.jpg",
-                Temperature = 23,
-                Scene = "朝",
-                SetTemperature = 23,
-                Devices =
-                [
-                    new HomeDevice { Name = "スポット照明", Kind = HomeDeviceKind.Light, IsOn = true, Level = 90 },
-                    new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, IsOn = true, Level = 100 },
-                    new HomeDevice { Name = "勝手口の鍵", Kind = HomeDeviceKind.Lock, Status = HomeDeviceStatus.Issue },
-                    new HomeDevice { Name = "手元ランプ", Kind = HomeDeviceKind.Lamp, Level = 0 },
-                    new HomeDevice { Name = "換気扇", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 3, Status = HomeDeviceStatus.Active },
-                    new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, Level = 24 }
-                ],
-                Batteries =
-                [
-                    new HomeBattery { Name = "防犯カメラ", Level = 0.54, Status = HomeDeviceStatus.Active },
-                    new HomeBattery { Name = "漏水センサー", Level = 0.81 },
-                    new HomeBattery { Name = "ドアセンサー", Level = 0.27, Status = HomeDeviceStatus.Issue }
-                ]
-            }
-        ];
-        Room = Rooms[0];
-        Room.IsSelected = true;
+        Rooms = rooms;
+        Room = rooms[0];
     }
 
-    public void Select(HomeRoom room)
-    {
-        Room.IsSelected = false;
-        room.IsSelected = true;
-        Room = room;
-    }
+    public void Select(HomeRoom room) => Room = room;
 
     public void ChangeTemperature(double delta) =>
         Room.SetTemperature = Math.Clamp(Room.SetTemperature + delta, MinTemperature, MaxTemperature);
+}
+
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 部屋と機器の見本 (リビング・寝室・キッチン)
+public static class HomeSample
+{
+    public static IReadOnlyList<HomeRoom> LoadRooms() =>
+    [
+        new()
+        {
+            Kind = HomeRoomKind.LivingRoom,
+            Name = "リビング",
+            Background = "gallery05.jpg",
+            Temperature = 21,
+            Scene = "夕暮れ",
+            SetTemperature = 22.5,
+            IsThermostatActive = true,
+            Devices =
+            [
+                new HomeDevice { Name = "メイン照明", Kind = HomeDeviceKind.Light, IsOn = true, Level = 75 },
+                new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, IsOn = true, Level = 60 },
+                new HomeDevice { Name = "玄関の鍵", Kind = HomeDeviceKind.Lock, IsOn = true },
+                new HomeDevice { Name = "フロアランプ", Kind = HomeDeviceKind.Lamp, Level = 0 },
+                new HomeDevice { Name = "天井ファン", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 2 },
+                new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, IsOn = true, Level = 22.5 }
+            ],
+            Batteries =
+            [
+                new HomeBattery { Name = "ドアロック", Level = 0.92 },
+                new HomeBattery { Name = "センサーハブ", Level = 0.78 },
+                new HomeBattery { Name = "防犯カメラ", Level = 0.54, Status = HomeDeviceStatus.Active }
+            ]
+        },
+        new()
+        {
+            Kind = HomeRoomKind.Bedroom,
+            Name = "寝室",
+            Background = "gallery06.jpg",
+            Temperature = 20,
+            Scene = "おやすみ",
+            SetTemperature = 20.5,
+            IsThermostatActive = true,
+            Devices =
+            [
+                new HomeDevice { Name = "天井の照明", Kind = HomeDeviceKind.Light, Level = 0 },
+                new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, Level = 0 },
+                new HomeDevice { Name = "窓の鍵", Kind = HomeDeviceKind.Lock, IsOn = true },
+                new HomeDevice { Name = "枕元ランプ", Kind = HomeDeviceKind.Lamp, IsOn = true, Level = 30 },
+                new HomeDevice { Name = "空気清浄機", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 1 },
+                new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, IsOn = true, Level = 20.5 }
+            ],
+            Batteries =
+            [
+                new HomeBattery { Name = "ドアセンサー", Level = 0.66 },
+                new HomeBattery { Name = "リモコン", Level = 0.35, Status = HomeDeviceStatus.Active },
+                new HomeBattery { Name = "火災報知器", Level = 0.18, Status = HomeDeviceStatus.Issue }
+            ]
+        },
+        new()
+        {
+            Kind = HomeRoomKind.Kitchen,
+            Name = "キッチン",
+            Background = "gallery02.jpg",
+            Temperature = 23,
+            Scene = "朝",
+            SetTemperature = 23,
+            Devices =
+            [
+                new HomeDevice { Name = "スポット照明", Kind = HomeDeviceKind.Light, IsOn = true, Level = 90 },
+                new HomeDevice { Name = "ブラインド", Kind = HomeDeviceKind.Blinds, IsOn = true, Level = 100 },
+                new HomeDevice { Name = "勝手口の鍵", Kind = HomeDeviceKind.Lock, Status = HomeDeviceStatus.Issue },
+                new HomeDevice { Name = "手元ランプ", Kind = HomeDeviceKind.Lamp, Level = 0 },
+                new HomeDevice { Name = "換気扇", Kind = HomeDeviceKind.Fan, IsOn = true, Level = 3, Status = HomeDeviceStatus.Active },
+                new HomeDevice { Name = "エアコン", Kind = HomeDeviceKind.AirConditioner, Level = 24 }
+            ],
+            Batteries =
+            [
+                new HomeBattery { Name = "防犯カメラ", Level = 0.54, Status = HomeDeviceStatus.Active },
+                new HomeBattery { Name = "漏水センサー", Level = 0.81 },
+                new HomeBattery { Name = "ドアセンサー", Level = 0.27, Status = HomeDeviceStatus.Issue }
+            ]
+        }
+    ];
 }

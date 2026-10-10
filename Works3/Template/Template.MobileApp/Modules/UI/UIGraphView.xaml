@@ -5,8 +5,9 @@
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:conv="clr-namespace:Template.MobileApp.Converters" xmlns:graph="clr-namespace:Template.MobileApp.Models.Sample.Graph"
+             xmlns:conv="clr-namespace:Template.MobileApp.Converters"
              x:Class="Template.MobileApp.Modules.UI.UIGraphView"
              x:DataType="{x:Type module:UIGraphViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIGraphViewModel}"
@@ -91,13 +92,13 @@
             </Style>
 
             <DataTemplate x:Key="RefBadgeTemplate"
-                          x:DataType="{x:Type graph:GraphRef}">
+                          x:DataType="{x:Type models:GraphRef}">
                 <Border Style="{StaticResource RefBadgeBorder}"
                         BackgroundColor="{Binding Kind, Converter={StaticResource RefBackgroundConverter}}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border"
                                      Binding="{Binding Kind}"
-                                     Value="{x:Static graph:GraphRefKind.Head}">
+                                     Value="{x:Static models:GraphRefKind.Head}">
                             <Setter Property="StrokeThickness" Value="2" />
                             <Setter Property="Stroke" Value="{StaticResource BlueDarken4}" />
                         </DataTrigger>
@@ -182,7 +183,7 @@
                                    ItemSpacing="0" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type graph:GraphRow}">
+                <DataTemplate x:DataType="{x:Type models:GraphRow}">
                     <Grid Style="{StaticResource GraphRowGrid}"
                           ColumnDefinitions="Auto,Auto,*,Auto,Auto"
                           BackgroundColor="{Binding Row, Converter={StaticResource RowBackgroundConverter}}">

@@ -6,8 +6,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
-using Template.MobileApp.Models.Sample.Calendar;
-
 // 1 日分のタイムテーブルを描画するコントロール (時間範囲 / 罫線の間隔 / 空き時間帯 / 現在時刻ライン / イベントのタップ)
 public sealed class DayTimetableView : SKCanvasView
 {

@@ -2,8 +2,6 @@ namespace Template.MobileApp.Services;
 
 using ClamCalendar;
 
-using Template.MobileApp.Models.Sample.Calendar;
-
 // カレンダー画面 (UICalendar / UISchedule) のイベント・スタンプ・祝日の供給元 (サンプルデータ生成器。VM からの new 直生成を避け DI 注入の見本とする)
 public interface ICalendarService
 {

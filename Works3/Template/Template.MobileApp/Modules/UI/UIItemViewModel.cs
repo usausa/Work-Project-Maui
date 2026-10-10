@@ -76,7 +76,7 @@ public sealed partial class UIItemViewModel : AppViewModelBase
 
     private void Add()
     {
-        Context.AddToCart(Context.Selected, SelectedVariant, Quantity);
+        Context.Store.AddToCart(Context.Selected, SelectedVariant, Quantity);
         Quantity = 1;
         IsAdded = true;
         dispatcher.DispatchDelayed(AddedDuration, () => IsAdded = false);

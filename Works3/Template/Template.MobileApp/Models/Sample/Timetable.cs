@@ -1,4 +1,41 @@
-namespace Template.MobileApp.Models.Sample.Calendar;
+namespace Template.MobileApp.Models.Sample;
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
+public sealed class TimetableEvent
+{
+    public required string Title { get; init; }
+
+    public required TimeSpan Start { get; init; }
+
+    public required TimeSpan End { get; init; }
+
+    public required Color Color { get; init; }
+
+    public string Place { get; init; } = string.Empty;
+
+    // 参加者のアイコンの画像
+    public IReadOnlyList<string> Members { get; init; } = [];
+
+    public string Memo { get; init; } = string.Empty;
+}
+
+public sealed class TimetableDay
+{
+    public required DateOnly Date { get; init; }
+
+    public string DowText => Date.ToString("ddd");
+
+    public int Day => Date.Day;
+
+    public bool IsToday => Date == DateOnly.FromDateTime(DateTime.Today);
+}
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
 
 // タイムテーブルの時間計算 (描画側の空き時間帯と VM 側の日合計で共用する)
 public static class TimetableCalculator

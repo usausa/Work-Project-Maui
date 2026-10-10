@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -463,36 +462,35 @@
                     <DataTemplate x:DataType="models:StreamTrailer">
                         <Grid Style="{StaticResource TrailerRowGrid}"
                               ColumnDefinitions="Auto,*">
-                            <toolkit:SfEffectsView Grid.ColumnSpan="2"
-                                                   TouchDownEffects="Ripple">
-                                <Grid ColumnDefinitions="Auto,*">
-                                    <Border Grid.Column="0"
-                                            Style="{StaticResource TrailerThumbBorder}">
-                                        <Grid>
-                                            <Image Style="{StaticResource TrailerImage}"
-                                                   Source="{Binding Image}" />
-                                            <Border Style="{StaticResource TrailerPlayBorder}">
-                                                <Label Style="{StaticResource TrailerPlayLabel}"
-                                                       Text="▶" />
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         Style="{StaticResource TrailerTextStack}">
-                                        <Label Style="{StaticResource TrailerTitleLabel}"
-                                               Text="{Binding Title}" />
-                                        <Label Style="{StaticResource TrailerMetaLabel}">
-                                            <Label.Text>
-                                                <MultiBinding StringFormat="{}{0} · {1:m'm 'ss's'}">
-                                                    <Binding Path="Kind"
-                                                             Converter="{StaticResource TrailerKindConverter}" />
-                                                    <Binding Path="Length" />
-                                                </MultiBinding>
-                                            </Label.Text>
-                                        </Label>
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                            <Grid Grid.ColumnSpan="2"
+                                  ColumnDefinitions="Auto,*"
+                                  behaviors:TouchOption.Ripple="True">
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource TrailerThumbBorder}">
+                                    <Grid>
+                                        <Image Style="{StaticResource TrailerImage}"
+                                               Source="{Binding Image}" />
+                                        <Border Style="{StaticResource TrailerPlayBorder}">
+                                            <Label Style="{StaticResource TrailerPlayLabel}"
+                                                   Text="▶" />
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Style="{StaticResource TrailerTextStack}">
+                                    <Label Style="{StaticResource TrailerTitleLabel}"
+                                           Text="{Binding Title}" />
+                                    <Label Style="{StaticResource TrailerMetaLabel}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} · {1:m'm 'ss's'}">
+                                                <Binding Path="Kind"
+                                                         Converter="{StaticResource TrailerKindConverter}" />
+                                                <Binding Path="Length" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Grid>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
@@ -508,30 +506,26 @@
                                      Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="module:UIStreamWork">
+                    <DataTemplate x:DataType="models:StreamItem">
                         <Border Style="{StaticResource RelatedBorder}">
-                            <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                <toolkit:SfEffectsView.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding RelatedCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamDetailViewModel}}, x:DataType={x:Type module:UIStreamDetailViewModel}}"
-                                                          CommandParameter="{Binding .}" />
-                                </toolkit:SfEffectsView.GestureRecognizers>
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                            <Grid behaviors:TouchOption.ClickCommand="{Binding RelatedCommand, Source={RelativeSource AncestorType={x:Type module:UIStreamDetailViewModel}}, x:DataType={x:Type module:UIStreamDetailViewModel}}"
+                                  behaviors:TouchOption.ClickCommandParameter="{Binding .}"
+                                  behaviors:TouchOption.Ripple="True">
                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                                <Grid>
-                                    <Image Style="{StaticResource RelatedImage}"
-                                           Source="{Binding Work.Image}" />
-                                    <Border Style="{StaticResource RelatedOverlay}">
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <Label Grid.Column="0"
-                                                   Style="{StaticResource RelatedTitleLabel}"
-                                                   Text="{Binding Work.Title}" />
-                                            <Label Grid.Column="1"
-                                                   Style="{StaticResource RelatedDurationLabel}"
-                                                   Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
-                                        </Grid>
-                                    </Border>
-                                </Grid>
-                            </toolkit:SfEffectsView>
+                                <Image Style="{StaticResource RelatedImage}"
+                                       Source="{Binding Work.Image}" />
+                                <Border Style="{StaticResource RelatedOverlay}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Style="{StaticResource RelatedTitleLabel}"
+                                               Text="{Binding Work.Title}" />
+                                        <Label Grid.Column="1"
+                                               Style="{StaticResource RelatedDurationLabel}"
+                                               Text="{Binding Work.Minutes, Converter={StaticResource RuntimeTextConverter}}" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -39,7 +39,7 @@ public sealed partial class UIKitTrackingViewModel : AppViewModelBase
 
     public UIKitTrackingViewModel(IDispatcher dispatcher)
     {
-        var activity = new KitActivity(DateTime.Now);
+        var activity = KitSample.LoadActivity(DateTime.Now);
         OrderNumber = activity.OrderNumber;
         Eta = activity.OrderEta;
         Steps =

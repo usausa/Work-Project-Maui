@@ -561,57 +561,51 @@
             <Border Style="{StaticResource LinkCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="320">
-                <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                    <toolkit:SfEffectsView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding TrackingCommand}" />
-                    </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource LinkCardGrid}"
-                          ColumnDefinitions="Auto,*,Auto">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource LinkIconBorder}">
-                            <Label Style="{StaticResource LinkIcon}"
-                                   Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource LinkTextStack}">
-                            <Label Style="{StaticResource LinkTitle}"
-                                   Text="{Binding OrderNumber, StringFormat='注文 {0}'}" />
-                            <Label Style="{StaticResource LinkCaption}"
-                                   Text="{Binding OrderEta, StringFormat='配達中 · {0:H:mm} 到着予定'}" />
-                        </VerticalStackLayout>
-                        <Label Grid.Column="2"
-                               Style="{StaticResource LinkChevron}"
-                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                    </Grid>
-                </toolkit:SfEffectsView>
+                <Grid Style="{StaticResource LinkCardGrid}"
+                      ColumnDefinitions="Auto,*,Auto"
+                      behaviors:TouchOption.ClickCommand="{Binding TrackingCommand}"
+                      behaviors:TouchOption.Ripple="True">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource LinkIconBorder}">
+                        <Label Style="{StaticResource LinkIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Local_shipping}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource LinkTextStack}">
+                        <Label Style="{StaticResource LinkTitle}"
+                               Text="{Binding OrderNumber, StringFormat='注文 {0}'}" />
+                        <Label Style="{StaticResource LinkCaption}"
+                               Text="{Binding OrderEta, StringFormat='配達中 · {0:H:mm} 到着予定'}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2"
+                           Style="{StaticResource LinkChevron}"
+                           Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                </Grid>
             </Border>
 
             <Border Style="{StaticResource LinkCardBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="380">
-                <toolkit:SfEffectsView TouchDownEffects="Ripple">
-                    <toolkit:SfEffectsView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OnboardCommand}" />
-                    </toolkit:SfEffectsView.GestureRecognizers>
-                    <Grid Style="{StaticResource LinkCardGrid}"
-                          ColumnDefinitions="Auto,*,Auto">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource LinkIconBorder}">
-                            <Label Style="{StaticResource LinkIcon}"
-                                   Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                             Style="{StaticResource LinkTextStack}">
-                            <Label Style="{StaticResource LinkTitle}"
-                                   Text="はじめに" />
-                            <Label Style="{StaticResource LinkCaption}"
-                                   Text="3 ステップで目標を設定" />
-                        </VerticalStackLayout>
-                        <Label Grid.Column="2"
-                               Style="{StaticResource LinkChevron}"
-                               Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
-                    </Grid>
-                </toolkit:SfEffectsView>
+                <Grid Style="{StaticResource LinkCardGrid}"
+                      ColumnDefinitions="Auto,*,Auto"
+                      behaviors:TouchOption.ClickCommand="{Binding OnboardCommand}"
+                      behaviors:TouchOption.Ripple="True">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource LinkIconBorder}">
+                        <Label Style="{StaticResource LinkIcon}"
+                               Text="{x:Static fonts:MaterialIcons.Rocket_launch}" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Style="{StaticResource LinkTextStack}">
+                        <Label Style="{StaticResource LinkTitle}"
+                               Text="はじめに" />
+                        <Label Style="{StaticResource LinkCaption}"
+                               Text="3 ステップで目標を設定" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2"
+                           Style="{StaticResource LinkChevron}"
+                           Text="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                </Grid>
             </Border>
         </VerticalStackLayout>
     </ScrollView>

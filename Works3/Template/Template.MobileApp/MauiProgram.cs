@@ -336,6 +336,9 @@ public static partial class MauiProgram
                 options.RestoreFocus = false;
                 options.RegisterAppEffects();
             });
+#if false
+            config.AddPlugin<PerfPlugin>();
+#endif
             config.AddPlugin<NavigationTelemetryPlugin>();
             config.AddPlugin<NavigationFocusPlugin>();
             config.AddPlugin<NavigationFeedbackPlugin>();
@@ -476,6 +479,9 @@ public static partial class MauiProgram
 
         // Setup navigator
         var navigator = services.GetRequiredService<INavigator>();
+#if false
+        PerfPlugin.Attach(navigator);
+#endif
         navigator.Navigated += (_, args) =>
         {
             // for debug

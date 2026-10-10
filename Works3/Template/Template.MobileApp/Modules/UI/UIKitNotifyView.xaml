@@ -39,13 +39,13 @@
             <Style x:Key="ReadSwipeItem"
                    TargetType="SwipeItemView">
                 <Setter Property="WidthRequest" Value="88" />
-                <Setter Property="BackgroundColor" Value="{StaticResource GreenDefault}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource GreenLighten4}" />
             </Style>
 
             <Style x:Key="DeleteSwipeItem"
                    TargetType="SwipeItemView">
                 <Setter Property="WidthRequest" Value="88" />
-                <Setter Property="BackgroundColor" Value="{StaticResource RedDefault}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource RedLighten4}" />
             </Style>
 
             <Style x:Key="SwipeIcon"
@@ -53,8 +53,19 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontFamily" Value="MaterialIcons" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Style x:Key="ReadSwipeIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SwipeIcon}">
+                <Setter Property="TextColor" Value="{StaticResource GreenDarken1}" />
+            </Style>
+
+            <Style x:Key="DeleteSwipeIcon"
+                   TargetType="Label"
+                   BasedOn="{StaticResource SwipeIcon}">
+                <Setter Property="TextColor" Value="{StaticResource RedDarken1}" />
             </Style>
 
             <Style x:Key="RowStack"
@@ -160,7 +171,7 @@
                             <SwipeItemView Style="{StaticResource ReadSwipeItem}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=ReadCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource SwipeIcon}"
+                                <Label Style="{StaticResource ReadSwipeIcon}"
                                        Text="{x:Static fonts:MaterialIcons.Check}" />
                             </SwipeItemView>
                         </SwipeItems>
@@ -170,7 +181,7 @@
                             <SwipeItemView Style="{StaticResource DeleteSwipeItem}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIKitNotifyViewModel}}, Path=DeleteCommand, x:DataType={x:Type module:UIKitNotifyViewModel}}"
                                            CommandParameter="{Binding .}">
-                                <Label Style="{StaticResource SwipeIcon}"
+                                <Label Style="{StaticResource DeleteSwipeIcon}"
                                        Text="{x:Static fonts:MaterialIcons.Delete}" />
                             </SwipeItemView>
                         </SwipeItems>

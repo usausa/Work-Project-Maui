@@ -39,7 +39,7 @@ public sealed class UIKitNotifyViewModel : AppViewModelBase
     public UIKitNotifyViewModel()
     {
         var now = DateTime.Now;
-        var eta = new KitActivity(now).OrderEta;
+        var eta = KitSample.LoadActivity(now).OrderEta;
         UIKitNotifyItem[] items =
         [
             new() { Icon = Fonts.MaterialIcons.Local_offer, Title = "本日限定 50% オフ", Description = "週末セールは今夜まで。タップして商品を見る。", Time = now.AddMinutes(-5), IsUnread = true },

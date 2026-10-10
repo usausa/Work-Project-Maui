@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum StreamGenre
 {
     Sf,
@@ -25,6 +29,19 @@ public enum StreamTrailerKind
     Extra
 }
 
+// 棚 (高評価・オリジナル・急上昇・アクション & アドベンチャー)
+public enum StreamShelf
+{
+    TopRated,
+    Original,
+    Trending,
+    Action
+}
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
 public sealed record StreamTrailer(string Image, string Title, StreamTrailerKind Kind, TimeSpan Length);
 
 // Minutes は上映時間 (分)、Match は好みとの一致 (%)
@@ -46,10 +63,73 @@ public sealed record StreamWork(
     string Director,
     IReadOnlyList<StreamTrailer> Trailers);
 
-// 見本の作品 (取得の代わり)
-public static class StreamCatalog
+// 作品と見る人の状態
+public sealed partial class StreamItem : ObservableObject
 {
-    public static IReadOnlyList<StreamWork> Works { get; } =
+    public required StreamWork Work { get; init; }
+
+    // 見た割合 (0 は未視聴)
+    public double Progress { get; init; }
+
+    public bool HasProgress => Progress > 0;
+
+    public int RemainMinutes => (int)Math.Ceiling(Work.Minutes * (1 - Progress));
+
+    [ObservableProperty]
+    public partial bool InMyList { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsFavorite { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsDownloaded { get; set; }
+}
+
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
+
+// 見る人の作品の一覧 (トップ・続きを見る・棚・関連)
+public sealed class StreamLibrary
+{
+    private const int RelatedCount = 4;
+
+    public IReadOnlyList<StreamItem> Items { get; }
+
+    public StreamLibrary(IReadOnlyList<StreamItem> items)
+    {
+        Items = items;
+    }
+
+    public IReadOnlyList<StreamItem> Featured() => Items.Where(static x => x.Work.IsFeatured).ToArray();
+
+    public IReadOnlyList<StreamItem> Continue() => Items.Where(static x => x.HasProgress).ToArray();
+
+    public IReadOnlyList<StreamItem> Shelf(StreamShelf shelf) => shelf switch
+    {
+        StreamShelf.TopRated => Items.OrderByDescending(static x => x.Work.Rating).ToArray(),
+        StreamShelf.Original => Items.Where(static x => x.Work.IsOriginal).ToArray(),
+        StreamShelf.Trending => Items.OrderByDescending(static x => x.Work.Year).ThenByDescending(static x => x.Work.Match).ToArray(),
+        _ => Items.Where(static x => x.Work.Genre is StreamGenre.Action or StreamGenre.Sf or StreamGenre.Fantasy).ToArray()
+    };
+
+    // 関連は同じジャンルの作品を先に
+    public IReadOnlyList<StreamItem> Related(StreamItem item) =>
+        Items
+            .Where(x => x != item)
+            .OrderBy(x => x.Work.Genre == item.Work.Genre ? 0 : 1)
+            .Take(RelatedCount)
+            .ToArray();
+}
+
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 作品の見本 (見ている途中の作品は見た割合も)
+public static class StreamSample
+{
+    private static readonly IReadOnlyList<StreamWork> Works =
     [
         new(
             1, "君の知らない空の果てで", "stream_hero.jpg", 2024, StreamGenre.Sf, 138, "TV-14", 8.4, 98, StreamBadge.NewSeason, true, true,
@@ -91,4 +171,16 @@ public static class StreamCatalog
             "翠川 レイ、白石 カイ", "西村 A.",
             [new("poster06.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 1, 56))])
     ];
+
+    public static IReadOnlyList<StreamItem> LoadItems() =>
+        [.. Works.Select(static x => new StreamItem { Work = x, Progress = ProgressOf(x.Id) })];
+
+    // 見本の視聴の進み具合
+    private static double ProgressOf(int id) => id switch
+    {
+        1 => 0.4,
+        5 => 0.7,
+        6 => 0.25,
+        _ => 0
+    };
 }

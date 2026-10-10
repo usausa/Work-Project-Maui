@@ -9,8 +9,6 @@ using Microsoft.Extensions.AI;
 using OllamaSharp;
 using OllamaSharp.Models.Exceptions;
 
-using Template.MobileApp.Models.Sample.Chat;
-
 using AiMessage = Microsoft.Extensions.AI.ChatMessage;
 
 public sealed partial class SampleChatViewModel : AppViewModelBase

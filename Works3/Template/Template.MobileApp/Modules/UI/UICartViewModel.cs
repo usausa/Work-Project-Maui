@@ -12,7 +12,7 @@ public sealed partial class UICartViewModel : AppViewModelBase
 
     // 確定した注文 (IsCompleted の後に表示する)
     [ObservableProperty]
-    public partial UIShopOrder Order { get; set; } = default!;
+    public partial ShopOrder Order { get; set; } = default!;
 
     [ObservableProperty]
     public partial bool IsCompleted { get; set; }
@@ -37,9 +37,9 @@ public sealed partial class UICartViewModel : AppViewModelBase
     {
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
 #pragma warning disable IDE0200
-        IncrementCommand = MakeDelegateCommand<UIShopCartItem>(x => Context.Increase(x));
-        DecrementCommand = MakeDelegateCommand<UIShopCartItem>(x => Context.Decrease(x));
-        RemoveCommand = MakeDelegateCommand<UIShopCartItem>(x => Context.Remove(x));
+        IncrementCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Increase(x));
+        DecrementCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Decrease(x));
+        RemoveCommand = MakeDelegateCommand<ShopCartItem>(x => Context.Store.Remove(x));
 #pragma warning restore IDE0200
         CheckoutCommand = MakeDelegateCommand(() =>
         {

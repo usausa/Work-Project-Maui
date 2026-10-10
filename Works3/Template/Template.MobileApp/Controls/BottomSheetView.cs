@@ -112,6 +112,9 @@ public sealed class BottomSheetView : Grid
     // 表示前 (高さ未確定) に開かれたときは、レイアウト後に開く
     private bool pendingOpen;
 
+    // 背景とシートは初めて開くときに加える (画面を開くときに作らない)
+    private bool attached;
+
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
@@ -199,9 +202,6 @@ public sealed class BottomSheetView : Grid
             Content = body
         };
 
-        Children.Add(backdrop);
-        Children.Add(sheet);
-
         SizeChanged += (_, _) => UpdateSheetSize();
     }
 
@@ -216,7 +216,7 @@ public sealed class BottomSheetView : Grid
 
     private void UpdateSheetSize()
     {
-        if ((Width <= 0) || (Height <= 0))
+        if (!attached || (Width <= 0) || (Height <= 0))
         {
             return;
         }
@@ -241,6 +241,13 @@ public sealed class BottomSheetView : Grid
             if ((SheetContent is null) && (SheetTemplate is not null))
             {
                 SheetContent = (View)SheetTemplate.CreateContent();
+            }
+
+            if (!attached)
+            {
+                attached = true;
+                Children.Add(backdrop);
+                Children.Add(sheet);
             }
 
             expanded = false;

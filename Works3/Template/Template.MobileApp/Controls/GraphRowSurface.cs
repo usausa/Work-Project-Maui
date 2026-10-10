@@ -4,8 +4,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
-using Template.MobileApp.Models.Sample.Graph;
-
 public sealed class GraphRowSurface : SKCanvasView
 {
     private const float DefaultRowHeight = 26f;

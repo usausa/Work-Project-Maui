@@ -513,10 +513,10 @@
                         Command="{Binding CartCommand}"
                         Text="{x:Static fonts:MaterialIcons.Shopping_cart}" />
                 <Border Style="{StaticResource CartBadgeBorder}"
-                        behaviors:AnimationOption.BounceTrigger="{Binding Context.CartCount}"
-                        IsVisible="{Binding Context.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
+                        behaviors:AnimationOption.BounceTrigger="{Binding Context.Store.CartCount}"
+                        IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}">
                     <Label Style="{StaticResource CartBadgeLabel}"
-                           Text="{Binding Context.CartCount, Converter={StaticResource BadgeCountConverter}}" />
+                           Text="{Binding Context.Store.CartCount, Converter={StaticResource BadgeCountConverter}}" />
                 </Border>
             </Grid>
         </Grid>

@@ -23,13 +23,7 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial MapType CurrentMapType { get; set; } = MapType.Street;
 
-    public IReadOnlyList<MapSpot> Spots { get; } =
-    [
-        new() { Name = "皇居", Description = "千代田区千代田", Location = new Location(35.685175, 139.752800) },
-        new() { Name = "東京タワー", Description = "港区芝公園", Location = new Location(35.658581, 139.745433) },
-        new() { Name = "東京スカイツリー", Description = "墨田区押上", Location = new Location(35.710063, 139.810700) },
-        new() { Name = "浅草寺", Description = "台東区浅草", Location = new Location(35.714765, 139.796655) }
-    ];
+    public IReadOnlyList<MapSpot> Spots { get; } = MapSample.LoadSpots();
 
     [ObservableProperty]
     public partial bool RouteVisible { get; set; }

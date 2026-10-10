@@ -147,17 +147,8 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-        </ResourceDictionary>
-    </ContentView.Resources>
-    <!-- ReSharper restore Xaml.RedundantResource -->
-
-    <Grid>
-
-        <sf:SfBottomSheet Style="{StaticResource SfSheet}"
-                          IsOpen="{Binding IsSfSheetOpen}"
-                          IsModal="True">
-
-            <sf:SfBottomSheet.BottomSheetContent>
+            <DataTemplate x:Key="SfSheetTemplate"
+                          x:DataType="module:ViewBottomSheetViewModel">
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
                     <Label Style="{StaticResource SheetTitleLabel}"
                            Text="SfBottomSheet" />
@@ -190,6 +181,20 @@
                             Command="{Binding CloseCommand}"
                             Text="閉じる" />
                 </VerticalStackLayout>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <!-- ReSharper restore Xaml.RedundantResource -->
+
+    <Grid>
+
+        <sf:SfBottomSheet Style="{StaticResource SfSheet}"
+                          IsOpen="{Binding IsSfSheetOpen}"
+                          IsModal="True">
+
+            <sf:SfBottomSheet.BottomSheetContent>
+                <ContentView behaviors:LazyViewOption.Load="{Binding IsSfSheetOpen}"
+                             behaviors:LazyViewOption.Template="{StaticResource SfSheetTemplate}" />
             </sf:SfBottomSheet.BottomSheetContent>
 
             <ScrollView Style="{StaticResource RootScroll}">
@@ -252,40 +257,42 @@
 
         <controls:BottomSheetView Style="{StaticResource CustomSheet}"
                                   IsOpen="{Binding IsCustomSheetOpen}">
-            <controls:BottomSheetView.SheetContent>
-                <VerticalStackLayout Style="{StaticResource SheetStack}">
-                    <Label Style="{StaticResource SheetTitleLabel}"
-                           Text="BottomSheet (自作)" />
-                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Actions}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type x:String}">
-                                <VerticalStackLayout>
-                                    <Grid Style="{StaticResource SheetItemGrid}"
-                                          ColumnDefinitions="Auto,*">
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewBottomSheetViewModel}}, Path=SelectCommand, x:DataType={x:Type module:ViewBottomSheetViewModel}}"
-                                                                  CommandParameter="{Binding .}" />
-                                        </Grid.GestureRecognizers>
-                                        <Label Grid.Column="0"
-                                               Style="{StaticResource SheetItemIcon}"
-                                               Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
-                                               TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
-                                        <Label Grid.Column="1"
-                                               Style="{StaticResource SheetItemLabel}"
-                                               Text="{Binding .}" />
-                                    </Grid>
-                                    <BoxView Style="{StaticResource SheetSeparator}" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+            <controls:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="module:ViewBottomSheetViewModel">
+                    <VerticalStackLayout Style="{StaticResource SheetStack}">
+                        <Label Style="{StaticResource SheetTitleLabel}"
+                               Text="BottomSheet (自作)" />
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Actions}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type x:String}">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource SheetItemGrid}"
+                                              ColumnDefinitions="Auto,*">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:ViewBottomSheetViewModel}}, Path=SelectCommand, x:DataType={x:Type module:ViewBottomSheetViewModel}}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource SheetItemIcon}"
+                                                   Text="{Binding ., Converter={StaticResource ActionIconConverter}}"
+                                                   TextColor="{Binding ., Converter={StaticResource ActionColorConverter}}" />
+                                            <Label Grid.Column="1"
+                                                   Style="{StaticResource SheetItemLabel}"
+                                                   Text="{Binding .}" />
+                                        </Grid>
+                                        <BoxView Style="{StaticResource SheetSeparator}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        <Button Style="{StaticResource SheetCloseButton}"
+                                Command="{Binding CloseCommand}"
+                                Text="閉じる" />
                     </VerticalStackLayout>
-                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    <Button Style="{StaticResource SheetCloseButton}"
-                            Command="{Binding CloseCommand}"
-                            Text="閉じる" />
-                </VerticalStackLayout>
-            </controls:BottomSheetView.SheetContent>
+                </DataTemplate>
+            </controls:BottomSheetView.SheetTemplate>
         </controls:BottomSheetView>
 
     </Grid>

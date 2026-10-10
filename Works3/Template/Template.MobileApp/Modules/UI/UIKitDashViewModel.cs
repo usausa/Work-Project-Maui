@@ -35,7 +35,7 @@ public sealed class UIKitDashTileTemplateSelector : DataTemplateSelector
 
 public sealed partial class UIKitDashViewModel : AppViewModelBase
 {
-    private readonly KitActivity activity = new(DateTime.Now);
+    private readonly KitActivity activity = KitSample.LoadActivity(DateTime.Now);
 
     public string Greeting { get; } = "おはようございます";
     public string UserName { get; } = "うさうささん";
@@ -137,11 +137,11 @@ public sealed partial class UIKitDashViewModel : AppViewModelBase
     {
         var period = (KitPeriod)PeriodIndex;
 
-        var steps = activity.StepSeries(period);
+        var steps = KitSample.LoadStepSeries(activity, period);
         StepChart.ShowBar(steps.Values, steps.Labels);
         StepTotal = (int)steps.Values.Sum();
 
-        var heart = activity.HeartSeries(period);
+        var heart = KitSample.LoadHeartSeries(activity, period);
         HeartChart.ShowLine(heart.Values, heart.Labels);
         HeartAverage = (int)Math.Round(heart.Values.Average());
     }

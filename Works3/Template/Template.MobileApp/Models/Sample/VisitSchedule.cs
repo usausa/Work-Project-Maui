@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum VisitStatus
 {
     Planned,
@@ -16,6 +20,10 @@ public enum VisitCategory
     Collection
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
+
 // 訪問先 1 件
 public sealed record VisitInfo(
     string Code,
@@ -31,7 +39,11 @@ public sealed record VisitInfo(
     string Note);
 
 #pragma warning disable CA5394
-public static class VisitSamples
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+public static class VisitSample
 {
     private static readonly string[] Names =
     [
@@ -50,7 +62,7 @@ public static class VisitSamples
         "午前中の訪問を希望", "インターホンが故障中。ノック", "駐車場は裏手", "担当者変更の連絡あり", "再訪問時は資料を持参", "犬に注意", string.Empty, string.Empty
     ];
 
-    public static VisitInfo[] Create(int count, int seed = 20260913)
+    public static VisitInfo[] LoadVisits(int count, int seed = 20260913)
     {
         var random = new Random(seed);
         var today = DateTime.Today;

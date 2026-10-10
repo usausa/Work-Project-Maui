@@ -1,5 +1,9 @@
 namespace Template.MobileApp.Models.Sample;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
+
 public enum HabitCategory
 {
     Fitness,
@@ -7,6 +11,10 @@ public enum HabitCategory
     Learning,
     Work
 }
+
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 
 public sealed partial class HabitItem : ObservableObject
 {
@@ -40,6 +48,10 @@ public sealed partial class HabitDay : ObservableObject
     public partial bool IsAchieved { get; set; }
 }
 
+//--------------------------------------------------------------------------------
+// Service
+//--------------------------------------------------------------------------------
+
 // 習慣を 1 つ進めると今日の進みも進み、目標に届いた習慣は連続日数が 1 増える
 public sealed partial class HabitTracker : ObservableObject
 {
@@ -54,21 +66,12 @@ public sealed partial class HabitTracker : ObservableObject
 
     public double Progress => TotalSteps > 0 ? (double)DoneSteps / TotalSteps : 0d;
 
-    public HabitTracker(DateTime today)
+    public HabitTracker(IEnumerable<HabitItem> habits, IEnumerable<HabitDay> week)
     {
-        Habits.Add(new HabitItem { Name = "水を飲む", Category = HabitCategory.Fitness, Goal = "1日2.5L", Steps = 8, Done = 6, Streak = 12 });
-        Habits.Add(new HabitItem { Name = "朝のヨガ", Category = HabitCategory.Wellness, Goal = "15分", Steps = 2, Done = 2, Streak = 21 });
-        Habits.Add(new HabitItem { Name = "読書", Category = HabitCategory.Learning, Goal = "20分", Steps = 5, Done = 2, Streak = 8 });
-        Habits.Add(new HabitItem { Name = "コードを書く", Category = HabitCategory.Work, Goal = "1時間", Steps = 3, Done = 2, Streak = 5 });
+        Habits.AddRange(habits);
+        Week.AddRange(week);
         TotalSteps = Habits.Sum(static x => x.Steps);
         DoneSteps = Habits.Sum(static x => x.Done);
-
-        bool[] achieved = [true, true, false, true, true, true];
-        for (var i = 0; i < achieved.Length; i++)
-        {
-            Week.Add(new HabitDay { Date = today.AddDays(i - achieved.Length), IsAchieved = achieved[i] });
-        }
-        Week.Add(new HabitDay { Date = today, IsToday = true });
     }
 
     public void Step(HabitItem item)
@@ -84,5 +87,31 @@ public sealed partial class HabitTracker : ObservableObject
             DoneSteps++;
             Week[^1].IsAchieved = DoneSteps >= TotalSteps;
         }
+    }
+}
+
+//--------------------------------------------------------------------------------
+// Sample
+//--------------------------------------------------------------------------------
+
+// 習慣の見本 (4 つの習慣と、今週の達成)
+public static class HabitSample
+{
+    public static IReadOnlyList<HabitItem> LoadHabits() =>
+    [
+        new() { Name = "水を飲む", Category = HabitCategory.Fitness, Goal = "1日2.5L", Steps = 8, Done = 6, Streak = 12 },
+        new() { Name = "朝のヨガ", Category = HabitCategory.Wellness, Goal = "15分", Steps = 2, Done = 2, Streak = 21 },
+        new() { Name = "読書", Category = HabitCategory.Learning, Goal = "20分", Steps = 5, Done = 2, Streak = 8 },
+        new() { Name = "コードを書く", Category = HabitCategory.Work, Goal = "1時間", Steps = 3, Done = 2, Streak = 5 }
+    ];
+
+    public static IReadOnlyList<HabitDay> LoadWeek(DateTime today)
+    {
+        bool[] achieved = [true, true, false, true, true, true];
+        return
+        [
+            .. achieved.Select((x, i) => new HabitDay { Date = today.AddDays(i - achieved.Length), IsAchieved = x }),
+            new HabitDay { Date = today, IsToday = true }
+        ];
     }
 }

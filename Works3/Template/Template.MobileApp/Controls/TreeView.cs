@@ -2,23 +2,6 @@ namespace Template.MobileApp.Controls;
 
 using Fonts;
 
-public sealed class TreeNode
-{
-    public string Text { get; }
-
-    public IReadOnlyList<TreeNode> Children { get; }
-
-    public bool HasChildren => Children.Count > 0;
-
-    public bool IsExpanded { get; set; }
-
-    public TreeNode(string text, params TreeNode[] children)
-    {
-        Text = text;
-        Children = children;
-    }
-}
-
 // 階層データを展開/折りたたみ付きで表示する簡易 TreeView。
 // 表示中のノードをフラット化して並べ直す方式 (サンプル規模向け)
 public sealed class TreeView : ContentView

@@ -9,7 +9,7 @@ public sealed record UIShopPriceOption(int? MaxPrice, string Name);
 // 人気の商品のカルーセルの項目 (中央の項目を強調する)
 public sealed partial class UIShopPopularItem : ObservableObject
 {
-    public required UIShopProduct Item { get; init; }
+    public required ShopItem Item { get; init; }
 
     [ObservableProperty]
     public partial bool IsCurrent { get; set; }
@@ -78,8 +78,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<UIShopPopularItem> Popular { get; set; } = [];
 
-    [ObservableProperty]
-    public partial IReadOnlyList<UIShopProduct> Items { get; set; } = [];
+    public ObservableCollection<ShopItem> Items { get; } = [];
 
     public IObserveCommand ItemCommand { get; }
 
@@ -106,7 +105,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
         SubscribeSelectedSort(_ => Filter());
         SubscribeSelectedPrice(_ => Filter());
 
-        ItemCommand = MakeAsyncCommand<UIShopProduct>(OpenAsync);
+        ItemCommand = MakeAsyncCommand<ShopItem>(OpenAsync);
         CurrentChangedCommand = MakeDelegateCommand<UIShopPopularItem>(x =>
         {
             foreach (var item in Popular)
@@ -114,7 +113,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
                 item.IsCurrent = item == x;
             }
         });
-        FavoriteCommand = MakeDelegateCommand<UIShopProduct>(static x => x.IsFavorite = !x.IsFavorite);
+        FavoriteCommand = MakeDelegateCommand<ShopItem>(static x => x.IsFavorite = !x.IsFavorite);
         CartCommand = MakeAsyncCommand(() => Navigator.PushAsync(ViewId.UICart));
 
         FilterCommand = MakeDelegateCommand(() => IsFilterOpen = true);
@@ -135,7 +134,7 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     {
         if (!context.Attribute.IsRestore())
         {
-            Popular = Context.Products
+            Popular = Context.Store.Items
                 .Where(static x => x.Product.IsPopular)
                 .Select(static x => new UIShopPopularItem { Item = x })
                 .ToArray();
@@ -154,9 +153,9 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    private Task OpenAsync(UIShopProduct product)
+    private Task OpenAsync(ShopItem item)
     {
-        Context.Selected = product;
+        Context.Selected = item;
         return Navigator.PushAsync(ViewId.UIItem);
     }
 
@@ -164,6 +163,26 @@ public sealed partial class UIShopViewModel : AppViewModelBase
     // Helper
     //--------------------------------------------------------------------------------
 
-    private void Filter() =>
-        Items = Context.Find(SelectedCategory.Category, SearchText, SelectedSort.Sort, SelectedPrice.MaxPrice);
+    // 一覧を入れ替えたり途中で空にしたりすると見出しまで作り直されて動きが出直すので、先に足して並べ、残りを外す
+    private void Filter()
+    {
+        var items = Context.Store.Find(SelectedCategory.Category, SearchText, SelectedSort.Sort, SelectedPrice.MaxPrice);
+        for (var i = 0; i < items.Count; i++)
+        {
+            var index = Items.IndexOf(items[i]);
+            if (index < 0)
+            {
+                Items.Insert(i, items[i]);
+            }
+            else if (index != i)
+            {
+                Items.Move(index, i);
+            }
+        }
+
+        while (Items.Count > items.Count)
+        {
+            Items.RemoveAt(Items.Count - 1);
+        }
+    }
 }

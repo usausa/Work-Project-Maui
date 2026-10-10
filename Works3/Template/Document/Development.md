@@ -200,6 +200,26 @@ adb logcat -s SceneStats
 
 計測例として、SceneControl(SKCanvasViewの60fps自走描画)のダブルバッファ有無をUI > TelemetryのFunction2トグルで切り替えて比較した結果、直描きが約30fps(平均16.5〜17.8ms)、ダブルバッファが約60fps(平均14.0〜14.5ms)となり、`SceneObject.UseDoubleBuffer`を既定ONとしている。  
 
+## 画面を開く時間の計測
+
+`Extender/PerfPlugin.cs` は、画面遷移の時間と画面の要素の数をデバッグ出力に書く。普段は無効で、使うときは `MauiProgram.cs` の 2 か所の `#if false`(`config.AddPlugin<PerfPlugin>()` と `PerfPlugin.Attach(navigator)`)を `#if true` にして Debug で実行する。出力は Visual Studio の出力ウィンドウ(デバッグ)か logcat の `[NAV]` の行で見る。  
+
+```
+adb logcat -v time | findstr /l /c:"[NAV]"
+```
+
+| 行 | 内容 |
+|---|---|
+| `[NAV] start` | 遷移の始まり(以降の時間はここからの ms) |
+| `[NAV] create <画面> <ms>` | 画面を作り終えた |
+| `[NAV] navigatingTo <ViewId> <ms>` / `[NAV] navigatedTo <ViewId> <ms>` | 表示の前・後のイベント |
+| `[NAV] frame <ViewId> <ms> elements=<数>` | 表示の後の最初の処理(画面を開く時間の目安)と、画面の要素の数 |
+| `[NAV] tree <ViewId> hidden=<数> inList=<数> types=...` | 隠れている要素(`IsVisible` が False の要素とその中)の数、一覧の中の要素の数、種類ごとの数 |
+| `[NAV] hidden <ViewId> ...` | 隠れている要素の種類ごとの数 |
+
+- Debug の時間は Release より長いので、変更の前後を比べるのに使う。同じ画面を何回か開き、2 回目以降の値で比べる(1 回目は型の読み込みなどを含む)
+- 隠れている要素が多い画面は、初めて表示するときに作る形(`LazyViewOption.Template` / `BottomSheetView.SheetTemplate`)で開く時間を短くできる
+
 ## AI エージェントでの開発支援
 
 エージェント(Claude Code・GitHub Copilot など)への指示は `AGENTS.md`(`CLAUDE.md` から読む)にまとめている。手順(ビルド・配置・InspectCode・Xaml Styler・計測)は本書に書き、エージェント向けのスキルと MCP の設定は置いていない。

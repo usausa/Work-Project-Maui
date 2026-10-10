@@ -15,7 +15,7 @@ public sealed class UIHabitViewModel : AppViewModelBase
 
     public UIHabitViewModel()
     {
-        Tracker = new HabitTracker(Today);
+        Tracker = new HabitTracker(HabitSample.LoadHabits(), HabitSample.LoadWeek(Today));
 
         BackCommand = MakeAsyncCommand(OnNotifyBackAsync);
         StepCommand = MakeDelegateCommand<HabitItem>(Tracker.Step);

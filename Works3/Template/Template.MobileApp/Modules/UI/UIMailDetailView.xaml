@@ -4,6 +4,7 @@
              xmlns:s="http://smart/maui"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UIMailDetailView"
@@ -160,9 +161,10 @@
 
             <Grid Style="{StaticResource SenderGrid}"
                   ColumnDefinitions="Auto,*">
-                <Image Grid.Column="0"
-                       Style="{StaticResource SenderImage}"
-                       Source="{Binding Context.Selected.Image}" />
+                <controls:MailAvatarImage Grid.Column="0"
+                                          Style="{StaticResource SenderImage}"
+                                          Avatar="{Binding Context.Selected.Avatar}"
+                                          Sender="{Binding Context.Selected.From}" />
                 <VerticalStackLayout Grid.Column="1"
                                      Style="{StaticResource SenderTextStack}">
                     <Label Style="{StaticResource SenderNameLabel}"

@@ -14,6 +14,7 @@ internal static class AppHostBuilderExtensions
 
         Border.UseCustomMapper(options);
         Scroll.UseCustomMapper(options);
+        TouchOption.UseCustomMapper(options);
 
         LabelOption.UseCustomMapper(options);
         ButtonOption.UseCustomMapper(options);
