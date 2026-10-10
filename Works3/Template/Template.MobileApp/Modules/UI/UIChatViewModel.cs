@@ -18,13 +18,19 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         "stamp05.png", "stamp06.png", "stamp07.png", "stamp08.png"
     ];
 
+    private static readonly string[] ReactionEmojis = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
+
     private readonly IDispatcher dispatcher;
+
+    private ChatMessage? reactionTarget;
 
     public CollectionController Controller { get; } = new();
 
     public ObservableCollection<ChatMessage> Messages { get; } = [];
 
     public IReadOnlyList<string> StampList { get; } = Stamps;
+
+    public IReadOnlyList<string> ReactionList { get; } = ReactionEmojis;
 
     public string CurrentUser { get; } = "自分";
 
@@ -39,6 +45,8 @@ public sealed partial class UIChatViewModel : AppViewModelBase
     public IObserveCommand PickImageCommand { get; }
     public IObserveCommand PickStickerCommand { get; }
     public IObserveCommand ScrollToLatestCommand { get; }
+    public IObserveCommand SelectCommand { get; }
+    public IObserveCommand AddReactionCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -50,9 +58,16 @@ public sealed partial class UIChatViewModel : AppViewModelBase
 
         SendCommand = MakeDelegateCommand(ExecuteSend, () => !String.IsNullOrWhiteSpace(InputText));
         SendStampCommand = MakeDelegateCommand<string>(ExecuteSendStamp);
-        PickImageCommand = MakeDelegateCommand(static () => { });
-        PickStickerCommand = MakeDelegateCommand(() => IsStampTrayVisible = !IsStampTrayVisible);
+        PickImageCommand = MakeAsyncCommand(PickImageAsync);
+        PickStickerCommand = MakeDelegateCommand(() =>
+        {
+            var open = !IsStampTrayVisible;
+            CloseTrays();
+            IsStampTrayVisible = open;
+        });
         ScrollToLatestCommand = MakeDelegateCommand(() => ScrollToLast());
+        SelectCommand = MakeDelegateCommand<ChatMessage>(SelectMessage);
+        AddReactionCommand = MakeDelegateCommand<string>(AddReaction);
     }
 
     //--------------------------------------------------------------------------------
@@ -74,7 +89,16 @@ public sealed partial class UIChatViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if ((reactionTarget is not null) || IsStampTrayVisible)
+        {
+            CloseTrays();
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -104,8 +128,57 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             TextContent = InputText.Trim()
         });
         InputText = string.Empty;
-        IsStampTrayVisible = false;
+        CloseTrays();
         ScrollToLast();
+    }
+
+    private async Task PickImageAsync()
+    {
+        var files = await MediaPicker.Default.PickPhotosAsync(new MediaPickerOptions { SelectionLimit = 1 });
+        var file = files.FirstOrDefault();
+        if (file is not null)
+        {
+            Messages.Add(new ChatMessage
+            {
+                Type = MessageType.Send,
+                DateTime = DateTime.Now,
+                Author = CurrentUser,
+                AvatarSource = AvatarMe,
+                PhotoSource = file.FullPath,
+                TextContent = string.Empty
+            });
+            CloseTrays();
+            ScrollToLast();
+        }
+    }
+
+    // 同じメッセージをもう一度押すと閉じる
+    private void SelectMessage(ChatMessage message)
+    {
+        var select = !message.IsSelected;
+        CloseTrays();
+        if (select)
+        {
+            message.IsSelected = true;
+            reactionTarget = message;
+
+            // 下に出す帯が隠れないよう、選んだメッセージが見える位置までスクロールする
+            var index = Messages.IndexOf(message);
+            dispatcher.Dispatch(() => Controller.ScrollRequest(index, position: ScrollToPosition.MakeVisible));
+        }
+    }
+
+    private void AddReaction(string emoji)
+    {
+        reactionTarget?.AddReaction(emoji);
+        CloseTrays();
+    }
+
+    private void CloseTrays()
+    {
+        reactionTarget?.IsSelected = false;
+        reactionTarget = null;
+        IsStampTrayVisible = false;
     }
 
     private void ExecuteSendStamp(string stamp)
@@ -119,7 +192,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             StampSource = stamp,
             TextContent = string.Empty
         });
-        IsStampTrayVisible = false;
+        CloseTrays();
         ScrollToLast();
     }
 
@@ -178,7 +251,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             Author = author,
             AvatarSource = avatar,
             TextContent = text,
-            Reactions = reactions ?? []
+            Reactions = [.. reactions ?? []]
         });
 
     private void AddReceiveStamp(DateTime dateTime, string author, string avatar, string stampSource) =>
@@ -215,7 +288,7 @@ public sealed partial class UIChatViewModel : AppViewModelBase
             AvatarSource = AvatarMe,
             TextContent = text,
             IsRead = isRead,
-            Reactions = reactions ?? []
+            Reactions = [.. reactions ?? []]
         });
 
     //--------------------------------------------------------------------------------

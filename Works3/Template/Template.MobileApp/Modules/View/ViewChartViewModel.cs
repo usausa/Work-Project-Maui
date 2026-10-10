@@ -5,6 +5,12 @@ using Template.MobileApp.Graphics.Drawing;
 #pragma warning disable CA5394
 public sealed partial class ViewChartViewModel : AppViewModelBase
 {
+    private static readonly string[] Months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+    private static readonly string[] Regions = ["東京", "大阪", "名古屋", "福岡", "札幌"];
+
+    private static readonly string[] Weekdays = ["月", "火", "水", "木", "金", "土", "日"];
+
     private readonly Random random = new();
 
     [ObservableProperty]
@@ -21,6 +27,7 @@ public sealed partial class ViewChartViewModel : AppViewModelBase
     public ViewChartViewModel()
     {
         Disposables.Add(Drawing);
+        Drawing.SeriesNames = ["製品 A", "製品 B", "製品 C"];
 
         SelectCommand = MakeDelegateCommand<ChartKind>(Show);
     }
@@ -52,18 +59,20 @@ public sealed partial class ViewChartViewModel : AppViewModelBase
         switch (kind)
         {
             case ChartKind.Line:
-                Drawing.ShowLine(CreateWalk(12, 50, 12));
+                Drawing.ShowLine(CreateWalk(12, 50, 12), Months);
                 break;
             case ChartKind.Bar:
-                Drawing.ShowBar(CreateWalk(12, 50, 15));
+                Drawing.ShowBar(CreateWalk(12, 50, 15), Months);
                 break;
             case ChartKind.Donut:
-                Drawing.ShowDonut(Enumerable.Range(0, 5).Select(_ => (double)random.Next(10, 40)).ToList());
+                Drawing.ShowDonut(Enumerable.Range(0, 5).Select(_ => (double)random.Next(10, 40)).ToList(), Regions);
                 break;
             case ChartKind.Stacked:
-                Drawing.ShowStacked(Enumerable.Range(0, 6)
-                    .Select(_ => Enumerable.Range(0, 3).Select(_ => (double)random.Next(10, 40)).ToArray())
-                    .ToList());
+                Drawing.ShowStacked(
+                    Enumerable.Range(0, 6)
+                        .Select(_ => Enumerable.Range(0, 3).Select(_ => (double)random.Next(10, 40)).ToArray())
+                        .ToList(),
+                    Months[3..9]);
                 break;
             case ChartKind.Scatter:
                 Drawing.ShowScatter(Enumerable.Range(0, 24)
@@ -71,14 +80,19 @@ public sealed partial class ViewChartViewModel : AppViewModelBase
                     .ToList());
                 break;
             case ChartKind.Heat:
-                Drawing.ShowHeat(Enumerable.Range(0, 7)
-                    .Select(r => Enumerable.Range(0, 12)
-                        .Select(c => (Math.Sin((r * 0.9d) + (c * 0.5d)) * 40d) + random.Next(0, 30))
-                        .ToArray())
-                    .ToArray());
+                Drawing.ShowHeat(
+                    Enumerable.Range(0, 7)
+                        .Select(r => Enumerable.Range(0, 12)
+                            .Select(c => (Math.Sin((r * 0.9d) + (c * 0.5d)) * 40d) + random.Next(0, 30))
+                            .ToArray())
+                        .ToArray(),
+                    Weekdays,
+                    Enumerable.Range(0, 12).Select(static x => $"{x * 2}時").ToList());
                 break;
             default:
-                Drawing.ShowCandle(CreateCandles(12));
+                Drawing.ShowCandle(
+                    CreateCandles(12),
+                    Enumerable.Range(0, 12).Select(static x => DateTime.Today.AddDays(x - 11).ToString("M/d", CultureInfo.CurrentCulture)).ToList());
                 break;
         }
     }

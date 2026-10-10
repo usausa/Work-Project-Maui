@@ -9,7 +9,27 @@ public enum MailPage
 
 public sealed partial class UIMailViewModel : AppViewModelBase
 {
+    private const int InitialSize = 144;
+
+    // 頭文字のアイコンの色 (名前から決める)
+    private static readonly SKColor[] InitialColors =
+    [
+        SKColor.Parse("#FB8C00"),
+        SKColor.Parse("#00897B"),
+        SKColor.Parse("#D81B60"),
+        SKColor.Parse("#43A047"),
+        SKColor.Parse("#3949AB"),
+        SKColor.Parse("#6D4C41"),
+        SKColor.Parse("#8E24AA")
+    ];
+
+    private static readonly SKTypeface InitialTypeface = SKFontManager.Default.MatchCharacter('あ') ?? SKTypeface.Default;
+
     private readonly IFileSystem fileSystem;
+
+    [Scope]
+    [ObservableProperty]
+    public partial UIMailContext Context { get; set; } = default!;
 
     [ObservableProperty]
     public partial MailPage Selected { get; set; } = MailPage.Mail;
@@ -17,13 +37,26 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool IsLoading { get; set; }
 
-    public ObservableCollection<MailMessage> Messages { get; } = [];
+    [ObservableProperty]
+    public partial bool IsDrawerOpen { get; set; }
+
+    public string OwnerName { get; } = "うさうささん";
+
+    public ImageSource OwnerImage { get; }
 
     public ICommand ArchiveCommand { get; }
 
     public ICommand DeleteCommand { get; }
 
     public IObserveCommand SelectCommand { get; }
+
+    public IObserveCommand OpenCommand { get; }
+
+    public IObserveCommand StarCommand { get; }
+
+    public IObserveCommand DrawerCommand { get; }
+
+    public IObserveCommand FolderCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -34,21 +67,40 @@ public sealed partial class UIMailViewModel : AppViewModelBase
         this.fileSystem = fileSystem;
 
         SelectCommand = MakeDelegateCommand<MailPage>(x => Selected = x);
-        ArchiveCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
-        DeleteCommand = MakeDelegateCommand<MailMessage>(x => Messages.Remove(x));
+        ArchiveCommand = MakeDelegateCommand<MailMessage>(Archive);
+        DeleteCommand = MakeDelegateCommand<MailMessage>(Delete);
+        OpenCommand = MakeAsyncCommand<MailMessage>(OpenAsync);
+        StarCommand = MakeDelegateCommand<MailMessage>(ToggleStar);
+        DrawerCommand = MakeDelegateCommand(() => IsDrawerOpen = true);
+        FolderCommand = MakeDelegateCommand<UIMailFolderItem>(ShowFolder);
+
+        OwnerImage = CreateInitialImage(OwnerName);
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
+    // 本文の画面から戻ったときは読み込まない
     // ReSharper disable once ArrangeModifiersOrder
     public override async Task OnNavigatedToAsync(INavigationContext context)
     {
-        await Navigator.PostActionAsync(LoadMessagesAsync);
+        if (!Context.IsLoaded)
+        {
+            await Navigator.PostActionAsync(LoadMessagesAsync);
+        }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsDrawerOpen)
+        {
+            IsDrawerOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -56,7 +108,24 @@ public sealed partial class UIMailViewModel : AppViewModelBase
     // Operation
     //--------------------------------------------------------------------------------
 
-    // ReSharper disable StringLiteralTypo
+    private Task OpenAsync(MailMessage message)
+    {
+        Context.Open(message);
+        return Navigator.PushAsync(ViewId.UIMailDetail);
+    }
+
+    private void Archive(MailMessage message) => Context.Archive(message);
+
+    private void Delete(MailMessage message) => Context.Delete(message);
+
+    private void ToggleStar(MailMessage message) => Context.ToggleStar(message);
+
+    private void ShowFolder(UIMailFolderItem folder)
+    {
+        IsDrawerOpen = false;
+        Context.Show(folder.View);
+    }
+
     private async Task LoadMessagesAsync()
     {
         IsLoading = true;
@@ -64,83 +133,40 @@ public sealed partial class UIMailViewModel : AppViewModelBase
         // Simulate delay
         await Task.Delay(500);
 
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now,
-            Image = await LoadImage("mofusand.jpg"),
-            From = "山奥通信",
-            Title = "タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん",
-            Body = "こんにちは。\nうさうさです、どうぞよろしくお願いしますだよもん。\n文章はまだ続きます。",
-            IsUnread = true
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddHours(-3).AddMinutes(-12),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!",
-            IsUnread = true
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddHours(-6).AddMinutes(-15),
-            Image = await LoadImage("mofusand.jpg"),
-            From = "山奥通信",
-            Title = "タイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもんタイトルだよもん",
-            Body = "こんにちは。\n私はうさうさです。\nどうぞよろしくお願いしますだよもん。\n文章はまだ続きます。"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-1),
-            Image = await LoadImage("usausa.png"),
-            From = "うさうさ・メープル・フレンチトースト",
-            Title = "Re: Re: おはようございます！",
-            Body = "こんにちは！\n先日はありがとうございました"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-2),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-5),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-10),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
-        Messages.Add(new MailMessage
-        {
-            DateTime = DateTime.Now.AddDays(-20),
-            Image = await LoadImage("genbaneko.png"),
-            From = "現場猫bot",
-            Title = "作業前安全確認",
-            Body = "今日も一日ゼロ災ヨシ！\nあああああああああああ!!!!!!!!!!"
-        });
+        await Context.LoadAsync(LoadImage, CreateInitialImage);
 
         IsLoading = false;
-
-        async ValueTask<SKBitmapImageSource> LoadImage(string fileName)
-        {
-            await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", fileName));
-            var bitmap = SKBitmap.Decode(stream);
-            // SKBitmapはアンマネージドメモリを持つため画面破棄時に解放する
-            Disposables.Add(bitmap);
-            return new SKBitmapImageSource { Bitmap = bitmap };
-        }
     }
-    // ReSharper restore StringLiteralTypo
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private async ValueTask<ImageSource> LoadImage(string fileName)
+    {
+        await using var stream = await fileSystem.OpenAppPackageFileAsync(Path.Combine("Avatar", fileName));
+        var bitmap = SKBitmap.Decode(stream);
+        // SKBitmapはアンマネージドメモリを持つため画面破棄時に解放する
+        Disposables.Add(bitmap);
+        return new SKBitmapImageSource { Bitmap = bitmap };
+    }
+
+    // 色の地に名前の頭文字 (丸く切り抜くのは XAML)
+    private ImageSource CreateInitialImage(string name)
+    {
+        var bitmap = new SKBitmap(InitialSize, InitialSize);
+        using (var canvas = new SKCanvas(bitmap))
+        {
+            canvas.Clear(InitialColors[name.Sum(static x => x) % InitialColors.Length]);
+            using var font = new SKFont(InitialTypeface, InitialSize * 0.42f);
+            font.Embolden = true;
+            using var paint = new SKPaint();
+            paint.IsAntialias = true;
+            paint.Color = SKColors.White;
+            var metrics = font.Metrics;
+            canvas.DrawText(name[..1], InitialSize / 2f, (InitialSize - metrics.Ascent - metrics.Descent) / 2f, SKTextAlign.Center, font, paint);
+        }
+        Disposables.Add(bitmap);
+        return new SKBitmapImageSource { Bitmap = bitmap };
+    }
 }

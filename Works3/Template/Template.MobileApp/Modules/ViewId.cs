@@ -138,6 +138,7 @@ public enum ViewId
     UISchedule,
 
     UIMail,
+    UIMailDetail,
     UIChat,
 
     UIWeather,

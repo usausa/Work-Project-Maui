@@ -2905,7 +2905,7 @@ VM へのバインドを使う 3 か所を、Smart.Maui の Behavior(スイッ�
 
 ### 🎨UI のブラッシュアップ(2026-10-04)
 
-UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作り、指示を受けた項目(10-6・10-7 の ①②・10-10 の行の形・10-19・10-20・10-24〜10-28)を実施した。10-24 で Control のメニューを View にまとめた。10-5 の POS は作り直した版を画面パターンとして別に保存し、画面は元のままにした。
+UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作り、指示を受けた項目(10-6・10-7 の ①②・10-10 の行の形・10-19・10-20・10-24〜10-28)と、第 1 弾(10-1・10-4・10-9・10-13・10-15・10-23)・第 2 弾(10-22・10-3・10-11)・第 3 弾(10-8・10-12・10-10・10-14・10-17)を実施した。10-24 で Control のメニューを View にまとめた。10-5 の POS は作り直した版を画面パターンとして別に保存し、画面は元のままにした。
 
 | 対象 | 内容 |
 |---|---|
@@ -2945,6 +2945,44 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Controls/HomeControls.cs` / `HomeControls.android.cs` / `HomeControls.ios.cs`(新規) | 10-30: Home だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。`HomeBlurredImage`(写真を 4 分の 1 の大きさでぼかして暗くした画像を 1 回だけ作って写す。`MaxLuminance` を付けると、暗くした後の平均の明るさがそれを超えないところまで暗くする。写真は MauiImage の名前で、Android は drawable から読む)、`HomeThermostatDial`(下の開いた 270° の弧・光るグラデーション・つまみ・輪のドラッグ)、`HomeGlowIcon`(MaterialIcons の文字を光らせる)、`HomeBatteryGauge`(横向きの電池)。基底の `HomeControl` に再描画と密度 |
 | `Converters/HomeDeviceTextConverter.cs` / `HomeBatteryLevelConverter.cs`(新規) | 10-30: 機器の種類と状態からアイコン・状態の言葉・下の行の文(開度・安全・風量・冷房の温度)、電池の残量の言葉(十分・良好・普通・少ない)と色 |
 | `Modules/UI/UIMenu2View.xaml` / `Modules/ViewId.cs` / `Markup/AppIcons.cs` | 10-29 / 10-30: UI 2 のメニューの 1 段目に Home(家のアイコン `Home`)と Habit(炎のアイコン `LocalFireDepartment`)。Graph 以下は 1 段ずつ下げた。`ViewId` は UI 2 の節の先頭(`UIDock` の後)に `UIHome` / `UIHabit` |
+| `Modules/View/ViewCustomViewModel.cs` | 10-23: TreeView の見本のデータを今のフォルダーの構成に(Template.MobileApp の Controls・Modules・Resources。Document は入れない) |
+| `Graphics/Drawing/LoadDrawing.cs` | 10-15: 履歴の棒の左に 0〜100 dB の目盛り(20 ごと。横の線は薄い白)、50 dB(NORMAL・金)と 70 dB(LOUD・赤)の点線、50 の下に QUIET(緑)。目安の値はメーターの色(`DecibelToColorConverter`)と同じ |
+| `Modules/UI/UIDockViewModel.cs` / `UIDockView.xaml` | 10-13: CPU・メモリはアプリの実際の値(1 秒ごと。CPU は前回からの CPU 時間の増分を小数 1 桁の %、メモリは WorkingSet の MB。診断のパネルと同じ取り方)。2 つのフォルダーを Media(巻き戻し・再生・一時停止・早送り・停止)と System(ホーム・再開・電源)にし、押すと中のボタンの面(左上に戻る)に切り替える(戻るキーでも閉じる)。ミュートはアイコンと名前が Muted に変わる。タイマーは押すと 00:30 から 1 秒ずつ減り(もう一度押すと止まる)、0 で「Time's up」のダイアログ。タイルの余白を 0 に(「MEM 457 MB」を 2 行に収める) |
+| `Models/Sample/Chat/ChatMessage.cs` / `MessageReaction.cs` / `Modules/UI/UIChatViewModel.cs` / `UIChatView.xaml` | 10-9: カメラのボタンで端末の写真を選び、画像のメッセージ(200 × 150・角丸 12)として送る(`MediaPicker.PickPhotosAsync`)。相手のメッセージのタップで、その行を琥珀の地にしてメッセージの下(リアクションの下)にリアクションの帯(👍 ❤️ 😂 😮 😢 🙏。`ChatMessage.IsSelected`。帯の中身は初めて選んだときに作る)。押すとメッセージのリアクションに加わり(同じ絵文字は数が増える)、帯を閉じる。同じメッセージをもう一度押す・戻るキー・スタンプの帯・送信でも閉じる。帯が隠れないよう、選んだメッセージが見える位置までスクロールする。自分のメッセージには付けない |
+| `Modules/UI/UIProfileViewModel.cs` / `UIProfileView.xaml` | 10-1: 興味の下を 写真 / 投稿 / いいね のタブに(`Controls/TabStrip`。最初は写真。投稿は本文・経過時間・❤️ と 💬 の数、写真は 3 列、いいねはアイコン・名前・経過時間・本文の行。見本の日時は今からの相対)。写真のタップで黒地の全画面の表示(左右に送る・点・× と戻るキーで閉じる。`CarouselOption.PageSnap` と `IsScrollAnimated="False"`)。フォロワーは「3.8k」の表示(フォローはボタンの切り替えだけ)、投稿とフォロー中の数は桁区切り |
+| `Models/Sample/SuperItems.cs` / `Modules/UI/UISuperViewModel.cs` / `UISuperView.xaml` | 10-4: クーポンの「獲得する」(押すと「✓ 獲得済み」になって弾む。もう一度押すと戻る)。サービスのアイコンは押すと縮むボタンに(何も開かない)。クーポンの下に「近くのお店」の横の一覧(6 店。色の丸いアイコン・店名・種類、📍 距離のバッジ、混み具合のバッジ 空いています 緑・やや混雑 橙・混雑 赤。`SuperShop` / `SuperCrowd`)。クーポンとお店の横の一覧は止まる位置をそろえない(最後の項目まで送れる) |
+| `Graphics/Drawing/ChartDrawing.cs` | 10-22: 7 種類に値の目盛り(切りのよい 4 本前後の線と左の値。`ChartScale`)と下の名前(重なるときは間引く)、積み上げの上とドーナツの下の凡例。タップで点・棒・区画・セルを選んで値の吹き出し(折れ線は点線の縦の線、棒・積み上げ・ローソク足はほかを薄く、ドーナツは区画を太くして中央に名前・値・割合)。同じ種類・同じ数の値に変えると今の値と目盛りから動かす。`ShowLine(値, 名前)` などで値と名前を渡し、色(`LineColor` / `LineHighColor` / `BarColor` / `BarEndColor` / `TrackColor`)・書式(`AxisFormat` / `ValueFormat`)・`ShowAxis` / `ShowTrack` / `SeriesNames` を画面ごとに変える。棒は上から下へのグラデーションと目盛りの最大までの溝(角は 4 のまま) |
+| `Graphics/Drawing/DrawingObject.cs` / `DrawingControl.cs` | 10-22: タップを受け取る `ITapDrawing`(指の移動が 10 以下で離したときに `OnTap`。`IInteractiveDrawing` と違い、スクロールの中で親のスクロールを止めない) |
+| `Modules/View/ViewChartViewModel.cs` | 10-22: 見本のデータに名前(月・地域・製品・日付・曜日と時刻) |
+| `Models/Sample/MoneyBook.cs`(新規) | 10-3: 決済の見本の取引(半年前から今日まで、曜日と日付で決まる店と金額。残高が 8,000 円を下回るとオートチャージ)と集計(月の合計・週ごと・週の平均・分類ごと・日ごとの残高・1 日あたりの平均残高の前月比・最近・店の名前で探す・お知らせ・支払いのコード) |
+| `Controls/BarcodeView.cs`(新規) | 10-3: 数字の Code 128(コードセット C)のバーコード。ZXing.Net の出力と 400 件(0〜99 の全値)で突き合わせた |
+| `Converters/RelativeDayConverter.cs`(新規) | 今日・昨日、それより前は「10/06 (月)」(Money の取引と Kit の通知の区切り) |
+| `Modules/UI/UIMoneyViewModel.cs` / `UIMoneyView.xaml` | 10-3: 残高の前月比のバッジ、月の支出のカード(▼ で月の一覧のシート、合計と週の平均、週ごとの棒)、支出の分類(› で一覧のシート)、最近の取引 5 件、下のタブの中身(検索・お知らせ・アカウント)、支払いのシート(バーコード・QR・30 秒で作り直す)、詳細で残高の推移のシート。戻るキーは開いているシートを先に閉じる。画面を開くときに作る要素を減らす: 取引の行は 1 つの Grid(丸は `BoxView`)、検索の結果は見えている行だけを作る `CollectionView`(日ごとの区切り `UIMoneyDayGroup`)、お知らせの一覧はタブを開いたとき、アカウントのタブは初めて開いたとき(`LazyViewOption.Template`)、4 つのシートは初めて開くとき(`SheetTemplate`)に作る |
+| `Models/Sample/KitActivity.cs`(新規) | 10-11: 歩数・心拍(1 時間ごと / 7 日 / 30 日)・昨夜の睡眠の段階・配達の予定(次の 30 分の区切りの 30 分後) |
+| `Controls/KitControls.cs`(新規) | 10-11: Kit の画面だけで使う部品を 1 つのファイルに(`SocialControls.cs` と同じ形)。睡眠の段階の帯 `KitSleepBand`(覚醒・レム・浅い・深い の 4 段と 1 時間ごとの時刻。日本語は `SKFontManager.MatchCharacter` で選んだ書体) |
+| `Behaviors/AnimationOption.cs` | 10-11: `EnterAnimation` に `Grow`(上の端を起点に縦に伸ばす) |
+| `Controls/BottomSheetView.cs` | 10-3: `SheetTemplate`(`SheetContent` の代わりに DataTemplate を渡すと、初めて開くときに中身を作る) |
+| `Behaviors/LazyViewOption.cs` | 10-3: `ContentView` に `Template`(DataTemplate)を渡すと、`Load` が初めて true になったときに中身を作る(以後は残す) |
+| `Modules/UI/UIKitDashViewModel.cs` / `UIKitDashView.xaml` | 10-11: 先頭を歩数の輪のカードに(メトリクスの歩数は距離に)、日 / 週 / 月(`SfSegmentedControl`)で歩数の棒と心拍の折れ線、昨夜の睡眠のカード、注文のカードの番号と到着の予定。心拍の折れ線と睡眠の段は青(睡眠は浅いほど淡い青) |
+| `Modules/UI/UIKitNotifyViewModel.cs` / `UIKitNotifyView.xaml` | 10-11: フラットな行、日ごとの区切り(`UIKitNotifyGroup`)、右へのスワイプで既読・左へで削除(端まで引いて離すとそのまま実行。引いたところは色とアイコンだけ = 既読は緑と ✓、削除は赤とごみ箱)、F4 の Read All |
+| `Modules/UI/UIKitSettingViewModel.cs` / `UIKitSettingView.xaml` | 10-11: 表示(文字の大きさ・テーマの色の `ColorPicker`)、よくある質問(`SfAccordion`)、その他(バージョン・ログアウト) |
+| `Modules/UI/UIKitTrackingViewModel.cs` / `UIKitTrackingView.xaml` | 10-11: 到着までの分と進み具合の棒、配達員のカード、済んだ段階の線を順に伸ばす、日付付きの時刻 |
+| `Modules/UI/UIKitOnboardViewModel.cs` / `UIKitOnboardView.xaml` | 10-11: ページごとに絵の地と同じ色で全体を塗る、1・2 ページはスキップと次へ、最後のページだけ始める |
+| `Models/Sample/MailMessage.cs` | 10-8: フォルダー(`MailFolder`)・添付・スター。未読・スター・フォルダーは変更の通知を持つ。一覧の 2 行の要約 `Preview`(改行を詰める) |
+| `Modules/UI/UIMailContext.cs`(新規) | 10-8: 一覧と本文が共有する文脈(`[Scope]`)。見本のメール 13 件(日時は今からの相対)、表示のフォルダー(受信トレイ・スター付き・送信済み・下書き・ゴミ箱)と数、日付の区切り(`UIMailGroup`。今日・昨日・今週・それ以前)、開く(既読)・スター・削除(ゴミ箱へ、ゴミ箱の中では消す)・アーカイブ。絵の無い差出人には頭文字の画像を入れる(同じ差出人は同じ画像) |
+| `Modules/UI/UIMailViewModel.cs` / `UIMailView.xaml` | 10-8: 日付の区切りのある一覧、絵の無い差出人は頭文字の丸いアイコン(色の地に頭文字を描いた画像を SkiaSharp で作る。色は名前から決める。ドロワーの自分のアイコンも同じ)、添付の印とスター、行のタップで本文へ Push、左上のアイコンで自作のドロワー(`SideDrawer`。フォルダーと数、選んだ行は琥珀)、見出しの名前とアイコンは選んだフォルダー、空の表示。戻るキーは開いているドロワーを先に閉じる。本文から戻ったときは読み込み直さない |
+| `Modules/UI/UIMailDetailView.xaml` + `.xaml.cs` / `UIMailDetailViewModel.cs`(新規)/ `Modules/ViewId.cs` | 10-8: 本文の画面(件名とスター・差出人・日時・添付のチップ・本文)。F4 の Delete で削除して一覧へ。戻るは Pop。`ViewId` は `UIMail` の後に `UIMailDetail` |
+| `Models/Sample/StreamCatalog.cs`(新規) | 10-12: 見本の作品 7 件(題・絵・年・ジャンル・時間(分)・レーティング・評価・マッチ度・バッジ・トップとオリジナルの印・説明・出演・監督・予告(種類と長さ)) |
+| `Converters/RuntimeTextConverter.cs`(新規) | 10-12: 時間(分)を「2h 18m」の形に(1 時間未満は「58m」) |
+| `Modules/UI/UIStreamContext.cs`(新規) | 10-12: 一覧と詳細が共有する文脈(`[Scope]`)。作品の行 `UIStreamWork`(見た割合と残りの分・マイリスト・お気に入り・ダウンロード)、選んだ作品と関連(同じジャンルを先に 4 件) |
+| `Modules/UI/UIStreamViewModel.cs` / `UIStreamView.xaml` | 10-12: トップを 5 作品の幅いっぱいの `CarouselView`(高さ 340。下の点は横長の棒で、今の作品は長く赤。5 秒ごとに次へ、スワイプでも送れ、手で送ると数え直す。詳細を開く前に止める)、絵の上に評価・バッジ・題・年とジャンルと時間・Play・+ My List。続きを見るの棚(進み具合の棒と残りの分)、棚ごとに中身を変えた(高評価・オリジナル・急上昇・アクション & アドベンチャー)。作品のタップで文脈に置いて Push |
+| `Modules/UI/UIStreamDetailViewModel.cs` / `UIStreamDetailView.xaml` | 10-12: 選んだ作品の絵・題・マッチ度・年とジャンルと時間とレーティング・説明・出演と監督・予告(種類と長さ)。見ている途中の作品は Resume と進み具合の棒、ほかは Play。ダウンロードとお気に入りは作品ごと。More Like This のタップで同じ画面で作品を入れ替えて先頭へ戻る。戻るは Pop |
+| `Modules/UI/UITimelineViewModel.cs` / `UITimelineView.xaml` | 10-10: 日付を今日に、セッションを今の前後(90 分ごとに 75 分、4 番目が今の 30 分の区切りに始まる)に置き、終わった・進行中を今の時刻から決めて分が変わると見直す。最後に始まったセッションの下に今の時刻の線。行の ☆ でブックマーク、すべて・ブックマーク・タグのチップ(`SfChipGroup`)で絞り込み、該当なしの表示 |
+| `Modules/UI/UIGraphViewModel.cs` / `UIGraphView.xaml` | 10-14: 行のタップでコミットの詳細のシート(自作の `BottomSheetView`。要約・ブランチとタグ・作者・日時・SHA)。閉じると選択を外す。戻るキーは開いているシートを先に閉じる。ブランチとタグのバッジは一覧とシートで同じテンプレート |
+| `Modules/UI/UIGraph2View.xaml` | 10-14: 開いた行に要約(太字・折り返し)と SHA |
+| `Graphics/Drawing/WheelDrawing.cs` | 10-17: 項目の色 `ColorOf`(最後の項目が先頭と同じ色で隣り合わないようにする) |
+| `Modules/UI/UIWheelViewModel.cs` / `UIWheelView.xaml` | 10-17: 背景のグラデーション(藍から紫)、結果のカード(当たりは琥珀の枠)、履歴(直近 5 回)、項目のチップ(扇形と同じ色の点、当たり枠は琥珀の枠)。× で削除(2 つまで)、F3 の Add で追加(12 個まで・8 文字まで)。回っている間は変えない |
+| `MauiProgram.cs` | `CarouselView` のオーバースクロールも無効に(`CarouselViewHandler` の `IsBounceEnabled` のマッピングの後に `OverScrollMode.Never` を当てる) |
 
 - 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
 - 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
@@ -2959,6 +2997,21 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 - 実機: Home の −/+(22.5 → 23.5°C)、照明を消す(0%・灰色)・ランプを点ける(100%)・鍵を開ける(解錠・要確認・灰色)、ダイヤルを右へドラッグ(27.5°C)、運転を切る(弧が灰色で停止)、寝室・キッチンへの切り替え(背景の写真・機器・電池・空調が入れ替わり、18% の電池は赤の少ない)を撮って確かめた
 - 実機: Home の背景をリビング・寝室・キッチンで前後を撮って比べた(カードの無い所の明るさ: リビング 0.35 → 0.17、キッチン 0.16 → 0.08、寝室は 0.07 のまま)
 - 実機: UI 2 のメニューの 1 段目の Home・Habit から開き、戻るキーで UI 2 のメニューへ戻る。メニューの並びと `ViewId` の順はスクリプトで突き合わせた(全メニューで食い違いなし)
+- 実機: Custom の TreeView(Resources と Fonts を開いて Fonts を選ぶ)、Load の目盛りと目安の線
+- 実機: Dock の CPU・メモリの値(1 秒ごと)、ミュートの切り替え、タイマーの減少と停止、Media のフォルダーの中と戻るキーで閉じる
+- 実機: Chat の相手のメッセージのタップで行が琥珀の地になり下に絵文字の帯(押したメッセージは動かない)、👍 を押すと 👍 1 が加わって帯が閉じる。同じメッセージの 2 回目のタップと戻るキーで閉じ、自分のメッセージは押しても何も出ない。カメラのボタンで端末の写真の選択が開き、戻るでアプリへ戻る(写真を選んで送るところは未確認)
+- 実機: Profile のタブの切り替え、写真のタップで押した写真から全画面の表示(2 枚目・6 枚目・1 枚目の順に開き直しても押した写真が出る)と左へ送る、最初は写真のタブ(タブは 写真・投稿・いいね の順)、フォローしてもフォロワーは 3.8k のまま
+- 実機: Super の獲得(✓ 獲得済み)、お店の一覧を横に送る、クーポンの一覧を最後の項目まで送れること、ポイントは開いたときから 1,250 pt(数え上げない)
+- 実機: Chart の 7 種類で目盛り・凡例・タップの吹き出しと選んだ所の強調
+- 実機: Money の前月比のバッジ、週の棒のタップ、▼ の月の一覧で 9 月を選ぶ、› の分類の一覧、最近の取引、詳細の残高の推移(タップで日付と残高)、支払いのシート(バーコード・QR・残り時間)、検索(見つからないときの表示)、お知らせのタップで既読、アカウント
+- 実機: Money を開く時間(メニューのタップから表示の後まで。Pixel 9a、Debug)は約 1.6 秒 → 約 0.6 秒、検索のタブを開く時間は約 0.6 秒 → 約 0.15 秒(Shop を開く時間は約 0.4〜0.6 秒)。データの準備は 5 ms ほどで、時間の多くは画面の要素を作る部分。取引の行は 1 件あたり約 10 ms(行を 1 つの Grid にして約 1 割減)で、隠れていた検索の 50 件・お知らせ・アカウントのタブ・4 つのシート(空のコードの QR も)を開くときに作っていた。4 つのシートとアカウントのタブを開いて中身が出ること、検索の日ごとの区切りとスクロールを撮って確かめた
+- 実機: Kit のダッシュボードの日 / 週 / 月、睡眠の帯、通知の右へのスワイプ(緑と ✓)で既読・左へ(赤とごみ箱)で削除と F4 の Read All、設定のテーマの色と文字の大きさ、追跡の線が順に伸びること、はじめにの 3 ページと最後のページの始める、心拍と睡眠の青
+- 実機: Mail の日付の区切り・頭文字のアイコン・添付とスター、ドロワー(スター付きを選ぶと見出しと一覧が変わる)、本文を開いて戻ると既読、F4 の Delete でゴミ箱へ(ドロワーの数が変わる)、頭文字の画像(差出人ごとに色が違う)
+- 実機: Stream の幅いっぱいのトップの自動送り(5 秒ごと。詳細から戻った後も)とスワイプ、+ My List、続きを見る、選んだ作品の詳細(Resume と進み具合)、More Like This で入れ替え(Play になり、お気に入りは作品ごと)、戻ったトップの位置
+- 実機: カルーセル(Stream のトップ・Shop の人気の商品・News のページ・Profile の写真の全画面・Kit のはじめに)の最初のページで右へ引っぱった途中と、離した後を画素で比べた(前: 約 6 万〜42 万画素の差 → 後: 0)
+- 実機: Timeline の今の時刻の線、ブックマークとタグの絞り込み、行の ☆
+- 実機: Graph の行のタップのシートと、閉じた後に同じ行を押し直して開くこと、Graph2 の開いた行
+- 実機: Wheel の当たりのカードと紙吹雪、5 回の履歴、F3 で項目を足す(9 個目は黄)、× で削除
 - ビルド 0 警告、inspectcode 0 件(`UIItemView.xaml` の Syncfusion のテーマの色の 2 つのキーは、ライブラリが名前で読むため `Xaml.RedundantResource` になる。その 2 行だけ抑止)
 
 ### ✨既存の画面の細部の見直し(2026-10-04)
@@ -3165,6 +3218,8 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | `Document/Development.md` | 「🔧開発環境」に「AI エージェントでの開発支援」(スキルの候補・MCP の種類と設定の例・DevFlow のできることと本アプリでの注意・参照) |
 | `Document/Task_Checklist.md` / `README.md` | 12 節 Health Connect(`Shiny.Health` で歩数・心拍・睡眠などを読み書きする候補。パッケージ・端末・マニフェスト・変更するファイルと、要否と範囲の判断 12-0)。13 節 取り込み候補に 13-1 Sample > Chat のツール呼び出し(仕組み・題材・トリミング・ツールの分け方と、判断 13-1-0)。サマリと TODO に 2 つの行 |
 | `Document/UIBrushup_Plan.md` | 10-3 Money の ⑤〜⑦(前月比のバッジ・月の支出の棒・支出の分類)、10-22 Chart の ③(棒のグラデーションと溝・選んだ棒の強調)。10-3 ⑤〜⑦・10-22 ③ の使える部品。番号なしのアニメーションの強化の案(今ある動き・足す動きの案・画面ごとの案) |
+| `Document/UIBrushup_Plan.md` | 10-0 の共通の方針を決めた(一覧と詳細・規則の置き場所・配置・一覧の行・見本のデータ・部品・遷移先の無いボタン・画像は案のまま、操作のボタンは F キーのまま)。決定事項へ移して 10-0 は消し、Load・TreeMap・Wheel の画面の中のボタンの項目は外した |
+| `Document/UIBrushup_Plan.md` | 10-x の進め方(第 1 弾〜第 3 弾。弾ごとにまとめて作り、前後をまとめて確認)を足した。10-3 ⑤〜⑦ と 10-22 ③ は案のままで実施待ちに。11-x が全部済んだので 11-0 を閉じ、適用済みの行(空・読み込み中・失敗、ボタン、配置、カメラの画面、一覧の行、決まりに合わない値)を決定事項へ移した |
 | `Document/Change_Summary.md` | 付録D の不採用 (1) に Revv |
 
 ## 💡C. この区間のナレッジ
@@ -3290,6 +3345,9 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - Smart.Mapper(1.0.0-beta9)は `long` → `long?`、`DateTime` → `DateTime?` をそのまま写す(`TodoItem` → `TodoDraft` の `Id` と作成・更新の日時)
 - **Smart.Navigation の `MauiNavigationProvider` の `RestoreFocus`(既定 true)は、戻った画面で何もフォーカスしていなかったときに画面へ `Focus()` をかけ、Android では先頭の入力欄がフォーカスを受ける**(Pop で戻った Shop の検索欄に枠と入力の位置が出た)。アプリは `NavigationFocusPlugin` が前のフォーカスを戻すので、`RestoreFocus` は false にした
 - Syncfusion の `SfAccordion` は、開いた項目の見出しをテーマの `SfAccordionFocusedHeaderBackground`(灰色)で塗る。画面のリソースに同じキーの色を置くと変えられる(ReSharper は使われていないリソースと見る)。キーはほかに `SfAccordionNormalHeaderBackground` / `SfAccordionFocusedItemStroke` / `SfAccordionExpandedItemStroke` など
+- `IsVisible` が False の要素も、画面を開いたときに作られる(隠れたタブの中の `BindableLayout` の行も)。開くのが遅い画面は、隠れたタブの一覧をタブを開いたときに入れ、長い一覧は見えている行だけを作る `CollectionView` にする
+- `IndicatorView` の `IndicatorTemplate` の要素には、今の項目に `Selected`、ほかに `Normal` の VisualState が付く(今の項目だけ形や色を変えられる)
+- **`CarouselView`(Android)は `IsBounceEnabled`(既定 true)から `OverScrollMode` を Always にするので、テーマの `android:overScrollMode` = never が効かない**(`CarouselViewHandler.MapIsBounceEnabled`)
 - `SfChipGroup` の `ChipLayout` の既定は折り返さない。折り返すときは `FlexLayout`(`Wrap`)、横に流すときは `HorizontalStackLayout` を横の `ScrollView` に入れる。チップはアクセシビリティのツリーに出ないので、実機の操作は座標で行う
 - 添付プロパティの既定値と同じ値は変更として通知されない。`LabelOption.CountUpValue` は既定値が 0 だったので、最初の値が 0 だと何も表示されなかった
 - CA1716: インターフェースのメソッドの引数に `date` を使うと、VB のキーワード `Date` と重なるとして警告になる
@@ -3304,6 +3362,9 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - `BindableProperty` の `propertyChanged` に基底の protected の静的メソッドを渡すと、使わない引数が IDE0060 の警告になる(private なら出ない)。基底で共有するときは `static (bindable, _, _) => ...` のデリゲートの静的フィールドにする
 - **1 つの `BindableProperty` に結べる `Binding` は 1 つ**。Behavior の中で `SetBinding` すると、XAML で書いた同じプロパティの `Binding` は黙って置き換わる(Drawing の `DrawingBind` が `DrawingView` の色と幅をコントローラーへ結び直し、パレットの値が線に届かなかった)
 - **SkiaSharp.Extended.UI 3.0 の `SKLottieView` は、`RepeatCount` が 0 以外のとき、止めたまま(`IsAnimationEnabled` = false)`Progress` を `Duration` にすると UI スレッドが回り続けて固まる**。最後に着いたので先頭へ戻す `Progress = 0` は、MAUI が設定中の同じプロパティへの設定として後回しの列に入れ、止めているときの再描画(`Invalidate` → `Update`)がまだ古い `Duration` を設定し直すので、2 つの値が交互に列に入り続ける(`BindableObject.SetValueCore` の `DelayedSetters`)。止めたまま動かす位置は `Duration` の 1 tick 手前までにする
+- **`IsVisible` で隠した重ねの中の `CarouselView` は、開くたびに `Position` を変えると 2 回目から前に見たページが出たままになる**(位置の値とインジケーターは変わる)。News と同じ `CarouselOption.PageSnap`(ページより先に RecyclerView がフォーカスを受ける)を付けると、押した写真から開く
+- **Android の MAUI Graphics では、`SetFillPaint` のグラデーションは後で `FillColor` を変えても残る**(後の塗りもグラデーションのまま)。グラデーションの塗りは `SaveState` / `RestoreState` で囲む
+- XAML のマークアップ拡張の中の `\` はエスケープなので、TimeSpan の書式の `:` は `StringFormat='{0:h\\:mm}'` と書く(`\:` だと書式が壊れて既定の `01:34:00` になる)
 
 ---
 

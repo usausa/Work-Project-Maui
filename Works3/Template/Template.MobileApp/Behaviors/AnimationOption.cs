@@ -4,7 +4,8 @@ public enum EnterAnimationType
 {
     None,
     FadeUp,
-    Pop
+    Pop,
+    Grow
 }
 
 public static class AnimationOption
@@ -742,6 +743,13 @@ public static class AnimationOption
             element.Opacity = 0;
             element.TranslationY = GetEnterBaseTranslationY(element) + 16;
         }
+        else if (GetEnterAnimation(element) == EnterAnimationType.Grow)
+        {
+            // 上の端を起点に縦に伸ばす
+            GetEnterBaseTranslationY(element);
+            element.AnchorY = 0;
+            element.ScaleY = 0;
+        }
         else
         {
             // Pop は TranslationY を使わないが、基準値の取得漏れを防ぐためここで確定させる
@@ -791,6 +799,16 @@ public static class AnimationOption
                 Easing.CubicOut,
                 (_, _) => ResetEnter(element));
         }
+        else if (GetEnterAnimation(element) == EnterAnimationType.Grow)
+        {
+            element.Animate(
+                EnterAnimationName,
+                v => element.ScaleY = v,
+                16,
+                400,
+                Easing.CubicOut,
+                (_, _) => ResetEnter(element));
+        }
         else
         {
             // 0 → 1.15 → 1.0 と弾んで出現
@@ -814,6 +832,7 @@ public static class AnimationOption
         // 0 固定にすると Style 等で指定された静的な TranslationY を壊すため、退避した基準値へ戻す
         element.TranslationY = GetEnterBaseTranslationY(element);
         element.Scale = 1;
+        element.ScaleY = 1;
     }
 
     private static Color LerpColor(Color from, Color to, double t) =>

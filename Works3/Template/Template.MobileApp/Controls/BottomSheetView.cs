@@ -47,6 +47,12 @@ public sealed class BottomSheetView : Grid
         typeof(BottomSheetView),
         propertyChanged: static (bindable, _, newValue) => ((BottomSheetView)bindable).contentHost.Content = (View?)newValue);
 
+    // SheetContent の代わりに渡すと、初めて開くときに中身を作る (画面を開くときに作らない)
+    public static readonly BindableProperty SheetTemplateProperty = BindableProperty.Create(
+        nameof(SheetTemplate),
+        typeof(DataTemplate),
+        typeof(BottomSheetView));
+
     // 半開のときにシートが占める高さの割合
     public static readonly BindableProperty HalfExpandedRatioProperty = BindableProperty.Create(
         nameof(HalfExpandedRatio),
@@ -116,6 +122,12 @@ public sealed class BottomSheetView : Grid
     {
         get => (View?)GetValue(SheetContentProperty);
         set => SetValue(SheetContentProperty, value);
+    }
+
+    public DataTemplate? SheetTemplate
+    {
+        get => (DataTemplate?)GetValue(SheetTemplateProperty);
+        set => SetValue(SheetTemplateProperty, value);
     }
 
     public double HalfExpandedRatio
@@ -226,6 +238,11 @@ public sealed class BottomSheetView : Grid
     {
         if (open)
         {
+            if ((SheetContent is null) && (SheetTemplate is not null))
+            {
+                SheetContent = (View)SheetTemplate.CreateContent();
+            }
+
             expanded = false;
             IsVisible = true;
             if ((Width > 0) && (Height > 0))

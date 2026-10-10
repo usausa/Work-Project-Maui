@@ -14,6 +14,26 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
     [ObservableProperty]
     public partial IReadOnlyList<GraphRow> Rows { get; private set; } = [];
 
+    [ObservableProperty]
+    public partial GraphRow? Selected { get; set; }
+
+    // シートの内容 (閉じる途中も残す)
+    [ObservableProperty]
+    public partial GraphRow Detail { get; private set; } = default!;
+
+    [ObservableProperty]
+    public partial bool IsDetailOpen { get; set; }
+
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
+
+    public UIGraphViewModel()
+    {
+        SubscribeSelected(OpenDetail);
+        SubscribeIsDetailOpen(ClearSelection);
+    }
+
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
@@ -26,13 +46,40 @@ public sealed partial class UIGraphViewModel : AppViewModelBase
         }
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu2);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsDetailOpen)
+        {
+            IsDetailOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu2);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
     //--------------------------------------------------------------------------------
     // Operation
     //--------------------------------------------------------------------------------
+
+    private void OpenDetail(GraphRow? row)
+    {
+        if (row is not null)
+        {
+            Detail = row;
+            IsDetailOpen = true;
+        }
+    }
+
+    // 閉じたら選択を外す (同じ行をもう一度押しても開く)
+    private void ClearSelection(bool open)
+    {
+        if (!open)
+        {
+            Selected = null;
+        }
+    }
 
     private async Task LoadAsync()
     {

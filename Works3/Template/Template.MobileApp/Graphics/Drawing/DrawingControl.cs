@@ -2,11 +2,16 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed partial class DrawingControl : GraphicsView
 {
+    // タップとみなす指の移動の上限
+    private const float TapSlop = 10f;
+
     public static readonly BindableProperty DrawingProperty = BindableProperty.Create(
         nameof(Drawing),
         typeof(IDrawingObject),
         typeof(DrawingControl),
         propertyChanged: HandlePropertyChanged);
+
+    private PointF touchStart;
 
     public IDrawingObject Drawing
     {
@@ -16,9 +21,13 @@ public sealed partial class DrawingControl : GraphicsView
 
     public DrawingControl()
     {
-        // Drawing が IInteractiveDrawing のときだけタッチ操作を転送する
+        // Drawing が IInteractiveDrawing のときはタッチ操作を、ITapDrawing のときはタップを転送する
         StartInteraction += (_, e) =>
         {
+            if (e.Touches.Length > 0)
+            {
+                touchStart = e.Touches[0];
+            }
             if ((Drawing is IInteractiveDrawing interactive) && (e.Touches.Length > 0))
             {
                 interactive.OnInteractionStart(e.Touches[0]);
@@ -36,6 +45,10 @@ public sealed partial class DrawingControl : GraphicsView
             if ((Drawing is IInteractiveDrawing interactive) && (e.Touches.Length > 0))
             {
                 interactive.OnInteractionEnd(e.Touches[0]);
+            }
+            if ((Drawing is ITapDrawing tap) && e.IsInsideBounds && (e.Touches.Length > 0) && (e.Touches[0].Distance(touchStart) <= TapSlop))
+            {
+                tap.OnTap(e.Touches[0]);
             }
         };
 

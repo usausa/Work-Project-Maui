@@ -24,9 +24,9 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
             "Template.MobileApp",
             new(
                 "Controls",
+                new("ColorPicker.cs"),
                 new("MarqueeLabel.cs"),
-                new("TreeView.cs"),
-                new("ColorPicker.cs")),
+                new("TreeView.cs")),
             new(
                 "Modules",
                 new(
@@ -35,16 +35,18 @@ public sealed partial class ViewCustomViewModel : AppViewModelBase
                     new("BasicSettingView.xaml")),
                 new(
                     "View",
-                    new("ViewLayoutView.xaml"),
-                    new("ViewCustomView.xaml"))),
+                    new("ViewCustomView.xaml"),
+                    new("ViewLayoutView.xaml"))),
             new(
                 "Resources",
-                new("Styles"),
-                new("Fonts"))),
-        new(
-            "Document",
-            new("Development.md"),
-            new("UI_Development_Log.md"))
+                new(
+                    "Fonts",
+                    new("MaterialIcons-Regular.ttf"),
+                    new("OpenSans-Regular.ttf")),
+                new(
+                    "Styles",
+                    new("Colors.xaml"),
+                    new("Styles.xaml"))))
     ];
 
     [ObservableProperty]

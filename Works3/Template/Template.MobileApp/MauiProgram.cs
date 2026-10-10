@@ -234,8 +234,6 @@ public static partial class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // TODO App center alternative
-
         // Crash dump
         CrashReport.Start();
 

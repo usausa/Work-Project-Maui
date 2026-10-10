@@ -1,8 +1,19 @@
 namespace Template.MobileApp.Modules.UI;
 
-#pragma warning disable CA5394
+using System.Diagnostics;
+
+using Template.MobileApp.Components;
+
 public sealed class UIDockViewModel : AppViewModelBase
 {
+    private const int TimerSeconds = 30;
+
+    private const double MegaByte = 1024 * 1024;
+
+    private const string FolderColor1 = "#ffb347";
+
+    private const string FolderColor2 = "#ffcc33";
+
     private static readonly (string Color1, string Color2)[] Colors =
     [
         new("#F44336", "#FF8A80"),
@@ -23,21 +34,60 @@ public sealed class UIDockViewModel : AppViewModelBase
         new("#FF5722", "#FF9E80")
     ];
 
+    // フォルダーの中のボタン(画像・名前)
+    private static readonly (string Name, (string Image, string Label)[] Items)[] Folders =
+    [
+        ("Media",
+        [
+            ("fast_rewind.png", "Rewind"),
+            ("play_arrow.png", "Play"),
+            ("pause.png", "Pause"),
+            ("fast_forward.png", "Forward"),
+            ("stop.png", "Stop")
+        ]),
+        ("System",
+        [
+            ("home.png", "Home"),
+            ("resume.png", "Resume"),
+            ("power_settings_circle.png", "Power")
+        ])
+    ];
+
     private readonly IDialog dialog;
 
     private readonly IScreen screen;
 
     private readonly IFileSystem fileSystem;
 
+    private readonly DeviceInformation deviceInformation;
+
     private readonly IDispatcherTimer timer;
+
+    private readonly int processorCount = Environment.ProcessorCount;
+
+    private readonly List<DeckButtonInfo> rootButtons = [];
+
+    private readonly Dictionary<string, List<DeckButtonInfo>> folderButtons = [];
+
+    private bool folderOpened;
+
+    private ProcessStatistics previous;
 
     private DeckButtonInfo? cpuButton;
 
     private DeckButtonInfo? memButton;
 
-    private int cpuValue = 13;
+    private DeckButtonInfo? timerButton;
 
-    private int memValue = 74;
+    private DeckButtonInfo? muteButton;
+
+    private byte[] muteImage = [];
+
+    private byte[] mutedImage = [];
+
+    private bool muted;
+
+    private int remainSeconds;
 
     public ObservableCollection<DeckButtonInfo> Buttons { get; } = [];
 
@@ -49,14 +99,16 @@ public sealed class UIDockViewModel : AppViewModelBase
         IDialog dialog,
         IScreen screen,
         IFileSystem fileSystem,
-        IDispatcher dispatcher)
+        IDispatcher dispatcher,
+        DeviceInformation deviceInformation)
     {
         this.dialog = dialog;
         this.screen = screen;
         this.fileSystem = fileSystem;
+        this.deviceInformation = deviceInformation;
 
         timer = dispatcher.CreateTimer();
-        timer.Interval = TimeSpan.FromSeconds(2);
+        timer.Interval = TimeSpan.FromSeconds(1);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => OnTimerTick()));
     }
 
@@ -72,6 +124,7 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
 
         screen.SetFullscreen(true);
+        previous = deviceInformation.ReadProcessStatistics();
         timer.Start();
     }
 
@@ -82,7 +135,16 @@ public sealed class UIDockViewModel : AppViewModelBase
         return Task.CompletedTask;
     }
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.UIMenu1);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (folderOpened)
+        {
+            CloseFolder();
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.UIMenu1);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
 
@@ -94,10 +156,13 @@ public sealed class UIDockViewModel : AppViewModelBase
     {
         return BusyState.UsingAsync(async () =>
         {
+            muteImage = await LoadImageAsync("volume_mute.png");
+            mutedImage = await LoadImageAsync("volume_off.png");
+
             // Row0 - Row3
             for (var i = 0; i < Colors.Length; i++)
             {
-                Buttons.Add(new DeckButtonInfo
+                rootButtons.Add(new DeckButtonInfo
                 {
                     Row = i / 4,
                     Column = i % 4,
@@ -112,31 +177,24 @@ public sealed class UIDockViewModel : AppViewModelBase
             }
 
             // Row4
-            Buttons.Add(new DeckButtonInfo
+            for (var i = 0; i < Folders.Length; i++)
             {
-                Row = 4,
-                Column = 0,
-                ButtonType = DeckButtonType.Image,
-                Label = "Folder1",
-                BackColor1 = Color.FromArgb("#ffb347"),
-                BackColor2 = Color.FromArgb("#ffcc33"),
-                ImageBytes = await LoadImageAsync("folder.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "Folder1"
-            });
-            Buttons.Add(new DeckButtonInfo
-            {
-                Row = 4,
-                Column = 1,
-                ButtonType = DeckButtonType.Image,
-                Label = "Folder2",
-                BackColor1 = Color.FromArgb("#ffb347"),
-                BackColor2 = Color.FromArgb("#ffcc33"),
-                ImageBytes = await LoadImageAsync("folder.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
-                Parameter = "Folder2"
-            });
-            Buttons.Add(new DeckButtonInfo
+                var (name, items) = Folders[i];
+                rootButtons.Add(new DeckButtonInfo
+                {
+                    Row = 4,
+                    Column = i,
+                    ButtonType = DeckButtonType.Image,
+                    Label = name,
+                    BackColor1 = Color.FromArgb(FolderColor1),
+                    BackColor2 = Color.FromArgb(FolderColor2),
+                    ImageBytes = await LoadImageAsync("folder.png"),
+                    Command = MakeDelegateCommand<string>(OpenFolder),
+                    Parameter = name
+                });
+                folderButtons[name] = await CreateFolderButtonsAsync(items);
+            }
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 4,
                 Column = 2,
@@ -148,7 +206,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Sound1"
             });
-            Buttons.Add(new DeckButtonInfo
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 4,
                 Column = 3,
@@ -162,7 +220,7 @@ public sealed class UIDockViewModel : AppViewModelBase
             });
 
             // Row5
-            Buttons.Add(new DeckButtonInfo
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 5,
                 Column = 0,
@@ -174,7 +232,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "VolumeUp"
             });
-            Buttons.Add(new DeckButtonInfo
+            muteButton = new DeckButtonInfo
             {
                 Row = 5,
                 Column = 1,
@@ -182,11 +240,12 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Label = "Mute",
                 BackColor1 = Color.FromArgb("#f46b45"),
                 BackColor2 = Color.FromArgb("#eea849"),
-                ImageBytes = await LoadImageAsync("volume_off.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                ImageBytes = muteImage,
+                Command = MakeDelegateCommand(ToggleMute),
                 Parameter = "Mute"
-            });
-            Buttons.Add(new DeckButtonInfo
+            };
+            rootButtons.Add(muteButton);
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 5,
                 Column = 2,
@@ -200,19 +259,20 @@ public sealed class UIDockViewModel : AppViewModelBase
             });
 
             // Row6
-            Buttons.Add(new DeckButtonInfo
+            timerButton = new DeckButtonInfo
             {
                 Row = 6,
                 Column = 1,
                 ButtonType = DeckButtonType.Image,
-                Label = "00:30",
+                Label = FormatTimer(TimerSeconds),
                 BackColor1 = Color.FromArgb("#1fa2ff"),
                 BackColor2 = Color.FromArgb("#12d8fa"),
                 ImageBytes = await LoadImageAsync("timer.png"),
-                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Command = MakeDelegateCommand(ToggleTimer),
                 Parameter = "Timer"
-            });
-            Buttons.Add(new DeckButtonInfo
+            };
+            rootButtons.Add(timerButton);
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 6,
                 Column = 2,
@@ -224,7 +284,7 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Lock"
             });
-            Buttons.Add(new DeckButtonInfo
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 6,
                 Column = 3,
@@ -238,7 +298,7 @@ public sealed class UIDockViewModel : AppViewModelBase
             });
 
             // Row7
-            Buttons.Add(new DeckButtonInfo
+            rootButtons.Add(new DeckButtonInfo
             {
                 Row = 7,
                 Column = 0,
@@ -256,27 +316,66 @@ public sealed class UIDockViewModel : AppViewModelBase
                 Column = 2,
                 ButtonType = DeckButtonType.Text,
                 Label = "CPU",
-                Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%"),
+                Text = String.Join(Environment.NewLine, "CPU", "-"),
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Cpu"
             };
-            Buttons.Add(cpuButton);
+            rootButtons.Add(cpuButton);
             memButton = new DeckButtonInfo
             {
                 Row = 7,
                 Column = 3,
                 ButtonType = DeckButtonType.Text,
                 Label = "Memory",
-                Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%"),
+                Text = String.Join(Environment.NewLine, "MEM", "-"),
                 BackColor1 = Color.FromArgb("#616161"),
                 BackColor2 = Color.FromArgb("#424242"),
                 Command = MakeAsyncCommand<string>(ExecuteAsync),
                 Parameter = "Memory"
             };
-            Buttons.Add(memButton);
+            rootButtons.Add(memButton);
+
+            ShowButtons(rootButtons);
         });
+    }
+
+    private async ValueTask<List<DeckButtonInfo>> CreateFolderButtonsAsync((string Image, string Label)[] items)
+    {
+        // 左上に戻るのボタン、2 段目から中のボタン
+        var buttons = new List<DeckButtonInfo>
+        {
+            new()
+            {
+                Row = 0,
+                Column = 0,
+                ButtonType = DeckButtonType.Image,
+                Label = "Back",
+                BackColor1 = Color.FromArgb(FolderColor1),
+                BackColor2 = Color.FromArgb(FolderColor2),
+                ImageBytes = await LoadImageAsync("arrow_circle_left.png"),
+                Command = MakeDelegateCommand(CloseFolder),
+                Parameter = "Back"
+            }
+        };
+        for (var i = 0; i < items.Length; i++)
+        {
+            buttons.Add(new DeckButtonInfo
+            {
+                Row = 1 + (i / 4),
+                Column = i % 4,
+                ButtonType = DeckButtonType.Image,
+                Label = items[i].Label,
+                BackColor1 = Color.FromArgb("#1fa2ff"),
+                BackColor2 = Color.FromArgb("#12d8fa"),
+                ImageBytes = await LoadImageAsync(items[i].Image),
+                Command = MakeAsyncCommand<string>(ExecuteAsync),
+                Parameter = items[i].Label
+            });
+        }
+
+        return buttons;
     }
 
     private async ValueTask<byte[]> LoadImageAsync(string image)
@@ -302,21 +401,84 @@ public sealed class UIDockViewModel : AppViewModelBase
         }
     }
 
+    private void OpenFolder(string name)
+    {
+        if (folderButtons.TryGetValue(name, out var buttons))
+        {
+            folderOpened = true;
+            ShowButtons(buttons);
+        }
+    }
+
+    private void CloseFolder()
+    {
+        folderOpened = false;
+        ShowButtons(rootButtons);
+    }
+
+    private void ToggleMute()
+    {
+        muted = !muted;
+        if (muteButton is not null)
+        {
+            muteButton.ImageBytes = muted ? mutedImage : muteImage;
+            muteButton.Label = muted ? "Muted" : "Mute";
+        }
+    }
+
+    private async Task NotifyTimeUpAsync() => await dialog.InformationAsync("Time's up");
+
+    private void ToggleTimer()
+    {
+        remainSeconds = remainSeconds > 0 ? 0 : TimerSeconds;
+        timerButton?.Label = FormatTimer(remainSeconds > 0 ? remainSeconds : TimerSeconds);
+    }
+
     //--------------------------------------------------------------------------------
     // Event
     //--------------------------------------------------------------------------------
 
     private void OnTimerTick()
     {
-        if ((cpuButton is null) || (memButton is null))
-        {
-            return;
-        }
+        UpdateUsage();
 
-        cpuValue = Math.Clamp(cpuValue + Random.Shared.Next(-9, 10), 3, 97);
-        memValue = Math.Clamp(memValue + Random.Shared.Next(-5, 6), 20, 95);
-        cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuValue}%");
-        memButton.Text = String.Join(Environment.NewLine, "MEM", $"{memValue}%");
+        if ((remainSeconds > 0) && (timerButton is not null))
+        {
+            remainSeconds--;
+            timerButton.Label = FormatTimer(remainSeconds > 0 ? remainSeconds : TimerSeconds);
+            if (remainSeconds == 0)
+            {
+                _ = NotifyTimeUpAsync();
+            }
+        }
     }
+
+    //--------------------------------------------------------------------------------
+    // Helper
+    //--------------------------------------------------------------------------------
+
+    private void ShowButtons(List<DeckButtonInfo> buttons)
+    {
+        Buttons.Clear();
+        foreach (var button in buttons)
+        {
+            Buttons.Add(button);
+        }
+    }
+
+    // 診断のパネル(DiagnosticSampler)と同じ取り方。CPU は前回からの CPU 時間の増分、メモリは WorkingSet
+    private void UpdateUsage()
+    {
+        var statistics = deviceInformation.ReadProcessStatistics();
+        var elapsed = Stopwatch.GetElapsedTime(previous.Timestamp, statistics.Timestamp).TotalSeconds;
+        if ((elapsed > 0) && (cpuButton is not null) && (memButton is not null))
+        {
+            var cpuUsage = (statistics.CpuTime - previous.CpuTime).TotalSeconds / elapsed * 100 / processorCount;
+            previous = statistics;
+            cpuButton.Text = String.Join(Environment.NewLine, "CPU", $"{cpuUsage:F1}%");
+            memButton.Text = String.Join(Environment.NewLine, "MEM", $"{statistics.WorkingSet / MegaByte:F0} MB");
+        }
+    }
+
+    private static string FormatTimer(int seconds) => TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss", CultureInfo.InvariantCulture);
 }
-#pragma warning restore CA5394

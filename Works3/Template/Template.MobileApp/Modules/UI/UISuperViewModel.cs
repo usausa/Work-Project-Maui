@@ -68,6 +68,18 @@ public sealed partial class UISuperViewModel : AppViewModelBase
         }
     ];
 
+    public IReadOnlyList<SuperShop> Shops { get; } =
+    [
+        new() { Glyph = Fonts.MaterialIcons.Local_cafe, Name = "カフェ モカ", Category = "カフェ", Color = Color.FromArgb("#6D4C41"), Distance = 120, Crowd = SuperCrowd.Low },
+        new() { Glyph = Fonts.MaterialIcons.Ramen_dining, Name = "麺処 ひだまり", Category = "ラーメン", Color = Color.FromArgb("#E53935"), Distance = 350, Crowd = SuperCrowd.High },
+        new() { Glyph = Fonts.MaterialIcons.Local_grocery_store, Name = "フードマート", Category = "スーパー", Color = Color.FromArgb("#43A047"), Distance = 480, Crowd = SuperCrowd.Medium },
+        new() { Glyph = Fonts.MaterialIcons.Bakery_dining, Name = "パン工房 ルナ", Category = "パン", Color = Color.FromArgb("#FB8C00"), Distance = 620, Crowd = SuperCrowd.Low },
+        new() { Glyph = Fonts.MaterialIcons.Local_pharmacy, Name = "あおば薬局", Category = "ドラッグストア", Color = Color.FromArgb("#1E88E5"), Distance = 780, Crowd = SuperCrowd.Medium },
+        new() { Glyph = Fonts.MaterialIcons.Menu_book, Name = "ブックス 青空", Category = "書店", Color = Color.FromArgb("#5E35B1"), Distance = 930, Crowd = SuperCrowd.Low }
+    ];
+
+    public IObserveCommand AcquireCommand { get; }
+
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
@@ -78,6 +90,8 @@ public sealed partial class UISuperViewModel : AppViewModelBase
         timer = dispatcher.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(5);
         Disposables.Add(timer.TickAsObservable().Subscribe(_ => BannerPosition = (BannerPosition + 1) % Banners.Count));
+
+        AcquireCommand = MakeDelegateCommand<SuperCoupon>(x => x.IsAcquired = !x.IsAcquired);
     }
 
     //--------------------------------------------------------------------------------

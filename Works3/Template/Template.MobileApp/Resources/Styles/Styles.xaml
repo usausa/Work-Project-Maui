@@ -39,6 +39,9 @@
     <s:CompareToBoolConverter x:Key="EqualsConverter"
                               Expression="{x:Static s:CompareExpressions.Equal}" />
 
+    <s:CompareToBoolConverter x:Key="NotEqualsConverter"
+                              Expression="{x:Static s:CompareExpressions.NotEqual}" />
+
     <s:CompareToBoolConverter x:Key="GreaterThanToBoolConverter"
                               Expression="{x:Static s:CompareExpressions.GreaterThan}" />
 

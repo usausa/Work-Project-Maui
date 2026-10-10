@@ -1,0 +1,94 @@
+namespace Template.MobileApp.Models.Sample;
+
+public enum StreamGenre
+{
+    Sf,
+    Action,
+    Romance,
+    Comedy,
+    Documentary,
+    Fantasy
+}
+
+public enum StreamBadge
+{
+    None,
+    New,
+    NewSeason,
+    Live
+}
+
+public enum StreamTrailerKind
+{
+    Trailer,
+    Teaser,
+    Extra
+}
+
+public sealed record StreamTrailer(string Image, string Title, StreamTrailerKind Kind, TimeSpan Length);
+
+// Minutes は上映時間 (分)、Match は好みとの一致 (%)
+public sealed record StreamWork(
+    int Id,
+    string Title,
+    string Image,
+    int Year,
+    StreamGenre Genre,
+    int Minutes,
+    string Rated,
+    double Rating,
+    int Match,
+    StreamBadge Badge,
+    bool IsFeatured,
+    bool IsOriginal,
+    string Synopsis,
+    string Cast,
+    string Director,
+    IReadOnlyList<StreamTrailer> Trailers);
+
+// 見本の作品 (取得の代わり)
+public static class StreamCatalog
+{
+    public static IReadOnlyList<StreamWork> Works { get; } =
+    [
+        new(
+            1, "君の知らない空の果てで", "stream_hero.jpg", 2024, StreamGenre.Sf, 138, "TV-14", 8.4, 98, StreamBadge.NewSeason, true, true,
+            "巨大都市の空を守る若きパイロットたちが、暴走した AI に眠りを妨げられた古代兵器の起動を阻むため、夕暮れの摩天楼を駆け抜ける。",
+            "森 葵、佐藤 蓮、ミア・チェン", "田中 K.",
+            [
+                new("stream_clip01.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 2, 14)),
+                new("stream_clip02.jpg", "ティザー: 管制室", StreamTrailerKind.Teaser, new TimeSpan(0, 1, 2)),
+                new("stream_clip03.jpg", "特別映像: 惑星の夜明け", StreamTrailerKind.Extra, new TimeSpan(0, 4, 30))
+            ]),
+        new(
+            2, "星海のリング", "poster01.jpg", 2025, StreamGenre.Sf, 102, "TV-PG", 8.1, 95, StreamBadge.New, true, true,
+            "銀河の果ての巨大なリングに取り残された宇宙飛行士が、仲間の待つ地球へ帰るため、最後の航路を探す。",
+            "高橋 湊、小林 美月", "中村 S.",
+            [new("poster01.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 1, 48))]),
+        new(
+            3, "紅の残響", "poster02.jpg", 2023, StreamGenre.Action, 125, "TV-MA", 7.9, 91, StreamBadge.None, true, false,
+            "雨の降る裏通りで、赤い刀を持つ剣士が、姉を奪った組織への復讐のため一夜の戦いに挑む。",
+            "黒川 玲、伊藤 剛", "山本 R.",
+            [new("poster02.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 2, 5))]),
+        new(
+            4, "屋上の約束", "poster03.jpg", 2024, StreamGenre.Romance, 98, "TV-G", 8.6, 93, StreamBadge.Live, true, true,
+            "卒業の前の日に屋上で交わした約束。十年後の同じ日、二人は夕焼けの屋上で再会する。",
+            "春野 陽太、水瀬 さくら", "加藤 M.",
+            [new("poster03.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 1, 32))]),
+        new(
+            5, "キッチン三人組", "poster04.jpg", 2025, StreamGenre.Comedy, 58, "TV-G", 7.6, 88, StreamBadge.None, false, true,
+            "料理の苦手な三人が、つぶれかけの洋菓子店を立て直すため、毎日の試作に挑む。笑いと甘さの日々。",
+            "桃井 ひな、黄瀬 りん、栗原 まゆ", "吉田 T.",
+            [new("poster04.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 1, 15))]),
+        new(
+            6, "山の記憶", "poster05.jpg", 2022, StreamGenre.Documentary, 72, "TV-G", 8.2, 86, StreamBadge.None, false, false,
+            "山岳写真家が、亡き父の残した地図を頼りに、北アルプスの尾根をたどる記録。",
+            "大石 誠", "森田 H.",
+            [new("poster05.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 2, 20))]),
+        new(
+            7, "浮遊城の魔導士", "poster06.jpg", 2025, StreamGenre.Fantasy, 112, "TV-PG", 8.3, 94, StreamBadge.None, true, true,
+            "空に浮かぶ城を守る若き魔導士が、城を落とそうとする古い竜との契約の秘密に迫る。",
+            "翠川 レイ、白石 カイ", "西村 A.",
+            [new("poster06.jpg", "本予告", StreamTrailerKind.Trailer, new TimeSpan(0, 1, 56))])
+    ];
+}

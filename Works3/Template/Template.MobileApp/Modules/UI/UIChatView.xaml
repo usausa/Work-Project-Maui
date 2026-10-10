@@ -150,6 +150,17 @@
                 <Setter Property="BackgroundColor" Value="Transparent" />
                 <Setter Property="Aspect" Value="AspectFit" />
             </Style>
+            <Style x:Key="PhotoBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="200" />
+                <Setter Property="HeightRequest" Value="150" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            </Style>
+            <Style x:Key="PhotoImage"
+                   TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFill" />
+            </Style>
             <Style x:Key="ToolbarActionButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="40" />
@@ -268,6 +279,27 @@
                 <Setter Property="Padding" Value="8" />
             </Style>
 
+            <Style x:Key="ReactionBand"
+                   TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource ReactionBackground}" />
+                <Setter Property="Stroke" Value="{StaticResource ReactionBorder}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="4,0" />
+                <Setter Property="Margin" Value="0,4,0,0" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+            </Style>
+
+            <Style x:Key="ReactionBandButton"
+                   TargetType="Button">
+                <Setter Property="WidthRequest" Value="44" />
+                <Setter Property="HeightRequest" Value="44" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="22" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
             <Style x:Key="StampTrayButton"
                    TargetType="ImageButton">
                 <Setter Property="WidthRequest" Value="72" />
@@ -291,6 +323,24 @@
                         <Label Style="{StaticResource ReactionCountLabel}"
                                Text="{Binding Count}" />
                     </HorizontalStackLayout>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ReactionBandTemplate"
+                          x:DataType="models:ChatMessage">
+                <Border Style="{StaticResource ReactionBand}">
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=ReactionList, x:DataType={x:Type module:UIChatViewModel}}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type x:String}">
+                                <Button Style="{StaticResource ReactionBandButton}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=AddReactionCommand, x:DataType={x:Type module:UIChatViewModel}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="{Binding .}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                 </Border>
             </DataTemplate>
 
@@ -326,6 +376,12 @@
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
                                    IsVisible="{Binding StampSource, Converter={StaticResource NotEmptyConverter}}" />
+                            <Border Grid.Column="1"
+                                    Style="{StaticResource PhotoBorder}"
+                                    IsVisible="{Binding PhotoSource, Converter={StaticResource NotEmptyConverter}}">
+                                <Image Style="{StaticResource PhotoImage}"
+                                       Source="{Binding PhotoSource}" />
+                            </Border>
                         </Grid>
                         <HorizontalStackLayout Style="{StaticResource SendReactionList}"
                                                BindableLayout.ItemsSource="{Binding Reactions}"
@@ -340,6 +396,13 @@
                           x:DataType="models:ChatMessage">
                 <Grid Style="{StaticResource ReceiveMessageRow}"
                       ColumnDefinitions="40,*">
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid"
+                                     Binding="{Binding IsSelected}"
+                                     Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource AmberLighten4}" />
+                        </DataTrigger>
+                    </Grid.Triggers>
                     <Border Grid.Column="0"
                             Style="{StaticResource AvatarBorder}">
                         <Image Source="{Binding AvatarSource}"
@@ -349,8 +412,13 @@
                                          Style="{StaticResource ReceiveContentStack}">
                         <Label Style="{StaticResource AuthorLabel}"
                                Text="{Binding Author}" />
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <Grid Style="{StaticResource ReceiveBubbleGrid}"
                               ColumnDefinitions="Auto,Auto">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SelectCommand, x:DataType={x:Type module:UIChatViewModel}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
                             <Border Grid.Column="0"
                                     Style="{StaticResource ReceiveBubbleBorder}">
                                 <Border.IsVisible>
@@ -368,14 +436,24 @@
                                    Style="{StaticResource StampImage}"
                                    Source="{Binding StampSource}"
                                    IsVisible="{Binding StampSource, Converter={StaticResource NotEmptyConverter}}" />
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource PhotoBorder}"
+                                    IsVisible="{Binding PhotoSource, Converter={StaticResource NotEmptyConverter}}">
+                                <Image Style="{StaticResource PhotoImage}"
+                                       Source="{Binding PhotoSource}" />
+                            </Border>
                             <Label Grid.Column="1"
                                    Style="{StaticResource ReceiveTimeLabel}"
                                    Text="{Binding DateTime, Converter={StaticResource ChatTimeConverter}}" />
                         </Grid>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                         <HorizontalStackLayout Style="{StaticResource ReceiveReactionList}"
                                                BindableLayout.ItemsSource="{Binding Reactions}"
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
                                                IsVisible="{Binding Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
+                        <ContentView behaviors:LazyViewOption.Template="{StaticResource ReactionBandTemplate}"
+                                     behaviors:LazyViewOption.Load="{Binding IsSelected}"
+                                     IsVisible="{Binding IsSelected}" />
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
