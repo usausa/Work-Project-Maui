@@ -84,7 +84,7 @@ Template project for MAUI.
 | Decision | Pending decisions (CoreCLR runtime) |
 | Device | Health Connect (candidate, pending decision) |
 | Sample | AI tool calling (candidate, pending decision) |
-| UI | Brushup (UI 1 / UI 2, View component screens, details of existing screens) |
+| UI | Control extraction to libraries (Smart.Maui.Controls, Skia gauges) |
 
 ## Pending
 

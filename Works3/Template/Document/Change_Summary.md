@@ -258,17 +258,6 @@ A-9 の補足:
 | `NoWarn` | `NU1903` を **TODO 付きで暫定追加**(次区間で解消) |
 | ドキュメント | `Document/UI_Development_Log.md` / `Document/UI_Verification_Checklist.md` を新設 |
 
-### 💫動きの案の試し(2026-10-11)
-
-| 対象 | 内容 |
-|---|---|
-| `Controls/SeriesSegmentView.cs` / `Modules/UI/UIWeatherViewModel.cs` / `UIWeatherView.xaml` | Weather の時間ごとの線を、開いたときに左から描き込む。`RevealOrder`(一覧の中の順番。行の型の `UIWeatherHour.Index`)のぶん 80 ms ずつ遅らせ、1 項目を 80 ms で描く。起点は一覧の中で最初に表示した項目の時刻(一覧に添付プロパティで持つ)で、遅れて作られた項目(スクロールで出た項目)は描き込まない。点と文字は線が中央に届いてから出す |
-| `Messaging/MapsuiController.cs` | Map2 の Overlay の経路を、出したときに始点から終点へ 1.2 秒で描き込む。始点からの長さの割合で最後の線分を途中まで描く(`FindTip`) |
-| `Modules/Device/DeviceBluetoothView.xaml` | 円の `Pulse` は接続中だけにし、印刷中は円のアイコンを印刷のアイコンにして `Wave` で揺らす |
-
-- 実機: Weather は開いたときに今から右へ線が伸び、約 0.9 秒で描き終わる。Map2 は Overlay を入れると始点の点から終点まで線が伸びる。Bluetooth は DummyPrinter が無いので接続中から失敗になり、印刷中の動きは見ていない
-- ビルド 0 警告
-
 ## 💡C. この区間のナレッジ
 
 - **正確な API 名**(発明注意): CountUp=`LabelOption.CountUpValue/CountUpFormat/CountUpDuration`、フォーカス枠=`Focus.FocusedStroke/FocusedThickness`(親 Border 必須)、Make* コマンドヘルパは canExecute 自動再評価(`.Observe()` は存在しない)、`s:NullToText` は Null/NonNull 置換のみ(値パススルー不可 → 空状態は 2 ラベル + `NullToBoolConverter`)
@@ -3393,14 +3382,14 @@ View > Toolkit の 2 つ目のタブと Kit の設定の色の選択も、初め
 |---|---|
 | `Behaviors/AnimationOption.cs` | `Spin`(1 周 1.2 秒で回り続ける。止めると 0 度)、`Blink`(透明度 1 → 0.3 → 1 を 1 秒)、`Heartbeat`(1.0 → 1.18 → 1.0 → 1.1 → 1.0 の 2 段の後に休む。`HeartbeatRate` は毎分の回数で既定 72)、`HeartbeatTrigger` / `HeartbeatValue`(値が変わったときに 1 回打つ)、`JumpTrigger` / `JumpValue`(14 上がって落ち、下の端を起点に縦につぶれて戻る)、`Float`(3 秒で 6 上がって戻る)。続く動きは表示中だけ動く |
 | `Modules/View/ViewAnimationView.xaml` / `ViewAnimationViewModel.cs` | Loop animation(Spin・Blink・Heartbeat・Float・Ripple と、止めるスイッチを 1 行)と Trigger animation(Jump・Heartbeat。押すと 1 回動く)。カードは Click・Loop・Trigger・Tap の順で、題に括弧書きを付けず、カードの中に説明の文を置かない。アイコンごとの色で並べ、Jump は上に跳ねる分の余白を取る |
-| `Document/UIBrushup_Plan.md` / `Document/Japanese_Text_List.md`(新規) | 10-35 アニメーションの強化(① 部品と見本、② 画面ごとの案を当てる)と、10-36 英語への統一(画面ごとの文言の数)。UI と App 以外の画面の日本語の文言は、画面・文言・英語候補の表 |
+| `Document/UIBrushup_Plan.md` | 10-35 アニメーションの強化(① 部品と見本、② 画面ごとの案を当てる)と、10-36 英語への統一(画面ごとの文言の数) |
 
 - 実機: View > Animation で続く動き 5 つを続けて撮り、回転・点滅・拡大・上下・輪の広がりを確かめた。Jump と Heartbeat は押すと 1 回動き、Jump の上は切れない
 - ビルド 0 警告
 
 ### 🔤UI と App 以外の文言の英語化(2026-10-11)
 
-Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本語の文言(見出し・説明・ボタン・状態・ダイアログ・トースト・通知・ログ)を、`Document/Japanese_Text_List.md` の英語候補のとおりにした。データとして表示する所(Suica の端末と処理の名前、グラフ・地図・ドラッグの見本の項目、ドロワーのメニューと名前、曜日、Font の見本、言語名、Activity の項目、DurationPicker の「分」、人数)は日本語のまま。
+Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本語の文言(見出し・説明・ボタン・状態・ダイアログ・トースト・通知・ログ)を英語にした。データとして表示する所(Suica の端末と処理の名前、グラフ・地図・ドラッグの見本の項目、ドロワーのメニューと名前、曜日、Font の見本、言語名、Activity の項目、DurationPicker の「分」、人数)は日本語のまま。
 
 | 対象 | 内容 |
 |---|---|
@@ -3412,7 +3401,6 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Controls/ChatView.xaml` / `Modules/Sample/SampleChatViewModel.cs` / `SampleCropView.xaml` / `SampleCropViewModel.cs` / `Graphics/Drawing/CropDrawing.cs` / `SampleCvLocalView.xaml` / `SampleCvNetView.xaml` / `SampleCvNetViewModel.cs` / `SampleMediaView.xaml` | 入力欄・応答とエラーの文・ボタン |
 | `Modules/View/ViewBorderView.xaml` / `ViewBottomSheetView.xaml` / `ViewBottomSheetViewModel.cs` / `ViewCustomView.xaml` / `ViewDragDropView.xaml` / `ViewDrawerView.xaml` / `ViewDrawerViewModel.cs` / `ViewEffectView.xaml` / `ViewGraphicsView.xaml` / `ViewLayoutView.xaml` / `ViewLottieView.xaml` / `ViewShadowView.xaml` / `ViewStateView.xaml` / `ViewStatePanelView.xaml` / `ViewToolkitView.xaml` / `Controls/DurationPicker.cs` | 見出し・説明・ボタン・Toolkit の見本の FAQ。Bottom Sheet の選択肢は VM の値と変換のキーをそろえて英語に。DurationPicker の単位の「時間」は「時」 |
 | `Modules/View/ViewDragDropView.xaml` / `ViewGraphicsView.xaml` | 操作の説明の文(長押しでドラッグして並べ替える・長押しでドラッグして別のリストかゴミ箱に落とす・指でなぞって描く)を消した |
-| `Document/Japanese_Text_List.md`(新規) | 変える文言の画面・文言・英語候補の表 |
 
 - 実機: View > Animation・Drag & Drop・Graphics・Effect・Layout・Bottom Sheet、Basic > Setting、Device > Status・Biometric で、英語の文言と表示の崩れが無いことを確かめた
 - ビルド 0 警告
@@ -3471,6 +3459,64 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - UI > Kit・Schedule・Character には動きを足さない(Kit の心拍のハート・未読の点・配送の追跡、Schedule の今の時刻の点、Character の星は動かない)
 - 実機: ヘッダーの ⛔ の点滅、Stream の LIVE の点滅(NEW SEASON は止まったまま)、Shop のお気に入り(入れたときに鼓動、外したときは動かない)、Load の履歴の流れと録音中の点、NFC の待ち受けの波紋、Weather の今の時間の点の波紋、Timer(残り 10 秒の鼓動)
 - ビルド 0 警告、inspectcode は 2 件(`ActivityDrawing` の不要なキャスト)を直した
+
+### 💫動きの案の試し(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/SeriesSegmentView.cs` / `Modules/UI/UIWeatherViewModel.cs` / `UIWeatherView.xaml` | Weather の時間ごとの線を、開いたときに左から描き込む。`RevealOrder`(一覧の中の順番。行の型の `UIWeatherHour.Index`)のぶん 80 ms ずつ遅らせ、1 項目を 80 ms で描く。起点は一覧の中で最初に表示した項目の時刻(一覧に添付プロパティで持つ)で、遅れて作られた項目(スクロールで出た項目)は描き込まない。点と文字は線が中央に届いてから出す |
+| `Modules/Device/DeviceBluetoothView.xaml` | 円の `Pulse` は接続中だけにし、印刷中は円のアイコンを印刷のアイコンにして `Wave` で揺らす |
+
+- 実機: Weather は開いたときに今から右へ線が伸び、約 0.9 秒で描き終わる。Bluetooth は DummyPrinter が無いので接続中から失敗になり、印刷中の動きは見ていない
+- ビルド 0 警告
+
+### 🛡️ポップアップの前後のコマンドの受け付け(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Extender/GuardedPopupNavigator.cs`(新規) | `PopupNavigator` を包む `IPopupNavigator`。1 枚目を開くときに今の画面の VM(`Navigator.CurrentTarget`)の `OnDeactivated()` を呼んで `AcceptsCommand` を止め、閉じた後に同じ画面なら `OnActivated()` で戻す。開いていないときの `CloseAsync` と、閉じる途中の 2 回目の `CloseAsync` は無視する |
+| `Extender/IPopupNavigatorAware.cs` / `PopupNavigatorAwarePlugin.cs`(新規) | ポップアップを作るときに、VM が `IPopupNavigatorAware` なら `IPopupNavigator` を渡す(`IPopupPlugin`)。`PopupNavigator` がプラグインを受け取って作られるので、`IPopupNavigator` は渡すときに `IServiceProvider` から取り出す |
+| `Modules/AppDialogViewModelBase.cs` | `IPopupNavigatorAware` を実装し、`IPopupNavigator` は private のまま持つ(派生クラスから使わせない)。閉じる入口の `CloseAsync()` / `CloseAsync(result)` は、閉じ始めたら `AcceptsCommand` を false にして、閉じ終わるまでに届いたコマンドを受け付けない |
+| `Modules/Navigation/Modal/InputNumberViewModel.cs` | コンストラクターで `IPopupNavigator` を受け取らず、基底の `CloseAsync` で閉じる |
+| `MauiProgram.cs` / `GeneratedFactory.cs` | `PopupNavigator` と `IPopupNavigator`(`GuardedPopupNavigator`)を `AddComponentsPopup` より前に登録。`PopupNavigatorAwarePlugin` を `AddComponentsPopupPlugin` で登録し、ファクトリの生成の属性を足した |
+
+- 実機(一時のログで確かめ、ログは外した): Navigation のメニューの Dialog で、開くとメニューの VM が `OnDeactivated`、閉じると `OnActivated` になり、その後 Edit へ進める。1 回のコマンドで `CloseAsync` を 2 回呼んでも 2 回目は無視され、閉じるのは 1 回(例外なし)。✓ の同時 2 回でも、閉じるのと結果の表示は 1 回。戻るキーはポップアップが受け、下の画面は動かない。DI の実行時のフォールバックに新しい型は出ない
+- ビルド 0 警告
+
+### 🐛見つけた不具合の修正(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Behaviors/ButtonOption.cs` | PressBind は True のときだけ Behavior を付ける |
+| Smart.Maui(サブモジュール)の `Maui/Interactivity/AppLifecycleBehavior.cs` | 外すときも `ParentChanged` から外す |
+| Smart.Maui(サブモジュール)の `Maui/Interactivity/TapActionBehavior.cs` | `ParameterProperty` の所有型を `TapActionBehavior` に |
+
+- ビルド 0 警告
+
+### 🧩コントロールの抽出の計画(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Control_Extraction_Plan.md`(新規) | 汎用のコントロールを移す計画。非 Skia は MauiComponents と関連する名前のライブラリ(名前の案は `MauiComponents.Controls`・`MauiControls`)、Skia は Gauge だけを `ClamGauge` へ。対象ごとの用途・使っている画面・汎用性(★)・移す前の手直しと、ClamGauge の Example(パターン・タップとスライダーでの値・色の切り替え) |
+| `Document/Task_Checklist.md` / `README.md` | コントロールの抽出は計画書で管理し、README の TODO に 1 行 |
+
+### 📚計画書の整理(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/UIBrushup_Plan.md` | 削除。画面の作りの決まりは付録A へ |
+| `Document/Biometric_Plan.md` | 削除。残りの 4-2(生体認証で守る秘密)と 4-4(パスキー)に要る作り方・制約・前提は `Task_Checklist.md` の 4 節へ |
+| `Document/Other_App_Candidates.md` / `Telemetry_Study.md` | 削除。ディープリンクと、クラッシュ・テレメトリのほかの方式は `Task_Checklist.md` の 14 節(別のアプリでの導入候補)へ |
+| `Document/Task_Checklist.md` / `README.md` | 上の移動と、TODO の UI のブラッシュアップの行を外した |
+
+### 🔧DI のファクトリ(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `GeneratedFactory.cs` | `MauiComponents.WiFiManager` のファクトリの生成の属性を足した |
+
+- 実機: DEBUG の起動で、実行時のフォールバックが 0 件
+- ビルド 0 警告
 
 ## 💡C. この区間のナレッジ
 
@@ -3620,6 +3666,9 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 開く時間に効くのは、画面を開くときにハンドラーを作る要素の数。画面に加えない要素(初めて開くときに画面に加えるシートの中身)を作らないようにしても、開く時間は変わらない
 - Syncfusion の `SfTabView` の `SelectedIndex` は `int`。2 つ目以降のタブの中身は、`x:Reference` で `SelectedIndex` を `EqualsConverter` と比べた値を `LazyViewOption.Load` に渡すと、タブを初めて選んだときに作れる
 - `HybridWebView` で Vite + React の雛形のページを開くと、アプリを起動して最初でも約 0.4 秒で中身が出る(Pixel 9a・Debug)
+- Smart.Mvvm の `ViewModelOptions` の既定の BusyState は共有の `BusyState.Default` で、画面の VM とシェル(`MainPageViewModel`)が同じ Busy を見る。ポップアップの VM(`AppDialogViewModelBase`)が自前の BusyState を持つのは、呼び出し元のコマンドの Busy に巻き込まれないため
+- `IPopupPlugin.Extend` はポップアップの VM ができた後に呼ばれるので、VM に値を渡すのに使える。`PopupNavigator` は `IPopupPlugin` を受け取って作られるので、プラグインから `IPopupNavigator` を使うときは、渡すときに `IServiceProvider` から取り出す(循環を避ける)
+- 継承できるクラスでインターフェイスを明示的に実装すると CA1033 になる。通常の public の実装にする
 - **`IPopupNavigator` のポップアップ(CommunityToolkit の Popup)は MAUI のモーダルとして別ウィンドウで出る**。戻るキーとタップは下の画面に届かない(戻るキーはポップアップが受け、`CanBeDismissedByTappingOutsideOfPopup` = false なら何もしない)。ポップアップの間も呼び出し元の `AcceptsCommand` は true のまま(Smart.Navigation の遷移ではないので `OnDeactivated` が呼ばれない)
 - `uiautomator dump` は絵文字を文字参照で返す(「🥝 Dialog」は `&#129373; Dialog`)。文字で探すときは文字参照で比べる
 - **`*` の行に中央で置いた盤面は、すぐ下の `Auto` の行の高さが変わると動く**(盤面の大きさは幅と高さの短い方なので、大きさも変わる)。出し入れする要素は同じセルの `Grid` に入れて `MinimumHeightRequest` で高さをそろえる
@@ -3682,6 +3731,28 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`
 - `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
+
+### 🖼️画面の作りの決まり
+
+- 画面の下に大きな余白を残さない。余る画面は、その画面らしい情報(履歴・グラフ・一覧)で埋める。中央のカード 1 枚の画面(QR Display・Bluetooth・BLE Host・Audio・View State)は、主役を空きの真ん中に、操作を下にそろえる
+- UI の画面の操作は F キーのまま(画面の中にボタンを足さない。App のミニアプリは画面の中のボタン)。遷移先の無いボタンは押しても何も出さない
+- 一覧の行は角丸のカードにせず、フラットな行と区切り線にして、中身を色付きのバッジと絵文字で示す
+- 一覧から開く画面(Stream → 詳細、Mail → 本文)は、`[Scope]` の文脈クラスで選んだ項目を共有する。集計・ポイントのような画面の規則は文脈クラスかモデルに置き、VM は呼び出しとバインドだけにする。値段・日時は文字列ではなく値で持ち、書式は XAML で付ける
+- 見本のデータの日時は今日からの相対にする(固定の日付や、予定の無い曜日を作らない)。文面は実在しそうな内容にする
+- 画像は既存の画像(商品・ポスター・人物・写真)を使い、足りない所は絵文字とアイコンにする。新しい画像は作らない
+- 下から出るシートは自作の `BottomSheetView` を優先する。部品の画面(View の Toolkit・Custom・Chart・Sf Chart・Bottom Sheet・Drawer)は、部品の一覧と、ライブラリと自作の比較の見本として残す
+- UI・App 以外の画面の文字は英語で簡潔にする(データとして出す所は除く)。日本語の画面は UI 2 の Habit・Home と App のミニアプリ。題・メニュー・F キー、機材・計器風の英語、方位、英語のバッジは英語。曜日は端末の言語
+- 文章の中は、日本語と英語・数字の間と括弧の前に半角スペースを入れない。パラメータ的な所(部品の名前と括弧の補足・値と単位・ID・ファイル名)、「:」の後、記号と「/」の区切りの前後、角括弧の前、リストの点の絵文字の後は入れる
+- 補足の文に、実装の説明・断り書き・「⇔」・状態の移り変わりを書かない。書くのは何をするかだけ。操作の説明の文(ガイド)は足さない
+- メニューの大きさ(文字・すき間)と色は変えない。メニュー・F キー・Action のボタン・ダイアログ・グラフは角丸にしない
+- 見出しのアイコンには、鮮やかな色(XxxDefault。琥珀は AmberDarken2)を画面ローカルのスタイルで付ける
+- 名前と値の行は、共有の `CardNameValueGrid` / `CardNameLabel` / `CardValueLabel` / `CardMonoValueLabel`(名前 14 の灰・値 16 の濃い色・行の間に 1px の線。ID・パス・日時は等幅の 14)
+- 状態は淡い地のチップ(`StatusChip` の `Tone`。緑 = 正常・接続済み、琥珀 = 途中・注意、赤 = エラー・切断、灰 = 未使用・停止)。エラーの文は共有の `CardErrorBorder` / `CardErrorIconLabel` / `CardErrorLabel`
+- 一覧の空の表示は `EmptyView` に `BasicEmptyStack`、読み込み中は `BasicLoadingIndicator`。通信できないときは空の表示を出さない
+- ボタンは、主な操作が `BasicFilledButton`、ほかはアイコン付きの `BasicIconOutlinedButton`、消す操作は `BasicOutlinedCancelButton`。押す部品の高さは 44 以上
+- カメラの画面(Camera・QR Scan・OCR)は黒地にし、プレビューに重ねた丸いボタンと状態のチップでそろえる
+- 許可値以外の文字の大きさと押す部品の高さは、その画面を直すときに許可値へ寄せる。要素に直接書いた見た目の属性(見本の内容のものを除く)は、画面ローカルのスタイルへ移す
+- 動きは足しすぎない(UI > Kit・Schedule・Character には足さない)。表示だけの演出は付けない
 
 ## ⚖️付録B. 意図的差異・統合しない判断
 
