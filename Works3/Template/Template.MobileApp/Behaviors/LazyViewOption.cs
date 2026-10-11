@@ -4,8 +4,9 @@ using CommunityToolkit.Maui.Views;
 
 // CommunityToolkit の LazyView は LoadViewAsync() 呼び出しで初めて中身を生成する。
 // code-behind を使わず VM のフラグから起動できるよう添付プロパティで橋渡しする
-// ContentView には Template (DataTemplate) を渡すと、Load が初めて true になったときに中身を作る (以後は残す)
-public static class LazyViewOption
+// ContentView には Template (DataTemplate) を渡すと、Load が初めて true になったときに中身を作る (以後は残す)。
+// Deferred を付けると、画面を表示した後 (最初の描画の後) に中身を作る
+public static partial class LazyViewOption
 {
     public static readonly BindableProperty LoadProperty = BindableProperty.CreateAttached(
         "Load",
@@ -29,6 +30,17 @@ public static class LazyViewOption
 
     public static void SetTemplate(BindableObject bindable, DataTemplate? value) => bindable.SetValue(TemplateProperty, value);
 
+    public static readonly BindableProperty DeferredProperty = BindableProperty.CreateAttached(
+        "Deferred",
+        typeof(bool),
+        typeof(LazyViewOption),
+        false,
+        propertyChanged: HandleDeferredChanged);
+
+    public static bool GetDeferred(BindableObject bindable) => (bool)bindable.GetValue(DeferredProperty);
+
+    public static void SetDeferred(BindableObject bindable, bool value) => bindable.SetValue(DeferredProperty, value);
+
     private static void HandleLoadChanged(BindableObject bindable, object oldValue, object newValue)
     {
         if ((bindable is LazyView view) && (newValue is true) && !view.HasLazyViewLoaded)
@@ -48,6 +60,26 @@ public static class LazyViewOption
             LoadTemplate(content);
         }
     }
+
+    private static void HandleDeferredChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if ((bindable is ContentView view) && (newValue is true))
+        {
+            view.HandlerChanged += HandleDeferredHandlerChanged;
+        }
+    }
+
+    private static void HandleDeferredHandlerChanged(object? sender, EventArgs e)
+    {
+        if ((sender is ContentView view) && (view.Handler is not null))
+        {
+            view.HandlerChanged -= HandleDeferredHandlerChanged;
+            RunAfterDraw(view, () => SetLoad(view, true));
+        }
+    }
+
+    // 最初の描画の後に実行する
+    private static partial void RunAfterDraw(ContentView view, Action action);
 
     private static void LoadTemplate(ContentView view)
     {

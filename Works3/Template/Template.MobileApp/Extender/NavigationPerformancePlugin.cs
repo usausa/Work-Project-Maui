@@ -4,10 +4,12 @@ using System.Diagnostics;
 
 using Smart.Navigation.Plugins;
 
-// 画面遷移の時間と画面の要素の数をデバッグ出力に書く (MauiProgram.cs の #if false を有効にして使う)。
+// 画面遷移の時間と画面の要素の数をデバッグ出力に書く (MauiProgram.cs の先頭で NAVIGATION_PERFORMANCE を定義して使う)。
 // 時間は遷移の始まりからの ms。frame は表示の後の最初の処理で、画面を開く時間の目安
-public sealed class PerfPlugin : PluginBase
+public sealed class NavigationPerformancePlugin : PluginBase
 {
+    private const string Tag = "[NavigationPerformance]";
+
     private static long start;
 
     public static void Attach(INavigator navigator)
@@ -17,29 +19,29 @@ public sealed class PerfPlugin : PluginBase
             if (navigator.Executing)
             {
                 start = Stopwatch.GetTimestamp();
-                Debug.WriteLine("[NAV] start");
+                Debug.WriteLine($"{Tag} start");
             }
         };
     }
 
     public override void OnCreate(IPluginContext pluginContext, object view, object? target)
     {
-        Debug.WriteLine($"[NAV] create {view.GetType().Name} {Elapsed()}");
+        Debug.WriteLine($"{Tag} create {view.GetType().Name} {Elapsed()}");
     }
 
     public override void OnNavigatingTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object? target)
     {
-        Debug.WriteLine($"[NAV] navigatingTo {navigationContext.ToId} {Elapsed()}");
+        Debug.WriteLine($"{Tag} navigatingTo {navigationContext.ToId} {Elapsed()}");
     }
 
     public override void OnNavigatedTo(IPluginContext pluginContext, INavigationContext navigationContext, object view, object? target)
     {
         var id = navigationContext.ToId;
-        Debug.WriteLine($"[NAV] navigatedTo {id} {Elapsed()}");
+        Debug.WriteLine($"{Tag} navigatedTo {id} {Elapsed()}");
         _ = Application.Current!.Dispatcher.DispatchAsync(() =>
         {
             var root = (IVisualTreeElement)view;
-            Debug.WriteLine($"[NAV] frame {id} {Elapsed()} elements={Count(root)}");
+            Debug.WriteLine($"{Tag} frame {id} {Elapsed()} elements={Count(root)}");
             Analyze(root, id.ToString() ?? string.Empty);
         });
     }
@@ -80,7 +82,7 @@ public sealed class PerfPlugin : PluginBase
         }
 
         Walk(root, false, false);
-        Debug.WriteLine($"[NAV] tree {id} hidden={hidden} inList={inList} types=" + String.Join(",", types.OrderByDescending(static x => x.Value).Take(14).Select(static x => $"{x.Key}:{x.Value}")));
-        Debug.WriteLine($"[NAV] hidden {id} " + String.Join(",", hiddenTypes.OrderByDescending(static x => x.Value).Take(10).Select(static x => $"{x.Key}:{x.Value}")));
+        Debug.WriteLine($"{Tag} tree {id} hidden={hidden} inList={inList} types=" + String.Join(",", types.OrderByDescending(static x => x.Value).Take(14).Select(static x => $"{x.Key}:{x.Value}")));
+        Debug.WriteLine($"{Tag} hidden {id} " + String.Join(",", hiddenTypes.OrderByDescending(static x => x.Value).Take(10).Select(static x => $"{x.Key}:{x.Value}")));
     }
 }

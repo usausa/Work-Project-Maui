@@ -418,95 +418,6 @@
                 <Setter Property="Padding" Value="0,0,0,12" />
             </Style>
 
-            <DataTemplate x:Key="PostsTemplate"
-                          x:DataType="module:UIProfileViewModel">
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding PostList}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="module:UIProfilePost">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource PostRowGrid}"
-                                      RowDefinitions="Auto,Auto">
-                                    <Label Grid.Row="0"
-                                           Style="{StaticResource PostTextLabel}"
-                                           Text="{Binding Text}" />
-                                    <HorizontalStackLayout Grid.Row="1"
-                                                           Style="{StaticResource PostMetaRow}">
-                                        <Label Style="{StaticResource PostMetaLabel}"
-                                               Text="{Binding Posted, Converter={StaticResource ElapsedTimeConverter}}" />
-                                        <Label Style="{StaticResource PostMetaLabel}"
-                                               Text="{Binding Likes, StringFormat='❤️ {0}'}" />
-                                        <Label Style="{StaticResource PostMetaLabel}"
-                                               Text="{Binding Comments, StringFormat='💬 {0}'}" />
-                                    </HorizontalStackLayout>
-                                </Grid>
-                                <BoxView Style="{StaticResource RowDivider}" />
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </DataTemplate>
-
-            <DataTemplate x:Key="LikesTemplate"
-                          x:DataType="module:UIProfileViewModel">
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding LikeList}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="module:UIProfileLike">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource LikeRowGrid}"
-                                      ColumnDefinitions="40,*">
-                                    <Border Grid.Column="0"
-                                            Style="{StaticResource LikeAvatarBorder}">
-                                        <Image Style="{StaticResource PhotoImage}"
-                                               Source="{Binding Avatar}" />
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         Style="{StaticResource LikeTextStack}">
-                                        <HorizontalStackLayout Style="{StaticResource LikeHeaderRow}">
-                                            <Label Style="{StaticResource LikeAuthorLabel}"
-                                                   Text="{Binding Author}" />
-                                            <Label Style="{StaticResource PostMetaLabel}"
-                                                   VerticalOptions="Center"
-                                                   Text="{Binding Posted, Converter={StaticResource ElapsedTimeConverter}}" />
-                                        </HorizontalStackLayout>
-                                        <Label Style="{StaticResource PostTextLabel}"
-                                               Text="{Binding Text}" />
-                                    </VerticalStackLayout>
-                                </Grid>
-                                <BoxView Style="{StaticResource RowDivider}" />
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </DataTemplate>
-
-            <DataTemplate x:Key="PhotoViewerTemplate"
-                          x:DataType="module:UIProfileViewModel">
-                <Grid Style="{StaticResource PhotoViewerGrid}"
-                      RowDefinitions="Auto,*,Auto">
-                    <Button Grid.Row="0"
-                            Style="{StaticResource PhotoCloseButton}"
-                            Command="{Binding ClosePhotoCommand}"
-                            Text="{x:Static fonts:MaterialIcons.Close}" />
-                    <CarouselView Grid.Row="1"
-                                  behaviors:CarouselOption.PageSnap="True"
-                                  ItemsSource="{Binding Photos}"
-                                  IndicatorView="{x:Reference PhotoIndicatorView}"
-                                  IsScrollAnimated="False"
-                                  Loop="False"
-                                  Position="{Binding PhotoPosition}">
-                        <CarouselView.ItemTemplate>
-                            <DataTemplate x:DataType="module:UIProfilePhoto">
-                                <Image Style="{StaticResource PhotoViewerImage}"
-                                       Source="{Binding Image}" />
-                            </DataTemplate>
-                        </CarouselView.ItemTemplate>
-                    </CarouselView>
-                    <IndicatorView x:Name="PhotoIndicatorView"
-                                   Grid.Row="2"
-                                   Style="{StaticResource PhotoIndicator}" />
-                </Grid>
-            </DataTemplate>
-
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -704,12 +615,73 @@
                             </FlexLayout>
 
                             <ContentView behaviors:LazyViewOption.Load="{Binding SelectedTab, Converter={StaticResource PostsTabConverter}}"
-                                         behaviors:LazyViewOption.Template="{StaticResource PostsTemplate}"
-                                         IsVisible="{Binding SelectedTab, Converter={StaticResource PostsTabConverter}}" />
+                                         IsVisible="{Binding SelectedTab, Converter={StaticResource PostsTabConverter}}">
+                                <behaviors:LazyViewOption.Template>
+                                    <DataTemplate x:DataType="module:UIProfileViewModel">
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding PostList}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="module:UIProfilePost">
+                                                    <VerticalStackLayout>
+                                                        <Grid Style="{StaticResource PostRowGrid}"
+                                                              RowDefinitions="Auto,Auto">
+                                                            <Label Grid.Row="0"
+                                                                   Style="{StaticResource PostTextLabel}"
+                                                                   Text="{Binding Text}" />
+                                                            <HorizontalStackLayout Grid.Row="1"
+                                                                                   Style="{StaticResource PostMetaRow}">
+                                                                <Label Style="{StaticResource PostMetaLabel}"
+                                                                       Text="{Binding Posted, Converter={StaticResource ElapsedTimeConverter}}" />
+                                                                <Label Style="{StaticResource PostMetaLabel}"
+                                                                       Text="{Binding Likes, StringFormat='❤️ {0}'}" />
+                                                                <Label Style="{StaticResource PostMetaLabel}"
+                                                                       Text="{Binding Comments, StringFormat='💬 {0}'}" />
+                                                            </HorizontalStackLayout>
+                                                        </Grid>
+                                                        <BoxView Style="{StaticResource RowDivider}" />
+                                                    </VerticalStackLayout>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </behaviors:LazyViewOption.Template>
+                            </ContentView>
 
                             <ContentView behaviors:LazyViewOption.Load="{Binding SelectedTab, Converter={StaticResource LikesTabConverter}}"
-                                         behaviors:LazyViewOption.Template="{StaticResource LikesTemplate}"
-                                         IsVisible="{Binding SelectedTab, Converter={StaticResource LikesTabConverter}}" />
+                                         IsVisible="{Binding SelectedTab, Converter={StaticResource LikesTabConverter}}">
+                                <behaviors:LazyViewOption.Template>
+                                    <DataTemplate x:DataType="module:UIProfileViewModel">
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding LikeList}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="module:UIProfileLike">
+                                                    <VerticalStackLayout>
+                                                        <Grid Style="{StaticResource LikeRowGrid}"
+                                                              ColumnDefinitions="40,*">
+                                                            <Border Grid.Column="0"
+                                                                    Style="{StaticResource LikeAvatarBorder}">
+                                                                <Image Style="{StaticResource PhotoImage}"
+                                                                       Source="{Binding Avatar}" />
+                                                            </Border>
+                                                            <VerticalStackLayout Grid.Column="1"
+                                                                                 Style="{StaticResource LikeTextStack}">
+                                                                <HorizontalStackLayout Style="{StaticResource LikeHeaderRow}">
+                                                                    <Label Style="{StaticResource LikeAuthorLabel}"
+                                                                           Text="{Binding Author}" />
+                                                                    <Label Style="{StaticResource PostMetaLabel}"
+                                                                           VerticalOptions="Center"
+                                                                           Text="{Binding Posted, Converter={StaticResource ElapsedTimeConverter}}" />
+                                                                </HorizontalStackLayout>
+                                                                <Label Style="{StaticResource PostTextLabel}"
+                                                                       Text="{Binding Text}" />
+                                                            </VerticalStackLayout>
+                                                        </Grid>
+                                                        <BoxView Style="{StaticResource RowDivider}" />
+                                                    </VerticalStackLayout>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </behaviors:LazyViewOption.Template>
+                            </ContentView>
                         </VerticalStackLayout>
                     </Border>
 
@@ -720,8 +692,36 @@
 
         <ContentView behaviors:AnimationOption.FadeInTrigger="{Binding IsPhotoViewerVisible}"
                      behaviors:LazyViewOption.Load="{Binding IsPhotoViewerVisible}"
-                     behaviors:LazyViewOption.Template="{StaticResource PhotoViewerTemplate}"
-                     IsVisible="{Binding IsPhotoViewerVisible}" />
+                     IsVisible="{Binding IsPhotoViewerVisible}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIProfileViewModel">
+                    <Grid Style="{StaticResource PhotoViewerGrid}"
+                          RowDefinitions="Auto,*,Auto">
+                        <Button Grid.Row="0"
+                                Style="{StaticResource PhotoCloseButton}"
+                                Command="{Binding ClosePhotoCommand}"
+                                Text="{x:Static fonts:MaterialIcons.Close}" />
+                        <CarouselView Grid.Row="1"
+                                      behaviors:CarouselOption.PageSnap="True"
+                                      ItemsSource="{Binding Photos}"
+                                      IndicatorView="{x:Reference PhotoIndicatorView}"
+                                      IsScrollAnimated="False"
+                                      Loop="False"
+                                      Position="{Binding PhotoPosition}">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate x:DataType="module:UIProfilePhoto">
+                                    <Image Style="{StaticResource PhotoViewerImage}"
+                                           Source="{Binding Image}" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
+                        <IndicatorView x:Name="PhotoIndicatorView"
+                                       Grid.Row="2"
+                                       Style="{StaticResource PhotoIndicator}" />
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
     </Grid>
 

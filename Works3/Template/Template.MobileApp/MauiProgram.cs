@@ -1,3 +1,4 @@
+//#define NAVIGATION_PERFORMANCE
 namespace Template.MobileApp;
 
 using System.Net.Http.Headers;
@@ -336,8 +337,8 @@ public static partial class MauiProgram
                 options.RestoreFocus = false;
                 options.RegisterAppEffects();
             });
-#if false
-            config.AddPlugin<PerfPlugin>();
+#if NAVIGATION_PERFORMANCE
+            config.AddPlugin<NavigationPerformancePlugin>();
 #endif
             config.AddPlugin<NavigationTelemetryPlugin>();
             config.AddPlugin<NavigationFocusPlugin>();
@@ -479,8 +480,8 @@ public static partial class MauiProgram
 
         // Setup navigator
         var navigator = services.GetRequiredService<INavigator>();
-#if false
-        PerfPlugin.Attach(navigator);
+#if NAVIGATION_PERFORMANCE
+        NavigationPerformancePlugin.Attach(navigator);
 #endif
         navigator.Navigated += (_, args) =>
         {

@@ -2995,8 +2995,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Models/Sample/SuperPortal.cs`(新規)/ `SuperItems.cs`(削除)/ `Modules/UI/UISuperViewModel.cs` | スーパーアプリのホームの見本 `SuperSample`(`LoadPoint` / `LoadBanners` / `LoadApps` / `LoadCoupons` / `LoadShops`)。VM は個々のプロパティにそれを入れる |
 | `Models/Sample/ButtonDeck.cs`(新規)/ `DeckButtonInfo.cs`(削除)/ `Modules/UI/UIDockViewModel.cs` | ボタンの盤の定義 `DeckButton`(位置・種類・名前・文字・画像・色・押したときの動き `DeckAction`)と、見本の並び `DeckSample`(`LoadButtons` / `LoadFolders`。色 16・フォルダー 2 と中身・音・音量・ミュート・タイマー・ロック・設定・終了・CPU とメモリ)。VM は定義からボタンを作り(コマンドと画像)、ミュート・タイマー・CPU とメモリの表示を変える |
 | `Models/Sample/ChatTalk.cs`(新規)/ `ChatMessage.cs`(削除)/ `Modules/UI/UIChatViewModel.cs` / `UIChatView.xaml` | 自分のメッセージ・写真・スタンプを作る `ChatTalk` と、見本の `ChatSample`(`LoadMessages` = 昨日と今日の会話、`LoadStamps`)。日付の区切りの文言は画面で日付から作る |
-| `Models/Sample/CharacterRoster.cs`(新規)/ `CharacterItem.cs`(削除)/ `Modules/UI/UICharacterViewModel.cs` | キャラクターの見本 `CharacterSample.LoadCharacters` |
-| `Models/Sample/SocialGame.cs`(新規)/ `SocialUnit.cs` / `SocialNotificationInfo.cs`(削除)/ `Modules/UI/UISocialViewModel.cs` | ソーシャルゲームのホームの見本 `SocialSample`(`LoadPlayer` = エピソード・経験値・所持数、`LoadAlert`、`LoadNotifications`、`LoadStatus`、`LoadInformation` = 支援部隊、`LoadBadges` = 新着の印 `SocialBadges`)。VM は個々のプロパティにそれを入れる |
+| `Models/Sample/CharacterRoster.cs`(新規)/ `CharacterItem.cs`(削除)/ `Modules/UI/UICharacterViewModel.cs` | キャラクターの見本 `CharacterSample.LoadCharacters`。VM は `ObservableCollection` に入れる |
+| `Models/Sample/SocialGame.cs`(新規)/ `SocialUnit.cs` / `SocialNotificationInfo.cs`(削除)/ `Modules/UI/UISocialViewModel.cs` | ソーシャルゲームのホームの見本 `SocialSample`(`LoadPlayer` = エピソード・経験値・所持数、`LoadAlert`、`LoadNotifications`、`LoadStatus`、`LoadInformation` = 支援部隊、`LoadBadges` = 新着の印 `SocialBadges`)。VM は個々のプロパティにそれを入れる(通知の一覧は `ObservableCollection`) |
 | `Models/Sample/RadarScan.cs`(新規)/ `RadarTarget.cs`(削除)/ `Modules/UI/UIRadarViewModel.cs` | 目標の見本 `RadarSample.LoadTargets`(4〜7 個。乱数は 0 以上 1 未満を返す関数で受け取る) |
 | `Models/Sample/CommitGraph.cs` / `Modules/UI/UIGraphViewModel.cs` / `UIGraph2ViewModel.cs` | コミットの履歴の見本 `GraphSample.LoadRepositoryAsync`(`Graph/repository.json` を `GraphRepository` に読む。2 つの VM にあった同じ読み込みをまとめた) |
 | `Models/Sample/MapGuide.cs`(新規)/ `MapSpot.cs`(削除)/ `Modules/Sample/SampleMap1ViewModel.cs` | 地点の見本 `MapSample.LoadSpots` |
@@ -3005,7 +3005,8 @@ UI 1 / UI 2 と部品の画面の見直しの計画(`UIBrushup_Plan.md`)を作�
 | `Models/Sample/SuicaCard.cs` / `Modules/Device/DeviceNfcViewModel.cs` | Suica の読み取り(ポーリングで IDm を取り、残高と履歴のブロックを読んで解析する)をヘルパー `SuicaHelper.ParseTag` へ移した。解析の失敗を受けてログを出すのは VM のまま |
 | `Models/Sample/MailBox.cs` / `ShopStore.cs` / `StreamLibrary.cs` / `MoneyBook.cs` / `NewsFeed.cs` / `HabitTracker.cs` / `SmartHome.cs` / `WeatherForecast.cs` / `KitActivity.cs` と使う VM・文脈 | 見本のデータを作る部分を `XxxSample` に分けた(`MailSample.LoadMails`、`ShopSample.LoadProducts` / `LoadCart`、`StreamSample.LoadItems`、`MoneySample.LoadStartBalance` / `LoadTransactions` / `LoadNotices` / `LoadPaymentCode`、`NewsSample.LoadArticles` / `LoadLatest` / `LoadBreaking` / `LoadRelated`、`HabitSample.LoadHabits` / `LoadWeek`、`HomeSample.LoadRooms`、`WeatherSample.LoadForecast`、`KitSample.LoadActivity` / `LoadStepSeries` / `LoadHeartSeries`)。処理のクラスは受け取ったデータで動く(`MailBox`・`ShopStore`・`StreamLibrary`・`MoneyBook` は取引から日ごとの残高を求める・`HabitTracker`・`SmartHome`。予報 `WeatherForecast` と今日の活動 `KitActivity` はデータだけに) |
 | `Models/Sample/*.cs`(見本のクラスを持つファイル) | 見本のクラスの区切りは `// Sample`(処理のクラスがあるファイルは `// Service` の後ろに別に置く) |
-| `Modules/UI/UIShopViewModel.cs` | カテゴリなどを変えたときは一覧を入れ替えず、同じ一覧に商品を足して並べ直してから残りを外す(上の検索・カテゴリ・人気の商品はそのままで、一覧の商品だけが変わる) |
+| `Modules/UI/UIShopView.xaml` / `UIShopViewModel.cs` | 人気の商品を挨拶のすぐ下に移し、検索・カテゴリ・商品の一覧を続けて並べた(操作のすぐ下に、それで変わる一覧がある)。カテゴリなどを変えたときは一覧を入れ替えず、同じ一覧に商品を足して並べ直してから残りを外す(上の部分はそのままで、一覧の商品だけが変わる) |
+| `Controls/SideDrawer.cs` / `SideDrawer.android.cs` / `SideDrawer.ios.cs`(新規) | Android はパネルのビューを差し替え(`PlatformViewFactory`)、行などがタッチを受けていても左への横のドラッグになったらパネルが受けて閉じる方へ動かす(メニューの行の上からのスワイプでも閉じる。縦のスワイプと行のタップは今までどおり)。iOS はパネルの `PanGestureRecognizer` のまま |
 
 - 実機(Pixel 9a): Social の戻るキーと「作戦中止」で UI 2 のメニューへ戻る
 - 実機: Shop のカテゴリのチップ(PC で 2 件)、人気の商品のスワイプ(中央の強調・前後ののぞき・インジケーター)、絞り込みのシート(安い順・〜3 万円で 6 件、閉じるとボタンに印)、検索(SSD で 1 件)、お気に入り、商品を開く(選んだ商品が出る)、種類・数量を選んでカートに入れる(バッジ 4 → 6)、カート(行の追加・数の増減・スワイプで削除・合計)、注文の確定(番号・お届け予定)、一覧まで戻る(バッジが消え、お気に入りと絞り込みは残る)、戻ったときに検索欄にフォーカスが付かない
@@ -3250,7 +3251,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 
 ### ⚡画面を開く時間の短縮(2026-10-10)
 
-画面を開くときに作る要素を減らした。隠れている部分(タブの中身・開閉する部分・ドロワー・シート)は初めて開くときに作り(`LazyViewOption.Template` / `BottomSheetView`)、タップの効果の `SfEffectsView` は要素を足さない添付プロパティ(`TouchOption`)に置き換えて使うのをやめた。押したときの波紋は Android の標準(`selectableItemBackground`)の色で、`SfEffectsView` の波紋より薄い。ほかの見た目は変えていない。
+画面を開くときに作る要素を減らした。隠れている部分(タブの中身・開閉する部分・ドロワー・シート)は初めて開くときに作り(`LazyViewOption.Template` / `BottomSheetView`)、最初の画面の外にある部分は表示の後に作る(`LazyViewOption.Deferred`)。タップの効果の `SfEffectsView` は要素を足さない添付プロパティ(`TouchOption`)に置き換えて使うのをやめた。押したときの波紋の濃さは `SfEffectsView` と同じにした(既定の色は #1C1B1F の 18%。`TouchOption.RippleColor` で変えられる)。ほかの見た目は変えていない。
 
 | 画面 | 対応 | 開く時間 (ms) | 要素の数 |
 |---|---|---|---|
@@ -3270,9 +3271,10 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | UI 1 > Stream | `SfEffectsView` 19 個を `TouchOption` に置き換えた | 407 → 371 | 269 → 250 |
 | UI 1 > POS | `SfEffectsView` 5 個を `TouchOption` に置き換えた | 145 → 134 | 66 → 61 |
 | UI 1 > Login / UI 1 > Kit / View > Effect | `SfEffectsView`(1 個 / 2 個 / 1 個)を `TouchOption` に置き換えた | 108 → 106 / 239 → 245 / 168 → 162 | 32 → 31 / 132 → 130 / 98 → 97 |
+| UI 1 > Weather | 生活指数と詳細(最初の画面の外)は表示の後に作る | 456 → 304 | 284 → 175 |
 
-- 開く時間は Pixel 9a・Debug で、メニューのタップから最初のフレームまで(`Extender/PerfPlugin.cs` の `frame`)。後は 2〜4 回目に開いたときの中央値、前は Visit〜Graph が 2 回目の値、Mail 以降が 2・3 回目の中央値。計測の回ごとに 1 割前後の揺れがあり、変えていない画面は View > Layout 672 → 549、UI 2 > Home 296 → 295、App > ToDo 259 → 259、App > Calculator 142 → 147
-- 要素の数は、画面を開いたときにできている要素の数(隠れている要素も数える)
+- 開く時間は Pixel 9a・Debug で、メニューのタップから最初のフレームまで(`Extender/NavigationPerformancePlugin.cs` の `frame`)。後は 2〜4 回目に開いたときの中央値、前は Visit〜Graph が 2 回目の値、Mail 以降が 2・3 回目の中央値(Weather は前後とも 2〜5 回目の中央値。アプリを起動して最初に開くときは 799 → 487 ms)。計測の回ごとに 1 割前後の揺れがあり、変えていない画面は View > Layout 672 → 549、UI 2 > Home 296 → 295、App > ToDo 259 → 259、App > Calculator 142 → 147
+- 要素の数は、画面を開いたときにできている要素の数(隠れている要素も数える。表示の後に作る部分は入らない)
 
 `SfEffectsView` の重さ(Syncfusion.Maui.Toolkit 1.0.11 の実装):
 
@@ -3280,11 +3282,12 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - 1 つごとにテーマの動的リソースを 2 つ足す(`ThemeElement.InitializeThemeResources`)
 - 1 つごとにタッチの仕組みを作る(`GestureDetector` / `TouchDetector` と `ScaleGestureDetector`、`HandlerChanged` と Android の Touch のイベントの購読)
 - 波紋・選択・強調の効果の層を最初から作る。アプリで最初の 1 つは Syncfusion の型とテーマの初期化も走る
-- `TouchOption` は付けた要素の Android のビューに、波紋は前景の `selectableItemBackground`、タップはクリックのリスナーを付けるだけ(要素も描画の処理も足さない)。Money で置き換えだけを比べると(シートの変更の後で、置き換えの前 → 後)、2 回目以降に開く時間は 406 → 384 ms(−22 ms、約 5%。要素 220 → 211)、アプリを起動して最初に開くときは 785 → 613 ms(−172 ms)
+- `TouchOption` は付けた要素の Android のビューに、波紋は前景の `RippleDrawable`、タップはクリックのリスナーを付けるだけ(要素も描画の処理も足さない)。Money で置き換えだけを比べると(シートの変更の後で、置き換えの前 → 後)、2 回目以降に開く時間は 406 → 384 ms(−22 ms、約 5%。要素 220 → 211)、アプリを起動して最初に開くときは 785 → 613 ms(−172 ms)
 
 | 対象 | 内容 |
 |---|---|
-| `Behaviors/TouchOption.cs` / `TouchOption.android.cs` / `TouchOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` | 押したときの波紋 `Ripple` と、タップのコマンド `ClickCommand` / `ClickCommandParameter` の添付プロパティ。Android はビューの前景に `selectableItemBackground` を当て、クリックのリスナーでコマンドを呼ぶ(付けたビューだけを変える)。`ConfigureCustomBehaviors` で `UseCustomMapper` を呼ぶ |
+| `Behaviors/TouchOption.cs` / `TouchOption.android.cs` / `TouchOption.ios.cs`(新規)/ `Behaviors/AppHostBuilderExtensions.cs` | 押したときの波紋 `Ripple` と波紋の色 `RippleColor`(既定は #1C1B1F の 18%)、タップのコマンド `ClickCommand` / `ClickCommandParameter` の添付プロパティ。Android はビューの前景に指定の色の `RippleDrawable`(付けたビューの四角の中に描く)を当て、クリックのリスナーでコマンドを呼ぶ(付けたビューだけを変える)。`ConfigureCustomBehaviors` で `UseCustomMapper` を呼ぶ |
+| `Behaviors/LazyViewOption.cs` / `LazyViewOption.android.cs` / `LazyViewOption.ios.cs`(新規) | `Deferred`: 画面を表示した後(最初の描画の後)に中身を作る。Android は描画の直前の通知(`ViewTreeObserver` の `OnPreDraw`)で外し、描画が終わった後に作る |
 | `Controls/BottomSheetView.cs` | 下地とシートは初めて開くときに画面に加える(閉じている間はハンドラーを作らない) |
 | `Modules/UI/UIMoneyView.xaml` | `SfEffectsView` をやめ、明細・ランク・口座の行は `TouchOption.Ripple`、下のタブと支払いのボタンは `TouchOption.ClickCommand`。検索とお知らせのページは `LazyViewOption.Template` |
 | `Modules/UI/UIVisitView.xaml` | 行の枠を `CardGrid`(背景と選択の色を持つ `Grid`)に。並替のパネルと行の展開部分は `LazyViewOption.Template` |
@@ -3295,12 +3298,15 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | `Modules/View/ViewDrawerView.xaml` | `SfNavigationDrawer` の見出し・中身・下と、自作のドロワーの中身は `LazyViewOption.Template` |
 | `Modules/View/ViewBottomSheetView.xaml` | `SfBottomSheet` の中身は `LazyViewOption.Template`、自作のシートの中身は `BottomSheetView.SheetTemplate` |
 | `Modules/App/AppTimerView.xaml` | ストップウォッチとカウントダウンは `LazyViewOption.Template`(選んだほうを作り、`IsVisible` で切り替える) |
-| `Modules/UI/UISocialView.xaml` / `UIStreamView.xaml` / `UIStreamDetailView.xaml` / `UIPosView.xaml` / `UILoginView.xaml` / `UIKitDashView.xaml` / `Modules/View/ViewEffectView.xaml` | `SfEffectsView` をやめ、波紋は `TouchOption.Ripple`、押したときの処理は `TouchOption.ClickCommand` / `ClickCommandParameter`(Social の作戦中止、Stream の作品、Stream の詳細の More Like This、Kit の注文とはじめに)。View > Effect の見本は `TouchOption.Ripple` に |
-| `Extender/PerfPlugin.cs`(新規)/ `MauiProgram.cs` / `Document/Development.md` | 画面遷移の時間と画面の要素の数をデバッグ出力に書くプラグイン。普段は `MauiProgram.cs` の 2 か所の `#if false` で無効。使い方は Development.md の「画面を開く時間の計測」 |
+| `Modules/UI/UIWeatherView.xaml` | 生活指数と詳細は `LazyViewOption.Deferred` |
+| `Modules/App/AppTimerView.xaml` / `Modules/UI/UIChatView.xaml` / `UIGraph2View.xaml` / `UIMailView.xaml` / `UIMoneyView.xaml` / `UIProfileView.xaml` / `UIVisitView.xaml` / `Modules/View/ViewBottomSheetView.xaml` / `ViewDrawerView.xaml` | `LazyViewOption.Template` のテンプレートはリソースに置かず、使う要素の子要素に書く(Chat の写真の部分は送信と受信の 2 か所で使うのでリソースのまま) |
+| `Modules/UI/UISocialView.xaml` / `UIStreamView.xaml` / `UIStreamDetailView.xaml` / `UIPosView.xaml` / `UILoginView.xaml` / `UIKitDashView.xaml` / `Modules/View/ViewEffectView.xaml` | `SfEffectsView` をやめ、波紋は `TouchOption.Ripple`、押したときの処理は `TouchOption.ClickCommand` / `ClickCommandParameter`(Social の作戦中止、Stream の作品、Stream の詳細の More Like This、Kit の注文とはじめに)。View > Effect の見本は `TouchOption.Ripple` にし、Label をボタンいっぱいに広げて波紋をボタン全体に出す |
+| `Extender/NavigationPerformancePlugin.cs`(新規)/ `MauiProgram.cs` / `Document/Development.md` | 画面遷移の時間と画面の要素の数をデバッグ出力に書くプラグイン。`MauiProgram.cs` の先頭で `NAVIGATION_PERFORMANCE` を定義すると有効(普段は `//#define` で無効。プラグインの登録と遷移の始まりの取得の 2 か所がこの定義を見る)。使い方は Development.md の「画面を開く時間の計測」 |
 
 - 実機: Profile(投稿・いいねのタブ、写真の全画面を 2 枚目・6 枚目・1 枚目から開く)、Visit(並替のパネルの名前のキーで並べ替え、行の展開、全部の展開と畳む、行の選択の色)、Graph2(行の開閉と開き直し)、Chat(スタンプの帯を開いて送る・開き直す)、Money(検索・お知らせ・ホームのタブ、支払いのシート)。Chat の写真のメッセージは端末の写真を選ぶので未確認
 - 実機(Mail 以降): Mail(ドロワーの開閉)、View > Drawer と View > Bottom Sheet(Sf と自作の開閉)、App > Timer(ストップウォッチとカウントダウンの切り替え、カウントダウン)、Social(作戦中止で戻る、押したときの波紋)、Stream(作品 → 詳細 → More Like This で切り替え)、Kit(注文 → Tracking、はじめに → Onboarding)、Money(お知らせ、支払いのシート)、Shop(カテゴリの切り替えで上の部分がそのまま)
-- 残り(未実施): 縦に長く隠れた部分の少ない画面(View > Layout 358 要素、UI 1 > Weather 276 要素)は、画面の外の部分を後から作る別の仕組みが要る。シートの中身を `SheetTemplate` にする(Shop の絞り込み・Schedule の詳細・Graph のコミット)、Stream の詳細の More Like This、Kit の設定の `ColorPicker`、View > Toolkit の `SfTabView` の 2 つ目のタブ
+- 実機(Weather 以降): Weather(開いた後にスクロールして生活指数と詳細が出る)、テンプレートを子要素に移した画面(View > Bottom Sheet の 2 つのシート、Timer の切り替え、Visit の並替と行の展開、Profile の投稿・いいね、Graph2 の行の詳細、Chat のスタンプとリアクション、Money の検索・お知らせ・アカウント、View > Drawer の Sf のドロワー、Mail のドロワー)、波紋の濃さ(View > Effect のボタンで前の `SfEffectsView` と比べる)
+- 残り(未実施): シートの中身を `SheetTemplate` にする(Shop の絞り込み・Schedule の詳細・Graph のコミット)、Stream の詳細の More Like This、Kit の設定の `ColorPicker`、View > Toolkit の `SfTabView` の 2 つ目のタブ
 - UI の画面に残る Syncfusion の部品: `SfAccordion`(Item・Kit の設定)、`SfChipGroup`(Shop・Item・Timeline)、`SfSegmentedControl`(Kit のダッシュボード)、`SfShimmer`(News)
 - ビルド 0 警告、inspectcode 0 件
 
@@ -3439,6 +3445,9 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - `TapGestureRecognizer` はタッチを受けるので、付けた要素の Android のビューが押された状態にならず、`TouchOption.Ripple` の波紋が出ない。押したときの処理は `TouchOption.ClickCommand` にする
 - `CollectionView`(Android)の `Header` の中の `AnimationOption.EnterAnimation` は、`ItemsSource` を入れ替えたときと、一覧が途中で空になったときに出直す。絞り込みは同じ `ObservableCollection` に足して並べてから残りを外す
 - `Debug.WriteLine` は Debug ビルドでは logcat に出る(Release では呼び出しが消える)
+- タッチを受ける子(`TapGestureRecognizer` を付けた行など)の上から始めたドラッグは、親の `PanGestureRecognizer` に届かない(Android)。親で受けるには Android の `ViewGroup.OnInterceptTouchEvent` で横の移動を見て横取りする。レイアウトの Android のビューは `ViewHandler<ILayout, LayoutViewGroup>.PlatformViewFactory` で特定の要素だけ差し替えられる(ほかは null を返すと標準の作り方)
+- `SfEffectsView` の波紋は #1C1B1F を放射のグラデーションで重ねる(View > Effect のボタンで中心 約 16%・端 約 12%・平均 14.4%)。Android の `RippleDrawable` は指定の色を一様に重ね、#1C1B1F の 18% で平均 14.6% になる。スクロールの中では、押した状態は Android の標準どおり少し遅れて出る
+- 最初の画面の外にある部分を表示の後に作ると(`LazyViewOption.Deferred`)、Weather は開く時間 456 → 304 ms、最初のフレームの要素 284 → 175
 - `SfChipGroup` の `ChipLayout` の既定は折り返さない。折り返すときは `FlexLayout`(`Wrap`)、横に流すときは `HorizontalStackLayout` を横の `ScrollView` に入れる。チップはアクセシビリティのツリーに出ないので、実機の操作は座標で行う
 - 添付プロパティの既定値と同じ値は変更として通知されない。`LabelOption.CountUpValue` は既定値が 0 だったので、最初の値が 0 だと何も表示されなかった
 - CA1716: インターフェースのメソッドの引数に `date` を使うと、VB のキーワード `Date` と重なるとして警告になる
@@ -3483,7 +3492,10 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - **ナビゲーションイベントの使い分け**: 表示前に済ませたい処理(表示値の取得・一覧の準備・パラメータの取り出し)は `OnNavigatingToAsync`、表示後でよい / 表示が要る処理(権限要求・カメラ / センサー / タイマー / 接続の開始・スクロール・表示後のアニメーション)は `OnNavigatedToAsync`。初回表示だけの処理は `context.Attribute.IsRestore()` を明示的に見る(`Count == 0` やフラグで代用しない)
 - **コマンドの種類**: 利用者の操作とコントロールからの通知は `MakeXxxCommand` の既定(`Standard`。アクティブでない画面と Busy の間は実行しない)。コントロールからの通知のうち、遷移を始めたコマンドの Busy の間・ほかのコマンドの実行の中・続けて何度も来るもの(と、それと同じ操作の一連の通知)だけ `MakeDelegateCommand(CommandMode.Simple, ...)`(`CommandMode` は第 1 引数。アクティブのときだけ実行し、Busy は見ず立てもしない。使っている所は `CommandMode.Simple` で探す)。Simple のコマンドからは遷移もダイアログも出さない。Simple もアクティブでない画面(離れる途中・Push で下になった画面)では実行しないので、その間も受けたい通知は Make 系でない素のコマンドにするか、戻ったときに VM で取り直す。通知から非同期の処理を始めるときは `_ = XxxAsync()` で開始だけ行い(`MakeAsyncCommand` に `Simple` は使わない。Busy を使わないうえ、`async void` の実行で例外がアプリを落とす)、再入は最初の await の前に立てるフラグで防ぐ
 - **遷移の間は Busy**: 画面は自分の遷移イベント(`OnNavigatingTo` の前)からアクティブになるので、遷移の途中の利用者の操作は Busy で止める。`MainPageViewModel` が `Navigator.ExecutingChanged` で遷移の間 Busy を立てるので、遷移を始める側で Busy を用意しなくてよい(コマンドから始めた遷移は Busy が重なるが、`BusyState` は数で持つ)
-- **Syncfusion の部品は Sf のサンプル画面(View > Toolkit・Sf Chart・Bottom Sheet・Drawer)以外では極力使わない**。タップの効果は `SfEffectsView` を使わず `TouchOption`(`Ripple` / `ClickCommand`)
+- **Syncfusion の部品は Sf のサンプル画面(View > Toolkit・Sf Chart・Bottom Sheet・Drawer)以外では極力使わない**。タップの効果は `SfEffectsView` を使わず `TouchOption`(`Ripple` / `RippleColor` / `ClickCommand`)
+- **後から作る部分(`LazyViewOption.Template` / `BottomSheetView.SheetTemplate`)のテンプレートは、リソースに置かず使う要素の子要素に書く**(複数の場所で使うものだけリソース)
+- **VM の一覧で `ObservableCollection` のものは、プロパティの型も `ObservableCollection` にする**(`IReadOnlyList` で公開しない。見本は `[.. XxxSample.LoadYyy()]` で入れる)
+- 型の名前は省略形にせず、何をするものかが分かる名前にする。計測などの切り替えは定義を 1 つにして、使う所はそれを見る(`#if false` を何か所にも書かない)
 - **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`
 - `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
@@ -3555,7 +3567,8 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | バー伸長 | `behaviors:AnimationOption.ProgressTo`(ProgressBar を 800ms CubicOut で伸長) | ステータスバー・ゲージ |
 | カウントアップ | `behaviors:LabelOption.CountUpValue`+`CountUpFormat`(+`CountUpDuration`) | 金額・件数・歩数(Loaded 数え上げ対応) |
 | フォーカス枠 | `behaviors:Focus.FocusedStroke`+`FocusedThickness`(**親 Border 必須**) | Entry/Editor の入力体験 |
-| 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `behaviors:TouchOption.Ripple="True"`(+`TouchOption.ClickCommand`/`ClickCommandParameter`) | 全タップ要素 |
+| 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `behaviors:TouchOption.Ripple="True"`(+`RippleColor` / `TouchOption.ClickCommand`/`ClickCommandParameter`) | 全タップ要素 |
+| 後から作る | `behaviors:LazyViewOption.Load="{Binding ...}"` + 子要素の `<behaviors:LazyViewOption.Template>`(初めて開くときに作る)/ `behaviors:LazyViewOption.Deferred="True"`(表示の後に作る) | 隠れた部分(タブ・開閉・ドロワー)、最初の画面の外の部分 |
 | バッジ | `converters:BadgeCountConverter`(0→空、Max 超→「99+」) | 件数バッジ |
 | アイコン | `{markup:Material Glyph={x:Static fonts:MaterialIcons.Xxx}, Color=.., Size=..}` / `{markup:Fluent ..}` / `{markup:MenuIcon ..}` | 絵文字・生 Unicode の置換(バインド不可な点に注意) |
 | ステータスバー | `shell:ShellProperty.StatusBarColor="{StaticResource ...}"` + `StatusBarStyle="LightContent|DarkContent"`(未指定 = `MainPage.xaml` の既定 `BlueDefault` / `LightContent`) | ヘッダ非表示・全面画像の画面 |

@@ -228,8 +228,8 @@
 
             <Style x:Key="RippleButtonLabel"
                    TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
             </Style>

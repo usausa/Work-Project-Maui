@@ -116,32 +116,6 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
-            <DataTemplate x:Key="DetailTemplate"
-                          x:DataType="holder:Selectable(models:GraphRow)">
-                <Border Style="{StaticResource DetailBorder}">
-                    <VerticalStackLayout Style="{StaticResource DetailStack}">
-                        <Label Style="{StaticResource DetailSummaryLabel}"
-                               Text="{Binding Item.Summary}" />
-                        <HorizontalStackLayout>
-                            <Label Style="{StaticResource DetailIconLabel}"
-                                   Text="{x:Static fonts:MaterialIcons.Person}" />
-                            <Label Style="{StaticResource DetailTextLabel}"
-                                   Text="{Binding Item.Author}" />
-                            <Label Style="{StaticResource DetailIconLabel}"
-                                   Text="{x:Static fonts:MaterialIcons.Schedule}" />
-                            <Label Style="{StaticResource DetailTextLabel}"
-                                   Text="{Binding Item.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout>
-                            <Label Style="{StaticResource DetailIconLabel}"
-                                   Text="{x:Static fonts:MaterialIcons.Commit}" />
-                            <Label Style="{StaticResource DetailShaLabel}"
-                                   Text="{Binding Item.Sha}" />
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -191,8 +165,34 @@
                         <ContentView Grid.Row="1" Grid.Column="1"
                                      behaviors:AnimationOption.FadeInTrigger="{Binding IsSelected}"
                                      behaviors:LazyViewOption.Load="{Binding IsSelected}"
-                                     behaviors:LazyViewOption.Template="{StaticResource DetailTemplate}"
-                                     IsVisible="{Binding IsSelected}" />
+                                     IsVisible="{Binding IsSelected}">
+                            <behaviors:LazyViewOption.Template>
+                                <DataTemplate x:DataType="holder:Selectable(models:GraphRow)">
+                                    <Border Style="{StaticResource DetailBorder}">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <Label Style="{StaticResource DetailSummaryLabel}"
+                                                   Text="{Binding Item.Summary}" />
+                                            <HorizontalStackLayout>
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Person}" />
+                                                <Label Style="{StaticResource DetailTextLabel}"
+                                                       Text="{Binding Item.Author}" />
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Schedule}" />
+                                                <Label Style="{StaticResource DetailTextLabel}"
+                                                       Text="{Binding Item.When, StringFormat='{0:yyyy-MM-dd HH:mm}'}" />
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout>
+                                                <Label Style="{StaticResource DetailIconLabel}"
+                                                       Text="{x:Static fonts:MaterialIcons.Commit}" />
+                                                <Label Style="{StaticResource DetailShaLabel}"
+                                                       Text="{Binding Item.Sha}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </behaviors:LazyViewOption.Template>
+                        </ContentView>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

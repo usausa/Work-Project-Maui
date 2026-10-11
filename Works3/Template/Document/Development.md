@@ -202,23 +202,23 @@ adb logcat -s SceneStats
 
 ## 画面を開く時間の計測
 
-`Extender/PerfPlugin.cs` は、画面遷移の時間と画面の要素の数をデバッグ出力に書く。普段は無効で、使うときは `MauiProgram.cs` の 2 か所の `#if false`(`config.AddPlugin<PerfPlugin>()` と `PerfPlugin.Attach(navigator)`)を `#if true` にして Debug で実行する。出力は Visual Studio の出力ウィンドウ(デバッグ)か logcat の `[NAV]` の行で見る。  
+`Extender/NavigationPerformancePlugin.cs` は、画面遷移の時間と画面の要素の数をデバッグ出力に書く。普段は無効で、使うときは `MauiProgram.cs` の先頭の `//#define NAVIGATION_PERFORMANCE` を `#define NAVIGATION_PERFORMANCE` にして Debug で実行する(プラグインの登録と遷移の始まりの取得の 2 か所がこの定義を見る)。出力は Visual Studio の出力ウィンドウ(デバッグ)か logcat の `[NavigationPerformance]` の行で見る。  
 
 ```
-adb logcat -v time | findstr /l /c:"[NAV]"
+adb logcat -v time | findstr /l /c:"[NavigationPerformance]"
 ```
 
 | 行 | 内容 |
 |---|---|
-| `[NAV] start` | 遷移の始まり(以降の時間はここからの ms) |
-| `[NAV] create <画面> <ms>` | 画面を作り終えた |
-| `[NAV] navigatingTo <ViewId> <ms>` / `[NAV] navigatedTo <ViewId> <ms>` | 表示の前・後のイベント |
-| `[NAV] frame <ViewId> <ms> elements=<数>` | 表示の後の最初の処理(画面を開く時間の目安)と、画面の要素の数 |
-| `[NAV] tree <ViewId> hidden=<数> inList=<数> types=...` | 隠れている要素(`IsVisible` が False の要素とその中)の数、一覧の中の要素の数、種類ごとの数 |
-| `[NAV] hidden <ViewId> ...` | 隠れている要素の種類ごとの数 |
+| `[NavigationPerformance] start` | 遷移の始まり(以降の時間はここからの ms) |
+| `[NavigationPerformance] create <画面> <ms>` | 画面を作り終えた |
+| `[NavigationPerformance] navigatingTo <ViewId> <ms>` / `[NavigationPerformance] navigatedTo <ViewId> <ms>` | 表示の前・後のイベント |
+| `[NavigationPerformance] frame <ViewId> <ms> elements=<数>` | 表示の後の最初の処理(画面を開く時間の目安)と、画面の要素の数 |
+| `[NavigationPerformance] tree <ViewId> hidden=<数> inList=<数> types=...` | 隠れている要素(`IsVisible` が False の要素とその中)の数、一覧の中の要素の数、種類ごとの数 |
+| `[NavigationPerformance] hidden <ViewId> ...` | 隠れている要素の種類ごとの数 |
 
 - Debug の時間は Release より長いので、変更の前後を比べるのに使う。同じ画面を何回か開き、2 回目以降の値で比べる(1 回目は型の読み込みなどを含む)
-- 隠れている要素が多い画面は、初めて表示するときに作る形(`LazyViewOption.Template` / `BottomSheetView.SheetTemplate`)で開く時間を短くできる
+- 隠れている要素が多い画面は初めて表示するときに作る形(`LazyViewOption.Template` / `BottomSheetView.SheetTemplate`)で、最初の画面の外にある部分は表示の後に作る形(`LazyViewOption.Deferred`)で、開く時間を短くできる。表示の後に作る部分は `frame` の要素の数に入らない
 
 ## AI エージェントでの開発支援
 

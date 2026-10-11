@@ -2,7 +2,7 @@ namespace Template.MobileApp.Modules.UI;
 
 public sealed partial class UICharacterViewModel : AppViewModelBase
 {
-    public IReadOnlyList<CharacterItem> Characters { get; } = CharacterSample.LoadCharacters();
+    public ObservableCollection<CharacterItem> Characters { get; } = [.. CharacterSample.LoadCharacters()];
 
     [ObservableProperty]
     public partial string? SelectedImage { get; set; }

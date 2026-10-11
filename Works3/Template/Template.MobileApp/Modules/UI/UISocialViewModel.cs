@@ -41,7 +41,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
 
     // Notification
 
-    public IReadOnlyList<SocialNotificationInfo> Notifications { get; }
+    public ObservableCollection<SocialNotificationInfo> Notifications { get; }
 
     // Status
 
@@ -118,7 +118,7 @@ public sealed partial class UISocialViewModel : AppViewModelBase
         AlertTitle = alert.Title;
         AlertMessage = alert.Message;
 
-        Notifications = SocialSample.LoadNotifications();
+        Notifications = [.. SocialSample.LoadNotifications()];
 
         var status = SocialSample.LoadStatus();
         StatusName = status.Name;

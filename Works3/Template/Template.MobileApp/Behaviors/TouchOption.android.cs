@@ -2,9 +2,11 @@ namespace Template.MobileApp.Behaviors;
 
 using System.Runtime.CompilerServices;
 
-using Android.Util;
+using Android.Content.Res;
+using Android.Graphics.Drawables;
 
 using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Platform;
 
 public static partial class TouchOption
 {
@@ -13,6 +15,7 @@ public static partial class TouchOption
     public static partial void UseCustomMapper(BehaviorOptions options)
     {
         ViewHandler.ViewMapper.AppendToMapping(RippleProperty.PropertyName, UpdateRipple);
+        ViewHandler.ViewMapper.AppendToMapping(RippleColorProperty.PropertyName, UpdateRipple);
         ViewHandler.ViewMapper.AppendToMapping(ClickCommandProperty.PropertyName, UpdateClickCommand);
     }
 
@@ -25,9 +28,10 @@ public static partial class TouchOption
         {
             if (GetRipple(bindable))
             {
-                using var value = new TypedValue();
-                platformView.Context!.Theme!.ResolveAttribute(Android.Resource.Attribute.SelectableItemBackground, value, true);
-                platformView.Foreground = AndroidX.Core.Content.ContextCompat.GetDrawable(platformView.Context, value.ResourceId);
+                // 波紋は付けたビューの四角の中だけに描く (マスク)
+                using var color = ColorStateList.ValueOf(GetRippleColor(bindable).ToPlatform());
+                using var mask = new ColorDrawable(Android.Graphics.Color.White);
+                platformView.Foreground = new RippleDrawable(color, null, mask);
                 platformView.Clickable = true;
             }
             else

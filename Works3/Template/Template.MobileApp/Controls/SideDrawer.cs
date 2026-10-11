@@ -2,6 +2,7 @@ namespace Template.MobileApp.Controls;
 
 // 左端から出るドロワー (自作)。ページの最前面に置く。IsOpen で表示、左端のスワイプで開く、
 // パネルと背景のドラッグ (スワイプ) と背景のタップで閉じる。閉じているときは左端の帯以外はタッチを通す
+// Android はパネルの中の行などがタッチを受けていても、左へのドラッグになったらパネルが受けて閉じる方へ動かす
 // ドラッグの終了時は、離したときの速さ (止まっていれば無し) か最後に動かした方向で開閉を決め、方向が明確でなければ位置 (半分) で決める。
 // ドラッグの続きの移動は、離したときの速さから減速して止まる (残りの距離に応じた時間)
 public sealed partial class SideDrawer : Grid
@@ -77,7 +78,7 @@ public sealed partial class SideDrawer : Grid
 
     private readonly BoxView backdrop;
 
-    private readonly Grid panel;
+    private readonly DrawerPanel panel;
 
     private double panStart;
 
@@ -157,7 +158,7 @@ public sealed partial class SideDrawer : Grid
         backdropPan.PanUpdated += OnPanUpdated;
         backdrop.GestureRecognizers.Add(backdropPan);
 
-        panel = new Grid
+        panel = new DrawerPanel(this)
         {
             HorizontalOptions = LayoutOptions.Start,
             WidthRequest = DrawerWidth,
@@ -166,9 +167,7 @@ public sealed partial class SideDrawer : Grid
             IsVisible = false,
             Shadow = new Shadow { Brush = Brush.Black, Opacity = 0.25f, Radius = 12, Offset = new Point(2, 0) }
         };
-        var panelPan = new PanGestureRecognizer();
-        panelPan.PanUpdated += OnPanUpdated;
-        panel.GestureRecognizers.Add(panelPan);
+        InitializePanelGesture();
 
         Children.Add(edge);
         Children.Add(backdrop);
@@ -177,6 +176,9 @@ public sealed partial class SideDrawer : Grid
 
     // 左端はシステムの戻るジェスチャと重なるため、プラットフォーム側で帯の一部をシステムジェスチャから除外する
     partial void UpdateGestureExclusion();
+
+    // パネルのドラッグ (Android はパネルのビューで受ける)
+    partial void InitializePanelGesture();
 
     private void SetDrawerContent(View? view)
     {
@@ -239,42 +241,53 @@ public sealed partial class SideDrawer : Grid
         switch (e.StatusType)
         {
             case GestureStatus.Started:
-                panel.AbortAnimation(AnimationName);
-                panStart = panel.TranslationX;
-                panTotal = 0;
-                panVelocity = 0;
-                panDirection = 0;
-                panTimestamp = Environment.TickCount64;
-                backdrop.IsVisible = true;
-                panel.IsVisible = true;
+                StartDrag();
                 break;
             case GestureStatus.Running:
-                var delta = e.TotalX - panTotal;
-                var now = Environment.TickCount64;
-                var elapsed = now - panTimestamp;
-                if ((delta != 0) && (elapsed > 0))
-                {
-                    // 直前の区間の速さ (揺れを抑えるため前回と平均する。逆方向に転じたら置き換える)
-                    var velocity = delta / elapsed;
-                    panVelocity = (panVelocity == 0) || (Math.Sign(velocity) != Math.Sign(panVelocity)) ? velocity : (panVelocity + velocity) / 2;
-                    panTimestamp = now;
-                }
-
-                if (Math.Abs(delta) >= DirectionDistance)
-                {
-                    panDirection = Math.Sign(delta);
-                }
-
-                panTotal = e.TotalX;
-                var x = Math.Clamp(panStart + e.TotalX, -DrawerWidth, 0);
-                panel.TranslationX = x;
-                backdrop.Opacity = BackdropOpacity * (1 + (x / DrawerWidth));
+                MoveDrag(e.TotalX);
                 break;
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
                 Settle();
                 break;
         }
+    }
+
+    private void StartDrag()
+    {
+        panel.AbortAnimation(AnimationName);
+        panStart = panel.TranslationX;
+        panTotal = 0;
+        panVelocity = 0;
+        panDirection = 0;
+        panTimestamp = Environment.TickCount64;
+        backdrop.IsVisible = true;
+        panel.IsVisible = true;
+    }
+
+    // 始めた位置からの移動量 (dp) で動かす
+    private void MoveDrag(double totalX)
+    {
+        var delta = totalX - panTotal;
+        var now = Environment.TickCount64;
+        var elapsed = now - panTimestamp;
+        if ((delta != 0) && (elapsed > 0))
+        {
+            // 直前の区間の速さ (揺れを抑えるため前回と平均する。逆方向に転じたら置き換える)
+            var velocity = delta / elapsed;
+            panVelocity = (panVelocity == 0) || (Math.Sign(velocity) != Math.Sign(panVelocity)) ? velocity : (panVelocity + velocity) / 2;
+            panTimestamp = now;
+        }
+
+        if (Math.Abs(delta) >= DirectionDistance)
+        {
+            panDirection = Math.Sign(delta);
+        }
+
+        panTotal = totalX;
+        var x = Math.Clamp(panStart + totalX, -DrawerWidth, 0);
+        panel.TranslationX = x;
+        backdrop.Opacity = BackdropOpacity * (1 + (x / DrawerWidth));
     }
 
     // 右方向 (速いか、最後に右へ動かして合計が距離を超えた) は開く、左方向は閉じる。方向が明確でなければ半分の位置で決める。
@@ -312,4 +325,14 @@ public sealed partial class SideDrawer : Grid
     // 離したときの速さ (dp/ms) で残りの距離を進む時間。逆方向や停止からは通常の時間
     private static uint FlingDuration(double distance, double velocity) =>
         velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
+
+    private sealed class DrawerPanel : Grid
+    {
+        public SideDrawer Owner { get; }
+
+        public DrawerPanel(SideDrawer owner)
+        {
+            Owner = owner;
+        }
+    }
 }

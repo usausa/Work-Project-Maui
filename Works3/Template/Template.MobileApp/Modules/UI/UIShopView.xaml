@@ -571,52 +571,11 @@
                         </Grid>
                     </Grid>
 
-                    <!-- Search + filter -->
-                    <Grid Style="{StaticResource SearchRowGrid}"
-                          ColumnDefinitions="*,Auto"
-                          behaviors:AnimationOption.EnterAnimation="FadeUp"
-                          behaviors:AnimationOption.EnterDelay="80">
-                        <Border Grid.Column="0"
-                                Style="{StaticResource SearchBorder}">
-                            <Grid Style="{StaticResource SearchRowLayout}"
-                                  ColumnDefinitions="Auto,*">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource SearchIconLabel}"
-                                       Text="{x:Static fonts:MaterialIcons.Search}" />
-                                <Entry Grid.Column="1"
-                                       Style="{StaticResource SearchEntry}"
-                                       Text="{Binding SearchText}" />
-                            </Grid>
-                        </Border>
-                        <Grid Grid.Column="1"
-                              Style="{StaticResource FilterButtonArea}">
-                            <Button Style="{StaticResource FilterButton}"
-                                    Command="{Binding FilterCommand}"
-                                    Text="{x:Static fonts:MaterialIcons.Tune}" />
-                            <Ellipse Style="{StaticResource FilterDot}"
-                                     IsVisible="{Binding IsFiltered}" />
-                        </Grid>
-                    </Grid>
-
-                    <!-- Category -->
-                    <ScrollView Style="{StaticResource ChipScroll}"
-                                behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                behaviors:AnimationOption.EnterDelay="120">
-                        <sf:SfChipGroup Style="{StaticResource ShopChipGroup}"
-                                        ItemsSource="{Binding Categories}"
-                                        SelectedItem="{Binding SelectedCategory}"
-                                        DisplayMemberPath="Name">
-                            <sf:SfChipGroup.ChipLayout>
-                                <HorizontalStackLayout Style="{StaticResource ChipStack}" />
-                            </sf:SfChipGroup.ChipLayout>
-                        </sf:SfChipGroup>
-                    </ScrollView>
-
                     <!-- Popular -->
                     <Grid Style="{StaticResource SectionTitleGrid}"
                           ColumnDefinitions="Auto,*"
                           behaviors:AnimationOption.EnterAnimation="FadeUp"
-                          behaviors:AnimationOption.EnterDelay="160">
+                          behaviors:AnimationOption.EnterDelay="80">
                         <BoxView Grid.Column="0"
                                  Style="{StaticResource SectionAccent}" />
                         <Label Grid.Column="1"
@@ -627,7 +586,7 @@
                     <CarouselView x:Name="PopularCarousel"
                                   Style="{StaticResource PopularCarousel}"
                                   behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                  behaviors:AnimationOption.EnterDelay="200"
+                                  behaviors:AnimationOption.EnterDelay="120"
                                   ItemsSource="{Binding Popular}"
                                   CurrentItemChangedCommand="{Binding CurrentChangedCommand}"
                                   CurrentItemChangedCommandParameter="{Binding Source={x:Reference PopularCarousel}, Path=CurrentItem, x:DataType=CarouselView}"
@@ -675,6 +634,47 @@
 
                     <IndicatorView x:Name="PopularIndicator"
                                    Style="{StaticResource PopularIndicator}" />
+
+                    <!-- Search + filter -->
+                    <Grid Style="{StaticResource SearchRowGrid}"
+                          ColumnDefinitions="*,Auto"
+                          behaviors:AnimationOption.EnterAnimation="FadeUp"
+                          behaviors:AnimationOption.EnterDelay="160">
+                        <Border Grid.Column="0"
+                                Style="{StaticResource SearchBorder}">
+                            <Grid Style="{StaticResource SearchRowLayout}"
+                                  ColumnDefinitions="Auto,*">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource SearchIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Search}" />
+                                <Entry Grid.Column="1"
+                                       Style="{StaticResource SearchEntry}"
+                                       Text="{Binding SearchText}" />
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Column="1"
+                              Style="{StaticResource FilterButtonArea}">
+                            <Button Style="{StaticResource FilterButton}"
+                                    Command="{Binding FilterCommand}"
+                                    Text="{x:Static fonts:MaterialIcons.Tune}" />
+                            <Ellipse Style="{StaticResource FilterDot}"
+                                     IsVisible="{Binding IsFiltered}" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- Category -->
+                    <ScrollView Style="{StaticResource ChipScroll}"
+                                behaviors:AnimationOption.EnterAnimation="FadeUp"
+                                behaviors:AnimationOption.EnterDelay="200">
+                        <sf:SfChipGroup Style="{StaticResource ShopChipGroup}"
+                                        ItemsSource="{Binding Categories}"
+                                        SelectedItem="{Binding SelectedCategory}"
+                                        DisplayMemberPath="Name">
+                            <sf:SfChipGroup.ChipLayout>
+                                <HorizontalStackLayout Style="{StaticResource ChipStack}" />
+                            </sf:SfChipGroup.ChipLayout>
+                        </sf:SfChipGroup>
+                    </ScrollView>
 
                     <!-- All items -->
                     <Grid Style="{StaticResource SectionTitleGrid}"

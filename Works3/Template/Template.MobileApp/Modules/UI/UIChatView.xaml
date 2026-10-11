@@ -327,52 +327,12 @@
                 </Border>
             </DataTemplate>
 
-            <DataTemplate x:Key="ReactionBandTemplate"
-                          x:DataType="holder:Selectable(models:ChatMessage)">
-                <Border Style="{StaticResource ReactionBand}">
-                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=ReactionList, x:DataType={x:Type module:UIChatViewModel}}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type x:String}">
-                                <Button Style="{StaticResource ReactionBandButton}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=AddReactionCommand, x:DataType={x:Type module:UIChatViewModel}}"
-                                        CommandParameter="{Binding .}"
-                                        Text="{Binding .}" />
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </HorizontalStackLayout>
-                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                </Border>
-            </DataTemplate>
-
             <DataTemplate x:Key="PhotoTemplate"
                           x:DataType="holder:Selectable(models:ChatMessage)">
                 <Border Style="{StaticResource PhotoBorder}">
                     <Image Style="{StaticResource PhotoImage}"
                            Source="{Binding Item.PhotoSource}" />
                 </Border>
-            </DataTemplate>
-
-            <DataTemplate x:Key="StampTrayTemplate"
-                          x:DataType="module:UIChatViewModel">
-                <Grid RowDefinitions="1,Auto">
-                    <BoxView Grid.Row="0"
-                             Style="{StaticResource InputDividerBoxView}" />
-                    <FlexLayout Grid.Row="1"
-                                Style="{StaticResource StampTray}"
-                                BindableLayout.ItemsSource="{Binding StampList}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Type x:String}">
-                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                <ImageButton Style="{StaticResource StampTrayButton}"
-                                             Source="{Binding .}"
-                                             Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand, x:DataType={x:Type module:UIChatViewModel}}"
-                                             CommandParameter="{Binding .}" />
-                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
-                </Grid>
             </DataTemplate>
 
             <!-- Send -->
@@ -479,8 +439,26 @@
                                                BindableLayout.ItemTemplate="{StaticResource ReactionTemplate}"
                                                IsVisible="{Binding Item.Reactions, Converter={StaticResource CollectionNotEmptyConverter}}" />
                         <ContentView behaviors:LazyViewOption.Load="{Binding IsSelected}"
-                                     behaviors:LazyViewOption.Template="{StaticResource ReactionBandTemplate}"
-                                     IsVisible="{Binding IsSelected}" />
+                                     IsVisible="{Binding IsSelected}">
+                            <behaviors:LazyViewOption.Template>
+                                <DataTemplate x:DataType="holder:Selectable(models:ChatMessage)">
+                                    <Border Style="{StaticResource ReactionBand}">
+                                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=ReactionList, x:DataType={x:Type module:UIChatViewModel}}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="{x:Type x:String}">
+                                                    <Button Style="{StaticResource ReactionBandButton}"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=AddReactionCommand, x:DataType={x:Type module:UIChatViewModel}}"
+                                                            CommandParameter="{Binding .}"
+                                                            Text="{Binding .}" />
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </HorizontalStackLayout>
+                                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                    </Border>
+                                </DataTemplate>
+                            </behaviors:LazyViewOption.Template>
+                        </ContentView>
                     </VerticalStackLayout>
                 </Grid>
             </DataTemplate>
@@ -572,8 +550,30 @@
         <ContentView Grid.Row="3"
                      behaviors:AnimationOption.FadeInTrigger="{Binding IsStampTrayVisible}"
                      behaviors:LazyViewOption.Load="{Binding IsStampTrayVisible}"
-                     behaviors:LazyViewOption.Template="{StaticResource StampTrayTemplate}"
-                     IsVisible="{Binding IsStampTrayVisible}" />
+                     IsVisible="{Binding IsStampTrayVisible}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIChatViewModel">
+                    <Grid RowDefinitions="1,Auto">
+                        <BoxView Grid.Row="0"
+                                 Style="{StaticResource InputDividerBoxView}" />
+                        <FlexLayout Grid.Row="1"
+                                    Style="{StaticResource StampTray}"
+                                    BindableLayout.ItemsSource="{Binding StampList}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type x:String}">
+                                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                                    <ImageButton Style="{StaticResource StampTrayButton}"
+                                                 Source="{Binding .}"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIChatViewModel}}, Path=SendStampCommand, x:DataType={x:Type module:UIChatViewModel}}"
+                                                 CommandParameter="{Binding .}" />
+                                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
     </Grid>
 
 </ContentView>

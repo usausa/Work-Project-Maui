@@ -1134,225 +1134,6 @@
                 </VerticalStackLayout>
             </DataTemplate>
 
-            <DataTemplate x:Key="AccountTemplate"
-                          x:DataType="module:UIMoneyViewModel">
-                <VerticalStackLayout>
-                    <Border Style="{StaticResource MoneyCardBorder}">
-                        <Grid Style="{StaticResource AccountProfileGrid}"
-                              ColumnDefinitions="Auto,*">
-                            <Border Grid.Column="0"
-                                    Style="{StaticResource AccountAvatarBorder}">
-                                <Image Aspect="AspectFill"
-                                       Source="avatar_user.jpg" />
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1"
-                                                 Style="{StaticResource AccountTextStack}">
-                                <Label Style="{StaticResource AccountNameLabel}"
-                                       Text="うさうさ" />
-                                <Label Style="{StaticResource AccountRankLabel}"
-                                       Text="シルバーランク会員" />
-                                <Label Style="{StaticResource AccountIdLabel}"
-                                       Text="ID 2412-0817-3301" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                    <Border Style="{StaticResource MoneyCardBorder}">
-                        <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource CardTitleLabel}"
-                                       Text="ランク" />
-                                <Label Grid.Column="1"
-                                       Style="{StaticResource RankNextLabel}"
-                                       Text="次はゴールド" />
-                            </Grid>
-                            <ProgressBar Style="{StaticResource RankProgressBar}"
-                                         Progress="0.62" />
-                            <Label Style="{StaticResource RankNoteLabel}"
-                                   Text="ゴールドまで、あと 38,000 円のお支払い" />
-                            <Grid Style="{StaticResource AccountStatGrid}"
-                                  ColumnDefinitions="*,*">
-                                <VerticalStackLayout Grid.Column="0">
-                                    <Label Style="{StaticResource AccountStatCaptionLabel}"
-                                           Text="今月のお支払い" />
-                                    <Label Style="{StaticResource AccountStatValueLabel}"
-                                           Text="{Binding CurrentMonth.Total, StringFormat='{0:N0} 円'}" />
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Grid.Column="1">
-                                    <Label Style="{StaticResource AccountStatCaptionLabel}"
-                                           Text="ポイント残高" />
-                                    <Label Style="{StaticResource AccountStatValueLabel}"
-                                           Text="1,234 pt" />
-                                </VerticalStackLayout>
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Border>
-                    <VerticalStackLayout Style="{StaticResource DetailLayout}">
-                        <Border Style="{StaticResource DetailBorder}">
-                            <VerticalStackLayout>
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36"
-                                      behaviors:TouchOption.Ripple="True">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="🪪 本人確認" />
-                                    <Border Grid.Column="1"
-                                            Style="{StaticResource AlertBadgeBorder}"
-                                            IsVisible="{Binding HasAccountAlert}">
-                                        <Label Style="{StaticResource AlertBadgeLabel}"
-                                               Text="未完了" />
-                                    </Border>
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-
-                                <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
-
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36"
-                                      behaviors:TouchOption.Ripple="True">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="💳 支払い方法" />
-                                    <Label Grid.Column="1"
-                                           Style="{StaticResource DetailValueLabel}"
-                                           Text="うさうさカード" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-
-                                <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
-
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36"
-                                      behaviors:TouchOption.Ripple="True">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="🧾 利用明細" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-
-                                <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
-
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36"
-                                      behaviors:TouchOption.Ripple="True">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="🔔 通知の設定" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-
-                                <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
-
-                                <Grid Style="{StaticResource DetailGridWithLink}"
-                                      ColumnDefinitions="*,*,36"
-                                      behaviors:TouchOption.Ripple="True">
-                                    <Label Grid.Column="0"
-                                           Style="{StaticResource DetailNameLabel}"
-                                           Text="❓ ヘルプ" />
-                                    <Label Grid.Column="2"
-                                           Style="{StaticResource DetailNextLabel}"
-                                           Text="➡️" />
-                                </Grid>
-                            </VerticalStackLayout>
-                        </Border>
-                    </VerticalStackLayout>
-                </VerticalStackLayout>
-            </DataTemplate>
-
-            <DataTemplate x:Key="SearchTemplate"
-                          x:DataType="module:UIMoneyViewModel">
-                <Grid Style="{StaticResource BackgroundGrid}"
-                      RowDefinitions="Auto,*">
-                    <Border Grid.Row="0"
-                            Style="{StaticResource SearchBorder}">
-                        <Grid ColumnDefinitions="Auto,*">
-                            <Label Grid.Column="0"
-                                   Style="{StaticResource SearchIconLabel}"
-                                   Text="{x:Static fonts:MaterialIcons.Search}" />
-                            <Entry Grid.Column="1"
-                                   Style="{StaticResource SearchEntry}"
-                                   Text="{Binding SearchText}" />
-                        </Grid>
-                    </Border>
-                    <Border Grid.Row="1"
-                            Style="{StaticResource SearchResultBorder}">
-                        <CollectionView IsGrouped="True"
-                                        ItemsSource="{Binding SearchResults}"
-                                        ItemTemplate="{StaticResource TransactionTemplate}">
-                            <CollectionView.GroupHeaderTemplate>
-                                <DataTemplate x:DataType="models:MoneyDay">
-                                    <Label Style="{StaticResource DayHeaderLabel}"
-                                           Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
-                                </DataTemplate>
-                            </CollectionView.GroupHeaderTemplate>
-                            <CollectionView.EmptyView>
-                                <Label Style="{StaticResource EmptyLabel}"
-                                       Text="見つかりませんでした" />
-                            </CollectionView.EmptyView>
-                        </CollectionView>
-                    </Border>
-                </Grid>
-            </DataTemplate>
-
-            <DataTemplate x:Key="NoticeTemplate"
-                          x:DataType="module:UIMoneyViewModel">
-                <ScrollView Style="{StaticResource NoticeScroll}">
-                    <Border Style="{StaticResource MoneyCardBorder}">
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notices}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:MoneyNotice">
-                                    <VerticalStackLayout>
-                                        <Grid Style="{StaticResource NoticeRowGrid}"
-                                              ColumnDefinitions="Auto,*,Auto">
-                                            <Grid.GestureRecognizers>
-                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=ReadNoticeCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
-                                                                      CommandParameter="{Binding .}" />
-                                            </Grid.GestureRecognizers>
-                                            <Border Grid.Column="0"
-                                                    Style="{StaticResource NoticeIconBorder}"
-                                                    BackgroundColor="{Binding Kind, Converter={StaticResource NoticeColorConverter}}">
-                                                <Label Style="{StaticResource NoticeIconLabel}"
-                                                       Text="{Binding Kind, Converter={StaticResource NoticeIconConverter}}" />
-                                            </Border>
-                                            <VerticalStackLayout Grid.Column="1"
-                                                                 Style="{StaticResource NoticeTextStack}">
-                                                <Label Style="{StaticResource NoticeTitleLabel}"
-                                                       Text="{Binding Title}">
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
-                                                                     Binding="{Binding IsUnread}"
-                                                                     Value="True">
-                                                            <Setter Property="FontAttributes" Value="Bold" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-                                                <Label Style="{StaticResource NoticeBodyLabel}"
-                                                       Text="{Binding Body}" />
-                                                <Label Style="{StaticResource NoticeDateLabel}"
-                                                       Text="{Binding Date, StringFormat='{0:MM/dd HH:mm}'}" />
-                                            </VerticalStackLayout>
-                                            <Ellipse Grid.Column="2"
-                                                     Style="{StaticResource NoticeUnreadEllipse}"
-                                                     IsVisible="{Binding IsUnread}" />
-                                        </Grid>
-                                        <BoxView Style="{StaticResource RowLine}" />
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                    </Border>
-                </ScrollView>
-            </DataTemplate>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -1663,19 +1444,238 @@
 
         <ContentView Grid.Row="0"
                      behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}"
-                     behaviors:LazyViewOption.Template="{StaticResource SearchTemplate}"
-                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}" />
+                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Search}}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIMoneyViewModel">
+                    <Grid Style="{StaticResource BackgroundGrid}"
+                          RowDefinitions="Auto,*">
+                        <Border Grid.Row="0"
+                                Style="{StaticResource SearchBorder}">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource SearchIconLabel}"
+                                       Text="{x:Static fonts:MaterialIcons.Search}" />
+                                <Entry Grid.Column="1"
+                                       Style="{StaticResource SearchEntry}"
+                                       Text="{Binding SearchText}" />
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Style="{StaticResource SearchResultBorder}">
+                            <CollectionView IsGrouped="True"
+                                            ItemsSource="{Binding SearchResults}"
+                                            ItemTemplate="{StaticResource TransactionTemplate}">
+                                <CollectionView.GroupHeaderTemplate>
+                                    <DataTemplate x:DataType="models:MoneyDay">
+                                        <Label Style="{StaticResource DayHeaderLabel}"
+                                               Text="{Binding Date, Converter={StaticResource RelativeDayConverter}}" />
+                                    </DataTemplate>
+                                </CollectionView.GroupHeaderTemplate>
+                                <CollectionView.EmptyView>
+                                    <Label Style="{StaticResource EmptyLabel}"
+                                           Text="見つかりませんでした" />
+                                </CollectionView.EmptyView>
+                            </CollectionView>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
         <ContentView Grid.Row="0"
                      behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}"
-                     behaviors:LazyViewOption.Template="{StaticResource NoticeTemplate}"
-                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}" />
+                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Notifications}}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIMoneyViewModel">
+                    <ScrollView Style="{StaticResource NoticeScroll}">
+                        <Border Style="{StaticResource MoneyCardBorder}">
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notices}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:MoneyNotice">
+                                        <VerticalStackLayout>
+                                            <Grid Style="{StaticResource NoticeRowGrid}"
+                                                  ColumnDefinitions="Auto,*,Auto">
+                                                <Grid.GestureRecognizers>
+                                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIMoneyViewModel}}, Path=ReadNoticeCommand, x:DataType={x:Type module:UIMoneyViewModel}}"
+                                                                          CommandParameter="{Binding .}" />
+                                                </Grid.GestureRecognizers>
+                                                <Border Grid.Column="0"
+                                                        Style="{StaticResource NoticeIconBorder}"
+                                                        BackgroundColor="{Binding Kind, Converter={StaticResource NoticeColorConverter}}">
+                                                    <Label Style="{StaticResource NoticeIconLabel}"
+                                                           Text="{Binding Kind, Converter={StaticResource NoticeIconConverter}}" />
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1"
+                                                                     Style="{StaticResource NoticeTextStack}">
+                                                    <Label Style="{StaticResource NoticeTitleLabel}"
+                                                           Text="{Binding Title}">
+                                                        <Label.Triggers>
+                                                            <DataTrigger TargetType="Label"
+                                                                         Binding="{Binding IsUnread}"
+                                                                         Value="True">
+                                                                <Setter Property="FontAttributes" Value="Bold" />
+                                                            </DataTrigger>
+                                                        </Label.Triggers>
+                                                    </Label>
+                                                    <Label Style="{StaticResource NoticeBodyLabel}"
+                                                           Text="{Binding Body}" />
+                                                    <Label Style="{StaticResource NoticeDateLabel}"
+                                                           Text="{Binding Date, StringFormat='{0:MM/dd HH:mm}'}" />
+                                                </VerticalStackLayout>
+                                                <Ellipse Grid.Column="2"
+                                                         Style="{StaticResource NoticeUnreadEllipse}"
+                                                         IsVisible="{Binding IsUnread}" />
+                                            </Grid>
+                                            <BoxView Style="{StaticResource RowLine}" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </Border>
+                    </ScrollView>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
         <ScrollView Grid.Row="0"
                     Style="{StaticResource NoticeScroll}"
                     IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}">
-            <ContentView behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}"
-                         behaviors:LazyViewOption.Template="{StaticResource AccountTemplate}" />
+            <ContentView behaviors:LazyViewOption.Load="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MoneyPage.Account}}">
+                <behaviors:LazyViewOption.Template>
+                    <DataTemplate x:DataType="module:UIMoneyViewModel">
+                        <VerticalStackLayout>
+                            <Border Style="{StaticResource MoneyCardBorder}">
+                                <Grid Style="{StaticResource AccountProfileGrid}"
+                                      ColumnDefinitions="Auto,*">
+                                    <Border Grid.Column="0"
+                                            Style="{StaticResource AccountAvatarBorder}">
+                                        <Image Aspect="AspectFill"
+                                               Source="avatar_user.jpg" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Style="{StaticResource AccountTextStack}">
+                                        <Label Style="{StaticResource AccountNameLabel}"
+                                               Text="うさうさ" />
+                                        <Label Style="{StaticResource AccountRankLabel}"
+                                               Text="シルバーランク会員" />
+                                        <Label Style="{StaticResource AccountIdLabel}"
+                                               Text="ID 2412-0817-3301" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource MoneyCardBorder}">
+                                <VerticalStackLayout>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Style="{StaticResource CardTitleLabel}"
+                                               Text="ランク" />
+                                        <Label Grid.Column="1"
+                                               Style="{StaticResource RankNextLabel}"
+                                               Text="次はゴールド" />
+                                    </Grid>
+                                    <ProgressBar Style="{StaticResource RankProgressBar}"
+                                                 Progress="0.62" />
+                                    <Label Style="{StaticResource RankNoteLabel}"
+                                           Text="ゴールドまで、あと 38,000 円のお支払い" />
+                                    <Grid Style="{StaticResource AccountStatGrid}"
+                                          ColumnDefinitions="*,*">
+                                        <VerticalStackLayout Grid.Column="0">
+                                            <Label Style="{StaticResource AccountStatCaptionLabel}"
+                                                   Text="今月のお支払い" />
+                                            <Label Style="{StaticResource AccountStatValueLabel}"
+                                                   Text="{Binding CurrentMonth.Total, StringFormat='{0:N0} 円'}" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <Label Style="{StaticResource AccountStatCaptionLabel}"
+                                                   Text="ポイント残高" />
+                                            <Label Style="{StaticResource AccountStatValueLabel}"
+                                                   Text="1,234 pt" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                            <VerticalStackLayout Style="{StaticResource DetailLayout}">
+                                <Border Style="{StaticResource DetailBorder}">
+                                    <VerticalStackLayout>
+                                        <Grid Style="{StaticResource DetailGridWithLink}"
+                                              ColumnDefinitions="*,*,36"
+                                              behaviors:TouchOption.Ripple="True">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource DetailNameLabel}"
+                                                   Text="🪪 本人確認" />
+                                            <Border Grid.Column="1"
+                                                    Style="{StaticResource AlertBadgeBorder}"
+                                                    IsVisible="{Binding HasAccountAlert}">
+                                                <Label Style="{StaticResource AlertBadgeLabel}"
+                                                       Text="未完了" />
+                                            </Border>
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource DetailNextLabel}"
+                                                   Text="➡️" />
+                                        </Grid>
+
+                                        <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                                        <Grid Style="{StaticResource DetailGridWithLink}"
+                                              ColumnDefinitions="*,*,36"
+                                              behaviors:TouchOption.Ripple="True">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource DetailNameLabel}"
+                                                   Text="💳 支払い方法" />
+                                            <Label Grid.Column="1"
+                                                   Style="{StaticResource DetailValueLabel}"
+                                                   Text="うさうさカード" />
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource DetailNextLabel}"
+                                                   Text="➡️" />
+                                        </Grid>
+
+                                        <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                                        <Grid Style="{StaticResource DetailGridWithLink}"
+                                              ColumnDefinitions="*,*,36"
+                                              behaviors:TouchOption.Ripple="True">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource DetailNameLabel}"
+                                                   Text="🧾 利用明細" />
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource DetailNextLabel}"
+                                                   Text="➡️" />
+                                        </Grid>
+
+                                        <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                                        <Grid Style="{StaticResource DetailGridWithLink}"
+                                              ColumnDefinitions="*,*,36"
+                                              behaviors:TouchOption.Ripple="True">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource DetailNameLabel}"
+                                                   Text="🔔 通知の設定" />
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource DetailNextLabel}"
+                                                   Text="➡️" />
+                                        </Grid>
+
+                                        <BoxView Style="{StaticResource DetailSeparatorBoxView}" />
+
+                                        <Grid Style="{StaticResource DetailGridWithLink}"
+                                              ColumnDefinitions="*,*,36"
+                                              behaviors:TouchOption.Ripple="True">
+                                            <Label Grid.Column="0"
+                                                   Style="{StaticResource DetailNameLabel}"
+                                                   Text="❓ ヘルプ" />
+                                            <Label Grid.Column="2"
+                                                   Style="{StaticResource DetailNextLabel}"
+                                                   Text="➡️" />
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </behaviors:LazyViewOption.Template>
+            </ContentView>
         </ScrollView>
 
         <!-- Bottom select -->

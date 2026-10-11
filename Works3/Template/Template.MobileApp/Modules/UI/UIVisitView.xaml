@@ -505,70 +505,6 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-            <DataTemplate x:Key="SortPanelTemplate"
-                          x:DataType="module:UIVisitViewModel">
-                <Border Style="{StaticResource SortPanelBorder}">
-                    <VerticalStackLayout>
-                        <Grid Style="{StaticResource SortPanelGrid}"
-                              ColumnDefinitions="*,Auto">
-                            <Label Grid.Column="0"
-                                   Style="{StaticResource SortPanelLabel}"
-                                   Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
-                            <Button Grid.Column="1"
-                                    Style="{StaticResource SortClearButton}"
-                                    Command="{Binding ClearSortCommand}"
-                                    Text="クリア" />
-                        </Grid>
-                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                        <FlexLayout Style="{StaticResource SortKeyFlex}"
-                                    BindableLayout.ItemsSource="{Binding SortKeys}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
-                                    <Border Style="{StaticResource SortKeyChip}">
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
-                                                                  CommandParameter="{Binding .}" />
-                                        </Border.GestureRecognizers>
-                                        <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
-                                            <Border Style="{StaticResource SortKeyBadgeBorder}"
-                                                    IsVisible="{Binding IsActive}">
-                                                <Label Style="{StaticResource SortKeyBadge}"
-                                                       Text="{Binding Priority}" />
-                                            </Border>
-                                            <Label Style="{StaticResource SortKeyLabel}"
-                                                   Text="{Binding Name}" />
-                                            <Label Style="{StaticResource SortKeyLabel}"
-                                                   IsVisible="{Binding IsActive}"
-                                                   Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
-                                        </HorizontalStackLayout>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </FlexLayout>
-                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                    </VerticalStackLayout>
-                </Border>
-            </DataTemplate>
-
-            <DataTemplate x:Key="CardDetailTemplate"
-                          x:DataType="module:VisitCard">
-                <VerticalStackLayout Style="{StaticResource DetailStack}">
-                    <BoxView Style="{StaticResource DetailSeparator}" />
-                    <FlexLayout Style="{StaticResource InfoRow}">
-                        <Label Style="{StaticResource DetailLabel}"
-                               Text="{Binding Phone, StringFormat='📞 {0}'}"
-                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                        <Label Style="{StaticResource DetailLabel}"
-                               Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
-                               TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                    </FlexLayout>
-                    <Label Style="{StaticResource DetailNoteLabel}"
-                           IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding Note, StringFormat='📝 {0}'}"
-                           TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
-                </VerticalStackLayout>
-            </DataTemplate>
-
         </ResourceDictionary>
     </ContentView.Resources>
     <!-- ReSharper restore Xaml.RedundantResource -->
@@ -636,8 +572,53 @@
         <!-- 並替パネル: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
         <ContentView Grid.Row="2"
                      behaviors:LazyViewOption.Load="{Binding IsSortPanelOpen}"
-                     behaviors:LazyViewOption.Template="{StaticResource SortPanelTemplate}"
-                     IsVisible="{Binding IsSortPanelOpen}" />
+                     IsVisible="{Binding IsSortPanelOpen}">
+            <behaviors:LazyViewOption.Template>
+                <DataTemplate x:DataType="module:UIVisitViewModel">
+                    <Border Style="{StaticResource SortPanelBorder}">
+                        <VerticalStackLayout>
+                            <Grid Style="{StaticResource SortPanelGrid}"
+                                  ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Style="{StaticResource SortPanelLabel}"
+                                       Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource SortClearButton}"
+                                        Command="{Binding ClearSortCommand}"
+                                        Text="クリア" />
+                            </Grid>
+                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                            <FlexLayout Style="{StaticResource SortKeyFlex}"
+                                        BindableLayout.ItemsSource="{Binding SortKeys}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
+                                        <Border Style="{StaticResource SortKeyChip}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                                                      CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
+                                                <Border Style="{StaticResource SortKeyBadgeBorder}"
+                                                        IsVisible="{Binding IsActive}">
+                                                    <Label Style="{StaticResource SortKeyBadge}"
+                                                           Text="{Binding Priority}" />
+                                                </Border>
+                                                <Label Style="{StaticResource SortKeyLabel}"
+                                                       Text="{Binding Name}" />
+                                                <Label Style="{StaticResource SortKeyLabel}"
+                                                       IsVisible="{Binding IsActive}"
+                                                       Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </behaviors:LazyViewOption.Template>
+        </ContentView>
 
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
         <CollectionView Grid.Row="3"
@@ -710,8 +691,27 @@
 
                             <!-- 展開部分 -->
                             <ContentView behaviors:LazyViewOption.Load="{Binding IsExpanded}"
-                                         behaviors:LazyViewOption.Template="{StaticResource CardDetailTemplate}"
-                                         IsVisible="{Binding IsExpanded}" />
+                                         IsVisible="{Binding IsExpanded}">
+                                <behaviors:LazyViewOption.Template>
+                                    <DataTemplate x:DataType="module:VisitCard">
+                                        <VerticalStackLayout Style="{StaticResource DetailStack}">
+                                            <BoxView Style="{StaticResource DetailSeparator}" />
+                                            <FlexLayout Style="{StaticResource InfoRow}">
+                                                <Label Style="{StaticResource DetailLabel}"
+                                                       Text="{Binding Phone, StringFormat='📞 {0}'}"
+                                                       TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                                <Label Style="{StaticResource DetailLabel}"
+                                                       Text="{Binding LastVisitedAt, StringFormat='📅 前回 {0:yyyy/MM/dd}', TargetNullValue='📅 前回 なし'}"
+                                                       TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                            </FlexLayout>
+                                            <Label Style="{StaticResource DetailNoteLabel}"
+                                                   IsVisible="{Binding Note, Converter={StaticResource NotEmptyConverter}}"
+                                                   Text="{Binding Note, StringFormat='📝 {0}'}"
+                                                   TextColor="{Binding IsSelected, Converter={StaticResource PrimaryTextColorConverter}}" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </behaviors:LazyViewOption.Template>
+                            </ContentView>
                         </VerticalStackLayout>
 
                         <Button Grid.Row="0" Grid.Column="2"
