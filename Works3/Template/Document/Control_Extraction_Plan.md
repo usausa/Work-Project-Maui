@@ -16,22 +16,15 @@
 
 | 項目 | 決定 |
 | --- | --- |
-| 非 Skia のアセンブリ | MauiComponents と関連する固有の名前で、NuGet でぶつからないもの(Smart には入れない) |
-| Skia のアセンブリ | `ClamGauge`(パッケージも `ClamGauge`)。Gauge だけを入れる。リポジトリは ClamGrid・ClamCalendar と同じ構成(本体・Tests・Example・Document・README・AGENTS.md・Settings.XamlStyler)で、対象は `net10.0;net10.0-android` |
+| 非 Skia のアセンブリ | `MauiComponents.Controls`(パッケージ `Components.Maui.Controls`)。`D:\GitHub\Components-MauiComponents` に足し、見本は `MauiComponentsExample`(`Components.Maui.Resolver` と同じ並び) |
+| Skia のアセンブリ | `ClamGauge`(パッケージも `ClamGauge`)。Gauge だけを入れ、型名は `ClamGaugeView`(`GaugeRange`・`GaugeUnitPosition` はそのまま)。リポジトリは `D:\GitHub\Other-ClamGauge` で、ClamGrid・ClamCalendar と同じ構成(本体・Tests・Example・Document・README・AGENTS.md・Settings.XamlStyler)、対象は `net10.0;net10.0-android` |
 | 対象の選び方 | 汎用性が ★★ 以下のものは対象にしない。1 つの UI の画面だけで使うものは、その画面専用の可能性が高いので対象にしない。ただし、よく使う形(★★★★ 以上)として作ったものは対象にする |
-
-## ⚖️決めること
-
-| 項目 | 案 |
-| --- | --- |
-| 非 Skia のアセンブリ名 | `MauiComponents.Controls`(パッケージ `Components.Maui.Controls`。MauiComponents のリポジトリに足し、見本は `MauiComponentsExample`。`Components.Maui.Resolver` と同じ並び)/ `MauiControls`。どちらも NuGet で使われていない(2026-10-11) |
-| ClamGauge の型名 | `Gauge` のままにするか、ClamGrid の `ClamGridView` に合わせて `ClamGaugeView` にするか |
 
 ## 🚀進め方
 
 | 段階 | 内容 |
 | --- | --- |
-| ① | ライブラリを作る(ClamGauge は新しいリポジトリ、非 Skia は名前を決めてから) |
+| ① | ライブラリを作る |
 | ② | コントロールを移し、Template への結合を外す(表の「移す前の手直し」) |
 | ③ | 見本のアプリに画面を作り、実機で動きを確かめる(ClamGauge は下の「🧪ClamGauge の Example」) |
 | ④ | 全部を確かめたら、Template の参照をライブラリに替え、XAML の名前空間を書き換えて、`Controls` から消す |
@@ -76,7 +69,7 @@ ClamGrid・ClamCalendar の Example と同じく、パターンごとの画面�
 
 | 現在のファイル名 | 何用か | 使っている画面 | 汎用性 | 移行 | 移す前の手直し | 状態 |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Controls/Gauge.cs`(`GaugeRange`・`GaugeUnitPosition` を含む) | 円形のゲージ一式(地のグラデーション・外と内のベゼル・円弧の溝と塗り・色の帯・大小の目盛り・数字・中央の値と単位・針と軸。値が変わると針が動く) | UI Gauge | ★★★★ | ✅ | 名前空間を ClamGauge に。型名は決めることのとおり | 📝 |
+| `Controls/Gauge.cs`(`GaugeRange`・`GaugeUnitPosition` を含む) | 円形のゲージ一式(地のグラデーション・外と内のベゼル・円弧の溝と塗り・色の帯・大小の目盛り・数字・中央の値と単位・針と軸。値が変わると針が動く) | UI Gauge | ★★★★ | ✅ | 名前空間を ClamGauge に、型名を `ClamGaugeView` に | 📝 |
 
 ## ⚠️制約
 

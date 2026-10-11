@@ -3474,13 +3474,16 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 
 | 対象 | 内容 |
 |---|---|
-| `Extender/GuardedPopupNavigator.cs`(新規) | `PopupNavigator` を包む `IPopupNavigator`。1 枚目を開くときに今の画面の VM(`Navigator.CurrentTarget`)の `OnDeactivated()` を呼んで `AcceptsCommand` を止め、閉じた後に同じ画面なら `OnActivated()` で戻す。開いていないときの `CloseAsync` と、閉じる途中の 2 回目の `CloseAsync` は無視する |
-| `Extender/IPopupNavigatorAware.cs` / `PopupNavigatorAwarePlugin.cs`(新規) | ポップアップを作るときに、VM が `IPopupNavigatorAware` なら `IPopupNavigator` を渡す(`IPopupPlugin`)。`PopupNavigator` がプラグインを受け取って作られるので、`IPopupNavigator` は渡すときに `IServiceProvider` から取り出す |
-| `Modules/AppDialogViewModelBase.cs` | `IPopupNavigatorAware` を実装し、`IPopupNavigator` は private のまま持つ(派生クラスから使わせない)。閉じる入口の `CloseAsync()` / `CloseAsync(result)` は、閉じ始めたら `AcceptsCommand` を false にして、閉じ終わるまでに届いたコマンドを受け付けない |
+| MauiComponents(`Popup.cs` / `Popup.PopupNavigator.cs`) | `PopupNavigator` は、開いていないときの `CloseAsync` と、閉じる途中の 2 回目の `CloseAsync` を無視する。VM が `IPopupNavigatorAware` なら、作った後に `SetPopupNavigator` で自分を渡す。VM が `IPopupClosing` / `IPopupClosingAsync`(`IPopupInitialize` / `IPopupInitializeAsync` と同じく同期と非同期の組)なら、閉じ始め(`CloseAsync` の始め、または `CloseAsync` を使わずに閉じたとき)に `OnClosing` を呼ぶ。`CloseAsync` は非同期の `OnClosing` を待ってから閉じる。`IPopupPlugin` に、開く前の `OnOpening` と閉じた後の `OnClosed` を足した(既定の実装は無い) |
+| `Extender/PopupActivationPlugin.cs`(新規) | 1 枚目を開く前に今の画面の VM(`Navigator.CurrentTarget`)の `OnDeactivated()` で `AcceptsCommand` を止め、最後の 1 枚を閉じた後に同じ画面なら `OnActivated()` で戻す |
+| `Extender/PopupFocusPlugin.cs` | `OnOpening` / `OnClosed` の空の実装を足した |
+| `Modules/AppDialogViewModelBase.cs` | `SetPopupNavigator` で受け取った `IPopupNavigator` は private のまま持ち(派生クラスから使わせない)、閉じる入口は `CloseAsync()` / `CloseAsync(result)`。`IPopupClosing` の `OnClosing` で `AcceptsCommand` を false にして、閉じ終わるまでに届いたコマンドを受け付けない |
 | `Modules/Navigation/Modal/InputNumberViewModel.cs` | コンストラクターで `IPopupNavigator` を受け取らず、基底の `CloseAsync` で閉じる |
-| `MauiProgram.cs` / `GeneratedFactory.cs` | `PopupNavigator` と `IPopupNavigator`(`GuardedPopupNavigator`)を `AddComponentsPopup` より前に登録。`PopupNavigatorAwarePlugin` を `AddComponentsPopupPlugin` で登録し、ファクトリの生成の属性を足した |
+| `MauiProgram.cs` / `GeneratedFactory.cs` | `PopupActivationPlugin` を `AddComponentsPopupPlugin` で登録し、ファクトリの生成の属性を足した |
 
-- 実機(一時のログで確かめ、ログは外した): Navigation のメニューの Dialog で、開くとメニューの VM が `OnDeactivated`、閉じると `OnActivated` になり、その後 Edit へ進める。1 回のコマンドで `CloseAsync` を 2 回呼んでも 2 回目は無視され、閉じるのは 1 回(例外なし)。✓ の同時 2 回でも、閉じるのと結果の表示は 1 回。戻るキーはポップアップが受け、下の画面は動かない。DI の実行時のフォールバックに新しい型は出ない
+- ポップアップの VM に呼ぶ順: 作った後の `SetPopupNavigator` → 表示の前の `Initialize`(`PopupAsync` に渡した引数を受け取る)→ 閉じ始めの `OnClosing` → 閉じた後の `Dispose`。開いたときの通知は無く、コマンドは最初から受け付ける(表示されるまで押せない)
+- 上に別のポップアップを開いている間は、下のポップアップのコマンドは開いたコマンドの Busy で止まり、タップは上のポップアップが受ける
+- 実機(一時のログで確かめ、ログは外した): Navigation のメニューの Dialog で、開くとメニューの VM が `OnDeactivated`、最後の 1 枚を閉じると `OnActivated` になる。ポップアップの上に 2 枚目を開いて閉じると、`OnClosing` は 2 枚目だけに呼ばれ、1 枚目の ✓ はそのまま効く。1 回のコマンドで `CloseAsync` を 2 回呼んでも 2 回目は無視され、閉じるのと結果の表示は 1 回(例外なし)。戻るキーはポップアップが受け、下の画面は動かない。DI の実行時のフォールバックに新しい型は出ない
 - ビルド 0 警告
 
 ### 🐛見つけた不具合の修正(2026-10-11)
@@ -3667,9 +3670,8 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - Syncfusion の `SfTabView` の `SelectedIndex` は `int`。2 つ目以降のタブの中身は、`x:Reference` で `SelectedIndex` を `EqualsConverter` と比べた値を `LazyViewOption.Load` に渡すと、タブを初めて選んだときに作れる
 - `HybridWebView` で Vite + React の雛形のページを開くと、アプリを起動して最初でも約 0.4 秒で中身が出る(Pixel 9a・Debug)
 - Smart.Mvvm の `ViewModelOptions` の既定の BusyState は共有の `BusyState.Default` で、画面の VM とシェル(`MainPageViewModel`)が同じ Busy を見る。ポップアップの VM(`AppDialogViewModelBase`)が自前の BusyState を持つのは、呼び出し元のコマンドの Busy に巻き込まれないため
-- `IPopupPlugin.Extend` はポップアップの VM ができた後に呼ばれるので、VM に値を渡すのに使える。`PopupNavigator` は `IPopupPlugin` を受け取って作られるので、プラグインから `IPopupNavigator` を使うときは、渡すときに `IServiceProvider` から取り出す(循環を避ける)
 - 継承できるクラスでインターフェイスを明示的に実装すると CA1033 になる。通常の public の実装にする
-- **`IPopupNavigator` のポップアップ(CommunityToolkit の Popup)は MAUI のモーダルとして別ウィンドウで出る**。戻るキーとタップは下の画面に届かない(戻るキーはポップアップが受け、`CanBeDismissedByTappingOutsideOfPopup` = false なら何もしない)。ポップアップの間も呼び出し元の `AcceptsCommand` は true のまま(Smart.Navigation の遷移ではないので `OnDeactivated` が呼ばれない)
+- **`IPopupNavigator` のポップアップ(CommunityToolkit の Popup)は MAUI のモーダルとして別ウィンドウで出る**。戻るキーとタップは下の画面に届かない(戻るキーはポップアップが受け、`CanBeDismissedByTappingOutsideOfPopup` = false なら何もしない)。ポップアップの間も呼び出し元の `AcceptsCommand` は true のまま(Smart.Navigation の遷移ではないので `OnDeactivated` が呼ばれない。`PopupActivationPlugin` で止める)
 - `uiautomator dump` は絵文字を文字参照で返す(「🥝 Dialog」は `&#129373; Dialog`)。文字で探すときは文字参照で比べる
 - **`*` の行に中央で置いた盤面は、すぐ下の `Auto` の行の高さが変わると動く**(盤面の大きさは幅と高さの短い方なので、大きさも変わる)。出し入れする要素は同じセルの `Grid` に入れて `MinimumHeightRequest` で高さをそろえる
 - `Border` は中身を自分の形で切り抜くので、中の要素を跳ねさせると上が切れる。跳ねる要素は `Border` の外に置くか、上に跳ねる分の余白を取る

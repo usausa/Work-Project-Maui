@@ -320,6 +320,7 @@ public static partial class MauiProgram
             c.EnablePromptSelectAll = true;
         });
         services.AddComponentsPopup(static c => c.AutoRegister(DialogSource()));
+        services.AddComponentsPopupPlugin<PopupActivationPlugin>();
         services.AddComponentsPopupPlugin<PopupFocusPlugin>();
         services.AddComponentsScreen();
         services.AddComponentsLocation();
