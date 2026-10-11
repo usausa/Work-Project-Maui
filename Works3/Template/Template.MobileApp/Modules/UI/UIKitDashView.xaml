@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:toolkit="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -253,15 +252,11 @@
                                                   MetricTemplate="{StaticResource MetricTemplate}" />
 
             <Style x:Key="PeriodSegment"
-                   TargetType="toolkit:SfSegmentedControl">
-                <Setter Property="Margin" Value="16,4,16,12" />
+                   TargetType="controls:SegmentedView">
+                <Setter Property="Margin" Value="16,7,16,15" />
                 <Setter Property="SegmentHeight" Value="36" />
-                <Setter Property="SelectionIndicatorSettings">
-                    <Setter.Value>
-                        <toolkit:SelectionIndicatorSettings Background="{StaticResource BlueDefault}"
-                                                            TextColor="White" />
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="SelectedBackground" Value="{StaticResource BlueDefault}" />
+                <Setter Property="SelectedTextColor" Value="White" />
             </Style>
 
             <Style x:Key="ChartCardBorder"
@@ -474,9 +469,9 @@
                                             BindableLayout.ItemsSource="{Binding Tiles}"
                                             BindableLayout.ItemTemplateSelector="{StaticResource TileTemplateSelector}" />
 
-            <toolkit:SfSegmentedControl Style="{StaticResource PeriodSegment}"
-                                        ItemsSource="{Binding Periods}"
-                                        SelectedIndex="{Binding PeriodIndex, Mode=TwoWay}" />
+            <controls:SegmentedView Style="{StaticResource PeriodSegment}"
+                                    ItemsSource="{Binding Periods}"
+                                    SelectedIndex="{Binding PeriodIndex, Mode=TwoWay}" />
 
             <Border Style="{StaticResource ChartCardBorder}">
                 <VerticalStackLayout>

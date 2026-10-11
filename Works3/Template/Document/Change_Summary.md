@@ -3310,6 +3310,47 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - UI の画面に残る Syncfusion の部品: `SfAccordion`(Item・Kit の設定)、`SfChipGroup`(Shop・Item・Timeline)、`SfSegmentedControl`(Kit のダッシュボード)、`SfShimmer`(News)
 - ビルド 0 警告、inspectcode 0 件
 
+### 🧱Sf の部品の置き換え(2026-10-11)
+
+UI の画面で使っていた Syncfusion の部品(`SfChipGroup`・`SfSegmentedControl`・`SfAccordion`・`SfShimmer`)を自前の部品に置き換えた。ViewModel は変えていない。見た目(大きさ・色・並び)と押したときの暗さは Sf と同じにした。Sf の部品は Sf の見本の画面(View の Toolkit・Sf Chart・Bottom Sheet・Drawer)だけに残る。
+
+| 画面 | 置き換えた部品 | 開く時間 (ms) | 起動して最初 (ms) | 要素の数 |
+|---|---|---|---|---|
+| UI 1 > Shop | `SfChipGroup` 3 つ(カテゴリ、絞り込みのシートの並び順と価格) | 328 → 276 | 581 → 519 | 110 → 122 |
+| UI 1 > Timeline | `SfChipGroup`(絞り込み) | 447 → 294 | 634 → 442 | 160 → 188 |
+| UI 1 > Kit のダッシュボード | `SfSegmentedControl`(日 / 週 / 月) | 257 → 204 | 456 → 408 | 130 → 125 |
+| UI 1 > News | `SfShimmer`(読み込み中の骨組み) | 196 → 173 | 380 → 367 | 84 → 84 |
+| UI 1 > Item(Shop の商品) | `SfChipGroup`(色)・`SfAccordion`(説明・仕様・配送) | 264 → 230 | 320 → 253 | 106 → 99 |
+| UI 1 > Kit の設定 | `SfAccordion`(よくある質問) | 211 → 181 | 312 → 265 | 113 → 102 |
+
+- 開く時間は Pixel 9a・Debug で、メニュー(Item と Kit の設定は前の画面)のタップから最初のフレームまで(`NavigationPerformancePlugin`)。前後とも画面ごとにアプリを起動し直し、1 回目が「起動して最初」、2〜4 回目の中央値が「開く時間」。Item と Kit の設定の 1 回目は、前の画面で Sf の部品をすでに使った後
+- Shop と Timeline は要素の数が増えた(チップ 1 つが枠・形・文字の 3 つ)が、開く時間は短くなった
+
+押したときの暗さ(#1C1B1F を重ねる割合。押している間の平均):
+
+| 部品 | Sf | 自前 |
+|---|---|---|
+| チップ(Shop の PC) | 10.3% | 9.6% |
+| 区切り(Kit の月) | 14.0% | 14.6% |
+| アコーディオンの見出し(Item の仕様・よくある質問) | 14.2〜14.3% | 14.7% |
+
+- Sf は押した直後から暗くなる。自前は Android の標準どおり、スクロールの中では押し始めが少し遅れて出て、離した後は薄くなって消える
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/ChipGroup.cs`(新規) | 1 つだけ選ぶチップ。`ItemsSource`・`SelectedItem`(双方向)・`ItemTemplate`(文字の `Label`。無ければ項目の文字列)・`Wrap`(折り返す)・`Spacing`(横に並べるときの間)、見た目は `ChipBackground`・`ChipStroke`・`ChipTextColor`・`SelectedChipBackground`・`SelectedChipTextColor`・`ChipTextSize`・`ChipCornerRadius`・`ChipPadding`(チップの外の余白)・`ChipRippleColor`(既定は #1C1B1F の 12.5%)。チップは `Border` と `Label`(文字の左右の余白 15、高さは文字の大きさ × 1.3 + 13)。押したときは `TouchOption` |
+| `Controls/SegmentedView.cs`(新規) | 区切りから 1 つを選ぶ。`ItemsSource`・`SelectedIndex`(双方向)・`SegmentWidth`(100)・`SegmentHeight`(36)・`FontSize`(16)・色(`TextColor`・`SelectedTextColor`・`SelectedBackground`・`Stroke`)・`CornerRadius`(20)。区切りの間に線。選んだ区切りの塗りは 250 ms で滑らせ、文字の色は塗りが重なる割合で変える |
+| `Controls/AccordionView.cs`(新規) | `AccordionView`(`ExpandMode` = `SingleOrNone` / `MultipleOrNone`)と `AccordionItem`(`Header`・`Content`・`IsExpanded`)。開閉は中身の高さを 250 ms で伸び縮みさせ、右の矢印を回す。開いている間は見出しの上に線(#CAC4D0)。押して開いた項目が隠れるときは、開き終わってから見える位置まで送る |
+| `Controls/ShimmerView.cs`(新規) | 子要素の骨組みの `BoxView` の形を `Fill`(#F7F2FB)で描き、`WaveColor`(白)の帯(`WaveWidth` 200)を左上から右下へ `Duration`(1 秒)で流す。地は #FFFBFE。骨組みの `BoxView` は透明にし、帯は `IsActive` で画面に出ている間だけ動かす |
+| `Modules/UI/UIShopView.xaml` / `UIItemView.xaml` / `UITimelineView.xaml` | `SfChipGroup` を `controls:ChipGroup` に。Shop と Timeline の文字は `ItemTemplate` の `Label`(`{Binding Name}`)。Shop の絞り込みのシートは `ShopWrapChipGroup`(折り返す)。Timeline の文字は 13 → 14。並べ方の `ChipLayout` とそのスタイル(`ChipStack`・`ChipWrapLayout`・`FilterChipStack`)はやめた |
+| `Modules/UI/UIKitDashView.xaml` | `SfSegmentedControl` を `controls:SegmentedView` に(余白は 16,7,16,15 で、下のグラフの位置を Sf のときと同じに) |
+| `Modules/UI/UIItemView.xaml` / `UIKitSettingView.xaml` | `SfAccordion` を `controls:AccordionView` に。Item の Syncfusion のテーマのキー 2 つと ReSharper の抑止は消した |
+| `Modules/UI/UINewsView.xaml` | `SfShimmer` を `controls:ShimmerView` に(骨組みは子要素。一覧の下の端まで広げる) |
+
+- 実機: 前後を同じ手順で撮って比べた(Shop のカテゴリ・PC を選んだ所・絞り込みのシート、Item の色と開閉、Timeline、Kit の日 / 週 / 月と日を選んだ所、よくある質問の閉じた所と開いた所、News の読み込み中の 3 タブ × 3 コマ)。チップの大きさの差は 2px 以内、区切りと下のグラフは同じ位置、シマーは同じ色と斜めの帯。日 / 週 / 月の塗りの滑りと開閉の途中(矢印の回転)は、押した直後から続けて撮って確かめた
+- Sf と違う点: 日 / 週 / 月の塗りが滑る(Sf はすぐ切り替わる)、押して開いた項目が隠れるときは項目が見える位置まで送る(Sf は見出しのあたりまで少し送るだけ)
+- ビルド 0 警告。inspectcode の 6 件は直した(`Controls/SideDrawer.cs` の `InitializePanelGesture` は `private partial void` にし、Android の実装は空のまま)
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3445,6 +3486,16 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 - `TapGestureRecognizer` はタッチを受けるので、付けた要素の Android のビューが押された状態にならず、`TouchOption.Ripple` の波紋が出ない。押したときの処理は `TouchOption.ClickCommand` にする
 - `CollectionView`(Android)の `Header` の中の `AnimationOption.EnterAnimation` は、`ItemsSource` を入れ替えたときと、一覧が途中で空になったときに出直す。絞り込みは同じ `ObservableCollection` に足して並べてから残りを外す
 - `Debug.WriteLine` は Debug ビルドでは logcat に出る(Release では呼び出しが消える)
+- Syncfusion の `SfChipGroup` の `ChipPadding` はチップの外の余白(`Margin`)。チップの幅は「文字の幅 × 1.03 + 4 + 左右 12」、高さは「文字の高さ + 13」(文字 14 で 31.2)。並べ方の既定は横の `StackLayout`(間 4)
+- `FlexLayout` で折り返すと、子の `Margin` が 2 回分の間になる(Shop の絞り込みのシートのチップの間 56 = 14 × 4)
+- Syncfusion の `SfAccordion` は、開いている項目の見出しの上に線(#CAC4D0)を引き、矢印のフォントのアイコンを 200 ms で回す。見出しを押すと Android の注目が移り、隠れかけた見出しを見える位置まで送る(`AutoScrollPosition="None"` でも)
+- Syncfusion の `SfShimmer` は `CustomView` を透明にし、その `BoxView` の形を #F7F2FB で描いて、地を #FFFBFE で塗る。帯の既定の向きは左上から右下(`ShimmerWaveDirection.Default`)
+- Syncfusion の `SfSegmentedControl` は区切りの幅が既定で 100 で、区切りの間に線、選んだ区切りは動きなしで切り替わる
+- MAUI の `Binding` は文字列のパスだと `RequiresUnreferencedCode`(`PublishAot` で IL2026 の警告)。部品に項目の文字を渡すときは、`x:DataType` を付けた `DataTemplate` の `Label` にする
+- 型の名前が参照しているライブラリの名前空間(Syncfusion の `Accordion`・`SegmentedControl`)と同じだと CA1724 になる
+- `Template.MobileApp.Behaviors` を `using` するファイルでは、`Border` が Behaviors の静的クラスになる(`using Border = Microsoft.Maui.Controls.Border;` で分ける)
+- コレクションの型(`Grid` など)を作った後に `Add` を呼ぶと IDE0028 になる(`root = [canvas];`、列は `ColumnDefinitions = [...]`、子は `Children.Add`)
+- アクセス修飾子の無い `partial void` は、実装が空だと ReSharper の `RedundantPartialMethodEmptyImplementation`、実装が無いと `PartialMethodWithSinglePart` になる。片方のプラットフォームで何もしない部分メソッドは `private partial void`(実装が必須)にして空の実装を書く(空の実装の CA1822 は pragma)
 - タッチを受ける子(`TapGestureRecognizer` を付けた行など)の上から始めたドラッグは、親の `PanGestureRecognizer` に届かない(Android)。親で受けるには Android の `ViewGroup.OnInterceptTouchEvent` で横の移動を見て横取りする。レイアウトの Android のビューは `ViewHandler<ILayout, LayoutViewGroup>.PlatformViewFactory` で特定の要素だけ差し替えられる(ほかは null を返すと標準の作り方)
 - `SfEffectsView` の波紋は #1C1B1F を放射のグラデーションで重ねる(View > Effect のボタンで中心 約 16%・端 約 12%・平均 14.4%)。Android の `RippleDrawable` は指定の色を一様に重ね、#1C1B1F の 18% で平均 14.6% になる。スクロールの中では、押した状態は Android の標準どおり少し遅れて出る
 - 最初の画面の外にある部分を表示の後に作ると(`LazyViewOption.Deferred`)、Weather は開く時間 456 → 304 ms、最初のフレームの要素 284 → 175
@@ -3569,6 +3620,7 @@ template-maui-server の API に、エンドポイントの名前と応答の宣
 | フォーカス枠 | `behaviors:Focus.FocusedStroke`+`FocusedThickness`(**親 Border 必須**) | Entry/Editor の入力体験 |
 | 押下 | `behaviors:ButtonOption.PressEffect="True"`(Button/ImageButton)+`HapticFeedback` / `behaviors:TouchOption.Ripple="True"`(+`RippleColor` / `TouchOption.ClickCommand`/`ClickCommandParameter`) | 全タップ要素 |
 | 後から作る | `behaviors:LazyViewOption.Load="{Binding ...}"` + 子要素の `<behaviors:LazyViewOption.Template>`(初めて開くときに作る)/ `behaviors:LazyViewOption.Deferred="True"`(表示の後に作る) | 隠れた部分(タブ・開閉・ドロワー)、最初の画面の外の部分 |
+| 選ぶ・開閉・読み込み中 | `controls:ChipGroup`(ItemsSource / SelectedItem / ItemTemplate / Wrap / Spacing / Chip*)/ `controls:SegmentedView`(ItemsSource / SelectedIndex)/ `controls:AccordionView` + `controls:AccordionItem`(Header / Content / IsExpanded、ExpandMode)/ `controls:ShimmerView`(骨組みを子要素に) | 1 つだけ選ぶチップ、期間の切り替え、説明・よくある質問、読み込み中 |
 | バッジ | `converters:BadgeCountConverter`(0→空、Max 超→「99+」) | 件数バッジ |
 | アイコン | `{markup:Material Glyph={x:Static fonts:MaterialIcons.Xxx}, Color=.., Size=..}` / `{markup:Fluent ..}` / `{markup:MenuIcon ..}` | 絵文字・生 Unicode の置換(バインド不可な点に注意) |
 | ステータスバー | `shell:ShellProperty.StatusBarColor="{StaticResource ...}"` + `StatusBarStyle="LightContent|DarkContent"`(未指定 = `MainPage.xaml` の既定 `BlueDefault` / `LightContent`) | ヘッダ非表示・全面画像の画面 |

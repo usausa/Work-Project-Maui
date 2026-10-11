@@ -2,7 +2,7 @@ namespace Template.MobileApp.Controls;
 
 public sealed partial class SideDrawer
 {
-    partial void InitializePanelGesture()
+    private partial void InitializePanelGesture()
     {
         var pan = new PanGestureRecognizer();
         pan.PanUpdated += OnPanUpdated;

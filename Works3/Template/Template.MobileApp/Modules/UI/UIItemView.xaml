@@ -5,10 +5,10 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              x:Class="Template.MobileApp.Modules.UI.UIItemView"
              x:DataType="{x:Type module:UIItemViewModel}"
              s:BindingContextResolver.Type="{x:Type module:UIItemViewModel}"
@@ -27,12 +27,6 @@
             <s:BoolToTextConverter x:Key="AddTextConverter"
                                    TrueValue="✓ カートに追加しました"
                                    FalseValue="カートに入れる" />
-
-            <!-- Syncfusion のテーマの色: 開いた見出しに付く灰色の背景と枠を消す -->
-            <!-- ReSharper disable Xaml.RedundantResource -->
-            <Color x:Key="SfAccordionFocusedHeaderBackground">Transparent</Color>
-            <Color x:Key="SfAccordionFocusedItemStroke">Transparent</Color>
-            <!-- ReSharper restore Xaml.RedundantResource -->
 
             <!-- Root -->
             <Style x:Key="ItemDetailGrid"
@@ -240,8 +234,7 @@
             </Style>
 
             <Style x:Key="VariantChipGroup"
-                   TargetType="sf:SfChipGroup">
-                <Setter Property="ChipType" Value="Choice" />
+                   TargetType="controls:ChipGroup">
                 <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="18" />
                 <Setter Property="ChipPadding" Value="16,0" />
@@ -250,14 +243,12 @@
                 <Setter Property="ChipTextColor" Value="{StaticResource GrayDarken2}" />
                 <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedChipTextColor" Value="White" />
-                <Setter Property="SelectionIndicatorColor" Value="White" />
             </Style>
 
             <!-- Accordion -->
             <Style x:Key="DetailAccordion"
-                   TargetType="sf:SfAccordion">
+                   TargetType="controls:AccordionView">
                 <Setter Property="ExpandMode" Value="MultipleOrNone" />
-                <Setter Property="AutoScrollPosition" Value="None" />
             </Style>
 
             <Style x:Key="AccordionHeaderLabel"
@@ -439,28 +430,28 @@
                                              IsVisible="{Binding Context.Selected.Product.VariantName, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource VariantCaption}"
                                    Text="{Binding Context.Selected.Product.VariantName}" />
-                            <sf:SfChipGroup Style="{StaticResource VariantChipGroup}"
-                                            ItemsSource="{Binding Context.Selected.Product.Variants}"
-                                            SelectedItem="{Binding SelectedVariant}" />
+                            <controls:ChipGroup Style="{StaticResource VariantChipGroup}"
+                                                ItemsSource="{Binding Context.Selected.Product.Variants}"
+                                                SelectedItem="{Binding SelectedVariant}" />
                         </VerticalStackLayout>
 
-                        <sf:SfAccordion Style="{StaticResource DetailAccordion}">
-                            <sf:AccordionItem IsExpanded="True">
-                                <sf:AccordionItem.Header>
+                        <controls:AccordionView Style="{StaticResource DetailAccordion}">
+                            <controls:AccordionItem IsExpanded="True">
+                                <controls:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="商品の説明" />
-                                </sf:AccordionItem.Header>
-                                <sf:AccordionItem.Content>
+                                </controls:AccordionItem.Header>
+                                <controls:AccordionItem.Content>
                                     <Label Style="{StaticResource AccordionBodyLabel}"
                                            Text="{Binding Context.Selected.Product.Description}" />
-                                </sf:AccordionItem.Content>
-                            </sf:AccordionItem>
-                            <sf:AccordionItem>
-                                <sf:AccordionItem.Header>
+                                </controls:AccordionItem.Content>
+                            </controls:AccordionItem>
+                            <controls:AccordionItem>
+                                <controls:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="仕様" />
-                                </sf:AccordionItem.Header>
-                                <sf:AccordionItem.Content>
+                                </controls:AccordionItem.Header>
+                                <controls:AccordionItem.Content>
                                     <VerticalStackLayout Style="{StaticResource SpecStack}"
                                                          BindableLayout.ItemsSource="{Binding Context.Selected.Product.Specs}">
                                         <BindableLayout.ItemTemplate>
@@ -480,19 +471,19 @@
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </VerticalStackLayout>
-                                </sf:AccordionItem.Content>
-                            </sf:AccordionItem>
-                            <sf:AccordionItem>
-                                <sf:AccordionItem.Header>
+                                </controls:AccordionItem.Content>
+                            </controls:AccordionItem>
+                            <controls:AccordionItem>
+                                <controls:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="配送・返品" />
-                                </sf:AccordionItem.Header>
-                                <sf:AccordionItem.Content>
+                                </controls:AccordionItem.Header>
+                                <controls:AccordionItem.Content>
                                     <Label Style="{StaticResource AccordionBodyLabel}"
                                            Text="14 時までのご注文で翌日に発送します。届いてから 30 日以内なら、開封していない商品を返品できます。" />
-                                </sf:AccordionItem.Content>
-                            </sf:AccordionItem>
-                        </sf:SfAccordion>
+                                </controls:AccordionItem.Content>
+                            </controls:AccordionItem>
+                        </controls:AccordionView>
 
                     </VerticalStackLayout>
                 </Border>

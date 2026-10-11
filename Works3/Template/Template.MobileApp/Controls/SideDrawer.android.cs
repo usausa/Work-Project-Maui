@@ -21,7 +21,7 @@ public sealed partial class SideDrawer
 
     // パネルのドラッグはパネルのビュー (PanelView) で受ける
 #pragma warning disable CA1822
-    partial void InitializePanelGesture()
+    private partial void InitializePanelGesture()
     {
     }
 #pragma warning restore CA1822

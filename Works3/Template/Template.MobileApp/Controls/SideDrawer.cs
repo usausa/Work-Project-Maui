@@ -178,7 +178,7 @@ public sealed partial class SideDrawer : Grid
     partial void UpdateGestureExclusion();
 
     // パネルのドラッグ (Android はパネルのビューで受ける)
-    partial void InitializePanelGesture();
+    private partial void InitializePanelGesture();
 
     private void SetDrawerContent(View? view)
     {

@@ -34,9 +34,8 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 | 弾 | 項目 |
 | --- | --- |
-| 第 1 弾 | 10-23 Custom・10-15 Load・10-16 TreeMap・10-13 Dock・10-9 Chat・10-1 Profile・10-4 Super |
-| 第 2 弾 | 10-22 Chart → 10-3 Money → 10-11 Kit(10-21 の `SfSegmentedControl`・`SfAccordion`・`ColorPicker` もここ) |
-| 第 3 弾 | 10-8 Mail・10-12 Stream・10-10 Timeline・10-14 Graph / Graph2・10-17 Wheel(10-21 の `AvatarView` もここ) |
+| 第 1 弾 | 10-9 Chat・10-4 Super |
+| 第 2 弾 | 10-3 Money → 10-11 Kit |
 | 最後 | アニメーションの強化の案から実施するものを選ぶ。無ければこの計画を閉じて `Task_Checklist.md` へ戻る |
 
 ## ⚖️決定事項
@@ -56,6 +55,7 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 | 一覧の行 | 角丸のカードの行(Kit の通知)は、フラットな行と区切り線にし、中身を色付きのバッジと絵文字で示す |
 | 見本のデータ | 日時は今日からの相対にする(固定の日付や、予定の無い曜日を作らない)。文面は実在しそうな内容にする(登場人物はそのまま) |
 | 部品 | 部品の画面(View の Toolkit・Custom・Chart・Bottom Sheet・Drawer)でしか使っていない部品は、使いどころのある UI の画面で使う |
+| Syncfusion の部品 | UI の画面では使わず、自前の部品にする。Sf の部品は Sf の見本の画面(View の Toolkit・Sf Chart・Bottom Sheet・Drawer)だけに残す |
 | 遷移先の無いボタン | 今のまま(押しても何も出さない)。画面の中で完結する操作(割引・チップの選択・お気に入りなど)だけを動かす |
 | 画像 | 既存の画像(商品・ポスター・人物・写真)を使う。足りないところは絵文字とアイコン |
 
@@ -163,7 +163,7 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 | 画面 | 現在のファイル名 | 見せている機能 | UI / App での使用 | 判定 |
 | --- | --- | --- | --- | --- |
-| Toolkit | `Modules/View/ViewToolkitView.xaml` + `ViewToolkitViewModel.cs` | `SfTabView`・`SfOtpInput`・`SfSegmentedControl`・`SfChipGroup`・`AvatarView`・`RatingView`・`Expander`・`SfAccordion` | `SfChipGroup` = UI Shop・Timeline、`RatingView` = UI Shop の商品、`SfAccordion` = UI Shop の商品・Kit の設定、`SfSegmentedControl` = UI Kit のダッシュボード。ほかは使われていない | 残す(ライブラリの部品の一覧) |
+| Toolkit | `Modules/View/ViewToolkitView.xaml` + `ViewToolkitViewModel.cs` | `SfTabView`・`SfOtpInput`・`SfSegmentedControl`・`SfChipGroup`・`AvatarView`・`RatingView`・`Expander`・`SfAccordion` | `RatingView` = UI Shop の商品。ほかは使われていない(UI の画面のチップ・区切り・開閉は自前の `ChipGroup`・`SegmentedView`・`AccordionView`) | 残す(ライブラリの部品の一覧) |
 | Custom | `Modules/View/ViewCustomView.xaml` + `ViewCustomViewModel.cs` | 自作の `MarqueeLabel`・`TreeView`・`ColorPicker`・`DurationPicker`・`AvatarGroup` | `MarqueeLabel` = UI News、`AvatarGroup` = UI Stream の詳細、`ColorPicker` = UI Kit の設定。ほかは使われていない | 残す(自作の部品の一覧) |
 | Chart | `Modules/View/ViewChartView.xaml` + `ViewChartViewModel.cs` | 自作の描画のグラフ 7 種(`Graphics/Drawing/ChartDrawing`) | UI Money(残高の推移・週の支出)と UI Kit(歩数・心拍) | 残す(グラフの種類の一覧) |
 | Sf Chart | `Modules/View/ViewSfChartView.xaml` + `ViewSfChartViewModel.cs` | Syncfusion のグラフ(縦棒・ドーナツ・極座標・ファネル / ピラミッド・スパーク・サンバースト) | 使われていない | 残す(ライブラリのグラフの一覧) |

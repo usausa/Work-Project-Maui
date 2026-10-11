@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
-             xmlns:sf="http://schemas.syncfusion.com/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
+             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITimelineView"
@@ -39,9 +39,8 @@
             </Style>
 
             <Style x:Key="FilterChipGroup"
-                   TargetType="sf:SfChipGroup">
-                <Setter Property="ChipType" Value="Choice" />
-                <Setter Property="ChipTextSize" Value="13" />
+                   TargetType="controls:ChipGroup">
+                <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="16" />
                 <Setter Property="ChipPadding" Value="12,0" />
                 <Setter Property="ChipBackground" Value="White" />
@@ -49,11 +48,6 @@
                 <Setter Property="ChipTextColor" Value="{StaticResource BlueGrayDarken3}" />
                 <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedChipTextColor" Value="White" />
-                <Setter Property="SelectionIndicatorColor" Value="White" />
-            </Style>
-
-            <Style x:Key="FilterChipStack"
-                   TargetType="HorizontalStackLayout">
                 <Setter Property="Spacing" Value="8" />
             </Style>
 
@@ -331,14 +325,15 @@
 
         <ScrollView Grid.Row="1"
                     Style="{StaticResource FilterScroll}">
-            <sf:SfChipGroup Style="{StaticResource FilterChipGroup}"
-                            ItemsSource="{Binding Filters}"
-                            SelectedItem="{Binding SelectedFilter}"
-                            DisplayMemberPath="Name">
-                <sf:SfChipGroup.ChipLayout>
-                    <HorizontalStackLayout Style="{StaticResource FilterChipStack}" />
-                </sf:SfChipGroup.ChipLayout>
-            </sf:SfChipGroup>
+            <controls:ChipGroup Style="{StaticResource FilterChipGroup}"
+                                ItemsSource="{Binding Filters}"
+                                SelectedItem="{Binding SelectedFilter}">
+                <controls:ChipGroup.ItemTemplate>
+                    <DataTemplate x:DataType="module:UITimelineFilterOption">
+                        <Label Text="{Binding Name}" />
+                    </DataTemplate>
+                </controls:ChipGroup.ItemTemplate>
+            </controls:ChipGroup>
         </ScrollView>
 
         <BoxView Grid.Row="2"
