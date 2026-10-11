@@ -1054,7 +1054,8 @@
                                                                             Text="{Binding Hour.Temperature, StringFormat='{0}°'}"
                                                                             IsHighlighted="{Binding IsCurrent}"
                                                                             Next="{Binding Next}"
-                                                                            Previous="{Binding Previous}" />
+                                                                            Previous="{Binding Previous}"
+                                                                            RevealOrder="{Binding Index}" />
                                                 <Label Grid.Row="3"
                                                        Style="{StaticResource HourRainLabel}"
                                                        Text="{Binding Hour.PrecipitationChance, StringFormat='{0}%'}" />

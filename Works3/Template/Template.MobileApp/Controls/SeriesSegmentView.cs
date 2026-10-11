@@ -10,10 +10,25 @@ public sealed class SeriesSegmentView : SKCanvasView
 {
     private const string RippleAnimationName = "SeriesRipple";
 
+    private const string RevealAnimationName = "SeriesReveal";
+
+    // 1 項目ぶんの線を描き込む時間 (ms)
+    private const int RevealLength = 80;
+
     private static readonly SKTypeface BoldTypeface = SKTypeface.FromFamilyName("sans-serif", SKFontStyle.Bold);
+
+    // 一覧ごとの描き込みの起点 (一覧の中で最初に表示した項目の時刻)
+    private static readonly BindableProperty RevealOriginProperty = BindableProperty.CreateAttached(
+        "RevealOrigin",
+        typeof(long),
+        typeof(SeriesSegmentView),
+        0L);
 
     // 光らせた点から広がる輪 (0〜1)。IsHighlighted の間だけ動かす
     private float ripple;
+
+    // 線を描き込んだ割合 (0〜1)。左から右へ伸ばす
+    private float reveal = 1f;
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
@@ -160,6 +175,19 @@ public sealed class SeriesSegmentView : SKCanvasView
         set => SetValue(IsHighlightedProperty, value);
     }
 
+    // 一覧の中で線を描き込む順番 (先頭が 0)。負の値は描き込まない
+    public static readonly BindableProperty RevealOrderProperty = BindableProperty.Create(
+        nameof(RevealOrder),
+        typeof(int),
+        typeof(SeriesSegmentView),
+        -1);
+
+    public int RevealOrder
+    {
+        get => (int)GetValue(RevealOrderProperty);
+        set => SetValue(RevealOrderProperty, value);
+    }
+
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
         ((SeriesSegmentView)bindable).InvalidateSurface();
 
@@ -172,8 +200,16 @@ public sealed class SeriesSegmentView : SKCanvasView
 
     public SeriesSegmentView()
     {
-        Loaded += (_, _) => UpdateRipple();
-        Unloaded += (_, _) => this.AbortAnimation(RippleAnimationName);
+        Loaded += (_, _) =>
+        {
+            UpdateRipple();
+            StartReveal();
+        };
+        Unloaded += (_, _) =>
+        {
+            this.AbortAnimation(RippleAnimationName);
+            this.AbortAnimation(RevealAnimationName);
+        };
     }
 
     private void UpdateRipple()
@@ -198,6 +234,63 @@ public sealed class SeriesSegmentView : SKCanvasView
         }
     }
 
+    // 一覧で最初に表示した項目の時刻を起点に、順番のぶん遅らせて左から描き込む。
+    // 起点から遅れて作られた項目 (スクロールで出た項目) は描き込まずに出す
+    private void StartReveal()
+    {
+        this.AbortAnimation(RevealAnimationName);
+        reveal = 1f;
+
+        var owner = FindItemsView();
+        if ((RevealOrder >= 0) && (owner is not null))
+        {
+            var now = Environment.TickCount64;
+            var origin = (long)owner.GetValue(RevealOriginProperty);
+            if (origin == 0)
+            {
+                origin = now;
+                owner.SetValue(RevealOriginProperty, origin);
+            }
+
+            var wait = origin + ((long)RevealOrder * RevealLength) - now;
+            if (wait + RevealLength > 0)
+            {
+                var length = Math.Max(wait, 0) + RevealLength;
+                reveal = (float)Math.Clamp(-wait / (double)RevealLength, 0, 1);
+                this.Animate(
+                    RevealAnimationName,
+                    v =>
+                    {
+                        reveal = (float)Math.Clamp(((v * length) - wait) / RevealLength, 0, 1);
+                        InvalidateSurface();
+                    },
+                    0d,
+                    1d,
+                    16,
+                    (uint)length,
+                    Easing.Linear,
+                    (_, _) =>
+                    {
+                        reveal = 1f;
+                        InvalidateSurface();
+                    });
+            }
+        }
+    }
+
+    private ItemsView? FindItemsView()
+    {
+        for (var element = Parent; element is not null; element = element.Parent)
+        {
+            if (element is ItemsView view)
+            {
+                return view;
+            }
+        }
+
+        return null;
+    }
+
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
@@ -219,10 +312,18 @@ public sealed class SeriesSegmentView : SKCanvasView
             var start = Previous is null ? center : left;
             var end = Next is null ? center : right;
 
+            // 描き込みの途中は線と面を左から伸ばし、点と文字は線が中央に届いてから出す
+            canvas.Save();
+            canvas.ClipRect(new SKRect(0, 0, info.Width * reveal, info.Height));
             DrawFill(canvas, start, center, end, top, info.Height);
             DrawLine(canvas, start, center, end, density);
-            DrawPoint(canvas, center, density);
-            DrawText(canvas, center, font, density);
+            canvas.Restore();
+
+            if (reveal >= 0.5f)
+            {
+                DrawPoint(canvas, center, density);
+                DrawText(canvas, center, font, density);
+            }
         }
     }
 

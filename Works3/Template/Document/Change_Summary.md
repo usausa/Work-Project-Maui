@@ -258,6 +258,17 @@ A-9 の補足:
 | `NoWarn` | `NU1903` を **TODO 付きで暫定追加**(次区間で解消) |
 | ドキュメント | `Document/UI_Development_Log.md` / `Document/UI_Verification_Checklist.md` を新設 |
 
+### 💫動きの案の試し(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/SeriesSegmentView.cs` / `Modules/UI/UIWeatherViewModel.cs` / `UIWeatherView.xaml` | Weather の時間ごとの線を、開いたときに左から描き込む。`RevealOrder`(一覧の中の順番。行の型の `UIWeatherHour.Index`)のぶん 80 ms ずつ遅らせ、1 項目を 80 ms で描く。起点は一覧の中で最初に表示した項目の時刻(一覧に添付プロパティで持つ)で、遅れて作られた項目(スクロールで出た項目)は描き込まない。点と文字は線が中央に届いてから出す |
+| `Messaging/MapsuiController.cs` | Map2 の Overlay の経路を、出したときに始点から終点へ 1.2 秒で描き込む。始点からの長さの割合で最後の線分を途中まで描く(`FindTip`) |
+| `Modules/Device/DeviceBluetoothView.xaml` | 円の `Pulse` は接続中だけにし、印刷中は円のアイコンを印刷のアイコンにして `Wave` で揺らす |
+
+- 実機: Weather は開いたときに今から右へ線が伸び、約 0.9 秒で描き終わる。Map2 は Overlay を入れると始点の点から終点まで線が伸びる。Bluetooth は DummyPrinter が無いので接続中から失敗になり、印刷中の動きは見ていない
+- ビルド 0 警告
+
 ## 💡C. この区間のナレッジ
 
 - **正確な API 名**(発明注意): CountUp=`LabelOption.CountUpValue/CountUpFormat/CountUpDuration`、フォーカス枠=`Focus.FocusedStroke/FocusedThickness`(親 Border 必須)、Make* コマンドヘルパは canExecute 自動再評価(`.Observe()` は存在しない)、`s:NullToText` は Null/NonNull 置換のみ(値パススルー不可 → 空状態は 2 ラベル + `NullToBoolConverter`)
@@ -3376,12 +3387,11 @@ View > Toolkit の 2 つ目のタブと Kit の設定の色の選択も、初め
 
 ### 💫動きの部品と View > Animation の見本(2026-10-11)
 
-`AnimationOption` に続く動きと 1 回だけの動きを足し、View > Animation に見本を並べた。流れる線の描画 `FlowLineDrawing` を足した(画面にはまだ使っていない)。
+`AnimationOption` に続く動きと 1 回だけの動きを足し、View > Animation に見本を並べた。
 
 | 対象 | 内容 |
 |---|---|
 | `Behaviors/AnimationOption.cs` | `Spin`(1 周 1.2 秒で回り続ける。止めると 0 度)、`Blink`(透明度 1 → 0.3 → 1 を 1 秒)、`Heartbeat`(1.0 → 1.18 → 1.0 → 1.1 → 1.0 の 2 段の後に休む。`HeartbeatRate` は毎分の回数で既定 72)、`HeartbeatTrigger` / `HeartbeatValue`(値が変わったときに 1 回打つ)、`JumpTrigger` / `JumpValue`(14 上がって落ち、下の端を起点に縦につぶれて戻る)、`Float`(3 秒で 6 上がって戻る)。続く動きは表示中だけ動く |
-| `Graphics/Drawing/FlowLineDrawing.cs`(新規) | 値を `Add` すると `Interval` の時間で 1 区間ぶん右から左へ流れる線。先頭の点は右の端で、古い側ほど薄い。`Capacity`・`Minimum` / `Maximum`・`LineColor`・`LineWidth` |
 | `Modules/View/ViewAnimationView.xaml` / `ViewAnimationViewModel.cs` | Loop animation(Spin・Blink・Heartbeat・Float・Ripple と、止めるスイッチを 1 行)と Trigger animation(Jump・Heartbeat。押すと 1 回動く)。カードは Click・Loop・Trigger・Tap の順で、題に括弧書きを付けず、カードの中に説明の文を置かない。アイコンごとの色で並べ、Jump は上に跳ねる分の余白を取る |
 | `Document/UIBrushup_Plan.md` / `Document/Japanese_Text_List.md`(新規) | 10-35 アニメーションの強化(① 部品と見本、② 画面ごとの案を当てる)と、10-36 英語への統一(画面ごとの文言の数)。UI と App 以外の画面の日本語の文言は、画面・文言・英語候補の表 |
 
@@ -3448,7 +3458,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Controls/StatControl.cs` | 値が届くたびに、前の値が届いてからの時間(100〜3000 ms、初めは 1 秒)で 1 区間ぶん右から左へ流れる。最新の値は右の外から入り、左は平らにつなぐ |
 | `Modules/UI/UIStreamView.xaml` | LIVE のバッジの `Blink`(`CompareToBool` で LIVE のときだけ) |
 | `Modules/UI/UIProfileView.xaml` / `UIStreamDetailView.xaml` / `UIShopView.xaml` / `UIItemView.xaml` | `BounceTrigger` を `HeartbeatTrigger`(`HeartbeatValue` = True)に。入れたときだけ鼓動 |
-| `Modules/UI/UICharacterView.xaml` / `UIMonsterView.xaml` | Character は `BounceTrigger`(`BounceValue` = True。入れたときだけ弾む)、Monster は `HeartbeatTrigger`(`Hp`) |
+| `Modules/UI/UICharacterView.xaml` / `UIMonsterView.xaml` | Character は星の `BounceTrigger` を外した(動きを付けない)。Monster は `HeartbeatTrigger`(`Hp`) |
 | `Controls/SeriesSegmentView.cs` / `WeatherSunArcView.cs` | Weather の今の時間の点の波紋(表示している間だけ 1.8 秒で繰り返す)。弧は表示したときに 0.9 秒で今の位置まで描き込む |
 | `Graphics/Drawing/LoadDrawing.cs` / `Modules/UI/UILoadView.xaml` | 棒を 1 本多く持ち、測定の間隔(200 ms)で左へ滑らせる(クリップして描く)。録音中の点(`Blink`)、MAX の値の背景の光(`HighlightTrigger`) |
 | `Graphics/Drawing/ActivityDrawing.cs` / `Modules/Device/DeviceActivityView.xaml` | 歩数の輪は今の長さから新しい値まで 0.6 秒で伸びる。👟 に `JumpTrigger`(`Calculator.Step`) |
@@ -3458,7 +3468,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Modules/App/AppTimerView.xaml` | タイマーの数字(消えている桁の重ねを含む `Grid`)に `Heartbeat`(`IsWarning`、毎分 120)と `Blink`(`Paused`)。終わったときの文字は `BounceTrigger` から `JumpTrigger` に |
 | `Settings.XamlStyler` | `behaviors:AnimationOption.Ripple` / `RippleDelay` を個別のグループに(リテラルの値が 1 行にまとまらないように) |
 
-- UI > Kit・Schedule には動きを足さない(Kit の心拍のハート・未読の点・配送の追跡、Schedule の今の時刻の点は動かない)
+- UI > Kit・Schedule・Character には動きを足さない(Kit の心拍のハート・未読の点・配送の追跡、Schedule の今の時刻の点、Character の星は動かない)
 - 実機: ヘッダーの ⛔ の点滅、Stream の LIVE の点滅(NEW SEASON は止まったまま)、Shop のお気に入り(入れたときに鼓動、外したときは動かない)、Load の履歴の流れと録音中の点、NFC の待ち受けの波紋、Weather の今の時間の点の波紋、Timer(残り 10 秒の鼓動)
 - ビルド 0 警告、inspectcode は 2 件(`ActivityDrawing` の不要なキャスト)を直した
 
@@ -3610,6 +3620,8 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 開く時間に効くのは、画面を開くときにハンドラーを作る要素の数。画面に加えない要素(初めて開くときに画面に加えるシートの中身)を作らないようにしても、開く時間は変わらない
 - Syncfusion の `SfTabView` の `SelectedIndex` は `int`。2 つ目以降のタブの中身は、`x:Reference` で `SelectedIndex` を `EqualsConverter` と比べた値を `LazyViewOption.Load` に渡すと、タブを初めて選んだときに作れる
 - `HybridWebView` で Vite + React の雛形のページを開くと、アプリを起動して最初でも約 0.4 秒で中身が出る(Pixel 9a・Debug)
+- **`IPopupNavigator` のポップアップ(CommunityToolkit の Popup)は MAUI のモーダルとして別ウィンドウで出る**。戻るキーとタップは下の画面に届かない(戻るキーはポップアップが受け、`CanBeDismissedByTappingOutsideOfPopup` = false なら何もしない)。ポップアップの間も呼び出し元の `AcceptsCommand` は true のまま(Smart.Navigation の遷移ではないので `OnDeactivated` が呼ばれない)
+- `uiautomator dump` は絵文字を文字参照で返す(「🥝 Dialog」は `&#129373; Dialog`)。文字で探すときは文字参照で比べる
 - **`*` の行に中央で置いた盤面は、すぐ下の `Auto` の行の高さが変わると動く**(盤面の大きさは幅と高さの短い方なので、大きさも変わる)。出し入れする要素は同じセルの `Grid` に入れて `MinimumHeightRequest` で高さをそろえる
 - `Border` は中身を自分の形で切り抜くので、中の要素を跳ねさせると上が切れる。跳ねる要素は `Border` の外に置くか、上に跳ねる分の余白を取る
 - `AnimationOption.FlashTrigger` は撮影のフラッシュのような重ね用で、終わると `Opacity` が 0 に戻る。値の文字に付けると消えてしまうので、値が変わったことを知らせるときは `HighlightTrigger` か `BounceTrigger`

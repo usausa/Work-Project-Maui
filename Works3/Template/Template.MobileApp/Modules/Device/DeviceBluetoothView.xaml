@@ -53,7 +53,7 @@
             <VerticalStackLayout Style="{StaticResource CardStack}">
 
                 <Border Style="{StaticResource BasicIconCircleBorder}"
-                        behaviors:AnimationOption.Pulse="{Binding IsBusy}">
+                        behaviors:AnimationOption.Pulse="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static module:BluetoothPrintState.Connecting}}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border"
                                      Binding="{Binding State}"
@@ -72,12 +72,18 @@
                         </DataTrigger>
                     </Border.Triggers>
                     <Label Style="{StaticResource BasicIconCircleLabel}"
+                           behaviors:AnimationOption.Wave="{Binding State, Converter={s:CompareToBool}, ConverterParameter={x:Static module:BluetoothPrintState.Printing}}"
                            Text="{x:Static fonts:MaterialIcons.Bluetooth}">
                         <Label.Triggers>
                             <DataTrigger TargetType="Label"
                                          Binding="{Binding State}"
                                          Value="Connecting">
                                 <Setter Property="TextColor" Value="{StaticResource AmberDarken3}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding State}"
+                                         Value="Printing">
+                                <Setter Property="Text" Value="{x:Static fonts:MaterialIcons.Print}" />
                             </DataTrigger>
                             <DataTrigger TargetType="Label"
                                          Binding="{Binding State}"
