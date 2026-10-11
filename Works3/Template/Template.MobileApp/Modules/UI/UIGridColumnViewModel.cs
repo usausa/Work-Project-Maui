@@ -69,5 +69,5 @@ public sealed partial class UIGridColumnViewModel : AppViewModelBase
     //--------------------------------------------------------------------------------
 
     private void UpdateMessage() =>
-        Message = $"表示 {session.Columns.Count(static x => x.IsVisible)} / {session.Columns.Count} 列。チェックで表示を切り替え、左端をドラッグして順序を変更";
+        Message = $"表示 {session.Columns.Count(static x => x.IsVisible)} / {session.Columns.Count} 列";
 }

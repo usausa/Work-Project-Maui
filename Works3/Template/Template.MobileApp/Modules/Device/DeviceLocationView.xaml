@@ -76,11 +76,17 @@
         <VerticalStackLayout Grid.Row="1"
                              Style="{StaticResource BasicEmptyStack}"
                              IsVisible="{Binding Location, Converter={StaticResource EmptyConverter}}">
-            <Border Style="{StaticResource BasicIconCircleBorder}"
-                    behaviors:AnimationOption.Pulse="True">
-                <Label Style="{StaticResource BasicIconCircleLabel}"
-                       Text="{x:Static fonts:MaterialIcons.My_location}" />
-            </Border>
+            <Grid Style="{StaticResource BasicRippleGrid}">
+                <Ellipse Style="{StaticResource BasicRippleRing}"
+                         behaviors:AnimationOption.Ripple="True" />
+                <Ellipse Style="{StaticResource BasicRippleRing}"
+                         behaviors:AnimationOption.Ripple="True"
+                         behaviors:AnimationOption.RippleDelay="900" />
+                <Border Style="{StaticResource BasicIconCircleBorder}">
+                    <Label Style="{StaticResource BasicIconCircleLabel}"
+                           Text="{x:Static fonts:MaterialIcons.My_location}" />
+                </Border>
+            </Grid>
             <Label Style="{StaticResource BasicCenterTitleLabel}"
                    Text="Acquiring location..." />
             <Label Style="{StaticResource BasicCenterHintLabel}"

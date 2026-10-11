@@ -23,12 +23,6 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
             </Style>
 
-            <Style x:Key="QrPlaceholderHintLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCenterHintLabel}">
-                <Setter Property="TextColor" Value="{StaticResource GrayLighten1}" />
-            </Style>
-
             <Style x:Key="QrCardBorder"
                    TargetType="Border"
                    BasedOn="{StaticResource CardCenterBorder}">
@@ -91,8 +85,6 @@
                                              IsVisible="{Binding Text, Converter={StaticResource EmptyConverter}}">
                             <Label Style="{StaticResource QrPlaceholderIconLabel}"
                                    Text="{x:Static fonts:MaterialIcons.Qr_code_2}" />
-                            <Label Style="{StaticResource QrPlaceholderHintLabel}"
-                                   Text="Enter text to encode" />
                         </VerticalStackLayout>
                     </Grid>
                 </Border>

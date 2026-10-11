@@ -28,6 +28,19 @@ public partial class InfoCard
     }
 
     // 既定値は BlueGrayDarken2 相当
+    // True の間、アイコンを回し続ける
+    public static readonly BindableProperty IconSpinProperty = BindableProperty.Create(
+        nameof(IconSpin),
+        typeof(bool),
+        typeof(InfoCard),
+        false);
+
+    public bool IconSpin
+    {
+        get => (bool)GetValue(IconSpinProperty);
+        set => SetValue(IconSpinProperty, value);
+    }
+
     public static readonly BindableProperty IconColorProperty = BindableProperty.Create(
         nameof(IconColor),
         typeof(Color),

@@ -515,13 +515,6 @@
                 <Setter Property="TextColor" Value="{StaticResource NewsTextColor}" />
             </Style>
 
-            <Style x:Key="EmptyNoteLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource NewsSubTextColor}" />
-            </Style>
-
             <!-- 一覧の最後 -->
             <Style x:Key="FooterGrid"
                    TargetType="Grid">
@@ -791,11 +784,10 @@
                                         <!-- 保存した記事が無い -->
                                         <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                                              IsVisible="{Binding IsSaved}">
-                                            <Label Style="{StaticResource EmptyIconLabel}" />
+                                            <Label Style="{StaticResource EmptyIconLabel}"
+                                                   behaviors:AnimationOption.Float="True" />
                                             <Label Style="{StaticResource EmptyTitleLabel}"
                                                    Text="保存した記事はありません" />
-                                            <Label Style="{StaticResource EmptyNoteLabel}"
-                                                   Text="記事を開いて「保存」を押してください" />
                                         </VerticalStackLayout>
                                     </Grid>
                                 </CollectionView.EmptyView>

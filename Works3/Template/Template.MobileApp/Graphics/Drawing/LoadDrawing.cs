@@ -2,7 +2,15 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed class LoadDrawing : DrawingObject
 {
+    private const string AnimationName = "LoadFlow";
+
     private const int MaxBars = 60;
+
+    // 左へ流れ出る途中の棒も描くため 1 本多く持つ
+    private const int Capacity = MaxBars + 1;
+
+    // 測定の間隔 (NoiseMonitor の 200 ms) の間に 1 本ぶん流れる
+    private const uint FlowLength = 200;
 
     private const float Gap = 2f;
 
@@ -34,11 +42,13 @@ public sealed class LoadDrawing : DrawingObject
         startPoint: new Point(0, 1),
         endPoint: new Point(0, 0));
 
-    private readonly float[] buffer = new float[MaxBars];
+    private readonly float[] buffer = new float[Capacity];
 
     private int writeIndex;
 
     private int count;
+
+    private float phase = 1f;
 
     public int Min
     {
@@ -73,12 +83,13 @@ public sealed class LoadDrawing : DrawingObject
             return (0, 0, 0);
         }
 
+        var length = Math.Min(count, MaxBars);
         var sum = 0d;
         var min = double.MaxValue;
         var max = double.MinValue;
-        for (var i = 0; i < count; i++)
+        for (var i = 0; i < length; i++)
         {
-            var index = (writeIndex - 1 - i + MaxBars) % MaxBars;
+            var index = (writeIndex - 1 - i + Capacity) % Capacity;
             var value = buffer[index];
             sum += value;
             if (value < min)
@@ -91,25 +102,28 @@ public sealed class LoadDrawing : DrawingObject
             }
         }
 
-        return (sum / count, min, max);
+        return (sum / length, min, max);
     }
 
     public void Clear()
     {
+        AbortAnimation(AnimationName);
         count = 0;
+        phase = 1f;
         Invalidate();
     }
 
     public void AddValue(float value)
     {
         buffer[writeIndex] = value;
-        writeIndex = (writeIndex + 1) % MaxBars;
-        if (count < MaxBars)
+        writeIndex = (writeIndex + 1) % Capacity;
+        if (count < Capacity)
         {
             count++;
         }
 
-        Invalidate();
+        phase = 0f;
+        AnimateValue(AnimationName, 0d, 1d, FlowLength, Easing.Linear, v => phase = (float)v);
     }
 
     protected override void OnDraw(ICanvas canvas, RectF dirtyRect)
@@ -134,10 +148,13 @@ public sealed class LoadDrawing : DrawingObject
     private void DrawBars(ICanvas canvas, RectF plot, float range)
     {
         var barWidth = plot.Width / MaxBars;
+        var shift = (1f - phase) * barWidth;
+        canvas.SaveState();
+        canvas.ClipRectangle(plot);
         for (var i = 0; i < count; i++)
         {
-            var idx = (writeIndex - 1 - i + MaxBars) % MaxBars;
-            var x = plot.Right - ((i + 1) * barWidth);
+            var idx = (writeIndex - 1 - i + Capacity) % Capacity;
+            var x = plot.Right - ((i + 1) * barWidth) + shift;
             var fullRect = new RectF(x + (Gap / 2), plot.Top, barWidth - Gap, plot.Height);
 
             canvas.SaveState();
@@ -150,6 +167,8 @@ public sealed class LoadDrawing : DrawingObject
             canvas.FillColor = BackgroundColor;
             canvas.FillRectangle(maskRect);
         }
+
+        canvas.RestoreState();
     }
 
     private void DrawScale(ICanvas canvas, RectF area, RectF plot, float range)

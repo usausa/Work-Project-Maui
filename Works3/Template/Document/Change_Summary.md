@@ -3351,6 +3351,117 @@ UI の画面で使っていた Syncfusion の部品(`SfChipGroup`・`SfSegmented
 - Sf と違う点: 日 / 週 / 月の塗りが滑る(Sf はすぐ切り替わる)、押して開いた項目が隠れるときは項目が見える位置まで送る(Sf は見出しのあたりまで少し送るだけ)
 - ビルド 0 警告。inspectcode の 6 件は直した(`Controls/SideDrawer.cs` の `InitializePanelGesture` は `private partial void` にし、Android の実装は空のまま)
 
+### ⚡画面を開く時間の短縮の残り / Sample Web App の覆い(2026-10-11)
+
+View > Toolkit の 2 つ目のタブと Kit の設定の色の選択も、初めて開くときに作るようにした。Sample > Web App は、決まった時間の後に消す読み込み中の覆いと、それを消す code-behind をやめた。
+
+| 画面 | 対応 | 開く時間 (ms) | 起動して最初 (ms) | 要素の数 |
+|---|---|---|---|---|
+| View > Toolkit | 2 つ目のタブ(表示)の中身は、タブを初めて選んだときに作る | 461 → 299 | 724 → 504 | 192 → 97 |
+| UI 1 > Kit の設定 | テーマの色の選択(`ColorPicker`)は初めて開くときに作る | 186 → 165 | 265 → 225 | 102 → 88 |
+
+- 開く時間は Pixel 9a・Debug で、メニュー(Kit の設定は前の画面)のタップから最初のフレームまで。前後とも画面ごとにアプリを起動し直し、1 回目が「起動して最初」、2〜4 回目の中央値が「開く時間」
+- シートの中身(Shop の絞り込み・Schedule の予定の詳細・Graph のコミットの詳細)と Stream の詳細の More Like This は、初めて開くときに作っても開く時間が変わらない(Shop 276 → 279、Schedule 173 → 171、Graph 310 → 318、Stream の詳細 240 → 239 ms)ので今のまま。シートは初めて開くときに画面に加える形で、隠れた `CollectionView` は行を作らない
+- Sample > Web App の中身(Vite + React の雛形のページ)は、アプリを起動して最初に開いても約 0.4 秒で出る。覆い(白の半透明と回る印)は開いてから 0.8 秒待って 0.4 秒で消すので、約 1.2 秒まで中身を隠していた。覆いをやめた後、中身が出るまでの白い画面は約 0.2 秒
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/View/ViewToolkitView.xaml` | `SfTabView` に `x:Name="ToolkitTabs"`。2 つ目のタブの中身は `LazyViewOption.Template`(`Load` は `SelectedIndex` を `EqualsConverter` で 1 と比べる。`x:DataType` は要素に付ける) |
+| `Modules/UI/UIKitSettingView.xaml` | `ColorPicker` は `LazyViewOption.Template`(`Load` / `IsVisible` = `IsColorOpen`) |
+| `Modules/Sample/SampleWebAppView.xaml` / `SampleWebAppView.xaml.cs` | 読み込み中の覆い(`LoadingOverlayGrid`)と、それを消す code-behind をやめた |
+| `Document/UIBrushup_Plan.md` | 10-3・10-4・10-9・10-11(確認 OK)と、見ていない画面の Sample CV Net / Chat(対応不要)、見た目以外の Sample Web App(確認 OK)を消した |
+
+- 実機: View > Toolkit(表示のタブを選ぶと中身が出る、Expander の開閉、入力のタブとの行き来)、Kit の設定(テーマの色を開き、R を動かすと色の丸とアイコンの色が変わる)、Sample > Web App(起動して最初に開き、端末の中で続けて撮る)
+- ビルド 0 警告。inspectcode の 1 件(Toolkit の `x:Reference` のバインドの中の `x:DataType` を ReSharper が解決できない `Xaml.BindingWithContextNotResolved`)は、同じ画面の Expander のラベルと同じく `x:DataType` を要素に付けて直した
+
+### 💫動きの部品と View > Animation の見本(2026-10-11)
+
+`AnimationOption` に続く動きと 1 回だけの動きを足し、View > Animation に見本を並べた。流れる線の描画 `FlowLineDrawing` を足した(画面にはまだ使っていない)。
+
+| 対象 | 内容 |
+|---|---|
+| `Behaviors/AnimationOption.cs` | `Spin`(1 周 1.2 秒で回り続ける。止めると 0 度)、`Blink`(透明度 1 → 0.3 → 1 を 1 秒)、`Heartbeat`(1.0 → 1.18 → 1.0 → 1.1 → 1.0 の 2 段の後に休む。`HeartbeatRate` は毎分の回数で既定 72)、`HeartbeatTrigger` / `HeartbeatValue`(値が変わったときに 1 回打つ)、`JumpTrigger` / `JumpValue`(14 上がって落ち、下の端を起点に縦につぶれて戻る)、`Float`(3 秒で 6 上がって戻る)。続く動きは表示中だけ動く |
+| `Graphics/Drawing/FlowLineDrawing.cs`(新規) | 値を `Add` すると `Interval` の時間で 1 区間ぶん右から左へ流れる線。先頭の点は右の端で、古い側ほど薄い。`Capacity`・`Minimum` / `Maximum`・`LineColor`・`LineWidth` |
+| `Modules/View/ViewAnimationView.xaml` / `ViewAnimationViewModel.cs` | Loop animation(Spin・Blink・Heartbeat・Float・Ripple と、止めるスイッチを 1 行)と Trigger animation(Jump・Heartbeat。押すと 1 回動く)。カードは Click・Loop・Trigger・Tap の順で、題に括弧書きを付けず、カードの中に説明の文を置かない。アイコンごとの色で並べ、Jump は上に跳ねる分の余白を取る |
+| `Document/UIBrushup_Plan.md` / `Document/Japanese_Text_List.md`(新規) | 10-35 アニメーションの強化(① 部品と見本、② 画面ごとの案を当てる)と、10-36 英語への統一(画面ごとの文言の数)。UI と App 以外の画面の日本語の文言は、画面・文言・英語候補の表 |
+
+- 実機: View > Animation で続く動き 5 つを続けて撮り、回転・点滅・拡大・上下・輪の広がりを確かめた。Jump と Heartbeat は押すと 1 回動き、Jump の上は切れない
+- ビルド 0 警告
+
+### 🔤UI と App 以外の文言の英語化(2026-10-11)
+
+Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本語の文言(見出し・説明・ボタン・状態・ダイアログ・トースト・通知・ログ)を、`Document/Japanese_Text_List.md` の英語候補のとおりにした。データとして表示する所(Suica の端末と処理の名前、グラフ・地図・ドラッグの見本の項目、ドロワーのメニューと名前、曜日、Font の見本、言語名、Activity の項目、DurationPicker の「分」、人数)は日本語のまま。
+
+| 対象 | 内容 |
+|---|---|
+| `MainPageViewModel.cs` / `Components/NotificationService.android.cs` | 通知のトーストと、通知のチャネル名 |
+| `Modules/Basic/BasicBehaviorView.xaml` / `BasicSettingView.xaml` / `BasicValidationView.xaml` / `BasicValidationViewModel.cs` | 見出し・ツールチップ・ボタン・値・検証のメッセージ(未設定は -) |
+| `Modules/Device/DeviceBiometricView.xaml` / `DeviceBiometricViewModel.cs` / `DeviceCameraViewModel.cs` / `DeviceMiscViewModel.cs` / `DeviceNfcView.xaml` / `DeviceOcrViewModel.cs` / `DeviceStatusView.xaml` / `DeviceWiFiView.xaml` / `DeviceWiFiViewModel.cs` | 状態の文・ダイアログ・通知の文・ラベル |
+| `Modules/Navigation/Edit/EditListView.xaml` / `Shared/SharedInputView.xaml` / `Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` | 選んだ数・ボタン・入力欄の例 |
+| `Modules/Network/NetworkAuthView.xaml` / `NetworkGrpcView.xaml` / `NetworkGrpcViewModel.cs` / `NetworkHttpView.xaml` / `NetworkHttpViewModel.cs` / `NetworkRealtimeView.xaml` / `NetworkSftpView.xaml` / `NetworkSftpViewModel.cs` / `NetworkStorageView.xaml` / `NetworkStorageViewModel.cs` | 見出し・ボタン・状態・ログ・エラー・削除の確認(Realtime と gRPC のカードの題「接続」は Connection) |
+| `Controls/ChatView.xaml` / `Modules/Sample/SampleChatViewModel.cs` / `SampleCropView.xaml` / `SampleCropViewModel.cs` / `Graphics/Drawing/CropDrawing.cs` / `SampleCvLocalView.xaml` / `SampleCvNetView.xaml` / `SampleCvNetViewModel.cs` / `SampleMediaView.xaml` | 入力欄・応答とエラーの文・ボタン |
+| `Modules/View/ViewBorderView.xaml` / `ViewBottomSheetView.xaml` / `ViewBottomSheetViewModel.cs` / `ViewCustomView.xaml` / `ViewDragDropView.xaml` / `ViewDrawerView.xaml` / `ViewDrawerViewModel.cs` / `ViewEffectView.xaml` / `ViewGraphicsView.xaml` / `ViewLayoutView.xaml` / `ViewLottieView.xaml` / `ViewShadowView.xaml` / `ViewStateView.xaml` / `ViewStatePanelView.xaml` / `ViewToolkitView.xaml` / `Controls/DurationPicker.cs` | 見出し・説明・ボタン・Toolkit の見本の FAQ。Bottom Sheet の選択肢は VM の値と変換のキーをそろえて英語に。DurationPicker の単位の「時間」は「時」 |
+| `Modules/View/ViewDragDropView.xaml` / `ViewGraphicsView.xaml` | 操作の説明の文(長押しでドラッグして並べ替える・長押しでドラッグして別のリストかゴミ箱に落とす・指でなぞって描く)を消した |
+| `Document/Japanese_Text_List.md`(新規) | 変える文言の画面・文言・英語候補の表 |
+
+- 実機: View > Animation・Drag & Drop・Graphics・Effect・Layout・Bottom Sheet、Basic > Setting、Device > Status・Biometric で、英語の文言と表示の崩れが無いことを確かめた
+- ビルド 0 警告
+
+### 🧹操作の説明の文の削除・View のメニューの並び・Wizard(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/View/ViewBottomSheetView.xaml` / `ViewDrawerView.xaml` | 操作の説明の文を消した |
+| `Modules/Basic/BasicSettingView.xaml` | ツールチップ 8 つを消した |
+| `Modules/Device/DeviceOcrView.xaml` / `DeviceSensorView.xaml` / `DeviceQrDisplayView.xaml` / `DeviceNfcView.xaml` | 結果の欄・水準器・QR の置き場所の説明の文と、NFC の待ち受けの「かざしてください」の文(とそのスタイル `NfcTitleLabel`)を消した |
+| `Modules/Navigation/Edit/EditListView.xaml` / `Wizard/WizardResultView.xaml` | 空の一覧の説明の文と、終わり方の説明の文(それだけを入れていた Done のカードごと)を消した |
+| `Modules/Sample/SampleCvLocalView.xaml` / `SampleCvNetView.xaml` / `SampleCropViewModel.cs` | 撮り直しの案内の帯と、Crop の最初の結果の文を消した |
+| `Modules/App/AppPuzzle2048View.xaml` / `AppMinesweeperView.xaml` / `AppTodoView.xaml` | 遊び方・旗の立て方・追加の仕方の文を消した |
+| `Modules/UI/UICartView.xaml` / `UIGridViewModel.cs` / `UIGridColumnViewModel.cs` / `UIVisitView.xaml` / `UINewsView.xaml` | スワイプで消す説明と空のときの勧め、Grid の状態の欄の操作の説明(開いたときは空)、列の設定の状態の文は表示の列の数だけ、並べ替えのパネルの説明、保存の仕方の文を消した |
+| `Modules/View/ViewAnimationView.xaml` / `ViewEffectView.xaml` / `ViewEffectViewModel.cs` | Effect の Loop (Wave / Pulse) を Animation の Loop animation に移した(4 列 × 2 段で、止めるスイッチは 2 段目の右) |
+| `Modules/View/ViewMenuView.xaml` / `Modules/ViewId.cs` | View のメニューを Layout・State / Border・Shadow / Animation・Easing / Effect・Drag & Drop / Graphics・Drawing / Lottie・SVG / Bottom Sheet・Drawer / Toolkit・Custom / Chart・Sf Chart の順に。ViewId も同じ順に |
+| `Modules/Navigation/Wizard/WizardInput1View.xaml` / `WizardInput2View.xaml` | 入力のカードを上に置き、入力が空でも ▶️ で次へ進む(欄の名前の (required) を外した) |
+
+- 実機: View のメニューの並び、Animation の Loop animation(7 つの動きとスイッチ)、Effect に Loop が無いこと、Wizard を入力なしで最後まで進めて結果が Summary だけになること
+- ビルド 0 警告、inspectcode 0 件
+
+### 🧩Minesweeper の結果が出ても盤面が動かない(2026-10-11)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/App/AppMinesweeperView.xaml` | 操作の切り替え(プレイ中)と結果のカード(クリア・ゲームオーバー)を、同じセルの `Grid`(`BottomGrid`)に入れた。高さは結果のカードがいちばん高いとき(クリアでベスト更新の 4 行、約 118.5)に合わせて `MinimumHeightRequest` = 120。操作の切り替えと結果のカードは `VerticalOptions` = Center |
+
+- 実機: 初級でプレイ中・ゲームオーバー(3 行)・もう一度・クリアでベスト更新(4 行)の盤面の外枠がすべて (42, 831)-(1038, 1827) で同じ。下の領域は 315 px(120)のまま、4 行のカードは 311 px
+- ビルド 0 警告
+
+### 💫アニメーションを画面に当てる(2026-10-11)
+
+動きの部品(`AnimationOption` の `Spin`・`Blink`・`Heartbeat`・`JumpTrigger`・`Float` と、波紋の `Ripple`)を、動きの案の画面に当てた。
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/InfoCard.xaml` / `InfoCard.xaml.cs` / `StatusChip.xaml` / `StatusChip.xaml.cs` | `IconSpin`(True の間、見出し・チップのアイコンを回す)。テンプレートの中のアイコンの `Label` に `AnimationOption.Spin="{TemplateBinding IconSpin}"` |
+| `MainPage.xaml` | ヘッダーのプッシュの状態のラベル: 接続中(`Connecting`)は `Spin`、再接続の待ち(`Retrying`)は `Blink` |
+| `Modules/Network/NetworkRealtimeView.xaml` / `NetworkGrpcView.xaml` | 状態のチップの `IconSpin`(接続中・再接続中。`MapToBoolConverter` の `StateBusyConverter`) |
+| `Modules/Network/NetworkStorageView.xaml` / `NetworkSftpView.xaml` | 転送のカードの `IconSpin`(`Transferring` / `Busy`) |
+| `Modules/Device/DeviceWiFiView.xaml` / `DeviceWiFiViewModel.cs` | 一覧の見出しの右に、スキャン中だけ回る同期のアイコン(`Scanning`) |
+| `Controls/StatControl.cs` | 値が届くたびに、前の値が届いてからの時間(100〜3000 ms、初めは 1 秒)で 1 区間ぶん右から左へ流れる。最新の値は右の外から入り、左は平らにつなぐ |
+| `Modules/UI/UIStreamView.xaml` | LIVE のバッジの `Blink`(`CompareToBool` で LIVE のときだけ) |
+| `Modules/UI/UIProfileView.xaml` / `UIStreamDetailView.xaml` / `UIShopView.xaml` / `UIItemView.xaml` | `BounceTrigger` を `HeartbeatTrigger`(`HeartbeatValue` = True)に。入れたときだけ鼓動 |
+| `Modules/UI/UICharacterView.xaml` / `UIMonsterView.xaml` | Character は `BounceTrigger`(`BounceValue` = True。入れたときだけ弾む)、Monster は `HeartbeatTrigger`(`Hp`) |
+| `Controls/SeriesSegmentView.cs` / `WeatherSunArcView.cs` | Weather の今の時間の点の波紋(表示している間だけ 1.8 秒で繰り返す)。弧は表示したときに 0.9 秒で今の位置まで描き込む |
+| `Graphics/Drawing/LoadDrawing.cs` / `Modules/UI/UILoadView.xaml` | 棒を 1 本多く持ち、測定の間隔(200 ms)で左へ滑らせる(クリップして描く)。録音中の点(`Blink`)、MAX の値の背景の光(`HighlightTrigger`) |
+| `Graphics/Drawing/ActivityDrawing.cs` / `Modules/Device/DeviceActivityView.xaml` | 歩数の輪は今の長さから新しい値まで 0.6 秒で伸びる。👟 に `JumpTrigger`(`Calculator.Step`) |
+| `Resources/Styles/Styles.xaml` | `BasicRippleGrid`(150 × 150)・`BasicRippleRing`(96 の輪) |
+| `Modules/Device/DeviceBleScanView.xaml` / `DeviceNfcView.xaml` / `DeviceLocationView.xaml` / `DeviceMiscView.xaml` / `Controls/ChatView.xaml` | 待ち受け・聞き取り中の `Pulse` を、アイコンの後ろの波紋の輪 2 つ(`RippleDelay` = 900)に。NFC は緑の輪、Misc と Chat は赤の輪。Chat の音声のボタンは輪と同じ `Grid` に入れ、表示の切り替えは `Grid` で行う |
+| `Modules/UI/UICartView.xaml` / `UIShopView.xaml` / `UIMailView.xaml` / `UINewsView.xaml` / `Modules/App/AppTodoView.xaml` | 空の表示の絵に `Float`。ToDo の 🎉 は `JumpTrigger`(`Context.List.Sections.Count`) |
+| `Modules/App/AppTimerView.xaml` | タイマーの数字(消えている桁の重ねを含む `Grid`)に `Heartbeat`(`IsWarning`、毎分 120)と `Blink`(`Paused`)。終わったときの文字は `BounceTrigger` から `JumpTrigger` に |
+| `Settings.XamlStyler` | `behaviors:AnimationOption.Ripple` / `RippleDelay` を個別のグループに(リテラルの値が 1 行にまとまらないように) |
+
+- UI > Kit・Schedule には動きを足さない(Kit の心拍のハート・未読の点・配送の追跡、Schedule の今の時刻の点は動かない)
+- 実機: ヘッダーの ⛔ の点滅、Stream の LIVE の点滅(NEW SEASON は止まったまま)、Shop のお気に入り(入れたときに鼓動、外したときは動かない)、Load の履歴の流れと録音中の点、NFC の待ち受けの波紋、Weather の今の時間の点の波紋、Timer(残り 10 秒の鼓動)
+- ビルド 0 警告、inspectcode は 2 件(`ActivityDrawing` の不要なキャスト)を直した
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3496,6 +3607,15 @@ UI の画面で使っていた Syncfusion の部品(`SfChipGroup`・`SfSegmented
 - `Template.MobileApp.Behaviors` を `using` するファイルでは、`Border` が Behaviors の静的クラスになる(`using Border = Microsoft.Maui.Controls.Border;` で分ける)
 - コレクションの型(`Grid` など)を作った後に `Add` を呼ぶと IDE0028 になる(`root = [canvas];`、列は `ColumnDefinitions = [...]`、子は `Children.Add`)
 - アクセス修飾子の無い `partial void` は、実装が空だと ReSharper の `RedundantPartialMethodEmptyImplementation`、実装が無いと `PartialMethodWithSinglePart` になる。片方のプラットフォームで何もしない部分メソッドは `private partial void`(実装が必須)にして空の実装を書く(空の実装の CA1822 は pragma)
+- 開く時間に効くのは、画面を開くときにハンドラーを作る要素の数。画面に加えない要素(初めて開くときに画面に加えるシートの中身)を作らないようにしても、開く時間は変わらない
+- Syncfusion の `SfTabView` の `SelectedIndex` は `int`。2 つ目以降のタブの中身は、`x:Reference` で `SelectedIndex` を `EqualsConverter` と比べた値を `LazyViewOption.Load` に渡すと、タブを初めて選んだときに作れる
+- `HybridWebView` で Vite + React の雛形のページを開くと、アプリを起動して最初でも約 0.4 秒で中身が出る(Pixel 9a・Debug)
+- **`*` の行に中央で置いた盤面は、すぐ下の `Auto` の行の高さが変わると動く**(盤面の大きさは幅と高さの短い方なので、大きさも変わる)。出し入れする要素は同じセルの `Grid` に入れて `MinimumHeightRequest` で高さをそろえる
+- `Border` は中身を自分の形で切り抜くので、中の要素を跳ねさせると上が切れる。跳ねる要素は `Border` の外に置くか、上に跳ねる分の余白を取る
+- `AnimationOption.FlashTrigger` は撮影のフラッシュのような重ね用で、終わると `Opacity` が 0 に戻る。値の文字に付けると消えてしまうので、値が変わったことを知らせるときは `HighlightTrigger` か `BounceTrigger`
+- 要素の `Scale` で拡大・縮小する動き(`Heartbeat` など)は、ラベルが親いっぱいに広がっていると中心がずれて、拡大のたびに絵が横に動く。ラベルの `HorizontalOptions` を Start にして、絵の幅に合わせる
+- 動き続ける画面(Load・Stream など)は `uiautomator dump` が失敗する(画面が落ち着かない)。実機の操作はメニューの画面で位置を取り、そのあとは座標で行う
+- テンプレートの中の要素へ添付プロパティを渡すときは `{TemplateBinding プロパティ}` を使う(`behaviors:AnimationOption.Spin="{TemplateBinding IconSpin}"`)。XAML Styler の並びでは `behaviors:` が `VerticalOptions` より前
 - タッチを受ける子(`TapGestureRecognizer` を付けた行など)の上から始めたドラッグは、親の `PanGestureRecognizer` に届かない(Android)。親で受けるには Android の `ViewGroup.OnInterceptTouchEvent` で横の移動を見て横取りする。レイアウトの Android のビューは `ViewHandler<ILayout, LayoutViewGroup>.PlatformViewFactory` で特定の要素だけ差し替えられる(ほかは null を返すと標準の作り方)
 - `SfEffectsView` の波紋は #1C1B1F を放射のグラデーションで重ねる(View > Effect のボタンで中心 約 16%・端 約 12%・平均 14.4%)。Android の `RippleDrawable` は指定の色を一様に重ね、#1C1B1F の 18% で平均 14.6% になる。スクロールの中では、押した状態は Android の標準どおり少し遅れて出る
 - 最初の画面の外にある部分を表示の後に作ると(`LazyViewOption.Deferred`)、Weather は開く時間 456 → 304 ms、最初のフレームの要素 284 → 175
@@ -3613,8 +3733,8 @@ UI の画面で使っていた Syncfusion の部品(`SfChipGroup`・`SfSegmented
 | 資産 | XAML での書き方 | 主な用途 |
 |---|---|---|
 | エントランス | `behaviors:AnimationOption.EnterAnimation="FadeUp\|Pop"` + `EnterDelay`(ms 段差) + `EnterTrigger`(再実行) | 静的カード/リスト行の入場 |
-| 常時アニメ | `behaviors:AnimationOption.Pulse` / `Wave`+`WaveDelay` | 進行中ドット、待受/スキャン中の生感 |
-| 変化フィードバック | `behaviors:AnimationOption.BounceTrigger`+`BounceValue` / `FlashTrigger` / `FadeInTrigger` / `HighlightTrigger`+`HighlightColor` | 値更新、追加/削除、タブ切替、CTA 押下 |
+| 常時アニメ | `behaviors:AnimationOption.Pulse` / `Wave`+`WaveDelay` / `Spin`(回り続ける)/ `Blink`(点滅)/ `Heartbeat`+`HeartbeatRate`(鼓動)/ `Float`(ゆっくり上下)/ `Ripple`+`RippleDelay`(輪を 2 つ重ねる。`BasicRippleGrid` / `BasicRippleRing`) | 進行中ドット、待受/スキャン中の生感、LIVE・録音中、同期中のアイコン(`InfoCard` / `StatusChip` の `IconSpin`) |
+| 変化フィードバック | `behaviors:AnimationOption.BounceTrigger`+`BounceValue` / `HeartbeatTrigger`+`HeartbeatValue` / `JumpTrigger`+`JumpValue` / `FlashTrigger` / `FadeInTrigger` / `HighlightTrigger`+`HighlightColor` | 値更新、追加/削除、タブ切替、CTA 押下 |
 | バー伸長 | `behaviors:AnimationOption.ProgressTo`(ProgressBar を 800ms CubicOut で伸長) | ステータスバー・ゲージ |
 | カウントアップ | `behaviors:LabelOption.CountUpValue`+`CountUpFormat`(+`CountUpDuration`) | 金額・件数・歩数(Loaded 数え上げ対応) |
 | フォーカス枠 | `behaviors:Focus.FocusedStroke`+`FocusedThickness`(**親 Border 必須**) | Entry/Editor の入力体験 |

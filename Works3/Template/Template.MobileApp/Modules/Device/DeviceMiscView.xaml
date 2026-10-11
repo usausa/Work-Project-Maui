@@ -51,6 +51,25 @@
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
 
+            <Style x:Key="ListeningRippleGrid"
+                   TargetType="Grid">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <Style x:Key="ListeningRing"
+                   TargetType="Ellipse">
+                <Setter Property="WidthRequest" Value="22" />
+                <Setter Property="HeightRequest" Value="22" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Stroke" Value="{StaticResource RedDefault}" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="InputTransparent" Value="True" />
+            </Style>
+
             <Style x:Key="ListeningIcon"
                    TargetType="Label">
                 <Setter Property="FontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
@@ -259,10 +278,17 @@
                     <Grid Style="{StaticResource CardRowGrid}"
                           ColumnDefinitions="Auto,*"
                           IsVisible="{Binding IsListening}">
-                        <Label Grid.Column="0"
-                               Style="{StaticResource ListeningIcon}"
-                               behaviors:AnimationOption.Pulse="True"
-                               Text="{x:Static fonts:MaterialIcons.Mic}" />
+                        <Grid Grid.Column="0"
+                              Style="{StaticResource ListeningRippleGrid}">
+                            <Ellipse Style="{StaticResource ListeningRing}"
+                                     behaviors:AnimationOption.Ripple="True" />
+                            <Ellipse Style="{StaticResource ListeningRing}"
+                                     behaviors:AnimationOption.Ripple="True"
+                                     behaviors:AnimationOption.RippleDelay="900" />
+                            <Label Style="{StaticResource ListeningIcon}"
+                                   HorizontalOptions="Center"
+                                   Text="{x:Static fonts:MaterialIcons.Mic}" />
+                        </Grid>
                         <Label Grid.Column="1"
                                Style="{StaticResource BasicItemValueLabel}"
                                Text="Listening..." />

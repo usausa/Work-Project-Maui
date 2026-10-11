@@ -2,6 +2,8 @@ namespace Template.MobileApp.Graphics.Drawing;
 
 public sealed class ActivityDrawing : DrawingObject
 {
+    private const string AnimationName = "ActivityStep";
+
     private const int Max = 10000;
 
     private const float StartAngle = 240f;
@@ -17,13 +19,16 @@ public sealed class ActivityDrawing : DrawingObject
     private static readonly Color CircleColor = Color.FromArgb("#ECEFF1");
     private static readonly Color BackgroundColor = Colors.White;
 
+    private float shownStep;
+
+    // 値が変わると、輪は今の長さから新しい値まで伸びる
     public int Step
     {
         get;
         set
         {
             field = value;
-            Invalidate();
+            AnimateValue(AnimationName, shownStep, value, 600, Easing.CubicOut, v => shownStep = (float)v);
         }
     }
 
@@ -46,14 +51,14 @@ public sealed class ActivityDrawing : DrawingObject
         canvas.StrokeColor = CircleColor;
         canvas.DrawArc(arcRect, StartAngle, EndAngle, true, false);
 
-        var value = Math.Min(Max, Step);
+        var value = Math.Min(Max, shownStep);
         if (value <= 0)
         {
             return;
         }
 
-        var sweep = (StartAngle - EndAngle) * ((float)value / Max);
-        var count = Math.Max(1, (int)MathF.Ceiling(Segments * ((float)value / Max)));
+        var sweep = (StartAngle - EndAngle) * (value / Max);
+        var count = Math.Max(1, (int)MathF.Ceiling(Segments * (value / Max)));
         for (var i = 0; i < count; i++)
         {
             var from = StartAngle - (sweep * i / count);

@@ -246,7 +246,7 @@
                     <VerticalStackLayout Style="{StaticResource PageStack}">
 
                         <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                                           Title="実装"
+                                           Title="Implementation"
                                            Icon="{x:Static fonts:MaterialIcons.Menu_open}">
                             <VerticalStackLayout Style="{StaticResource CardContentStack}">
                                 <sf:SfSegmentedControl Style="{StaticResource SegmentedControl}"
@@ -254,17 +254,15 @@
                                                        SegmentHeight="40"
                                                        SelectedIndex="{Binding ModeIndex, Mode=TwoWay}"
                                                        VisibleSegmentsCount="2" />
-                                <Label Style="{StaticResource BasicCaptionLabel}"
-                                       Text="左端からのスワイプでも開く" />
                                 <Button Style="{StaticResource BasicFilledButton}"
                                         Command="{Binding OpenCommand}"
-                                        Text="ドロワーを開く (F2)" />
+                                        Text="Open drawer" />
                             </VerticalStackLayout>
                         </controls:InfoCard>
 
                         <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                            behaviors:AnimationOption.EnterDelay="100"
-                                           Title="選択中"
+                                           Title="Selected"
                                            Icon="{x:Static fonts:MaterialIcons.Check_circle}">
                             <Grid Style="{StaticResource SelectedRowGrid}"
                                   ColumnDefinitions="Auto,*">
@@ -314,7 +312,7 @@
                                                      BindableLayout.ItemTemplate="{StaticResource DrawerItemTemplate}" />
                                 <Label Grid.Row="2"
                                        Style="{StaticResource DrawerFooterLabel}"
-                                       Text="SideDrawer (自作)" />
+                                       Text="SideDrawer" />
                             </Grid>
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>

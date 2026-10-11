@@ -383,7 +383,8 @@
                         behaviors:ButtonOption.PressEffect="True"
                         Text="{x:Static fonts:MaterialIcons.Share}" />
                 <Button Style="{StaticResource IconActionButton}"
-                        behaviors:AnimationOption.BounceTrigger="{Binding Context.Selected.IsFavorite}"
+                        behaviors:AnimationOption.HeartbeatTrigger="{Binding Context.Selected.IsFavorite}"
+                        behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
                         behaviors:ButtonOption.PressEffect="True"
                         Command="{Binding FavoriteCommand}"
                         Text="{x:Static fonts:MaterialIcons.Favorite_outline}">

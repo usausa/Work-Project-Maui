@@ -59,7 +59,7 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="ログイン"
+                               Title="Log in"
                                Icon="{x:Static fonts:MaterialIcons.Vpn_key}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource LoginStateGrid}"
@@ -87,7 +87,7 @@
                         </Border>
                         <controls:StatusChip Grid.Column="1"
                                              Style="{StaticResource LoginStateChip}"
-                                             Text="{Binding IsAuthenticated, Converter={s:BoolToText True='ログイン済み', False='未ログイン'}}"
+                                             Text="{Binding IsAuthenticated, Converter={s:BoolToText True='Signed in', False='Signed out'}}"
                                              Tone="{Binding IsAuthenticated, Converter={StaticResource LoginToneConverter}}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource CardValueLabel}"
@@ -97,7 +97,7 @@
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Column="0"
                                Style="{StaticResource CardNameLabel}"
-                               Text="トークンの期限" />
+                               Text="Token expiry" />
                         <Label Grid.Column="1"
                                Style="{StaticResource CardMonoValueLabel}"
                                Text="{Binding TokenExpires, StringFormat='{0:yyyy/MM/dd HH:mm:ss}', TargetNullValue='-'}" />
@@ -105,11 +105,11 @@
                     <BoxView Style="{StaticResource CardDivider}" />
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="ログインID" />
+                               Text="Login ID" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    Text="{Binding LoginId}"
-                                   Placeholder="例: user" />
+                                   Placeholder="e.g. user" />
                         </Border>
                     </VerticalStackLayout>
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -117,18 +117,18 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicFilledButton}"
                                 Command="{Binding LoginCommand}"
-                                Text="ログイン" />
+                                Text="Log in" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedCancelButton}"
                                 Command="{Binding LogoutCommand}"
-                                Text="ログアウト" />
+                                Text="Log out" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="JWTが必要なAPI"
+                               Title="JWT API"
                                Icon="{x:Static fonts:MaterialIcons.Verified_user}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -136,12 +136,12 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding SecureCommand}"
-                                Text="Secureを呼ぶ"
+                                Text="Call Secure"
                                 ImageSource="{x:Static markup:AppIcons.SmallLock}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedCancelButton}"
                                 Command="{Binding InvalidateCommand}"
-                                Text="トークンを無効化" />
+                                Text="Revoke token" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

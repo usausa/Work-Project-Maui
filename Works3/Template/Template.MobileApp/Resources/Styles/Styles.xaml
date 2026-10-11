@@ -1098,6 +1098,25 @@
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
+    <Style x:Key="BasicRippleGrid"
+           TargetType="Grid">
+        <Setter Property="WidthRequest" Value="150" />
+        <Setter Property="HeightRequest" Value="150" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="BasicRippleRing"
+           TargetType="Ellipse">
+        <Setter Property="WidthRequest" Value="96" />
+        <Setter Property="HeightRequest" Value="96" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Stroke" Value="{StaticResource BlueDefault}" />
+        <Setter Property="StrokeThickness" Value="3" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="InputTransparent" Value="True" />
+    </Style>
+
     <Style x:Key="BasicEmptyIconBorder"
            TargetType="Border"
            BasedOn="{StaticResource BasicIconCircleBorder}">

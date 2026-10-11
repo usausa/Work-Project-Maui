@@ -500,7 +500,8 @@
                             </Button.Triggers>
                         </Button>
                         <Button Style="{StaticResource LikeButton}"
-                                behaviors:AnimationOption.BounceTrigger="{Binding IsLiked}"
+                                behaviors:AnimationOption.HeartbeatTrigger="{Binding IsLiked}"
+                                behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
                                 behaviors:ButtonOption.PressEffect="True"
                                 Command="{Binding LikeCommand}"
                                 Text="{x:Static fonts:MaterialIcons.Favorite_outline}">

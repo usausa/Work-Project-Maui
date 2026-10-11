@@ -84,18 +84,18 @@
             </Style>
 
             <s:MapToTextConverter x:Key="BatteryStateTextConverter"
-                                  DefaultValue="不明">
+                                  DefaultValue="Unknown">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static devices:BatteryState.Charging}"
-                                      Value="充電中" />
+                                      Value="Charging" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryState.Full}"
-                                      Value="満充電" />
+                                      Value="Full" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryState.Discharging}"
-                                      Value="放電中" />
+                                      Value="Discharging" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotCharging}"
-                                      Value="充電していない" />
+                                      Value="Not charging" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryState.NotPresent}"
-                                      Value="電池なし" />
+                                      Value="No battery" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <converters:MapToToneConverter x:Key="BatteryStateToneConverter">
@@ -107,30 +107,30 @@
                 </converters:MapToToneConverter.Entries>
             </converters:MapToToneConverter>
             <s:MapToTextConverter x:Key="PowerSourceTextConverter"
-                                  DefaultValue="不明">
+                                  DefaultValue="Unknown">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.AC}"
-                                      Value="AC電源" />
+                                      Value="AC" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Usb}"
                                       Value="USB" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Wireless}"
-                                      Value="ワイヤレス" />
+                                      Value="Wireless" />
                     <s:MapToTextEntry Key="{x:Static devices:BatteryPowerSource.Battery}"
-                                      Value="電池" />
+                                      Value="Battery" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="NetworkAccessTextConverter"
-                                  DefaultValue="不明">
+                                  DefaultValue="Unknown">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Internet}"
-                                      Value="インターネット" />
+                                      Value="Internet" />
                     <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.ConstrainedInternet}"
-                                      Value="制限付き" />
+                                      Value="Limited" />
                     <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.Local}"
-                                      Value="ローカル" />
+                                      Value="Local" />
                     <s:MapToTextEntry Key="{x:Static networking:NetworkAccess.None}"
-                                      Value="なし" />
+                                      Value="None" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <converters:MapToToneConverter x:Key="NetworkAccessToneConverter">
@@ -148,11 +148,11 @@
             <s:MapToTextConverter x:Key="NetworkStateTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static state:NetworkState.ConnectedHighSpeed}"
-                                      Value="高速" />
+                                      Value="High speed" />
                     <s:MapToTextEntry Key="{x:Static state:NetworkState.Connected}"
-                                      Value="接続" />
+                                      Value="Connected" />
                     <s:MapToTextEntry Key="{x:Static state:NetworkState.Disconnected}"
-                                      Value="切断" />
+                                      Value="Disconnected" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
             <converters:MapToToneConverter x:Key="NetworkStateToneConverter">

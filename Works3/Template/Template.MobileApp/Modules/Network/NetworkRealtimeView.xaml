@@ -31,17 +31,26 @@
             <s:MapToTextConverter x:Key="StateTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static module:RealtimeState.Stopped}"
-                                      Value="停止" />
+                                      Value="Stopped" />
                     <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connecting}"
-                                      Value="接続中" />
+                                      Value="Connecting" />
                     <s:MapToTextEntry Key="{x:Static module:RealtimeState.Connected}"
-                                      Value="接続済み" />
+                                      Value="Connected" />
                     <s:MapToTextEntry Key="{x:Static module:RealtimeState.Reconnecting}"
-                                      Value="再接続中" />
+                                      Value="Reconnecting" />
                     <s:MapToTextEntry Key="{x:Static module:RealtimeState.Error}"
-                                      Value="エラー" />
+                                      Value="Error" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <s:MapToBoolConverter x:Key="StateBusyConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static module:RealtimeState.Connecting}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static module:RealtimeState.Reconnecting}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
 
             <converters:MapToToneConverter x:Key="StateToneConverter">
                 <converters:MapToToneConverter.Entries>
@@ -69,12 +78,13 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="接続"
+                               Title="Connection"
                                Icon="{x:Static fonts:MaterialIcons.Sync}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <controls:StatusChip Style="{StaticResource StateChip}"
                                          Icon="{x:Static fonts:MaterialIcons.Sync}"
                                          Text="{Binding State, Converter={StaticResource StateTextConverter}}"
+                                         IconSpin="{Binding State, Converter={StaticResource StateBusyConverter}}"
                                          Tone="{Binding State, Converter={StaticResource StateToneConverter}}" />
                     <Border Style="{StaticResource CardErrorBorder}"
                             IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}">
@@ -93,7 +103,7 @@
                           ColumnDefinitions="2*,3*">
                         <Label Grid.Row="0" Grid.Column="0"
                                Style="{StaticResource CardNameLabel}"
-                               Text="接続ID" />
+                               Text="Connection ID" />
                         <Label Grid.Row="0" Grid.Column="1"
                                Style="{StaticResource CardMonoValueLabel}"
                                Text="{Binding ConnectionId}" />
@@ -102,7 +112,7 @@
 
                         <Label Grid.Row="1" Grid.Column="0"
                                Style="{StaticResource CardNameLabel}"
-                               Text="サーバー時刻" />
+                               Text="Server time" />
                         <Label Grid.Row="1" Grid.Column="1"
                                Style="{StaticResource CardMonoValueLabel}"
                                Text="{Binding ServerTime}" />
@@ -111,21 +121,21 @@
 
                         <Label Grid.Row="2" Grid.Column="0"
                                Style="{StaticResource CardNameLabel}"
-                               Text="状態の送信" />
+                               Text="Status reports" />
                         <Label Grid.Row="2" Grid.Column="1"
                                Style="{StaticResource CardValueLabel}"
-                               Text="{Binding ReportCount, StringFormat='{0} 回 (10 秒ごと)'}" />
+                               Text="{Binding ReportCount, StringFormat='{0} (every 10 s)'}" />
                     </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ReconnectCommand}"
-                                Text="再接続" />
+                                Text="Reconnect" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicOutlinedButton}"
                                 Command="{Binding ReportCommand}"
-                                Text="状態を送信" />
+                                Text="Send status" />
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -153,7 +163,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
-                               Title="通知"
+                               Title="Notifications"
                                Icon="{x:Static fonts:MaterialIcons.Notifications}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
                                      BindableLayout.ItemsSource="{Binding Notifications}">
@@ -165,7 +175,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="管理画面のDevicesから送った通知を表示" />
+                               Text="Notifications from Devices in the dashboard" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

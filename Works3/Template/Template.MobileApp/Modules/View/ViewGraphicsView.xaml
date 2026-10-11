@@ -158,7 +158,7 @@
                         <Button Grid.Column="2"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ExportSketchCommand}"
-                                Text="PNG出力"
+                                Text="Export PNG"
                                 ImageSource="{x:Static markup:AppIcons.SmallImage}" />
                     </Grid>
 
@@ -168,9 +168,6 @@
                                Source="{Binding ExportedImage}"
                                Aspect="AspectFit" />
                     </Border>
-
-                    <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                           Text="指でなぞって描く" />
 
                 </VerticalStackLayout>
             </controls:InfoCard>

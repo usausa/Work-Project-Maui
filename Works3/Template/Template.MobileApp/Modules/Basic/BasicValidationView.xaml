@@ -169,7 +169,7 @@
                         </Entry>
                     </Border>
                     <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="EmailValidationBehavior (メールアドレスの形式のみ)" />
+                           Text="EmailValidationBehavior (format only)" />
                     <Label Style="{StaticResource BasicFieldCaptionLabel}"
                            Text="Quantity" />
                     <Border Style="{StaticResource CardFieldBorder}">
@@ -185,7 +185,7 @@
                         </Entry>
                     </Border>
                     <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="NumericValidationBehavior (1〜100 の数値のみ)" />
+                           Text="NumericValidationBehavior (1-100)" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

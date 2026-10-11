@@ -53,15 +53,24 @@
             <s:MapToTextConverter x:Key="StateTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Disconnected}"
-                                      Value="切断" />
+                                      Value="Disconnected" />
                     <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Connecting}"
-                                      Value="接続中" />
+                                      Value="Connecting" />
                     <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Connected}"
-                                      Value="接続済み" />
+                                      Value="Connected" />
                     <s:MapToTextEntry Key="{x:Static services:ChatConnectionState.Reconnecting}"
-                                      Value="再接続中" />
+                                      Value="Reconnecting" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
+
+            <s:MapToBoolConverter x:Key="StateBusyConverter">
+                <s:MapToBoolConverter.Entries>
+                    <s:MapToBoolEntry Key="{x:Static services:ChatConnectionState.Connecting}"
+                                      Value="True" />
+                    <s:MapToBoolEntry Key="{x:Static services:ChatConnectionState.Reconnecting}"
+                                      Value="True" />
+                </s:MapToBoolConverter.Entries>
+            </s:MapToBoolConverter>
 
             <converters:MapToToneConverter x:Key="StateToneConverter">
                 <converters:MapToToneConverter.Entries>
@@ -148,7 +157,7 @@
 
         <controls:InfoCard Grid.Row="0"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"
-                           Title="接続"
+                           Title="Connection"
                            Icon="{x:Static fonts:MaterialIcons.Hub}">
             <VerticalStackLayout Style="{StaticResource CardContentStack}">
                 <Label Style="{StaticResource AddressLabel}"
@@ -156,6 +165,7 @@
                 <controls:StatusChip Style="{StaticResource StateChip}"
                                      Icon="{x:Static fonts:MaterialIcons.Sync}"
                                      Text="{Binding State, Converter={StaticResource StateTextConverter}}"
+                                     IconSpin="{Binding State, Converter={StaticResource StateBusyConverter}}"
                                      Tone="{Binding State, Converter={StaticResource StateToneConverter}}" />
                 <Border Style="{StaticResource CardErrorBorder}"
                         IsVisible="{Binding LastError, Converter={StaticResource NotEmptyConverter}}">
@@ -173,19 +183,19 @@
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Column="0"
                            Style="{StaticResource CardNameLabel}"
-                           Text="未配送の送信" />
+                           Text="Pending sends" />
                     <Label Grid.Column="1"
                            Style="{StaticResource CardValueLabel}"
-                           Text="{Binding PendingCount, StringFormat='{0} 件'}" />
+                           Text="{Binding PendingCount, StringFormat='{0}'}" />
                 </Grid>
                 <Button Style="{StaticResource BasicOutlinedButton}"
                         Command="{Binding ServerTimeCommand}"
-                        Text="サーバー時刻 (単項 RPC)" />
+                        Text="Server time (unary RPC)" />
                 <Grid Style="{StaticResource CardNameValueGrid}"
                       ColumnDefinitions="2*,3*">
                     <Label Grid.Column="0"
                            Style="{StaticResource CardNameLabel}"
-                           Text="サーバー時刻" />
+                           Text="Server time" />
                     <Label Grid.Column="1"
                            Style="{StaticResource CardMonoValueLabel}"
                            Text="{Binding ServerTime}" />
@@ -205,7 +215,7 @@
                                Text="{x:Static fonts:MaterialIcons.Forum}" />
                     </Border>
                     <Label Style="{StaticResource BasicCenterHintLabel}"
-                           Text="まだメッセージはありません" />
+                           Text="No messages yet" />
                 </VerticalStackLayout>
                 <CollectionView Style="{StaticResource ChatCollection}"
                                 ItemsSource="{Binding Messages}">
@@ -241,7 +251,7 @@
                     Style="{StaticResource CardFieldBorder}">
                 <Entry Style="{StaticResource BasicFieldEntry}"
                        Text="{Binding Input}"
-                       Placeholder="メッセージ"
+                       Placeholder="Message"
                        ReturnCommand="{Binding SendCommand}"
                        ReturnType="Send" />
             </Border>

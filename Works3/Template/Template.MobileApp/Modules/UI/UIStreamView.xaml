@@ -399,6 +399,7 @@
                             </Border>
                             <VerticalStackLayout Style="{StaticResource FeaturedInfo}">
                                 <Border Style="{StaticResource HeroBadgeBorder}"
+                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
                                         IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
                                     <Label Style="{StaticResource HeroBadgeLabel}"
                                            Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />
@@ -515,6 +516,7 @@
                                                 <Image Style="{StaticResource PosterImage}"
                                                        Source="{Binding Work.Image}" />
                                                 <Border Style="{StaticResource PosterBadgeBorder}"
+                                                        behaviors:AnimationOption.Blink="{Binding Work.Badge, Converter={s:CompareToBool}, ConverterParameter={x:Static models:StreamBadge.Live}}"
                                                         IsVisible="{Binding Work.Badge, Converter={StaticResource BadgeVisibleConverter}}">
                                                     <Label Style="{StaticResource PosterBadgeLabel}"
                                                            Text="{Binding Work.Badge, Converter={StaticResource BadgeTextConverter}}" />

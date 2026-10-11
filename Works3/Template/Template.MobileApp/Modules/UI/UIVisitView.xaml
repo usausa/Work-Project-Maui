@@ -242,13 +242,6 @@
                 <Setter Property="ColumnSpacing" Value="8" />
             </Style>
 
-            <Style x:Key="SortPanelLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource SecondaryTextColor}" />
-                <Setter Property="Margin" Value="0,0,0,6" />
-            </Style>
-
             <Style x:Key="SortClearButton"
                    TargetType="Button">
                 <Setter Property="HeightRequest" Value="32" />
@@ -579,9 +572,6 @@
                         <VerticalStackLayout>
                             <Grid Style="{StaticResource SortPanelGrid}"
                                   ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource SortPanelLabel}"
-                                       Text="タップで第 1 キーに。同じキーをもう一度タップすると昇順 / 降順が切り替わる (最大 3 キー)" />
                                 <Button Grid.Column="1"
                                         Style="{StaticResource SortClearButton}"
                                         Command="{Binding ClearSortCommand}"

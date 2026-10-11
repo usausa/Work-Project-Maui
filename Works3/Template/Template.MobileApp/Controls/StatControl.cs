@@ -2,7 +2,20 @@ namespace Template.MobileApp.Controls;
 
 public sealed class StatControl : GraphicsView, IDrawable
 {
+    private const string FlowAnimationName = "StatControlFlow";
+
     private const int GridLines = 3;
+
+    // 前の値が届いてからの時間 (ms) の範囲。この時間で 1 区間ぶん流れる
+    private const long MinFlowLength = 100;
+
+    private const long MaxFlowLength = 3000;
+
+    private const long DefaultFlowLength = 1000;
+
+    private float phase = 1f;
+
+    private long updatedAt;
 
     // ------------------------------------------------------------
     // Property
@@ -172,7 +185,24 @@ public sealed class StatControl : GraphicsView, IDrawable
 
     private void OnDataSetUpdated(object? sender, EventArgs e)
     {
-        Invalidate();
+        var now = Environment.TickCount64;
+        var length = updatedAt == 0 ? DefaultFlowLength : Math.Clamp(now - updatedAt, MinFlowLength, MaxFlowLength);
+        updatedAt = now;
+
+        this.AbortAnimation(FlowAnimationName);
+        phase = 0f;
+        this.Animate(
+            FlowAnimationName,
+            v =>
+            {
+                phase = (float)v;
+                Invalidate();
+            },
+            0d,
+            1d,
+            16,
+            (uint)length,
+            Easing.Linear);
     }
 
     // ------------------------------------------------------------
@@ -189,6 +219,7 @@ public sealed class StatControl : GraphicsView, IDrawable
 
         var values = DataSet;
         var pointWidth = width / (values.Capacity - 1);
+        var shift = (1f - phase) * pointWidth;
         var maxValueForScale = MaxValue > 0 ? MaxValue : 100f;
         var color = GraphColor;
 
@@ -214,19 +245,20 @@ public sealed class StatControl : GraphicsView, IDrawable
             canvas.DrawLine(0, y, width, y);
         }
 
-        // Path
+        // Path (最新の値は右の外から入り、古い側は左の端まで平らにつなぐ)
         var wavePath = new PathF();
         wavePath.MoveTo(0, height);
+        wavePath.LineTo(0, height - (values.GetValue(0) / maxValueForScale * statHeight));
 
         for (var i = 0; i < values.Capacity; i++)
         {
-            var x = i * pointWidth;
+            var x = (i * pointWidth) + shift;
             var normalizedValue = values.GetValue(i) / maxValueForScale;
             var y = height - (normalizedValue * statHeight);
             wavePath.LineTo(x, y);
         }
 
-        wavePath.LineTo(width, height);
+        wavePath.LineTo(width + shift, height);
         wavePath.Close();
 
         // Gradation
@@ -243,9 +275,9 @@ public sealed class StatControl : GraphicsView, IDrawable
         using var linePath = new PathF();
         linePath.MoveTo(0, height - (values.GetValue(0) / maxValueForScale * statHeight));
 
-        for (var i = 1; i < values.Capacity; i++)
+        for (var i = 0; i < values.Capacity; i++)
         {
-            var x = i * pointWidth;
+            var x = (i * pointWidth) + shift;
             var y = height - (values.GetValue(i) / maxValueForScale * statHeight);
             linePath.LineTo(x, y);
         }

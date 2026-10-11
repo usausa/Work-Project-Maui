@@ -146,7 +146,7 @@ public sealed partial class NetworkGrpcViewModel : AppViewModelBase
         }
         catch (RpcException ex)
         {
-            ServerTime = $"失敗 ({ex.StatusCode})";
+            ServerTime = $"Failed ({ex.StatusCode})";
         }
     }
 }

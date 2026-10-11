@@ -110,7 +110,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                         <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="mct:MaskedBehavior (電話番号 000-0000-0000)" />
+                               Text="mct:MaskedBehavior (000-0000-0000)" />
                         <Border Style="{StaticResource CardFieldBorder}">
                             <Entry Style="{StaticResource BasicFieldEntry}"
                                    Text="{Binding Phone}"
@@ -135,7 +135,7 @@
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding LastStopped}"
                                IsVisible="{Binding LastStopped, Converter={StaticResource NotEmptyConverter}}"
-                               Text="{Binding LastStopped, StringFormat='確定: {0}'}" />
+                               Text="{Binding LastStopped, StringFormat='Committed: {0}'}" />
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
@@ -152,7 +152,7 @@
                             <Label Grid.Column="1"
                                    Style="{StaticResource CardRowLabel}"
                                    behaviors:AnimationOption.BounceTrigger="{Binding SwitchCount}"
-                                   Text="{Binding SwitchCount, StringFormat='イベント発火: {0} 回'}" />
+                                   Text="{Binding SwitchCount, StringFormat='Fired: {0}'}" />
                         </Grid>
                     </VerticalStackLayout>
                 </VerticalStackLayout>

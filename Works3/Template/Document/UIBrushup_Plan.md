@@ -5,7 +5,8 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 | 部分 | 番号 | 内容 |
 | --- | --- | --- |
 | 🖼️UI 1 / UI 2 と View の部品の画面 | 10-x | UI 1 / UI 2 の画面を、App のミニアプリと同じ水準(画面の中で完結する操作、下に余白を残さない配置、色と描画で華やかに、一覧で選んだ項目が詳細に出る)へ寄せる。View の部品の画面(Toolkit / Custom / Chart / Sf Chart / Bottom Sheet / Drawer)でしか使っていない部品は、使いどころのある UI の画面へ取り込む |
-| 💫アニメーションの強化の案 | — | 既存の画面をアニメーションで強化する案(番号なし)。実施するものは 10-x / 11-x の項目(📝)にしてから進める |
+| 💫アニメーションの強化 | 10-35 | 動きの部品を足し、画面ごとの案の画面に当てる |
+| 🔤英語への統一 | 10-36 | UI と App 以外の画面の日本語の文字を英語にする |
 
 ファイルパスは `Template.MobileApp/` からの相対。各項目の ①〜 は段階または修正の候補。
 
@@ -23,10 +24,10 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 | 番号 | 対象 | 優先 | 変更量 | 状態 | 内容 |
 | --- | --- | --- | --- | --- | --- |
-| 10-3 | UI 1 Money | 🟡 | 📦📦📦 | 👀 | ~~最近の取引、下のタブで中身を切り替え、支払いのシート(バーコード・QR)、前月比のバッジ、月の支出の棒と分類~~ |
-| 10-4 | UI 1 Super | 🟢 | 📦📦 | 👀 | ~~クーポンの獲得、サービスのアイコンの反応、近くのお店~~ |
-| 10-9 | UI 1 Chat | 🟢 | 📦📦 | 👀 | ~~写真の送信、タップでリアクション~~ |
-| 10-11 | UI 1 Kit | 🟡 | 📦📦📦 | 👀 | ~~通知のスワイプ~~ |
+| 10-35 | アニメーションの強化 | 🟡 | 📦 | ②👀 ③📝 | ~~② Character の星を弾む動きに、Kit・Schedule の動きを元に戻す~~、③ 案のまま残すもの |
+| 10-36 | 英語への統一(UI と App 以外) | 🟢 | 📦 | 👀 | ~~NFC の待ち受けの文を消す~~ |
+| 10-37 | View のメニューの並び | 🟢 | 📦 | 👀 | ~~Bottom Sheet・Drawer を Toolkit・Custom の前の段へ~~ |
+| 10-38 | Minesweeper の結果の表示 | 🟢 | 📦 | 👀 | ~~クリア・ゲームオーバーのカードが出ても盤面を動かさない~~ |
 
 ### 🚀10-x の進め方
 
@@ -34,9 +35,8 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 | 弾 | 項目 |
 | --- | --- |
-| 第 1 弾 | 10-9 Chat・10-4 Super |
-| 第 2 弾 | 10-3 Money → 10-11 Kit |
-| 最後 | アニメーションの強化の案から実施するものを選ぶ。無ければこの計画を閉じて `Task_Checklist.md` へ戻る |
+| 第 5 弾 | 10-35 ②・10-36・10-37・10-38 の確認、10-35 ③ の案の判断 |
+| 最後 | この計画を閉じて `Task_Checklist.md` へ戻る。`Biometric_Plan.md`・`Other_App_Candidates.md`・`Telemetry_Study.md` も、要らない部分を消して `Task_Checklist.md` にまとめる |
 
 ## ⚖️決定事項
 
@@ -93,69 +93,8 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 | Device OCR | 黒地・四隅のかぎと格子・角丸の結果のパネルで整っている |
 | Navigation のメニューの項目の絵文字 | メニューの間の意図的な差異(`Change_Summary.md` の付録B) |
 | View Svg | 大きな枠・ファイル名・選んだものを塗るチップがそろっている |
-| Sample Web App | 中は Vite + React の雛形のページで、読み込み中の覆いもそろっている |
+| Sample Web App | 中は Vite + React の雛形のページ |
 | 各メニュー(Device / Sample ほか) | 大きさと色は変えない(決定事項) |
-
-## 🖼️UI 1
-
-### 💰10-3 Money(🟡📦📦📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/UI/UIMoneyView.xaml` + `UIMoneyViewModel.cs` | 決済アプリのホーム(残高・ランク・機能のアイコン・利用可能額・下のタブ) |
-
-今: 下のタブは色が変わるだけで中身は変わらない。利用可能額の下が大きく空く。中央の「支払い」は何もしない。
-
-- ~~① 空きに最近の取引(日付の区切り、入金は緑・支払いは赤、店の種類の絵文字、金額)~~
-- ~~② 下のタブで中身を切り替える(ホーム以外は、取引の検索・お知らせの一覧・アカウントの簡単な画面)~~
-- ~~③ 「支払い」で、バーコードと QR を出すシート(自作の `BottomSheetView`。QR は Device > QR Display と同じ `QrImageSourceConverter`。残り時間で作り直す)~~
-- ~~④ 「詳細」で残高の推移の折れ線(10-22 のグラフ)~~
-- ~~⑤ 残高のカードに前月比のバッジ(↑ +2.4% は緑、↓ は赤)~~
-- ~~⑥ 月の支出のカード: 月の切り替え(▼ で月の一覧のシート)、合計と週の平均、週ごとの棒(10-22 ③ の形。タップで選んだ週を強調)~~
-- ~~⑦ 支出の分類: 丸い色のアイコン・金額・割合を横に並べ、「›」ですべてを出す~~
-
-結果(👀 確認待ち): ① ホームの下に最近の取引 5 件(今日・昨日・「10/06 (月)」の区切り、店の種類の絵文字、入金は緑で +、支払いは赤で −)。② 下のタブで中身を切り替える(検索 = 店の名前で探す、お知らせ = 8 件・タップで既読、アカウント = 名前・ランクの進み具合・本人確認の未完了など)。③ 支払いで下からシート(Code 128 のバーコード・番号・QR、30 秒で作り直す残り時間の棒、残高)。④ 詳細で残高の推移のシート(最近 30 日の折れ線、タップで日付と残高)。⑤ 残高の横に前月比のバッジ(1 日あたりの平均残高。↑ 緑・↓ 赤)。⑥ 月の支出のカード(▼ で 6 か月の一覧のシート、合計と週の平均、週ごとの棒・タップで強調。棒は見本の画像と同じ青緑から青のグラデーション)。⑦ 支出の分類(丸い色のアイコン・金額・割合を横に並べ、› で分類の一覧のシート)。取引の見本は半年前から今日までを曜日と日付で作り、残高が 8,000 円を下回るとオートチャージする。開くまで約 0.6 秒・検索のタブは約 0.15 秒(検索は見えている行だけを作り、お知らせの一覧・アカウントのタブ・4 つのシートは初めて開いたときに作る)
-
-見本の画像(⑤〜⑦): `__Image/Mockup/Finance.jpg`。
-
-使える部品(⑤〜⑦): 前月比のバッジは無い(形は `Controls/StatusChip.xaml` と Cart のバッジ、アイコンは `MaterialIcons.Trending_up`)。月の切り替え(▼)も無い。合計と平均は Schedule の `SummaryBorder`、分類の横の一覧は Super の丸い色のアイコンと Stream の「›」の見出しと横の一覧。
-
-### 🏬10-4 Super(🟢📦📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/UI/UISuperView.xaml` + `UISuperViewModel.cs` | スーパーアプリのホーム(検索・ポイント・自動で送るバナー・サービス・クーポン) |
-
-今: バナーの自動の送り以外の操作が無い。
-
-- ~~① クーポンの「獲得」の切り替え(獲得済みの印と、押したときの弾む動き)~~
-- ~~② サービスのアイコンの押したときの反応~~
-- ~~③ クーポンの下に「近くのお店」の横の一覧(距離・混み具合のバッジ)~~
-
-結果(👀 確認待ち): ① クーポンの左下に「獲得する」。押すと「✓ 獲得済み」(半透明の白)になって弾み、もう一度押すと戻る。② サービスのアイコンは押すと縮む(何も開かない)。③ 「近くのお店」の横の一覧 6 店(色の丸いアイコン・店名・種類、📍 距離、混み具合のバッジ 空いています 緑・やや混雑 橙・混雑 赤)。カードは白地に灰の枠・角丸 12(クーポンに合わせた)、バッジの角は 2。クーポンとお店の横の一覧は止まる位置をそろえない(最後の項目まで送れる)
-
-### 💬10-9 Chat(🟢📦📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/UI/UIChatView.xaml` + `UIChatViewModel.cs` | チャット(スタンプ・リアクション・既読・入力欄) |
-
-今: 入力欄の左のカメラのボタンは何もしない(コマンドが空)。
-
-- ~~① カメラのボタンで写真を選び、画像のメッセージとして送る(`MediaPicker`)~~
-- ~~② 相手のメッセージのタップでリアクションを付ける(よく使う絵文字の帯)~~
-
-結果(👀 確認待ち): ① カメラのボタンで端末の写真の選択を開き、選んだ写真を画像のメッセージ(200 × 150・角丸 12)で送る(実機は選択の画面が開くところまで)。② 相手のメッセージをタップすると、その行を琥珀の地にして、メッセージの下(リアクションの下)に絵文字の帯(👍 ❤️ 😂 😮 😢 🙏。白地に灰の枠)を出す。絵文字を押すとメッセージの下に加わり(同じ絵文字は数が増える)、帯を閉じる。同じメッセージをもう一度押す・戻るキー・スタンプの帯・送信でも閉じる。自分のメッセージには付けない(長押しと入力欄の下の帯はやめた)
-
-### 🧩10-11 Kit(🟡📦📦📦)
-
-| 現在のファイル名 | 何用か |
-| --- | --- |
-| `Modules/UI/UIKitNotifyView.xaml` + `UIKitNotifyViewModel.cs` | 通知の一覧 |
-
-- ~~② 通知のスワイプ: 端まで引くとそのまま実行し、引いたところは色とアイコンだけ~~
-
-結果(👀 確認待ち): ② 右へ引くと淡い緑の地に緑の小さな ✓、左へ引くと淡い赤の地に赤の小さなごみ箱(文字は出さない)。端まで引いて離すとそのまま既読・削除
 
 ## 🧰部品の画面(View)
 
@@ -172,84 +111,43 @@ UI のブラッシュアップの残作業はこの計画で管理する(`Task_C
 
 判定の考え方: 標準のコントロールの単体の見本で、機能が UI / App の画面ですでに使われているものは削除する。複数の部品を並べた一覧と、ライブラリと自作の比較は、UI で使った後も残す。
 
-## 💫アニメーションの強化の案
+## 💫10-35 アニメーションの強化(🟡📦)
 
-既存の画面をアニメーションで強化する案(番号なし)。実施するものは 10-x / 11-x の項目(📝)にしてから進める。参照: https://www.telerik.com/blogs/5-heart-animations-using-net-maui(ハートの 5 種の動き。`ScaleTo` / `FadeTo` / `RotateTo` / `TranslateTo` と `GraphicsView` で作る)。
+既存の画面に動きを足す。参照: https://www.telerik.com/blogs/5-heart-animations-using-net-maui(ハートの 5 種の動き。`ScaleTo` / `FadeTo` / `RotateTo` / `TranslateTo` と `GraphicsView` で作る)。
 
-### 🧭今ある動き
+- ~~② UI > Character の星をジャンプから弾む動き(`BounceTrigger`。入れたときだけ)にする。UI > Kit・Schedule に当てた動きは元に戻す~~
+- ③ 案のまま残すもの(下)
 
-| 部品 | 動き | 現在のファイル名 |
-| --- | --- | --- |
-| `AnimationOption.Pulse` | 拡大と縮小(1.0 → 1.05、3 秒)を繰り返す | `Behaviors/AnimationOption.cs` |
-| `AnimationOption.BounceTrigger` / `BounceValue` | 値が変わったときに 1 回弾む(1.0 → 1.15、300 ms)。`BounceValue` を指定すると、その値になったときだけ弾む | `Behaviors/AnimationOption.cs` |
-| `AnimationOption.Wave` / `WaveDelay` | 上下の揺れ(5、700 ms)を繰り返す。開始を遅らせて並べると波になる | `Behaviors/AnimationOption.cs` |
-| `AnimationOption.FadeInTrigger` / `FlashTrigger` / `HighlightTrigger` | 1 回の表示・光る・背景色 | `Behaviors/AnimationOption.cs` |
-| `AnimationOption.ProgressTo` / `HoldCommand` | 進捗のバーの伸び / 長押しの進み | `Behaviors/AnimationOption.cs` |
-| `AnimationOption.EnterAnimation` | 表示したときの FadeUp / Pop | `Behaviors/AnimationOption.cs` |
-| `LabelOption.CountUpValue` | 数の数え上げ | `Behaviors/LabelOption.cs` |
-| Smart.Maui の XAML のアニメーション | Fade / Rotate / Scale / Translate を組み合わせた 1 回の動き | `Modules/View/ViewAnimationView.xaml` |
-| `AnimationBase` の派生 | 1 回の動きのクラス(`SpringAnimation` / `EasingDemoAnimation`) | `Animations/` |
-| `DrawingObject.AnimateValue` | 描画の値の補間(16 ms ごとに描き直す) | `Graphics/Drawing/DrawingObject.cs` |
-| `PulseRingDrawing` | 3 つの輪が広がって消える波紋。開始と停止は ViewModel から呼び、色は固定 | `Graphics/Drawing/PulseRingDrawing.cs` |
-| `ChartDrawing` | 折れ線の左からの描き込み、棒の伸び、ドーナツの回り込み(1 回) | `Graphics/Drawing/ChartDrawing.cs` |
-| `SceneObject` | 60 fps の描画のループ。点滅(`Blink`)と光る線(`DrawGlowLine`) | `Graphics/Scene/SceneObject.cs` |
+結果(👀 確認待ち): ② Character の星は入れたときに 1.15 倍に弾んで戻る(外したときは動かない)。Kit(心拍数のタイルのハート・未読の点・配送の追跡)と Schedule(今の時刻の点)は元の動きに戻した
 
-足りない動き: 回り続ける、透明度の点滅、着地でつぶれるジャンプ、心拍の 2 段の鼓動、バインドで動かす要素の後ろの波紋、値が流れる線。
+③ 案のまま残すもの(📝):
 
-`Pulse` / `Bounce` / `Pop` と `ButtonOption.PressEffect` はどれも Scale を、`Wave` と `FadeUp` は TranslationY を動かす。同じ要素に重ねると打ち消し合う。
+- UI > Weather: 時間ごとの線の描き込み
+- Sample > Map2: 経路を出したときの描き込み
+- Device > Bluetooth: 印刷中のアイコンの動き(円の `Pulse` のまま)
 
-### 💡足す動きの案
+## 🔤10-36 英語への統一(UI と App 以外)(🟢📦)
 
-| 案 | 動き | 形 | 使い道 |
-| --- | --- | --- | --- |
-| 鼓動 | 1.0 → 1.18 → 1.0 → 1.1 → 1.0 の 2 段の拡大の後に休む。間隔は毎分の回数から決める(72 回で 833 ms) | `AnimationOption.Heartbeat`(bool)+ `HeartbeatRate` | 心拍の表示、残り時間が少ないときの警告(回数を上げて速くする) |
-| 点滅 | 透明度 1 → 0.3 → 1 を繰り返す | `AnimationOption.Blink`(bool) | LIVE・録音中・再接続の待ち・一時停止中の表示 |
-| 回転 | 回り続ける(1 周 1.2 秒、Linear)。止めると 0 度に戻す | `AnimationOption.Spin`(bool) | 接続中・同期中・検索中のアイコン、読み込み中 |
-| ジャンプ | 上へ跳ねて落ち、着地で縦につぶれて戻る(TranslationY と ScaleY) | `AnimationOption.JumpTrigger` + `JumpValue` | お気に入りに入れたとき、獲得・完了のとき、空の表示の絵文字 |
-| 波紋 | 要素の後ろで輪が広がって消える | `PulseRingDrawing` を、色と動かすかどうかをバインドできるビューにする(表示中だけ動く) | 待ち受け(マイク・検索・NFC・位置)、広告中、接続済み、今の位置の点 |
-| 流れる線 | 受けた値の線を右から左へ滑らかに流し、先頭に点を置いて後ろを薄くする | `DrawingObject` の新しい描画(`AnimateValue` のループか、`ChartDrawing` と同じ 60 fps のタイマー) | リアルタイムのグラフ、騒音の履歴、心拍のカード |
-| 描き込み | 線・経路・弧を始点から伸ばして描く | `ChartDrawing` の描き込みと同じ切り抜きを、ほかの描画にも使う | 配送の段階の線、地図の経路、日の出と日の入りの弧 |
+- ~~② Device > NFC の待ち受けの「Hold Suica near the device」を消す~~
 
-- 同じ要素に Scale の動きを 2 つ付けない。鼓動とジャンプは中のアイコンに、押したときの縮み(`PressEffect`)は外側のボタンに付けるように、要素を分ける
-- 続く動きは表示中だけ動かす(`Pulse` と同じく、表示で始めて非表示で止める)
+結果(👀 確認待ち): ② 待ち受けは波紋とアイコンだけ(文とスタイル `NfcTitleLabel` を消した)
 
-### 🗺️画面ごとの案
+## 🧭10-37 View のメニューの並び(🟢📦)
 
-| 現在のファイル名 | 何用か | 案 |
-| --- | --- | --- |
-| `Modules/UI/UIKitDashView.xaml` | ダッシュボード(平均心拍数のカード・心拍数のタイル・通知のベル) | 平均心拍数のカードに、ハートの鼓動(毎分 72 回)と流れる線(10-11 ① の心拍の折れ線と合わせる)。未読の点に波紋か点滅 |
-| `MainPage.xaml` | ヘッダーのプッシュの接続の状態(↔️ / 🔄 / ⛔) | 接続中は回転、再接続の待ちは点滅、接続済みは波紋 |
-| `Modules/Network/NetworkRealtimeView.xaml` + `Controls/StatControl.cs` | SignalR の接続の状態と値のグラフ | 接続中は同期のアイコンを回転。1 秒ごとに跳ぶグラフを流れる線に |
-| `Modules/UI/UIStreamView.xaml` | 動画配信のホーム(LIVE / NEW のバッジ) | LIVE のバッジを赤い点の点滅に |
-| `Modules/UI/UIProfileView.xaml` / `UIStreamDetailView.xaml` / `UIShopView.xaml` / `UIItemView.xaml` / `UICharacterView.xaml` / `UIMonsterView.xaml` | いいね・お気に入り・ハートのボタン | 入れたときだけ鼓動かジャンプにする(今は外したときも弾む) |
-| `Modules/Device/DeviceBleHostView.xaml` | BLE の広告 | 広告中の `Pulse` を波紋に |
-| `Controls/ChatView.xaml` / `Modules/Device/DeviceMiscView.xaml` / `DeviceBleScanView.xaml` / `DeviceNfcView.xaml` / `DeviceLocationView.xaml` | 聞き取り中のマイク、検索中・待ち受けの空の表示 | `Pulse` を波紋に |
-| `Modules/Device/DeviceWiFiView.xaml` / `DeviceBluetoothView.xaml` / `Modules/Network/NetworkStorageView.xaml` / `NetworkSftpView.xaml` | 検索・印刷・同期 | 処理中はアイコンを回転 |
-| `Modules/UI/UILoadView.xaml` + `Graphics/Drawing/LoadDrawing.cs` | 騒音計の履歴 | 履歴を流れる線に。録音中の点の点滅、最大を更新したときの点滅 |
-| `Modules/Device/DeviceActivityView.xaml` + `Graphics/Drawing/ActivityDrawing.cs` | 歩数の輪 | 歩くたびに 👟 がジャンプ、輪が値まで伸びる(11-31 と合わせる) |
-| `Modules/UI/UIKitTrackingView.xaml` | 配送の追跡 | 今の段階の点に波紋、段階の線の描き込み(10-11 ④)、トラックの上下の揺れ |
-| `Controls/DayTimetableView.cs`(`Modules/UI/UIScheduleView.xaml`) | 1 日の予定と今の時刻の線 | 今の時刻の点に波紋 |
-| `Modules/App/AppTimerView.xaml` | タイマー | 残り 10 秒から鼓動を速める、一時停止中は数字の点滅、終わったらベルのジャンプ |
-| `Modules/UI/UIWeatherView.xaml` | 天気(時間ごとの線・日の出と日の入りの弧) | 今の時刻の点に波紋、弧と線の描き込み |
-| `Modules/Sample/SampleMap2View.xaml` + `Messaging/MapsuiController.cs` | 地図の経路 | 経路を出したときの描き込み |
-| `Modules/View/ViewEffectView.xaml` | 効果の見本 | 足した動き(鼓動・点滅・回転・ジャンプ・波紋)の見本を並べる |
-| `Modules/UI/UICartView.xaml` / `UIShopView.xaml` / `UIMailView.xaml` / `UINewsView.xaml` / `Modules/App/AppTodoView.xaml` ほか | 一覧が空のときの表示 | 絵をゆっくり上下に揺らす。完了の 🎉 はジャンプ |
+- ~~① Bottom Sheet・Drawer を Toolkit・Custom の前の段へ移す~~
 
-## 🙈見ていない画面
+結果(👀 確認待ち): ① Layout・State / Border・Shadow / Animation・Easing / Effect・Drag & Drop / Graphics・Drawing / Lottie・SVG / Bottom Sheet・Drawer / Toolkit・Custom / Chart・Sf Chart。ViewId も同じ順に
 
-| 画面 | 理由 |
-| --- | --- |
-| Sample CV Net / Chat | AI の接続先を設定していない端末では画面に入れない(設定した端末で見る) |
+## 🧩10-38 Minesweeper の結果の表示(🟢📦)
 
-## 🔧見た目以外
+- ~~① クリア・ゲームオーバーのカードが出ても、盤面の位置と大きさを変えない~~
 
-| 画面 | 内容 |
-| --- | --- |
-| Sample Web App | 読み込み中の覆いを消す処理(決まった時間の後に消す)が code-behind にある |
+結果(👀 確認待ち): ① 操作の切り替えと結果のカードを同じ下の領域(高さ 120。クリアでベスト更新の 4 行が入る高さ)に置き、どちらも上下の中央。プレイ中・ゲームオーバー・クリアで盤面の位置と大きさが同じ
 
 ## ⚠️制約
 
 - 新しい画像は作らない(既存の画像と、絵文字・アイコン)
+- UI > Kit・Schedule には動きを足さない
 - 既存の画面の細部(11-x)は、表示する項目を変えない(並び・形・色・強弱・余白・状態の見せ方・操作の位置を変える)
 
 ## 🚫対象外

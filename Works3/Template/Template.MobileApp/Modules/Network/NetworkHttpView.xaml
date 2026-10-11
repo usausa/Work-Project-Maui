@@ -96,7 +96,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Border Style="{StaticResource CountBadgeBorder}">
                         <Label Style="{StaticResource CountBadgeLabel}"
-                               Text="{Binding Total, StringFormat='全 {0} 件'}" />
+                               Text="{Binding Total, StringFormat='{0} total'}" />
                     </Border>
                     <Grid>
                         <CollectionView Style="{StaticResource ListCollection}"
@@ -112,9 +112,9 @@
                                                Text="{x:Static fonts:MaterialIcons.Inbox}" />
                                     </Border>
                                     <Label Style="{StaticResource BasicCenterTitleLabel}"
-                                           Text="データなし" />
+                                           Text="No data" />
                                     <Label Style="{StaticResource BasicCenterHintLabel}"
-                                           Text="作成で追加" />
+                                           Text="Add with Create" />
                                 </VerticalStackLayout>
                             </CollectionView.EmptyView>
                             <CollectionView.ItemTemplate>
@@ -159,11 +159,11 @@
                         <Entry Grid.Column="0"
                                Style="{StaticResource BasicEntry}"
                                Text="{Binding Name}"
-                               Placeholder="名前" />
+                               Placeholder="Name" />
                         <Entry Grid.Column="1"
                                Style="{StaticResource BasicEntry}"
                                Text="{Binding Value}"
-                               Placeholder="数値"
+                               Placeholder="Value"
                                Keyboard="Numeric" />
                     </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -171,33 +171,33 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicFilledButton}"
                                 Command="{Binding CreateCommand}"
-                                Text="作成" />
+                                Text="Create" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding UpdateCommand}"
-                                Text="更新"
+                                Text="Update"
                                 ImageSource="{x:Static markup:AppIcons.SmallEdit}" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource RedButton}"
                                 Command="{Binding DeleteCommand}"
-                                Text="削除"
+                                Text="Delete"
                                 ImageSource="{x:Static markup:AppIcons.NetworkDelete}" />
                         <Button Grid.Column="3"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding ClearCommand}"
-                                Text="クリア"
+                                Text="Clear"
                                 ImageSource="{x:Static markup:AppIcons.SmallUndo}" />
                     </Grid>
                     <Button Style="{StaticResource BasicIconOutlinedButton}"
                             Command="{Binding SaveToWorkCommand}"
-                            Text="全件をWorkテーブルへ保存"
+                            Text="Save all to Work"
                             ImageSource="{x:Static markup:AppIcons.SmallCloudSync}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="テストAPI"
+                               Title="Test API"
                                Icon="{x:Static fonts:MaterialIcons.Bug_report}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -205,12 +205,12 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding TestErrorCommand}"
-                                Text="エラー (500)"
+                                Text="Error (500)"
                                 ImageSource="{x:Static markup:AppIcons.SmallDoNotDisturb}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding TestDelayCommand}"
-                                Text="遅延 (5 秒)"
+                                Text="Delay (5s)"
                                 ImageSource="{x:Static markup:AppIcons.SmallAlarm}" />
                     </Grid>
                     <Grid Style="{StaticResource BasicButtonGrid}"
@@ -218,12 +218,12 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource BasicIconOutlinedButton}"
                                 Command="{Binding DelayCommand}"
-                                Text="10秒待つAPI"
+                                Text="Delay (10s)"
                                 ImageSource="{x:Static markup:AppIcons.SmallDownloading}" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource RedButton}"
                                 Command="{Binding CancelCommand}"
-                                Text="キャンセル"
+                                Text="Cancel"
                                 ImageSource="{x:Static markup:AppIcons.NetworkCancel}" />
                     </Grid>
                     <ActivityIndicator IsRunning="{Binding Delaying}"
@@ -233,7 +233,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
-                               Title="ログ"
+                               Title="Log"
                                Icon="{x:Static fonts:MaterialIcons.Receipt_long}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}"
                                      BindableLayout.ItemsSource="{Binding Logs}">
@@ -245,7 +245,7 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <Label Style="{StaticResource BasicCaptionLabel}"
-                               Text="まだ呼び出していません" />
+                               Text="No calls yet" />
                     </BindableLayout.EmptyView>
                 </VerticalStackLayout>
             </controls:InfoCard>

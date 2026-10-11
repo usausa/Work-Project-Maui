@@ -234,34 +234,6 @@
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
-            <Style x:Key="WaveDotStack"
-                   TargetType="HorizontalStackLayout">
-                <Setter Property="Spacing" Value="16" />
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
-            <Style x:Key="WaveDot"
-                   TargetType="BoxView">
-                <Setter Property="WidthRequest" Value="14" />
-                <Setter Property="HeightRequest" Value="14" />
-                <Setter Property="CornerRadius" Value="7" />
-                <Setter Property="Color" Value="{StaticResource BlueDefault}" />
-            </Style>
-
-            <Style x:Key="PulseDot"
-                   TargetType="BoxView">
-                <Setter Property="Margin" Value="16,0,0,0" />
-                <Setter Property="WidthRequest" Value="16" />
-                <Setter Property="HeightRequest" Value="16" />
-                <Setter Property="CornerRadius" Value="8" />
-                <Setter Property="Color" Value="{StaticResource RedDefault}" />
-            </Style>
-
-            <Style x:Key="RowSwitch"
-                   TargetType="Switch">
-                <Setter Property="VerticalOptions" Value="Center" />
-            </Style>
-
             <Style x:Key="EffectCardStack"
                    TargetType="VerticalStackLayout">
                 <Setter Property="Spacing" Value="12" />
@@ -365,7 +337,7 @@
                   ColumnDefinitions="*,Auto">
                 <Label Grid.Column="0"
                        Style="{StaticResource SectionHeaderLabel}"
-                       Text="エントランス(FadeUp 時間差)" />
+                       Text="Entrance (FadeUp)" />
                 <Button Grid.Column="1"
                         Style="{StaticResource SectionActionButton}"
                         Command="{Binding ReplayCommand}"
@@ -378,7 +350,7 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_one}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="1番目のカード(遅延なし)" />
+                           Text="Card 1 (no delay)" />
                 </HorizontalStackLayout>
             </Border>
             <Border Style="{StaticResource EnterCard}"
@@ -389,7 +361,7 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_two}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="2番目のカード(120ms 遅延)" />
+                           Text="Card 2 (120 ms)" />
                 </HorizontalStackLayout>
             </Border>
             <Border Style="{StaticResource EnterCard}"
@@ -400,13 +372,13 @@
                     <Label Style="{StaticResource EnterIconLabel}"
                            Text="{x:Static fonts:MaterialIcons.Looks_3}" />
                     <Label Style="{StaticResource EnterTextLabel}"
-                           Text="3番目のカード(240ms 遅延)" />
+                           Text="Card 3 (240 ms)" />
                 </HorizontalStackLayout>
             </Border>
 
             <!-- ポップ+バッジ -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="ポップ+バッジ(BadgeCountConverter)" />
+                   Text="Pop + badge" />
             <Border Style="{StaticResource BadgeCard}">
                 <Grid Style="{StaticResource BadgeRowGrid}"
                       ColumnDefinitions="Auto,*,Auto,Auto">
@@ -444,7 +416,7 @@
 
             <!-- カウントアップ -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="カウントアップ" />
+                   Text="Count up" />
             <Border Style="{StaticResource EffectCard}">
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
@@ -454,25 +426,25 @@
                     <Button Grid.Column="1"
                             Style="{StaticResource SmallActionButton}"
                             Command="{Binding AmountCommand}"
-                            Text="再設定" />
+                            Text="Reset" />
                 </Grid>
             </Border>
 
             <!-- フォーカス枠 -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="フォーカス枠(Focus)" />
+                   Text="Focus border" />
             <Border Style="{StaticResource FocusEntryBorder}">
                 <Entry Style="{StaticResource BlueFocusEntry}"
-                       Placeholder="ユーザー名(フォーカスで青枠)" />
+                       Placeholder="User name" />
             </Border>
             <Border Style="{StaticResource FocusEntryBorder}">
                 <Entry Style="{StaticResource GreenFocusEntry}"
-                       Placeholder="メールアドレス(フォーカスで緑枠)" />
+                       Placeholder="Email" />
             </Border>
 
             <!-- 押下フィードバック比較 -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="押下フィードバック比較" />
+                   Text="Press feedback" />
             <Grid Style="{StaticResource EffectRowGrid}"
                   ColumnDefinitions="*,*">
                 <VerticalStackLayout Grid.Column="0">
@@ -492,34 +464,9 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <!-- 常時アニメ(Wave / Pulse) -->
-            <Label Style="{StaticResource SectionLabel}"
-                   Text="常時アニメ(Wave / Pulse)" />
-            <Border Style="{StaticResource EffectCard}">
-                <Grid Style="{StaticResource EffectRowGrid}"
-                      ColumnDefinitions="*,Auto">
-                    <HorizontalStackLayout Grid.Column="0"
-                                           Style="{StaticResource WaveDotStack}">
-                        <BoxView Style="{StaticResource WaveDot}"
-                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}" />
-                        <BoxView Style="{StaticResource WaveDot}"
-                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
-                                 behaviors:AnimationOption.WaveDelay="120" />
-                        <BoxView Style="{StaticResource WaveDot}"
-                                 behaviors:AnimationOption.Wave="{Binding WavePulseEnabled}"
-                                 behaviors:AnimationOption.WaveDelay="240" />
-                        <BoxView Style="{StaticResource PulseDot}"
-                                 behaviors:AnimationOption.Pulse="{Binding WavePulseEnabled}" />
-                    </HorizontalStackLayout>
-                    <Switch Grid.Column="1"
-                            Style="{StaticResource RowSwitch}"
-                            IsToggled="{Binding WavePulseEnabled}" />
-                </Grid>
-            </Border>
-
             <!-- 変化フィードバック(Bounce / Flash / Highlight) -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="変化フィードバック(Bounce / Flash / Highlight)" />
+                   Text="Change feedback (Bounce / Flash / Highlight)" />
             <Border Style="{StaticResource EffectCard}">
                 <VerticalStackLayout Style="{StaticResource EffectCardStack}">
                     <Grid Style="{StaticResource EffectRowGrid}"
@@ -532,7 +479,7 @@
                                Style="{StaticResource FeedbackTextLabel}"
                                behaviors:AnimationOption.HighlightColor="{StaticResource AmberLighten4}"
                                behaviors:AnimationOption.HighlightTrigger="{Binding FeedbackCount}"
-                               Text="Bounce / Highlight / Flashを同時に発火" />
+                               Text="Fire Bounce / Highlight / Flash" />
                         <Button Grid.Column="2"
                                 Style="{StaticResource SmallActionButton}"
                                 Command="{Binding FeedbackCommand}"
@@ -541,7 +488,7 @@
                     <Grid Style="{StaticResource FlashPreviewGrid}">
                         <Border Style="{StaticResource DarkPreviewBorder}">
                             <Label Style="{StaticResource PreviewCaptionLabel}"
-                                   Text="撮影プレビュー" />
+                                   Text="Camera preview" />
                         </Border>
                         <BoxView Style="{StaticResource FlashOverlay}"
                                  behaviors:AnimationOption.FlashTrigger="{Binding FeedbackCount}" />
@@ -551,7 +498,7 @@
 
             <!-- 演出(Confetti / 長押し / IconTint) -->
             <Label Style="{StaticResource SectionLabel}"
-                   Text="演出(Confetti / 長押し / IconTint)" />
+                   Text="Effects (Confetti / Long press / IconTint)" />
             <Border Style="{StaticResource EffectCard}">
                 <VerticalStackLayout Style="{StaticResource EffectCardStack}">
                     <Grid Style="{StaticResource ConfettiGrid}">
@@ -572,11 +519,11 @@
                         <Button Grid.Column="0"
                                 Style="{StaticResource TouchCardButton}"
                                 behaviors:ButtonOption.LongPressCommand="{Binding LongPressCommand}"
-                                Text="ButtonOption: 押すと縮む / 長押しでカウント" />
+                                Text="ButtonOption: press / long press" />
                         <Label Grid.Column="1"
                                Style="{StaticResource EffectValueLabel}"
                                behaviors:AnimationOption.BounceTrigger="{Binding LongPressCount}"
-                               Text="{Binding LongPressCount, StringFormat='長押し {0}'}" />
+                               Text="{Binding LongPressCount, StringFormat='Long press {0}'}" />
                     </Grid>
                     <HorizontalStackLayout Style="{StaticResource TintSampleStack}">
                         <Image Style="{StaticResource TintSampleImage}"

@@ -261,11 +261,9 @@
         <VerticalStackLayout Style="{StaticResource PageStack}">
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               Title="並べ替え"
+                               Title="Reorder"
                                Icon="{x:Static fonts:MaterialIcons.Swap_vert}">
                 <VerticalStackLayout Style="{StaticResource CardSmallContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="行を長押しでドラッグして並べ替える" />
                     <Border Style="{StaticResource ReorderListBorder}">
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding ReorderList}"
                                              BindableLayout.ItemTemplate="{StaticResource ReorderTemplate}" />
@@ -275,11 +273,9 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="80"
-                               Title="リスト間移動とゴミ箱"
+                               Title="Move between lists / Trash"
                                Icon="{x:Static fonts:MaterialIcons.Move_up}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <Label Style="{StaticResource BasicCaptionLabel}"
-                           Text="長押しでドラッグして、別のリストかゴミ箱に落とす" />
                     <Grid Style="{StaticResource BoardGrid}"
                           ColumnDefinitions="*,*">
                         <Border Grid.Column="0"

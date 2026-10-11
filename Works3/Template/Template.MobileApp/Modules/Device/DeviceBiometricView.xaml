@@ -24,13 +24,13 @@
             <s:MapToTextConverter x:Key="AvailabilityTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Available}"
-                                      Value="使える" />
+                                      Value="Available" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoHardware}"
-                                      Value="センサー無し" />
+                                      Value="No sensor" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.NoneEnrolled}"
-                                      Value="未登録" />
+                                      Value="Not enrolled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAvailability.Unavailable}"
-                                      Value="一時不可" />
+                                      Value="Unavailable now" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -49,13 +49,13 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Succeeded}"
-                                      Value="✅ 成功" />
+                                      Value="✅ Success" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Canceled}"
-                                      Value="↩️ キャンセル" />
+                                      Value="↩️ Canceled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Lockout}"
-                                      Value="🔒 失敗回数の超過" />
+                                      Value="🔒 Too many attempts" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricResult.Failed}"
-                                      Value="❌ エラー" />
+                                      Value="❌ Error" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -63,20 +63,20 @@
                                   DefaultValue="">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.Biometric}"
-                                      Value="(生体)" />
+                                      Value="(Biometric)" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricAuthenticationType.DeviceCredential}"
-                                      Value="(画面ロック)" />
+                                      Value="(Screen lock)" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
             <s:MapToTextConverter x:Key="KeyStateTextConverter">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.None}"
-                                      Value="— 無し" />
+                                      Value="— None" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Available}"
-                                      Value="🔑 あり" />
+                                      Value="🔑 Exists" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyState.Invalidated}"
-                                      Value="⚠️ 使えない" />
+                                      Value="⚠️ Unusable" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -90,7 +90,7 @@
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Software}"
                                       Value="⚠️ Software" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricKeyLocation.Unknown}"
-                                      Value="❓ 不明" />
+                                      Value="❓ Unknown" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -98,17 +98,17 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Succeeded}"
-                                      Value="✅ 署名した" />
+                                      Value="✅ Signed" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Canceled}"
-                                      Value="↩️ キャンセル" />
+                                      Value="↩️ Canceled" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Lockout}"
-                                      Value="🔒 失敗回数の超過" />
+                                      Value="🔒 Too many attempts" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.Failed}"
-                                      Value="❌ エラー" />
+                                      Value="❌ Error" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.NoKey}"
-                                      Value="— 鍵が無い" />
+                                      Value="— No key" />
                     <s:MapToTextEntry Key="{x:Static components:BiometricSignStatus.KeyInvalidated}"
-                                      Value="⚠️ 鍵が使えない" />
+                                      Value="⚠️ Key unusable" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -117,9 +117,9 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{s:Bool Value=True}"
-                                      Value="✅ 一致" />
+                                      Value="✅ Match" />
                     <s:MapToTextEntry Key="{s:Bool Value=False}"
-                                      Value="❌ 不一致" />
+                                      Value="❌ Mismatch" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -127,9 +127,9 @@
                                   DefaultValue="—">
                 <s:MapToTextConverter.Entries>
                     <s:MapToTextEntry Key="{s:Bool Value=False}"
-                                      Value="🛡️ 拒否" />
+                                      Value="🛡️ Rejected" />
                     <s:MapToTextEntry Key="{s:Bool Value=True}"
-                                      Value="⚠️ 受け付けた" />
+                                      Value="⚠️ Accepted" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
 
@@ -209,7 +209,7 @@
                         <Label Style="{StaticResource BasicCaptionLabel}"
                                Text="Last used" />
                         <Label Style="{StaticResource CardAccentLabel}"
-                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} 前', TargetNullValue='—'}">
+                               Text="{Binding SinceLastAuthentication, Converter={StaticResource DurationConverter}, StringFormat='{0} ago', TargetNullValue='—'}">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label"
                                              Binding="{Binding SinceLastAuthentication, Converter={StaticResource EmptyConverter}}"

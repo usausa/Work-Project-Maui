@@ -445,8 +445,6 @@
                                          Style="{StaticResource SensorTextStack}">
                         <Label Style="{StaticResource ValueLabel}"
                                Text="Bubble level" />
-                        <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                               Text="Tilt the device" />
                     </VerticalStackLayout>
                 </Grid>
             </controls:InfoCard>

@@ -172,13 +172,13 @@
                                 HorizontalScrollBarVisibility="Never">
                         <Border Style="{StaticResource ScrubTrackBorder}">
                             <Label Style="{StaticResource ScrubTrackLabel}"
-                                   Text="→ → → スクロールで再生位置が進みます → → →" />
+                                   Text="→ → → Scroll to play → → →" />
                         </Border>
                     </ScrollView>
                     <Button Style="{StaticResource HoldButton}"
                             behaviors:AnimationOption.HoldCommand="{Binding ScrubCommand}"
                             behaviors:AnimationOption.HoldDuration="2000"
-                            Text="長押しで進行 (2 秒)" />
+                            Text="Long press (2s)" />
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout Style="{StaticResource TransportRow}">

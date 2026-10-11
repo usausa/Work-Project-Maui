@@ -128,7 +128,7 @@
 
         <controls:InfoCard Grid.Row="0"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"
-                           Title="接続先"
+                           Title="Server"
                            Icon="{x:Static fonts:MaterialIcons.Dns}">
             <VerticalStackLayout Style="{StaticResource CardContentStack}">
                 <Grid Style="{StaticResource HostGrid}"
@@ -146,15 +146,16 @@
         <controls:InfoCard Grid.Row="1"
                            behaviors:AnimationOption.EnterAnimation="FadeUp"
                            behaviors:AnimationOption.EnterDelay="80"
-                           Title="転送"
-                           Icon="{x:Static fonts:MaterialIcons.Sync_alt}">
+                           Title="Transfer"
+                           Icon="{x:Static fonts:MaterialIcons.Sync_alt}"
+                           IconSpin="{Binding Busy}">
             <VerticalStackLayout Style="{StaticResource CardContentStack}">
                 <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                       Text="リモートファイル名" />
+                       Text="Remote file name" />
                 <Border Style="{StaticResource CardFieldBorder}">
                     <Entry Style="{StaticResource BasicFieldEntry}"
                            Text="{Binding RemoteFileName}"
-                           Placeholder="例: sample.txt" />
+                           Placeholder="e.g. sample.txt" />
                 </Border>
                 <Grid Style="{StaticResource ProgressGrid}"
                       ColumnDefinitions="*,Auto">
@@ -180,7 +181,7 @@
                     <Button Grid.Column="2"
                             Style="{StaticResource RedButton}"
                             Command="{Binding CancelCommand}"
-                            Text="キャンセル"
+                            Text="Cancel"
                             ImageSource="{x:Static markup:AppIcons.NetworkCancel}" />
                 </Grid>
             </VerticalStackLayout>
@@ -199,7 +200,7 @@
                            Text="{x:Static fonts:MaterialIcons.Receipt_long}" />
                     <Label Grid.Column="1"
                            Style="{StaticResource LogHeaderTitleLabel}"
-                           Text="ログ" />
+                           Text="Log" />
                 </Grid>
                 <BoxView Grid.Row="1"
                          Style="{StaticResource LogHeaderDivider}" />
@@ -213,7 +214,7 @@
                                        Text="{x:Static fonts:MaterialIcons.Receipt_long}" />
                             </Border>
                             <Label Style="{StaticResource BasicCenterHintLabel}"
-                                   Text="まだ転送していません" />
+                                   Text="No transfers yet" />
                         </VerticalStackLayout>
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>

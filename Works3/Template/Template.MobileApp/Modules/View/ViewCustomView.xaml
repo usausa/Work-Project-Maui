@@ -76,7 +76,7 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Border Style="{StaticResource MarqueeBorder}">
                         <controls:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
-                                               Text="【お知らせ】本日 21:00 よりメンテナンスを実施します ／ 新商品「うさうさまんじゅう」販売開始 ／ ポイント2倍キャンペーン実施中"
+                                               Text="Maintenance tonight at 21:00 / New item on sale / Double points campaign"
                                                Speed="60" />
                     </Border>
                 </VerticalStackLayout>
@@ -91,7 +91,7 @@
                                        SelectedNode="{Binding SelectedNode}" />
                     <Label Style="{StaticResource CardAccentLabel}"
                            IsVisible="{Binding SelectedNode, Converter={StaticResource NotEmptyConverter}}"
-                           Text="{Binding SelectedNode.Text, StringFormat='選択: {0}', FallbackValue='-'}" />
+                           Text="{Binding SelectedNode.Text, StringFormat='Selected: {0}', FallbackValue='-'}" />
                 </VerticalStackLayout>
             </controls:InfoCard>
 

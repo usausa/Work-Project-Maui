@@ -258,9 +258,15 @@
                                Style="{StaticResource RowChevron}"
                                Text="{Binding IsColorOpen, Converter={StaticResource ExpandGlyphConverter}}" />
                     </Grid>
-                    <controls:ColorPicker Style="{StaticResource ColorPickerPanel}"
-                                          IsVisible="{Binding IsColorOpen}"
-                                          SelectedColor="{Binding ThemeColor}" />
+                    <ContentView behaviors:LazyViewOption.Load="{Binding IsColorOpen}"
+                                 IsVisible="{Binding IsColorOpen}">
+                        <behaviors:LazyViewOption.Template>
+                            <DataTemplate x:DataType="module:UIKitSettingViewModel">
+                                <controls:ColorPicker Style="{StaticResource ColorPickerPanel}"
+                                                      SelectedColor="{Binding ThemeColor}" />
+                            </DataTemplate>
+                        </behaviors:LazyViewOption.Template>
+                    </ContentView>
                 </VerticalStackLayout>
             </Border>
 

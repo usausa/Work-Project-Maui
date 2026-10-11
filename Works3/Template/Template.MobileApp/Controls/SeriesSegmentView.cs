@@ -8,7 +8,12 @@ using SkiaSharp.Views.Maui.Controls;
 // 高さは全体の範囲 (Minimum〜Maximum) に合わせるので、項目の間を空けずに並べると一覧をまたいで線がつながる
 public sealed class SeriesSegmentView : SKCanvasView
 {
+    private const string RippleAnimationName = "SeriesRipple";
+
     private static readonly SKTypeface BoldTypeface = SKTypeface.FromFamilyName("sans-serif", SKFontStyle.Bold);
+
+    // 光らせた点から広がる輪 (0〜1)。IsHighlighted の間だけ動かす
+    private float ripple;
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
@@ -147,7 +152,7 @@ public sealed class SeriesSegmentView : SKCanvasView
         typeof(bool),
         typeof(SeriesSegmentView),
         false,
-        propertyChanged: OnVisualChanged);
+        propertyChanged: OnHighlightedChanged);
 
     public bool IsHighlighted
     {
@@ -157,6 +162,41 @@ public sealed class SeriesSegmentView : SKCanvasView
 
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
         ((SeriesSegmentView)bindable).InvalidateSurface();
+
+    private static void OnHighlightedChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (SeriesSegmentView)bindable;
+        control.UpdateRipple();
+        control.InvalidateSurface();
+    }
+
+    public SeriesSegmentView()
+    {
+        Loaded += (_, _) => UpdateRipple();
+        Unloaded += (_, _) => this.AbortAnimation(RippleAnimationName);
+    }
+
+    private void UpdateRipple()
+    {
+        this.AbortAnimation(RippleAnimationName);
+        ripple = 0f;
+        if (IsHighlighted && IsLoaded)
+        {
+            this.Animate(
+                RippleAnimationName,
+                v =>
+                {
+                    ripple = (float)v;
+                    InvalidateSurface();
+                },
+                0d,
+                1d,
+                32,
+                1800,
+                Easing.CubicOut,
+                repeat: () => IsHighlighted);
+        }
+    }
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -237,6 +277,15 @@ public sealed class SeriesSegmentView : SKCanvasView
         {
             paint.Color = color.WithAlpha(90);
             canvas.DrawCircle(center, 8 * density, paint);
+
+            if (ripple > 0f)
+            {
+                paint.Style = SKPaintStyle.Stroke;
+                paint.StrokeWidth = 1.5f * density;
+                paint.Color = color.WithAlpha((byte)(200 * (1f - ripple)));
+                canvas.DrawCircle(center, (8f + (10f * ripple)) * density, paint);
+                paint.Style = SKPaintStyle.Fill;
+            }
         }
 
         paint.Color = color;

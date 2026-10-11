@@ -574,7 +574,9 @@
                             </controls:TimerDial>
                             <VerticalStackLayout Style="{StaticResource DialCenterStack}">
                                 <!-- 消えているセグメントを後ろに薄く重ねる -->
-                                <Grid>
+                                <Grid behaviors:AnimationOption.Blink="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Paused}}"
+                                      behaviors:AnimationOption.Heartbeat="{Binding IsWarning}"
+                                      behaviors:AnimationOption.HeartbeatRate="120">
                                     <Label Style="{StaticResource DialUnlitLabel}"
                                            Text="{Binding Remaining, Converter={StaticResource RemainingUnlitConverter}}" />
                                     <Label Style="{StaticResource DialTimeLabel}"
@@ -590,7 +592,8 @@
                                        IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Stopped}}"
                                        Text="{Binding DurationMinutes, StringFormat='⏳ {0} 分'}" />
                                 <Label Style="{StaticResource DialAlertLabel}"
-                                       behaviors:AnimationOption.BounceTrigger="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}"
+                                       behaviors:AnimationOption.JumpTrigger="{Binding CountdownState}"
+                                       behaviors:AnimationOption.JumpValue="{x:Static models:TimerCountdownState.Finished}"
                                        IsVisible="{Binding CountdownState, Converter={s:CompareToBool}, ConverterParameter={x:Static models:TimerCountdownState.Finished}}"
                                        Text="⏰ 時間です" />
                             </VerticalStackLayout>

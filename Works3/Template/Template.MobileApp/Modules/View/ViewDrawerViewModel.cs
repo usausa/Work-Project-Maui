@@ -40,7 +40,7 @@ public sealed partial class ViewDrawerViewModel : AppViewModelBase
     [ObservableProperty]
     public partial DrawerMenuItem SelectedItem { get; set; }
 
-    public IReadOnlyList<string> Modes { get; } = ["SfNavigationDrawer", "自作 SideDrawer"];
+    public IReadOnlyList<string> Modes { get; } = ["SfNavigationDrawer", "SideDrawer"];
 
     public IReadOnlyList<DrawerMenuItem> MenuItems { get; } =
     [

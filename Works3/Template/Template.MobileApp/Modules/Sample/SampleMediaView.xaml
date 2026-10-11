@@ -98,7 +98,7 @@
             <Label Style="{StaticResource FailedIconLabel}"
                    Text="{x:Static fonts:MaterialIcons.Error_outline}" />
             <Label Style="{StaticResource FailedTextLabel}"
-                   Text="再生できません" />
+                   Text="Cannot play" />
         </VerticalStackLayout>
 
         <!-- タップでコントロールバーの表示を切り替える -->

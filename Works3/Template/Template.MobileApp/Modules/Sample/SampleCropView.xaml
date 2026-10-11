@@ -111,10 +111,10 @@
                     <HorizontalStackLayout Style="{StaticResource CropButtonStack}">
                         <Button Style="{StaticResource CropButtonPrimary}"
                                 Command="{Binding ExportCommand}"
-                                Text="書き出し" />
+                                Text="Export" />
                         <Button Style="{StaticResource CropButton}"
                                 Command="{Binding ResetCommand}"
-                                Text="リセット" />
+                                Text="Reset" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Grid>

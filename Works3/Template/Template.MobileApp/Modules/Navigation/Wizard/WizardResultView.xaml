@@ -44,15 +44,6 @@
                 </VerticalStackLayout>
             </controls:InfoCard>
 
-            <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
-                               behaviors:AnimationOption.EnterDelay="160"
-                               Title="Done"
-                               Icon="{x:Static fonts:MaterialIcons.Check_circle}"
-                               IconColor="{StaticResource GreenDefault}">
-                <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                       Text="Press ✔️ to finish the wizard and return to the menu" />
-            </controls:InfoCard>
-
         </VerticalStackLayout>
     </ScrollView>
 

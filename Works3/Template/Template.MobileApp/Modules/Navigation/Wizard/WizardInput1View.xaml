@@ -14,7 +14,7 @@
              shell:ShellProperty.Function1Text="◀️"
              shell:ShellProperty.Function4Text="▶️"
              shell:ShellProperty.Function1Enabled="True"
-             shell:ShellProperty.Function4Enabled="{Binding Context.Data1, Converter={StaticResource NotEmptyConverter}}">
+             shell:ShellProperty.Function4Enabled="True">
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -28,7 +28,7 @@
 
             <Style x:Key="WizardCard"
                    TargetType="controls:InfoCard">
-                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Start" />
             </Style>
 
             <Style x:Key="FocusFieldEntry"
@@ -56,11 +56,11 @@
                            Icon="{x:Static fonts:MaterialIcons.Edit}">
             <VerticalStackLayout Style="{StaticResource CardFieldGroupStack}">
                 <Label Style="{StaticResource BasicFieldCaptionLabel}"
-                       Text="Data1 (required)" />
+                       Text="Data1" />
                 <Border Style="{StaticResource CardFieldBorder}">
                     <Entry Style="{StaticResource FocusFieldEntry}"
                            Text="{Binding Context.Data1}"
-                           Placeholder="例: Apple" />
+                           Placeholder="e.g. Apple" />
                 </Border>
             </VerticalStackLayout>
         </controls:InfoCard>

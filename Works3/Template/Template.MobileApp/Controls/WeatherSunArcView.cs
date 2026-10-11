@@ -7,6 +7,11 @@ using SkiaSharp.Views.Maui.Controls;
 // 日の出から日の入りまでの太陽の道のり。通った部分を塗り、今の位置に太陽を置く (夜は地平線の端で暗く)
 public sealed class WeatherSunArcView : SKCanvasView
 {
+    private const string RevealAnimationName = "SunArcReveal";
+
+    // 今の位置まで描き込む割合 (0〜1)。表示したときに 0 から伸ばす
+    private float reveal = 1f;
+
     public static readonly BindableProperty SunriseProperty = BindableProperty.Create(
         nameof(Sunrise),
         typeof(DateTime),
@@ -75,6 +80,30 @@ public sealed class WeatherSunArcView : SKCanvasView
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
         ((WeatherSunArcView)bindable).InvalidateSurface();
 
+    public WeatherSunArcView()
+    {
+        Loaded += (_, _) => StartReveal();
+        Unloaded += (_, _) => this.AbortAnimation(RevealAnimationName);
+    }
+
+    private void StartReveal()
+    {
+        this.AbortAnimation(RevealAnimationName);
+        reveal = 0f;
+        this.Animate(
+            RevealAnimationName,
+            v =>
+            {
+                reveal = (float)v;
+                InvalidateSurface();
+            },
+            0d,
+            1d,
+            16,
+            900,
+            Easing.CubicOut);
+    }
+
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
@@ -91,7 +120,7 @@ public sealed class WeatherSunArcView : SKCanvasView
 
             // 地平線から上の半分の楕円
             var oval = new SKRect(margin, margin, info.Width - margin, (horizon * 2) - margin);
-            var progress = (float)Math.Clamp((Now - Sunrise).TotalMinutes / (Sunset - Sunrise).TotalMinutes, 0, 1);
+            var progress = (float)Math.Clamp((Now - Sunrise).TotalMinutes / (Sunset - Sunrise).TotalMinutes, 0, 1) * reveal;
             var isDay = (Now > Sunrise) && (Now < Sunset);
             var sunColor = SunColor.ToSKColor();
 

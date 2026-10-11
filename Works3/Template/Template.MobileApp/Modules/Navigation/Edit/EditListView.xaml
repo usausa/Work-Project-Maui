@@ -155,8 +155,6 @@
                     </Border>
                     <Label Style="{StaticResource BasicCenterTitleLabel}"
                            Text="No items" />
-                    <Label Style="{StaticResource BasicCenterHintLabel}"
-                           Text="Press New to add a work item" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
@@ -236,15 +234,15 @@
                   ColumnDefinitions="*,Auto,Auto">
                 <Label Grid.Column="0"
                        Style="{StaticResource SelectionCountLabel}"
-                       Text="{Binding SelectedItems.Count, StringFormat='{0} 件選択'}" />
+                       Text="{Binding SelectedItems.Count, StringFormat='{0} selected'}" />
                 <Button Grid.Column="1"
                         Style="{StaticResource SelectionBarButton}"
                         Command="{Binding SelectAllCommand}"
-                        Text="全選択" />
+                        Text="Select all" />
                 <Button Grid.Column="2"
                         Style="{StaticResource SelectionBarButtonDanger}"
                         Command="{Binding BulkDeleteCommand}"
-                        Text="削除" />
+                        Text="Delete" />
             </Grid>
         </Border>
 

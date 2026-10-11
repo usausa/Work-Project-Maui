@@ -410,13 +410,6 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource TodoSubTextColor}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
             <!-- 一覧の最後の行が ＋ のボタンに隠れない余白 -->
             <Style x:Key="ListFooterBoxView"
                    TargetType="BoxView">
@@ -703,9 +696,11 @@
             <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                  IsVisible="{Binding Context.List.Sections.Count, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
                 <Label Style="{StaticResource EmptyEmojiLabel}"
+                       behaviors:AnimationOption.JumpTrigger="{Binding Context.List.Sections.Count}"
                        IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
                        Text="🎉" />
                 <Label Style="{StaticResource EmptyEmojiLabel}"
+                       behaviors:AnimationOption.Float="True"
                        IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}"
                        Text="📝" />
                 <Label Style="{StaticResource EmptyTitleLabel}"
@@ -714,8 +709,6 @@
                 <Label Style="{StaticResource EmptyTitleLabel}"
                        IsVisible="{Binding Context.List.TotalCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}"
                        Text="タスクはありません" />
-                <Label Style="{StaticResource EmptyHintLabel}"
-                       Text="右下の ＋ から追加できます" />
             </VerticalStackLayout>
 
             <!-- 元に戻すの帯 (消してから 4 秒) -->

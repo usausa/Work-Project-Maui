@@ -81,13 +81,13 @@
             <s:MapToTextConverter x:Key="ActionIconConverter"
                                   DefaultValue="{x:Static fonts:MaterialIcons.Chevron_right}">
                 <s:MapToTextConverter.Entries>
-                    <s:MapToTextEntry Key="共有"
+                    <s:MapToTextEntry Key="Share"
                                       Value="{x:Static fonts:MaterialIcons.Share}" />
-                    <s:MapToTextEntry Key="リンクをコピー"
+                    <s:MapToTextEntry Key="Copy link"
                                       Value="{x:Static fonts:MaterialIcons.Link}" />
-                    <s:MapToTextEntry Key="お気に入りに追加"
+                    <s:MapToTextEntry Key="Add to favorites"
                                       Value="{x:Static fonts:MaterialIcons.Star}" />
-                    <s:MapToTextEntry Key="レポート"
+                    <s:MapToTextEntry Key="Report"
                                       Value="{x:Static fonts:MaterialIcons.Flag}" />
                 </s:MapToTextConverter.Entries>
             </s:MapToTextConverter>
@@ -95,9 +95,9 @@
             <s:MapToColorConverter x:Key="ActionColorConverter"
                                    DefaultValue="{StaticResource BlueGrayDarken1}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="お気に入りに追加"
+                    <s:MapToColorEntry Key="Add to favorites"
                                        Value="{StaticResource AmberDarken3}" />
-                    <s:MapToColorEntry Key="レポート"
+                    <s:MapToColorEntry Key="Report"
                                        Value="{StaticResource RedDefault}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -105,9 +105,9 @@
             <s:MapToColorConverter x:Key="ActionTintConverter"
                                    DefaultValue="{StaticResource BlueGrayLighten4}">
                 <s:MapToColorConverter.Entries>
-                    <s:MapToColorEntry Key="お気に入りに追加"
+                    <s:MapToColorEntry Key="Add to favorites"
                                        Value="{StaticResource AmberLighten4}" />
-                    <s:MapToColorEntry Key="レポート"
+                    <s:MapToColorEntry Key="Report"
                                        Value="{StaticResource RedLighten4}" />
                 </s:MapToColorConverter.Entries>
             </s:MapToColorConverter>
@@ -190,7 +190,7 @@
                                 <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                                 <Button Style="{StaticResource SheetCloseButton}"
                                         Command="{Binding CloseCommand}"
-                                        Text="閉じる" />
+                                        Text="Close" />
                             </VerticalStackLayout>
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>
@@ -204,35 +204,31 @@
                                        Title="SfBottomSheet"
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_top}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                            <Label Style="{StaticResource BasicCaptionLabel}"
-                                   Text="グラバーのドラッグで高さを変え、背景のタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenSfSheetCommand}"
-                                    Text="Sfのシートを開く (F2)" />
+                                    Text="Open Sf sheet (F2)" />
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
                     <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="100"
-                                       Title="BottomSheet (自作)"
+                                       Title="BottomSheetView"
                                        Icon="{x:Static fonts:MaterialIcons.Vertical_align_bottom}">
                         <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                            <Label Style="{StaticResource BasicCaptionLabel}"
-                                   Text="シートのドラッグで高さを変え、背景のタップで閉じる" />
                             <Button Style="{StaticResource BasicFilledButton}"
                                     Command="{Binding OpenCustomSheetCommand}"
-                                    Text="自作のシートを開く (F3)" />
+                                    Text="Open BottomSheetView (F3)" />
                         </VerticalStackLayout>
                     </controls:InfoCard>
 
                     <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                        behaviors:AnimationOption.EnterDelay="200"
-                                       Title="結果"
+                                       Title="Result"
                                        Icon="{x:Static fonts:MaterialIcons.Check_circle}">
                         <Grid>
                             <Label Style="{StaticResource CardAccentLabel}"
                                    IsVisible="{Binding Selected, Converter={StaticResource EmptyConverter}}"
-                                   Text="シートはまだ開いていません" />
+                                   Text="Not opened yet" />
                             <Grid Style="{StaticResource ResultRowGrid}"
                                   ColumnDefinitions="Auto,*"
                                   IsVisible="{Binding Selected, Converter={StaticResource NotEmptyConverter}}">
@@ -261,7 +257,7 @@
                 <DataTemplate x:DataType="module:ViewBottomSheetViewModel">
                     <VerticalStackLayout Style="{StaticResource SheetStack}">
                         <Label Style="{StaticResource SheetTitleLabel}"
-                               Text="BottomSheet (自作)" />
+                               Text="BottomSheetView" />
                         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding Actions}">
                             <BindableLayout.ItemTemplate>
@@ -289,7 +285,7 @@
                         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                         <Button Style="{StaticResource SheetCloseButton}"
                                 Command="{Binding CloseCommand}"
-                                Text="閉じる" />
+                                Text="Close" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </controls:BottomSheetView.SheetTemplate>

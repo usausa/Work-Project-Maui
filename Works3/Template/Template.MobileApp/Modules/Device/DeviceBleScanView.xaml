@@ -112,11 +112,17 @@
                         ItemsSource="{Binding Devices}">
             <CollectionView.EmptyView>
                 <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
-                    <Border Style="{StaticResource BasicIconCircleBorder}"
-                            behaviors:AnimationOption.Pulse="True">
-                        <Label Style="{StaticResource BasicIconCircleLabel}"
-                               Text="{x:Static fonts:MaterialIcons.Bluetooth_searching}" />
-                    </Border>
+                    <Grid Style="{StaticResource BasicRippleGrid}">
+                        <Ellipse Style="{StaticResource BasicRippleRing}"
+                                 behaviors:AnimationOption.Ripple="True" />
+                        <Ellipse Style="{StaticResource BasicRippleRing}"
+                                 behaviors:AnimationOption.Ripple="True"
+                                 behaviors:AnimationOption.RippleDelay="900" />
+                        <Border Style="{StaticResource BasicIconCircleBorder}">
+                            <Label Style="{StaticResource BasicIconCircleLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Bluetooth_searching}" />
+                        </Border>
+                    </Grid>
                     <Label Style="{StaticResource BasicCenterTitleLabel}"
                            Text="Scanning..." />
                     <Label Style="{StaticResource BasicCenterHintLabel}"

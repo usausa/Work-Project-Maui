@@ -189,13 +189,6 @@
                 <Setter Property="Color" Value="{StaticResource GrayLighten3}" />
             </Style>
 
-            <Style x:Key="SwipeHintLabel"
-                   TargetType="Label">
-                <Setter Property="Margin" Value="20,0" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
-            </Style>
-
             <!-- Empty -->
             <Style x:Key="EmptyStack"
                    TargetType="VerticalStackLayout">
@@ -217,13 +210,6 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{StaticResource BlueGrayDarken3}" />
-            </Style>
-
-            <Style x:Key="EmptyHintLabel"
-                   TargetType="Label">
-                <Setter Property="HorizontalOptions" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="{StaticResource GrayDefault}" />
             </Style>
 
             <!-- Coupon / points -->
@@ -483,11 +469,10 @@
                 <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                      IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource EqualsConverter}, ConverterParameter={s:Int32 0}}">
                     <Label Style="{StaticResource EmptyIconLabel}"
+                           behaviors:AnimationOption.Float="True"
                            Text="{x:Static fonts:MaterialIcons.Remove_shopping_cart}" />
                     <Label Style="{StaticResource EmptyTitleLabel}"
                            Text="カートは空です" />
-                    <Label Style="{StaticResource EmptyHintLabel}"
-                           Text="気になる商品をカートに入れましょう" />
                 </VerticalStackLayout>
 
                 <!-- Cart items (swipe left to delete) -->
@@ -558,10 +543,6 @@
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </Border>
-
-                <Label Style="{StaticResource SwipeHintLabel}"
-                       IsVisible="{Binding Context.Store.CartCount, Converter={StaticResource GreaterThanToBoolConverter}, ConverterParameter={s:Int32 0}}"
-                       Text="行を左へスワイプすると削除できます" />
 
                 <!-- Coupon / points -->
                 <Border Style="{StaticResource CouponBorder}">

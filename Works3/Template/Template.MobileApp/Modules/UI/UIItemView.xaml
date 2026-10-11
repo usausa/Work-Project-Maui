@@ -393,7 +393,8 @@
                                    Text="{Binding Context.Selected.Product.Kind}" />
                             <Button Grid.Column="1"
                                     Style="{StaticResource FavoriteButton}"
-                                    behaviors:AnimationOption.BounceTrigger="{Binding Context.Selected.IsFavorite}"
+                                    behaviors:AnimationOption.HeartbeatTrigger="{Binding Context.Selected.IsFavorite}"
+                                    behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
                                     Command="{Binding FavoriteCommand}"
                                     Text="{Binding Context.Selected.IsFavorite, Converter={StaticResource FavoriteGlyphConverter}}">
                                 <Button.Triggers>

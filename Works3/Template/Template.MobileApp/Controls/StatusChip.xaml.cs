@@ -40,6 +40,19 @@ public partial class StatusChip
         set => SetValue(ChipColorProperty, value);
     }
 
+    // True の間、アイコンを回し続ける
+    public static readonly BindableProperty IconSpinProperty = BindableProperty.Create(
+        nameof(IconSpin),
+        typeof(bool),
+        typeof(StatusChip),
+        false);
+
+    public bool IconSpin
+    {
+        get => (bool)GetValue(IconSpinProperty);
+        set => SetValue(IconSpinProperty, value);
+    }
+
     // 既定値は BlueGrayDarken1 相当
     public static readonly BindableProperty IconColorProperty = BindableProperty.Create(
         nameof(IconColor),

@@ -27,16 +27,16 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource MetroGrayDark}" />
             </Style>
 
+            <Style x:Key="NfcRippleRing"
+                   TargetType="Ellipse"
+                   BasedOn="{StaticResource BasicRippleRing}">
+                <Setter Property="Stroke" Value="{StaticResource MetroGreen}" />
+            </Style>
+
             <Style x:Key="NfcIconLabel"
                    TargetType="Label"
                    BasedOn="{StaticResource BasicIconCircleLabel}">
                 <Setter Property="TextColor" Value="{StaticResource MetroGreen}" />
-            </Style>
-
-            <Style x:Key="NfcTitleLabel"
-                   TargetType="Label"
-                   BasedOn="{StaticResource BasicCenterTitleLabel}">
-                <Setter Property="TextColor" Value="White" />
             </Style>
 
             <!-- Converter -->
@@ -312,13 +312,17 @@
                         ItemsSource="{Binding Logs}">
             <CollectionView.EmptyView>
                 <VerticalStackLayout Style="{StaticResource BasicEmptyStack}">
-                    <Border Style="{StaticResource NfcIconBorder}"
-                            behaviors:AnimationOption.Pulse="True">
-                        <Label Style="{StaticResource NfcIconLabel}"
-                               Text="{x:Static fonts:MaterialIcons.Contactless}" />
-                    </Border>
-                    <Label Style="{StaticResource NfcTitleLabel}"
-                           Text="Suicaをかざしてください" />
+                    <Grid Style="{StaticResource BasicRippleGrid}">
+                        <Ellipse Style="{StaticResource NfcRippleRing}"
+                                 behaviors:AnimationOption.Ripple="True" />
+                        <Ellipse Style="{StaticResource NfcRippleRing}"
+                                 behaviors:AnimationOption.Ripple="True"
+                                 behaviors:AnimationOption.RippleDelay="900" />
+                        <Border Style="{StaticResource NfcIconBorder}">
+                            <Label Style="{StaticResource NfcIconLabel}"
+                                   Text="{x:Static fonts:MaterialIcons.Contactless}" />
+                        </Border>
+                    </Grid>
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>

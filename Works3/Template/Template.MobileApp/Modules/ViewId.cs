@@ -93,23 +93,23 @@ public enum ViewId
     ViewBorder,
     ViewShadow,
 
-    ViewToolkit,
-    ViewCustom,
-
-    ViewBottomSheet,
-    ViewDrawer,
-
     ViewAnimation,
     ViewEasing,
 
     ViewEffect,
     ViewDragDrop,
 
+    ViewGraphics,
+    ViewDrawing,
+
     ViewLottie,
     ViewSvg,
 
-    ViewGraphics,
-    ViewDrawing,
+    ViewBottomSheet,
+    ViewDrawer,
+
+    ViewToolkit,
+    ViewCustom,
 
     ViewChart,
     ViewSfChart,

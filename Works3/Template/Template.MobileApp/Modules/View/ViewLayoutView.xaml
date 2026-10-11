@@ -225,14 +225,14 @@
                                 BackgroundColor="{StaticResource BlueDefault}"
                                 mct:DockLayout.DockPosition="Top">
                             <Label Style="{StaticResource DockPaneLabel}"
-                                   Text="Top (ツールバー)" />
+                                   Text="Top" />
                         </Border>
                         <Border Style="{StaticResource DockPane}"
                                 HeightRequest="32"
                                 BackgroundColor="{StaticResource BlueGrayDefault}"
                                 mct:DockLayout.DockPosition="Bottom">
                             <Label Style="{StaticResource DockPaneLabel}"
-                                   Text="Bottom (ステータス)" />
+                                   Text="Bottom" />
                         </Border>
                         <Border Style="{StaticResource DockPane}"
                                 WidthRequest="64"
@@ -251,7 +251,7 @@
                         <Border Style="{StaticResource DockPane}"
                                 BackgroundColor="{StaticResource GrayLighten2}">
                             <Label Style="{StaticResource DockFillLabel}"
-                                   Text="Fill (コンテンツ)" />
+                                   Text="Fill" />
                         </Border>
                     </mct:DockLayout>
                 </VerticalStackLayout>
@@ -310,7 +310,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="160"
-                               Title="CircularLayout (自作)"
+                               Title="CircularLayout"
                                Icon="{x:Static fonts:MaterialIcons.Data_usage}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid HeightRequest="240">
@@ -392,7 +392,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="240"
-                               Title="CircularLayout 回転 / リング (自作)"
+                               Title="CircularLayout rotation / ring"
                                Icon="{x:Static fonts:MaterialIcons.Track_changes}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid ColumnDefinitions="*,*">
@@ -468,7 +468,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="320"
-                               Title="HoneycombLayout (自作)"
+                               Title="HoneycombLayout"
                                Icon="{x:Static fonts:MaterialIcons.Hexagon}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <controls:HoneycombLayout Style="{StaticResource HexLayout}"
@@ -520,7 +520,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="400"
-                               Title="StaggeredGrid (自作)"
+                               Title="StaggeredGrid"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <controls:StaggeredGrid Style="{StaticResource StaggeredLayout}"
@@ -579,7 +579,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="480"
-                               Title="VariableSizeWrapPanel (自作)"
+                               Title="VariableSizeWrapPanel"
                                Icon="{x:Static fonts:MaterialIcons.View_quilt}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <controls:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
@@ -629,7 +629,7 @@
 
             <controls:InfoCard behaviors:AnimationOption.EnterAnimation="FadeUp"
                                behaviors:AnimationOption.EnterDelay="560"
-                               Title="OverlapPanel (自作)"
+                               Title="OverlapPanel"
                                Icon="{x:Static fonts:MaterialIcons.Filter_none}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid ColumnDefinitions="*,*">

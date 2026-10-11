@@ -550,6 +550,7 @@
                              behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
                              IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Schedule}}">
             <Label Style="{StaticResource EmptyStateIconLabel}"
+                   behaviors:AnimationOption.Float="True"
                    Text="{x:Static fonts:MaterialIcons.Event_busy}" />
             <Label Style="{StaticResource EmptyStateTextLabel}"
                    Text="今日の予定はありません" />
@@ -560,6 +561,7 @@
                              behaviors:AnimationOption.FadeInTrigger="{Binding Selected}"
                              IsVisible="{Binding Selected, Converter={StaticResource EqualsConverter}, ConverterParameter={x:Static module:MailPage.Application}}">
             <Label Style="{StaticResource EmptyStateIconLabel}"
+                   behaviors:AnimationOption.Float="True"
                    Text="{x:Static fonts:MaterialIcons.Apps}" />
             <Label Style="{StaticResource EmptyStateTextLabel}"
                    Text="アプリはまだありません" />

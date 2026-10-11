@@ -698,7 +698,8 @@
                                    Source="{Binding Product.Image}" />
                             <Button Grid.Row="0"
                                     Style="{StaticResource FavoriteButton}"
-                                    behaviors:AnimationOption.BounceTrigger="{Binding IsFavorite}"
+                                    behaviors:AnimationOption.HeartbeatTrigger="{Binding IsFavorite}"
+                                    behaviors:AnimationOption.HeartbeatValue="{s:Bool Value=True}"
                                     Command="{Binding FavoriteCommand, Source={RelativeSource AncestorType={x:Type module:UIShopViewModel}}, x:DataType={x:Type module:UIShopViewModel}}"
                                     CommandParameter="{Binding .}"
                                     Text="{Binding IsFavorite, Converter={StaticResource FavoriteGlyphConverter}}">
@@ -735,6 +736,7 @@
             <CollectionView.EmptyView>
                 <VerticalStackLayout Style="{StaticResource EmptyStack}">
                     <Label Style="{StaticResource EmptyIconLabel}"
+                           behaviors:AnimationOption.Float="True"
                            Text="{x:Static fonts:MaterialIcons.Search_off}" />
                     <Label Style="{StaticResource EmptyTextLabel}"
                            Text="条件に合う商品はありません" />
