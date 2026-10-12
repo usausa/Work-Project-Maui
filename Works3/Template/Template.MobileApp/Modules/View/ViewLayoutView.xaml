@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
@@ -91,12 +92,12 @@
             </Style>
 
             <Style x:Key="StaggeredLayout"
-                   TargetType="controls:StaggeredGrid">
+                   TargetType="mcc:StaggeredGrid">
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
             <Style x:Key="TileLayout"
-                   TargetType="controls:VariableSizeWrapPanel">
+                   TargetType="mcc:VariableSizeWrapPanel">
                 <Setter Property="Spacing" Value="6" />
             </Style>
 
@@ -523,8 +524,8 @@
                                Title="StaggeredGrid"
                                Icon="{x:Static fonts:MaterialIcons.Dashboard}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <controls:StaggeredGrid Style="{StaticResource StaggeredLayout}"
-                                            Columns="3">
+                    <mcc:StaggeredGrid Style="{StaticResource StaggeredLayout}"
+                                       Columns="3">
                         <Border Style="{StaticResource StaggeredCell}"
                                 HeightRequest="90"
                                 BackgroundColor="{StaticResource BlueLighten4}">
@@ -573,7 +574,7 @@
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="8" />
                         </Border>
-                    </controls:StaggeredGrid>
+                    </mcc:StaggeredGrid>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -582,17 +583,17 @@
                                Title="VariableSizeWrapPanel"
                                Icon="{x:Static fonts:MaterialIcons.View_quilt}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <controls:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
-                                                    Columns="3" RowHeight="56">
+                    <mcc:VariableSizeWrapPanel Style="{StaticResource TileLayout}"
+                                               Columns="3" RowHeight="56">
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource BlueLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="2">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="2"
+                                BackgroundColor="{StaticResource BlueLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource GreenLighten4}"
-                                controls:VariableSizeWrapPanel.RowSpan="2">
+                                mcc:VariableSizeWrapPanel.RowSpan="2"
+                                BackgroundColor="{StaticResource GreenLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="1×2" />
                         </Border>
@@ -607,8 +608,8 @@
                                    Text="1×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource CyanLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="2" controls:VariableSizeWrapPanel.RowSpan="2">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="2" mcc:VariableSizeWrapPanel.RowSpan="2"
+                                BackgroundColor="{StaticResource CyanLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="2×2" />
                         </Border>
@@ -618,12 +619,12 @@
                                    Text="1×1" />
                         </Border>
                         <Border Style="{StaticResource TileCell}"
-                                BackgroundColor="{StaticResource OrangeLighten4}"
-                                controls:VariableSizeWrapPanel.ColumnSpan="3">
+                                mcc:VariableSizeWrapPanel.ColumnSpan="3"
+                                BackgroundColor="{StaticResource OrangeLighten4}">
                             <Label Style="{StaticResource UniformCellLabel}"
                                    Text="3×1" />
                         </Border>
-                    </controls:VariableSizeWrapPanel>
+                    </mcc:VariableSizeWrapPanel>
                 </VerticalStackLayout>
             </controls:InfoCard>
 
@@ -633,9 +634,9 @@
                                Icon="{x:Static fonts:MaterialIcons.Filter_none}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid ColumnDefinitions="*,*">
-                        <controls:OverlapPanel Grid.Column="0"
-                                               HorizontalOptions="Start" VerticalOptions="Start"
-                                               OffsetX="18" OffsetY="14">
+                        <mcc:OverlapPanel Grid.Column="0"
+                                          HorizontalOptions="Start" VerticalOptions="Start"
+                                          OffsetX="18" OffsetY="14">
                             <Border Style="{StaticResource DockPane}"
                                     WidthRequest="96" HeightRequest="60"
                                     BackgroundColor="{StaticResource BlueDefault}">
@@ -654,11 +655,11 @@
                                 <Label Style="{StaticResource DockPaneLabel}"
                                        Text="3" />
                             </Border>
-                        </controls:OverlapPanel>
-                        <controls:OverlapPanel Grid.Column="1"
-                                               HorizontalOptions="Start" VerticalOptions="Center"
-                                               OffsetX="26"
-                                               ReverseZIndex="True">
+                        </mcc:OverlapPanel>
+                        <mcc:OverlapPanel Grid.Column="1"
+                                          HorizontalOptions="Start" VerticalOptions="Center"
+                                          OffsetX="26"
+                                          ReverseZIndex="True">
                             <Border Style="{StaticResource OverlapCircle}"
                                     BackgroundColor="{StaticResource BlueDefault}" />
                             <Border Style="{StaticResource OverlapCircle}"
@@ -667,7 +668,7 @@
                                     BackgroundColor="{StaticResource OrangeDefault}" />
                             <Border Style="{StaticResource OverlapCircle}"
                                     BackgroundColor="{StaticResource BlueGrayDefault}" />
-                        </controls:OverlapPanel>
+                        </mcc:OverlapPanel>
                     </Grid>
                 </VerticalStackLayout>
             </controls:InfoCard>

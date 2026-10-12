@@ -2,6 +2,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:s="http://smart/maui"
+                    xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
                     xmlns:shell="clr-namespace:Template.MobileApp.Shell"
                     xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
                     xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -1183,7 +1184,7 @@
     <!-- Step -->
 
     <Style x:Key="BasicStepIndicator"
-           TargetType="controls:StepIndicator">
+           TargetType="mcc:StepIndicator">
         <Setter Property="Margin" Value="0,8,0,0" />
     </Style>
 

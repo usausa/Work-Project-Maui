@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
@@ -135,7 +136,7 @@
 
             <!-- 予定の詳細のシート -->
             <Style x:Key="DetailSheet"
-                   TargetType="controls:BottomSheetView">
+                   TargetType="mcc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -202,7 +203,7 @@
             </Style>
 
             <Style x:Key="DetailMembers"
-                   TargetType="controls:AvatarGroup">
+                   TargetType="mcc:AvatarGroup">
                 <Setter Property="AvatarSize" Value="32" />
                 <Setter Property="MaxDisplayed" Value="4" />
                 <Setter Property="Overlap" Value="10" />
@@ -354,10 +355,10 @@
         </ScrollView>
 
         <!-- 予定の詳細 -->
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
-                                  Style="{StaticResource DetailSheet}"
-                                  IsOpen="{Binding IsDetailOpen}">
-            <controls:BottomSheetView.SheetContent>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="4"
+                             Style="{StaticResource DetailSheet}"
+                             IsOpen="{Binding IsDetailOpen}">
+            <mcc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource DetailStack}">
                     <Grid Style="{StaticResource DetailTitleGrid}"
                           ColumnDefinitions="Auto,*">
@@ -396,9 +397,9 @@
                         <Label Grid.Column="0"
                                Style="{StaticResource DetailIconLabel}"
                                Text="{x:Static fonts:MaterialIcons.Group}" />
-                        <controls:AvatarGroup Grid.Column="1"
-                                              Style="{StaticResource DetailMembers}"
-                                              ItemsSource="{Binding SelectedEvent.Members}" />
+                        <mcc:AvatarGroup Grid.Column="1"
+                                         Style="{StaticResource DetailMembers}"
+                                         ItemsSource="{Binding SelectedEvent.Members}" />
                         <Label Grid.Column="2"
                                Style="{StaticResource DetailMemberCountLabel}"
                                Text="{Binding SelectedEvent.Members.Count, StringFormat='{0} 人'}" />
@@ -411,8 +412,8 @@
                             Command="{Binding CloseDetailCommand}"
                             Text="閉じる" />
                 </VerticalStackLayout>
-            </controls:BottomSheetView.SheetContent>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
 
     </Grid>
 

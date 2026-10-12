@@ -197,6 +197,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MauiComponents\MauiComponents.Controls\MauiComponents.Controls.csproj" />
     <ProjectReference Include="..\..\MauiComponents\MauiComponents.Generator\MauiComponents.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\MauiComponents\MauiComponents\MauiComponents.csproj" />
     <ProjectReference Include="..\..\Smart.Maui\Smart.Maui.Extensions\Smart.Maui.Extensions.csproj" />
@@ -224,6 +225,7 @@
     <TrimmerRootAssembly Include="Smart.Reactive" />
     <TrimmerRootAssembly Include="Smart.Results" />
     <TrimmerRootAssembly Include="MauiComponents" />
+    <TrimmerRootAssembly Include="MauiComponents.Controls" />
     <TrimmerRootAssembly Include="Renci.SshNet" />
     <TrimmerRootAssembly Include="BouncyCastle.Cryptography" />
   </ItemGroup>

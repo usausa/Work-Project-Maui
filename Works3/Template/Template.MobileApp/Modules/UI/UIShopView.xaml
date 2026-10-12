@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -217,8 +217,18 @@
                 <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
             </Style>
 
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="ShopChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
             <Style x:Key="ShopChipGroup"
-                   TargetType="controls:ChipGroup">
+                   TargetType="mcc:ChipGroup">
                 <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="18" />
                 <Setter Property="ChipPadding" Value="14,0" />
@@ -228,9 +238,10 @@
                 <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedChipTextColor" Value="White" />
                 <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource ShopChipLabel}" />
             </Style>
             <Style x:Key="ShopWrapChipGroup"
-                   TargetType="controls:ChipGroup"
+                   TargetType="mcc:ChipGroup"
                    BasedOn="{StaticResource ShopChipGroup}">
                 <Setter Property="Wrap" Value="True" />
             </Style>
@@ -462,7 +473,7 @@
 
             <!-- Filter sheet -->
             <Style x:Key="FilterSheet"
-                   TargetType="controls:BottomSheetView">
+                   TargetType="mcc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -655,15 +666,15 @@
                     <ScrollView Style="{StaticResource ChipScroll}"
                                 behaviors:AnimationOption.EnterAnimation="FadeUp"
                                 behaviors:AnimationOption.EnterDelay="200">
-                        <controls:ChipGroup Style="{StaticResource ShopChipGroup}"
-                                            ItemsSource="{Binding Categories}"
-                                            SelectedItem="{Binding SelectedCategory}">
-                            <controls:ChipGroup.ItemTemplate>
+                        <mcc:ChipGroup Style="{StaticResource ShopChipGroup}"
+                                       ItemsSource="{Binding Categories}"
+                                       SelectedItem="{Binding SelectedCategory}">
+                            <mcc:ChipGroup.ItemTemplate>
                                 <DataTemplate x:DataType="module:UIShopCategoryOption">
                                     <Label Text="{Binding Name}" />
                                 </DataTemplate>
-                            </controls:ChipGroup.ItemTemplate>
-                        </controls:ChipGroup>
+                            </mcc:ChipGroup.ItemTemplate>
+                        </mcc:ChipGroup>
                     </ScrollView>
 
                     <!-- All items -->
@@ -745,34 +756,34 @@
         </CollectionView>
 
         <!-- 並び順と価格のシート -->
-        <controls:BottomSheetView Style="{StaticResource FilterSheet}"
-                                  IsOpen="{Binding IsFilterOpen}">
-            <controls:BottomSheetView.SheetContent>
+        <mcc:BottomSheetView Style="{StaticResource FilterSheet}"
+                             IsOpen="{Binding IsFilterOpen}">
+            <mcc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource FilterSheetStack}">
                     <Label Style="{StaticResource FilterTitleLabel}"
                            Text="並び替えと絞り込み" />
                     <Label Style="{StaticResource FilterCaptionLabel}"
                            Text="並び順" />
-                    <controls:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
-                                        ItemsSource="{Binding Sorts}"
-                                        SelectedItem="{Binding SelectedSort}">
-                        <controls:ChipGroup.ItemTemplate>
+                    <mcc:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
+                                   ItemsSource="{Binding Sorts}"
+                                   SelectedItem="{Binding SelectedSort}">
+                        <mcc:ChipGroup.ItemTemplate>
                             <DataTemplate x:DataType="module:UIShopSortOption">
                                 <Label Text="{Binding Name}" />
                             </DataTemplate>
-                        </controls:ChipGroup.ItemTemplate>
-                    </controls:ChipGroup>
+                        </mcc:ChipGroup.ItemTemplate>
+                    </mcc:ChipGroup>
                     <Label Style="{StaticResource FilterCaptionLabel}"
                            Text="価格" />
-                    <controls:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
-                                        ItemsSource="{Binding Prices}"
-                                        SelectedItem="{Binding SelectedPrice}">
-                        <controls:ChipGroup.ItemTemplate>
+                    <mcc:ChipGroup Style="{StaticResource ShopWrapChipGroup}"
+                                   ItemsSource="{Binding Prices}"
+                                   SelectedItem="{Binding SelectedPrice}">
+                        <mcc:ChipGroup.ItemTemplate>
                             <DataTemplate x:DataType="module:UIShopPriceOption">
                                 <Label Text="{Binding Name}" />
                             </DataTemplate>
-                        </controls:ChipGroup.ItemTemplate>
-                    </controls:ChipGroup>
+                        </mcc:ChipGroup.ItemTemplate>
+                    </mcc:ChipGroup>
                     <Grid Style="{StaticResource FilterButtonGrid}"
                           ColumnDefinitions="*,*">
                         <Button Grid.Column="0"
@@ -785,8 +796,8 @@
                                 Text="{Binding Items.Count, StringFormat='{0} 件を表示'}" />
                     </Grid>
                 </VerticalStackLayout>
-            </controls:BottomSheetView.SheetContent>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
 
     </Grid>
 

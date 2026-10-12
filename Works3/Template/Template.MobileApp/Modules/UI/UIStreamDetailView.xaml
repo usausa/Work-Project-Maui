@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
@@ -164,7 +164,7 @@
             </Style>
 
             <Style x:Key="FriendsAvatars"
-                   TargetType="controls:AvatarGroup">
+                   TargetType="mcc:AvatarGroup">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="MaxDisplayed" Value="3" />
                 <Setter Property="Overlap" Value="10" />
@@ -412,8 +412,8 @@
 
             <!-- Friends watching (overlapping avatars) -->
             <HorizontalStackLayout Style="{StaticResource FriendsRow}">
-                <controls:AvatarGroup Style="{StaticResource FriendsAvatars}"
-                                      ItemsSource="{Binding Friends}" />
+                <mcc:AvatarGroup Style="{StaticResource FriendsAvatars}"
+                                 ItemsSource="{Binding Friends}" />
                 <Label Style="{StaticResource FriendsLabel}"
                        Text="Friends are watching" />
             </HorizontalStackLayout>

@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -624,11 +625,11 @@
             </Button>
         </Grid>
 
-        <controls:SideDrawer Grid.Row="0" Grid.RowSpan="4"
-                             IsOpen="{Binding IsDrawerOpen}"
-                             DrawerWidth="280"
-                             EdgeSwipeEnabled="False">
-            <controls:SideDrawer.DrawerContent>
+        <mcc:SideDrawer Grid.Row="0" Grid.RowSpan="4"
+                        IsOpen="{Binding IsDrawerOpen}"
+                        DrawerWidth="280"
+                        EdgeSwipeEnabled="False">
+            <mcc:SideDrawer.DrawerContent>
                 <ContentView behaviors:LazyViewOption.Load="{Binding IsDrawerOpen}">
                     <behaviors:LazyViewOption.Template>
                         <DataTemplate x:DataType="module:UIMailViewModel">
@@ -694,8 +695,8 @@
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>
                 </ContentView>
-            </controls:SideDrawer.DrawerContent>
-        </controls:SideDrawer>
+            </mcc:SideDrawer.DrawerContent>
+        </mcc:SideDrawer>
 
     </Grid>
 

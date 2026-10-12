@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Modules.View;
 
+using MauiComponents.Controls;
+
 public sealed partial class ViewCustomViewModel : AppViewModelBase
 {
     private const int MaxAvatars = 8;

@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -123,8 +124,22 @@
             </Style>
 
             <Style x:Key="FaqAccordion"
-                   TargetType="controls:AccordionView">
+                   TargetType="mcc:AccordionView">
                 <Setter Property="ExpandMode" Value="SingleOrNone" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="FaqHeaderRowGrid"
+                   TargetType="Grid">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:AccordionItem}}, Path=ToggleCommand, x:DataType={x:Type mcc:AccordionItem}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style TargetType="mcc:AccordionItem">
+                <Setter Property="Icon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
+                <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="HeaderRowStyle" Value="{StaticResource FaqHeaderRowGrid}" />
             </Style>
 
             <Style x:Key="FaqHeaderLabel"
@@ -277,38 +292,38 @@
             <Border Style="{StaticResource GroupBorder}"
                     behaviors:AnimationOption.EnterAnimation="FadeUp"
                     behaviors:AnimationOption.EnterDelay="560">
-                <controls:AccordionView Style="{StaticResource FaqAccordion}">
-                    <controls:AccordionItem>
-                        <controls:AccordionItem.Header>
+                <mcc:AccordionView Style="{StaticResource FaqAccordion}">
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="パスワードを忘れたときは?" />
-                        </controls:AccordionItem.Header>
-                        <controls:AccordionItem.Content>
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="サインインの画面の「パスワードを忘れた方」から、登録したメールアドレスに再設定のリンクを送れます。" />
-                        </controls:AccordionItem.Content>
-                    </controls:AccordionItem>
-                    <controls:AccordionItem>
-                        <controls:AccordionItem.Header>
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="通知が届かないときは?" />
-                        </controls:AccordionItem.Header>
-                        <controls:AccordionItem.Content>
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="端末の設定でこのアプリの通知を許可しているかと、上のプッシュ通知がオンになっているかを確かめてください。" />
-                        </controls:AccordionItem.Content>
-                    </controls:AccordionItem>
-                    <controls:AccordionItem>
-                        <controls:AccordionItem.Header>
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                    <mcc:AccordionItem>
+                        <mcc:AccordionItem.Header>
                             <Label Style="{StaticResource FaqHeaderLabel}"
                                    Text="別の端末に引き継ぐには?" />
-                        </controls:AccordionItem.Header>
-                        <controls:AccordionItem.Content>
+                        </mcc:AccordionItem.Header>
+                        <mcc:AccordionItem.Content>
                             <Label Style="{StaticResource FaqBodyLabel}"
                                    Text="新しい端末で同じアカウントにサインインすると、歩数の記録と設定が引き継がれます。" />
-                        </controls:AccordionItem.Content>
-                    </controls:AccordionItem>
-                </controls:AccordionView>
+                        </mcc:AccordionItem.Content>
+                    </mcc:AccordionItem>
+                </mcc:AccordionView>
             </Border>
 
             <Label Style="{StaticResource KitSettingSectionLabel}"

@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -290,7 +290,7 @@
             </Style>
 
             <Style x:Key="ProfileTabStrip"
-                   TargetType="controls:TabStrip">
+                   TargetType="mcc:TabStrip">
                 <Setter Property="IndicatorColor" Value="{StaticResource BlueDefault}" />
                 <Setter Property="IndicatorHeight" Value="3" />
                 <Setter Property="IndicatorInset" Value="16" />
@@ -570,10 +570,10 @@
 
                     <Border Style="{StaticResource TabCardBorder}">
                         <VerticalStackLayout>
-                            <controls:TabStrip Style="{StaticResource ProfileTabStrip}"
-                                               ItemsSource="{Binding Tabs}"
-                                               SelectedIndex="{Binding SelectedTab}">
-                                <controls:TabStrip.ItemTemplate>
+                            <mcc:TabStrip Style="{StaticResource ProfileTabStrip}"
+                                          ItemsSource="{Binding Tabs}"
+                                          SelectedIndex="{Binding SelectedTab}">
+                                <mcc:TabStrip.ItemTemplate>
                                     <DataTemplate x:DataType="{x:Type x:String}">
                                         <Label Style="{StaticResource TabLabel}"
                                                Text="{Binding .}">
@@ -591,8 +591,8 @@
                                             </VisualStateManager.VisualStateGroups>
                                         </Label>
                                     </DataTemplate>
-                                </controls:TabStrip.ItemTemplate>
-                            </controls:TabStrip>
+                                </mcc:TabStrip.ItemTemplate>
+                            </mcc:TabStrip>
                             <BoxView Style="{StaticResource TabLine}" />
 
                             <!-- 件数固定の一覧のため、縦ScrollView内で仮想化が無効になるCollectionViewは使わずBindableLayoutで並べる -->

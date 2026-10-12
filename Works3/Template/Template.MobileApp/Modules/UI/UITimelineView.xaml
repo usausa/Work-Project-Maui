@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
              x:Class="Template.MobileApp.Modules.UI.UITimelineView"
@@ -38,8 +38,18 @@
                 <Setter Property="BackgroundColor" Value="White" />
             </Style>
 
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="FilterChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
             <Style x:Key="FilterChipGroup"
-                   TargetType="controls:ChipGroup">
+                   TargetType="mcc:ChipGroup">
                 <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="16" />
                 <Setter Property="ChipPadding" Value="12,0" />
@@ -49,6 +59,7 @@
                 <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedChipTextColor" Value="White" />
                 <Setter Property="Spacing" Value="8" />
+                <Setter Property="ItemStyle" Value="{StaticResource FilterChipLabel}" />
             </Style>
 
             <Style x:Key="TimelineHeaderDivider"
@@ -325,15 +336,15 @@
 
         <ScrollView Grid.Row="1"
                     Style="{StaticResource FilterScroll}">
-            <controls:ChipGroup Style="{StaticResource FilterChipGroup}"
-                                ItemsSource="{Binding Filters}"
-                                SelectedItem="{Binding SelectedFilter}">
-                <controls:ChipGroup.ItemTemplate>
+            <mcc:ChipGroup Style="{StaticResource FilterChipGroup}"
+                           ItemsSource="{Binding Filters}"
+                           SelectedItem="{Binding SelectedFilter}">
+                <mcc:ChipGroup.ItemTemplate>
                     <DataTemplate x:DataType="module:UITimelineFilterOption">
                         <Label Text="{Binding Name}" />
                     </DataTemplate>
-                </controls:ChipGroup.ItemTemplate>
-            </controls:ChipGroup>
+                </mcc:ChipGroup.ItemTemplate>
+            </mcc:ChipGroup>
         </ScrollView>
 
         <BoxView Grid.Row="2"

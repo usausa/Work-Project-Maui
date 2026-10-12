@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
@@ -110,7 +111,7 @@
             </DataTemplate>
 
             <Style x:Key="CommitSheet"
-                   TargetType="controls:BottomSheetView">
+                   TargetType="mcc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
@@ -224,10 +225,10 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
-                                  Style="{StaticResource CommitSheet}"
-                                  IsOpen="{Binding IsDetailOpen}">
-            <controls:BottomSheetView.SheetContent>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="2"
+                             Style="{StaticResource CommitSheet}"
+                             IsOpen="{Binding IsDetailOpen}">
+            <mcc:BottomSheetView.SheetContent>
                 <VerticalStackLayout Style="{StaticResource SheetStack}">
                     <Label Style="{StaticResource SheetSummaryLabel}"
                            Text="{Binding Detail.Summary}" />
@@ -263,8 +264,8 @@
                                Text="{Binding Detail.Sha}" />
                     </Grid>
                 </VerticalStackLayout>
-            </controls:BottomSheetView.SheetContent>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetContent>
+        </mcc:BottomSheetView>
     </Grid>
 
 </ContentView>

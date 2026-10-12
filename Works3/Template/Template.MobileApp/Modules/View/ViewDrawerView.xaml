@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -282,10 +283,10 @@
             </drawer:SfNavigationDrawer.ContentView>
         </drawer:SfNavigationDrawer>
 
-        <controls:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
-                             DrawerWidth="280"
-                             EdgeSwipeEnabled="{Binding IsCustomMode}">
-            <controls:SideDrawer.DrawerContent>
+        <mcc:SideDrawer IsOpen="{Binding IsCustomDrawerOpen}"
+                        DrawerWidth="280"
+                        EdgeSwipeEnabled="{Binding IsCustomMode}">
+            <mcc:SideDrawer.DrawerContent>
                 <ContentView behaviors:LazyViewOption.Load="{Binding IsCustomDrawerOpen}">
                     <behaviors:LazyViewOption.Template>
                         <DataTemplate x:DataType="module:ViewDrawerViewModel">
@@ -317,8 +318,8 @@
                         </DataTemplate>
                     </behaviors:LazyViewOption.Template>
                 </ContentView>
-            </controls:SideDrawer.DrawerContent>
-        </controls:SideDrawer>
+            </mcc:SideDrawer.DrawerContent>
+        </mcc:SideDrawer>
 
     </Grid>
 

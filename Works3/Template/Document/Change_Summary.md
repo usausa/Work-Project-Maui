@@ -3541,6 +3541,29 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 実機: UI Social で、`SocialPlayer` と `SocialStatus` の地がほかの枠と同じ半透明になり、`SocialStatus` の数字の重なりが消えた(ほかの 3 つは描き直しの無い枠なので見た目は同じ)
 - ビルド 0 警告
 
+### 🔁MauiComponents.Controls への切り替え(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` / `Template.MobileApp.slnx` | `MauiComponents.Controls` のプロジェクトの参照と `TrimmerRootAssembly`、ソリューションの行を足した |
+| `Controls/` | 抽出したコントロール(`BottomSheetView`・`SideDrawer`(.android / .ios を含む)・`TabStrip`・`ChipGroup`・`SegmentedView`・`AccordionView`・`ShimmerView`・`StepIndicator`・`MarqueeLabel`・`AvatarGroup`・`OverlapPanel`・`StaggeredGrid`・`VariableSizeWrapPanel`・`TreeView`)を削除 |
+| `Models/TreeNode.cs` | 削除(`MauiComponents.Controls.TreeNode` を使う。`ViewCustomViewModel` にファイルの using) |
+| XAML(25 画面と `Styles.xaml`) | 接頭辞 `mcc:`(`clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls`)に。使わなくなった `controls:` の宣言を外した |
+| `Settings.XamlStyler` | `xmlns:mcc` と `mcc:*` の組を `xmlns:mcs` / `mcs:*` の次に足した(宣言は 1 行ずつ、添付プロパティは behaviors の前に並ぶ) |
+| UI Item / Shop / Timeline | チップの Label のスタイル(`VariantChipLabel` / `ShopChipLabel` / `FilterChipLabel`)を ChipGroup の `ItemStyle` に(`TouchOption` の波紋 `#201C1B1F`、`ClickCommand` は ChipGroup の `SelectCommand`、引数は項目) |
+| UI Kit Dash | `PeriodSegmentLabel` を SegmentedView の `ItemStyle` に(波紋、`ClickCommand` は `SelectCommand`、引数は項目) |
+| UI Item / Kit Setting | AccordionItem の暗黙のスタイル(矢印は `MaterialIcons.Expand_more`、見出しの行は `AccordionHeaderRowGrid` / `FaqHeaderRowGrid` = 波紋と `ClickCommand` は `ToggleCommand`) |
+| View Custom | `FileTreeView`(開閉のアイコンは `MaterialIcons.Expand_more` / `Chevron_right`) |
+| `Modules/View/ViewDrawerViewModel.cs` | コメントの SideDrawer の場所を `MauiComponents.Controls` に |
+| `Document/Control_Extraction_Plan.md` / `README.md` | 切り替えたコントロールの行と設定、非 Skia のアセンブリの決定、波紋の制約を外した(残りは ClamGauge)。TODO の行を `ClamGauge` だけに |
+
+- 見た目と動きは前と同じ(ライブラリの既定値は Template の値と同じ。アイコンと押したときの波紋は上のスタイルで付けた)
+- 波紋は TouchOption の Ripple と ClickCommand を組で付けた(Ripple だけだと子の要素がタッチを受け、選択・開閉が動かない)
+- 実機: 対象の 17 画面(41 枚)を切り替えの前と後で撮って比べ、差は時刻や乱数で変わる見本(Kit Dash の到着予定、Mail の時刻、Money の金額、Schedule の現在時刻の線、Timeline の時刻、News の記事)と流れる文字だけ
+- 実機: チップ(UI Shop・Item・Timeline)と区切り(UI Kit Dash)は押している間に波紋が出て、離すと選ばれる。Accordion(UI Item・Kit Setting)は矢印が MaterialIcons で、見出しの行の波紋・開閉・開いた項目へのスクロール・1 つだけ開く設定が動く。TreeView(View Custom)の開閉と選択、BottomSheetView(View Bottom Sheet)のつまみのドラッグと背景のタップで閉じる、SideDrawer(View Drawer・UI Mail)のボタン・端のスワイプ・項目の選択・背景のタップ、TabStrip(UI News)のタップとスワイプへの追従
+- inspectcode: 足したスタイルのバインド(RelativeSource + x:DataType)の `Xaml.BindingWithContextNotResolved` の誤検知 10 件を、そのスタイルだけ `ReSharper disable/restore` で抑止。ほかは 0 件
+- ビルド 0 警告
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする

@@ -18,7 +18,7 @@ public sealed partial class DrawerMenuItem : ObservableObject
     }
 }
 
-// Syncfusion の SfNavigationDrawer と自作の SideDrawer (Controls/SideDrawer.cs) を切り替えて比べる
+// Syncfusion の SfNavigationDrawer と自作の SideDrawer (MauiComponents.Controls) を切り替えて比べる
 public sealed partial class ViewDrawerViewModel : AppViewModelBase
 {
     // 0 = Sf / 1 = 自作

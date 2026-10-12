@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -31,7 +32,7 @@
             </Style>
 
             <Style x:Key="CustomSheet"
-                   TargetType="controls:BottomSheetView">
+                   TargetType="mcc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="16" />
                 <Setter Property="HalfExpandedRatio" Value="0.45" />
             </Style>
@@ -251,9 +252,9 @@
 
         </sf:SfBottomSheet>
 
-        <controls:BottomSheetView Style="{StaticResource CustomSheet}"
-                                  IsOpen="{Binding IsCustomSheetOpen}">
-            <controls:BottomSheetView.SheetTemplate>
+        <mcc:BottomSheetView Style="{StaticResource CustomSheet}"
+                             IsOpen="{Binding IsCustomSheetOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:ViewBottomSheetViewModel">
                     <VerticalStackLayout Style="{StaticResource SheetStack}">
                         <Label Style="{StaticResource SheetTitleLabel}"
@@ -288,8 +289,8 @@
                                 Text="Close" />
                     </VerticalStackLayout>
                 </DataTemplate>
-            </controls:BottomSheetView.SheetTemplate>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
     </Grid>
 

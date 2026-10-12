@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -23,7 +24,7 @@
         <ResourceDictionary>
 
             <Style x:Key="MarqueeTextLabel"
-                   TargetType="controls:MarqueeLabel">
+                   TargetType="mcc:MarqueeLabel">
                 <Setter Property="HeightRequest" Value="24" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="#7DF36B" />
@@ -37,6 +38,13 @@
                 <Setter Property="Padding" Value="8,6" />
             </Style>
 
+            <Style x:Key="FileTreeView"
+                   TargetType="mcc:TreeView">
+                <Setter Property="ExpandedIcon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
+                <Setter Property="CollapsedIcon" Value="{x:Static fonts:MaterialIcons.Chevron_right}" />
+                <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+            </Style>
+
             <Style x:Key="ColorSwatchBoxView"
                    TargetType="BoxView">
                 <Setter Property="WidthRequest" Value="24" />
@@ -45,7 +53,7 @@
             </Style>
 
             <Style x:Key="MemberAvatarGroup"
-                   TargetType="controls:AvatarGroup">
+                   TargetType="mcc:AvatarGroup">
                 <Setter Property="HorizontalOptions" Value="Start" />
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="AvatarSize" Value="40" />
@@ -75,9 +83,9 @@
                                Icon="{x:Static fonts:MaterialIcons.Campaign}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Border Style="{StaticResource MarqueeBorder}">
-                        <controls:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
-                                               Text="Maintenance tonight at 21:00 / New item on sale / Double points campaign"
-                                               Speed="60" />
+                        <mcc:MarqueeLabel Style="{StaticResource MarqueeTextLabel}"
+                                          Text="Maintenance tonight at 21:00 / New item on sale / Double points campaign"
+                                          Speed="60" />
                     </Border>
                 </VerticalStackLayout>
             </controls:InfoCard>
@@ -87,8 +95,9 @@
                                Title="TreeView"
                                Icon="{x:Static fonts:MaterialIcons.Account_tree}">
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
-                    <controls:TreeView ItemsSource="{Binding Nodes}"
-                                       SelectedNode="{Binding SelectedNode}" />
+                    <mcc:TreeView Style="{StaticResource FileTreeView}"
+                                  ItemsSource="{Binding Nodes}"
+                                  SelectedNode="{Binding SelectedNode}" />
                     <Label Style="{StaticResource CardAccentLabel}"
                            IsVisible="{Binding SelectedNode, Converter={StaticResource NotEmptyConverter}}"
                            Text="{Binding SelectedNode.Text, StringFormat='Selected: {0}', FallbackValue='-'}" />
@@ -128,10 +137,10 @@
                 <VerticalStackLayout Style="{StaticResource CardContentStack}">
                     <Grid Style="{StaticResource BasicButtonGrid}"
                           ColumnDefinitions="*,Auto,Auto">
-                        <controls:AvatarGroup Grid.Column="0"
-                                              Style="{StaticResource MemberAvatarGroup}"
-                                              ItemsSource="{Binding Avatars}"
-                                              MaxDisplayed="4" />
+                        <mcc:AvatarGroup Grid.Column="0"
+                                         Style="{StaticResource MemberAvatarGroup}"
+                                         ItemsSource="{Binding Avatars}"
+                                         MaxDisplayed="4" />
                         <Button Grid.Column="1"
                                 Style="{StaticResource SmallButton}"
                                 Command="{Binding RemoveAvatarCommand}"

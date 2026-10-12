@@ -2,10 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
              xmlns:module="clr-namespace:Template.MobileApp.Modules.UI"
@@ -233,8 +233,18 @@
                 <Setter Property="TextColor" Value="{StaticResource GrayDarken1}" />
             </Style>
 
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="VariantChipLabel"
+                   TargetType="Label">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.RippleColor" Value="#201C1B1F" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:ChipGroup}}, Path=SelectCommand, x:DataType={x:Type mcc:ChipGroup}}" />
+                <Setter Property="behaviors:TouchOption.ClickCommandParameter" Value="{Binding Source={RelativeSource Self}, Path=BindingContext, x:DataType={x:Type Label}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
             <Style x:Key="VariantChipGroup"
-                   TargetType="controls:ChipGroup">
+                   TargetType="mcc:ChipGroup">
                 <Setter Property="ChipTextSize" Value="14" />
                 <Setter Property="ChipCornerRadius" Value="18" />
                 <Setter Property="ChipPadding" Value="16,0" />
@@ -243,12 +253,27 @@
                 <Setter Property="ChipTextColor" Value="{StaticResource GrayDarken2}" />
                 <Setter Property="SelectedChipBackground" Value="{StaticResource BlueDefault}" />
                 <Setter Property="SelectedChipTextColor" Value="White" />
+                <Setter Property="ItemStyle" Value="{StaticResource VariantChipLabel}" />
             </Style>
 
             <!-- Accordion -->
             <Style x:Key="DetailAccordion"
-                   TargetType="controls:AccordionView">
+                   TargetType="mcc:AccordionView">
                 <Setter Property="ExpandMode" Value="MultipleOrNone" />
+            </Style>
+
+            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+            <Style x:Key="AccordionHeaderRowGrid"
+                   TargetType="Grid">
+                <Setter Property="behaviors:TouchOption.Ripple" Value="True" />
+                <Setter Property="behaviors:TouchOption.ClickCommand" Value="{Binding Source={RelativeSource AncestorType={x:Type mcc:AccordionItem}}, Path=ToggleCommand, x:DataType={x:Type mcc:AccordionItem}}" />
+            </Style>
+            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+            <Style TargetType="mcc:AccordionItem">
+                <Setter Property="Icon" Value="{x:Static fonts:MaterialIcons.Expand_more}" />
+                <Setter Property="IconFontFamily" Value="{x:Static fonts:MaterialIcons.FontFamily}" />
+                <Setter Property="HeaderRowStyle" Value="{StaticResource AccordionHeaderRowGrid}" />
             </Style>
 
             <Style x:Key="AccordionHeaderLabel"
@@ -431,28 +456,28 @@
                                              IsVisible="{Binding Context.Selected.Product.VariantName, Converter={StaticResource NotEmptyConverter}}">
                             <Label Style="{StaticResource VariantCaption}"
                                    Text="{Binding Context.Selected.Product.VariantName}" />
-                            <controls:ChipGroup Style="{StaticResource VariantChipGroup}"
-                                                ItemsSource="{Binding Context.Selected.Product.Variants}"
-                                                SelectedItem="{Binding SelectedVariant}" />
+                            <mcc:ChipGroup Style="{StaticResource VariantChipGroup}"
+                                           ItemsSource="{Binding Context.Selected.Product.Variants}"
+                                           SelectedItem="{Binding SelectedVariant}" />
                         </VerticalStackLayout>
 
-                        <controls:AccordionView Style="{StaticResource DetailAccordion}">
-                            <controls:AccordionItem IsExpanded="True">
-                                <controls:AccordionItem.Header>
+                        <mcc:AccordionView Style="{StaticResource DetailAccordion}">
+                            <mcc:AccordionItem IsExpanded="True">
+                                <mcc:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="商品の説明" />
-                                </controls:AccordionItem.Header>
-                                <controls:AccordionItem.Content>
+                                </mcc:AccordionItem.Header>
+                                <mcc:AccordionItem.Content>
                                     <Label Style="{StaticResource AccordionBodyLabel}"
                                            Text="{Binding Context.Selected.Product.Description}" />
-                                </controls:AccordionItem.Content>
-                            </controls:AccordionItem>
-                            <controls:AccordionItem>
-                                <controls:AccordionItem.Header>
+                                </mcc:AccordionItem.Content>
+                            </mcc:AccordionItem>
+                            <mcc:AccordionItem>
+                                <mcc:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="仕様" />
-                                </controls:AccordionItem.Header>
-                                <controls:AccordionItem.Content>
+                                </mcc:AccordionItem.Header>
+                                <mcc:AccordionItem.Content>
                                     <VerticalStackLayout Style="{StaticResource SpecStack}"
                                                          BindableLayout.ItemsSource="{Binding Context.Selected.Product.Specs}">
                                         <BindableLayout.ItemTemplate>
@@ -472,19 +497,19 @@
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </VerticalStackLayout>
-                                </controls:AccordionItem.Content>
-                            </controls:AccordionItem>
-                            <controls:AccordionItem>
-                                <controls:AccordionItem.Header>
+                                </mcc:AccordionItem.Content>
+                            </mcc:AccordionItem>
+                            <mcc:AccordionItem>
+                                <mcc:AccordionItem.Header>
                                     <Label Style="{StaticResource AccordionHeaderLabel}"
                                            Text="配送・返品" />
-                                </controls:AccordionItem.Header>
-                                <controls:AccordionItem.Content>
+                                </mcc:AccordionItem.Header>
+                                <mcc:AccordionItem.Content>
                                     <Label Style="{StaticResource AccordionBodyLabel}"
                                            Text="14 時までのご注文で翌日に発送します。届いてから 30 日以内なら、開封していない商品を返品できます。" />
-                                </controls:AccordionItem.Content>
-                            </controls:AccordionItem>
-                        </controls:AccordionView>
+                                </mcc:AccordionItem.Content>
+                            </mcc:AccordionItem>
+                        </mcc:AccordionView>
 
                     </VerticalStackLayout>
                 </Border>

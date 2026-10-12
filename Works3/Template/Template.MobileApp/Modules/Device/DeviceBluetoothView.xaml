@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -137,9 +138,9 @@
                     </controls:StatusChip.Triggers>
                 </controls:StatusChip>
 
-                <controls:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
-                                        TotalSteps="3"
-                                        IsCountVisible="False" />
+                <mcc:StepIndicator CurrentStep="{Binding State, Converter={StaticResource StepConverter}}"
+                                   TotalSteps="3"
+                                   IsCountVisible="False" />
 
                 <Label Style="{StaticResource BasicCenterHintLabel}"
                        behaviors:AnimationOption.FadeInTrigger="{Binding Detail}"

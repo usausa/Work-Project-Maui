@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
-             xmlns:controls="clr-namespace:Template.MobileApp.Controls"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:models="clr-namespace:Template.MobileApp.Models.Sample"
@@ -87,7 +87,7 @@
 
             <!-- タブ (選んだ見出しはカテゴリの色) -->
             <Style x:Key="NewsTabStrip"
-                   TargetType="controls:TabStrip">
+                   TargetType="mcc:TabStrip">
                 <Setter Property="BackgroundColor" Value="White" />
                 <Setter Property="IndicatorHeight" Value="3" />
                 <Setter Property="IndicatorInset" Value="12" />
@@ -138,7 +138,7 @@
             </Style>
 
             <Style x:Key="BreakingMarquee"
-                   TargetType="controls:MarqueeLabel">
+                   TargetType="mcc:MarqueeLabel">
                 <Setter Property="VerticalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="White" />
@@ -453,7 +453,7 @@
 
             <!-- 読み込み中のスケルトン -->
             <Style x:Key="SkeletonShimmer"
-                   TargetType="controls:ShimmerView">
+                   TargetType="mcc:ShimmerView">
                 <Setter Property="IsActive" Value="True" />
             </Style>
 
@@ -611,13 +611,13 @@
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- タブ (見出しのタップと、ページのスワイプの両方で SelectedIndex が変わる。下線はスワイプに合わせて動く) -->
-        <controls:TabStrip Grid.Row="0"
-                           Style="{StaticResource NewsTabStrip}"
-                           ItemsSource="{Binding Context.Pages}"
-                           IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
-                           PagePosition="{Binding PagePosition}"
-                           SelectedIndex="{Binding SelectedIndex}">
-            <controls:TabStrip.ItemTemplate>
+        <mcc:TabStrip Grid.Row="0"
+                      Style="{StaticResource NewsTabStrip}"
+                      ItemsSource="{Binding Context.Pages}"
+                      IndicatorColor="{Binding SelectedPage.Category, Converter={StaticResource CategoryColorConverter}}"
+                      PagePosition="{Binding PagePosition}"
+                      SelectedIndex="{Binding SelectedIndex}">
+            <mcc:TabStrip.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type module:UINewsPage}">
                     <Label Style="{StaticResource TabLabel}"
                            Text="{Binding Category, Converter={StaticResource CategoryTextConverter}}">
@@ -635,8 +635,8 @@
                         </VisualStateManager.VisualStateGroups>
                     </Label>
                 </DataTemplate>
-            </controls:TabStrip.ItemTemplate>
-        </controls:TabStrip>
+            </mcc:TabStrip.ItemTemplate>
+        </mcc:TabStrip>
         <BoxView Grid.Row="1"
                  Style="{StaticResource TabLine}" />
 
@@ -652,9 +652,9 @@
                 <Label Style="{StaticResource BreakingBadgeLabel}"
                        Text="速報" />
             </Border>
-            <controls:MarqueeLabel Grid.Column="1"
-                                   Style="{StaticResource BreakingMarquee}"
-                                   Text="{Binding Context.Breaking.Title}" />
+            <mcc:MarqueeLabel Grid.Column="1"
+                              Style="{StaticResource BreakingMarquee}"
+                              Text="{Binding Context.Breaking.Title}" />
         </Grid>
 
         <!-- カテゴリごとのページと、保存した記事のページ -->
@@ -756,8 +756,8 @@
                                 <CollectionView.EmptyView>
                                     <Grid>
                                         <!-- 読み込み中 -->
-                                        <controls:ShimmerView Style="{StaticResource SkeletonShimmer}"
-                                                              IsVisible="{Binding IsLoading}">
+                                        <mcc:ShimmerView Style="{StaticResource SkeletonShimmer}"
+                                                         IsVisible="{Binding IsLoading}">
                                             <VerticalStackLayout Style="{StaticResource SkeletonStack}">
                                                 <Grid Style="{StaticResource SkeletonRowGrid}"
                                                       RowDefinitions="Auto,Auto,Auto"
@@ -780,7 +780,7 @@
                                                              Style="{StaticResource SkeletonThumbnail}" />
                                                 </Grid>
                                             </VerticalStackLayout>
-                                        </controls:ShimmerView>
+                                        </mcc:ShimmerView>
                                         <!-- 保存した記事が無い -->
                                         <VerticalStackLayout Style="{StaticResource EmptyStack}"
                                                              IsVisible="{Binding IsSaved}">

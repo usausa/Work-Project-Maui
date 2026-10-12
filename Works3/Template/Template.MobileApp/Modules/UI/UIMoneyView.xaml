@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:controls="clr-namespace:Template.MobileApp.Controls"
@@ -930,13 +931,13 @@
             </Style>
 
             <Style x:Key="MoneySheet"
-                   TargetType="controls:BottomSheetView">
+                   TargetType="mcc:BottomSheetView">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="HalfExpandedRatio" Value="0.5" />
             </Style>
 
             <Style x:Key="PaymentSheet"
-                   TargetType="controls:BottomSheetView"
+                   TargetType="mcc:BottomSheetView"
                    BasedOn="{StaticResource MoneySheet}">
                 <Setter Property="HalfExpandedRatio" Value="0.8" />
             </Style>
@@ -1806,10 +1807,10 @@
             </VerticalStackLayout>
         </Border>
 
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
-                                  Style="{StaticResource PaymentSheet}"
-                                  IsOpen="{Binding IsPaymentOpen}">
-            <controls:BottomSheetView.SheetTemplate>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource PaymentSheet}"
+                             IsOpen="{Binding IsPaymentOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
                         <VerticalStackLayout Style="{StaticResource SheetStack}">
                             <Label Style="{StaticResource SheetTitleLabel}"
@@ -1838,13 +1839,13 @@
                             </Grid>
                         </VerticalStackLayout>
                 </DataTemplate>
-            </controls:BottomSheetView.SheetTemplate>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
-                                  Style="{StaticResource MoneySheet}"
-                                  IsOpen="{Binding IsBalanceOpen}">
-            <controls:BottomSheetView.SheetTemplate>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource MoneySheet}"
+                             IsOpen="{Binding IsBalanceOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
                         <VerticalStackLayout Style="{StaticResource SheetStack}">
                             <Label Style="{StaticResource SheetTitleLabel}"
@@ -1855,13 +1856,13 @@
                                                     Drawing="{Binding BalanceChart}" />
                         </VerticalStackLayout>
                 </DataTemplate>
-            </controls:BottomSheetView.SheetTemplate>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
-                                  Style="{StaticResource MoneySheet}"
-                                  IsOpen="{Binding IsMonthOpen}">
-            <controls:BottomSheetView.SheetTemplate>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource MoneySheet}"
+                             IsOpen="{Binding IsMonthOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
                         <VerticalStackLayout Style="{StaticResource SheetStack}">
                             <Label Style="{StaticResource SheetTitleLabel}"
@@ -1903,13 +1904,13 @@
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                 </DataTemplate>
-            </controls:BottomSheetView.SheetTemplate>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
-        <controls:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
-                                  Style="{StaticResource MoneySheet}"
-                                  IsOpen="{Binding IsCategoryOpen}">
-            <controls:BottomSheetView.SheetTemplate>
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource MoneySheet}"
+                             IsOpen="{Binding IsCategoryOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
                 <DataTemplate x:DataType="module:UIMoneyViewModel">
                         <VerticalStackLayout Style="{StaticResource SheetStack}">
                             <Label Style="{StaticResource SheetTitleLabel}"
@@ -1945,8 +1946,8 @@
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                 </DataTemplate>
-            </controls:BottomSheetView.SheetTemplate>
-        </controls:BottomSheetView>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
 
     </Grid>
 
