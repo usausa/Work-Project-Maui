@@ -237,7 +237,7 @@ public sealed class MinesweeperBoard : SKCanvasView
                         var color = exploded ? ExplodedColor : MineColors[((row * MineColorRowStep) + (column * MineColorColumnStep)) % MineColors.Length];
                         paint.Color = color;
                         canvas.DrawRect(rect, paint);
-                        paint.Color = Darken(color, MineCoreDarken);
+                        paint.Color = color.Lerp(SKColors.Black.WithAlpha(color.Alpha), MineCoreDarken);
                         canvas.DrawCircle(rect.MidX, rect.MidY, rect.Width * (exploded ? ExplodedCoreRate : MineCoreRate), paint);
                     }
                     else
@@ -248,8 +248,7 @@ public sealed class MinesweeperBoard : SKCanvasView
                         if (number > 0)
                         {
                             paint.Color = NumberColors[number - 1];
-                            var baseline = rect.MidY - ((font.Metrics.Ascent + font.Metrics.Descent) / 2);
-                            canvas.DrawText(number.ToString(CultureInfo.InvariantCulture), rect.MidX, baseline, SKTextAlign.Center, font, paint);
+                            canvas.DrawText(number.ToString(CultureInfo.InvariantCulture), rect.MidX, font.Metrics.GetCenterBaseline(rect.MidY), SKTextAlign.Center, font, paint);
                         }
                     }
                 }
@@ -329,7 +328,7 @@ public sealed class MinesweeperBoard : SKCanvasView
                     var rect = layout.GetCell(cell);
                     var size = rect.Width * (1f - (float)(local * local));
                     var even = ((cell.Row + cell.Column) % 2) == 0;
-                    paint.Color = (even ? HiddenLightColor : HiddenDarkColor).WithAlpha((byte)(255 * (1 - local)));
+                    paint.Color = (even ? HiddenLightColor : HiddenDarkColor).WithOpacity((float)(1 - local));
                     var cover = SKRect.Create(rect.MidX - (size / 2), rect.MidY - (size / 2), size, size);
                     canvas.DrawRoundRect(cover, size * CoverRadiusRate, size * CoverRadiusRate, paint);
                 }
@@ -370,12 +369,6 @@ public sealed class MinesweeperBoard : SKCanvasView
     private static bool IsOpenLook(MinesweeperGame game, MinesweeperCell cell) =>
         (game.GetState(cell) == MinesweeperCellState.Opened) ||
         ((game.State == MinesweeperState.Lost) && game.IsMine(cell) && (game.GetState(cell) != MinesweeperCellState.Flagged));
-
-    private static SKColor Darken(SKColor color, float amount) => new(
-        (byte)(color.Red * (1 - amount)),
-        (byte)(color.Green * (1 - amount)),
-        (byte)(color.Blue * (1 - amount)),
-        color.Alpha);
 
     private readonly struct BoardLayout
     {

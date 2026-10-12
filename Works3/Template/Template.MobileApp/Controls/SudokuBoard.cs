@@ -90,7 +90,7 @@ public sealed class SudokuBoard : SKCanvasView
 
     private SudokuCell? popCell;
 
-    private IReadOnlyList<SudokuCell> flashCells = [];
+    private SudokuCell[] flashCells = [];
 
     private SudokuCell flashOrigin;
 
@@ -354,11 +354,8 @@ public sealed class SudokuBoard : SKCanvasView
         canvas.DrawRoundRect(rect, layout.Radius, layout.Radius, paint);
     }
 
-    private static void DrawText(SKCanvas canvas, int value, float x, float y, SKFont font, SKPaint paint)
-    {
-        var baseline = y - ((font.Metrics.Ascent + font.Metrics.Descent) / 2);
-        canvas.DrawText(value.ToString(CultureInfo.InvariantCulture), x, baseline, SKTextAlign.Center, font, paint);
-    }
+    private static void DrawText(SKCanvas canvas, int value, float x, float y, SKFont font, SKPaint paint) =>
+        canvas.DrawText(value.ToString(CultureInfo.InvariantCulture), x, font.Metrics.GetCenterBaseline(y), SKTextAlign.Center, font, paint);
 
     private static bool IsPeer(SudokuCell cell, SudokuCell target) =>
         (cell.Row == target.Row) ||
@@ -404,7 +401,7 @@ public sealed class SudokuBoard : SKCanvasView
     private static void OnBoardChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
         var board = (SudokuBoard)bindable;
-        if ((newValue is SudokuFrame frame) && ((frame.Placed is not null) || (frame.Flash.Count > 0)))
+        if ((newValue is SudokuFrame frame) && ((frame.Placed is not null) || (frame.Flash.Length > 0)))
         {
             board.AbortAnimation(AnimationName);
             board.popCell = frame.Placed;
@@ -438,7 +435,7 @@ public sealed class SudokuBoard : SKCanvasView
     private double GetAnimationLength() =>
         Math.Max(
             popCell is null ? 0 : PopLength,
-            flashCells.Count > 0 ? (flashCells.Max(GetFlashDistance) * FlashStep) + FlashLength : 0);
+            flashCells.Length > 0 ? (flashCells.Max(GetFlashDistance) * FlashStep) + FlashLength : 0);
 
     private int GetFlashDistance(SudokuCell cell) =>
         Math.Max(Math.Abs(cell.Row - flashOrigin.Row), Math.Abs(cell.Column - flashOrigin.Column));

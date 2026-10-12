@@ -28,6 +28,16 @@ public sealed class BarcodeView : SKCanvasView
     ];
 
     //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private string? encodedValue;
+
+    private int[] widths = [];
+
+    private int modules;
+
+    //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
 
@@ -69,13 +79,18 @@ public sealed class BarcodeView : SKCanvasView
         var canvas = e.Surface.Canvas;
         canvas.Clear(SKColors.Transparent);
 
-        var widths = Encode(Value);
+        if (encodedValue != Value)
+        {
+            encodedValue = Value;
+            widths = Encode(Value);
+            modules = widths.Sum() + (QuietZone * 2);
+        }
+
         if (widths.Length == 0)
         {
             return;
         }
 
-        var modules = widths.Sum() + (QuietZone * 2);
         var unit = Math.Max(1, e.Info.Width / modules);
         var x = (e.Info.Width - ((modules - (QuietZone * 2)) * unit)) / 2;
         using var paint = new SKPaint();

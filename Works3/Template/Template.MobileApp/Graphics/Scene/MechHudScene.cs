@@ -1,5 +1,8 @@
 namespace Template.MobileApp.Graphics.Scene;
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 internal sealed class MechSquadUnit
 {
     public string Label { get; init; } = string.Empty;
@@ -24,6 +27,9 @@ internal sealed class MechContact
     public float Vy { get; set; }
 }
 
+//--------------------------------------------------------------------------------
+// Simulation
+//--------------------------------------------------------------------------------
 internal sealed class MechHudSim
 {
     private static readonly string[] PartNames = ["HEAD", "CORE", "L-ARM", "R-ARM", "L-LEG", "R-LEG", "L-JU", "R-JU"];
@@ -36,7 +42,7 @@ internal sealed class MechHudSim
 
     public float[] PartHp { get; } = [100f, 100f, 100f, 100f, 100f, 100f, 100f, 100f];
 
-    public IReadOnlyList<MechSquadUnit> Squad { get; } =
+    public MechSquadUnit[] Squad { get; } =
     [
         new() { Label = "D1-2", Platoon = 1, BaseX = -180f, BaseY = 140f, Amp = 40f, Freq = 0.09f, Phase = 0.7f },
         new() { Label = "D1-3", Platoon = 1, BaseX = -120f, BaseY = -190f, Amp = 50f, Freq = 0.07f, Phase = 2.1f },
@@ -47,7 +53,7 @@ internal sealed class MechHudSim
         new() { Label = "D3", Platoon = 3, BaseX = 500f, BaseY = -360f, Amp = 35f, Freq = 0.08f, Phase = 5.1f }
     ];
 
-    public IReadOnlyList<MechContact> Contacts { get; } =
+    public MechContact[] Contacts { get; } =
     [
         new() { Label = "E1", X = 320f, Y = 660f, Vx = -9f, Vy = -14f },
         new() { Label = "E2", X = -260f, Y = 780f, Vx = 12f, Vy = -10f },
@@ -128,6 +134,9 @@ internal sealed class MechHudSim
     public string WorstPartName => PartNames[WorstPart];
 }
 
+//--------------------------------------------------------------------------------
+// Scene
+//--------------------------------------------------------------------------------
 public sealed class MechHudScene : SceneObject
 {
     private const float BaseWidth = 400f;
@@ -150,6 +159,8 @@ public sealed class MechHudScene : SceneObject
     private static readonly SKColor TerrainPeak = new(0x38, 0x50, 0x24);
 
     private static readonly float[] TerrainLevels = [-0.55f, -0.25f, 0.06f, 0.36f, 0.65f];
+
+    private static readonly string[] Channels = ["CH1 OPEN", "CH2 SECURE", "CH3 COMMAND"];
 
     // 部位の枠 (機体の中心と上端からの位置)。PartHp と同じ順 (HEAD / CORE / L-ARM / R-ARM / L-LEG / R-LEG)
     private static readonly SKRect[] PartRects =
@@ -179,7 +190,7 @@ public sealed class MechHudScene : SceneObject
         var vh = height / s;
         var layout = ComputeLayout(vh);
 
-        DrawStaticImage(canvas, width, height, s, c => DrawChrome(c, layout, vh));
+        DrawStaticImage(canvas, width, height, s, (Scene: this, Layout: layout, Height: vh), static (c, state) => state.Scene.DrawChrome(c, state.Layout, state.Height));
 
         canvas.Save();
         canvas.Scale(s);
@@ -376,8 +387,7 @@ public sealed class MechHudScene : SceneObject
         var keyWidth = MeasureText(sim.EncryptKey, 9f) + 16f;
         DrawChip(canvas, new SKRect(panel.Right - 10f - keyWidth, panel.Top + 8f, panel.Right - 10f, panel.Top + 23f), sim.EncryptKey, Amber, false);
 
-        string[] channels = ["CH1 OPEN", "CH2 SECURE", "CH3 COMMAND"];
-        for (var i = 0; i < channels.Length; i++)
+        for (var i = 0; i < Channels.Length; i++)
         {
             var y = panel.Top + 46f + (i * 17f);
             var active = i == sim.ActiveChannel;
@@ -389,7 +399,7 @@ public sealed class MechHudScene : SceneObject
                 canvas.DrawRect(panel.Left + 8f, y - 12f, 3f, 16f, Fill);
             }
 
-            DrawText(canvas, channels[i], panel.Left + 18f, y, 10.5f, active ? Amber : Main.WithAlpha(150), bold: active);
+            DrawText(canvas, Channels[i], panel.Left + 18f, y, 10.5f, active ? Amber : Main.WithAlpha(150), bold: active);
         }
 
         // 波形 (送信中は大きく揺れる)
@@ -643,14 +653,11 @@ public sealed class MechHudScene : SceneObject
         var n = Math.Clamp((h + 1.3f) / 2.6f, 0f, 1f);
         if (n < 0.4f)
         {
-            return Lerp(TerrainLow, TerrainMid, n / 0.4f);
+            return TerrainLow.Lerp(TerrainMid, n / 0.4f);
         }
 
-        return n < 0.75f ? Lerp(TerrainMid, TerrainHigh, (n - 0.4f) / 0.35f) : Lerp(TerrainHigh, TerrainPeak, (n - 0.75f) / 0.25f);
+        return n < 0.75f ? TerrainMid.Lerp(TerrainHigh, (n - 0.4f) / 0.35f) : TerrainHigh.Lerp(TerrainPeak, (n - 0.75f) / 0.25f);
     }
-
-    private static SKColor Lerp(SKColor a, SKColor b, float t) =>
-        new((byte)(a.Red + ((b.Red - a.Red) * t)), (byte)(a.Green + ((b.Green - a.Green) * t)), (byte)(a.Blue + ((b.Blue - a.Blue) * t)));
 
     private static SKColor Shade(SKColor color, float k) =>
         new((byte)Math.Min(255f, color.Red * k), (byte)Math.Min(255f, color.Green * k), (byte)Math.Min(255f, color.Blue * k));
@@ -819,7 +826,7 @@ public sealed class MechHudScene : SceneObject
     // 近い順に 3 つの脅威の距離と方位
     private void DrawThreats(SKCanvas canvas, SKRect map)
     {
-        var count = Math.Min(threatOrder.Length, sim.Contacts.Count);
+        var count = Math.Min(threatOrder.Length, sim.Contacts.Length);
         for (var i = 0; i < count; i++)
         {
             threatOrder[i] = i;

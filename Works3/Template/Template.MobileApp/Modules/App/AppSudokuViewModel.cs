@@ -256,7 +256,7 @@ public sealed partial class AppSudokuViewModel : AppViewModelBase
         Refresh(null, []);
     }
 
-    private void Refresh(SudokuCell? placed, IReadOnlyList<SudokuCell> flash)
+    private void Refresh(SudokuCell? placed, SudokuCell[] flash)
     {
         Board = new SudokuFrame(game, selected, placed, flash);
         Level = game.Level;

@@ -193,8 +193,11 @@ public sealed class GraphRowSurface : SKCanvasView
         strokePaint.StrokeCap = SKStrokeCap.Round;
         strokePaint.StrokeJoin = SKStrokeJoin.Round;
 
-        foreach (var seg in row.Segments)
+        var segments = row.Segments;
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < segments.Count; i++)
         {
+            var seg = segments[i];
             strokePaint.Color = LaneColors[seg.ColorIndex % LaneColors.Length];
             DrawSegment(canvas, seg, strokePaint, rowHeight, nodeCenterY);
         }

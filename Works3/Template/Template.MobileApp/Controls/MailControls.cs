@@ -7,6 +7,8 @@ using SkiaSharp.Views.Maui.Controls;
 //--------------------------------------------------------------------------------
 public sealed class MailAvatarImage : Image
 {
+    private const string FontFamily = "sans-serif";
+
     private const int InitialSize = 144;
 
     private const float InitialFontRate = 0.42f;
@@ -21,8 +23,6 @@ public sealed class MailAvatarImage : Image
         SKColor.Parse("#6D4C41"),
         SKColor.Parse("#8E24AA")
     ];
-
-    private static readonly SKTypeface InitialTypeface = SKFontManager.Default.MatchCharacter('あ') ?? SKTypeface.Default;
 
     private static readonly Dictionary<string, ImageSource> Files = [];
 
@@ -87,13 +87,12 @@ public sealed class MailAvatarImage : Image
             using (var canvas = new SKCanvas(bitmap))
             {
                 canvas.Clear(InitialColors[name.Sum(static x => x) % InitialColors.Length]);
-                using var font = new SKFont(InitialTypeface, InitialSize * InitialFontRate);
-                font.Embolden = true;
+                using var fonts = new FontResolver(FontFamily);
                 using var paint = new SKPaint();
                 paint.IsAntialias = true;
                 paint.Color = SKColors.White;
-                var metrics = font.Metrics;
-                canvas.DrawText(name[..1], InitialSize / 2f, (InitialSize - metrics.Ascent - metrics.Descent) / 2f, SKTextAlign.Center, font, paint);
+                var size = InitialSize * InitialFontRate;
+                canvas.DrawText(fonts.CreateText(name[..1], size, true), InitialSize / 2f, fonts.GetMetrics(size, true).GetCenterBaseline(InitialSize / 2f), SKTextAlign.Center, paint);
             }
             source = new SKBitmapImageSource { Bitmap = bitmap };
             Initials[name] = source;

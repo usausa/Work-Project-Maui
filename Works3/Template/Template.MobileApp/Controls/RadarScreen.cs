@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Controls;
 
+using System.Collections.Specialized;
+
 #pragma warning disable CA1001
 public sealed class RadarScreen : GraphicsView, IDrawable
 {
@@ -278,8 +280,10 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         if (targets is not null)
         {
             var now = Environment.TickCount64;
-            foreach (var target in targets)
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < targets.Count; i++)
             {
+                var target = targets[i];
                 if (!targetPassTimes.TryGetValue(target, out var passTime))
                 {
                     continue;
@@ -442,7 +446,33 @@ public sealed class RadarScreen : GraphicsView, IDrawable
 
     private static void HandleTargetsChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
-        ((RadarScreen)bindable).targetPassTimes.Clear();
+        var screen = (RadarScreen)bindable;
+        if (oldValue is INotifyCollectionChanged oldCollection)
+        {
+            oldCollection.CollectionChanged -= screen.HandleTargetsCollectionChanged;
+        }
+
+        if (newValue is INotifyCollectionChanged newCollection)
+        {
+            newCollection.CollectionChanged += screen.HandleTargetsCollectionChanged;
+        }
+
+        screen.targetPassTimes.Clear();
+    }
+
+    private void HandleTargetsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            targetPassTimes.Clear();
+        }
+        else if (e.OldItems is not null)
+        {
+            foreach (var target in e.OldItems.OfType<RadarTarget>())
+            {
+                targetPassTimes.Remove(target);
+            }
+        }
     }
 
     private void UpdateTargetPass(float fromAngle, float toAngle)
@@ -454,8 +484,10 @@ public sealed class RadarScreen : GraphicsView, IDrawable
         }
 
         var now = Environment.TickCount64;
-        foreach (var target in targets)
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < targets.Count; i++)
         {
+            var target = targets[i];
             var angle = ((target.Angle % 360f) + 360f) % 360f;
             if (IsAnglePassed(fromAngle, toAngle, angle))
             {

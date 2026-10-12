@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Controls;
 
+using System.Collections.Specialized;
+
 using SkiaSharp.Views.Maui;
 
 //--------------------------------------------------------------------------------
@@ -125,10 +127,11 @@ public sealed class SocialIcon : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
         var text = Text;
 
-        using var font = new SKFont(SocialFonts.MaterialIcons, size: (int)(FontSize * DeviceDisplay.MainDisplayInfo.Density));
+        using var font = new SKFont(SocialFonts.MaterialIcons, size: (int)(FontSize * density));
 
         using var paint = new SKPaint();
         paint.Style = SKPaintStyle.Fill;
@@ -202,13 +205,14 @@ public sealed class SocialEpisode : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var margin = (int)(InnerMargin * DeviceDisplay.MainDisplayInfo.Density);
+        var leftBorder = (int)(LeftBorderWidth * density);
+        var margin = (int)(InnerMargin * density);
 
         var text = Text;
 
-        using var font = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize * DeviceDisplay.MainDisplayInfo.Density));
+        using var font = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize * density));
 
         using var paint = new SKPaint();
         paint.Style = SKPaintStyle.Fill;
@@ -321,18 +325,19 @@ public sealed class SocialPlayer : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var imageBorder = (int)(ImageBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var expHeight = (int)(ExpHeight * DeviceDisplay.MainDisplayInfo.Density);
+        var leftBorder = (int)(LeftBorderWidth * density);
+        var imageBorder = (int)(ImageBorderWidth * density);
+        var expHeight = (int)(ExpHeight * density);
         var imageSize = info.Height - (imageBorder * 2);
         var imageRight = leftBorder + imageSize + (imageBorder * 2);
-        var space = (int)(Space * DeviceDisplay.MainDisplayInfo.Density);
+        var space = (int)(Space * density);
         var expWidth = (info.Rect.Right - imageBorder) - (imageRight + space);
 
-        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * density));
+        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * density));
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
 
@@ -484,14 +489,15 @@ public sealed class SocialCounter : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        using var font = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize * DeviceDisplay.MainDisplayInfo.Density));
+        using var font = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize * density));
 
         using var paint = new SKPaint();
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
 
-        var space = (int)(Space * DeviceDisplay.MainDisplayInfo.Density);
+        var space = (int)(Space * density);
 
         var fontHeight = (int)Math.Ceiling(-font.Metrics.Ascent);
 
@@ -649,13 +655,14 @@ public sealed class SocialAlert : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var space = (int)(Space * DeviceDisplay.MainDisplayInfo.Density);
-        var border = (int)(BorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var sideBorder = (int)(SideBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
+        var space = (int)(Space * density);
+        var border = (int)(BorderWidth * density);
+        var sideBorder = (int)(SideBorderWidth * density);
 
-        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * density));
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
         var titleHeight = font1Height + (border * 2) + (space * 2);
@@ -795,19 +802,20 @@ public sealed class SocialNotification : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var space = (int)(Space * DeviceDisplay.MainDisplayInfo.Density);
-        var margin = (int)(InnerMargin * DeviceDisplay.MainDisplayInfo.Density);
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var bottomBorder = (int)(BottomBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
+        var space = (int)(Space * density);
+        var margin = (int)(InnerMargin * density);
+        var leftBorder = (int)(LeftBorderWidth * density);
+        var bottomBorder = (int)(BottomBorderWidth * density);
         var progressWidth = info.Width - leftBorder - (space * 2);
 
-        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font1 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * density));
+        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * density));
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
-        var font3Height = (int)Math.Ceiling(font3.Metrics.Descent - font3.Metrics.Ascent);
+        var font3Height = (int)Math.Ceiling(font3.Metrics.GetLineHeight());
         var titleHeight = font1Height + (margin * 2);
 
         using var paint = new SKPaint();
@@ -1050,21 +1058,22 @@ public sealed class SocialStatus : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var margin = (int)(InnerMargin * DeviceDisplay.MainDisplayInfo.Density);
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var circleRadius = (int)(CircleRadius * DeviceDisplay.MainDisplayInfo.Density);
-        var circleMargin = (int)(CircleMargin * DeviceDisplay.MainDisplayInfo.Density);
-        var statusHeight = (int)(StatusHeight * DeviceDisplay.MainDisplayInfo.Density);
-        var levelHeight = (int)(LevelHeight * DeviceDisplay.MainDisplayInfo.Density);
+        var margin = (int)(InnerMargin * density);
+        var leftBorder = (int)(LeftBorderWidth * density);
+        var circleRadius = (int)(CircleRadius * density);
+        var circleMargin = (int)(CircleMargin * density);
+        var statusHeight = (int)(StatusHeight * density);
+        var levelHeight = (int)(LevelHeight * density);
 
-        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font3 = new SKFont(SocialFonts.MaterialIcons, size: (int)(FontSize3 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize2 * density));
+        using var font3 = new SKFont(SocialFonts.MaterialIcons, size: (int)(FontSize3 * density));
 
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
-        var font3Height = (int)Math.Ceiling(font3.Metrics.Descent - font3.Metrics.Ascent);
+        var font3Height = (int)Math.Ceiling(font3.Metrics.GetLineHeight());
         var titleHeight = font1Height + (margin * 2);
 
         using var paint = new SKPaint();
@@ -1253,7 +1262,7 @@ public sealed class SocialInformation : SocialControl
         nameof(Units),
         typeof(IReadOnlyList<SocialUnit>),
         typeof(SocialInformation),
-        propertyChanged: Invalidate);
+        propertyChanged: OnUnitsChanged);
 
     public Color Color
     {
@@ -1286,21 +1295,40 @@ public sealed class SocialInformation : SocialControl
     // Render
     //--------------------------------------------------------------------------------
 
+    private static void OnUnitsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var information = (SocialInformation)bindable;
+        if (oldValue is INotifyCollectionChanged oldCollection)
+        {
+            oldCollection.CollectionChanged -= information.OnUnitsCollectionChanged;
+        }
+
+        if (newValue is INotifyCollectionChanged newCollection)
+        {
+            newCollection.CollectionChanged += information.OnUnitsCollectionChanged;
+        }
+
+        information.InvalidateSurface();
+    }
+
+    private void OnUnitsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => InvalidateSurface();
+
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
-        var margin = (int)(InnerMargin * DeviceDisplay.MainDisplayInfo.Density);
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
+        var margin = (int)(InnerMargin * density);
+        var leftBorder = (int)(LeftBorderWidth * density);
 
-        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * DeviceDisplay.MainDisplayInfo.Density));
+        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize2 * density));
+        using var font3 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize3 * density));
         var font1Height = (int)Math.Ceiling(-font1.Metrics.Ascent);
         var font2Height = (int)Math.Ceiling(-font2.Metrics.Ascent);
-        var font3Height = (int)Math.Ceiling(font3.Metrics.Descent - font3.Metrics.Ascent);
+        var font3Height = (int)Math.Ceiling(font3.Metrics.GetLineHeight());
         var titleHeight = font1Height + (margin * 2);
 
         using var paint = new SKPaint();
@@ -1329,8 +1357,10 @@ public sealed class SocialInformation : SocialControl
         var units = Units;
         if (units is not null)
         {
-            foreach (var unit in units)
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < units.Count; i++)
             {
+                var unit = units[i];
                 y += margin;
 
                 y += font2Height;
@@ -1439,19 +1469,20 @@ public sealed class SocialMenu : SocialControl
     {
         var canvas = e.Surface.Canvas;
         var info = e.Info;
+        var density = DeviceDisplay.MainDisplayInfo.Density;
 
         using var paint = new SKPaint();
         paint.IsAntialias = true;
 
-        var border = (int)(BorderWidth * DeviceDisplay.MainDisplayInfo.Density);
-        var leftBorder = (int)(LeftBorderWidth * DeviceDisplay.MainDisplayInfo.Density);
+        var border = (int)(BorderWidth * density);
+        var leftBorder = (int)(LeftBorderWidth * density);
         var clientRect = new SKRect(leftBorder, border, info.Width - border, info.Height - border);
 
         var text1 = Text1;
         var text2 = Text2;
-        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * DeviceDisplay.MainDisplayInfo.Density));
-        using var font2 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize2 * DeviceDisplay.MainDisplayInfo.Density));
-        var text2Height = (int)Math.Ceiling(font2.Metrics.Descent - font2.Metrics.Ascent);
+        using var font1 = new SKFont(SocialFonts.NotoSerifJP, size: (int)(FontSize1 * density));
+        using var font2 = new SKFont(SocialFonts.Oxanium, size: (int)(FontSize2 * density));
+        var text2Height = (int)Math.Ceiling(font2.Metrics.GetLineHeight());
 
         canvas.Save();
         canvas.ClipRect(clientRect, SKClipOperation.Intersect, true);

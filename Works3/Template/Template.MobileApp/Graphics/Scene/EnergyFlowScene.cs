@@ -209,7 +209,7 @@ public sealed class EnergyFlowScene : SceneObject
         var layout = ComputeLayout(vh);
         frameHitCount = 0;
 
-        DrawStaticImage(canvas, width, height, s, c => DrawChrome(c, layout, vh));
+        DrawStaticImage(canvas, width, height, s, (Scene: this, Layout: layout, Height: vh), static (c, state) => state.Scene.DrawChrome(c, state.Layout, state.Height));
 
         canvas.Save();
         canvas.Scale(s);
@@ -899,13 +899,6 @@ public sealed class EnergyFlowScene : SceneObject
         return (v * v * v * p0) + (3f * v * v * u * p1) + (3f * v * u * u * p2) + (u * u * u * p3);
     }
 
-    private static SKColor Mix(SKColor a, SKColor b, float t) =>
-        new(
-            (byte)(a.Red + ((b.Red - a.Red) * t)),
-            (byte)(a.Green + ((b.Green - a.Green) * t)),
-            (byte)(a.Blue + ((b.Blue - a.Blue) * t)),
-            (byte)(a.Alpha + ((b.Alpha - a.Alpha) * t)));
-
     // 帯の上を流れる光の粒。速さは流れの大きさに合わせる
     private void DrawParticles(SKCanvas canvas, FlowGraph graph, bool hasSelection)
     {
@@ -936,10 +929,10 @@ public sealed class EnergyFlowScene : SceneObject
                 var x = Bezier(x0, xm, xm, x1, u);
                 var y = Bezier(link.Y0, link.Y0, link.Y1, link.Y1, u) + (band * lane);
                 var fade = EnergyMath.Smooth(0f, 0.08f, u) * (1f - EnergyMath.Smooth(0.9f, 1f, u));
-                var color = Mix(link.From.Color, link.To.Color, u);
+                var color = link.From.Color.Lerp(link.To.Color, u);
                 Fill.Color = color.WithAlpha((byte)(95f * fade));
                 canvas.DrawCircle(x, y, 3f, Fill);
-                Fill.Color = Mix(color, SKColors.White, 0.6f).WithAlpha((byte)(250f * fade));
+                Fill.Color = color.Lerp(SKColors.White, 0.6f).WithAlpha((byte)(250f * fade));
                 canvas.DrawCircle(x, y, 1.35f, Fill);
             }
         }

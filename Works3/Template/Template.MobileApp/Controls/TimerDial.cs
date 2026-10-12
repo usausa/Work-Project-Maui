@@ -200,15 +200,8 @@ public sealed class TimerDial : SKCanvasView
             paint.StrokeWidth = (major ? MajorTickWidth : MinorTickWidth) * density;
             paint.Color = major ? color : color.WithAlpha((byte)(color.Alpha / 2));
             var length = (major ? MajorTickLength : MinorTickLength) * density;
-            var angle = ((i * TickAngle) + StartAngle) * MathF.PI / 180f;
-            var cos = MathF.Cos(angle);
-            var sin = MathF.Sin(angle);
-            canvas.DrawLine(
-                center.X + (cos * (radius - length)),
-                center.Y + (sin * (radius - length)),
-                center.X + (cos * radius),
-                center.Y + (sin * radius),
-                paint);
+            var angle = (i * TickAngle) + StartAngle;
+            canvas.DrawLine(AngleHelper.GetPoint(center, radius - length, angle), AngleHelper.GetPoint(center, radius, angle), paint);
         }
     }
 
@@ -229,8 +222,7 @@ public sealed class TimerDial : SKCanvasView
         {
             GlowRing.DrawGlowArc(canvas, center, radius, stroke, GlowBlur * density, progress, ArcStartColor.ToSKColor(), ArcEndColor.ToSKColor());
 
-            var end = ((360f * progress) + StartAngle) * MathF.PI / 180f;
-            var knob = new SKPoint(center.X + (MathF.Cos(end) * radius), center.Y + (MathF.Sin(end) * radius));
+            var knob = AngleHelper.GetPoint(center, radius, (360f * progress) + StartAngle);
             using var knobGlow = new SKPaint();
             knobGlow.IsAntialias = true;
             knobGlow.Color = ArcEndColor.ToSKColor();

@@ -26,6 +26,9 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     public IReadOnlyList<MapSpot> Spots { get; } = MapSample.LoadSpots();
 
     [ObservableProperty]
+    public partial bool HybridEnabled { get; set; }
+
+    [ObservableProperty]
     public partial bool RouteVisible { get; set; }
 
     [ObservableProperty]
@@ -34,12 +37,10 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     [ObservableProperty]
     public partial bool CircleVisible { get; set; }
 
-    public ICommand HomeCommand { get; }
+    [ObservableProperty]
+    public partial bool IsLayerOpen { get; set; }
 
-    public ICommand ToggleMapTypeCommand { get; }
-    public ICommand ToggleRouteCommand { get; }
-    public ICommand ToggleAreaCommand { get; }
-    public ICommand ToggleCircleCommand { get; }
+    public ICommand HomeCommand { get; }
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -48,30 +49,33 @@ public sealed partial class SampleMap1ViewModel : AppViewModelBase
     public SampleMap1ViewModel()
     {
         HomeCommand = MakeDelegateCommand(Controller.MoveToHome);
-        ToggleMapTypeCommand = MakeDelegateCommand(() => CurrentMapType = CurrentMapType == MapType.Street ? MapType.Hybrid : MapType.Street);
 
-        ToggleRouteCommand = MakeDelegateCommand(() =>
-        {
-            RouteVisible = !RouteVisible;
-            Controller.SetRoute(RouteVisible ? Spots.Select(static x => x.Location) : null);
-        });
-        ToggleAreaCommand = MakeDelegateCommand(() =>
-        {
-            AreaVisible = !AreaVisible;
-            Controller.SetArea(AreaVisible ? AreaPoints : null);
-        });
-        ToggleCircleCommand = MakeDelegateCommand(() =>
-        {
-            CircleVisible = !CircleVisible;
-            Controller.SetCircle(CircleVisible ? new Location(InitialLatitude, InitialLongitude) : null, 1.5);
-        });
+        SubscribeHybridEnabled(x => CurrentMapType = x ? MapType.Hybrid : MapType.Street);
+        SubscribeRouteVisible(x => Controller.SetRoute(x ? Spots.Select(static spot => spot.Location) : null));
+        SubscribeAreaVisible(x => Controller.SetArea(x ? AreaPoints : null));
+        SubscribeCircleVisible(x => Controller.SetCircle(x ? new Location(InitialLatitude, InitialLongitude) : null, 1.5));
     }
 
     //--------------------------------------------------------------------------------
     // Navigation
     //--------------------------------------------------------------------------------
 
-    protected override Task OnNotifyBackAsync() => Navigator.ForwardAsync(ViewId.SampleMenu);
+    protected override Task OnNotifyBackAsync()
+    {
+        if (IsLayerOpen)
+        {
+            IsLayerOpen = false;
+            return Task.CompletedTask;
+        }
+
+        return Navigator.ForwardAsync(ViewId.SampleMenu);
+    }
 
     protected override Task OnNotifyFunction1() => OnNotifyBackAsync();
+
+    protected override Task OnNotifyFunction2()
+    {
+        IsLayerOpen = !IsLayerOpen;
+        return Task.CompletedTask;
+    }
 }

@@ -222,7 +222,6 @@ public sealed class ArcMeter : SKCanvasView
             var density = (float)(info.Width / Width);
             var thickness = (float)Thickness * density;
             var (center, radius) = FitArc(info.Width, info.Height, (thickness / 2) + (ArcPadding * density));
-            var rect = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
             var range = Maximum - Minimum;
             var ratio = range > 0 ? (float)Math.Clamp((Value - Minimum) / range, 0, 1) : 0f;
             var valueAngle = StartAngle + (SweepAngle * ratio);
@@ -235,7 +234,7 @@ public sealed class ArcMeter : SKCanvasView
             paint.StrokeWidth = thickness;
             paint.StrokeCap = SKStrokeCap.Round;
             paint.Color = TrackColor.ToSKColor();
-            DrawArc(canvas, rect, StartAngle, SweepAngle, paint);
+            canvas.DrawArc(center, radius, StartAngle, SweepAngle, false, paint);
 
             using var shader = CreateShader(center);
             paint.Color = shader is null ? BrushColor() : SKColors.White;
@@ -244,13 +243,13 @@ public sealed class ArcMeter : SKCanvasView
             {
                 if (ratio > 0)
                 {
-                    DrawArc(canvas, rect, StartAngle, SweepAngle * ratio, paint);
+                    canvas.DrawArc(center, radius, StartAngle, SweepAngle * ratio, false, paint);
                 }
             }
             else
             {
-                DrawArc(canvas, rect, StartAngle, SweepAngle, paint);
-                DrawMarker(canvas, PointAt(center, radius, valueAngle), thickness, density);
+                canvas.DrawArc(center, radius, StartAngle, SweepAngle, false, paint);
+                DrawMarker(canvas, AngleHelper.GetPoint(center, radius, valueAngle), thickness, density);
             }
 
             if (ShowNeedle)
@@ -268,13 +267,11 @@ public sealed class ArcMeter : SKCanvasView
         var maxY = maxX;
         for (var i = 0; i <= FitSteps; i++)
         {
-            var angle = (StartAngle + (SweepAngle * i / FitSteps)) * MathF.PI / 180f;
-            var x = MathF.Cos(angle);
-            var y = MathF.Sin(angle);
-            minX = MathF.Min(minX, x);
-            maxX = MathF.Max(maxX, x);
-            minY = MathF.Min(minY, y);
-            maxY = MathF.Max(maxY, y);
+            var point = AngleHelper.GetPoint(SKPoint.Empty, 1f, StartAngle + (SweepAngle * i / FitSteps));
+            minX = MathF.Min(minX, point.X);
+            maxX = MathF.Max(maxX, point.X);
+            minY = MathF.Min(minY, point.Y);
+            maxY = MathF.Max(maxY, point.Y);
         }
 
         var spanX = MathF.Max(maxX - minX, MinimumSpan);
@@ -292,11 +289,25 @@ public sealed class ArcMeter : SKCanvasView
             return null;
         }
 
-        var stops = gradient.GradientStops.OrderBy(static x => x.Offset).ToArray();
-        var colors = stops.Select(static x => x.Color.ToSKColor()).ToArray();
-        var positions = stops.Select(x => x.Offset * SweepAngle / 360f).ToArray();
-        using var shader = SKShader.CreateSweepGradient(center, colors, positions);
-        return shader.WithLocalMatrix(SKMatrix.CreateRotationDegrees(StartAngle, center.X, center.Y));
+        var stops = gradient.GradientStops;
+        var colors = new SKColor[stops.Count];
+        var positions = new float[stops.Count];
+        for (var i = 0; i < stops.Count; i++)
+        {
+            var stop = stops[i];
+            var index = i;
+            while ((index > 0) && (positions[index - 1] > stop.Offset))
+            {
+                colors[index] = colors[index - 1];
+                positions[index] = positions[index - 1];
+                index--;
+            }
+
+            colors[index] = stop.Color.ToSKColor();
+            positions[index] = stop.Offset;
+        }
+
+        return AngleHelper.CreateArcGradient(center, StartAngle, SweepAngle, colors, positions);
     }
 
     private SKColor BrushColor() =>
@@ -315,7 +326,7 @@ public sealed class ArcMeter : SKCanvasView
             for (var i = 0; i < TickCount; i++)
             {
                 var angle = StartAngle + (SweepAngle * i / (TickCount - 1));
-                canvas.DrawLine(PointAt(center, radius - (TickOuterInset * density), angle), PointAt(center, radius - (TickInnerInset * density), angle), paint);
+                canvas.DrawLine(AngleHelper.GetPoint(center, radius - (TickOuterInset * density), angle), AngleHelper.GetPoint(center, radius - (TickInnerInset * density), angle), paint);
             }
         }
     }
@@ -342,23 +353,9 @@ public sealed class ArcMeter : SKCanvasView
         paint.StrokeWidth = NeedleWidth * density;
         paint.StrokeCap = SKStrokeCap.Round;
         paint.Color = NeedleColor.ToSKColor();
-        canvas.DrawLine(center, PointAt(center, length, angle), paint);
+        canvas.DrawLine(center, AngleHelper.GetPoint(center, length, angle), paint);
 
         paint.Style = SKPaintStyle.Fill;
         canvas.DrawCircle(center, PivotRadius * density, paint);
-    }
-
-    private static SKPoint PointAt(SKPoint center, float radius, float angle)
-    {
-        var radian = angle * MathF.PI / 180f;
-        return new SKPoint(center.X + (MathF.Cos(radian) * radius), center.Y + (MathF.Sin(radian) * radius));
-    }
-
-    private static void DrawArc(SKCanvas canvas, SKRect rect, float start, float sweep, SKPaint paint)
-    {
-        using var builder = new SKPathBuilder();
-        builder.AddArc(rect, start, sweep);
-        using var path = builder.Detach();
-        canvas.DrawPath(path, paint);
     }
 }

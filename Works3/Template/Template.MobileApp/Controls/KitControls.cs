@@ -1,5 +1,7 @@
 namespace Template.MobileApp.Controls;
 
+using System.Collections.Specialized;
+
 using SkiaSharp.Views.Maui;
 
 using Template.MobileApp.Models.Sample;
@@ -9,6 +11,8 @@ using Template.MobileApp.Models.Sample;
 //--------------------------------------------------------------------------------
 public sealed class KitSleepBand : SKCanvasView
 {
+    private const string FontFamily = "sans-serif";
+
     private const float LabelWidth = 36f;
 
     private const float AxisHeight = 20f;
@@ -27,7 +31,13 @@ public sealed class KitSleepBand : SKCanvasView
 
     private static readonly string[] LaneNames = ["覚醒", "レム", "浅い", "深い"];
 
-    private static readonly SKTypeface JapaneseTypeface = SKFontManager.Default.MatchCharacter('睡') ?? SKTypeface.Default;
+    private static readonly string[] HourTexts = [.. Enumerable.Range(0, 24).Select(static x => $"{x}時")];
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private FontResolver? fonts;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -37,7 +47,7 @@ public sealed class KitSleepBand : SKCanvasView
         nameof(Spans),
         typeof(IReadOnlyList<KitSleepSpan>),
         typeof(KitSleepBand),
-        propertyChanged: OnVisualChanged);
+        propertyChanged: OnSpansChanged);
 
     public static readonly BindableProperty AwakeColorProperty = BindableProperty.Create(
         nameof(AwakeColor),
@@ -143,6 +153,34 @@ public sealed class KitSleepBand : SKCanvasView
     private static void OnVisualChanged(BindableObject bindable, object? oldValue, object? newValue) =>
         ((KitSleepBand)bindable).InvalidateSurface();
 
+    private static void OnSpansChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        var band = (KitSleepBand)bindable;
+        if (oldValue is INotifyCollectionChanged oldCollection)
+        {
+            oldCollection.CollectionChanged -= band.OnSpansCollectionChanged;
+        }
+
+        if (newValue is INotifyCollectionChanged newCollection)
+        {
+            newCollection.CollectionChanged += band.OnSpansCollectionChanged;
+        }
+
+        band.InvalidateSurface();
+    }
+
+    private void OnSpansCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => InvalidateSurface();
+
+    protected override void OnHandlerChanging(HandlerChangingEventArgs args)
+    {
+        base.OnHandlerChanging(args);
+        if (args.NewHandler is null)
+        {
+            fonts?.Dispose();
+            fonts = null;
+        }
+    }
+
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
@@ -165,7 +203,8 @@ public sealed class KitSleepBand : SKCanvasView
 
         float ToX(DateTime time) => left + ((float)(time - start).TotalMinutes / total * width);
 
-        using var font = new SKFont(JapaneseTypeface, (float)FontSize * density);
+        fonts ??= new FontResolver(FontFamily);
+        var size = (float)FontSize * density;
         using var text = new SKPaint();
         text.IsAntialias = true;
         text.Color = TextColor.ToSKColor();
@@ -177,13 +216,15 @@ public sealed class KitSleepBand : SKCanvasView
         {
             var center = (lane + 0.5f) * laneHeight;
             canvas.DrawLine(left, center, e.Info.Width, center, grid);
-            canvas.DrawText(LaneNames[lane], 0, center + (font.Size * LabelBaselineRate), SKTextAlign.Left, font, text);
+            canvas.DrawText(fonts.CreateText(LaneNames[lane], size, false), 0, center + (size * LabelBaselineRate), SKTextAlign.Left, text);
         }
 
         using var fill = new SKPaint();
         fill.IsAntialias = true;
-        foreach (var span in spans)
+        // ReSharper disable once ForCanBeConvertedToForeach
+        for (var i = 0; i < spans.Count; i++)
         {
+            var span = spans[i];
             var lane = (int)span.Stage;
             var x0 = ToX(span.Start);
             var x1 = ToX(span.Start + span.Length);
@@ -202,7 +243,7 @@ public sealed class KitSleepBand : SKCanvasView
             if ((x - left > HourLabelMargin * density) && (e.Info.Width - x > HourLabelMargin * density))
             {
                 canvas.DrawLine(x, bottom, x, bottom + (HourTickLength * density), grid);
-                canvas.DrawText($"{hour.Hour}時", x, e.Info.Height - (HourLabelBottom * density), SKTextAlign.Center, font, text);
+                canvas.DrawText(fonts.CreateText(HourTexts[hour.Hour], size, false), x, e.Info.Height - (HourLabelBottom * density), SKTextAlign.Center, text);
             }
             hour = hour.AddHours(1);
         }

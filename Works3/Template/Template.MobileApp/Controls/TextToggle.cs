@@ -2,6 +2,9 @@ namespace Template.MobileApp.Controls;
 
 using SkiaSharp.Views.Maui;
 
+//--------------------------------------------------------------------------------
+// Event
+//--------------------------------------------------------------------------------
 public sealed class ToggleChangedEventArgs : EventArgs
 {
     public static readonly ToggleChangedEventArgs On = new(true);
@@ -15,21 +18,26 @@ public sealed class ToggleChangedEventArgs : EventArgs
     }
 }
 
+//--------------------------------------------------------------------------------
+// Toggle
+//--------------------------------------------------------------------------------
 public class TextToggle : SKCanvasView
 {
     private const string AnimationName = "ToggleAnimation";
 
+    private const string FontFamily = "sans-serif";
+
     private const uint AnimationRate = 16;
 
     private const uint AnimationLength = 200;
-
-    private static readonly SKTypeface Typeface = SKFontManager.Default.MatchCharacter('あ');
 
     //--------------------------------------------------------------------------------
     // Member
     //--------------------------------------------------------------------------------
 
     private float animationProgress;
+
+    private FontResolver? fonts;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -163,6 +171,16 @@ public class TextToggle : SKCanvasView
         ((TextToggle)bindable).InvalidateSurface();
     }
 
+    protected override void OnHandlerChanging(HandlerChangingEventArgs args)
+    {
+        base.OnHandlerChanging(args);
+        if (args.NewHandler is null)
+        {
+            fonts?.Dispose();
+            fonts = null;
+        }
+    }
+
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
@@ -171,11 +189,14 @@ public class TextToggle : SKCanvasView
         using var paint = new SKPaint();
         paint.IsAntialias = true;
 
-        using var font = new SKFont(Typeface, size: (float)(FontSize * DeviceDisplay.MainDisplayInfo.Density));
+        fonts ??= new FontResolver(FontFamily);
+        var size = (float)(FontSize * DeviceDisplay.MainDisplayInfo.Density);
+        var onText = fonts.CreateText(OnText, size, false);
+        var offText = fonts.CreateText(OffText, size, false);
 
         var radius = e.Info.Height / 2f;
-        var onTextWidth = font.MeasureText(OnText);
-        var offTextWidth = font.MeasureText(OffText);
+        var onTextWidth = onText.Width;
+        var offTextWidth = offText.Width;
         var onWidth = e.Info.Width * (onTextWidth + (radius * 2)) / (onTextWidth + offTextWidth + (radius * 4));
         var offWidth = e.Info.Width - onWidth;
 
@@ -192,9 +213,9 @@ public class TextToggle : SKCanvasView
         paint.Color = UnselectedTextColor.ToSKColor();
         var onTextX = (onWidth - onTextWidth) / 2f;
         var offTextX = onWidth + ((offWidth - offTextWidth) / 2f);
-        var textY = (e.Info.Height - font.Metrics.Ascent - font.Metrics.Descent) / 2f;
-        canvas.DrawText(OnText, onTextX, textY, SKTextAlign.Left, font, paint);
-        canvas.DrawText(OffText, offTextX, textY, SKTextAlign.Left, font, paint);
+        var textY = fonts.GetMetrics(size, false).GetCenterBaseline(e.Info.Height / 2f);
+        canvas.DrawText(onText, onTextX, textY, SKTextAlign.Left, paint);
+        canvas.DrawText(offText, offTextX, textY, SKTextAlign.Left, paint);
 
         canvas.SaveLayer();
 
@@ -203,8 +224,8 @@ public class TextToggle : SKCanvasView
 
         paint.Color = SelectedTextColor.ToSKColor();
         paint.BlendMode = SKBlendMode.SrcIn;
-        canvas.DrawText(OnText, onTextX, textY, SKTextAlign.Left, font, paint);
-        canvas.DrawText(OffText, offTextX, textY, SKTextAlign.Left, font, paint);
+        canvas.DrawText(onText, onTextX, textY, SKTextAlign.Left, paint);
+        canvas.DrawText(offText, offTextX, textY, SKTextAlign.Left, paint);
 
         canvas.Restore();
     }

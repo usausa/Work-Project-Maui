@@ -1,5 +1,6 @@
 namespace Template.MobileApp.Controls;
 
+using System.Collections.Specialized;
 using System.Windows.Input;
 
 using SkiaSharp;
@@ -88,6 +89,8 @@ public sealed class DayTimetableView : SKCanvasView
 
     private static readonly SKColor CardShadowColor = new(0x00, 0x00, 0x00, 0x30);
 
+    private static readonly Dictionary<int, string> HourTexts = [];
+
     //--------------------------------------------------------------------------------
     // Member
     //--------------------------------------------------------------------------------
@@ -130,7 +133,7 @@ public sealed class DayTimetableView : SKCanvasView
         nameof(Events),
         typeof(IReadOnlyList<TimetableEvent>),
         typeof(DayTimetableView),
-        propertyChanged: Invalidate);
+        propertyChanged: OnEventsChanged);
 
     public static readonly BindableProperty CurrentTimeProperty = BindableProperty.Create(
         nameof(CurrentTime),
@@ -250,6 +253,24 @@ public sealed class DayTimetableView : SKCanvasView
         control.InvalidateSurface();
     }
 
+    private static void OnEventsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (DayTimetableView)bindable;
+        if (oldValue is INotifyCollectionChanged oldCollection)
+        {
+            oldCollection.CollectionChanged -= control.OnEventsCollectionChanged;
+        }
+
+        if (newValue is INotifyCollectionChanged newCollection)
+        {
+            newCollection.CollectionChanged += control.OnEventsCollectionChanged;
+        }
+
+        control.InvalidateSurface();
+    }
+
+    private void OnEventsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => InvalidateSurface();
+
     private void UpdateHeight()
     {
         HeightRequest = PaddingTop + ((float)Math.Max(0, (EndTime - StartTime).TotalHours) * HourHeight) + PaddingBottom;
@@ -298,7 +319,7 @@ public sealed class DayTimetableView : SKCanvasView
 
         RenderGrid(canvas, paint, font, areaRight);
 
-        IEnumerable<TimetableEvent> events = Events ?? [];
+        var events = Events ?? [];
         if (FreeSlotHighlightVisible)
         {
             RenderFreeSlots(canvas, paint, font, events, areaLeft, areaRight);
@@ -334,12 +355,12 @@ public sealed class DayTimetableView : SKCanvasView
             {
                 paint.Style = SKPaintStyle.Fill;
                 paint.Color = TimeTextColor;
-                canvas.DrawText($"{(int)time.TotalHours}:00", TimeColumnWidth - TimeTextMargin, y + TimeTextOffset, SKTextAlign.Right, font, paint);
+                canvas.DrawText(GetHourText((int)time.TotalHours), TimeColumnWidth - TimeTextMargin, y + TimeTextOffset, SKTextAlign.Right, font, paint);
             }
         }
     }
 
-    private void RenderFreeSlots(SKCanvas canvas, SKPaint paint, SKFont font, IEnumerable<TimetableEvent> events, float areaLeft, float areaRight)
+    private void RenderFreeSlots(SKCanvas canvas, SKPaint paint, SKFont font, IReadOnlyList<TimetableEvent> events, float areaLeft, float areaRight)
     {
         foreach (var (freeStart, freeEnd) in TimetableCalculator.GetFreeSlots(events, StartTime, EndTime))
         {
@@ -357,7 +378,7 @@ public sealed class DayTimetableView : SKCanvasView
         }
     }
 
-    private void RenderEvents(SKCanvas canvas, SKPaint paint, SKFont font, SKFont boldFont, IEnumerable<TimetableEvent> events, float areaLeft, float areaRight)
+    private void RenderEvents(SKCanvas canvas, SKPaint paint, SKFont font, SKFont boldFont, IReadOnlyList<TimetableEvent> events, float areaLeft, float areaRight)
     {
         var sorted = events
             .Select(x => (Event: x, Start: x.Start < StartTime ? StartTime : x.Start, End: x.End > EndTime ? EndTime : x.End))
@@ -437,6 +458,17 @@ public sealed class DayTimetableView : SKCanvasView
 
             canvas.Restore();
         }
+    }
+
+    private static string GetHourText(int hour)
+    {
+        if (!HourTexts.TryGetValue(hour, out var text))
+        {
+            text = $"{hour}:00";
+            HourTexts[hour] = text;
+        }
+
+        return text;
     }
 
     private static string TruncateText(string text, SKFont font, float maxWidth)

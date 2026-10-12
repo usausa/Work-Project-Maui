@@ -1,5 +1,8 @@
 namespace Template.MobileApp.Graphics.Scene;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
 internal enum EnergyFlowMode
 {
     Power,
@@ -50,6 +53,9 @@ internal enum EnergyLevel
     Alarm
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 internal sealed record EnergyEvent(DateTime Time, float SceneTime, EnergyLevel Level, string Source, string Text);
 
 internal readonly record struct EnergyProfile(
@@ -65,6 +71,9 @@ internal readonly record struct EnergyProfile(
     float Press,
     float Noise);
 
+//--------------------------------------------------------------------------------
+// Helper
+//--------------------------------------------------------------------------------
 internal static class EnergyMath
 {
     public static float Smooth(float edge0, float edge1, float x)
@@ -109,6 +118,9 @@ internal static class EnergyMath
     }
 }
 
+//--------------------------------------------------------------------------------
+// Simulation
+//--------------------------------------------------------------------------------
 // 工場の 1 日の電力と熱のモデル。時刻は端末の時計で、起動時は 0 時から今までを 1 分ごとに計算し直す
 internal sealed class EnergySim
 {
@@ -136,7 +148,6 @@ internal sealed class EnergySim
     private readonly float[] minuteSum = new float[PeriodMinutes];
     private readonly float[] minuteTime = new float[PeriodMinutes];
     private readonly float[] todayEnergy = new float[NodeCount];
-    private readonly List<EnergyEvent> events = [];
 
     private DateTime day;
     private int seed;
@@ -232,7 +243,7 @@ internal sealed class EnergySim
 
     public float TodayCost => (todayEnergy[(int)EnergyNode.Grid] * 24f) + (todayGas * 95f);
 
-    public IReadOnlyList<EnergyEvent> Events => events;
+    public List<EnergyEvent> Events { get; } = [];
 
     public EnergySim()
     {
@@ -316,7 +327,7 @@ internal sealed class EnergySim
         Array.Clear(loadHistory);
         Array.Clear(slotTime);
         Array.Clear(todayEnergy);
-        events.Clear();
+        Events.Clear();
 
         for (var slot = 0; slot < Slots; slot++)
         {
@@ -545,10 +556,10 @@ internal sealed class EnergySim
 
     private void AddEvent(DateTime time, float sceneTime, EnergyLevel level, string source, string text)
     {
-        events.Insert(0, new EnergyEvent(time, sceneTime, level, source, text));
-        if (events.Count > MaxEvents)
+        Events.Insert(0, new EnergyEvent(time, sceneTime, level, source, text));
+        if (Events.Count > MaxEvents)
         {
-            events.RemoveAt(events.Count - 1);
+            Events.RemoveAt(Events.Count - 1);
         }
     }
 }

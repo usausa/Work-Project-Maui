@@ -20,7 +20,9 @@ public enum SudokuLevel
 public readonly record struct SudokuCell(int Row, int Column);
 
 // 描く盤面 (Placed は直前に数字を入れたマス、Flash はそろった行・列・ブロックや完成で光らせるマス)
-public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, IReadOnlyList<SudokuCell> Flash);
+#pragma warning disable CA1819
+public sealed record SudokuFrame(SudokuGame Game, SudokuCell? Selected, SudokuCell? Placed, SudokuCell[] Flash);
+#pragma warning restore CA1819
 
 // 保存する状態 (マスは行ごとに並べる。値の 0 は空き、メモは数字のビット。ベストタイムは難易度の順の秒で、0 は記録なし)
 public sealed class SudokuSnapshot
@@ -405,7 +407,7 @@ public sealed class SudokuGame
     }
 
     // マスを含む、すべて答えになった行・列・ブロックのマス (完成したら盤面のすべてのマス)
-    public IReadOnlyList<SudokuCell> GetCompletedCells(SudokuCell cell)
+    public SudokuCell[] GetCompletedCells(SudokuCell cell)
     {
         var index = ToIndex(cell);
         var row = index / Size;

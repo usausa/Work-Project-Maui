@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
+             xmlns:mcc="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
              xmlns:shell="clr-namespace:Template.MobileApp.Shell"
              xmlns:behaviors="clr-namespace:Template.MobileApp.Behaviors"
              xmlns:converters="clr-namespace:Template.MobileApp.Converters"
@@ -226,15 +227,16 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource GrayLighten4}" />
             </Style>
 
-            <!-- 並替パネル -->
-            <Style x:Key="SortPanelBorder"
-                   TargetType="Border">
-                <Setter Property="Margin" Value="12,0,12,8" />
-                <Setter Property="Padding" Value="10" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="Stroke" Value="{StaticResource BlueLighten4}" />
-                <Setter Property="StrokeThickness" Value="1" />
-                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <!-- 並替シート -->
+            <Style x:Key="SortSheet"
+                   TargetType="mcc:BottomSheetView">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HalfExpandedRatio" Value="0.5" />
+            </Style>
+
+            <Style x:Key="SortSheetStack"
+                   TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="20,8,20,24" />
             </Style>
 
             <Style x:Key="SortPanelGrid"
@@ -504,7 +506,7 @@
     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
     <Grid Style="{StaticResource FillGrid}"
-          RowDefinitions="Auto,Auto,Auto,*">
+          RowDefinitions="Auto,Auto,*">
 
         <!-- 件数: 状態ごとのバッジ (⏳ 未訪問 / ✅ 訪問済 / 🔁 再訪問 / 🚫 不在) -->
         <Grid Grid.Row="0"
@@ -562,56 +564,8 @@
                     Text="{x:Static font:MaterialIcons.Refresh}" />
         </Grid>
 
-        <!-- 並替パネル: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
-        <ContentView Grid.Row="2"
-                     behaviors:LazyViewOption.Load="{Binding IsSortPanelOpen}"
-                     IsVisible="{Binding IsSortPanelOpen}">
-            <behaviors:LazyViewOption.Template>
-                <DataTemplate x:DataType="module:UIVisitViewModel">
-                    <Border Style="{StaticResource SortPanelBorder}">
-                        <VerticalStackLayout>
-                            <Grid Style="{StaticResource SortPanelGrid}"
-                                  ColumnDefinitions="*,Auto">
-                                <Button Grid.Column="1"
-                                        Style="{StaticResource SortClearButton}"
-                                        Command="{Binding ClearSortCommand}"
-                                        Text="クリア" />
-                            </Grid>
-                            <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                            <FlexLayout Style="{StaticResource SortKeyFlex}"
-                                        BindableLayout.ItemsSource="{Binding SortKeys}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
-                                        <Border Style="{StaticResource SortKeyChip}">
-                                            <Border.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
-                                                                      CommandParameter="{Binding .}" />
-                                            </Border.GestureRecognizers>
-                                            <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
-                                                <Border Style="{StaticResource SortKeyBadgeBorder}"
-                                                        IsVisible="{Binding IsActive}">
-                                                    <Label Style="{StaticResource SortKeyBadge}"
-                                                           Text="{Binding Priority}" />
-                                                </Border>
-                                                <Label Style="{StaticResource SortKeyLabel}"
-                                                       Text="{Binding Name}" />
-                                                <Label Style="{StaticResource SortKeyLabel}"
-                                                       IsVisible="{Binding IsActive}"
-                                                       Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
-                                            </HorizontalStackLayout>
-                                        </Border>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </FlexLayout>
-                            <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </behaviors:LazyViewOption.Template>
-        </ContentView>
-
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-        <CollectionView Grid.Row="3"
+        <CollectionView Grid.Row="2"
                         Style="{StaticResource CardCollection}"
                         ItemsSource="{Binding Cards}">
             <CollectionView.ItemTemplate>
@@ -716,6 +670,53 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+
+        <!-- 並替シート: キーをタップで第 1 キーに。第 1 キーの再タップで昇降を反転 (数字は順位) -->
+        <mcc:BottomSheetView Grid.Row="0" Grid.RowSpan="3"
+                             Style="{StaticResource SortSheet}"
+                             IsOpen="{Binding IsSortPanelOpen}">
+            <mcc:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="module:UIVisitViewModel">
+                    <VerticalStackLayout Style="{StaticResource SortSheetStack}">
+                        <Grid Style="{StaticResource SortPanelGrid}"
+                              ColumnDefinitions="*,Auto">
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource SortClearButton}"
+                                    Command="{Binding ClearSortCommand}"
+                                    Text="クリア" />
+                        </Grid>
+                        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                        <FlexLayout Style="{StaticResource SortKeyFlex}"
+                                    BindableLayout.ItemsSource="{Binding SortKeys}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type module:VisitSortKey}">
+                                    <Border Style="{StaticResource SortKeyChip}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type module:UIVisitViewModel}}, Path=SelectSortKeyCommand, x:DataType={x:Type module:UIVisitViewModel}}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <HorizontalStackLayout Style="{StaticResource SortKeyStack}">
+                                            <Border Style="{StaticResource SortKeyBadgeBorder}"
+                                                    IsVisible="{Binding IsActive}">
+                                                <Label Style="{StaticResource SortKeyBadge}"
+                                                       Text="{Binding Priority}" />
+                                            </Border>
+                                            <Label Style="{StaticResource SortKeyLabel}"
+                                                   Text="{Binding Name}" />
+                                            <Label Style="{StaticResource SortKeyLabel}"
+                                                   IsVisible="{Binding IsActive}"
+                                                   Text="{Binding Descending, Converter={StaticResource DirectionMarkConverter}}" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </mcc:BottomSheetView.SheetTemplate>
+        </mcc:BottomSheetView>
+
     </Grid>
 
 </ContentView>

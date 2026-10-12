@@ -36,7 +36,7 @@ public sealed partial class HomeBlurredImage : HomeControl
 
     private SKImage? cache;
 
-    private string? cacheKey;
+    private (string? Source, int Width, int Height, double BlurRadius, double Dim, double MaxLuminance) cacheKey;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -104,7 +104,7 @@ public sealed partial class HomeBlurredImage : HomeControl
         {
             cache?.Dispose();
             cache = null;
-            cacheKey = null;
+            cacheKey = default;
         }
     }
 
@@ -116,7 +116,7 @@ public sealed partial class HomeBlurredImage : HomeControl
 
         if ((info.Width > 0) && (info.Height > 0) && (Width > 0))
         {
-            var key = $"{Source}:{info.Width}x{info.Height}:{BlurRadius}:{Dim}:{MaxLuminance}";
+            var key = (Source, info.Width, info.Height, BlurRadius, Dim, MaxLuminance);
             if (key != cacheKey)
             {
                 cache?.Dispose();
@@ -162,7 +162,7 @@ public sealed partial class HomeBlurredImage : HomeControl
             }
         }
 
-        canvas.DrawColor(SKColors.Black.WithAlpha((byte)(255 * dim)), SKBlendMode.SrcOver);
+        canvas.DrawColor(SKColors.Black.WithOpacity((float)dim), SKBlendMode.SrcOver);
         return surface.Snapshot();
     }
 
@@ -378,7 +378,6 @@ public sealed class HomeThermostatDial : HomeControl
         if ((info.Width > 0) && (info.Height > 0))
         {
             var (center, radius, stroke, density) = GetGeometry(info);
-            var rect = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
 
             DrawDisc(canvas, center, radius - (stroke * DiscInsetRate), density);
 
@@ -388,17 +387,12 @@ public sealed class HomeThermostatDial : HomeControl
             track.StrokeWidth = stroke;
             track.StrokeCap = SKStrokeCap.Round;
             track.Color = TrackColor.ToSKColor();
-            using (var builder = new SKPathBuilder())
-            {
-                builder.AddArc(rect, StartAngle, SweepAngle);
-                using var path = builder.Detach();
-                canvas.DrawPath(path, track);
-            }
+            canvas.DrawArc(center, radius, StartAngle, SweepAngle, false, track);
 
             var ratio = Ratio();
             var start = IsActive ? ArcStartColor.ToSKColor() : SKColors.Gray;
             var end = IsActive ? ArcEndColor.ToSKColor() : SKColors.Gray;
-            DrawValueArc(canvas, center, rect, stroke, density, ratio, start, end);
+            DrawValueArc(canvas, center, radius, stroke, density, ratio, start, end);
             DrawKnob(canvas, center, radius, stroke, density, ratio, end);
         }
     }
@@ -438,22 +432,12 @@ public sealed class HomeThermostatDial : HomeControl
         canvas.DrawCircle(center, radius, line);
     }
 
-    private static void DrawValueArc(SKCanvas canvas, SKPoint center, SKRect rect, float stroke, float density, float ratio, SKColor start, SKColor end)
+    private static void DrawValueArc(SKCanvas canvas, SKPoint center, float radius, float stroke, float density, float ratio, SKColor start, SKColor end)
     {
         if (ratio > 0f)
         {
             var sweep = SweepAngle * ratio;
-            using var baseShader = SKShader.CreateSweepGradient(
-                center,
-                [start, end],
-                [0f, sweep / 360f],
-                SKShaderTileMode.Clamp,
-                0f,
-                360f);
-            using var shader = baseShader.WithLocalMatrix(SKMatrix.CreateRotationDegrees(StartAngle, center.X, center.Y));
-            using var builder = new SKPathBuilder();
-            builder.AddArc(rect, StartAngle, sweep);
-            using var path = builder.Detach();
+            using var shader = AngleHelper.CreateArcGradient(center, StartAngle, sweep, [start, end]);
 
             using var glow = new SKPaint();
             glow.IsAntialias = true;
@@ -463,7 +447,7 @@ public sealed class HomeThermostatDial : HomeControl
             glow.Shader = shader;
             glow.Color = SKColors.White.WithAlpha(GlowAlpha);
             glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, GlowBlur * density);
-            canvas.DrawPath(path, glow);
+            canvas.DrawArc(center, radius, StartAngle, sweep, false, glow);
 
             using var paint = new SKPaint();
             paint.IsAntialias = true;
@@ -471,14 +455,13 @@ public sealed class HomeThermostatDial : HomeControl
             paint.StrokeWidth = stroke;
             paint.StrokeCap = SKStrokeCap.Round;
             paint.Shader = shader;
-            canvas.DrawPath(path, paint);
+            canvas.DrawArc(center, radius, StartAngle, sweep, false, paint);
         }
     }
 
     private static void DrawKnob(SKCanvas canvas, SKPoint center, float radius, float stroke, float density, float ratio, SKColor color)
     {
-        var angle = (StartAngle + (SweepAngle * ratio)) * MathF.PI / 180f;
-        var knob = new SKPoint(center.X + (MathF.Cos(angle) * radius), center.Y + (MathF.Sin(angle) * radius));
+        var knob = AngleHelper.GetPoint(center, radius, StartAngle + (SweepAngle * ratio));
 
         using var glow = new SKPaint();
         glow.IsAntialias = true;

@@ -1,5 +1,8 @@
 namespace Template.MobileApp.Graphics.Scene;
 
+//--------------------------------------------------------------------------------
+// Enum
+//--------------------------------------------------------------------------------
 internal enum FlightIff
 {
     Hostile,
@@ -7,6 +10,9 @@ internal enum FlightIff
     Unknown
 }
 
+//--------------------------------------------------------------------------------
+// Data
+//--------------------------------------------------------------------------------
 internal sealed class FlightContact
 {
     public FlightIff Iff { get; init; }
@@ -16,6 +22,9 @@ internal sealed class FlightContact
     public float RangeRate { get; set; }
 }
 
+//--------------------------------------------------------------------------------
+// Simulation
+//--------------------------------------------------------------------------------
 internal sealed class FlightHudSim
 {
     public float HeadingDeg { get; private set; } = 42f;
@@ -35,7 +44,7 @@ internal sealed class FlightHudSim
     public int Missiles { get; private set; } = 6;
     public float Fox2Timer { get; private set; }
 
-    public IReadOnlyList<FlightContact> Contacts { get; } =
+    public FlightContact[] Contacts { get; } =
     [
         new() { Iff = FlightIff.Hostile, BearingDeg = 38f, RangeNm = 9.5f, BearingDrift = 1.1f, RangeRate = -0.14f },
         new() { Iff = FlightIff.Hostile, BearingDeg = 71f, RangeNm = 21f, BearingDrift = -0.7f, RangeRate = -0.22f },
@@ -118,6 +127,9 @@ internal sealed class FlightHudSim
     public static float Wrap360(float value) => ((value % 360f) + 360f) % 360f;
 }
 
+//--------------------------------------------------------------------------------
+// Scene
+//--------------------------------------------------------------------------------
 public sealed class FlightHudScene : SceneObject
 {
     private const float BaseWidth = 400f;
@@ -211,7 +223,7 @@ public sealed class FlightHudScene : SceneObject
         var vh = height / s;
         var layout = ComputeLayout(vh);
 
-        DrawStaticImage(canvas, width, height, s, c => DrawChrome(c, layout, vh));
+        DrawStaticImage(canvas, width, height, s, (Scene: this, Layout: layout, Height: vh), static (c, state) => state.Scene.DrawChrome(c, state.Layout, state.Height));
 
         canvas.Save();
         canvas.Scale(s);
@@ -449,15 +461,15 @@ public sealed class FlightHudScene : SceneObject
         Stroke.StrokeCap = SKStrokeCap.Butt;
         Stroke.Color = Bright.WithAlpha(90);
         Stroke.StrokeWidth = 1.2f;
-        canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), 210f, 120f, false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, cy), r, 210f, 120f, false, Stroke);
 
         foreach (var a in RollMarks)
         {
-            var rad = DegToRad(a - 90f);
+            var angle = AngleHelper.ToSkiaAngle(a);
             var len = (Math.Abs(a) % 30) == 0 ? 11f : 6f;
             Stroke.Color = Bright.WithAlpha(200);
             Stroke.StrokeWidth = (Math.Abs(a) % 30) == 0 ? 1.8f : 1.3f;
-            canvas.DrawLine(cx + (r * MathF.Cos(rad)), cy + (r * MathF.Sin(rad)), cx + ((r + len) * MathF.Cos(rad)), cy + ((r + len) * MathF.Sin(rad)), Stroke);
+            canvas.DrawLine(AngleHelper.GetPoint(new SKPoint(cx, cy), r, angle), AngleHelper.GetPoint(new SKPoint(cx, cy), r + len, angle), Stroke);
         }
 
         // 固定の目印 (上) と、傾きに合わせて回る目印 (下)
@@ -704,11 +716,10 @@ public sealed class FlightHudScene : SceneObject
 
         for (var a = 0; a < 360; a += 10)
         {
-            var rad = DegToRad(a);
             var len = (a % 30) == 0 ? 7f : 3.5f;
             Stroke.Color = Main.WithAlpha((a % 30) == 0 ? (byte)150 : (byte)90);
             Stroke.StrokeWidth = (a % 30) == 0 ? 1.4f : 1f;
-            canvas.DrawLine(center.X + ((r - len) * MathF.Cos(rad)), center.Y + ((r - len) * MathF.Sin(rad)), center.X + (r * MathF.Cos(rad)), center.Y + (r * MathF.Sin(rad)), Stroke);
+            canvas.DrawLine(AngleHelper.GetPoint(center, r - len, a), AngleHelper.GetPoint(center, r, a), Stroke);
         }
 
         DrawText(canvas, "13", center.X + (r / 3f) + 2f, center.Y - 3f, 9f, Main.WithAlpha(110));
@@ -719,9 +730,7 @@ public sealed class FlightHudScene : SceneObject
     {
         var bearing = contact.BearingDeg + (contact.BearingDrift * ahead);
         var range = Math.Clamp(contact.RangeNm + (contact.RangeRate * ahead), 0f, 40f);
-        var rad = DegToRad(FlightHudSim.Wrap360(bearing - sim.HeadingDeg) - 90f);
-        var rr = range / 40f * r;
-        return new SKPoint(center.X + (rr * MathF.Cos(rad)), center.Y + (rr * MathF.Sin(rad)));
+        return AngleHelper.GetPoint(center, range / 40f * r, AngleHelper.ToSkiaAngle(FlightHudSim.Wrap360(bearing - sim.HeadingDeg)));
     }
 
     private void DrawRadar(SKCanvas canvas, FlightLayout layout)
@@ -824,10 +833,10 @@ public sealed class FlightHudScene : SceneObject
         }
 
         // North marker (heading-up)
-        var northRad = DegToRad(FlightHudSim.Wrap360(-sim.HeadingDeg) - 90f);
-        DrawText(canvas, "N", center.X + ((r - 14f) * MathF.Cos(northRad)), center.Y + ((r - 14f) * MathF.Sin(northRad)) + 3.5f, 10f, Amber, bold: true, align: SKTextAlign.Center);
+        var north = AngleHelper.GetPoint(center, r - 14f, AngleHelper.ToSkiaAngle(FlightHudSim.Wrap360(-sim.HeadingDeg)));
+        DrawText(canvas, "N", north.X, north.Y + 3.5f, 10f, Amber, bold: true, align: SKTextAlign.Center);
 
-        DrawText(canvas, $"CONTACTS {sim.Contacts.Count}  IFF ON", center.X, center.Y + r + 19f, 9.5f, Main.WithAlpha(180), align: SKTextAlign.Center);
+        DrawText(canvas, $"CONTACTS {sim.Contacts.Length}  IFF ON", center.X, center.Y + r + 19f, 9.5f, Main.WithAlpha(180), align: SKTextAlign.Center);
         if (selectedContact is { } selected)
         {
             var iff = selected.Iff switch

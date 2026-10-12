@@ -79,6 +79,8 @@ public sealed class Puzzle2048Board : SKCanvasView
 
     private static readonly float[] FontRates = [0.48f, 0.48f, 0.48f, 0.40f, 0.32f, 0.26f];
 
+    private static readonly Dictionary<int, string> ValueTexts = [];
+
     //--------------------------------------------------------------------------------
     // Member
     //--------------------------------------------------------------------------------
@@ -187,7 +189,7 @@ public sealed class Puzzle2048Board : SKCanvasView
                 {
                     scale = EaseOutBack(t);
                 }
-                else if (frame.Move?.Merged.Any(x => x.Id == tile.Id) ?? false)
+                else if (IsMerged(frame.Move, tile.Id))
                 {
                     scale = 1f + (MergeBounce * MathF.Sin(t * MathF.PI));
                 }
@@ -229,29 +231,49 @@ public sealed class Puzzle2048Board : SKCanvasView
             using var shader = SKShader.CreateLinearGradient(
                 new SKPoint(rect.Left, rect.Top),
                 new SKPoint(rect.Left, rect.Bottom),
-                [Blend(color, SKColors.White, HighlightAmount), color],
+                [color.Lerp(SKColors.White, HighlightAmount), color],
                 SKShaderTileMode.Clamp);
             paint.Shader = shader;
             canvas.DrawRoundRect(rect, radius, radius, paint);
             paint.Shader = null;
 
-            var text = value.ToString(CultureInfo.InvariantCulture);
+            var text = GetValueText(value);
             var ratio = FontRates[Math.Min(text.Length, FontRates.Length - 1)];
             using var font = new SKFont(BoldTypeface, cell.Width * ratio * scale);
             paint.Color = textColor;
-            var baseline = rect.MidY - ((font.Metrics.Ascent + font.Metrics.Descent) / 2);
-            canvas.DrawText(text, rect.MidX, baseline, SKTextAlign.Center, font, paint);
+            canvas.DrawText(text, rect.MidX, font.Metrics.GetCenterBaseline(rect.MidY), SKTextAlign.Center, font, paint);
         }
     }
 
     private static (SKColor Color, SKColor Text) GetColors(int value) =>
         (TileColors.GetValueOrDefault(value, LargeTileColor), value <= DarkTextMaximum ? DarkTextColor : SKColors.White);
 
-    private static SKColor Blend(SKColor from, SKColor to, float amount) => new(
-        (byte)(from.Red + ((to.Red - from.Red) * amount)),
-        (byte)(from.Green + ((to.Green - from.Green) * amount)),
-        (byte)(from.Blue + ((to.Blue - from.Blue) * amount)),
-        from.Alpha);
+    private static string GetValueText(int value)
+    {
+        if (!ValueTexts.TryGetValue(value, out var text))
+        {
+            text = value.ToString(CultureInfo.InvariantCulture);
+            ValueTexts[value] = text;
+        }
+
+        return text;
+    }
+
+    private static bool IsMerged(Puzzle2048Move? move, int id)
+    {
+        if (move is not null)
+        {
+            foreach (var tile in move.Merged)
+            {
+                if (tile.Id == id)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     private static float Lerp(float from, float to, float t) => from + ((to - from) * t);
 

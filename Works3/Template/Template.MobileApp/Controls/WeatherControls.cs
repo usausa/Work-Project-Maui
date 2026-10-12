@@ -251,7 +251,7 @@ public sealed class SeriesSegmentView : SKCanvasView
             var density = (float)(info.Width / Width);
             using var font = new SKFont(BoldTypeface, (float)FontSize * density);
 
-            var top = (font.Metrics.Descent - font.Metrics.Ascent) + (TextSpacing * density);
+            var top = font.Metrics.GetLineHeight() + (TextSpacing * density);
             var bottom = info.Height - (PointMargin * density);
             var center = new SKPoint(info.Width / 2f, ToY(Value, top, bottom));
             var left = new SKPoint(0, Previous is { } previous ? ToY((previous + Value) / 2, top, bottom) : center.Y);
@@ -345,7 +345,7 @@ public sealed class SeriesSegmentView : SKCanvasView
             using var paint = new SKPaint();
             paint.IsAntialias = true;
             paint.Color = TextColor.ToSKColor();
-            canvas.DrawText(Text, center.X, center.Y - (TextOffset * density) - font.Metrics.Descent, SKTextAlign.Center, font, paint);
+            canvas.DrawText(Text, center.X, font.Metrics.GetBottomBaseline(center.Y - (TextOffset * density)), SKTextAlign.Center, font, paint);
         }
     }
 
@@ -717,8 +717,7 @@ public sealed class WeatherCompassDial : SKCanvasView
         {
             var point = PointAt(center, radius, i * 90);
             paint.Color = (i == 0 ? NorthColor : LabelColor).ToSKColor();
-            var baseline = point.Y - ((font.Metrics.Ascent + font.Metrics.Descent) / 2);
-            canvas.DrawText(Labels[i], point.X, baseline, SKTextAlign.Center, font, paint);
+            canvas.DrawText(Labels[i], point.X, font.Metrics.GetCenterBaseline(point.Y), SKTextAlign.Center, font, paint);
         }
     }
 
@@ -743,8 +742,7 @@ public sealed class WeatherCompassDial : SKCanvasView
         canvas.DrawCircle(tail, TailRadius * density, paint);
 
         var back = PointAt(center, radius - (HeadLength * density), to);
-        var normal = (float)(to * Math.PI / 180);
-        var offset = new SKPoint(MathF.Cos(normal) * HeadHalfWidth * density, MathF.Sin(normal) * HeadHalfWidth * density);
+        var offset = AngleHelper.GetPoint(SKPoint.Empty, HeadHalfWidth * density, (float)to);
         using var builder = new SKPathBuilder();
         builder.MoveTo(head);
         builder.LineTo(back.X + offset.X, back.Y + offset.Y);
@@ -754,11 +752,8 @@ public sealed class WeatherCompassDial : SKCanvasView
         canvas.DrawPath(path, paint);
     }
 
-    private static SKPoint PointAt(SKPoint center, float radius, double degree)
-    {
-        var radian = (float)((degree - 90) * Math.PI / 180);
-        return new SKPoint(center.X + (MathF.Cos(radian) * radius), center.Y + (MathF.Sin(radian) * radius));
-    }
+    private static SKPoint PointAt(SKPoint center, float radius, double degree) =>
+        AngleHelper.GetPoint(center, radius, AngleHelper.ToSkiaAngle((float)degree));
 }
 
 //--------------------------------------------------------------------------------
@@ -912,7 +907,7 @@ public sealed class WeatherSunArcView : SKCanvasView
             paint.StrokeWidth = PathStrokeWidth * density;
             paint.Color = PathColor.ToSKColor();
             paint.PathEffect = SKPathEffect.CreateDash([PathDash * density, PathDash * density], 0);
-            DrawArc(canvas, oval, 180, 180, paint);
+            canvas.DrawArc(oval, 180, 180, false, paint);
             paint.PathEffect = null;
 
             if (progress > 0)
@@ -937,7 +932,7 @@ public sealed class WeatherSunArcView : SKCanvasView
                 paint.StrokeWidth = PassedStrokeWidth * density;
                 paint.StrokeCap = SKStrokeCap.Round;
                 paint.Color = sunColor;
-                DrawArc(canvas, oval, 180, 180 * progress, paint);
+                canvas.DrawArc(oval, 180, 180 * progress, false, paint);
             }
 
             paint.StrokeWidth = HorizonStrokeWidth * density;
@@ -961,14 +956,6 @@ public sealed class WeatherSunArcView : SKCanvasView
     {
         var radian = angle * MathF.PI / 180f;
         return new SKPoint(oval.MidX + (MathF.Cos(radian) * oval.Width / 2), oval.MidY + (MathF.Sin(radian) * oval.Height / 2));
-    }
-
-    private static void DrawArc(SKCanvas canvas, SKRect oval, float start, float sweep, SKPaint paint)
-    {
-        using var builder = new SKPathBuilder();
-        builder.AddArc(oval, start, sweep);
-        using var path = builder.Detach();
-        canvas.DrawPath(path, paint);
     }
 
     //--------------------------------------------------------------------------------

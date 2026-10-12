@@ -45,13 +45,13 @@ ClamGrid・ClamCalendar の Example と同じく、パターンごとの画面�
 
 | 現在のファイル名 | 何用か | 使っている画面 | 汎用性 | 移行 | 移す前の手直し | 状態 |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Controls/Gauge.cs`(`GaugeRange`・`GaugeUnitPosition` を含む) | 円形のゲージ一式(地のグラデーション・外と内のベゼル・円弧の溝と塗り・色の帯・大小の目盛り・数字・中央の値と単位・針と軸。値が変わると針が動く) | UI Gauge | ★★★★ | ✅ | 名前空間を ClamGauge に、型名を `ClamGaugeView` に。線の太さ・針の幅・軸の半径も DIP で描くので(ClamGrid・ClamCalendar と同じ)、物理ピクセルで決めてある Template の値は切り替えのときに見直す | 👀 |
+| ~~`Controls/Gauge.cs`(`GaugeRange`・`GaugeUnitPosition` を含む)~~ | ~~円形のゲージ一式(地のグラデーション・外と内のベゼル・円弧の溝と塗り・色の帯・大小の目盛り・数字・中央の値と単位・針と軸。値が変わると針が動く)~~ | ~~UI Gauge~~ | ~~★★★★~~ | ~~✅~~ | ~~名前空間を ClamGauge に、型名を `ClamGaugeView` に。線の太さ・針の幅・軸の半径も DIP で描くので(ClamGrid・ClamCalendar と同じ)、物理ピクセルで決めてある Template の値は切り替えのときに見直す~~ | ~~👀~~ |
 
 ## 🔁Template の切り替えで設定すること
 
 | 対象 | Template で設定すること |
 | --- | --- |
-| ClamGauge | 線・針・軸の値を DIP で見直す(今の値は物理ピクセルで決めてある) |
+| ~~ClamGauge~~ | ~~線・針・軸の値を DIP で見直す(今の値は物理ピクセルで決めてある)~~ |
 
 ## ⚠️制約
 

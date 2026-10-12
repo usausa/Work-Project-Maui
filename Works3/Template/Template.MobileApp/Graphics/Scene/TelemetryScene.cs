@@ -1,5 +1,8 @@
 namespace Template.MobileApp.Graphics.Scene;
 
+//--------------------------------------------------------------------------------
+// Simulation
+//--------------------------------------------------------------------------------
 internal sealed class CarSim
 {
     private enum Phase
@@ -140,6 +143,9 @@ internal sealed class CarSim
     }
 }
 
+//--------------------------------------------------------------------------------
+// Scene
+//--------------------------------------------------------------------------------
 public sealed class TelemetryScene : SceneObject
 {
     private const float BaseWidth = 400f;
@@ -325,7 +331,7 @@ public sealed class TelemetryScene : SceneObject
         var inRed = sim.Rpm >= redlineRpm;
 
         // 不変の盤面 (レッドライン帯 / トラック / 目盛) はキャッシュから再生
-        DrawCachedLayer(canvas, "tacho", BaseWidth, cy + r + 16f, c => DrawTachometerChrome(c, cx, cy, r, start, sweep, maxRpm, redlineRpm));
+        DrawCachedLayer(canvas, "tacho", BaseWidth, cy + r + 16f, (Scene: this, X: cx, Y: cy, Radius: r), static (c, state) => state.Scene.DrawTachometerChrome(c, state.X, state.Y, state.Radius, start, sweep, maxRpm, redlineRpm));
 
         Stroke.StrokeCap = SKStrokeCap.Butt;
 
@@ -334,19 +340,14 @@ public sealed class TelemetryScene : SceneObject
         {
             Stroke.Color = inRed ? Red : sim.Rpm > 15200f ? Amber : Cyan;
             Stroke.StrokeWidth = 11f;
-            canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), start, sweep * frac, false, Stroke);
+            canvas.DrawArc(new SKPoint(cx, cy), r, start, sweep * frac, false, Stroke);
         }
 
         // Needle
-        var needleRad = DegToRad(start + (sweep * frac));
-        DrawGlowLine(
-            canvas,
-            cx + (10f * MathF.Cos(needleRad)),
-            cy + (10f * MathF.Sin(needleRad)),
-            cx + ((r - 6f) * MathF.Cos(needleRad)),
-            cy + ((r - 6f) * MathF.Sin(needleRad)),
-            inRed ? Red : White,
-            2.4f);
+        var needleAngle = start + (sweep * frac);
+        var needleFrom = AngleHelper.GetPoint(new SKPoint(cx, cy), 10f, needleAngle);
+        var needleTo = AngleHelper.GetPoint(new SKPoint(cx, cy), r - 6f, needleAngle);
+        DrawGlowLine(canvas, needleFrom.X, needleFrom.Y, needleTo.X, needleTo.Y, inRed ? Red : White, 2.4f);
 
         // Hub
         Fill.Color = Panel;
@@ -370,33 +371,28 @@ public sealed class TelemetryScene : SceneObject
         // Redline band
         Stroke.Color = Red.WithAlpha(200);
         Stroke.StrokeWidth = 3f;
-        canvas.DrawArc(new SKRect(cx - r - 9f, cy - r - 9f, cx + r + 9f, cy + r + 9f), start + (sweep * redFrac), sweep * (1f - redFrac), false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, cy), r + 9f, start + (sweep * redFrac), sweep * (1f - redFrac), false, Stroke);
 
         // Track
         Stroke.Color = PanelLine.WithAlpha(160);
         Stroke.StrokeWidth = 11f;
-        canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), start, sweep, false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, cy), r, start, sweep, false, Stroke);
 
         // Ticks (major every 2000, label inside)
         for (var rpm = 0; rpm <= (int)maxRpm; rpm += 1000)
         {
-            var angle = DegToRad(start + (sweep * rpm / maxRpm));
+            var angle = start + (sweep * rpm / maxRpm);
             var major = (rpm % 2000) == 0;
             var tickColor = rpm >= redlineRpm ? Red.WithAlpha(220) : Dim.WithAlpha(major ? (byte)220 : (byte)110);
             var r0 = r + 7f;
             var r1 = r + (major ? 15f : 11f);
             Stroke.Color = tickColor;
             Stroke.StrokeWidth = major ? 1.8f : 1.1f;
-            canvas.DrawLine(
-                cx + (r0 * MathF.Cos(angle)),
-                cy + (r0 * MathF.Sin(angle)),
-                cx + (r1 * MathF.Cos(angle)),
-                cy + (r1 * MathF.Sin(angle)),
-                Stroke);
+            canvas.DrawLine(AngleHelper.GetPoint(new SKPoint(cx, cy), r0, angle), AngleHelper.GetPoint(new SKPoint(cx, cy), r1, angle), Stroke);
 
             if (major)
             {
-                var tp = new SKPoint(cx + ((r - 16f) * MathF.Cos(angle)), cy + ((r - 16f) * MathF.Sin(angle)));
+                var tp = AngleHelper.GetPoint(new SKPoint(cx, cy), r - 16f, angle);
                 DrawText(canvas, $"{rpm / 1000}", tp.X, tp.Y + 3.5f, 9f, rpm >= 18000 ? Red : Dim, align: SKTextAlign.Center);
             }
         }
@@ -422,7 +418,7 @@ public sealed class TelemetryScene : SceneObject
         canvas.RotateDegrees((t * 40f) % 360f, cx, cy);
         for (var i = 0; i < 3; i++)
         {
-            canvas.DrawArc(new SKRect(cx - r - 8f, cy - r - 8f, cx + r + 8f, cy + r + 8f), i * 120f, 70f, false, Stroke);
+            canvas.DrawArc(new SKPoint(cx, cy), r + 8f, i * 120f, 70f, false, Stroke);
         }
 
         canvas.Restore();
@@ -438,14 +434,14 @@ public sealed class TelemetryScene : SceneObject
             var segStart = start + (i * (sweep / segments)) + 1.5f;
             Stroke.Color = i < litSegments ? ringColor.WithAlpha(230) : PanelLine.WithAlpha(150);
             Stroke.StrokeWidth = 10f;
-            canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), segStart, (sweep / segments) - 3f, false, Stroke);
+            canvas.DrawArc(new SKPoint(cx, cy), r, segStart, (sweep / segments) - 3f, false, Stroke);
         }
 
         // Scale labels
         for (var p = 0; p <= 100; p += 50)
         {
-            var rad = DegToRad(start + (sweep * p / 100f));
-            DrawText(canvas, $"{p}", cx + ((r + 15f) * MathF.Cos(rad)), cy + ((r + 15f) * MathF.Sin(rad)) + 3.5f, 9f, Dim, align: SKTextAlign.Center);
+            var point = AngleHelper.GetPoint(new SKPoint(cx, cy), r + 15f, start + (sweep * p / 100f));
+            DrawText(canvas, $"{p}", point.X, point.Y + 3.5f, 9f, Dim, align: SKTextAlign.Center);
         }
 
         // Pulse rings when active
@@ -497,20 +493,18 @@ public sealed class TelemetryScene : SceneObject
         Stroke.StrokeCap = SKStrokeCap.Round;
         Stroke.Color = PanelLine.WithAlpha(150);
         Stroke.StrokeWidth = 7f;
-        canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), 135f, 270f, false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, cy), r, 135f, 270f, false, Stroke);
 
         var norm = Math.Clamp((sim.ErsKw + 100f) / 400f, 0f, 1f);
         var color = sim.BoostActive ? Amber : sim.ErsKw < -5f ? Azure : Cyan;
         Stroke.Color = color;
-        canvas.DrawArc(new SKRect(cx - r, cy - r, cx + r, cy + r), 135f, 270f * norm, false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, cy), r, 135f, 270f * norm, false, Stroke);
 
-        var rad = DegToRad(135f + (270f * norm));
-        var px = cx + (r * MathF.Cos(rad));
-        var py = cy + (r * MathF.Sin(rad));
+        var marker = AngleHelper.GetPoint(new SKPoint(cx, cy), r, 135f + (270f * norm));
         Fill.Color = White.WithAlpha(80);
-        canvas.DrawCircle(px, py, 7f, Fill);
+        canvas.DrawCircle(marker, 7f, Fill);
         Fill.Color = White;
-        canvas.DrawCircle(px, py, 3.5f, Fill);
+        canvas.DrawCircle(marker, 3.5f, Fill);
 
         DrawGlowText(canvas, $"{(int)sim.ErsKw:+0;-0}", cx, cy + 6f, 19f, color, 4f, bold: true, align: SKTextAlign.Center);
         DrawText(canvas, "kW", cx, cy + 20f, 9f, Dim, align: SKTextAlign.Center);
@@ -549,7 +543,7 @@ public sealed class TelemetryScene : SceneObject
         var r = layout.SideR;
 
         // 不変の盤面 (外円 / 十字 / 破線円) はキャッシュから再生
-        DrawCachedLayer(canvas, "gforce", BaseWidth, cy + r + 16f, c => DrawGForceChrome(c, cx, cy, r));
+        DrawCachedLayer(canvas, "gforce", BaseWidth, cy + r + 16f, (Scene: this, X: cx, Y: cy, Radius: r), static (c, state) => state.Scene.DrawGForceChrome(c, state.X, state.Y, state.Radius));
 
         var total = MathF.Sqrt((sim.LatG * sim.LatG) + (sim.LonG * sim.LonG));
         var color = total < 2.2f ? Cyan : total < 3.2f ? Amber : Red;
@@ -629,19 +623,18 @@ public sealed class TelemetryScene : SceneObject
         Stroke.StrokeCap = SKStrokeCap.Round;
         Stroke.Color = PanelLine.WithAlpha(140);
         Stroke.StrokeWidth = 5f;
-        canvas.DrawArc(new SKRect(cx - r, gy - r, cx + r, gy + r), 180f, 180f, false, Stroke);
+        canvas.DrawArc(new SKPoint(cx, gy), r, 180f, 180f, false, Stroke);
 
         var norm = Math.Clamp((value - min) / (max - min), 0f, 1f);
         if (norm > 0.005f)
         {
             Stroke.Color = flash ? Red : color;
-            canvas.DrawArc(new SKRect(cx - r, gy - r, cx + r, gy + r), 180f, 180f * norm, false, Stroke);
+            canvas.DrawArc(new SKPoint(cx, gy), r, 180f, 180f * norm, false, Stroke);
         }
 
         // 針先ドット
-        var rad = DegToRad(180f + (180f * norm));
         Fill.Color = White;
-        canvas.DrawCircle(cx + (r * MathF.Cos(rad)), gy + (r * MathF.Sin(rad)), 2.6f, Fill);
+        canvas.DrawCircle(AngleHelper.GetPoint(new SKPoint(cx, gy), r, 180f + (180f * norm)), 2.6f, Fill);
 
         // 目盛
         Stroke.StrokeCap = SKStrokeCap.Butt;
@@ -649,13 +642,8 @@ public sealed class TelemetryScene : SceneObject
         Stroke.StrokeWidth = 1.4f;
         for (var i = 0; i <= 4; i++)
         {
-            var tickRad = DegToRad(180f + (45f * i));
-            canvas.DrawLine(
-                cx + ((r + 5f) * MathF.Cos(tickRad)),
-                gy + ((r + 5f) * MathF.Sin(tickRad)),
-                cx + ((r + 9f) * MathF.Cos(tickRad)),
-                gy + ((r + 9f) * MathF.Sin(tickRad)),
-                Stroke);
+            var tickAngle = 180f + (45f * i);
+            canvas.DrawLine(AngleHelper.GetPoint(new SKPoint(cx, gy), r + 5f, tickAngle), AngleHelper.GetPoint(new SKPoint(cx, gy), r + 9f, tickAngle), Stroke);
         }
 
         // アークの中に値と単位

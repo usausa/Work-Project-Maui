@@ -130,19 +130,7 @@ public sealed class GlowRing : SKCanvasView
     private static void DrawArc(SKCanvas canvas, SKPoint center, float radius, float stroke, float blur, float progress, SKColor startColor, SKColor endColor)
     {
         var sweep = 360f * progress;
-        var rect = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
-
-        using var baseShader = SKShader.CreateSweepGradient(
-            center,
-            [startColor, endColor],
-            [0f, progress],
-            SKShaderTileMode.Clamp,
-            0f,
-            360f);
-        using var shader = baseShader.WithLocalMatrix(SKMatrix.CreateRotationDegrees(StartAngle, center.X, center.Y));
-        using var builder = new SKPathBuilder();
-        builder.AddArc(rect, StartAngle, sweep);
-        using var path = builder.Detach();
+        using var shader = AngleHelper.CreateArcGradient(center, StartAngle, sweep, [startColor, endColor]);
 
         using var glow = new SKPaint();
         glow.IsAntialias = true;
@@ -152,7 +140,7 @@ public sealed class GlowRing : SKCanvasView
         glow.Shader = shader;
         glow.Color = SKColors.White.WithAlpha(GlowAlpha);
         glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, blur);
-        canvas.DrawPath(path, glow);
+        canvas.DrawArc(center, radius, StartAngle, sweep, false, glow);
 
         using var paint = new SKPaint();
         paint.IsAntialias = true;
@@ -160,6 +148,6 @@ public sealed class GlowRing : SKCanvasView
         paint.StrokeWidth = stroke;
         paint.StrokeCap = SKStrokeCap.Round;
         paint.Shader = shader;
-        canvas.DrawPath(path, paint);
+        canvas.DrawArc(center, radius, StartAngle, sweep, false, paint);
     }
 }
