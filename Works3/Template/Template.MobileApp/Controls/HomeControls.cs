@@ -10,30 +10,43 @@ public abstract class HomeControl : SKCanvasView
     protected static readonly BindableProperty.BindingPropertyChangedDelegate Invalidate =
         static (bindable, _, _) => ((HomeControl)bindable).InvalidateSurface();
 
-    // SKCanvas は物理ピクセルなので、論理単位の大きさ・太さにはこの密度を掛ける
     protected float GetDensity(SKImageInfo info) => Width > 0 ? (float)(info.Width / Width) : 1f;
 }
 
 //--------------------------------------------------------------------------------
 // Background
 //--------------------------------------------------------------------------------
-// 写真(MauiImage のファイル名)を全面に敷き、ぼかして暗くする。ぼかしは写真か大きさが変わったときに 1 回だけ描き、以後は写す
 public sealed partial class HomeBlurredImage : HomeControl
 {
-    // ぼかしは 4 分の 1 の大きさで描いて引き伸ばす(全面のぼかしをそのまま描くと重い)
     private const int Reduction = 4;
+
+    private const int SampleStep = 4;
+
+    private const int BytesPerPixel = 4;
+
+    private const double RedLuminance = 0.2126;
+
+    private const double GreenLuminance = 0.7152;
+
+    private const double BlueLuminance = 0.0722;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private SKImage? cache;
+
+    private string? cacheKey;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SourceProperty = BindableProperty.Create(
         nameof(Source),
         typeof(string),
         typeof(HomeBlurredImage),
         propertyChanged: Invalidate);
-
-    public string? Source
-    {
-        get => (string?)GetValue(SourceProperty);
-        set => SetValue(SourceProperty, value);
-    }
 
     public static readonly BindableProperty BlurRadiusProperty = BindableProperty.Create(
         nameof(BlurRadius),
@@ -42,13 +55,6 @@ public sealed partial class HomeBlurredImage : HomeControl
         16d,
         propertyChanged: Invalidate);
 
-    public double BlurRadius
-    {
-        get => (double)GetValue(BlurRadiusProperty);
-        set => SetValue(BlurRadiusProperty, value);
-    }
-
-    // 0〜1
     public static readonly BindableProperty DimProperty = BindableProperty.Create(
         nameof(Dim),
         typeof(double),
@@ -56,13 +62,6 @@ public sealed partial class HomeBlurredImage : HomeControl
         0.5d,
         propertyChanged: Invalidate);
 
-    public double Dim
-    {
-        get => (double)GetValue(DimProperty);
-        set => SetValue(DimProperty, value);
-    }
-
-    // 0〜1。暗くした後の平均の明るさの上限。明るい写真は、これを超えないところまで暗くする
     public static readonly BindableProperty MaxLuminanceProperty = BindableProperty.Create(
         nameof(MaxLuminance),
         typeof(double),
@@ -70,15 +69,33 @@ public sealed partial class HomeBlurredImage : HomeControl
         1d,
         propertyChanged: Invalidate);
 
+    public string? Source
+    {
+        get => (string?)GetValue(SourceProperty);
+        set => SetValue(SourceProperty, value);
+    }
+
+    public double BlurRadius
+    {
+        get => (double)GetValue(BlurRadiusProperty);
+        set => SetValue(BlurRadiusProperty, value);
+    }
+
+    public double Dim
+    {
+        get => (double)GetValue(DimProperty);
+        set => SetValue(DimProperty, value);
+    }
+
     public double MaxLuminance
     {
         get => (double)GetValue(MaxLuminanceProperty);
         set => SetValue(MaxLuminanceProperty, value);
     }
 
-    private SKImage? cache;
-
-    private string? cacheKey;
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     protected override void OnHandlerChanging(HandlerChangingEventArgs args)
     {
@@ -127,7 +144,6 @@ public sealed partial class HomeBlurredImage : HomeControl
         using var surface = SKSurface.Create(new SKImageInfo(width, height));
         var canvas = surface.Canvas;
 
-        // 縦横の比を保って全面を覆う
         var scale = Math.Max(width / (float)bitmap.Width, height / (float)bitmap.Height);
         var dest = SKRect.Create((width - (bitmap.Width * scale)) / 2f, (height - (bitmap.Height * scale)) / 2f, bitmap.Width * scale, bitmap.Height * scale);
         var sigma = (float)BlurRadius * density / Reduction;
@@ -150,7 +166,6 @@ public sealed partial class HomeBlurredImage : HomeControl
         return surface.Snapshot();
     }
 
-    // 平均の明るさ(0〜1)。縦横 4 画素おきに見る
     private static double MeasureLuminance(SKSurface surface)
     {
         using var pixmap = surface.PeekPixels();
@@ -163,14 +178,14 @@ public sealed partial class HomeBlurredImage : HomeControl
         var span = pixmap.GetPixelSpan();
         var sum = 0d;
         var count = 0;
-        for (var y = 0; y < pixmap.Height; y += 4)
+        for (var y = 0; y < pixmap.Height; y += SampleStep)
         {
-            var row = span.Slice(y * pixmap.RowBytes, pixmap.Width * 4);
-            for (var x = 0; x < row.Length; x += 16)
+            var row = span.Slice(y * pixmap.RowBytes, pixmap.Width * BytesPerPixel);
+            for (var x = 0; x < row.Length; x += SampleStep * BytesPerPixel)
             {
                 var r = bgra ? row[x + 2] : row[x];
                 var b = bgra ? row[x] : row[x + 2];
-                sum += (0.2126 * r) + (0.7152 * row[x + 1]) + (0.0722 * b);
+                sum += (RedLuminance * r) + (GreenLuminance * row[x + 1]) + (BlueLuminance * b);
                 count++;
             }
         }
@@ -178,18 +193,63 @@ public sealed partial class HomeBlurredImage : HomeControl
         return count > 0 ? sum / count / 255d : 0d;
     }
 
+    //--------------------------------------------------------------------------------
+    // Platform
+    //--------------------------------------------------------------------------------
+
     private static partial SKBitmap? LoadBitmap(string? source);
 }
 
 //--------------------------------------------------------------------------------
 // Thermostat
 //--------------------------------------------------------------------------------
-// 下を開けた 270° の円弧(左下が Minimum、右下が Maximum)。輪のあたりをドラッグすると Step 刻みで Value が変わる
 public sealed class HomeThermostatDial : HomeControl
 {
     private const float StartAngle = 135f;
 
     private const float SweepAngle = 270f;
+
+    private const float ArcStrokeWidth = 10f;
+
+    private const float ArcInsetRate = 2.4f;
+
+    private const float DiscInsetRate = 1.6f;
+
+    private const float DiscLineWidth = 1f;
+
+    private const float GlowWidthRate = 2f;
+
+    private const float GlowBlur = 8f;
+
+    private const float KnobGlowRate = 1.2f;
+
+    private const float KnobGlowBlur = 6f;
+
+    private const float KnobRingRate = 0.95f;
+
+    private const float KnobDotRate = 0.6f;
+
+    private const float TouchRangeRate = 3f;
+
+    private const byte GlowAlpha = 150;
+
+    private const byte KnobGlowAlpha = 200;
+
+    private static readonly SKColor DiscTopColor = new(255, 255, 255, 40);
+
+    private static readonly SKColor DiscBottomColor = new(255, 255, 255, 10);
+
+    private static readonly SKColor DiscLineColor = new(255, 255, 255, 60);
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private bool dragging;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
@@ -199,24 +259,12 @@ public sealed class HomeThermostatDial : HomeControl
         BindingMode.TwoWay,
         propertyChanged: Invalidate);
 
-    public double Value
-    {
-        get => (double)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
-
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
         typeof(HomeThermostatDial),
         0d,
         propertyChanged: Invalidate);
-
-    public double Minimum
-    {
-        get => (double)GetValue(MinimumProperty);
-        set => SetValue(MinimumProperty, value);
-    }
 
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
@@ -225,23 +273,11 @@ public sealed class HomeThermostatDial : HomeControl
         1d,
         propertyChanged: Invalidate);
 
-    public double Maximum
-    {
-        get => (double)GetValue(MaximumProperty);
-        set => SetValue(MaximumProperty, value);
-    }
-
     public static readonly BindableProperty StepProperty = BindableProperty.Create(
         nameof(Step),
         typeof(double),
         typeof(HomeThermostatDial),
         0d);
-
-    public double Step
-    {
-        get => (double)GetValue(StepProperty);
-        set => SetValue(StepProperty, value);
-    }
 
     public static readonly BindableProperty ArcStartColorProperty = BindableProperty.Create(
         nameof(ArcStartColor),
@@ -250,24 +286,12 @@ public sealed class HomeThermostatDial : HomeControl
         Colors.Orange,
         propertyChanged: Invalidate);
 
-    public Color ArcStartColor
-    {
-        get => (Color)GetValue(ArcStartColorProperty);
-        set => SetValue(ArcStartColorProperty, value);
-    }
-
     public static readonly BindableProperty ArcEndColorProperty = BindableProperty.Create(
         nameof(ArcEndColor),
         typeof(Color),
         typeof(HomeThermostatDial),
         Colors.OrangeRed,
         propertyChanged: Invalidate);
-
-    public Color ArcEndColor
-    {
-        get => (Color)GetValue(ArcEndColorProperty);
-        set => SetValue(ArcEndColorProperty, value);
-    }
 
     public static readonly BindableProperty TrackColorProperty = BindableProperty.Create(
         nameof(TrackColor),
@@ -276,12 +300,6 @@ public sealed class HomeThermostatDial : HomeControl
         Color.FromRgba(255, 255, 255, 36),
         propertyChanged: Invalidate);
 
-    public Color TrackColor
-    {
-        get => (Color)GetValue(TrackColorProperty);
-        set => SetValue(TrackColorProperty, value);
-    }
-
     public static readonly BindableProperty IsActiveProperty = BindableProperty.Create(
         nameof(IsActive),
         typeof(bool),
@@ -289,13 +307,57 @@ public sealed class HomeThermostatDial : HomeControl
         true,
         propertyChanged: Invalidate);
 
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
+    public double Minimum
+    {
+        get => (double)GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
+    }
+
+    public double Maximum
+    {
+        get => (double)GetValue(MaximumProperty);
+        set => SetValue(MaximumProperty, value);
+    }
+
+    public double Step
+    {
+        get => (double)GetValue(StepProperty);
+        set => SetValue(StepProperty, value);
+    }
+
+    public Color ArcStartColor
+    {
+        get => (Color)GetValue(ArcStartColorProperty);
+        set => SetValue(ArcStartColorProperty, value);
+    }
+
+    public Color ArcEndColor
+    {
+        get => (Color)GetValue(ArcEndColorProperty);
+        set => SetValue(ArcEndColorProperty, value);
+    }
+
+    public Color TrackColor
+    {
+        get => (Color)GetValue(TrackColorProperty);
+        set => SetValue(TrackColorProperty, value);
+    }
+
     public bool IsActive
     {
         get => (bool)GetValue(IsActiveProperty);
         set => SetValue(IsActiveProperty, value);
     }
 
-    private bool dragging;
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public HomeThermostatDial()
     {
@@ -303,20 +365,9 @@ public sealed class HomeThermostatDial : HomeControl
         Touch += OnTouch;
     }
 
-    private (SKPoint Center, float Radius, float Stroke, float Density) GetGeometry(SKImageInfo info)
-    {
-        var density = GetDensity(info);
-        var stroke = 10f * density;
-        // つまみと光が端で切れないように内側に描く
-        var radius = (MathF.Min(info.Width, info.Height) / 2f) - (stroke * 2.4f);
-        return (new SKPoint(info.Width / 2f, info.Height / 2f), radius, stroke, density);
-    }
-
-    private float Ratio()
-    {
-        var range = Maximum - Minimum;
-        return range > 0 ? (float)Math.Clamp((Value - Minimum) / range, 0d, 1d) : 0f;
-    }
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -329,7 +380,7 @@ public sealed class HomeThermostatDial : HomeControl
             var (center, radius, stroke, density) = GetGeometry(info);
             var rect = new SKRect(center.X - radius, center.Y - radius, center.X + radius, center.Y + radius);
 
-            DrawDisc(canvas, center, radius - (stroke * 1.6f), density);
+            DrawDisc(canvas, center, radius - (stroke * DiscInsetRate), density);
 
             using var track = new SKPaint();
             track.IsAntialias = true;
@@ -352,13 +403,26 @@ public sealed class HomeThermostatDial : HomeControl
         }
     }
 
-    // 内側の円(上が少し明るい半透明の面と細い縁)
+    private (SKPoint Center, float Radius, float Stroke, float Density) GetGeometry(SKImageInfo info)
+    {
+        var density = GetDensity(info);
+        var stroke = ArcStrokeWidth * density;
+        var radius = (MathF.Min(info.Width, info.Height) / 2f) - (stroke * ArcInsetRate);
+        return (new SKPoint(info.Width / 2f, info.Height / 2f), radius, stroke, density);
+    }
+
+    private float Ratio()
+    {
+        var range = Maximum - Minimum;
+        return range > 0 ? (float)Math.Clamp((Value - Minimum) / range, 0d, 1d) : 0f;
+    }
+
     private static void DrawDisc(SKCanvas canvas, SKPoint center, float radius, float density)
     {
         using var shader = SKShader.CreateLinearGradient(
             new SKPoint(center.X, center.Y - radius),
             new SKPoint(center.X, center.Y + radius),
-            [new SKColor(255, 255, 255, 40), new SKColor(255, 255, 255, 10)],
+            [DiscTopColor, DiscBottomColor],
             [0f, 1f],
             SKShaderTileMode.Clamp);
         using var fill = new SKPaint();
@@ -369,8 +433,8 @@ public sealed class HomeThermostatDial : HomeControl
         using var line = new SKPaint();
         line.IsAntialias = true;
         line.Style = SKPaintStyle.Stroke;
-        line.StrokeWidth = 1f * density;
-        line.Color = new SKColor(255, 255, 255, 60);
+        line.StrokeWidth = DiscLineWidth * density;
+        line.Color = DiscLineColor;
         canvas.DrawCircle(center, radius, line);
     }
 
@@ -379,7 +443,6 @@ public sealed class HomeThermostatDial : HomeControl
         if (ratio > 0f)
         {
             var sweep = SweepAngle * ratio;
-            // SKShader.CreateSweepGradient は 3 時の方向が 0° なので、円弧の始まりの角度まで回す
             using var baseShader = SKShader.CreateSweepGradient(
                 center,
                 [start, end],
@@ -395,11 +458,11 @@ public sealed class HomeThermostatDial : HomeControl
             using var glow = new SKPaint();
             glow.IsAntialias = true;
             glow.Style = SKPaintStyle.Stroke;
-            glow.StrokeWidth = stroke * 2f;
+            glow.StrokeWidth = stroke * GlowWidthRate;
             glow.StrokeCap = SKStrokeCap.Round;
             glow.Shader = shader;
-            glow.Color = SKColors.White.WithAlpha(150);
-            glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 8f * density);
+            glow.Color = SKColors.White.WithAlpha(GlowAlpha);
+            glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, GlowBlur * density);
             canvas.DrawPath(path, glow);
 
             using var paint = new SKPaint();
@@ -419,19 +482,19 @@ public sealed class HomeThermostatDial : HomeControl
 
         using var glow = new SKPaint();
         glow.IsAntialias = true;
-        glow.Color = color.WithAlpha(200);
-        glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 6f * density);
-        canvas.DrawCircle(knob, stroke * 1.2f, glow);
+        glow.Color = color.WithAlpha(KnobGlowAlpha);
+        glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, KnobGlowBlur * density);
+        canvas.DrawCircle(knob, stroke * KnobGlowRate, glow);
 
         using var ring = new SKPaint();
         ring.IsAntialias = true;
         ring.Color = SKColors.White;
-        canvas.DrawCircle(knob, stroke * 0.95f, ring);
+        canvas.DrawCircle(knob, stroke * KnobRingRate, ring);
 
         using var dot = new SKPaint();
         dot.IsAntialias = true;
         dot.Color = color;
-        canvas.DrawCircle(knob, stroke * 0.6f, dot);
+        canvas.DrawCircle(knob, stroke * KnobDotRate, dot);
     }
 
     //--------------------------------------------------------------------------------
@@ -459,12 +522,11 @@ public sealed class HomeThermostatDial : HomeControl
         e.Handled = dragging;
     }
 
-    // 内側の円(−・+ のボタンのある所)は受けない
     private bool IsOnRing(SKPoint location)
     {
         var (center, radius, stroke, _) = GetGeometry(new SKImageInfo(CanvasSize.Width > 0 ? (int)CanvasSize.Width : 1, CanvasSize.Height > 0 ? (int)CanvasSize.Height : 1));
         var distance = SKPoint.Distance(location, center);
-        return (distance > radius - (stroke * 3f)) && (distance < radius + (stroke * 3f));
+        return (distance > radius - (stroke * TouchRangeRate)) && (distance < radius + (stroke * TouchRangeRate));
     }
 
     private void UpdateValue(SKPoint location)
@@ -474,7 +536,6 @@ public sealed class HomeThermostatDial : HomeControl
             var center = new SKPoint(CanvasSize.Width / 2f, CanvasSize.Height / 2f);
             var angle = MathF.Atan2(location.Y - center.Y, location.X - center.X) * 180f / MathF.PI;
             var relative = (((angle - StartAngle) % 360f) + 360f) % 360f;
-            // 下の開いた所は近い方の端にそろえる
             if (relative > SweepAngle)
             {
                 relative = relative < SweepAngle + ((360f - SweepAngle) / 2f) ? SweepAngle : 0f;
@@ -494,21 +555,22 @@ public sealed class HomeThermostatDial : HomeControl
 //--------------------------------------------------------------------------------
 // Icon
 //--------------------------------------------------------------------------------
-// MaterialIcons の文字のアイコン。IsGlowing の間は同じ色のぼかしを後ろに重ねて光らせる
 public sealed class HomeGlowIcon : HomeControl
 {
+    private const float GlowBlur = 9f;
+
+    private const byte GlowAlpha = 200;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty GlyphProperty = BindableProperty.Create(
         nameof(Glyph),
         typeof(string),
         typeof(HomeGlowIcon),
         string.Empty,
         propertyChanged: Invalidate);
-
-    public string Glyph
-    {
-        get => (string)GetValue(GlyphProperty);
-        set => SetValue(GlyphProperty, value);
-    }
 
     public static readonly BindableProperty ColorProperty = BindableProperty.Create(
         nameof(Color),
@@ -517,24 +579,12 @@ public sealed class HomeGlowIcon : HomeControl
         Colors.White,
         propertyChanged: Invalidate);
 
-    public Color Color
-    {
-        get => (Color)GetValue(ColorProperty);
-        set => SetValue(ColorProperty, value);
-    }
-
     public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(
         nameof(IconSize),
         typeof(double),
         typeof(HomeGlowIcon),
         40d,
         propertyChanged: Invalidate);
-
-    public double IconSize
-    {
-        get => (double)GetValue(IconSizeProperty);
-        set => SetValue(IconSizeProperty, value);
-    }
 
     public static readonly BindableProperty IsGlowingProperty = BindableProperty.Create(
         nameof(IsGlowing),
@@ -543,11 +593,33 @@ public sealed class HomeGlowIcon : HomeControl
         false,
         propertyChanged: Invalidate);
 
+    public string Glyph
+    {
+        get => (string)GetValue(GlyphProperty);
+        set => SetValue(GlyphProperty, value);
+    }
+
+    public Color Color
+    {
+        get => (Color)GetValue(ColorProperty);
+        set => SetValue(ColorProperty, value);
+    }
+
+    public double IconSize
+    {
+        get => (double)GetValue(IconSizeProperty);
+        set => SetValue(IconSizeProperty, value);
+    }
+
     public bool IsGlowing
     {
         get => (bool)GetValue(IsGlowingProperty);
         set => SetValue(IsGlowingProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -568,8 +640,8 @@ public sealed class HomeGlowIcon : HomeControl
             {
                 using var glow = new SKPaint();
                 glow.IsAntialias = true;
-                glow.Color = color.WithAlpha(200);
-                glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 9f * density);
+                glow.Color = color.WithAlpha(GlowAlpha);
+                glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, GlowBlur * density);
                 canvas.DrawText(Glyph, x, y, SKTextAlign.Left, font, glow);
             }
 
@@ -584,21 +656,42 @@ public sealed class HomeGlowIcon : HomeControl
 //--------------------------------------------------------------------------------
 // Battery
 //--------------------------------------------------------------------------------
-// 横向きの電池(外形・右の端子・量のグラデーションと光)。Level は 0〜1
 public sealed class HomeBatteryGauge : HomeControl
 {
+    private const float BodyMargin = 6f;
+
+    private const float BodyRadius = 6f;
+
+    private const float FillInset = 3f;
+
+    private const float TerminalWidth = 4f;
+
+    private const float TerminalHeightRate = 0.4f;
+
+    private const float TerminalGap = 1f;
+
+    private const float TerminalRadius = 1f;
+
+    private const float LineWidth = 2f;
+
+    private const float GlowBlur = 5f;
+
+    private const byte GlowAlpha = 150;
+
+    private const byte FillBottomAlpha = 170;
+
+    private const byte LineAlpha = 220;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty LevelProperty = BindableProperty.Create(
         nameof(Level),
         typeof(double),
         typeof(HomeBatteryGauge),
         0d,
         propertyChanged: Invalidate);
-
-    public double Level
-    {
-        get => (double)GetValue(LevelProperty);
-        set => SetValue(LevelProperty, value);
-    }
 
     public static readonly BindableProperty FillColorProperty = BindableProperty.Create(
         nameof(FillColor),
@@ -607,11 +700,21 @@ public sealed class HomeBatteryGauge : HomeControl
         Colors.LimeGreen,
         propertyChanged: Invalidate);
 
+    public double Level
+    {
+        get => (double)GetValue(LevelProperty);
+        set => SetValue(LevelProperty, value);
+    }
+
     public Color FillColor
     {
         get => (Color)GetValue(FillColorProperty);
         set => SetValue(FillColorProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -622,14 +725,14 @@ public sealed class HomeBatteryGauge : HomeControl
         if ((info.Width > 0) && (info.Height > 0) && (Width > 0))
         {
             var density = GetDensity(info);
-            var margin = 6f * density;
-            var terminal = 4f * density;
+            var margin = BodyMargin * density;
+            var terminal = TerminalWidth * density;
             var body = new SKRect(margin, margin, info.Width - margin - terminal, info.Height - margin);
-            var radius = 6f * density;
+            var radius = BodyRadius * density;
             var color = FillColor.ToSKColor();
             var level = (float)Math.Clamp(Level, 0d, 1d);
 
-            var inset = 3f * density;
+            var inset = FillInset * density;
             var inner = new SKRect(body.Left + inset, body.Top + inset, body.Right - inset, body.Bottom - inset);
             if (level > 0f)
             {
@@ -637,14 +740,14 @@ public sealed class HomeBatteryGauge : HomeControl
 
                 using var glow = new SKPaint();
                 glow.IsAntialias = true;
-                glow.Color = color.WithAlpha(150);
-                glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f * density);
+                glow.Color = color.WithAlpha(GlowAlpha);
+                glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, GlowBlur * density);
                 canvas.DrawRoundRect(fill, radius / 2f, radius / 2f, glow);
 
                 using var shader = SKShader.CreateLinearGradient(
                     new SKPoint(0f, fill.Top),
                     new SKPoint(0f, fill.Bottom),
-                    [color.WithAlpha(255), color.WithAlpha(170)],
+                    [color.WithAlpha(255), color.WithAlpha(FillBottomAlpha)],
                     [0f, 1f],
                     SKShaderTileMode.Clamp);
                 using var paint = new SKPaint();
@@ -656,15 +759,15 @@ public sealed class HomeBatteryGauge : HomeControl
             using var line = new SKPaint();
             line.IsAntialias = true;
             line.Style = SKPaintStyle.Stroke;
-            line.StrokeWidth = 2f * density;
-            line.Color = color.WithAlpha(220);
+            line.StrokeWidth = LineWidth * density;
+            line.Color = color.WithAlpha(LineAlpha);
             canvas.DrawRoundRect(body, radius, radius, line);
 
             using var cap = new SKPaint();
             cap.IsAntialias = true;
-            cap.Color = color.WithAlpha(220);
-            var capHeight = body.Height * 0.4f;
-            canvas.DrawRoundRect(new SKRect(body.Right + density, body.MidY - (capHeight / 2f), body.Right + terminal, body.MidY + (capHeight / 2f)), density, density, cap);
+            cap.Color = color.WithAlpha(LineAlpha);
+            var capHeight = body.Height * TerminalHeightRate;
+            canvas.DrawRoundRect(new SKRect(body.Right + (TerminalGap * density), body.MidY - (capHeight / 2f), body.Right + terminal, body.MidY + (capHeight / 2f)), TerminalRadius * density, TerminalRadius * density, cap);
         }
     }
 }

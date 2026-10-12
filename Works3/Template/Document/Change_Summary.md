@@ -3493,14 +3493,16 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Behaviors/ButtonOption.cs` | PressBind は True のときだけ Behavior を付ける |
 | Smart.Maui(サブモジュール)の `Maui/Interactivity/AppLifecycleBehavior.cs` | 外すときも `ParentChanged` から外す |
 | Smart.Maui(サブモジュール)の `Maui/Interactivity/TapActionBehavior.cs` | `ParameterProperty` の所有型を `TapActionBehavior` に |
+| `Controls/ChipGroup.cs` | 折り返し(`Wrap`)で、行に収まらないチップを縮めずに次の行へ送る(FlexLayout の Shrink の既定 1 で、1 行目のチップの文字が切れていた) |
 
+- 実機: UI Shop の絞り込みのシートの折り返しのチップは、行に収まっていて縮める所が無いので並びは変わらない
 - ビルド 0 警告
 
 ### 🧩コントロールの抽出の計画(2026-10-11)
 
 | 対象 | 内容 |
 |---|---|
-| `Document/Control_Extraction_Plan.md`(新規) | 汎用のコントロールを移す計画。非 Skia は MauiComponents と関連する名前のライブラリ(名前の案は `MauiComponents.Controls`・`MauiControls`)、Skia は Gauge だけを `ClamGauge` へ。対象ごとの用途・使っている画面・汎用性(★)・移す前の手直しと、ClamGauge の Example(パターン・タップとスライダーでの値・色の切り替え) |
+| `Document/Control_Extraction_Plan.md`(新規) | 汎用のコントロールを移す計画。非 Skia は `MauiComponents.Controls`(パッケージ `Components.Maui.Controls`)、Skia は Gauge だけを `ClamGauge`(`ClamGaugeView`)へ。対象ごとの用途・使っている画面・汎用性(★)・移す前の手直しと、ClamGauge の Example(パターン・タップとスライダーでの値・色の切り替え) |
 | `Document/Task_Checklist.md` / `README.md` | コントロールの抽出は計画書で管理し、README の TODO に 1 行 |
 
 ### 📚計画書の整理(2026-10-11)
@@ -3519,6 +3521,21 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `GeneratedFactory.cs` | `MauiComponents.WiFiManager` のファクトリの生成の属性を足した |
 
 - 実機: DEBUG の起動で、実行時のフォールバックが 0 件
+- ビルド 0 警告
+
+### 🧹コントロールのソースの書き方の統一(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/`(抽出しないで残すコントロールの 42 ファイル) | コメントを消し(`// ReSharper` の指示と空の catch の `// Ignore` は残す)、const → static readonly → `// Member` → `// Property` → `// Constructor` → 機能の節(Layout → Render → Animation → Touch / Drag)の並びと区切りにそろえた。BindableProperty とプロパティ本体が交互だったものは BindableProperty を先にまとめた。余白・大きさ・太さ・角度・透明度・アニメーションの時間などの直値を const に、色と座標を static readonly に(値ごとの色は Dictionary や配列、旗・月の海の形は座標の組)。メソッドの中の const もクラスへ |
+| `Controls/KitControls.cs`(`KitSleepBand`) | 文字の大きさを `FontSize` のプロパティに(既定 11) |
+| `Controls/WeatherCompassDial.cs` | 方位の文字の大きさを `LabelFontSize` のプロパティに(既定 12) |
+| `Controls/NoiseGauge.cs` | `GaugeColor` を BindableProperty に(ほかの色と同じく、変えると描き直す)。ピークの針の太さを `PeakNeedleWidth` のプロパティに(既定 3) |
+| `Controls/SocialControls.cs` | `SocialMenu` の下の文字の大きさに `FontSize2` を使う。題の地の色と量の溝の色を `SocialResources` に |
+| `Controls/StatusChip.xaml.cs` | 状態ごとの色を static readonly に(プロパティの既定値も同じ色) |
+
+- 見た目は変えていない(足したプロパティの既定値は元の直値)
+- 実機: 対象のコントロールを使う 28 画面を変更前と変更後で撮って比べ、差は動き続ける部分(センサー・通信の値、時刻に連動する表示、ノイズ・ミキサー・レーダー・流れる文字、開くたびに変わる天気の見本)だけ
 - ビルド 0 警告
 
 ## 💡C. この区間のナレッジ
@@ -3732,6 +3749,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 型の名前は省略形にせず、何をするものかが分かる名前にする。計測などの切り替えは定義を 1 つにして、使う所はそれを見る(`#if false` を何か所にも書かない)
 - **Behavior は基本的に Smart.Maui か自前(`Behaviors/` の添付プロパティ)**。CommunityToolkit の Behavior は、VM へのバインドを使わない所(BindingContext が要らない所)だけ使う。単体で使える汎用の Behavior は Smart.Maui に置き、アプリの添付プロパティ(Option クラス)を入口にして要素ごとに付ける
 - **UI スレッドへの依頼は `IDispatcher`**(ViewModel は DI で注入、コントロールは `Dispatcher` プロパティ)。`MainThread` は使わない。async メソッド内は `await DispatchAsync`、待てない場所(UI スレッドで完了を待つ `Stop` がある描画ループなど)は同期メソッドに切り出して `Dispatch`
+- **`Controls/` のコントロールのソースの書き方**: コメントは書かず、`//---` の区切りでまとまりを示す(区切りは 2 つ以上のまとまりがあるコントロールだけ。`// ReSharper` の指示と空の catch の `// Ignore` は残す)。並びは const → static readonly → `// Member`(readonly → 状態)→ `// Property`(BindableProperty を全部 → プロパティ本体を同じ順 → イベント → コマンド → private のプロパティ)→ `// Constructor`(`Dispose` も)→ 機能の節(Layout → Render → Animation → Touch / Drag)。節の中は呼ぶ側を先、static の計算は節の最後。余白・大きさ・太さ・角度・透明度・時間などの直値は const、色と座標は static readonly、複数のコントロールで使う色は共有のリソースのクラスに置く。計算・添字・初期状態の 0・半分・全周(360)は直値のまま。プロパティにするのは、同じコントロールの同じ種類の値がプロパティなのに 1 つだけ固定のもの(文字の色はプロパティなのに大きさが固定など)
 - `Document/*.md` の章題は内容を表す絵文字を先頭に付ける(見出し文字列の直前・空白なし。GitHub のアンカーが変わらない)。`Task_Checklist.md` の `【判断】` 印は `⚖️【判断】`
 
 ### 🖼️画面の作りの決まり

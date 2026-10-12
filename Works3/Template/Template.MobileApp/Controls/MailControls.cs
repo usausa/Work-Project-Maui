@@ -5,12 +5,12 @@ using SkiaSharp.Views.Maui.Controls;
 //--------------------------------------------------------------------------------
 // Avatar
 //--------------------------------------------------------------------------------
-// 差出人のアイコン。画像のファイル名 (アプリの中の Avatar フォルダー) があれば読み込み、無ければ色の地に名前の頭文字を描く
 public sealed class MailAvatarImage : Image
 {
     private const int InitialSize = 144;
 
-    // 頭文字のアイコンの色 (名前から決める)
+    private const float InitialFontRate = 0.42f;
+
     private static readonly SKColor[] InitialColors =
     [
         SKColor.Parse("#FB8C00"),
@@ -24,10 +24,13 @@ public sealed class MailAvatarImage : Image
 
     private static readonly SKTypeface InitialTypeface = SKFontManager.Default.MatchCharacter('あ') ?? SKTypeface.Default;
 
-    // 同じ画像は作り直さない
     private static readonly Dictionary<string, ImageSource> Files = [];
 
     private static readonly Dictionary<string, ImageSource> Initials = [];
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty AvatarProperty = BindableProperty.Create(
         nameof(Avatar),
@@ -53,6 +56,10 @@ public sealed class MailAvatarImage : Image
         set => SetValue(SenderProperty, value);
     }
 
+    //--------------------------------------------------------------------------------
+    // Source
+    //--------------------------------------------------------------------------------
+
     private static void OnSourceChanged(BindableObject bindable, object? oldValue, object? newValue)
     {
         var image = (MailAvatarImage)bindable;
@@ -72,7 +79,6 @@ public sealed class MailAvatarImage : Image
         return source;
     }
 
-    // 色の地に名前の頭文字 (丸く切り抜くのは XAML)
     private static ImageSource CreateInitial(string name)
     {
         if (!Initials.TryGetValue(name, out var source))
@@ -81,7 +87,7 @@ public sealed class MailAvatarImage : Image
             using (var canvas = new SKCanvas(bitmap))
             {
                 canvas.Clear(InitialColors[name.Sum(static x => x) % InitialColors.Length]);
-                using var font = new SKFont(InitialTypeface, InitialSize * 0.42f);
+                using var font = new SKFont(InitialTypeface, InitialSize * InitialFontRate);
                 font.Embolden = true;
                 using var paint = new SKPaint();
                 paint.IsAntialias = true;

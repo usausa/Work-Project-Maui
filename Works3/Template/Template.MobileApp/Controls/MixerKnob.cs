@@ -2,11 +2,15 @@ namespace Template.MobileApp.Controls;
 
 public sealed class MixerKnob : GraphicsView, IDrawable
 {
-    // ------------------------------------------------------------
-    // Property
-    // ------------------------------------------------------------
+    private const float StartAngle = 225f;
 
-    // Value
+    private const float SweepAngle = 270f;
+
+    private const float GapAngle = (360f - SweepAngle) / 2;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
@@ -16,37 +20,17 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         defaultBindingMode: BindingMode.TwoWay,
         propertyChanged: (b, _, _) => ((MixerKnob)b).Invalidate());
 
-    public double Value
-    {
-        get => (double)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
-
     public static readonly BindableProperty MinimumProperty = BindableProperty.Create(
         nameof(Minimum),
         typeof(double),
         typeof(MixerKnob),
         0.0);
 
-    public double Minimum
-    {
-        get => (double)GetValue(MinimumProperty);
-        set => SetValue(MinimumProperty, value);
-    }
-
     public static readonly BindableProperty MaximumProperty = BindableProperty.Create(
         nameof(Maximum),
         typeof(double),
         typeof(MixerKnob),
         100.0);
-
-    public double Maximum
-    {
-        get => (double)GetValue(MaximumProperty);
-        set => SetValue(MaximumProperty, value);
-    }
-
-    // Color
 
     public static readonly BindableProperty KnobBackgroundProperty = BindableProperty.Create(
         nameof(KnobBackground),
@@ -55,24 +39,12 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         Brush.LightGray,
         propertyChanged: OnPropertyChanged);
 
-    public Brush KnobBackground
-    {
-        get => (Brush)GetValue(KnobBackgroundProperty);
-        set => SetValue(KnobBackgroundProperty, value);
-    }
-
     public static readonly BindableProperty PointerBackgroundProperty = BindableProperty.Create(
         nameof(PointerBackground),
         typeof(Brush),
         typeof(MixerKnob),
         Brush.Black,
         propertyChanged: OnPropertyChanged);
-
-    public Brush PointerBackground
-    {
-        get => (Brush)GetValue(PointerBackgroundProperty);
-        set => SetValue(PointerBackgroundProperty, value);
-    }
 
     public static readonly BindableProperty IndicatorColorProperty = BindableProperty.Create(
         nameof(IndicatorColor),
@@ -81,26 +53,12 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         Colors.Orange,
         propertyChanged: OnPropertyChanged);
 
-    public Color IndicatorColor
-    {
-        get => (Color)GetValue(IndicatorColorProperty);
-        set => SetValue(IndicatorColorProperty, value);
-    }
-
     public static readonly BindableProperty IndicatorBackgroundColorProperty = BindableProperty.Create(
         nameof(IndicatorBackgroundColor),
         typeof(Color),
         typeof(MixerKnob),
         Colors.Snow,
         propertyChanged: OnPropertyChanged);
-
-    public Color IndicatorBackgroundColor
-    {
-        get => (Color)GetValue(IndicatorBackgroundColorProperty);
-        set => SetValue(IndicatorBackgroundColorProperty, value);
-    }
-
-    // Size
 
     public static readonly BindableProperty IndicatorWidthProperty = BindableProperty.Create(
         nameof(IndicatorWidth),
@@ -109,24 +67,12 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         8.0,
         propertyChanged: OnPropertyChanged);
 
-    public double IndicatorWidth
-    {
-        get => (double)GetValue(IndicatorWidthProperty);
-        set => SetValue(IndicatorWidthProperty, value);
-    }
-
     public static readonly BindableProperty IndicatorMarginProperty = BindableProperty.Create(
         nameof(IndicatorMargin),
         typeof(double),
         typeof(MixerKnob),
         2.0,
         propertyChanged: OnPropertyChanged);
-
-    public double IndicatorMargin
-    {
-        get => (double)GetValue(IndicatorMarginProperty);
-        set => SetValue(IndicatorMarginProperty, value);
-    }
 
     public static readonly BindableProperty PointerWidthProperty = BindableProperty.Create(
         nameof(PointerWidth),
@@ -135,12 +81,6 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         12.0,
         propertyChanged: OnPropertyChanged);
 
-    public double PointerWidth
-    {
-        get => (double)GetValue(PointerWidthProperty);
-        set => SetValue(PointerWidthProperty, value);
-    }
-
     public static readonly BindableProperty PointerMarginProperty = BindableProperty.Create(
         nameof(PointerMargin),
         typeof(double),
@@ -148,15 +88,75 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         4.0,
         propertyChanged: OnPropertyChanged);
 
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
+    public double Minimum
+    {
+        get => (double)GetValue(MinimumProperty);
+        set => SetValue(MinimumProperty, value);
+    }
+
+    public double Maximum
+    {
+        get => (double)GetValue(MaximumProperty);
+        set => SetValue(MaximumProperty, value);
+    }
+
+    public Brush KnobBackground
+    {
+        get => (Brush)GetValue(KnobBackgroundProperty);
+        set => SetValue(KnobBackgroundProperty, value);
+    }
+
+    public Brush PointerBackground
+    {
+        get => (Brush)GetValue(PointerBackgroundProperty);
+        set => SetValue(PointerBackgroundProperty, value);
+    }
+
+    public Color IndicatorColor
+    {
+        get => (Color)GetValue(IndicatorColorProperty);
+        set => SetValue(IndicatorColorProperty, value);
+    }
+
+    public Color IndicatorBackgroundColor
+    {
+        get => (Color)GetValue(IndicatorBackgroundColorProperty);
+        set => SetValue(IndicatorBackgroundColorProperty, value);
+    }
+
+    public double IndicatorWidth
+    {
+        get => (double)GetValue(IndicatorWidthProperty);
+        set => SetValue(IndicatorWidthProperty, value);
+    }
+
+    public double IndicatorMargin
+    {
+        get => (double)GetValue(IndicatorMarginProperty);
+        set => SetValue(IndicatorMarginProperty, value);
+    }
+
+    public double PointerWidth
+    {
+        get => (double)GetValue(PointerWidthProperty);
+        set => SetValue(PointerWidthProperty, value);
+    }
+
     public double PointerMargin
     {
         get => (double)GetValue(PointerMarginProperty);
         set => SetValue(PointerMarginProperty, value);
     }
 
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
     // Constructor
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
 
     public MixerKnob()
     {
@@ -166,37 +166,14 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         DragInteraction += (_, e) => UpdateValue(e.Touches[0]);
     }
 
-    // ------------------------------------------------------------
-    // Handler
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ((MixerKnob)bindable).Invalidate();
     }
-
-    // ------------------------------------------------------------
-    // Update
-    // ------------------------------------------------------------
-
-    private void UpdateValue(PointF point)
-    {
-        var center = new Point(Width / 2, Height / 2);
-        var dx = point.X - center.X;
-        var dy = point.Y - center.Y;
-
-        var angle = Math.Atan2(dy, dx) * 180 / Math.PI;
-        angle = Math.Clamp(angle > 90 ? angle - 90 : angle + 270, 45, 315);
-        angle -= 45;
-
-        var percent = angle / 270.0;
-
-        Value = Minimum + (percent * (Maximum - Minimum));
-    }
-
-    // ------------------------------------------------------------
-    // Draw
-    // ------------------------------------------------------------
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
@@ -205,9 +182,8 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         var size = Math.Min(dirtyRect.Width, dirtyRect.Height);
 
         var valuePercent = (Value - Minimum) / (Maximum - Minimum);
-        var valueSweepAngle = (float)(270 * valuePercent);
+        var valueSweepAngle = (float)(SweepAngle * valuePercent);
 
-        // Indicator
         var indicatorWidth = (float)IndicatorWidth;
         var indicatorSize = size - indicatorWidth;
         var indicatorRadius = indicatorSize / 2;
@@ -216,28 +192,45 @@ public sealed class MixerKnob : GraphicsView, IDrawable
         canvas.StrokeLineCap = LineCap.Butt;
         canvas.StrokeSize = indicatorWidth;
         canvas.StrokeColor = IndicatorBackgroundColor;
-        canvas.DrawArc(indicatorRect, 225, -45, true, false);
+        canvas.DrawArc(indicatorRect, StartAngle, StartAngle - SweepAngle, true, false);
 
         canvas.StrokeColor = IndicatorColor;
-        canvas.DrawArc(indicatorRect, 225, 225 - valueSweepAngle, true, false);
+        canvas.DrawArc(indicatorRect, StartAngle, StartAngle - valueSweepAngle, true, false);
 
-        // Knob
         var knobSize = size - (indicatorWidth * 2) - ((float)IndicatorMargin * 2);
         var knobRadius = knobSize / 2;
 
         canvas.SetFillPaint(KnobBackground, new RectF(cx - knobRadius, cy - knobRadius, knobSize, knobSize));
         canvas.FillCircle(cx, cy, knobRadius);
 
-        // Knob pointer
         var pointerSize = (float)PointerWidth;
         var pointerRadius = pointerSize / 2;
 
         var pointerDistance = indicatorRadius - pointerSize - PointerMargin;
-        var pointerRadians = Math.PI * (valueSweepAngle - 225) / 180.0;
+        var pointerRadians = Math.PI * (valueSweepAngle - StartAngle) / 180.0;
         var pointerX = (float)(cx + (Math.Cos(pointerRadians) * pointerDistance));
         var pointerY = (float)(cy + (Math.Sin(pointerRadians) * pointerDistance));
 
         canvas.SetFillPaint(PointerBackground, new RectF(pointerX - pointerRadius, pointerY - pointerRadius, pointerSize, pointerSize));
         canvas.FillCircle(pointerX, pointerY, pointerRadius);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Touch
+    //--------------------------------------------------------------------------------
+
+    private void UpdateValue(PointF point)
+    {
+        var center = new Point(Width / 2, Height / 2);
+        var dx = point.X - center.X;
+        var dy = point.Y - center.Y;
+
+        var angle = Math.Atan2(dy, dx) * 180 / Math.PI;
+        angle = Math.Clamp(angle > 90 ? angle - 90 : angle + 270, GapAngle, 360 - GapAngle);
+        angle -= GapAngle;
+
+        var percent = angle / SweepAngle;
+
+        Value = Minimum + (percent * (Maximum - Minimum));
     }
 }

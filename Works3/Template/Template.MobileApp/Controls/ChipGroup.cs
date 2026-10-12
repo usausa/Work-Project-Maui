@@ -225,7 +225,14 @@ public sealed class ChipGroup : ContentView
         {
             foreach (var item in ItemsSource)
             {
-                layout.Children.Add(CreateChip(item));
+                var chip = CreateChip(item);
+                if (Wrap)
+                {
+                    // 行に収まらないときは、縮めずに次の行へ送る
+                    FlexLayout.SetShrink(chip, 0);
+                }
+
+                layout.Children.Add(chip);
             }
         }
 

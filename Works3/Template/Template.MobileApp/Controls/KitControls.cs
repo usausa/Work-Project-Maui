@@ -7,30 +7,37 @@ using Template.MobileApp.Models.Sample;
 //--------------------------------------------------------------------------------
 // Sleep
 //--------------------------------------------------------------------------------
-// 睡眠の段階の帯。上から 覚醒・レム・浅い・深い の段に、時間の長さで塗る。下に 1 時間ごとの時刻
 public sealed class KitSleepBand : SKCanvasView
 {
     private const float LabelWidth = 36f;
 
     private const float AxisHeight = 20f;
 
-    private const float FontSize = 11f;
+    private const float LabelBaselineRate = 0.35f;
+
+    private const float LaneFillMargin = 0.18f;
+
+    private const float FillCornerRadius = 2f;
+
+    private const float HourLabelMargin = 16f;
+
+    private const float HourTickLength = 3f;
+
+    private const float HourLabelBottom = 4f;
 
     private static readonly string[] LaneNames = ["覚醒", "レム", "浅い", "深い"];
 
     private static readonly SKTypeface JapaneseTypeface = SKFontManager.Default.MatchCharacter('睡') ?? SKTypeface.Default;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SpansProperty = BindableProperty.Create(
         nameof(Spans),
         typeof(IReadOnlyList<KitSleepSpan>),
         typeof(KitSleepBand),
         propertyChanged: OnVisualChanged);
-
-    public IReadOnlyList<KitSleepSpan>? Spans
-    {
-        get => (IReadOnlyList<KitSleepSpan>?)GetValue(SpansProperty);
-        set => SetValue(SpansProperty, value);
-    }
 
     public static readonly BindableProperty AwakeColorProperty = BindableProperty.Create(
         nameof(AwakeColor),
@@ -39,24 +46,12 @@ public sealed class KitSleepBand : SKCanvasView
         Colors.Orange,
         propertyChanged: OnVisualChanged);
 
-    public Color AwakeColor
-    {
-        get => (Color)GetValue(AwakeColorProperty);
-        set => SetValue(AwakeColorProperty, value);
-    }
-
     public static readonly BindableProperty RemColorProperty = BindableProperty.Create(
         nameof(RemColor),
         typeof(Color),
         typeof(KitSleepBand),
         Colors.MediumPurple,
         propertyChanged: OnVisualChanged);
-
-    public Color RemColor
-    {
-        get => (Color)GetValue(RemColorProperty);
-        set => SetValue(RemColorProperty, value);
-    }
 
     public static readonly BindableProperty LightColorProperty = BindableProperty.Create(
         nameof(LightColor),
@@ -65,12 +60,6 @@ public sealed class KitSleepBand : SKCanvasView
         Colors.LightSkyBlue,
         propertyChanged: OnVisualChanged);
 
-    public Color LightColor
-    {
-        get => (Color)GetValue(LightColorProperty);
-        set => SetValue(LightColorProperty, value);
-    }
-
     public static readonly BindableProperty DeepColorProperty = BindableProperty.Create(
         nameof(DeepColor),
         typeof(Color),
@@ -78,11 +67,12 @@ public sealed class KitSleepBand : SKCanvasView
         Colors.DarkSlateBlue,
         propertyChanged: OnVisualChanged);
 
-    public Color DeepColor
-    {
-        get => (Color)GetValue(DeepColorProperty);
-        set => SetValue(DeepColorProperty, value);
-    }
+    public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+        nameof(FontSize),
+        typeof(double),
+        typeof(KitSleepBand),
+        11d,
+        propertyChanged: OnVisualChanged);
 
     public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
         nameof(TextColor),
@@ -91,12 +81,6 @@ public sealed class KitSleepBand : SKCanvasView
         Colors.Gray,
         propertyChanged: OnVisualChanged);
 
-    public Color TextColor
-    {
-        get => (Color)GetValue(TextColorProperty);
-        set => SetValue(TextColorProperty, value);
-    }
-
     public static readonly BindableProperty GridColorProperty = BindableProperty.Create(
         nameof(GridColor),
         typeof(Color),
@@ -104,11 +88,57 @@ public sealed class KitSleepBand : SKCanvasView
         Colors.LightGray,
         propertyChanged: OnVisualChanged);
 
+    public IReadOnlyList<KitSleepSpan>? Spans
+    {
+        get => (IReadOnlyList<KitSleepSpan>?)GetValue(SpansProperty);
+        set => SetValue(SpansProperty, value);
+    }
+
+    public Color AwakeColor
+    {
+        get => (Color)GetValue(AwakeColorProperty);
+        set => SetValue(AwakeColorProperty, value);
+    }
+
+    public Color RemColor
+    {
+        get => (Color)GetValue(RemColorProperty);
+        set => SetValue(RemColorProperty, value);
+    }
+
+    public Color LightColor
+    {
+        get => (Color)GetValue(LightColorProperty);
+        set => SetValue(LightColorProperty, value);
+    }
+
+    public Color DeepColor
+    {
+        get => (Color)GetValue(DeepColorProperty);
+        set => SetValue(DeepColorProperty, value);
+    }
+
+    public double FontSize
+    {
+        get => (double)GetValue(FontSizeProperty);
+        set => SetValue(FontSizeProperty, value);
+    }
+
+    public Color TextColor
+    {
+        get => (Color)GetValue(TextColorProperty);
+        set => SetValue(TextColorProperty, value);
+    }
+
     public Color GridColor
     {
         get => (Color)GetValue(GridColorProperty);
         set => SetValue(GridColorProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void OnVisualChanged(BindableObject bindable, object? oldValue, object? newValue) =>
         ((KitSleepBand)bindable).InvalidateSurface();
@@ -135,7 +165,7 @@ public sealed class KitSleepBand : SKCanvasView
 
         float ToX(DateTime time) => left + ((float)(time - start).TotalMinutes / total * width);
 
-        using var font = new SKFont(JapaneseTypeface, FontSize * density);
+        using var font = new SKFont(JapaneseTypeface, (float)FontSize * density);
         using var text = new SKPaint();
         text.IsAntialias = true;
         text.Color = TextColor.ToSKColor();
@@ -143,15 +173,13 @@ public sealed class KitSleepBand : SKCanvasView
         grid.Color = GridColor.ToSKColor();
         grid.StrokeWidth = density;
 
-        // 段の名前と区切りの線
         for (var lane = 0; lane < LaneNames.Length; lane++)
         {
             var center = (lane + 0.5f) * laneHeight;
             canvas.DrawLine(left, center, e.Info.Width, center, grid);
-            canvas.DrawText(LaneNames[lane], 0, center + (font.Size * 0.35f), SKTextAlign.Left, font, text);
+            canvas.DrawText(LaneNames[lane], 0, center + (font.Size * LabelBaselineRate), SKTextAlign.Left, font, text);
         }
 
-        // 段階ごとの塗り
         using var fill = new SKPaint();
         fill.IsAntialias = true;
         foreach (var span in spans)
@@ -161,21 +189,20 @@ public sealed class KitSleepBand : SKCanvasView
             var x1 = ToX(span.Start + span.Length);
             fill.Color = ColorOf(span.Stage).ToSKColor();
             canvas.DrawRoundRect(
-                new SKRect(x0, (lane + 0.18f) * laneHeight, Math.Max(x0 + density, x1), (lane + 0.82f) * laneHeight),
-                2 * density,
-                2 * density,
+                new SKRect(x0, (lane + LaneFillMargin) * laneHeight, Math.Max(x0 + density, x1), (lane + 1 - LaneFillMargin) * laneHeight),
+                FillCornerRadius * density,
+                FillCornerRadius * density,
                 fill);
         }
 
-        // 1 時間ごとの時刻 (端に近いものは描かない)
         var hour = start.Date.AddHours(start.Hour + 1);
         while (hour < end)
         {
             var x = ToX(hour);
-            if ((x - left > 16 * density) && (e.Info.Width - x > 16 * density))
+            if ((x - left > HourLabelMargin * density) && (e.Info.Width - x > HourLabelMargin * density))
             {
-                canvas.DrawLine(x, bottom, x, bottom + (3 * density), grid);
-                canvas.DrawText($"{hour.Hour}時", x, e.Info.Height - (4 * density), SKTextAlign.Center, font, text);
+                canvas.DrawLine(x, bottom, x, bottom + (HourTickLength * density), grid);
+                canvas.DrawText($"{hour.Hour}時", x, e.Info.Height - (HourLabelBottom * density), SKTextAlign.Center, font, text);
             }
             hour = hour.AddHours(1);
         }

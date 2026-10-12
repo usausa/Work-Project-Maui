@@ -2,7 +2,6 @@ namespace Template.MobileApp.Controls;
 
 using SkiaSharp.Views.Maui;
 
-// 数字だけの Code 128 (コードセット C) のバーコード。左右に 10 モジュールの余白を取り、モジュールの幅は整数の画素にそろえる
 public sealed class BarcodeView : SKCanvasView
 {
     private const int StartC = 105;
@@ -11,7 +10,8 @@ public sealed class BarcodeView : SKCanvasView
 
     private const int QuietZone = 10;
 
-    // 値ごとのバーとスペースの幅 (バーから始まる)
+    private const int CheckDivisor = 103;
+
     private static readonly string[] Patterns =
     [
         "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213",
@@ -27,18 +27,16 @@ public sealed class BarcodeView : SKCanvasView
         "114131", "311141", "411131", "211412", "211214", "211232", "2331112"
     ];
 
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
+
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(string),
         typeof(BarcodeView),
         string.Empty,
         propertyChanged: OnVisualChanged);
-
-    public string Value
-    {
-        get => (string)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
 
     public static readonly BindableProperty BarColorProperty = BindableProperty.Create(
         nameof(BarColor),
@@ -47,11 +45,21 @@ public sealed class BarcodeView : SKCanvasView
         Colors.Black,
         propertyChanged: OnVisualChanged);
 
+    public string Value
+    {
+        get => (string)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
     public Color BarColor
     {
         get => (Color)GetValue(BarColorProperty);
         set => SetValue(BarColorProperty, value);
     }
+
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
         ((BarcodeView)bindable).InvalidateSurface();
@@ -83,7 +91,10 @@ public sealed class BarcodeView : SKCanvasView
         }
     }
 
-    // バーとスペースの幅の並び (桁が奇数のときは先頭に 0 を足す)
+    //--------------------------------------------------------------------------------
+    // Encode
+    //--------------------------------------------------------------------------------
+
     private static int[] Encode(string value)
     {
         var digits = new string(value.Where(Char.IsAsciiDigit).ToArray());
@@ -107,7 +118,7 @@ public sealed class BarcodeView : SKCanvasView
         {
             sum += codes[i] * i;
         }
-        codes.Add(sum % 103);
+        codes.Add(sum % CheckDivisor);
         codes.Add(Stop);
 
         return codes.SelectMany(static x => Patterns[x].Select(static c => c - '0')).ToArray();

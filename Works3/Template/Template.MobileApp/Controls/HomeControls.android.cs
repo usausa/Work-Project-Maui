@@ -6,7 +6,10 @@ using SkiaSharp.Views.Android;
 
 public sealed partial class HomeBlurredImage
 {
-    // MauiImage は Android の drawable になるので、拡張子を除いた名前で引く(密度で拡大しないように InScaled は false)
+    //--------------------------------------------------------------------------------
+    // Platform
+    //--------------------------------------------------------------------------------
+
     private static partial SKBitmap? LoadBitmap(string? source)
     {
         var context = Platform.AppContext;

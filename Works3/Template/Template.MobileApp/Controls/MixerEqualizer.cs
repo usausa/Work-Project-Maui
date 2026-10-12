@@ -2,20 +2,20 @@ namespace Template.MobileApp.Controls;
 
 public sealed class MixerEqualizer : GraphicsView, IDrawable
 {
-    // ------------------------------------------------------------
-    // Property
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
 
-    // Setting
+    private int[] peakValues = [];
+
+    private long[] peakTimes = [];
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty RangeProperty =
         BindableProperty.Create(nameof(Range), typeof(int), typeof(MixerEqualizer), 10, propertyChanged: OnPropertyChanged);
-
-    public int Range
-    {
-        get => (int)GetValue(RangeProperty);
-        set => SetValue(RangeProperty, value);
-    }
 
     public static readonly BindableProperty LevelProperty = BindableProperty.Create(
         nameof(Level),
@@ -24,20 +24,66 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
         10,
         propertyChanged: OnPropertyChanged);
 
-    public int Level
-    {
-        get => (int)GetValue(LevelProperty);
-        set => SetValue(LevelProperty, value);
-    }
-
-    // Value
-
     public static readonly BindableProperty ValuesProperty = BindableProperty.Create(
         nameof(Values),
         typeof(int[]),
         typeof(MixerEqualizer),
         Array.Empty<int>(),
         propertyChanged: OnValuesChanged);
+
+    public static readonly BindableProperty PeakHoldDurationProperty = BindableProperty.Create(
+        nameof(PeakHoldDuration),
+        typeof(int),
+        typeof(MixerEqualizer),
+        1000,
+        propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty InactiveColorProperty = BindableProperty.Create(
+        nameof(InactiveColor),
+        typeof(Color),
+        typeof(MixerEqualizer),
+        Colors.Gray,
+        propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty StartColorProperty = BindableProperty.Create(
+        nameof(StartColor),
+        typeof(Color),
+        typeof(MixerEqualizer),
+        Colors.DarkGreen,
+        propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty EndColorProperty = BindableProperty.Create(
+        nameof(EndColor),
+        typeof(Color),
+        typeof(MixerEqualizer),
+        Colors.LightGreen,
+        propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty HorizontalSpacingProperty = BindableProperty.Create(
+        nameof(HorizontalSpacing),
+        typeof(double),
+        typeof(MixerEqualizer),
+        2d,
+        propertyChanged: OnPropertyChanged);
+
+    public static readonly BindableProperty VerticalSpacingProperty = BindableProperty.Create(
+        nameof(VerticalSpacing),
+        typeof(double),
+        typeof(MixerEqualizer),
+        2d,
+        propertyChanged: OnPropertyChanged);
+
+    public int Range
+    {
+        get => (int)GetValue(RangeProperty);
+        set => SetValue(RangeProperty, value);
+    }
+
+    public int Level
+    {
+        get => (int)GetValue(LevelProperty);
+        set => SetValue(LevelProperty, value);
+    }
 
 #pragma warning disable CA1819
     public int[] Values
@@ -47,33 +93,11 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
     }
 #pragma warning restore CA1819
 
-    // Peak hold
-
-    public static readonly BindableProperty PeakHoldDurationProperty = BindableProperty.Create(
-        nameof(PeakHoldDuration),
-        typeof(int),
-        typeof(MixerEqualizer),
-        1000,
-        propertyChanged: OnPropertyChanged);
-
     public int PeakHoldDuration
     {
         get => (int)GetValue(PeakHoldDurationProperty);
         set => SetValue(PeakHoldDurationProperty, value);
     }
-
-    private int[] peakValues = [];
-
-    private long[] peakTimes = [];
-
-    // Color
-
-    public static readonly BindableProperty InactiveColorProperty = BindableProperty.Create(
-        nameof(InactiveColor),
-        typeof(Color),
-        typeof(MixerEqualizer),
-        Colors.Gray,
-        propertyChanged: OnPropertyChanged);
 
     public Color InactiveColor
     {
@@ -81,25 +105,11 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
         set => SetValue(InactiveColorProperty, value);
     }
 
-    public static readonly BindableProperty StartColorProperty = BindableProperty.Create(
-        nameof(StartColor),
-        typeof(Color),
-        typeof(MixerEqualizer),
-        Colors.DarkGreen,
-        propertyChanged: OnPropertyChanged);
-
     public Color StartColor
     {
         get => (Color)GetValue(StartColorProperty);
         set => SetValue(StartColorProperty, value);
     }
-
-    public static readonly BindableProperty EndColorProperty = BindableProperty.Create(
-        nameof(EndColor),
-        typeof(Color),
-        typeof(MixerEqualizer),
-        Colors.LightGreen,
-        propertyChanged: OnPropertyChanged);
 
     public Color EndColor
     {
@@ -107,27 +117,11 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
         set => SetValue(EndColorProperty, value);
     }
 
-    // Size
-
-    public static readonly BindableProperty HorizontalSpacingProperty = BindableProperty.Create(
-        nameof(HorizontalSpacing),
-        typeof(double),
-        typeof(MixerEqualizer),
-        2d,
-        propertyChanged: OnPropertyChanged);
-
     public double HorizontalSpacing
     {
         get => (double)GetValue(HorizontalSpacingProperty);
         set => SetValue(HorizontalSpacingProperty, value);
     }
-
-    public static readonly BindableProperty VerticalSpacingProperty = BindableProperty.Create(
-        nameof(VerticalSpacing),
-        typeof(double),
-        typeof(MixerEqualizer),
-        2d,
-        propertyChanged: OnPropertyChanged);
 
     public double VerticalSpacing
     {
@@ -135,60 +129,23 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
         set => SetValue(VerticalSpacingProperty, value);
     }
 
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
     // Constructor
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
 
     public MixerEqualizer()
     {
         Drawable = this;
     }
 
-    // ------------------------------------------------------------
-    // Handler
-    // ------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
 
     private static void OnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ((MixerEqualizer)bindable).Invalidate();
     }
-
-    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var control = (MixerEqualizer)bindable;
-        control.UpdatePeaks();
-        control.Invalidate();
-    }
-
-    // 各列のピーク値を一定時間ホールドする
-    private void UpdatePeaks()
-    {
-        var range = Range;
-        if (peakValues.Length != range)
-        {
-            peakValues = new int[range];
-            peakTimes = new long[range];
-        }
-
-        var values = Values;
-        var level = Level;
-        var now = Environment.TickCount64;
-        var holdDuration = PeakHoldDuration;
-
-        for (var i = 0; i < range; i++)
-        {
-            var value = (i < values.Length) ? Math.Clamp(values[i], 0, level) : 0;
-            if ((value >= peakValues[i]) || (now - peakTimes[i] > holdDuration))
-            {
-                peakValues[i] = value;
-                peakTimes[i] = now;
-            }
-        }
-    }
-
-    // ------------------------------------------------------------
-    // Draw
-    // ------------------------------------------------------------
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
@@ -220,7 +177,6 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
                 canvas.FillRectangle(x, y, cellWidth, cellHeight);
             }
 
-            // Peak hold cell
             var peak = (i < peakValues.Length) ? peakValues[i] : 0;
             if (peak > value)
             {
@@ -240,5 +196,41 @@ public sealed class MixerEqualizer : GraphicsView, IDrawable
             c1.Green + ((c2.Green - c1.Green) * factor),
             c1.Blue + ((c2.Blue - c1.Blue) * factor),
             c1.Alpha + ((c2.Alpha - c1.Alpha) * factor));
+    }
+
+    //--------------------------------------------------------------------------------
+    // Peak
+    //--------------------------------------------------------------------------------
+
+    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (MixerEqualizer)bindable;
+        control.UpdatePeaks();
+        control.Invalidate();
+    }
+
+    private void UpdatePeaks()
+    {
+        var range = Range;
+        if (peakValues.Length != range)
+        {
+            peakValues = new int[range];
+            peakTimes = new long[range];
+        }
+
+        var values = Values;
+        var level = Level;
+        var now = Environment.TickCount64;
+        var holdDuration = PeakHoldDuration;
+
+        for (var i = 0; i < range; i++)
+        {
+            var value = (i < values.Length) ? Math.Clamp(values[i], 0, level) : 0;
+            if ((value >= peakValues[i]) || (now - peakTimes[i] > holdDuration))
+            {
+                peakValues[i] = value;
+                peakTimes[i] = now;
+            }
+        }
     }
 }

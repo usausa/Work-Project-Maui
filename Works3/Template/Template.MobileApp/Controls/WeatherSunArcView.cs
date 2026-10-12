@@ -4,13 +4,47 @@ using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
-// 日の出から日の入りまでの太陽の道のり。通った部分を塗り、今の位置に太陽を置く (夜は地平線の端で暗く)
 public sealed class WeatherSunArcView : SKCanvasView
 {
     private const string RevealAnimationName = "SunArcReveal";
 
-    // 今の位置まで描き込む割合 (0〜1)。表示したときに 0 から伸ばす
+    private const uint AnimationRate = 16;
+
+    private const uint RevealLength = 900;
+
+    private const float SunRadius = 7f;
+
+    private const float SunMargin = 6f;
+
+    private const float PathStrokeWidth = 1.5f;
+
+    private const float PathDash = 4f;
+
+    private const float PassedStrokeWidth = 3f;
+
+    private const float HorizonStrokeWidth = 1f;
+
+    private const float GlowBlur = 5f;
+
+    private const float GlowRadiusRate = 1.4f;
+
+    private const byte FillAlpha = 110;
+
+    private const byte DayGlowAlpha = 150;
+
+    private const byte NightGlowAlpha = 60;
+
+    private const byte NightSunAlpha = 110;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
     private float reveal = 1f;
+
+    //--------------------------------------------------------------------------------
+    // Property
+    //--------------------------------------------------------------------------------
 
     public static readonly BindableProperty SunriseProperty = BindableProperty.Create(
         nameof(Sunrise),
@@ -19,24 +53,12 @@ public sealed class WeatherSunArcView : SKCanvasView
         default(DateTime),
         propertyChanged: OnVisualChanged);
 
-    public DateTime Sunrise
-    {
-        get => (DateTime)GetValue(SunriseProperty);
-        set => SetValue(SunriseProperty, value);
-    }
-
     public static readonly BindableProperty SunsetProperty = BindableProperty.Create(
         nameof(Sunset),
         typeof(DateTime),
         typeof(WeatherSunArcView),
         default(DateTime),
         propertyChanged: OnVisualChanged);
-
-    public DateTime Sunset
-    {
-        get => (DateTime)GetValue(SunsetProperty);
-        set => SetValue(SunsetProperty, value);
-    }
 
     public static readonly BindableProperty NowProperty = BindableProperty.Create(
         nameof(Now),
@@ -45,24 +67,12 @@ public sealed class WeatherSunArcView : SKCanvasView
         default(DateTime),
         propertyChanged: OnVisualChanged);
 
-    public DateTime Now
-    {
-        get => (DateTime)GetValue(NowProperty);
-        set => SetValue(NowProperty, value);
-    }
-
     public static readonly BindableProperty PathColorProperty = BindableProperty.Create(
         nameof(PathColor),
         typeof(Color),
         typeof(WeatherSunArcView),
         Color.FromRgba(255, 255, 255, 90),
         propertyChanged: OnVisualChanged);
-
-    public Color PathColor
-    {
-        get => (Color)GetValue(PathColorProperty);
-        set => SetValue(PathColorProperty, value);
-    }
 
     public static readonly BindableProperty SunColorProperty = BindableProperty.Create(
         nameof(SunColor),
@@ -71,14 +81,39 @@ public sealed class WeatherSunArcView : SKCanvasView
         Color.FromArgb("#FFD54F"),
         propertyChanged: OnVisualChanged);
 
+    public DateTime Sunrise
+    {
+        get => (DateTime)GetValue(SunriseProperty);
+        set => SetValue(SunriseProperty, value);
+    }
+
+    public DateTime Sunset
+    {
+        get => (DateTime)GetValue(SunsetProperty);
+        set => SetValue(SunsetProperty, value);
+    }
+
+    public DateTime Now
+    {
+        get => (DateTime)GetValue(NowProperty);
+        set => SetValue(NowProperty, value);
+    }
+
+    public Color PathColor
+    {
+        get => (Color)GetValue(PathColorProperty);
+        set => SetValue(PathColorProperty, value);
+    }
+
     public Color SunColor
     {
         get => (Color)GetValue(SunColorProperty);
         set => SetValue(SunColorProperty, value);
     }
 
-    private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((WeatherSunArcView)bindable).InvalidateSurface();
+    //--------------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------------
 
     public WeatherSunArcView()
     {
@@ -86,23 +121,12 @@ public sealed class WeatherSunArcView : SKCanvasView
         Unloaded += (_, _) => this.AbortAnimation(RevealAnimationName);
     }
 
-    private void StartReveal()
-    {
-        this.AbortAnimation(RevealAnimationName);
-        reveal = 0f;
-        this.Animate(
-            RevealAnimationName,
-            v =>
-            {
-                reveal = (float)v;
-                InvalidateSurface();
-            },
-            0d,
-            1d,
-            16,
-            900,
-            Easing.CubicOut);
-    }
+    //--------------------------------------------------------------------------------
+    // Render
+    //--------------------------------------------------------------------------------
+
+    private static void OnVisualChanged(BindableObject bindable, object oldValue, object newValue) =>
+        ((WeatherSunArcView)bindable).InvalidateSurface();
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
@@ -112,13 +136,11 @@ public sealed class WeatherSunArcView : SKCanvasView
 
         if ((info.Width > 0) && (info.Height > 0) && (Width > 0) && (Sunset > Sunrise))
         {
-            // SKCanvas は物理ピクセルなので、論理単位の太さや長さに密度を掛ける
             var density = (float)(info.Width / Width);
-            var sun = 7 * density;
-            var margin = sun + (6 * density);
+            var sun = SunRadius * density;
+            var margin = sun + (SunMargin * density);
             var horizon = info.Height - margin;
 
-            // 地平線から上の半分の楕円
             var oval = new SKRect(margin, margin, info.Width - margin, (horizon * 2) - margin);
             var progress = (float)Math.Clamp((Now - Sunrise).TotalMinutes / (Sunset - Sunrise).TotalMinutes, 0, 1) * reveal;
             var isDay = (Now > Sunrise) && (Now < Sunset);
@@ -127,13 +149,12 @@ public sealed class WeatherSunArcView : SKCanvasView
             using var paint = new SKPaint();
             paint.IsAntialias = true;
             paint.Style = SKPaintStyle.Stroke;
-            paint.StrokeWidth = 1.5f * density;
+            paint.StrokeWidth = PathStrokeWidth * density;
             paint.Color = PathColor.ToSKColor();
-            paint.PathEffect = SKPathEffect.CreateDash([4 * density, 4 * density], 0);
+            paint.PathEffect = SKPathEffect.CreateDash([PathDash * density, PathDash * density], 0);
             DrawArc(canvas, oval, 180, 180, paint);
             paint.PathEffect = null;
 
-            // 通った部分の下を塗り、線を太くする
             if (progress > 0)
             {
                 using var fill = new SKPaint();
@@ -141,7 +162,7 @@ public sealed class WeatherSunArcView : SKCanvasView
                 using var shader = SKShader.CreateLinearGradient(
                     new SKPoint(0, margin),
                     new SKPoint(0, horizon),
-                    [sunColor.WithAlpha(110), sunColor.WithAlpha(0)],
+                    [sunColor.WithAlpha(FillAlpha), sunColor.WithAlpha(0)],
                     SKShaderTileMode.Clamp);
                 fill.Shader = shader;
                 using var builder = new SKPathBuilder();
@@ -153,25 +174,25 @@ public sealed class WeatherSunArcView : SKCanvasView
                 using var path = builder.Detach();
                 canvas.DrawPath(path, fill);
 
-                paint.StrokeWidth = 3 * density;
+                paint.StrokeWidth = PassedStrokeWidth * density;
                 paint.StrokeCap = SKStrokeCap.Round;
                 paint.Color = sunColor;
                 DrawArc(canvas, oval, 180, 180 * progress, paint);
             }
 
-            paint.StrokeWidth = 1 * density;
+            paint.StrokeWidth = HorizonStrokeWidth * density;
             paint.Color = PathColor.ToSKColor();
             canvas.DrawLine(0, horizon, info.Width, horizon, paint);
 
             var position = PointAt(oval, 180 + (180 * progress));
             using var glow = new SKPaint();
             glow.IsAntialias = true;
-            glow.Color = sunColor.WithAlpha(isDay ? (byte)150 : (byte)60);
-            glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5 * density);
-            canvas.DrawCircle(position, sun * 1.4f, glow);
+            glow.Color = sunColor.WithAlpha(isDay ? DayGlowAlpha : NightGlowAlpha);
+            glow.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, GlowBlur * density);
+            canvas.DrawCircle(position, sun * GlowRadiusRate, glow);
 
             paint.Style = SKPaintStyle.Fill;
-            paint.Color = isDay ? sunColor : sunColor.WithAlpha(110);
+            paint.Color = isDay ? sunColor : sunColor.WithAlpha(NightSunAlpha);
             canvas.DrawCircle(position, sun, paint);
         }
     }
@@ -188,5 +209,27 @@ public sealed class WeatherSunArcView : SKCanvasView
         builder.AddArc(oval, start, sweep);
         using var path = builder.Detach();
         canvas.DrawPath(path, paint);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Animation
+    //--------------------------------------------------------------------------------
+
+    private void StartReveal()
+    {
+        this.AbortAnimation(RevealAnimationName);
+        reveal = 0f;
+        this.Animate(
+            RevealAnimationName,
+            v =>
+            {
+                reveal = (float)v;
+                InvalidateSurface();
+            },
+            0d,
+            1d,
+            AnimationRate,
+            RevealLength,
+            Easing.CubicOut);
     }
 }
