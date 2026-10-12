@@ -84,7 +84,6 @@ Template project for MAUI.
 | Decision | Pending decisions (CoreCLR runtime) |
 | Device | Health Connect (candidate, pending decision) |
 | Sample | AI tool calling (candidate, pending decision) |
-| UI | Control extraction to libraries (ClamGauge) |
 
 ## Pending
 
@@ -108,6 +107,8 @@ Template project for MAUI.
 | [Rester](https://github.com/usausa/Rester) | HttpClient extensions |
 | [ClamGrid](https://github.com/usausa/clam-grid) | SkiaSharp grid view |
 | [ClamCalendar](https://github.com/usausa/clam-calendar) | SkiaSharp calendar view |
+| [ClamGauge](https://github.com/usausa/clam-gauge) | SkiaSharp gauge view |
+| [SkiaExtension](https://github.com/usausa/skia-extension) | SkiaSharp extensions |
 | [Mofucat.ReactiveHub](https://github.com/usausa/mofucat-reactive-hub) | Reactive SignalR hub connection |
 | [BunnyTail.DependencyInjection](https://github.com/usausa/bunnytail-dependency-injection) | Source generator based DI |
 | [BunnyTail.EmbeddedBuildProperty](https://github.com/usausa/bunnytail-embedded-build-property) | Embedded build property generator |
