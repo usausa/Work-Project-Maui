@@ -3604,6 +3604,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 1 フレームの割り当て(バイト、前 → 後): ArcMeter 2816 → 1592、GlowRing 1672 → 1360、TimerDial 2040 → 1728、HomeThermostatDial 2568 → 2088、HomeBlurredImage 1280 → 848、WeatherSunArcView 2008 → 1672、Puzzle2048Board 11344 → 10752、SocialStatus 21992 → 5080、SocialNotification 16736 → 3872、SocialPlayer 16840 → 3976、SocialInformation 13600 → 4992、SocialAlert 12184 → 3608、SocialMenu 10040 → 3608、SocialEpisode 7632 → 3344、SocialCounter 5816 → 3744、DayTimetableView 9832 → 9392、BarcodeView 3000 → 936、GraphRowSurface 1488 → 1112。Scene の描画は EnergyFlow 19304 → 18104、Telemetry 11552 → 11232、FlightHud 10528 → 10240、MechHud 8536 → 8176。TextToggle(4008 → 5216)と KitSleepBand(3408 → 4016)は `FontResolver` の分が増える
 - 文字の位置・円周上の点・円弧の置き換えは計算が同じで、見た目は変わらない(色の補間は四捨五入の差で最大 1)
 - 実機: Habit・Device Status・Timer・Home・Weather・Minesweeper・2048・Sudoku・Social・Kit・Mail・Schedule・Graph・Graph2・Radar・Wheel・Chart・Flight・Tactical・Telemetry・Energy・Map2・TreeMap(撮影した画像の向きと色の集計)で、見た目と動きが変わらない。Radar は 5 秒ごとに点と `TGT` の数が変わり、Schedule は日を替えると描き直される
+- inspectcode: `GlobalUsing.cs` の using の組の間の空行 1 件を直した。`Puzzle2048Slide.Id` が読まれていない指摘は前からのもの(今回の変更とは関係ない)
 - ビルド 0 警告(Release は Shiny の BLE の Android SDK の警告だけ)
 
 ### 🗂️Visit と Map のシート(2026-10-12)
@@ -3805,6 +3806,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **`DeviceDisplay.MainDisplayInfo` は取るたびに約 2 KB を割り当てる**。描画では最初に 1 回だけ取る
 - **`IReadOnlyList<T>` の `foreach` は列挙子がボックス化される**(配列・`List<T>` の型のまま回せば割り当てなし)。0〜299 の `int.ToString()` はランタイムが共有の文字列を返すので割り当てがない
 - **XAML Styler は組の無い接頭辞の宣言を `xmlns:*` のグループで 1 行にまとめる**(`xmlns:clam` と `xmlns:conv` など)。名前の付いたグループに入る接頭辞(`xmlns:converters`)にすると行が分かれる
+- **Debug と Release のビルドを同時に走らせない**。`Microsoft.Extensions.Logging.Debug` は Debug のときだけ含める参照なので、構成で restore の結果(`obj/project.assets.json`。`IntermediateOutputPath` を変えても共有)が変わり、重ねると Debug の APK からこのアセンブリが抜けて起動時に落ちる。Release の restore の後の inspectcode が `AddDebug` を解決できないと出すのも同じ理由
 
 ---
 
