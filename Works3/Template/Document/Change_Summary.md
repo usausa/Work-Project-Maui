@@ -3564,6 +3564,65 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - inspectcode: 足したスタイルのバインド(RelativeSource + x:DataType)の `Xaml.BindingWithContextNotResolved` の誤検知 10 件を、そのスタイルだけ `ReSharper disable/restore` で抑止。ほかは 0 件
 - ビルド 0 警告
 
+### 🐚Clam 系の 2.1.0 と SkiaExtension(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `ClamCalendar`・`ClamGrid` を 2.1.0 に。`ClamGauge` 2.1.0 と `SkiaExtension` 1.2.0 を足した |
+| `GlobalUsing.cs` | `global using SkiaExtension;` |
+| `MauiProgram.cs` | `ConfigureGlobalSettings` で `FallbackFonts.Languages = ["ja"]`(Clam の描画と `FontResolver` の文字ごとのフォールバックで、漢字を日本語の字形にする) |
+| `Modules/UI/UIGridStyles.cs` | ClamGrid 2.x の改名(`ShowSortPriority` → `SortPriorityVisible`、`ShowRowHeaders` → `RowHeadersVisible`、`ShowVerticalLines` → `VerticalLinesVisible`) |
+| `Controls/Gauge.cs` | 削除(ClamGauge の `ClamGaugeView` を使う) |
+| `Modules/UI/UIGaugeView.xaml` / `UIGaugeViewModel.cs` | 1 ページで 6 種類(Press・Humid・Temp・Wind・Speed・RPM)を `mcc:SegmentedView` で切り替える形に。値と色は ClamGauge の Example と同じ(線・針・軸の大きさは DIP)。選んでいない種類は `LazyViewOption` で選んだときに作る。種類ごとの切り替えは F2〜F4(文字は種類で変わる)、色の候補はスライダーの下、ゲージのタップでランダムな値。`GaugeKind`・`GaugeColorSwatch` は VM の上 |
+| `Converters/CompassDirectionConverter.cs` / `DegreeTextConverter.cs`(新規) | 風向のラベルを 8 方位に。角度の文字(`45°`)のコンバーター |
+| `Modules/UI/UICalendarView.xaml` / `UICalendarViewModel.cs` | 下のバー(選択のモードの 4 つのボタンと今日へのボタン)をやめ、モードは F2(Setting)で開く `mcc:BottomSheetView`、今日へ戻るのは F3(Today)に。`GoToTodayCommand` は削除。戻るキーは開いているシートを先に閉じる |
+| `Document/Images/UI_Gauge.png` / `UI_Calendar.png` | 撮り直した |
+
+- 実機: UIGrid・UIGridColumn・UICalendar・UISchedule は 2.1.0 に上げる前と画素まで同じ。6 つのゲージは置き換える前と同じ見た目(中央の値と単位の間隔が DIP になった 1〜3 画素のずれだけ)
+- ビルド 0 警告(Release は Shiny の BLE の Android SDK の警告だけ)
+
+### 🖌️SkiaSharp の描画の見直し(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| 計器(`ArcMeter`・`GlowRing`・`TimerDial`・`HomeThermostatDial`) | 円周上の点を `AngleHelper.GetPoint`、円弧を `DrawArc(center, radius, …)`、弧のグラデーションを `AngleHelper.CreateArcGradient` に。ArcMeter の描くたびの `OrderBy`・`Select`・`ToArray` を配列への挿入に |
+| `Controls/HomeControls.cs`(`HomeBlurredImage`) | キャッシュのキーを文字列からタプルに、暗くする色を `WithOpacity` に |
+| `Controls/WeatherControls.cs` | `SeriesSegmentView` の文字の位置を `GetLineHeight`・`GetBottomBaseline`、`WeatherCompassDial` の点を `GetPoint`・`ToSkiaAngle`、ラベルの位置を `GetCenterBaseline`、`WeatherSunArcView` の円弧を SkiaSharp の `DrawArc(oval, …)` に |
+| ゲーム(`MinesweeperBoard`・`Puzzle2048Board`・`SudokuBoard`) | 色の補間を `SKColor.Lerp`、不透明度を `WithOpacity`、数字の位置を `GetCenterBaseline` に(自前の `Darken`・`Blend` を削除)。2048 は合体したタイルの判定を LINQ からループに、数字の文字列を値ごとに保持 |
+| `Controls/SocialControls.cs` | 描くたびに何度も呼んでいた `DeviceDisplay.MainDisplayInfo.Density` を、描画の最初に 1 回だけ取る。行の高さを `GetLineHeight` に |
+| `Controls/DayTimetableView.cs` | 時刻の軸の文字列を時ごとに保持 |
+| `Controls/BarcodeView.cs` | `Value` が変わったときだけ符号化する |
+| `KitSleepBand`・`TextToggle`・`MailAvatarImage` | 書体を `MatchCharacter` から SkiaExtension の `FontResolver("sans-serif")` と `DrawableText` に(漢字は日本語の字形、数字・英字は Roboto)。KitSleepBand は時刻のラベルを 0〜23 時の配列に |
+| `Graphics/Scene/SceneObject.cs` | ループが UI スレッドに渡す処理を、ループの前に 1 回だけ作るデリゲート(ローカル関数)に。`DrawCachedLayer`・`DrawStaticImage` は描く処理に状態を渡す形(`TState` + `static` ラムダ) |
+| Scene(`TelemetryScene`・`FlightHudScene`・`MechHudScene`・`EnergyFlowScene`) | 円周上の点・円弧・色の補間を SkiaExtension に(自前の `Lerp`・`Mix` を削除)。Mech の通信の 3 行を static の配列に |
+| `Messaging/MapsuiController.cs` | 経路の色の補間を `SKColor.Lerp` に。`SetOverlayRoute` の引数を `IEnumerable<T>` に |
+| `Helpers/ImageHelper.cs` | `ToNormalizeBitmap` を `SKCodec.DecodeOriented()`(EXIF の向き 8 通り、読み込みは 1 回)に、`Resize` を `SKBitmap.Resize(float)` に(180 度のときに破棄していなかった `bitmap.Copy()` もなくなった) |
+| 一覧の型 | 自前で持つ一覧(2048 の `Slides`・`Merged`・`Tiles`、数独の `Flash`、Flight の `Contacts`、Mech の `Squad`・`Contacts`、Energy の `Events`)は配列か `List<T>` にして `foreach`(public の型は CA1819 を `#pragma` で抑止)。バインドする一覧のプロパティ(`RadarScreen.Targets`・`DayTimetableView.Events`・`KitSleepBand.Spans`・`SocialInformation.Units`)は `IReadOnlyList<T>` のまま `for` で回し、`INotifyCollectionChanged` の変更で描き直す |
+| `Modules/UI/UIRadarViewModel.cs` / `UIRadarView.xaml` | ターゲットを `ObservableCollection<T>` にして 5 秒ごとに中身を入れ替え、`TGT` の数は `Targets.Count` にバインド |
+| `Graphics/Scene/*.cs`・`Controls/TextToggle.cs` | 型を複数持つファイルに、型ごとの区切りのコメント |
+
+- 1 フレームの割り当て(バイト、前 → 後): ArcMeter 2816 → 1592、GlowRing 1672 → 1360、TimerDial 2040 → 1728、HomeThermostatDial 2568 → 2088、HomeBlurredImage 1280 → 848、WeatherSunArcView 2008 → 1672、Puzzle2048Board 11344 → 10752、SocialStatus 21992 → 5080、SocialNotification 16736 → 3872、SocialPlayer 16840 → 3976、SocialInformation 13600 → 4992、SocialAlert 12184 → 3608、SocialMenu 10040 → 3608、SocialEpisode 7632 → 3344、SocialCounter 5816 → 3744、DayTimetableView 9832 → 9392、BarcodeView 3000 → 936、GraphRowSurface 1488 → 1112。Scene の描画は EnergyFlow 19304 → 18104、Telemetry 11552 → 11232、FlightHud 10528 → 10240、MechHud 8536 → 8176。TextToggle(4008 → 5216)と KitSleepBand(3408 → 4016)は `FontResolver` の分が増える
+- 文字の位置・円周上の点・円弧の置き換えは計算が同じで、見た目は変わらない(色の補間は四捨五入の差で最大 1)
+- 実機: Habit・Device Status・Timer・Home・Weather・Minesweeper・2048・Sudoku・Social・Kit・Mail・Schedule・Graph・Graph2・Radar・Wheel・Chart・Flight・Tactical・Telemetry・Energy・Map2・TreeMap(撮影した画像の向きと色の集計)で、見た目と動きが変わらない。Radar は 5 秒ごとに点と `TGT` の数が変わり、Schedule は日を替えると描き直される
+- ビルド 0 警告(Release は Shiny の BLE の Android SDK の警告だけ)
+
+### 🗂️Visit と Map のシート(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/UI/UIVisitView.xaml` / `UIVisitViewModel.cs` | 並べ替えのパネルを、F2(並替)か並べ替えのボタンで開く `mcc:BottomSheetView` に。戻るキーは開いているシートを先に閉じる |
+| `Modules/Sample/SampleMap1View.xaml` / `SampleMap1ViewModel.cs` | 地図の種類・経路・範囲・円の切り替えを、F2(Layer)で開く `mcc:BottomSheetView` のスイッチに(地図の上のボタンはホームだけ)。戻るキーは開いているシートを先に閉じる |
+
+- 実機: Visit・Map とも F2 でシートが開き、戻るキーでシートだけ閉じる。Map のスイッチで経路・範囲・円が出る
+
+### 📚計画書の削除(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Control_Extraction_Plan.md` / `Clam_Update_Plan.md` | 削除(コントロールの抽出と Clam 系の更新が終わった) |
+| `README.md` | My Libraries に ClamGauge・SkiaExtension を足し、TODO のコントロールの抽出の行を外した |
+| `Document/Task_Checklist.md` | コントロールの抽出の計画書の記述を外した |
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3742,6 +3801,10 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **`IsVisible` で隠した重ねの中の `CarouselView` は、開くたびに `Position` を変えると 2 回目から前に見たページが出たままになる**(位置の値とインジケーターは変わる)。News と同じ `CarouselOption.PageSnap`(ページより先に RecyclerView がフォーカスを受ける)を付けると、押した写真から開く
 - **Android の MAUI Graphics では、`SetFillPaint` のグラデーションは後で `FillColor` を変えても残る**(後の塗りもグラデーションのまま)。グラデーションの塗りは `SaveState` / `RestoreState` で囲む
 - XAML のマークアップ拡張の中の `\` はエスケープなので、TimeSpan の書式の `:` は `StringFormat='{0:h\\:mm}'` と書く(`\:` だと書式が壊れて既定の `01:34:00` になる)
+- **Android の `SKFontManager.MatchCharacter` は言語のヒントが無いと中国語(簡体字)の書体を返す**(この端末のフォールバックの順は zh-Hans → zh-Hant → ja → ko)。漢字を日本語の字形で描くには、言語のヒント(`["ja"]`)を渡すか、SkiaExtension の `FontResolver` と `FallbackFonts.Languages` を使う
+- **`DeviceDisplay.MainDisplayInfo` は取るたびに約 2 KB を割り当てる**。描画では最初に 1 回だけ取る
+- **`IReadOnlyList<T>` の `foreach` は列挙子がボックス化される**(配列・`List<T>` の型のまま回せば割り当てなし)。0〜299 の `int.ToString()` はランタイムが共有の文字列を返すので割り当てがない
+- **XAML Styler は組の無い接頭辞の宣言を `xmlns:*` のグループで 1 行にまとめる**(`xmlns:clam` と `xmlns:conv` など)。名前の付いたグループに入る接頭辞(`xmlns:converters`)にすると行が分かれる
 
 ---
 
