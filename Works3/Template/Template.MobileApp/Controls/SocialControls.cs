@@ -340,6 +340,7 @@ public sealed class SocialPlayer : SocialControl
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
 
+        canvas.Clear();
         paint.Color = Color.ToSKColor();
         canvas.DrawRect(new SKRect(0, 0, leftBorder, info.Height), paint);
         paint.Color = SKColors.Black.WithAlpha(ImageBackgroundAlpha);
@@ -663,6 +664,7 @@ public sealed class SocialAlert : SocialControl
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
 
+        canvas.Clear();
         paint.Color = SKColors.Black.WithAlpha(BackgroundAlpha);
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, info.Height), paint);
 
@@ -812,6 +814,7 @@ public sealed class SocialNotification : SocialControl
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
 
+        canvas.Clear();
         paint.Color = SocialResources.TitleBackgroundColor;
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SocialResources.BackgroundColor;
@@ -1304,6 +1307,7 @@ public sealed class SocialInformation : SocialControl
         paint.Style = SKPaintStyle.Fill;
         paint.IsAntialias = true;
 
+        canvas.Clear();
         paint.Color = SocialResources.TitleBackgroundColor;
         canvas.DrawRect(new SKRect(0, 0, info.Rect.Right, titleHeight), paint);
         paint.Color = SocialResources.BackgroundColor;

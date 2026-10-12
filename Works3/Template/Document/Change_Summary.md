@@ -3527,15 +3527,18 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 
 | 対象 | 内容 |
 |---|---|
-| `Controls/`(抽出しないで残すコントロールの 42 ファイル) | コメントを消し(`// ReSharper` の指示と空の catch の `// Ignore` は残す)、const → static readonly → `// Member` → `// Property` → `// Constructor` → 機能の節(Layout → Render → Animation → Touch / Drag)の並びと区切りにそろえた。BindableProperty とプロパティ本体が交互だったものは BindableProperty を先にまとめた。余白・大きさ・太さ・角度・透明度・アニメーションの時間などの直値を const に、色と座標を static readonly に(値ごとの色は Dictionary や配列、旗・月の海の形は座標の組)。メソッドの中の const もクラスへ |
+| `Controls/`(抽出しないで残すコントロール) | コメントを消し(`// ReSharper` の指示と空の catch の `// Ignore` は残す)、const → static readonly → `// Member` → `// Property` → `// Constructor` → 機能の節(Layout → Render → Animation → Touch / Drag)の並びと区切りにそろえた。BindableProperty とプロパティ本体が交互だったものは BindableProperty を先にまとめた。余白・大きさ・太さ・角度・透明度・アニメーションの時間などの直値を const に、色と座標を static readonly に(値ごとの色は Dictionary や配列、旗・月の海の形は座標の組)。メソッドの中の const もクラスへ |
+| `Controls/WeatherControls.cs`(新規) | UI Weather だけで使う `SeriesSegmentView`・`SegmentBar`・`WeatherCompassDial`・`WeatherSunArcView`・`WeatherMoonPhaseView` を 1 ファイルに(名前はそのまま) |
+| `Controls/MixerControls.cs`(新規) | UI Mixer の `MixerKnob`・`MixerSlider`・`MixerEqualizer` を 1 ファイルに |
 | `Controls/KitControls.cs`(`KitSleepBand`) | 文字の大きさを `FontSize` のプロパティに(既定 11) |
-| `Controls/WeatherCompassDial.cs` | 方位の文字の大きさを `LabelFontSize` のプロパティに(既定 12) |
+| `Controls/WeatherControls.cs`(`WeatherCompassDial`) | 方位の文字の大きさを `LabelFontSize` のプロパティに(既定 12) |
 | `Controls/NoiseGauge.cs` | `GaugeColor` を BindableProperty に(ほかの色と同じく、変えると描き直す)。ピークの針の太さを `PeakNeedleWidth` のプロパティに(既定 3) |
-| `Controls/SocialControls.cs` | `SocialMenu` の下の文字の大きさに `FontSize2` を使う。題の地の色と量の溝の色を `SocialResources` に |
+| `Controls/SocialControls.cs` | `SocialMenu` の下の文字の大きさに `FontSize2` を使う。題の地の色と量の溝の色を `SocialResources` に。描く前に画面を消す(`SocialPlayer`・`SocialAlert`・`SocialNotification`・`SocialInformation`・`SocialStatus`。描き直すたびに半透明の地が濃くなり、`SocialStatus` は数え上げの途中の数字が重なって残っていた)。`SocialStatus` の 2・3 行目の値の中央寄せを、それぞれの数字の幅で計る |
 | `Controls/StatusChip.xaml.cs` | 状態ごとの色を static readonly に(プロパティの既定値も同じ色) |
 
-- 見た目は変えていない(足したプロパティの既定値は元の直値)
+- 見た目は Social の地と数字の修正のほかは変えていない(足したプロパティの既定値は元の直値)
 - 実機: 対象のコントロールを使う 28 画面を変更前と変更後で撮って比べ、差は動き続ける部分(センサー・通信の値、時刻に連動する表示、ノイズ・ミキサー・レーダー・流れる文字、開くたびに変わる天気の見本)だけ
+- 実機: UI Social で、`SocialPlayer` と `SocialStatus` の地がほかの枠と同じ半透明になり、`SocialStatus` の数字の重なりが消えた(ほかの 3 つは描き直しの無い枠なので見た目は同じ)
 - ビルド 0 警告
 
 ## 💡C. この区間のナレッジ
