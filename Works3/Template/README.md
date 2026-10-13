@@ -87,15 +87,15 @@ Template project for MAUI.
 
 | Category | Feature |
 | --- | --- |
-| Basic | Typography / Style / Font / Converter / Behavior / Dialog / Validation / Localization / Setting |
+| Basic | Typography / Style / Font / Converter / Behavior / Localization / Dialog / Validation / Setting |
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
-| Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
+| Device | Info / Status / Sensor / Location / QR Display / QR Scan(Android AI) / Camera / OCR(Android AI) / WiFi / Bluetooth Serial / BLE / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
 | Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC / SFTP / OpenTelemetry |
-| View | Layout / State / Border / Shadow / Toolkit / Custom / Bottom sheet / Drawer / Animation / Easing / Effect / Drag & Drop / Lottie / SVG / Graphics / Drawing / Chart |
-| Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / ONNX / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
-| App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
+| View | Layout / State / Border / Shadow / Animation / Easing / Effect / Drag & Drop / Graphics / Drawing / Lottie / SVG / Bottom sheet / Drawer / Toolkit / Custom / Chart |
 | UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy |
+| Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / Object, Tag, People, OCR(Azure AI Vision) / ONNX / Chat(Ollama) / Crop |
+| App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
 
 # Pending
 
