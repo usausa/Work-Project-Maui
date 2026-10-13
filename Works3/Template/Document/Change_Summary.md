@@ -3676,6 +3676,21 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 実機: Debug で 59〜60 fps。START でタイトルのメニュー、A で KEY TEST。2 本の指(十字キーの右と A)を同時に押すと KEY TEST に「R A」と出る。裏に回すとエミュレーションのスレッドの CPU が 55% から 0% になり、前面に戻ると続きから。戻るで離れるとスレッドが無くなり、開き直すとタイトルから。消音の状態は次に開いたときも残る
 - ビルド 0 警告
 
+### 🧪実機の確認(2026-10-13)
+
+- 実機(Pixel 9a、ユーザー): Wi-Fi とモバイル回線の切り替えでの再接続(Realtime・テレメトリ)、Device > NFC の実物の Suica の読み取り、UI > Chat の写真のメッセージ
+- 実機(Pixel 9a): Network > HTTP (Data) の続きの読み込み。template-maui-server の 48 件で、一覧を送ると List 20 / 48 → More 40 / 48 → More 48 / 48 と最後まで読み、それ以降は読まない。サーバーにも `/api/data/list` が 3 回届いた
+- 実機(Pixel 9a): 診断画面の Delete files の実行。確認のダイアログの OK で、ログのフォルダーの 7 ファイル(10-07〜10-13)のうち今日の `20261013.log` だけが残り、Files は 1 つ、Recent は「No warnings or errors」になり、Delete files は押せなくなる
+- 実機(Pixel 9a): Telemetry の送信先の変更。送信先が `http://localhost:4318/`(adb の転送)のまま転送を外してサーバーを起動し直すと、70 秒の間テレメトリは届かない。template-maui-server の QR ページを PC の LAN の IP で開いて Setting で読み取ると、送信先が `http://192.168.100.9:4318/` に変わり、転送が無いまま 30 秒ごとにサーバーへ届く。localhost の QR を読み直すと元の送信先に戻り、また届く
+
+### 🧹ReSharper の指摘(2026-10-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Controls/DayTimetableView.cs` | 予定の一覧を 1 回だけ回す描画のメソッド(`RenderFreeSlots` / `RenderEvents`)の引数を `IEnumerable<TimetableEvent>` に(ParameterTypeCanBeEnumerable) |
+
+- ビルド 0 警告
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
