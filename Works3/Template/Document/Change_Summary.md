@@ -3634,6 +3634,32 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 
 - XAML Styler: 157 ファイルのうち 139 が合格(SampleCrop・UIKitDash は xmlns の順番のずれだけだったので合格に)。合格しない 18 はほかの所の前からのずれで、そのうち直したファイル(UIGraph・ViewDrawer・ViewSfChart・UIMoney など)は、xmlns と変えた所だけを Styler の結果に合わせた
 
+### 📚画面ごとの資料と画像(2026-10-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Document/Example01_Basic.md`〜`Example08_App.md` | 機能のグループごとの資料(新規)。画面ごとの節に画像を並べ(詳細の画面は親の画面と同じ節)、その画面の主な技術・UI 要素を箇条書きにした |
+| `Document/Images` | 全画面を撮り直して置き換え・追加し、Example から参照しない画像は削除した。Device の Location・WiFi・BLE Scan・BLE Host・NFC・Activity、Network > SFTP と UI > Load は見本の値(東京駅の位置、架空の SSID・センサーの ID・UserId・接続先・Suica の履歴など)の画面、Sample > Chat は日本語の会話。View > Chart は 7 種類(`View_Chart` / `-2`〜`-7`)、UI > Gauge は 6 種類(`UI_Gauge` / `-2`〜`-6`) |
+| `README.md` | Image の画像の参照を新しい名前に合わせ、Example のページへのリンクの表を追加。Implement の表を画面の順に並べ替え、Navigation に Effect、Device に Biometric を追加 |
+| XAML 97 ファイル | XAML Styler(コンソール版)で付いた UTF-8 の BOM を外した(`.editorconfig` の `charset = utf-8` に合わせる) |
+| `Document/Task_Checklist.md` | README の Pending の Physical keyboard support・iOS support を 15・16 節として追加。README との同期は「README の Pending の項目は本書にも載せる(6 節と外部待ちは README に載せない)」に |
+
+### 🐛見つけた不具合の修正(2026-10-13)
+
+| 対象 | 内容 |
+|---|---|
+| `MauiProgram.cs` | MediaElement の Android のフォアグラウンドサービスを使わない(`UseMauiCommunityToolkitMediaElement(false)`)。Sample > Media を開いた後に、`communityToolkit.maui.media.services` が `startForeground` を呼ばない ANR が出ていた。バックグラウンドの再生と通知の操作は使っていない。マージ後のマニフェストから `FOREGROUND_SERVICE` / `FOREGROUND_SERVICE_MEDIA_PLAYBACK` / `MEDIA_CONTENT_CONTROL` の権限が無くなった(サービスの宣言は残る) |
+| `Modules/Sample/SampleMap2ViewModel.cs` | 初期の位置の定数の緯度と経度の名前が逆だったのを直した(渡す値は同じ) |
+| `Modules/Device/DeviceWiFiView.xaml` | MauiComponents の接頭辞の宣言(`xmlns:cm`)と使う側(`mcs:WiFiSecurity`)が食い違ってビルドが通らなかったので、使う側を `cm:` に |
+| `MauiProgram.cs` / `Services/ApiNames.cs` | 地図のタイルの HttpClient(`ApiNames.MapTile`)を登録。User-Agent は `Template.MobileApp/<版>`(OpenStreetMap はアプリを識別できる User-Agent を求める)。接続は IPv4 だけ(`ConnectCallback` の `ConnectIPv4Async` で IPv4 のアドレスを引き、IPv4 のソケットでつなぐ) |
+| `Messaging/MapsuiController.cs` / `Modules/Sample/SampleMap2ViewModel.cs` | Sample > Map2 のタイルを、登録した HttpClient で取る(`HttpTileSource` を作り `TileLayer` の `httpClient` に渡す。帰属表示は同じ)。端末の Wi-Fi の IPv6 が外へ出られないと、既定の HttpClient(Android の HttpURLConnection)が IPv6 の接続を待ち続け、地図が白いままだった |
+| `Modules/Device/DeviceActivityView.xaml` | 消費カロリーを 1000 で割らずに表示する。`ActivityCalculator` の値はすでに kcal なのに、距離(m → km)と同じく 1000 で割っていて、1000 分の 1 の値が出ていた |
+| `Modules/Device/DeviceWiFiView.xaml` | アクセスポイントの行のバッジ(`AccessPointChip`)に `FlexLayout.Shrink = 0`。SSID の幅によっては、バッジが次の行へ折り返されずに縮み、中の文字が折り返して切れていた(「Not found」が「Not」になるなど) |
+| `Modules/App/AppTimerView.xaml` / `Modules/Device/DeviceStatusView.xaml` / `Modules/UI/UIProfileView.xaml` / `Modules/UI/UIVisitView.xaml` / `Modules/UI/UIWheelView.xaml` | 同じく、折り返す FlexLayout に並べるチップ(`ChipButton` / `StateChip` / `InterestBorder` / `Chip`・`SortKeyChip` / `HistoryBorder`・`ItemChipBorder`)に `FlexLayout.Shrink = 0` |
+
+- 実機: Sample > Media を滞在時間を変えて 5 回開いて閉じ、ANR の記録が増えないこと、メディアのサービスが起動しないこと、再生されることを確かめた。Sample > Map2 は Wi-Fi(IPv6 が外へ出られない回線)のまま 3 秒で地図が出て、ズームの後のタイルも出る。取り消された接続は、表示中も閉じた後も 0 件。Device > Activity は見本の歩数(6,842 歩)で 222.37 kcal と出る。Device > WiFi は文字が切れていた行(SSID `Guest-2C02` + Not found / 2.4 GHz / WPA2)を見本の値で出し、バッジが欠けずに並ぶ。Timer・Status・Profile・Visit・Wheel は見た目が変わらない
+- ビルド 0 警告
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3817,6 +3843,10 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **`IReadOnlyList<T>` の `foreach` は列挙子がボックス化される**(配列・`List<T>` の型のまま回せば割り当てなし)。0〜299 の `int.ToString()` はランタイムが共有の文字列を返すので割り当てがない
 - **XAML Styler は組の無い接頭辞の宣言を `xmlns:*` のグループで 1 行にまとめる**(`xmlns:clam` と `xmlns:conv` など)。名前の付いたグループに入る接頭辞(`xmlns:converters`)にすると行が分かれる
 - **Debug と Release のビルドを同時に走らせない**。`Microsoft.Extensions.Logging.Debug` は Debug のときだけ含める参照なので、構成で restore の結果(`obj/project.assets.json`。`IntermediateOutputPath` を変えても共有)が変わり、重ねると Debug の APK からこのアセンブリが抜けて起動時に落ちる。Release の restore の後の inspectcode が `AddDebug` を解決できないと出すのも同じ理由
+- **CommunityToolkit.Maui.MediaElement の `UseMauiCommunityToolkitMediaElement(true)` は、Android でフォアグラウンドサービス(`communityToolkit.maui.media.services`)を使う**。`startForeground` が呼ばれないまま時間が過ぎると ANR(`Context.startForegroundService() did not then call Service.startForeground()`)になる。バックグラウンドの再生や通知の操作を使わないなら `false` にする(`FOREGROUND_SERVICE` などの権限もマニフェストに入らなくなる。サービスの宣言は残る)
+- **.NET の既定の HttpClient(Android では HttpURLConnection)は IPv6 と IPv4 を並行に試さない**。IPv6 のアドレスが付いても外へ出られない Wi-Fi では IPv6 の接続を待ち続け、取り消される(端末のログに `Exception caught while cancelling connection`)。`SocketsHttpHandler.ConnectCallback` で IPv4 のアドレスだけを引き、IPv4 のソケットでつなぐと避けられる
+- **Mapsui 5.1 の `OpenStreetMap.CreateTileLayer()` は、`TileLayer` の中で `new HttpClient()` を作り、User-Agent は `user-agent-of-<アプリ名>`**。`TileLayer` の `httpClient` 引数で HttpClient を渡せる(BruTile 6 の `HttpTileSource` は User-Agent が無いと例外)
+- **MAUI の FlexLayout の折り返しの判定は子の Margin を含めない**(`Flex.cs` の `if (flex_tolerance < child_size)`。Margin は判定の後で残りの幅から引く)。本体は収まるが Margin を足すと収まらない子は折り返されず、はみ出した分を `FlexLayout.Shrink` が 0 でない子(既定 1)が縮めて吸収する。Label を入れたチップは中の文字が折り返して切れるので、折り返す FlexLayout に並べるチップは `FlexLayout.Shrink = 0` にする(親の FlexLayout の直接の子にだけ効く)
 
 ---
 

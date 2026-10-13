@@ -162,6 +162,11 @@
 
 <p>
 <img width="25%" src="./Images/UI_Gauge.png" />
+<img width="25%" src="./Images/UI_Gauge-2.png" />
+<img width="25%" src="./Images/UI_Gauge-3.png" />
+<img width="25%" src="./Images/UI_Gauge-4.png" />
+<img width="25%" src="./Images/UI_Gauge-5.png" />
+<img width="25%" src="./Images/UI_Gauge-6.png" />
 </p>
 
 ## Meter

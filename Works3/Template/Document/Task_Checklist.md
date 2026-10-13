@@ -15,6 +15,8 @@
 | Decision | 保留中の判断(CoreCLR の扱い) | 6 |
 | Device | Health Connect(歩数・心拍・睡眠などの健康データ。候補) | 12 |
 | Sample | AI tool calling(Sample > Chat のツール呼び出し。候補) | 13-1 |
+| Other | Physical keyboard support(物理キーだけで操作する) | 15 |
+| Other | iOS support(iOS 対応) | 16 |
 
 ## 📏運用ルール
 
@@ -22,7 +24,7 @@
 - **⚖️【判断】印の項目はユーザーが決定**(勝手に進めない)。デザイン判断を伴う差分は 1 項目ずつ指示を受けて実施
 - 実装・変更を行なう場合の完了条件 = **ビルド警告ゼロ** + `Change_Summary.md` への記録(開発ポリシーは同 付録A)
 - コミットはユーザーが実施(グループ単位を推奨)
-- `README.md` の TODO 表は本書のサマリ表(2〜6・12・13 節)と同期させる(項目の追加・削除・完了時に両方を更新。TODO 表に本書の番号は書かない)
+- `README.md` の Pending 表の項目は、すべて本書のサマリ表にも載せる(項目の追加・削除・完了時に両方を更新。Pending 表に本書の番号は書かない)。4 節(生体認証)・6 節(CoreCLR)・12 節(Health Connect)と外部待ち(XAML の global xmlns)は README に載せない
 - リンク集 `■MAUI.txd` は全件に判定を付記済み(🟩 取り込む / 🟦 取り込まないが記事として有用 / 🟥 古い・参照不要 / 🟨 要判断)。🟩 の項目は本書へ移し、元行は同書から削除する
 - 描画・性能の計測は **Release ビルド + 実機**(手順は `Development.md` の「Releaseビルドでの検証と計測」)
 
@@ -73,7 +75,7 @@
 
 - [ ] **3-2-0**⚖️【判断】プッシュ通知(FCM)の要否 — Firebase プロジェクトと `google-services.json` が前提。採用する場合、トークン表示と受信ログを Notification カードに追記する
 
-## ⏳外部待ち(README の Pending と同期)
+## ⏳外部待ち
 
 | 項目 | 待ち先 | 状態 |
 | --- | --- | --- |
@@ -206,3 +208,15 @@ URL からアプリを起動し、指定の画面へ移る。参照: https://git
 | Firebase Crashlytics | Android / iOS のクラッシュの収集(FCM を使うなら同じ `google-services.json`) | https://github.com/mattleibow/CloudyCrashReporting(各サービスの比較) |
 | Application Insights(TinyInsights) | クラッシュ・ページビュー・依存の呼び出し・カスタムイベント。ダッシュボードあり | https://github.com/dhindrik/TinyInsights.Maui |
 | OpenTelemetry → Azure Monitor | OTel の経路で Application Insights へ送る | https://www.docswell.com/s/tanaka_733/K4P265-maui-observability |
+
+## ⌨️15. 物理キーボード
+
+物理キー付きの Android 端末(キーパッドの付いたハンディターミナルなど)を、キーだけで操作できるようにする。検証用の実装は別のテンプレート `template-maui-keyboard`(`D:\GitHubTemplate\template-maui-keyboard`)にある。
+
+- [ ] **15-0**⚖️【判断】要否と範囲 — 本テンプレートに入れるか、`template-maui-keyboard` に任せるか
+
+## 🍎16. iOS
+
+今は Android だけ(`net10.0-android`、`Platforms/Android`)。iOS のターゲットと `Platforms/iOS` を足し、Android だけの実装(`*.android.cs`)に対応する iOS の実装(`*.ios.cs`)を用意する。csproj には `*.ios.cs` の扱いの設定がある。
+
+- [ ] **16-0**⚖️【判断】要否と範囲

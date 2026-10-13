@@ -97,6 +97,7 @@
             <Style x:Key="HistoryBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="10,4" />
                 <Setter Property="BackgroundColor" Value="#26FFFFFF" />
                 <Setter Property="StrokeThickness" Value="0" />
@@ -118,6 +119,7 @@
             <Style x:Key="ItemChipBorder"
                    TargetType="Border">
                 <Setter Property="Margin" Value="0,0,6,6" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="10,0,4,0" />
                 <Setter Property="HeightRequest" Value="32" />
                 <Setter Property="BackgroundColor" Value="#1FFFFFFF" />

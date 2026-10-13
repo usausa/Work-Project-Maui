@@ -334,6 +334,7 @@
             <Style x:Key="ChipButton"
                    TargetType="Button">
                 <Setter Property="Margin" Value="4" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
                 <Setter Property="Padding" Value="16,0" />
                 <Setter Property="HeightRequest" Value="40" />
                 <Setter Property="CornerRadius" Value="20" />

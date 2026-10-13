@@ -83,6 +83,7 @@
             <Style x:Key="StateChip"
                    TargetType="controls:StatusChip">
                 <Setter Property="Margin" Value="0,0,8,8" />
+                <Setter Property="FlexLayout.Shrink" Value="0" />
             </Style>
 
             <s:MapToTextConverter x:Key="BatteryStateTextConverter"
