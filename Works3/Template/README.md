@@ -59,7 +59,7 @@ Template project for MAUI.
 
 <img width="25%" src="Document/Images/UI_Energy.png" />
 <img width="25%" src="Document/Images/UI_Wheel.png" />
-<img width="25%" src="Document/Images/UI_Radar.png" />
+<img width="25%" src="Document/Images/App_GameBoy.png" />
 
 <img width="25%" src="Document/Images/App_Sudoku.png" />
 <img width="25%" src="Document/Images/App_Puzzle2048.png" />
@@ -95,7 +95,7 @@ Template project for MAUI.
 | View | Layout / State / Border / Shadow / Animation / Easing / Effect / Drag & Drop / Graphics / Drawing / Lottie / SVG / Bottom sheet / Drawer / Toolkit / Custom / Chart |
 | UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy |
 | Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / Object, Tag, People, OCR(Azure AI Vision) / ONNX / Chat(Ollama) / Crop |
-| App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
+| App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper / Game Boy |
 
 # Pending
 

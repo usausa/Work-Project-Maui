@@ -3660,6 +3660,22 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 実機: Sample > Media を滞在時間を変えて 5 回開いて閉じ、ANR の記録が増えないこと、メディアのサービスが起動しないこと、再生されることを確かめた。Sample > Map2 は Wi-Fi(IPv6 が外へ出られない回線)のまま 3 秒で地図が出て、ズームの後のタイルも出る。取り消された接続は、表示中も閉じた後も 0 件。Device > Activity は見本の歩数(6,842 歩)で 222.37 kcal と出る。Device > WiFi は文字が切れていた行(SSID `Guest-2C02` + Not found / 2.4 GHz / WPA2)を見本の値で出し、バッジが欠けずに並ぶ。Timer・Status・Profile・Visit・Wheel は見た目が変わらない
 - ビルド 0 警告
 
+### 🎮Game Boy(2026-10-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | GonFox.GameBoy.Core / GonFox.GameBoy.Platform.Shared / GonFox.GameBoy.Platform.Android 1.0.0 を参照 |
+| `Resources/Raw/GameBoy/rpgdemo.gb` | USAGI QUEST(GonFox-GameBoy の RPG デモ。32 KiB の ROM Only、MIT) |
+| `Models/App/GameBoyEmulator.cs` / `GameBoyEmulator.android.cs` | エミュレーター(`EmulationRunner`・`AudioPlayback`・`ButtonInputState`)。音量 70% と消音、裏に回ったら一時停止して前面で続きから、巻き戻しの記録は止める。音の機器は `AudioTrackDevice` |
+| `Models/App/AppJsonContext.cs` | 消音の状態(`GameBoySnapshot`)を JSON で保存 |
+| `Controls/GameBoyControls.cs` | 画面(`GameBoyScreen`。160 × 144 を収まる最大の整数倍で最近傍の拡大)とパッド(`GameBoyPad`。複数の指を別々に判定し、押している部品の色を変え、押したときに `HapticFeedback` で振動)。パッドの十字キー・A / B・SELECT / START は元の見本の約 1.3 倍 |
+| `Modules/App/AppGameBoyView.xaml` / `AppGameBoyViewModel.cs`、`Modules/ViewId.cs` | Game Boy の画面。上の帯に戻る・題・FPS・消音。開いたら USAGI QUEST を最初から動かし、離れたら破棄する |
+| `Modules/App/AppMenuView.xaml` / `Markup/AppIcons.cs` | App メニューの 9 段目を Game Boy に(アイコンは `VideogameAsset`) |
+| `Document/Example08_App.md` / `README.md` / `Document/Images/App_GameBoy.png` | Game Boy の節と画像、Implement の App の行。README の画像の欄は UI_Radar を App_GameBoy に |
+
+- 実機: Debug で 59〜60 fps。START でタイトルのメニュー、A で KEY TEST。2 本の指(十字キーの右と A)を同時に押すと KEY TEST に「R A」と出る。裏に回すとエミュレーションのスレッドの CPU が 55% から 0% になり、前面に戻ると続きから。戻るで離れるとスレッドが無くなり、開き直すとタイトルから。消音の状態は次に開いたときも残る
+- ビルド 0 警告
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3847,6 +3863,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **.NET の既定の HttpClient(Android では HttpURLConnection)は IPv6 と IPv4 を並行に試さない**。IPv6 のアドレスが付いても外へ出られない Wi-Fi では IPv6 の接続を待ち続け、取り消される(端末のログに `Exception caught while cancelling connection`)。`SocketsHttpHandler.ConnectCallback` で IPv4 のアドレスだけを引き、IPv4 のソケットでつなぐと避けられる
 - **Mapsui 5.1 の `OpenStreetMap.CreateTileLayer()` は、`TileLayer` の中で `new HttpClient()` を作り、User-Agent は `user-agent-of-<アプリ名>`**。`TileLayer` の `httpClient` 引数で HttpClient を渡せる(BruTile 6 の `HttpTileSource` は User-Agent が無いと例外)
 - **MAUI の FlexLayout の折り返しの判定は子の Margin を含めない**(`Flex.cs` の `if (flex_tolerance < child_size)`。Margin は判定の後で残りの幅から引く)。本体は収まるが Margin を足すと収まらない子は折り返されず、はみ出した分を `FlexLayout.Shrink` が 0 でない子(既定 1)が縮めて吸収する。Label を入れたチップは中の文字が折り返して切れるので、折り返す FlexLayout に並べるチップは `FlexLayout.Shrink = 0` にする(親の FlexLayout の直接の子にだけ効く)
+- **Game Boy の ROM はボタンを 1 フレーム(約 16.7 ms)に 1 回読むので、押して離すまでが 1 フレームより短いと届かない**。`adb shell input tap` は押してすぐ離すので届かないことがある。確かめるときは `input swipe x y x y 150` で 150 ms 押す
 
 ---
 
