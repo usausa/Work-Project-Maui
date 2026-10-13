@@ -3570,7 +3570,6 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 |---|---|
 | `Template.MobileApp.csproj` | `ClamCalendar`・`ClamGrid` を 2.1.0 に。`ClamGauge` 2.1.0 と `SkiaExtension` 1.2.0 を足した |
 | `GlobalUsing.cs` | `global using SkiaExtension;` |
-| `MauiProgram.cs` | `ConfigureGlobalSettings` で `FallbackFonts.Languages = ["ja"]`(Clam の描画と `FontResolver` の文字ごとのフォールバックで、漢字を日本語の字形にする) |
 | `Modules/UI/UIGridStyles.cs` | ClamGrid 2.x の改名(`ShowSortPriority` → `SortPriorityVisible`、`ShowRowHeaders` → `RowHeadersVisible`、`ShowVerticalLines` → `VerticalLinesVisible`) |
 | `Controls/Gauge.cs` | 削除(ClamGauge の `ClamGaugeView` を使う) |
 | `Modules/UI/UIGaugeView.xaml` / `UIGaugeViewModel.cs` | 1 ページで 6 種類(Press・Humid・Temp・Wind・Speed・RPM)を `mcc:SegmentedView` で切り替える形に。値と色は ClamGauge の Example と同じ(線・針・軸の大きさは DIP)。選んでいない種類は `LazyViewOption` で選んだときに作る。種類ごとの切り替えは F2〜F4(文字は種類で変わる)、色の候補はスライダーの下、ゲージのタップでランダムな値。`GaugeKind`・`GaugeColorSwatch` は VM の上 |
@@ -3604,7 +3603,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 1 フレームの割り当て(バイト、前 → 後): ArcMeter 2816 → 1592、GlowRing 1672 → 1360、TimerDial 2040 → 1728、HomeThermostatDial 2568 → 2088、HomeBlurredImage 1280 → 848、WeatherSunArcView 2008 → 1672、Puzzle2048Board 11344 → 10752、SocialStatus 21992 → 5080、SocialNotification 16736 → 3872、SocialPlayer 16840 → 3976、SocialInformation 13600 → 4992、SocialAlert 12184 → 3608、SocialMenu 10040 → 3608、SocialEpisode 7632 → 3344、SocialCounter 5816 → 3744、DayTimetableView 9832 → 9392、BarcodeView 3000 → 936、GraphRowSurface 1488 → 1112。Scene の描画は EnergyFlow 19304 → 18104、Telemetry 11552 → 11232、FlightHud 10528 → 10240、MechHud 8536 → 8176。TextToggle(4008 → 5216)と KitSleepBand(3408 → 4016)は `FontResolver` の分が増える
 - 文字の位置・円周上の点・円弧の置き換えは計算が同じで、見た目は変わらない(色の補間は四捨五入の差で最大 1)
 - 実機: Habit・Device Status・Timer・Home・Weather・Minesweeper・2048・Sudoku・Social・Kit・Mail・Schedule・Graph・Graph2・Radar・Wheel・Chart・Flight・Tactical・Telemetry・Energy・Map2・TreeMap(撮影した画像の向きと色の集計)で、見た目と動きが変わらない。Radar は 5 秒ごとに点と `TGT` の数が変わり、Schedule は日を替えると描き直される
-- inspectcode: `GlobalUsing.cs` の using の組の間の空行 1 件を直した。`Puzzle2048Slide.Id` が読まれていない指摘は前からのもの(今回の変更とは関係ない)
+- inspectcode: `GlobalUsing.cs` の using の組の間の空行 1 件を直した。前から読まれていなかった `Puzzle2048Slide` の `Id` を削除した
 - ビルド 0 警告(Release は Shiny の BLE の Android SDK の警告だけ)
 
 ### 🗂️Visit と Map のシート(2026-10-12)
@@ -3623,6 +3622,17 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Document/Control_Extraction_Plan.md` / `Clam_Update_Plan.md` | 削除(コントロールの抽出と Clam 系の更新が終わった) |
 | `README.md` | My Libraries に ClamGauge・SkiaExtension を足し、TODO のコントロールの抽出の行を外した |
 | `Document/Task_Checklist.md` | コントロールの抽出の計画書の記述を外した |
+
+### 🧹xmlns の接頭辞と支払いボタン(2026-10-12)
+
+| 対象 | 内容 |
+|---|---|
+| `Settings.XamlStyler` | xmlns の一覧に、使っている接頭辞を 1 つずつ足した(一覧に無い接頭辞は `xmlns:*` の組で 1 行にまとめられる)。一覧は MAUI・Smart・自作のライブラリ(Clam・MauiComponents)・外部のライブラリ・Template.MobileApp・そのほかの組に分け、どのアセンブリ由来かのコメントを付けた(同じアセンブリが続く所は先頭に 1 行)。`xmlns:animationss` の綴りを `xmlns:animations` に、使わなくなった `xmlns:toolkit` を削除 |
+| XAML の接頭辞 | 同じ名前空間はほかと同じ接頭辞に: `conv` → `converters`(SampleMedia・UIGraph・UILoad)、`font` → `fonts`(UIVisit)、`model` → `models`(UISocial)、`toolkit` → `mct`(MainPage・SampleMedia・ViewDrawing)。DataView の自分の名前空間を `data` から `module` に |
+| xmlns の行 | DeviceStatus・Diagnostics・SampleMap2・ViewDrawer・ViewSfChart の 1 行にまとまっていた宣言を 1 行ずつに。一覧の並びに合わせて、`animations`(ViewAnimation・ViewEasing)・`clam`(UICalendar・UIGauge・UIGrid・UIGridColumn)・`components`(DeviceBiometric・DeviceWiFi)・`diagnostics`(Diagnostics)・`entity`(EditList)・`drawer`(ViewDrawer)・`charts`(ViewSfChart)・`drawing`(SampleCrop・UIKitDash・UIWheel)の宣言の位置を直した |
+| `Modules/UI/UIMoneyView.xaml` | 支払いボタンを、点滅(`AnimationOption.Pulse`)の付いた Border から、普通の `Button`(アイコンの下に文字、押すと縮む `ButtonOption.PressEffect`)に。円のどこを押しても反応する |
+
+- XAML Styler: 157 ファイルのうち 139 が合格(SampleCrop・UIKitDash は xmlns の順番のずれだけだったので合格に)。合格しない 18 はほかの所の前からのずれで、そのうち直したファイル(UIGraph・ViewDrawer・ViewSfChart・UIMoney など)は、xmlns と変えた所だけを Styler の結果に合わせた
 
 ## 💡C. この区間のナレッジ
 
@@ -3802,7 +3812,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **`IsVisible` で隠した重ねの中の `CarouselView` は、開くたびに `Position` を変えると 2 回目から前に見たページが出たままになる**(位置の値とインジケーターは変わる)。News と同じ `CarouselOption.PageSnap`(ページより先に RecyclerView がフォーカスを受ける)を付けると、押した写真から開く
 - **Android の MAUI Graphics では、`SetFillPaint` のグラデーションは後で `FillColor` を変えても残る**(後の塗りもグラデーションのまま)。グラデーションの塗りは `SaveState` / `RestoreState` で囲む
 - XAML のマークアップ拡張の中の `\` はエスケープなので、TimeSpan の書式の `:` は `StringFormat='{0:h\\:mm}'` と書く(`\:` だと書式が壊れて既定の `01:34:00` になる)
-- **Android の `SKFontManager.MatchCharacter` は言語のヒントが無いと中国語(簡体字)の書体を返す**(この端末のフォールバックの順は zh-Hans → zh-Hant → ja → ko)。漢字を日本語の字形で描くには、言語のヒント(`["ja"]`)を渡すか、SkiaExtension の `FontResolver` と `FallbackFonts.Languages` を使う
+- **Android の `SKFontManager.MatchCharacter` は言語のヒントが無いと中国語(簡体字)の書体を返す**(この端末のフォールバックの順は zh-Hans → zh-Hant → ja → ko)。SkiaExtension の `FontResolver` は `FallbackFonts.Languages` が未設定なら端末の UI の言語をヒントにするので、日本語の端末では日本語の字形になる(Clam の 3 つと KitSleepBand・TextToggle・MailAvatarImage)。端末の言語に関係なく日本語の字形にするときは `FallbackFonts.Languages = ["ja"]`
 - **`DeviceDisplay.MainDisplayInfo` は取るたびに約 2 KB を割り当てる**。描画では最初に 1 回だけ取る
 - **`IReadOnlyList<T>` の `foreach` は列挙子がボックス化される**(配列・`List<T>` の型のまま回せば割り当てなし)。0〜299 の `int.ToString()` はランタイムが共有の文字列を返すので割り当てがない
 - **XAML Styler は組の無い接頭辞の宣言を `xmlns:*` のグループで 1 行にまとめる**(`xmlns:clam` と `xmlns:conv` など)。名前の付いたグループに入る接頭辞(`xmlns:converters`)にすると行が分かれる

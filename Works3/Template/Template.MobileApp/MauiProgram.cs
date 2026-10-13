@@ -235,9 +235,6 @@ public static partial class MauiProgram
             config.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        // Fallback fonts
-        FallbackFonts.Languages = ["ja"];
-
         // Crash dump
         CrashReport.Start();
 
