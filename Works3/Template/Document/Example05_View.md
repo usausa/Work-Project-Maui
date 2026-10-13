@@ -13,7 +13,6 @@
 - DockLayout / UniformItemsLayout
 - CircularLayout / HoneycombLayout / CascadeStackLayout
 - StaggeredGrid / VariableSizeWrapPanel / OverlapPanel
-- ILayoutManager
 
 ## State
 
@@ -22,36 +21,28 @@
 </p>
 
 - StateContainer (Loading / Empty / Error)
-- LazyView
-- Fade-up
 
 ## Border
 
 <p>
 <img width="25%" src="./Images/View_Border.png" />
-<img width="25%" src="./Images/View_Border-2.png" />
 </p>
 
-- Border (StrokeShape / stroke / corner radius)
-- Picker / Slider
-- Color pickers
+- Border
 
 ## Shadow
 
 <p>
 <img width="25%" src="./Images/View_Shadow.png" />
-<img width="25%" src="./Images/View_Shadow-2.png" />
 </p>
 
-- Shadow (offset / radius / opacity / color)
-- Sliders / color pickers
+- Shadow
 - Neumorphism card
 
 ## Animation
 
 <p>
 <img width="25%" src="./Images/View_Animation.png" />
-<img width="25%" src="./Images/View_Animation-2.png" />
 </p>
 
 - EventActionBehavior (fade / rotate / scale / shake)
@@ -66,8 +57,6 @@
 </p>
 
 - Easing functions
-- GraphicsView curves
-- EventRequest
 
 ## Effect
 
@@ -90,34 +79,24 @@
 </p>
 
 - Drag / Drop gesture recognizers
-- Reorder list
-- TODO / DONE lists
-- Trash cell
-- DataTrigger highlight
 
 ## Bottom Sheet
 
 <p>
 <img width="25%" src="./Images/View_BottomSheet.png" />
-<img width="25%" src="./Images/View_BottomSheet-2.png" />
 </p>
 
 - SfBottomSheet (Syncfusion)
 - BottomSheetView
-- Half-expanded / expanded
-- Action rows (MapToText / MapToColor)
 
 ## Drawer
 
 <p>
 <img width="25%" src="./Images/View_Drawer.png" />
-<img width="25%" src="./Images/View_Drawer-2.png" />
 </p>
 
 - SfNavigationDrawer (Syncfusion)
 - SideDrawer
-- SfSegmentedControl
-- Menu rows
 
 ## Graphics
 
@@ -128,7 +107,6 @@
 - Microsoft.Maui.Graphics (GraphicsView)
 - Shapes
 - Sketch / PNG export
-- Pulse ring / countdown arc
 
 ## Drawing
 
@@ -137,8 +115,6 @@
 </p>
 
 - DrawingView (CommunityToolkit.Maui)
-- DrawingBind.Controller
-- Color chips / width slider
 - Save (SkiaSharp)
 
 ## Lottie
@@ -148,7 +124,6 @@
 </p>
 
 - SKLottieView
-- Seek slider / play / pause
 - Scroll-linked playback
 - Press-and-hold playback
 
@@ -159,8 +134,6 @@
 </p>
 
 - SvgView (Svg.Skia)
-- Placeholder / cache
-- Chip buttons
 
 ## Toolkit
 
@@ -192,8 +165,6 @@
 </p>
 
 - ChartDrawing: Line / Bar / Donut / Candle / Stacked / Scatter / Heat
-- Draw-in animation
-- Tap tooltip
 
 ## Sf Chart
 

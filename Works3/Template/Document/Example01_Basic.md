@@ -4,7 +4,6 @@
 
 <p>
 <img width="25%" src="./Images/Basic_Typography.png" />
-<img width="25%" src="./Images/Basic_Typography-2.png" />
 </p>
 
 - Label font size / alignment / color example
@@ -16,10 +15,7 @@
 </p>
 
 - Button styles: Primary / Secondary / Tertiary / Information / Success / Warning / Error
-- Press effect
-- Shared command (CommandParameter)
 - Segmented select
-- Fade-up cards
 
 ## Font
 
@@ -30,7 +26,6 @@
 </p>
 
 - Bundled fonts: OpenSans / Oxanium / Gkktt / DSEG7 / JetBrains Mono / Noto Serif JP
-- Font sizes / platform default font
 - Icon fonts: MaterialIcons / FluentUI
 - FontImageSource
 
@@ -43,7 +38,6 @@
 - Smart.Maui converters: Reverse / Any / All / ToUpper / ToLower
 - Inline converters: BoolToText / BoolToColor / NullToText / NullToColor
 - MultiBinding
-- Highlight on change
 
 ## Behavior
 

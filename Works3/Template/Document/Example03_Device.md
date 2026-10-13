@@ -7,9 +7,6 @@
 </p>
 
 - IDeviceInfo / IAppInfo / IDeviceDisplay
-- InfoCard
-- StatusChip
-- Fade-up entrance
 
 ## Status
 
@@ -17,10 +14,7 @@
 <img width="25%" src="./Images/Device_Status.png" />
 </p>
 
-- Battery / network state (DeviceState)
-- ArcMeter
-- StatusChip
-- Battery icon (MultiBinding)
+- Battery / network state
 
 ## Sensor
 
@@ -30,9 +24,7 @@
 </p>
 
 - Accelerometer / Gyroscope / Magnetometer / Orientation / Compass / Barometer
-- Rx observables
-- RangeBar
-- Compass dial / bubble level (GraphicsView)
+- Compass dial / bubble level
 
 ## Location
 
@@ -42,9 +34,6 @@
 
 - Map (Microsoft.Maui.Controls.Maps)
 - ILocationService
-- Position / motion cards
-- Ripple empty state
-- Google Maps API key
 
 ## QR Display
 
@@ -53,8 +42,6 @@
 </p>
 
 - QRCoder
-- Entry
-- Fade-up cards
 
 ## QR Scan
 
@@ -63,10 +50,7 @@
 </p>
 
 - CameraView (BarcodeScanning.Native.Maui / ML Kit)
-- BarcodeBind.Controller
 - Detection boxes (GraphicsView)
-- Scan frame overlay
-- Torch / zoom / camera switch
 
 ## Camera
 
@@ -75,10 +59,7 @@
 </p>
 
 - CameraView (CommunityToolkit.Maui.Camera)
-- CameraBind.Controller
-- Preview / capture
-- Flash / torch / zoom
-- State chips
+- Preview / capture / flash / torch / zoom
 
 ## OCR
 
@@ -87,9 +68,7 @@
 </p>
 
 - CameraView
-- Guide overlay
 - Text recognition (ML Kit / IOcrReader)
-- Result panel
 
 ## WiFi
 
@@ -98,10 +77,6 @@
 </p>
 
 - IWiFiManager
-- Expandable connection block
-- Access point list (signal icon / chips)
-- Auto scan
-- Permissions
 
 ## Bluetooth
 
@@ -110,9 +85,6 @@
 </p>
 
 - Bluetooth Classic serial (SPP)
-- BluetoothSerialFactory
-- Print state (StatusChip / StepIndicator)
-- Pulse / wave animation
 
 ## BLE Scan
 
@@ -121,9 +93,6 @@
 </p>
 
 - Shiny.BluetoothLE scan
-- SwitchBot readings
-- Seven-segment values (DSEG7)
-- Bounce on change
 
 ## BLE Host
 
@@ -133,8 +102,6 @@
 
 - Shiny.BluetoothLE.Hosting
 - GATT service / advertising
-- Ripple rings
-- StatusChip
 
 ## NFC
 
@@ -143,9 +110,6 @@
 </p>
 
 - NFC reader mode (FeliCa)
-- Suica balance / history
-- Count-up number
-- Ripple empty state
 
 ## Audio
 
@@ -154,10 +118,6 @@
 </p>
 
 - Plugin.Maui.Audio
-- Play / pause / stop
-- Seek slider / volume slider
-- Cover art pulse
-- Haptic feedback
 
 ## Activity
 
@@ -166,9 +126,6 @@
 </p>
 
 - Step counter (SensorManager)
-- Distance / calories / time
-- Progress ring (Microsoft.Maui.Graphics)
-- Count-up number
 
 ## Biometric
 
@@ -177,9 +134,8 @@
 </p>
 
 - BiometricManager / BiometricPrompt
-- Strong / Weak / PIN
-- Keystore EC key (StrongBox)
-- Signature verification (in-app server)
+- Keystore EC key
+- Signature verification
 
 ## Communication
 
@@ -188,9 +144,6 @@
 </p>
 
 - Phone dialer / SMS / email
-- IsSupported
-- Manifest queries
-- Round buttons
 
 ## Misc
 
@@ -203,4 +156,3 @@
 - Vibration / haptic feedback / flashlight
 - Text to speech / speech to text
 - Notifications: immediate / scheduled / action buttons
-- Segmented buttons

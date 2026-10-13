@@ -8,9 +8,6 @@
 <img width="25%" src="./Images/Navigation_EditDetailUpdate.png" />
 </p>
 
-- CollectionView (EmptyView / SQLite)
-- Row edit / delete buttons
-- Multi-select / bulk delete
 - NavigationParameter
 - Edit screen for New / Update
 
@@ -23,8 +20,6 @@
 </p>
 
 - Stacked navigation (Push / Pop)
-- Pop 2 screens
-- StepIndicator
 
 ## Wizard
 
@@ -35,9 +30,7 @@
 </p>
 
 - Scope plugin ([Scope] context)
-- Next / previous
 - Scope lifecycle log
-- StepIndicator / summary card
 
 ## Shared
 
@@ -50,7 +43,6 @@
 - Shared input screen
 - Named NavigationParameter
 - Parameters helper
-- StatusChip
 
 ## Initialize
 
@@ -59,8 +51,6 @@
 </p>
 
 - Initialization after arrival
-- BusyState / IDialog.Loading
-- Skeleton placeholder
 
 ## Cancel
 
@@ -69,8 +59,6 @@
 </p>
 
 - Confirm dialog on arrival
-- BusyState
-- Back key
 
 ## Dialog
 
@@ -79,9 +67,6 @@
 </p>
 
 - Popup (IPopupNavigator)
-- Number keypad
-- Typed parameter / result
-- CommunityToolkit Popup
 
 ## Effect
 
@@ -92,7 +77,3 @@
 </p>
 
 - Navigation effects: slide / fade / zoom / drop / flip / rotate
-- IMauiNavigationEffect
-- Effect with stacked navigation
-- Reverse effect on Back
-- Dialog-style screen ([DialogView])
