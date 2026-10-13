@@ -162,6 +162,12 @@
 
 <p>
 <img width="25%" src="./Images/View_Chart.png" />
+<img width="25%" src="./Images/View_Chart-2.png" />
+<img width="25%" src="./Images/View_Chart-3.png" />
+<img width="25%" src="./Images/View_Chart-4.png" />
+<img width="25%" src="./Images/View_Chart-5.png" />
+<img width="25%" src="./Images/View_Chart-6.png" />
+<img width="25%" src="./Images/View_Chart-7.png" />
 </p>
 
 - ChartDrawing: Line / Bar / Donut / Candle / Stacked / Scatter / Heat

@@ -70,6 +70,19 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Social.png" />
 </p>
 
+# Example
+
+| Category | Page |
+| --- | --- |
+| Basic | [Example01_Basic](Document/Example01_Basic.md) |
+| Navigation | [Example02_Navigation](Document/Example02_Navigation.md) |
+| Device | [Example03_Device](Document/Example03_Device.md) |
+| Network | [Example04_Network](Document/Example04_Network.md) |
+| View | [Example05_View](Document/Example05_View.md) |
+| UI | [Example06_UI](Document/Example06_UI.md) |
+| Sample | [Example07_Sample](Document/Example07_Sample.md) |
+| App | [Example08_App](Document/Example08_App.md) |
+
 # Implement
 
 | Category | Feature |
@@ -78,31 +91,22 @@ Template project for MAUI.
 | Navigation | Basic / Stack / Wizard / Shared / Initialize / Cancel / Dialog |
 | Device | Info / Status / Sensor / Location / QR Scan(Android AI) / QR Display / Camera / OCR(Android AI) / WiFi / BLE / Bluetooth Serial / NFC / Audio / Activity / Communication / Screen / Vibrate / Feed / LED / Speak / Recognize / Local notification |
 | Data | SQLite |
-| Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC(Chat) / SFTP / Telemetry(OpenTelemetry) |
-| View | Layout / State / Border / Shadow / Toolkit / Custom / Bottom sheet(SfBottomSheet, custom) / Drawer(SfNavigationDrawer, custom) / Animation / Easing / Effect / Drag & Drop / Lottie / SVG / Graphics / Drawing / Chart / SfChart |
-| Sample | Web view / HybridWebView / Map / Map2 / Media play / Markdown / PDF reader / Object detection(Local) / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
+| Network | Web API(Data CRUD / JWT Authentication) / Storage / Realtime(SignalR) / Push(SignalR) / gRPC / SFTP / OpenTelemetry |
+| View | Layout / State / Border / Shadow / Toolkit / Custom / Bottom sheet / Drawer / Animation / Easing / Effect / Drag & Drop / Lottie / SVG / Graphics / Drawing / Chart |
+| Sample | Web view / HybridWebView / Map / Media play / Markdown / PDF / ONNX / Object, Tag, People, OCR(Azure AI Vision) / Chat(Ollama) / Crop |
 | App | Calculator / Timer / ToDo / Sudoku / 2048 / Minesweeper |
-| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid(ClamGrid) / Visit / Calendar(ClamCalendar) / Schedule / Mail / Chat / Weather / News / Timeline / Kit(Dashboard, Notification, Setting, Onboarding, Tracking) / Stream / Dock / Graph / Graph2 / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Monster / Character / Social / Flight / Tactical / Telemetry / Energy |
+| UI | Profile / Login / Money / Super / POS / Shop / Item / Cart / Grid / Visit / Calendar / Schedule / Mail / Chat / Weather / News / Timeline / Stream / Dock / Graph / Load / Gauge / Meter / Mixer / TreeMap / Radar / Wheel / Game like / Flight / Tactical / Telemetry / Energy |
 
-# TODO
+# Pending
 
 | Category | Feature |
 | --- | --- |
-| Device | Background task(WorkManager) |
-| Network | Tanking send |
-| Device | Push(FCM) |
-| Device | Biometric |
 | Device | Passkey (Credential Manager + WebAuthn, pending decision) |
-| Decision | Pending decisions (CoreCLR runtime) |
-| Device | Health Connect (candidate, pending decision) |
-| Sample | AI tool calling (candidate, pending decision) |
-
-## Pending
-
-| Item | Waiting for |
-| --- | --- |
-| Global xmlns (`http://schemas.microsoft.com/dotnet/maui/global`) for XAML | ReSharper support (build passes, inspectcode cannot resolve) |
-| CoreCLR runtime (`UseMonoRuntime=false`) | .NET 11 (Shiny `[Export]` startup crash: dotnet/android#10996) |
+| Device | Push (FCM) |
+| Device | Background task |
+| Network | Tanking send |
+| Other | Physical keyboard support |
+| Other | iOS support |
 
 # My Libraries
 
