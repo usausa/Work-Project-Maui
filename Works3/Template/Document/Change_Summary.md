@@ -3691,6 +3691,14 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 
 - ビルド 0 警告
 
+### 🎨支払いボタンの位置(2026-10-13)
+
+| 対象 | 内容 |
+|---|---|
+| `Modules/UI/UIMoneyView.xaml` / `Document/Images/UI_Money.png` | 中央の支払いボタン(`CenterButton`)の `Padding` を `0,6,0,0` に。アイコンと「支払い」を円の上下の中央に。画像は撮り直した |
+
+- 実機(Pixel 9a): 円(189 px)の中の上下の余白が 12 px / 31 px → 28 px / 23 px
+
 ## 💡C. この区間のナレッジ
 
 - **Grpc.Tools はサービスを持たない proto にも `GrpcServices="Server"` なら空の `*Grpc.cs` を生成し、StyleCop が SA1518 を出す**。メッセージだけの proto は `GrpcServices="None"` にする
@@ -3879,6 +3887,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - **Mapsui 5.1 の `OpenStreetMap.CreateTileLayer()` は、`TileLayer` の中で `new HttpClient()` を作り、User-Agent は `user-agent-of-<アプリ名>`**。`TileLayer` の `httpClient` 引数で HttpClient を渡せる(BruTile 6 の `HttpTileSource` は User-Agent が無いと例外)
 - **MAUI の FlexLayout の折り返しの判定は子の Margin を含めない**(`Flex.cs` の `if (flex_tolerance < child_size)`。Margin は判定の後で残りの幅から引く)。本体は収まるが Margin を足すと収まらない子は折り返されず、はみ出した分を `FlexLayout.Shrink` が 0 でない子(既定 1)が縮めて吸収する。Label を入れたチップは中の文字が折り返して切れるので、折り返す FlexLayout に並べるチップは `FlexLayout.Shrink = 0` にする(親の FlexLayout の直接の子にだけ効く)
 - **Game Boy の ROM はボタンを 1 フレーム(約 16.7 ms)に 1 回読むので、押して離すまでが 1 フレームより短いと届かない**。`adb shell input tap` は押してすぐ離すので届かないことがある。確かめるときは `input swipe x y x y 150` で 150 ms 押す
+- **Android の MAUI の Button で `ContentLayout` が `Top` のとき、アイコンは上の Padding の位置に付き、文字は残りの高さの中央に来る**(アイコンと文字の全体は中央にならない)。全体を中央にするときは上の Padding で下げる(上の余白が P 増え、下の余白は P / 2 減る)
 
 ---
 
