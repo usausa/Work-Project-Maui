@@ -29,29 +29,41 @@ Template project for MAUI.
 <img width="25%" src="Document/Images/UI_Visit.png" />
 <img width="25%" src="Document/Images/Device_WiFi.png" />
 
-<img width="25%" src="Document/Images/Device_NFC.png" />
-<img width="25%" src="Document/Images/Device_BLE.png" />
+<img width="25%" src="Document/Images/Device_Nfc.png" />
+<img width="25%" src="Document/Images/Device_BleScan.png" />
 <img width="25%" src="Document/Images/Device_Activity.png" />
 
 <img width="25%" src="Document/Images/UI_Stream.png" />
-<img width="25%" src="Document/Images/UI_Deck.png" />
-<img width="25%" src="Document/Images/UI_Gauge.png" />
+<img width="25%" src="Document/Images/UI_Dock.png" />
+<img width="25%" src="Document/Images/UI_Mixer.png" />
 
 <img width="25%" src="Document/Images/UI_Meter.png" />
 <img width="25%" src="Document/Images/UI_Load.png" />
-<img width="25%" src="Document/Images/UI_Mixier.png" />
+<img width="25%" src="Document/Images/UI_Gauge.png" />
 
-<img width="25%" src="Document/Images/Sample_CV.png" />
+<img width="25%" src="Document/Images/Sample_CvLocal.png" />
 <img width="25%" src="Document/Images/UI_TreeMap.png" />
 <img width="25%" src="Document/Images/View_Chart.png" />
 
+<img width="25%" src="Document/Images/UI_News.png" />
+<img width="25%" src="Document/Images/App_Todo.png" />
 <img width="25%" src="Document/Images/App_Calc.png" />
-<img width="25%" src="Document/Images/App_Game.png" />
-<img width="25%" src="Document/Images/UI_Radar.png" />
 
+<img width="25%" src="Document/Images/UI_Home.png" />
+<img width="25%" src="Document/Images/UI_Habit.png" />
+<img width="25%" src="Document/Images/App_Timer.png" />
+
+<img width="25%" src="Document/Images/UI_Telemetry.png" />
 <img width="25%" src="Document/Images/UI_Flight.png" />
 <img width="25%" src="Document/Images/UI_Tactical.png" />
-<img width="25%" src="Document/Images/UI_Telemetry.png" />
+
+<img width="25%" src="Document/Images/UI_Energy.png" />
+<img width="25%" src="Document/Images/UI_Wheel.png" />
+<img width="25%" src="Document/Images/UI_Radar.png" />
+
+<img width="25%" src="Document/Images/App_Sudoku.png" />
+<img width="25%" src="Document/Images/App_Puzzle2048.png" />
+<img width="25%" src="Document/Images/App_Minesweeper.png" />
 
 <img width="25%" src="Document/Images/UI_Monster.png" />
 <img width="25%" src="Document/Images/UI_Character.png" />

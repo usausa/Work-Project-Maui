@@ -27,8 +27,8 @@
     "xmlns:navigation",
 
     "xmlns:clam",
-    "xmlns:mcs",
-    "xmlns:mcsc",
+    "xmlns:cm",
+    "xmlns:cmc",
 
     "xmlns:mct",
     "xmlns:camera",
@@ -131,8 +131,8 @@
 
     "android:*",
     "ios:*",
-    "mcs:*",
-    "mcsc:*",
+    "cm:*",
+    "cmc:*",
     "mct:*",
     "controls:*",
     "behaviors:AnimationOption.EnterAnimation",
@@ -161,10 +161,10 @@
     "BindableLayout.ItemTemplate",
     "SelectedItem",
     "SelectionMode",
-    "ItemsUpdatingScrollMode", 
+    "ItemsUpdatingScrollMode",
     "HorizontalScrollBarVisibility, VerticalScrollBarVisibility",
     "Source",
-    "PageSource, PageIndex, Offset", 
+    "PageSource, PageIndex, Offset",
 
     "Command, CommandParameter",
 
