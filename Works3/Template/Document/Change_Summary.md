@@ -3681,6 +3681,7 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 - 実機(Pixel 9a、ユーザー): Wi-Fi とモバイル回線の切り替えでの再接続(Realtime・テレメトリ)、Device > NFC の実物の Suica の読み取り、UI > Chat の写真のメッセージ
 - 実機(Pixel 9a): Network > HTTP (Data) の続きの読み込み。template-maui-server の 48 件で、一覧を送ると List 20 / 48 → More 40 / 48 → More 48 / 48 と最後まで読み、それ以降は読まない。サーバーにも `/api/data/list` が 3 回届いた
 - 実機(Pixel 9a): 診断画面の Delete files の実行。確認のダイアログの OK で、ログのフォルダーの 7 ファイル(10-07〜10-13)のうち今日の `20261013.log` だけが残り、Files は 1 つ、Recent は「No warnings or errors」になり、Delete files は押せなくなる
+- 実機(Pixel 9a): Network > SFTP の送受信。SSH の値はユーザーがサーバーの QR ページに登録し、Setting で読み取った。LAN の SFTP サーバーへ 1 MB のファイルをアップロード(ファイルの選択から)し、ダウンロードで取り戻した。どちらも成功
 - 実機(Pixel 9a): Telemetry の送信先の変更。送信先が `http://localhost:4318/`(adb の転送)のまま転送を外してサーバーを起動し直すと、70 秒の間テレメトリは届かない。template-maui-server の QR ページを PC の LAN の IP で開いて Setting で読み取ると、送信先が `http://192.168.100.9:4318/` に変わり、転送が無いまま 30 秒ごとにサーバーへ届く。localhost の QR を読み直すと元の送信先に戻り、また届く
 
 ### 🧹ReSharper の指摘(2026-10-13)
@@ -3698,6 +3699,15 @@ Shell・Basic・Device・Navigation・Network・Sample・View の画面の日本
 | `Modules/UI/UIMoneyView.xaml` / `Document/Images/UI_Money.png` | 中央の支払いボタン(`CenterButton`)の `Padding` を `0,6,0,0` に。アイコンと「支払い」を円の上下の中央に。画像は撮り直した |
 
 - 実機(Pixel 9a): 円(189 px)の中の上下の余白が 12 px / 31 px → 28 px / 23 px
+
+### 📦BunnyTail.DependencyInjection 0.9.0 と Smart.Navigation 3.16.0(2026-10-13〜14)
+
+| 対象 | 内容 |
+|---|---|
+| `Template.MobileApp.csproj` | `BunnyTail.DependencyInjection` を 0.9.0 に。null 許容の参照型の依存(`T?` の引数や `[Inject]` のプロパティ)の生成コードが `GetValue<T?>` になり、`where T : class` の制約で CS8634 になる 0.8.0 の不具合の修正版。このアプリの依存には該当しない |
+| `Template.MobileApp.csproj` | `Usa.Smart.Navigation` / `.Extensions.DependencyInjection` / `.Maui` を 3.16.0 に。変わったのは Avalonia の Provider(閉じた画面にフォーカスがあったときに先頭へ移す)だけで、MAUI の動きは変わらない |
+
+- ビルド 0 警告
 
 ## 💡C. この区間のナレッジ
 
