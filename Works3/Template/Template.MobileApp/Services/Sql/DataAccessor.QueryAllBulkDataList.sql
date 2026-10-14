@@ -1,1 +1,0 @@
-SELECT * FROM BulkData ORDER BY Key1, Key2, Key3
